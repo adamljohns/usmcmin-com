@@ -1,21 +1,41 @@
 /* USMC Ministries — usmcmin.com Brand Stylesheet */
+
+/* ── LIGHT THEME (default) ── */
 :root {
+  --bg-dark: #FFFFFF;
+  --bg-card: #F5F5F5;
+  --bg-card-2: #EEEEEE;
+  --gold: #B8941F;
+  --gold-light: #D4AF37;
+  --gold-dim: rgba(184,148,31,0.12);
+  --navy: #1E3A5F;
+  --white: #1A1A1A;
+  --gray: #666666;
+  --gray-light: #555555;
+  --border: #DDDDDD;
+  --red: #C0392B;
+  --nav-bg: rgba(255,255,255,0.95);
+  --nav-text: #1A1A1A;
+  --font-main: 'Georgia', 'Times New Roman', serif;
+  --font-sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+  --radius: 8px;
+  --transition: 0.25s ease;
+}
+
+/* ── DARK THEME ── */
+[data-theme="dark"] {
   --bg-dark: #000000;
   --bg-card: #111111;
   --bg-card-2: #151515;
   --gold: #D4AF37;
   --gold-light: #F4D470;
   --gold-dim: rgba(212,175,55,0.15);
-  --navy: #1E3A5F;
   --white: #FFFFFF;
   --gray: #888888;
   --gray-light: #aaaaaa;
   --border: #2a2a2a;
-  --red: #C0392B;
-  --font-main: 'Georgia', 'Times New Roman', serif;
-  --font-sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
-  --radius: 8px;
-  --transition: 0.25s ease;
+  --nav-bg: rgba(0,0,0,0.92);
+  --nav-text: #FFFFFF;
 }
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -38,7 +58,7 @@ img { max-width: 100%; display: block; }
 /* ── NAV ── */
 nav {
   position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
-  background: rgba(0,0,0,0.92);
+  background: var(--nav-bg);
   backdrop-filter: blur(12px);
   border-bottom: 1px solid var(--border);
   padding: 0 2rem;
@@ -51,7 +71,7 @@ nav {
 }
 .nav-brand img { height: 42px; width: 42px; border-radius: 50%; }
 .nav-brand-text { line-height: 1.1; }
-.nav-brand-text .name { font-size: 0.95rem; font-weight: 700; color: var(--white); letter-spacing: 0.03em; }
+.nav-brand-text .name { font-size: 0.95rem; font-weight: 700; color: var(--nav-text, var(--white)); letter-spacing: 0.03em; }
 .nav-brand-text .tag { font-size: 0.7rem; color: var(--gold); letter-spacing: 0.12em; text-transform: uppercase; }
 
 .nav-links {
@@ -462,6 +482,54 @@ footer {
 }
 .coming-soon h3 { font-size: 1.5rem; margin: 1rem 0 0.5rem; color: var(--gold); }
 .coming-soon p { color: var(--gray); }
+
+/* ── THEME TOGGLE ── */
+.theme-toggle {
+  background: none; border: 1px solid var(--border);
+  cursor: pointer; font-size: 1.2rem; padding: 0.4rem 0.6rem;
+  border-radius: var(--radius); transition: all var(--transition);
+  line-height: 1; display: flex; align-items: center; margin-left: 0.75rem;
+}
+.theme-toggle:hover { border-color: var(--gold); }
+
+/* Light mode hero adjustments */
+:root .hero {
+  background: radial-gradient(ellipse at center top, rgba(30,58,95,0.08) 0%, rgba(255,255,255,0) 60%),
+              radial-gradient(ellipse at center, rgba(184,148,31,0.06) 0%, rgba(255,255,255,0) 70%);
+}
+[data-theme="dark"] .hero {
+  background: radial-gradient(ellipse at center top, rgba(30,58,95,0.4) 0%, rgba(0,0,0,0) 60%),
+              radial-gradient(ellipse at center, rgba(212,175,55,0.06) 0%, rgba(0,0,0,0) 70%);
+}
+
+/* Light mode mission strip */
+:root .mission-strip { background: var(--gold-light); }
+[data-theme="dark"] .mission-strip { background: #D4AF37; }
+
+/* Light mode email section */
+:root .email-section {
+  background: linear-gradient(135deg, #1E3A5F 0%, #0d1f35 100%);
+}
+:root .email-section .section-title { color: #fff; }
+:root .email-section p { color: rgba(255,255,255,0.75); }
+:root .email-section input { color: #fff; }
+
+/* Light mode nav toggle lines */
+:root .nav-toggle span { background: var(--white); }
+[data-theme="dark"] .nav-toggle span { background: #fff; }
+
+/* Light mode card hover shadow */
+:root .product-card:hover { box-shadow: 0 12px 32px rgba(0,0,0,0.12); }
+[data-theme="dark"] .product-card:hover { box-shadow: 0 12px 32px rgba(0,0,0,0.5); }
+
+/* Light mode gold CTA */
+.btn-primary { background: var(--gold); color: #fff; }
+.btn-primary:hover { background: var(--gold-light); color: #fff; }
+[data-theme="dark"] .btn-primary { color: #000; }
+[data-theme="dark"] .btn-primary:hover { color: #000; }
+.nav-cta { color: #fff !important; }
+[data-theme="dark"] .nav-cta { color: #000 !important; }
+[data-theme="dark"] .nav-cta:hover { color: #000 !important; }
 
 /* ── RESPONSIVE ── */
 @media (max-width: 900px) {

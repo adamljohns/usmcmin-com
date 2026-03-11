@@ -32,6 +32,7 @@
     <li><a href="https://usmcmin.org" target="_blank">Bible Plan</a></li>
   </ul>
   <a href="coaching.html" class="btn nav-cta">Book a Session</a>
+  <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme" title="Switch light/dark mode">🌙</button>
   <button class="nav-toggle" aria-label="Menu">
     <span></span><span></span><span></span>
   </button>
@@ -313,6 +314,34 @@
     </div>
   </div>
 </footer>
+
+<!-- Theme Toggle Script -->
+<script>
+(function() {
+  const toggle = document.getElementById('themeToggle');
+  const saved = localStorage.getItem('usmc-theme');
+  
+  // Default to light; respect saved preference
+  if (saved === 'dark') {
+    document.documentElement.setAttribute('data-theme', 'dark');
+    toggle.textContent = '☀️';
+  }
+  // Light is default (no data-theme attribute needed)
+  
+  toggle.addEventListener('click', function() {
+    const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+    if (isDark) {
+      document.documentElement.removeAttribute('data-theme');
+      localStorage.setItem('usmc-theme', 'light');
+      toggle.textContent = '🌙';
+    } else {
+      document.documentElement.setAttribute('data-theme', 'dark');
+      localStorage.setItem('usmc-theme', 'dark');
+      toggle.textContent = '☀️';
+    }
+  });
+})();
+</script>
 
 </body>
 </html>

@@ -1,41 +1,52 @@
 /* USMC Ministries — usmcmin.com Brand Stylesheet */
 
-/* ── LIGHT THEME (default) ── */
+/* ── LIGHT THEME (default) — Silver/Gray motif ── */
 :root {
   --bg-dark: #FFFFFF;
-  --bg-card: #F5F5F5;
-  --bg-card-2: #EEEEEE;
-  --gold: #B8941F;
-  --gold-light: #D4AF37;
-  --gold-dim: rgba(184,148,31,0.12);
+  --bg-card: #F4F5F7;
+  --bg-card-2: #EBEDF0;
+  --accent: #6B7280;
+  --accent-light: #9CA3AF;
+  --accent-dim: rgba(107,114,128,0.10);
+  --silver: #A8B0BC;
+  --silver-light: #C5CBD3;
   --navy: #1E3A5F;
   --white: #1A1A1A;
-  --gray: #666666;
-  --gray-light: #555555;
-  --border: #DDDDDD;
+  --gray: #6B7280;
+  --gray-light: #4B5563;
+  --border: #D1D5DB;
   --red: #C0392B;
-  --nav-bg: rgba(255,255,255,0.95);
+  --nav-bg: rgba(255,255,255,0.96);
   --nav-text: #1A1A1A;
+  /* Legacy aliases so existing classes work */
+  --gold: #6B7280;
+  --gold-light: #4B5563;
+  --gold-dim: rgba(107,114,128,0.10);
   --font-main: 'Georgia', 'Times New Roman', serif;
   --font-sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
   --radius: 8px;
   --transition: 0.25s ease;
 }
 
-/* ── DARK THEME ── */
+/* ── DARK THEME — Black/Silver/Gray ── */
 [data-theme="dark"] {
-  --bg-dark: #000000;
-  --bg-card: #111111;
-  --bg-card-2: #151515;
-  --gold: #D4AF37;
-  --gold-light: #F4D470;
-  --gold-dim: rgba(212,175,55,0.15);
-  --white: #FFFFFF;
-  --gray: #888888;
-  --gray-light: #aaaaaa;
-  --border: #2a2a2a;
-  --nav-bg: rgba(0,0,0,0.92);
-  --nav-text: #FFFFFF;
+  --bg-dark: #0A0A0A;
+  --bg-card: #141416;
+  --bg-card-2: #1A1A1E;
+  --accent: #A8B0BC;
+  --accent-light: #C5CBD3;
+  --accent-dim: rgba(168,176,188,0.12);
+  --silver: #C5CBD3;
+  --silver-light: #E2E5EA;
+  --white: #F0F0F0;
+  --gray: #9CA3AF;
+  --gray-light: #B0B8C4;
+  --border: #2A2D35;
+  --nav-bg: rgba(10,10,10,0.94);
+  --nav-text: #F0F0F0;
+  --gold: #A8B0BC;
+  --gold-light: #C5CBD3;
+  --gold-dim: rgba(168,176,188,0.12);
 }
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -492,44 +503,137 @@ footer {
 }
 .theme-toggle:hover { border-color: var(--gold); }
 
-/* Light mode hero adjustments */
+/* Light mode hero */
 :root .hero {
-  background: radial-gradient(ellipse at center top, rgba(30,58,95,0.08) 0%, rgba(255,255,255,0) 60%),
-              radial-gradient(ellipse at center, rgba(184,148,31,0.06) 0%, rgba(255,255,255,0) 70%);
+  background: radial-gradient(ellipse at center top, rgba(30,58,95,0.06) 0%, rgba(255,255,255,0) 60%),
+              radial-gradient(ellipse at center, rgba(107,114,128,0.04) 0%, rgba(255,255,255,0) 70%);
 }
 [data-theme="dark"] .hero {
-  background: radial-gradient(ellipse at center top, rgba(30,58,95,0.4) 0%, rgba(0,0,0,0) 60%),
-              radial-gradient(ellipse at center, rgba(212,175,55,0.06) 0%, rgba(0,0,0,0) 70%);
+  background: radial-gradient(ellipse at center top, rgba(30,58,95,0.35) 0%, rgba(0,0,0,0) 60%),
+              radial-gradient(ellipse at center, rgba(168,176,188,0.06) 0%, rgba(0,0,0,0) 70%);
 }
 
-/* Light mode mission strip */
-:root .mission-strip { background: var(--gold-light); }
-[data-theme="dark"] .mission-strip { background: #D4AF37; }
+/* Mission strip — silver accent */
+:root .mission-strip { background: #2D3748; color: #fff; }
+:root .mission-strip blockquote { color: #F0F0F0; }
+:root .mission-strip cite { color: var(--silver-light); }
+[data-theme="dark"] .mission-strip { background: #1A202C; }
+[data-theme="dark"] .mission-strip blockquote { color: #E2E5EA; }
+[data-theme="dark"] .mission-strip cite { color: var(--silver); }
 
-/* Light mode email section */
-:root .email-section {
+/* Email section — navy stays */
+.email-section {
   background: linear-gradient(135deg, #1E3A5F 0%, #0d1f35 100%);
 }
-:root .email-section .section-title { color: #fff; }
-:root .email-section p { color: rgba(255,255,255,0.75); }
-:root .email-section input { color: #fff; }
+.email-section .section-title { color: #fff; }
+.email-section p { color: rgba(255,255,255,0.75); }
+.email-section input { color: #fff; }
 
-/* Light mode nav toggle lines */
+/* Nav toggle */
 :root .nav-toggle span { background: var(--white); }
-[data-theme="dark"] .nav-toggle span { background: #fff; }
+[data-theme="dark"] .nav-toggle span { background: #F0F0F0; }
 
-/* Light mode card hover shadow */
-:root .product-card:hover { box-shadow: 0 12px 32px rgba(0,0,0,0.12); }
+/* Card hover */
+:root .product-card:hover { box-shadow: 0 12px 32px rgba(0,0,0,0.08); }
 [data-theme="dark"] .product-card:hover { box-shadow: 0 12px 32px rgba(0,0,0,0.5); }
 
-/* Light mode gold CTA */
-.btn-primary { background: var(--gold); color: #fff; }
-.btn-primary:hover { background: var(--gold-light); color: #fff; }
-[data-theme="dark"] .btn-primary { color: #000; }
-[data-theme="dark"] .btn-primary:hover { color: #000; }
-.nav-cta { color: #fff !important; }
-[data-theme="dark"] .nav-cta { color: #000 !important; }
-[data-theme="dark"] .nav-cta:hover { color: #000 !important; }
+/* CTA buttons — silver/charcoal */
+.btn-primary { background: #2D3748; color: #fff; }
+.btn-primary:hover { background: #4A5568; color: #fff; transform: translateY(-2px); box-shadow: 0 8px 24px rgba(45,55,72,0.35); }
+[data-theme="dark"] .btn-primary { background: var(--silver); color: #0A0A0A; }
+[data-theme="dark"] .btn-primary:hover { background: var(--silver-light); color: #0A0A0A; }
+.nav-cta { background: #2D3748; color: #fff !important; }
+.nav-cta:hover { background: #4A5568 !important; color: #fff !important; }
+[data-theme="dark"] .nav-cta { background: var(--silver); color: #0A0A0A !important; }
+[data-theme="dark"] .nav-cta:hover { background: var(--silver-light) !important; color: #0A0A0A !important; }
+
+/* Offer card top accent — silver */
+.offer-card::before { background: var(--silver); }
+[data-theme="dark"] .offer-card::before { background: var(--silver); }
+
+/* Coaching featured card — silver accent */
+.coaching-card.featured { border-color: var(--silver); background: linear-gradient(135deg, rgba(168,176,188,0.06) 0%, var(--bg-card) 100%); }
+.coaching-card.featured::before { background: #2D3748; color: #fff; }
+[data-theme="dark"] .coaching-card.featured::before { background: var(--silver); color: #0A0A0A; }
+
+/* Tags & badges — silver */
+.offer-tag { background: var(--accent-dim); color: var(--accent); }
+.product-badge { background: #2D3748; color: #fff; }
+[data-theme="dark"] .product-badge { background: var(--silver); color: #0A0A0A; }
+
+/* Hero eyebrow — silver border */
+.hero-eyebrow { color: var(--accent); border-color: rgba(107,114,128,0.3); }
+[data-theme="dark"] .hero-eyebrow { color: var(--silver); border-color: rgba(168,176,188,0.3); }
+
+/* Footer brand tag */
+.footer-brand .tag { color: var(--accent); }
+[data-theme="dark"] .footer-brand .tag { color: var(--silver); }
+
+/* Section label */
+.section-label { color: var(--accent); }
+[data-theme="dark"] .section-label { color: var(--silver); }
+
+/* Price */
+.product-price { color: var(--accent); }
+[data-theme="dark"] .product-price { color: var(--silver); }
+.coaching-price { color: var(--accent); }
+[data-theme="dark"] .coaching-price { color: var(--silver); }
+
+/* Stats */
+.stat-num { color: var(--accent); }
+[data-theme="dark"] .stat-num { color: var(--silver); }
+
+/* Coaching features bullet */
+.coaching-features li::before { color: var(--accent); }
+[data-theme="dark"] .coaching-features li::before { color: var(--silver); }
+
+/* Author avatar */
+.author-avatar { background: var(--accent-dim); border-color: var(--accent); color: var(--accent); }
+[data-theme="dark"] .author-avatar { border-color: var(--silver); color: var(--silver); }
+
+/* Testimonial stars */
+.testimonial-stars { color: var(--accent); }
+[data-theme="dark"] .testimonial-stars { color: var(--silver); }
+
+/* About image placeholder */
+.about-img-placeholder { color: var(--accent); }
+[data-theme="dark"] .about-img-placeholder { color: var(--silver); }
+
+/* Links — keep navy-ish for light, silver for dark */
+a { color: #2D3748; }
+a:hover { color: var(--accent); }
+[data-theme="dark"] a { color: var(--silver); }
+[data-theme="dark"] a:hover { color: var(--silver-light); }
+
+/* Nav links */
+.nav-links a:hover, .nav-links a.active { color: var(--accent); }
+[data-theme="dark"] .nav-links a:hover, [data-theme="dark"] .nav-links a.active { color: var(--silver); }
+
+/* Nav brand tag */
+.nav-brand-text .tag { color: var(--accent); }
+[data-theme="dark"] .nav-brand-text .tag { color: var(--silver); }
+
+/* Footer col headers */
+.footer-col h4 { color: var(--accent); }
+[data-theme="dark"] .footer-col h4 { color: var(--silver); }
+
+/* Social hover */
+.social-links a:hover { color: var(--accent); }
+[data-theme="dark"] .social-links a:hover { color: var(--silver); }
+
+/* Email form border */
+.email-form input { border-color: rgba(168,176,188,0.4); }
+.email-form input:focus { border-color: var(--silver); }
+
+/* Secondary button */
+.btn-secondary:hover { border-color: var(--accent); color: var(--accent); }
+[data-theme="dark"] .btn-secondary:hover { border-color: var(--silver); color: var(--silver); }
+
+/* Gold outline button → silver outline */
+.btn-gold-outline { color: var(--accent); border-color: var(--accent); }
+.btn-gold-outline:hover { background: var(--accent); color: #fff; }
+[data-theme="dark"] .btn-gold-outline { color: var(--silver); border-color: var(--silver); }
+[data-theme="dark"] .btn-gold-outline:hover { background: var(--silver); color: #0A0A0A; }
 
 /* ── RESPONSIVE ── */
 @media (max-width: 900px) {

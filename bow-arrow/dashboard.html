@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bow & Arrow Studio — Dashboard</title>
+    <link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+    <div class="dashboard">
+        <nav>
+            <span class="brand">🏹 Bow & Arrow</span>
+            <a href="dashboard.html" class="active">Dashboard</a>
+            <a href="calendar.html">Calendar</a>
+            <a href="cleaning.html">Cleaning</a>
+            <a href="financials.html">Financials</a>
+            <a class="logout" onclick="logout()">Logout</a>
+        </nav>
+
+        <header>
+            <h1>Command Center</h1>
+            <span class="date-info" id="dateInfo"></span>
+        </header>
+
+        <!-- Summary Cards -->
+        <div class="grid">
+            <div class="card">
+                <h3>Properties</h3>
+                <div class="value" id="occupiedCount">—</div>
+                <div class="subtext" id="occupiedLabel">Loading...</div>
+            </div>
+            <div class="card">
+                <h3>Revenue</h3>
+                <div class="value" id="revenueTotal">—</div>
+                <div class="subtext" id="revenueLabel">Loading...</div>
+            </div>
+            <div class="card">
+                <h3>Net Profit</h3>
+                <div class="value" id="netProfit">—</div>
+                <div class="subtext" id="netLabel">Loading...</div>
+            </div>
+        </div>
+
+        <!-- Property Status Grid -->
+        <h2 class="section-title">🏠 Property Status</h2>
+        <div class="property-grid" id="propertyGrid">
+            <p style="color:var(--gray)">Loading properties...</p>
+        </div>
+
+        <!-- Quick Actions -->
+        <div class="quick-actions">
+            <button onclick="openModal('cleaningModal')">🧹 Log Cleaning</button>
+            <button onclick="openModal('bookingModal')">📋 Add Booking</button>
+            <button onclick="openModal('expenseModal')">💸 Log Expense</button>
+        </div>
+
+        <!-- Two Column: Events + Alerts -->
+        <div class="two-col">
+            <div>
+                <h2 class="section-title">📅 Upcoming Events (7 days)</h2>
+                <div class="card" id="upcomingEvents">
+                    <p style="color:var(--gray)">Loading...</p>
+                </div>
+            </div>
+            <div>
+                <h2 class="section-title">🔔 Alerts</h2>
+                <div class="card" id="alertFeed">
+                    <p style="color:var(--gray)">Loading...</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Revenue Snapshot -->
+        <h2 class="section-title">💰 Revenue by Stream (March)</h2>
+        <div class="card" id="revenueChart">
+            <p style="color:var(--gray)">Loading...</p>
+        </div>
+    </div>
+
+    <!-- Modals -->
+    <div class="modal-overlay" id="cleaningModal">
+        <div class="modal">
+            <h2>🧹 Log Cleaning</h2>
+            <div class="form-group">
+                <label>Property</label>
+                <select id="cleanProp">
+                    <option value="1">Apt #6</option>
+                    <option value="2">Apt #7</option>
+                    <option value="3">Apt #8</option>
+                    <option value="4">Cottage</option>
+                    <option value="5">Combined #6+#8</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Date</label>
+                <input type="date" id="cleanDate">
+            </div>
+            <div class="form-group">
+                <label>Cleaner</label>
+                <select id="cleanCleaner">
+                    <option value="amanda">Amanda</option>
+                    <option value="tiffany">Tiffany</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Hours</label>
+                <input type="number" id="cleanHours" step="0.5" value="2">
+            </div>
+            <div class="form-group">
+                <label>Type</label>
+                <select id="cleanType">
+                    <option value="turnover">Turnover</option>
+                    <option value="refresh">Refresh</option>
+                    <option value="deep">Deep Clean</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Notes</label>
+                <textarea id="cleanNotes" rows="2"></textarea>
+            </div>
+            <button class="btn-primary" onclick="alert('Saved! (Connect backend for persistence)'); closeModal('cleaningModal')">Save Cleaning</button>
+            <button style="margin-left:0.5rem;padding:0.75rem 1rem;border:none;background:none;cursor:pointer;color:var(--gray)" onclick="closeModal('cleaningModal')">Cancel</button>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="bookingModal">
+        <div class="modal">
+            <h2>📋 Add Booking</h2>
+            <div class="form-group">
+                <label>Property</label>
+                <select id="bookProp">
+                    <option value="1">Apt #6</option>
+                    <option value="2">Apt #7</option>
+                    <option value="3">Apt #8</option>
+                    <option value="4">Cottage</option>
+                    <option value="5">Combined #6+#8</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Guest Name</label>
+                <input type="text" id="bookGuest">
+            </div>
+            <div class="form-group">
+                <label>Check-in</label>
+                <input type="date" id="bookCheckin">
+            </div>
+            <div class="form-group">
+                <label>Check-out</label>
+                <input type="date" id="bookCheckout">
+            </div>
+            <div class="form-group">
+                <label>Platform</label>
+                <select id="bookPlatform">
+                    <option value="airbnb">Airbnb</option>
+                    <option value="direct">Direct</option>
+                    <option value="vrbo">VRBO</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Payout ($)</label>
+                <input type="number" id="bookPayout" step="0.01">
+            </div>
+            <button class="btn-primary" onclick="alert('Saved! (Connect backend for persistence)'); closeModal('bookingModal')">Save Booking</button>
+            <button style="margin-left:0.5rem;padding:0.75rem 1rem;border:none;background:none;cursor:pointer;color:var(--gray)" onclick="closeModal('bookingModal')">Cancel</button>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="expenseModal">
+        <div class="modal">
+            <h2>💸 Log Expense</h2>
+            <div class="form-group">
+                <label>Category</label>
+                <select id="expCategory">
+                    <option value="supplies">Supplies</option>
+                    <option value="maintenance">Maintenance</option>
+                    <option value="utilities">Utilities</option>
+                    <option value="cleaning">Cleaning</option>
+                    <option value="marketing">Marketing</option>
+                    <option value="other">Other</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Amount ($)</label>
+                <input type="number" id="expAmount" step="0.01">
+            </div>
+            <div class="form-group">
+                <label>Description</label>
+                <input type="text" id="expDesc">
+            </div>
+            <div class="form-group">
+                <label>Property (optional)</label>
+                <select id="expProp">
+                    <option value="">General</option>
+                    <option value="1">Apt #6</option>
+                    <option value="2">Apt #7</option>
+                    <option value="3">Apt #8</option>
+                    <option value="4">Cottage</option>
+                </select>
+            </div>
+            <button class="btn-primary" onclick="alert('Saved! (Connect backend for persistence)'); closeModal('expenseModal')">Save Expense</button>
+            <button style="margin-left:0.5rem;padding:0.75rem 1rem;border:none;background:none;cursor:pointer;color:var(--gray)" onclick="closeModal('expenseModal')">Cancel</button>
+        </div>
+    </div>
+
+    <script src="assets/dashboard.js"></script>
+    <script>initDashboard();</script>
+</body>
+</html>

@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bow & Arrow Studio — Cleaning Management</title>
+    <link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+    <div class="dashboard">
+        <nav>
+            <span class="brand">🏹 Bow & Arrow</span>
+            <a href="dashboard.html">Dashboard</a>
+            <a href="calendar.html">Calendar</a>
+            <a href="cleaning.html" class="active">Cleaning</a>
+            <a href="financials.html">Financials</a>
+            <a class="logout" onclick="logout()">Logout</a>
+        </nav>
+
+        <header>
+            <h1>🧹 Cleaning Management</h1>
+        </header>
+
+        <!-- This Week's Schedule -->
+        <h2 class="section-title">This Week's Schedule</h2>
+        <div class="card" id="scheduledCleanings">
+            <p style="color:var(--gray)">Loading...</p>
+        </div>
+
+        <!-- Cleanings Needed -->
+        <h2 class="section-title">⚠️ Cleanings Needed</h2>
+        <div class="card" id="neededCleanings">
+            <p style="color:var(--gray)">Loading...</p>
+        </div>
+
+        <!-- Cleaner Summaries -->
+        <div class="two-col" style="margin-top:1.5rem">
+            <div class="cleaner-card">
+                <h3>
+                    <span>👤 Amanda</span>
+                    <span style="font-size:0.8rem;color:var(--gray);font-weight:400">$25/hr • Thursday specialist</span>
+                </h3>
+                <div class="cleaner-stats">
+                    <div class="cleaner-stat">
+                        <div class="label">Cleanings (March)</div>
+                        <div class="value" id="amandaCleanings">—</div>
+                    </div>
+                    <div class="cleaner-stat">
+                        <div class="label">Hours</div>
+                        <div class="value" id="amandaHours">—</div>
+                    </div>
+                    <div class="cleaner-stat">
+                        <div class="label">Pay Owed</div>
+                        <div class="value" id="amandaPay">—</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="cleaner-card">
+                <h3>
+                    <span>👤 Tiffany</span>
+                    <span style="font-size:0.8rem;color:var(--gray);font-weight:400">$25/hr • Fri+Sat specialist</span>
+                </h3>
+                <div class="cleaner-stats">
+                    <div class="cleaner-stat">
+                        <div class="label">Cleanings (March)</div>
+                        <div class="value" id="tiffanyCleanings">—</div>
+                    </div>
+                    <div class="cleaner-stat">
+                        <div class="label">Hours</div>
+                        <div class="value" id="tiffanyHours">—</div>
+                    </div>
+                    <div class="cleaner-stat">
+                        <div class="label">Pay Owed</div>
+                        <div class="value" id="tiffanyPay">—</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Log Cleaning Form -->
+        <h2 class="section-title">➕ Log New Cleaning</h2>
+        <div class="card">
+            <div class="two-col">
+                <div>
+                    <div class="form-group">
+                        <label>Property</label>
+                        <select id="logCleanProp">
+                            <option value="1">Apt #6</option>
+                            <option value="2">Apt #7</option>
+                            <option value="3">Apt #8</option>
+                            <option value="4">Cottage</option>
+                            <option value="5">Combined #6+#8</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Date</label>
+                        <input type="date" id="logCleanDate">
+                    </div>
+                    <div class="form-group">
+                        <label>Cleaner</label>
+                        <select id="logCleanCleaner">
+                            <option value="amanda">Amanda</option>
+                            <option value="tiffany">Tiffany</option>
+                        </select>
+                    </div>
+                </div>
+                <div>
+                    <div class="form-group">
+                        <label>Hours</label>
+                        <input type="number" id="logCleanHours" step="0.5" value="2">
+                    </div>
+                    <div class="form-group">
+                        <label>Type</label>
+                        <select id="logCleanType">
+                            <option value="turnover">Turnover</option>
+                            <option value="refresh">Refresh</option>
+                            <option value="deep">Deep Clean</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Notes</label>
+                        <textarea id="logCleanNotes" rows="2"></textarea>
+                    </div>
+                </div>
+            </div>
+            <button class="btn-primary" onclick="alert('Saved! (Connect backend for persistence)')">Save Cleaning</button>
+        </div>
+
+        <!-- Recent Payments -->
+        <h2 class="section-title">💳 Recent Cleaner Payments</h2>
+        <div class="card">
+            <table>
+                <thead><tr><th>Date</th><th>Cleaner</th><th>Amount</th><th>Method</th><th>Note</th></tr></thead>
+                <tbody>
+                    <tr>
+                        <td>Mar 15</td>
+                        <td>Tiffany</td>
+                        <td>$130</td>
+                        <td>Cash</td>
+                        <td>All 3 apts turnover, 5 hours</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script src="assets/dashboard.js"></script>
+    <script>initCleaning();</script>
+</body>
+</html>

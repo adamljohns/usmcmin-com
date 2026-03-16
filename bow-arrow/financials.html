@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bow & Arrow Studio — Financials</title>
+    <link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+    <div class="dashboard">
+        <nav>
+            <span class="brand">🏹 Bow & Arrow</span>
+            <a href="dashboard.html">Dashboard</a>
+            <a href="calendar.html">Calendar</a>
+            <a href="cleaning.html">Cleaning</a>
+            <a href="financials.html" class="active">Financials</a>
+            <a class="logout" onclick="logout()">Logout</a>
+        </nav>
+
+        <header>
+            <h1>💰 Financial Dashboard</h1>
+            <span class="date-info">March 2026</span>
+        </header>
+
+        <!-- Top Line Numbers -->
+        <div class="grid">
+            <div class="card">
+                <h3>Total Revenue</h3>
+                <div class="value" id="totalRevenue" style="color:var(--green)">—</div>
+                <div class="subtext">This month</div>
+            </div>
+            <div class="card">
+                <h3>Total Expenses</h3>
+                <div class="value" id="totalExpenses" style="color:var(--red)">—</div>
+                <div class="subtext">This month</div>
+            </div>
+            <div class="card">
+                <h3>Net Profit</h3>
+                <div class="value" id="totalNet">—</div>
+                <div class="subtext">Revenue - Expenses</div>
+            </div>
+        </div>
+
+        <!-- Revenue by Stream -->
+        <div class="two-col">
+            <div>
+                <h2 class="section-title">📊 Revenue by Stream</h2>
+                <div class="card" id="revenueStreams">
+                    <p style="color:var(--gray)">Loading...</p>
+                </div>
+            </div>
+            <div>
+                <h2 class="section-title">📉 Expense Breakdown</h2>
+                <div class="card" id="expenseBreakdown">
+                    <p style="color:var(--gray)">Loading...</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Monthly Bar Chart -->
+        <h2 class="section-title">📈 Monthly Revenue (Last 6 Months)</h2>
+        <div class="card" id="monthlyChart">
+            <p style="color:var(--gray)">Loading...</p>
+        </div>
+
+        <!-- Occupancy Metrics -->
+        <h2 class="section-title">🏠 Occupancy Metrics (30-day)</h2>
+        <div class="card" id="occupancyTable"></div>
+    </div>
+
+    <script src="assets/dashboard.js"></script>
+    <script>
+        initFinancials();
+
+        // Occupancy table
+        (async function() {
+            const occ = (await fetchData('/api/occupancy')) || DEMO.occupancy;
+            const container = document.getElementById('occupancyTable');
+            container.innerHTML = '<table><thead><tr><th>Property</th><th>Occupancy</th><th>ADR</th><th>RevPAR</th></tr></thead><tbody>' +
+                occ.map(o => `
+                    <tr${o.apt_number === 'ALL' ? ' style="font-weight:700;border-top:2px solid var(--dark-brown)"' : ''}>
+                        <td>${o.apt_number === 'ALL' ? '📊 Overall' : 'Apt ' + o.apt_number}</td>
+                        <td>${o.occupancy_30d}%</td>
+                        <td>${formatCurrency(o.adr)}</td>
+                        <td>${formatCurrency(o.revpar)}</td>
+                    </tr>
+                `).join('') + '</tbody></table>';
+        })();
+    </script>
+</body>
+</html>

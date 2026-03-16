@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bow & Arrow Studio — Operations Dashboard</title>
+    <link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+    <div class="login-container">
+        <div class="login-box">
+            <div class="arrow-icon">🏹</div>
+            <h1>Bow & Arrow Studio</h1>
+            <p class="subtitle">Operations Dashboard</p>
+            <form id="loginForm" onsubmit="return handleLogin(event)">
+                <input type="password" id="password" placeholder="Enter password" autocomplete="current-password" autofocus>
+                <button type="submit">Enter Dashboard</button>
+            </form>
+            <p class="login-error" id="loginError">Incorrect password. Try again.</p>
+        </div>
+    </div>
+
+    <script>
+        // Check if already authenticated
+        if (localStorage.getItem('ba_auth') === 'steward-2026') {
+            window.location.href = 'dashboard.html';
+        }
+
+        function handleLogin(e) {
+            e.preventDefault();
+            const pw = document.getElementById('password').value;
+            if (pw === 'steward') {
+                localStorage.setItem('ba_auth', 'steward-2026');
+                window.location.href = 'dashboard.html';
+            } else {
+                document.getElementById('loginError').style.display = 'block';
+                document.getElementById('password').value = '';
+                document.getElementById('password').focus();
+            }
+            return false;
+        }
+    </script>
+</body>
+</html>

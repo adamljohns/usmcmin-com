@@ -10,70 +10,565 @@
   <meta property="og:url" content="https://usmcmin.com/melaleuca/">
   <meta property="og:type" content="website">
   <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="../assets/css/main.css">
   <link rel="icon" href="../assets/img/favicon.png" type="image/png">
   <style>
+    /* ── MELALEUCA BRAND OVERRIDES ── */
+    .mel-page {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+      --mel-green: #00703C;
+      --mel-green-light: #009A4E;
+      --mel-green-dark: #005A30;
+      --mel-green-dim: rgba(0,112,60,0.08);
+      --mel-green-dim2: rgba(0,112,60,0.04);
+      --mel-warm: #F9FAFB;
+      --mel-cream: #F0F7F3;
+      --mel-text: #1A1A1A;
+      --mel-text-light: #5F6B7A;
+      --mel-border: #E5E7EB;
+      --mel-shadow: 0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
+      --mel-shadow-lg: 0 10px 25px rgba(0,0,0,0.06), 0 4px 10px rgba(0,0,0,0.04);
+      --mel-radius: 16px;
+    }
+
+    /* Dark mode adjustments for Melaleuca section */
+    body.dark .mel-page,
+    [data-theme="dark"] .mel-page {
+      --mel-warm: #111113;
+      --mel-cream: #0D1A12;
+      --mel-text: #F0F0F0;
+      --mel-text-light: #9CA3AF;
+      --mel-border: #2A2D35;
+      --mel-shadow: 0 1px 3px rgba(0,0,0,0.2);
+      --mel-shadow-lg: 0 10px 25px rgba(0,0,0,0.3);
+      --mel-green-dim: rgba(0,154,78,0.15);
+      --mel-green-dim2: rgba(0,154,78,0.06);
+    }
+
+    .mel-page * { box-sizing: border-box; }
+
+    /* ── HERO ── */
     .mel-hero {
+      position: relative;
       text-align: center;
-      padding: 4rem 1.5rem 3rem;
-      background: linear-gradient(135deg, var(--bg-card) 0%, var(--bg-card-2) 100%);
-      border-bottom: 2px solid var(--border);
+      padding: 7rem 2rem 5rem;
+      background: linear-gradient(165deg, var(--mel-cream) 0%, var(--mel-warm) 50%, #fff 100%);
+      overflow: hidden;
     }
-    .mel-hero h1 { font-size: 2.4rem; margin-bottom: 0.5rem; }
-    .mel-hero .subtitle { color: var(--gray); font-size: 1.15rem; max-width: 600px; margin: 0 auto 1.5rem; }
-    .mel-hero .badge {
-      display: inline-block; padding: 0.4rem 1rem; border-radius: 20px;
-      background: var(--accent-dim); color: var(--accent); font-size: 0.85rem;
-      font-weight: 600; letter-spacing: 0.05em; margin-bottom: 1rem;
+    body.dark .mel-hero,
+    [data-theme="dark"] .mel-hero {
+      background: linear-gradient(165deg, var(--mel-cream) 0%, #111113 50%, #0A0A0A 100%);
     }
-    .mel-grid {
-      display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-      gap: 1.5rem; padding: 2rem 1.5rem; max-width: 1100px; margin: 0 auto;
+    .mel-hero::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      right: -20%;
+      width: 600px;
+      height: 600px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(0,112,60,0.06) 0%, transparent 70%);
+      pointer-events: none;
     }
-    .mel-card {
-      background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius);
-      padding: 2rem; transition: transform var(--transition), box-shadow var(--transition);
+    .mel-hero::after {
+      content: '';
+      position: absolute;
+      bottom: -30%;
+      left: -10%;
+      width: 400px;
+      height: 400px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(0,112,60,0.04) 0%, transparent 70%);
+      pointer-events: none;
     }
-    .mel-card:hover { transform: translateY(-3px); box-shadow: 0 8px 24px rgba(0,0,0,0.08); }
-    .mel-card .icon { font-size: 2.2rem; margin-bottom: 0.8rem; }
-    .mel-card h3 { margin: 0 0 0.5rem; font-size: 1.2rem; }
-    .mel-card p { color: var(--gray); font-size: 0.95rem; line-height: 1.6; margin-bottom: 1rem; }
-    .mel-card .btn-resource {
-      display: inline-block; padding: 0.5rem 1.2rem; border-radius: 6px;
-      background: var(--accent); color: #fff; text-decoration: none;
-      font-size: 0.9rem; font-weight: 600; transition: opacity var(--transition);
+    .mel-hero-content {
+      position: relative;
+      z-index: 1;
+      max-width: 720px;
+      margin: 0 auto;
     }
-    .mel-card .btn-resource:hover { opacity: 0.85; }
-    .mel-section { max-width: 1100px; margin: 0 auto; padding: 2rem 1.5rem; }
-    .mel-section h2 { font-size: 1.8rem; margin-bottom: 1rem; text-align: center; }
-    .mel-section .divider { width: 60px; height: 3px; background: var(--accent); margin: 0 auto 2rem; border-radius: 2px; }
-    .mel-why { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1.5rem; margin-top: 1.5rem; }
-    .mel-why-item { text-align: center; padding: 1.5rem; }
-    .mel-why-item .num { font-size: 2rem; font-weight: 700; color: var(--accent); }
-    .mel-why-item h4 { margin: 0.5rem 0; }
-    .mel-why-item p { color: var(--gray); font-size: 0.9rem; }
-    .mel-cta {
-      text-align: center; padding: 3rem 1.5rem; margin: 2rem 0;
-      background: var(--bg-card); border-radius: var(--radius);
+    .mel-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.5rem 1.25rem;
+      border-radius: 100px;
+      background: var(--mel-green-dim);
+      color: var(--mel-green);
+      font-size: 0.8rem;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-bottom: 1.5rem;
     }
-    .mel-cta h2 { margin-bottom: 0.5rem; }
-    .mel-cta p { color: var(--gray); margin-bottom: 1.5rem; max-width: 500px; margin-left: auto; margin-right: auto; }
-    .mel-cta .btn-primary { font-size: 1.1rem; padding: 0.8rem 2rem; }
-    .mel-products { list-style: none; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; }
-    .mel-products li {
-      background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius);
-      padding: 1.2rem; text-align: center;
+    .mel-hero h1 {
+      font-size: 3.2rem;
+      font-weight: 800;
+      line-height: 1.1;
+      color: var(--mel-text);
+      margin-bottom: 1rem;
+      letter-spacing: -0.02em;
     }
-    .mel-products li strong { display: block; margin-bottom: 0.3rem; }
-    .mel-products li span { color: var(--gray); font-size: 0.85rem; }
-    .mel-faq details { border-bottom: 1px solid var(--border); padding: 1rem 0; }
-    .mel-faq summary { cursor: pointer; font-weight: 600; font-size: 1.05rem; }
-    .mel-faq details p { color: var(--gray); margin: 0.8rem 0 0; line-height: 1.6; }
+    .mel-hero h1 .green { color: var(--mel-green); }
+    .mel-hero .subtitle {
+      color: var(--mel-text-light);
+      font-size: 1.15rem;
+      line-height: 1.7;
+      max-width: 560px;
+      margin: 0 auto 2rem;
+      font-weight: 400;
+    }
+    .mel-hero-cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.9rem 2rem;
+      border-radius: 100px;
+      background: var(--mel-green);
+      color: #fff;
+      font-size: 1rem;
+      font-weight: 600;
+      text-decoration: none;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 14px rgba(0,112,60,0.3);
+    }
+    .mel-hero-cta:hover {
+      background: var(--mel-green-light);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(0,112,60,0.35);
+      color: #fff;
+    }
+
+    /* ── SECTION COMMON ── */
+    .mel-section {
+      max-width: 1140px;
+      margin: 0 auto;
+      padding: 5rem 2rem;
+    }
+    .mel-section-header {
+      text-align: center;
+      margin-bottom: 3rem;
+    }
+    .mel-section-header h2 {
+      font-size: 2.2rem;
+      font-weight: 700;
+      color: var(--mel-text);
+      margin-bottom: 0.75rem;
+      letter-spacing: -0.01em;
+    }
+    .mel-section-header p {
+      color: var(--mel-text-light);
+      font-size: 1.05rem;
+      max-width: 600px;
+      margin: 0 auto;
+      line-height: 1.7;
+    }
+    .mel-accent-line {
+      width: 48px;
+      height: 3px;
+      background: var(--mel-green);
+      border-radius: 3px;
+      margin: 0 auto 1rem;
+    }
+
+    /* ── WHY MELALEUCA ── */
+    .mel-why-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1.5rem;
+    }
+    .mel-why-card {
+      text-align: center;
+      padding: 2.5rem 1.5rem;
+      border-radius: var(--mel-radius);
+      background: var(--mel-warm);
+      border: 1px solid var(--mel-border);
+      transition: all 0.3s ease;
+    }
+    body.dark .mel-why-card,
+    [data-theme="dark"] .mel-why-card {
+      background: #141416;
+    }
+    .mel-why-card:hover {
+      transform: translateY(-4px);
+      box-shadow: var(--mel-shadow-lg);
+      border-color: rgba(0,112,60,0.2);
+    }
+    .mel-why-icon {
+      width: 56px;
+      height: 56px;
+      border-radius: 14px;
+      background: var(--mel-green-dim);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+      margin: 0 auto 1.25rem;
+    }
+    .mel-why-card h4 {
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: var(--mel-text);
+      margin-bottom: 0.5rem;
+    }
+    .mel-why-card p {
+      color: var(--mel-text-light);
+      font-size: 0.9rem;
+      line-height: 1.6;
+    }
+
+    /* ── RESOURCES ── */
+    .mel-bg-alt {
+      background: var(--mel-cream);
+    }
+    body.dark .mel-bg-alt,
+    [data-theme="dark"] .mel-bg-alt {
+      background: #0D1A12;
+    }
+    .mel-resources-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1.5rem;
+    }
+    .mel-resource-card {
+      display: flex;
+      gap: 1.25rem;
+      padding: 2rem;
+      border-radius: var(--mel-radius);
+      background: #fff;
+      border: 1px solid var(--mel-border);
+      transition: all 0.3s ease;
+      text-decoration: none;
+      color: inherit;
+    }
+    body.dark .mel-resource-card,
+    [data-theme="dark"] .mel-resource-card {
+      background: #141416;
+    }
+    .mel-resource-card:hover {
+      transform: translateY(-3px);
+      box-shadow: var(--mel-shadow-lg);
+      border-color: rgba(0,112,60,0.2);
+      color: inherit;
+    }
+    .mel-resource-icon {
+      flex-shrink: 0;
+      width: 48px;
+      height: 48px;
+      border-radius: 12px;
+      background: var(--mel-green-dim);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.3rem;
+    }
+    .mel-resource-card h3 {
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: var(--mel-text);
+      margin-bottom: 0.4rem;
+    }
+    .mel-resource-card p {
+      color: var(--mel-text-light);
+      font-size: 0.9rem;
+      line-height: 1.6;
+      margin-bottom: 0.75rem;
+    }
+    .mel-resource-link {
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--mel-green);
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+    }
+
+    /* ── COST COMPARISON ── */
+    .mel-savings-total {
+      text-align: center;
+      margin-bottom: 3rem;
+    }
+    .mel-savings-total .amount {
+      font-size: 3.5rem;
+      font-weight: 800;
+      color: var(--mel-green);
+      display: block;
+      letter-spacing: -0.02em;
+    }
+    .mel-savings-total .label {
+      color: var(--mel-text-light);
+      font-size: 1rem;
+      margin-top: 0.25rem;
+    }
+    .mel-compare-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 1rem;
+    }
+    .mel-compare-card {
+      text-align: center;
+      padding: 2rem 1rem;
+      border-radius: var(--mel-radius);
+      background: var(--mel-warm);
+      border: 1px solid var(--mel-border);
+      transition: all 0.3s ease;
+    }
+    body.dark .mel-compare-card,
+    [data-theme="dark"] .mel-compare-card {
+      background: #141416;
+    }
+    .mel-compare-card:hover {
+      transform: translateY(-3px);
+      box-shadow: var(--mel-shadow-lg);
+    }
+    .mel-compare-icon {
+      font-size: 2rem;
+      margin-bottom: 0.75rem;
+    }
+    .mel-compare-card h4 {
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: var(--mel-text);
+      margin-bottom: 0.35rem;
+    }
+    .mel-compare-card .desc {
+      color: var(--mel-text-light);
+      font-size: 0.8rem;
+      margin-bottom: 1rem;
+      line-height: 1.5;
+    }
+    .mel-compare-save {
+      display: inline-block;
+      padding: 0.4rem 1rem;
+      border-radius: 100px;
+      background: var(--mel-green-dim);
+      color: var(--mel-green);
+      font-size: 1.1rem;
+      font-weight: 700;
+    }
+    .mel-compare-detail {
+      color: var(--mel-text-light);
+      font-size: 0.75rem;
+      margin-top: 0.5rem;
+    }
+    .mel-spreadsheet-link {
+      text-align: center;
+      margin-top: 2rem;
+    }
+    .mel-spreadsheet-link a {
+      color: var(--mel-green);
+      font-weight: 600;
+      font-size: 0.9rem;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.6rem 1.5rem;
+      border: 1px solid var(--mel-green);
+      border-radius: 100px;
+      transition: all 0.3s ease;
+    }
+    .mel-spreadsheet-link a:hover {
+      background: var(--mel-green);
+      color: #fff;
+    }
+
+    /* ── PRODUCTS ── */
+    .mel-products-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1.25rem;
+    }
+    .mel-product-card {
+      display: flex;
+      flex-direction: column;
+      padding: 2rem 1.5rem;
+      border-radius: var(--mel-radius);
+      background: #fff;
+      border: 1px solid var(--mel-border);
+      text-align: center;
+      text-decoration: none;
+      color: inherit;
+      transition: all 0.3s ease;
+    }
+    body.dark .mel-product-card,
+    [data-theme="dark"] .mel-product-card {
+      background: #141416;
+    }
+    .mel-product-card:hover {
+      transform: translateY(-4px);
+      box-shadow: var(--mel-shadow-lg);
+      border-color: rgba(0,112,60,0.25);
+      color: inherit;
+    }
+    .mel-product-emoji {
+      font-size: 2.5rem;
+      margin-bottom: 1rem;
+    }
+    .mel-product-card h4 {
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--mel-text);
+      margin-bottom: 0.4rem;
+    }
+    .mel-product-card .desc {
+      color: var(--mel-text-light);
+      font-size: 0.85rem;
+      line-height: 1.5;
+      flex: 1;
+    }
+    .mel-product-card .price {
+      margin-top: 1rem;
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--mel-green);
+    }
+    .mel-products-note {
+      text-align: center;
+      margin-top: 2rem;
+      color: var(--mel-text-light);
+      font-size: 0.85rem;
+    }
+    .mel-products-note a {
+      color: var(--mel-green);
+      font-weight: 600;
+      text-decoration: none;
+    }
+    .mel-products-note a:hover { text-decoration: underline; }
+
+    /* ── FAQ ── */
+    .mel-faq-list {
+      max-width: 760px;
+      margin: 0 auto;
+    }
+    .mel-faq-item {
+      border-bottom: 1px solid var(--mel-border);
+    }
+    .mel-faq-item summary {
+      cursor: pointer;
+      padding: 1.25rem 0;
+      font-weight: 600;
+      font-size: 1.05rem;
+      color: var(--mel-text);
+      list-style: none;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      transition: color 0.2s ease;
+    }
+    .mel-faq-item summary::-webkit-details-marker { display: none; }
+    .mel-faq-item summary::after {
+      content: '+';
+      font-size: 1.4rem;
+      font-weight: 300;
+      color: var(--mel-green);
+      flex-shrink: 0;
+      transition: transform 0.3s ease;
+    }
+    .mel-faq-item[open] summary::after {
+      content: '−';
+    }
+    .mel-faq-item summary:hover { color: var(--mel-green); }
+    .mel-faq-item p {
+      color: var(--mel-text-light);
+      line-height: 1.7;
+      padding: 0 0 1.25rem;
+      font-size: 0.95rem;
+    }
+
+    /* ── CTA ── */
+    .mel-final-cta {
+      text-align: center;
+      padding: 5rem 2rem;
+      background: linear-gradient(165deg, var(--mel-cream) 0%, var(--mel-warm) 100%);
+      position: relative;
+      overflow: hidden;
+    }
+    body.dark .mel-final-cta,
+    [data-theme="dark"] .mel-final-cta {
+      background: linear-gradient(165deg, #0D1A12 0%, #111113 100%);
+    }
+    .mel-final-cta::before {
+      content: '';
+      position: absolute;
+      top: -40%;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 800px;
+      height: 800px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(0,112,60,0.05) 0%, transparent 60%);
+      pointer-events: none;
+    }
+    .mel-final-cta-content {
+      position: relative;
+      z-index: 1;
+      max-width: 540px;
+      margin: 0 auto;
+    }
+    .mel-final-cta h2 {
+      font-size: 2.2rem;
+      font-weight: 700;
+      color: var(--mel-text);
+      margin-bottom: 0.75rem;
+    }
+    .mel-final-cta p {
+      color: var(--mel-text-light);
+      font-size: 1.05rem;
+      line-height: 1.7;
+      margin-bottom: 2rem;
+    }
+
+    /* ── FOOTER ── */
+    .mel-footer {
+      text-align: center;
+      padding: 2.5rem 2rem;
+      color: var(--mel-text-light);
+      font-size: 0.85rem;
+      border-top: 1px solid var(--mel-border);
+    }
+    .mel-footer a { color: var(--mel-text-light); text-decoration: none; }
+    .mel-footer a:hover { color: var(--mel-green); }
+    .mel-footer .disclaimer {
+      margin-top: 0.5rem;
+      font-size: 0.8rem;
+      opacity: 0.7;
+    }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 1024px) {
+      .mel-why-grid { grid-template-columns: repeat(2, 1fr); }
+      .mel-compare-grid { grid-template-columns: repeat(3, 1fr); }
+      .mel-products-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 768px) {
+      .mel-hero { padding: 6rem 1.5rem 3.5rem; }
+      .mel-hero h1 { font-size: 2.2rem; }
+      .mel-hero .subtitle { font-size: 1rem; }
+      .mel-section { padding: 3.5rem 1.5rem; }
+      .mel-section-header h2 { font-size: 1.7rem; }
+      .mel-resources-grid { grid-template-columns: 1fr; }
+      .mel-compare-grid { grid-template-columns: repeat(2, 1fr); }
+      .mel-savings-total .amount { font-size: 2.5rem; }
+      .mel-final-cta { padding: 3.5rem 1.5rem; }
+      .mel-final-cta h2 { font-size: 1.7rem; }
+    }
+    @media (max-width: 480px) {
+      .mel-hero { padding: 5.5rem 1.25rem 3rem; }
+      .mel-hero h1 { font-size: 1.8rem; }
+      .mel-why-grid { grid-template-columns: 1fr; }
+      .mel-compare-grid { grid-template-columns: 1fr; }
+      .mel-products-grid { grid-template-columns: 1fr; }
+      .mel-section { padding: 3rem 1.25rem; }
+    }
   </style>
 </head>
 <body>
 
-<!-- ── NAV ── -->
+<!-- ── NAV (consistent with main site) ── -->
 <nav>
   <a href="/" class="nav-brand" style="text-decoration:none">
     <img src="../assets/img/logo.png" alt="U.S.M.C. Ministries" style="object-fit:contain">
@@ -96,183 +591,266 @@
   </button>
 </nav>
 
-<!-- ── HERO ── -->
-<section class="mel-hero">
-  <div class="badge">🌿 WELLNESS PARTNER</div>
-  <h1>Better Products.<br><span class="gold">Better Lives.</span></h1>
-  <p class="subtitle">
-    We've partnered with Melaleuca — The Wellness Company — to bring you safer, more effective products 
-    for your home, health, and family. No inventory. No pressure. Just better choices.
-  </p>
-</section>
+<div class="mel-page">
 
-<!-- ── WHY MELALEUCA ── -->
-<section class="mel-section">
-  <h2>Why We Recommend Melaleuca</h2>
-  <div class="divider"></div>
-  <div class="mel-why">
-    <div class="mel-why-item">
-      <div class="num">🇺🇸</div>
-      <h4>Made in the USA</h4>
-      <p>Products proudly manufactured in American facilities with rigorous quality standards.</p>
+  <!-- ── HERO ── -->
+  <section class="mel-hero">
+    <div class="mel-hero-content">
+      <div class="mel-badge">🌿 Wellness Partner</div>
+      <h1>Better Products.<br><span class="green">Better Lives.</span></h1>
+      <p class="subtitle">
+        We've partnered with Melaleuca — The Wellness Company — to bring you safer, more effective products 
+        for your home, health, and family. No inventory. No pressure. Just better choices.
+      </p>
+      <a href="mailto:adam.l.johns@gmail.com?subject=Melaleuca%20—%20I'm%20Interested&body=Hey%20Adam%2C%0A%0AI'm%20interested%20in%20learning%20more%20about%20Melaleuca.%20Let's%20set%20up%20a%20quick%20call!" class="mel-hero-cta">
+        Get Started →
+      </a>
     </div>
-    <div class="mel-why-item">
-      <div class="num">🧪</div>
-      <h4>Science-Backed</h4>
-      <p>Research-driven formulas including a landmark lung health study proving real results.</p>
-    </div>
-    <div class="mel-why-item">
-      <div class="num">🏠</div>
-      <h4>Non-Toxic Home</h4>
-      <p>Cleaning and personal care products that are safer for your family — without sacrificing effectiveness.</p>
-    </div>
-    <div class="mel-why-item">
-      <div class="num">💰</div>
-      <h4>Save 30–50%</h4>
-      <p>Preferred Members save 30–50% off retail on every order. Better products for less than the store brands.</p>
-    </div>
-  </div>
-</section>
+  </section>
 
-<!-- ── RESOURCES ── -->
-<section class="mel-section">
-  <h2>Resources & Downloads</h2>
-  <div class="divider"></div>
-  <div class="mel-grid">
-    <div class="mel-card">
-      <div class="icon">🇺🇸</div>
-      <h3>Proudly Made in the USA</h3>
-      <p>Learn how Melaleuca manufactures products right here in America with the highest quality standards.</p>
-      <a href="https://digital-library.media/public/share/en_B737F" target="_blank" class="btn-resource">Read Article →</a>
+  <!-- ── WHY MELALEUCA ── -->
+  <section class="mel-section">
+    <div class="mel-section-header">
+      <div class="mel-accent-line"></div>
+      <h2>Why We Recommend Melaleuca</h2>
+      <p>Trusted by over a million families for safer, science-backed wellness products.</p>
     </div>
-    <div class="mel-card">
-      <div class="icon">🫁</div>
-      <h3>The Lung Health Study</h3>
-      <p>Groundbreaking research showing the impact of switching from toxic cleaning products to Melaleuca's safer alternatives.</p>
-      <a href="https://digital-library.media/public/share/en_2RAJU" target="_blank" class="btn-resource">View Study →</a>
+    <div class="mel-why-grid">
+      <div class="mel-why-card">
+        <div class="mel-why-icon">🇺🇸</div>
+        <h4>Made in the USA</h4>
+        <p>Products proudly manufactured in American facilities with rigorous quality standards.</p>
+      </div>
+      <div class="mel-why-card">
+        <div class="mel-why-icon">🧪</div>
+        <h4>Science-Backed</h4>
+        <p>Research-driven formulas including a landmark lung health study proving real results.</p>
+      </div>
+      <div class="mel-why-card">
+        <div class="mel-why-icon">🏠</div>
+        <h4>Non-Toxic Home</h4>
+        <p>Cleaning and personal care products that are safer for your family — without sacrificing effectiveness.</p>
+      </div>
+      <div class="mel-why-card">
+        <div class="mel-why-icon">💰</div>
+        <h4>Save 30–50%</h4>
+        <p>Preferred Members save 30–50% off retail on every order. Better products for less than store brands.</p>
+      </div>
     </div>
-    <div class="mel-card">
-      <div class="icon">⭐</div>
-      <h3>10 Essential Products</h3>
-      <p>The top 10 products every household should switch to first. A quick visual guide to getting started.</p>
-      <a href="https://digital-library.media/public/share/en_8BGGy" target="_blank" class="btn-resource">View Guide →</a>
-    </div>
-    <div class="mel-card">
-      <div class="icon">🎬</div>
-      <h3>Tour of the Store</h3>
-      <p>Take a virtual walk through Melaleuca's product catalog. See everything available to Preferred Members.</p>
-      <a href="https://vimeo.com/1068216353/2845bc7407" target="_blank" class="btn-resource">Watch Video →</a>
-    </div>
-  </div>
-</section>
+  </section>
 
-<!-- ── COST COMPARISON ── -->
-<section class="mel-section">
-  <h2>The Real Numbers: Melaleuca vs. Store Brands</h2>
-  <div class="divider"></div>
-  <p style="text-align:center;color:var(--gray);max-width:650px;margin:0 auto 2rem;">We compared 60+ products across 5 categories. The savings speak for themselves — <strong>$292 saved</strong> by switching to Melaleuca.</p>
-  
-  <div class="mel-grid" style="grid-template-columns:repeat(auto-fit,minmax(200px,1fr))">
-    <div class="mel-card" style="text-align:center">
-      <div class="icon">🧴</div>
-      <h3>Personal Care</h3>
-      <p>Shampoo, body wash, lotion, sunscreen</p>
-      <div style="font-size:1.6rem;font-weight:700;color:#27ae60">Save $43</div>
-      <span style="color:var(--gray);font-size:0.8rem">$128 vs $172 store brands</span>
+  <!-- ── RESOURCES ── -->
+  <section class="mel-bg-alt">
+    <div class="mel-section" style="padding-top:5rem;padding-bottom:5rem;">
+      <div class="mel-section-header">
+        <div class="mel-accent-line"></div>
+        <h2>Resources & Downloads</h2>
+        <p>Learn more about what makes Melaleuca different — from independent research to product guides.</p>
+      </div>
+      <div class="mel-resources-grid">
+        <a href="https://digital-library.media/public/share/en_B737F" target="_blank" class="mel-resource-card">
+          <div class="mel-resource-icon">🇺🇸</div>
+          <div>
+            <h3>Proudly Made in the USA</h3>
+            <p>Learn how Melaleuca manufactures products right here in America with the highest quality standards.</p>
+            <span class="mel-resource-link">Read Article →</span>
+          </div>
+        </a>
+        <a href="https://digital-library.media/public/share/en_2RAJU" target="_blank" class="mel-resource-card">
+          <div class="mel-resource-icon">🫁</div>
+          <div>
+            <h3>The Lung Health Study</h3>
+            <p>Groundbreaking research showing the impact of switching from toxic cleaning products to safer alternatives.</p>
+            <span class="mel-resource-link">View Study →</span>
+          </div>
+        </a>
+        <a href="https://digital-library.media/public/share/en_8BGGy" target="_blank" class="mel-resource-card">
+          <div class="mel-resource-icon">⭐</div>
+          <div>
+            <h3>10 Essential Products</h3>
+            <p>The top 10 products every household should switch to first. A quick visual guide to getting started.</p>
+            <span class="mel-resource-link">View Guide →</span>
+          </div>
+        </a>
+        <a href="https://vimeo.com/1068216353/2845bc7407" target="_blank" class="mel-resource-card">
+          <div class="mel-resource-icon">🎬</div>
+          <div>
+            <h3>Tour of the Store</h3>
+            <p>Take a virtual walk through Melaleuca's product catalog. See everything available to Preferred Members.</p>
+            <span class="mel-resource-link">Watch Video →</span>
+          </div>
+        </a>
+      </div>
     </div>
-    <div class="mel-card" style="text-align:center">
-      <div class="icon">👕</div>
-      <h3>Laundry</h3>
-      <p>Detergent, softener, stain remover</p>
-      <div style="font-size:1.6rem;font-weight:700;color:#27ae60">Save $19</div>
-      <span style="color:var(--gray);font-size:0.8rem">$76 vs $95 store brands</span>
-    </div>
-    <div class="mel-card" style="text-align:center">
-      <div class="icon">🏠</div>
-      <h3>Household Cleaning</h3>
-      <p>Kitchen, bathroom, floors, glass</p>
-      <div style="font-size:1.6rem;font-weight:700;color:#27ae60">Save $31</div>
-      <span style="color:var(--gray);font-size:0.8rem">$120 vs $152 store brands</span>
-    </div>
-    <div class="mel-card" style="text-align:center">
-      <div class="icon">💪</div>
-      <h3>Sports Nutrition</h3>
-      <p>Protein, pre-workout, creatine, collagen</p>
-      <div style="font-size:1.6rem;font-weight:700;color:#27ae60">Save $85</div>
-      <span style="color:var(--gray);font-size:0.8rem">$315 vs $400 store brands</span>
-    </div>
-    <div class="mel-card" style="text-align:center">
-      <div class="icon">💊</div>
-      <h3>Supplements</h3>
-      <p>Vitamins, minerals, probiotics, sleep</p>
-      <div style="font-size:1.6rem;font-weight:700;color:#27ae60">Save $113</div>
-      <span style="color:var(--gray);font-size:0.8rem">$378 vs $491 store brands</span>
-    </div>
-  </div>
-  <p style="text-align:center;margin-top:1.5rem;font-size:0.85rem;color:var(--gray)">
-    <a href="https://docs.google.com/spreadsheets/d/14WOPq62D0rzBmikUu9QbPk97y7b6XDWnjZXfoeluSwE/edit" target="_blank" style="color:var(--accent)">📊 View Full Comparison Spreadsheet</a>
-  </p>
-</section>
+  </section>
 
-<!-- ── TOP PRODUCTS ── -->
-<section class="mel-section">
-  <h2>Products We Use & Recommend</h2>
-  <div class="divider"></div>
-  <ul class="mel-products">
-    <li><a href="https://www.melaleuca.com/ProductStore/Product?sku=7598" target="_blank" style="text-decoration:none;color:inherit"><strong>Peak Performance Pack</strong><span>Daily vitamins + amino acids for active men — $133.99</span></a></li>
-    <li><a href="https://www.melaleuca.com/ProductStore/Product?sku=7430" target="_blank" style="text-decoration:none;color:inherit"><strong>Proflex20 Protein</strong><span>Clean whey protein 30g/serving — $32.24</span></a></li>
-    <li><a href="https://www.melaleuca.com/ProductStore/Product?sku=1830" target="_blank" style="text-decoration:none;color:inherit"><strong>FiberWise</strong><span>Gut health & digestive support — $23.99</span></a></li>
-    <li><a href="https://www.melaleuca.com/ProductStore/Product?sku=7370" target="_blank" style="text-decoration:none;color:inherit"><strong>Access Bars</strong><span>Pre-workout energy bars — $15.69</span></a></li>
-    <li><a href="https://www.melaleuca.com/ProductStore/Product?sku=8880" target="_blank" style="text-decoration:none;color:inherit"><strong>GC Control Shake</strong><span>Blood sugar support + weight management</span></a></li>
-    <li><a href="https://www.melaleuca.com/ProductStore/Category?categoryId=702" target="_blank" style="text-decoration:none;color:inherit"><strong>EcoSense Cleaners</strong><span>Non-toxic home cleaning — $4–$13/ea</span></a></li>
-    <li><a href="https://www.melaleuca.com/ProductStore/Product?sku=5030" target="_blank" style="text-decoration:none;color:inherit"><strong>Renew Lotion</strong><span>Intensive moisturizer — $14.99</span></a></li>
-    <li><a href="https://www.melaleuca.com/ProductStore/Product?sku=7640" target="_blank" style="text-decoration:none;color:inherit"><strong>Sustain Sport</strong><span>Electrolyte hydration — $12.99</span></a></li>
-  </ul>
-  <p style="text-align:center;margin-top:1rem;font-size:0.85rem;color:var(--gray)">Prices shown are Preferred Member prices. <a href="https://www.melaleuca.com/ProductStore" target="_blank" style="color:var(--accent)">Browse all products →</a></p>
-</section>
+  <!-- ── COST COMPARISON ── -->
+  <section class="mel-section">
+    <div class="mel-section-header">
+      <div class="mel-accent-line"></div>
+      <h2>The Real Numbers</h2>
+      <p>We compared 60+ products across 5 categories. The savings speak for themselves.</p>
+    </div>
+    <div class="mel-savings-total">
+      <span class="amount">$292</span>
+      <span class="label">Total annual savings by switching to Melaleuca</span>
+    </div>
+    <div class="mel-compare-grid">
+      <div class="mel-compare-card">
+        <div class="mel-compare-icon">🧴</div>
+        <h4>Personal Care</h4>
+        <p class="desc">Shampoo, body wash, lotion, sunscreen</p>
+        <div class="mel-compare-save">Save $43</div>
+        <p class="mel-compare-detail">$128 vs $172 store brands</p>
+      </div>
+      <div class="mel-compare-card">
+        <div class="mel-compare-icon">👕</div>
+        <h4>Laundry</h4>
+        <p class="desc">Detergent, softener, stain remover</p>
+        <div class="mel-compare-save">Save $19</div>
+        <p class="mel-compare-detail">$76 vs $95 store brands</p>
+      </div>
+      <div class="mel-compare-card">
+        <div class="mel-compare-icon">🏠</div>
+        <h4>Household</h4>
+        <p class="desc">Kitchen, bathroom, floors, glass</p>
+        <div class="mel-compare-save">Save $31</div>
+        <p class="mel-compare-detail">$120 vs $152 store brands</p>
+      </div>
+      <div class="mel-compare-card">
+        <div class="mel-compare-icon">💪</div>
+        <h4>Sports Nutrition</h4>
+        <p class="desc">Protein, pre-workout, creatine, collagen</p>
+        <div class="mel-compare-save">Save $85</div>
+        <p class="mel-compare-detail">$315 vs $400 store brands</p>
+      </div>
+      <div class="mel-compare-card">
+        <div class="mel-compare-icon">💊</div>
+        <h4>Supplements</h4>
+        <p class="desc">Vitamins, minerals, probiotics, sleep</p>
+        <div class="mel-compare-save">Save $113</div>
+        <p class="mel-compare-detail">$378 vs $491 store brands</p>
+      </div>
+    </div>
+    <div class="mel-spreadsheet-link">
+      <a href="https://docs.google.com/spreadsheets/d/14WOPq62D0rzBmikUu9QbPk97y7b6XDWnjZXfoeluSwE/edit" target="_blank">
+        📊 View Full Comparison Spreadsheet
+      </a>
+    </div>
+  </section>
 
-<!-- ── FAQ ── -->
-<section class="mel-section">
-  <h2>Common Questions</h2>
-  <div class="divider"></div>
-  <div class="mel-faq">
-    <details>
-      <summary>Is this an MLM?</summary>
-      <p>No. Melaleuca is a Consumer Direct Marketing company — validated by the Better Business Bureau and independent economists. You don't buy inventory, recruit downlines, or resell products. You simply refer people to great products, and they buy direct from Melaleuca. You earn a commission on their ongoing purchases.</p>
-    </details>
-    <details>
-      <summary>How much does it cost to join?</summary>
-      <p>There's a small one-time enrollment fee (around $19–29). After that, Preferred Members commit to ordering at least 35 product points per month (roughly $55–75) — but you'd spend that at Target or Amazon on the same types of products anyway. The difference is these are safer, more effective, and often cheaper.</p>
-    </details>
-    <details>
-      <summary>What's the monthly commitment?</summary>
-      <p>35 product points minimum per month. That's about the equivalent of a few cleaning products, a bottle of vitamins, and some personal care items. Most families easily hit this by just swapping out what they already buy.</p>
-    </details>
-    <details>
-      <summary>Can I cancel anytime?</summary>
-      <p>Yes. There's no contract. If you decide it's not for you, you can cancel your membership. No penalties, no pressure.</p>
-    </details>
-    <details>
-      <summary>How is this connected to U.S.M.C. Ministries?</summary>
-      <p>Adam Johns (founder of U.S.M.C. Ministries) personally uses and recommends Melaleuca products for his family and in his Airbnb hospitality business. This isn't a ministry program — it's a personal recommendation from someone who believes in stewardship of health, home, and finances.</p>
-    </details>
-  </div>
-</section>
+  <!-- ── PRODUCTS ── -->
+  <section class="mel-bg-alt">
+    <div class="mel-section" style="padding-top:5rem;padding-bottom:5rem;">
+      <div class="mel-section-header">
+        <div class="mel-accent-line"></div>
+        <h2>Products We Use & Recommend</h2>
+        <p>These are the products our family uses daily. Real recommendations — not sponsored picks.</p>
+      </div>
+      <div class="mel-products-grid">
+        <a href="https://www.melaleuca.com/ProductStore/Product?sku=7598" target="_blank" class="mel-product-card">
+          <div class="mel-product-emoji">💊</div>
+          <h4>Peak Performance Pack</h4>
+          <p class="desc">Daily vitamins + amino acids for active men</p>
+          <div class="price">$133.99</div>
+        </a>
+        <a href="https://www.melaleuca.com/ProductStore/Product?sku=7430" target="_blank" class="mel-product-card">
+          <div class="mel-product-emoji">🥤</div>
+          <h4>Proflex20 Protein</h4>
+          <p class="desc">Clean whey protein, 30g per serving</p>
+          <div class="price">$32.24</div>
+        </a>
+        <a href="https://www.melaleuca.com/ProductStore/Product?sku=1830" target="_blank" class="mel-product-card">
+          <div class="mel-product-emoji">🌿</div>
+          <h4>FiberWise</h4>
+          <p class="desc">Gut health & digestive support</p>
+          <div class="price">$23.99</div>
+        </a>
+        <a href="https://www.melaleuca.com/ProductStore/Product?sku=7370" target="_blank" class="mel-product-card">
+          <div class="mel-product-emoji">⚡</div>
+          <h4>Access Bars</h4>
+          <p class="desc">Pre-workout energy bars</p>
+          <div class="price">$15.69</div>
+        </a>
+        <a href="https://www.melaleuca.com/ProductStore/Product?sku=8880" target="_blank" class="mel-product-card">
+          <div class="mel-product-emoji">🥛</div>
+          <h4>GC Control Shake</h4>
+          <p class="desc">Blood sugar support + weight management</p>
+          <div class="price">—</div>
+        </a>
+        <a href="https://www.melaleuca.com/ProductStore/Category?categoryId=702" target="_blank" class="mel-product-card">
+          <div class="mel-product-emoji">🧹</div>
+          <h4>EcoSense Cleaners</h4>
+          <p class="desc">Non-toxic home cleaning products</p>
+          <div class="price">$4–$13</div>
+        </a>
+        <a href="https://www.melaleuca.com/ProductStore/Product?sku=5030" target="_blank" class="mel-product-card">
+          <div class="mel-product-emoji">🧴</div>
+          <h4>Renew Lotion</h4>
+          <p class="desc">Intensive moisturizer for daily use</p>
+          <div class="price">$14.99</div>
+        </a>
+        <a href="https://www.melaleuca.com/ProductStore/Product?sku=7640" target="_blank" class="mel-product-card">
+          <div class="mel-product-emoji">💧</div>
+          <h4>Sustain Sport</h4>
+          <p class="desc">Electrolyte hydration</p>
+          <div class="price">$12.99</div>
+        </a>
+      </div>
+      <p class="mel-products-note">
+        Prices shown are Preferred Member prices. <a href="https://www.melaleuca.com/ProductStore" target="_blank">Browse all products →</a>
+      </p>
+    </div>
+  </section>
 
-<!-- ── CTA ── -->
-<section class="mel-section">
-  <div class="mel-cta">
-    <h2>Ready to Make the Switch?</h2>
-    <p>I'd love to walk you through it personally. No pressure — just a 10-minute conversation about what products would make sense for your household.</p>
-    <a href="mailto:adam.l.johns@gmail.com?subject=Melaleuca%20—%20I'm%20Interested&body=Hey%20Adam%2C%0A%0AI'm%20interested%20in%20learning%20more%20about%20Melaleuca.%20Let's%20set%20up%20a%20quick%20call!" class="btn btn-primary">📧 Let's Talk</a>
-  </div>
-</section>
+  <!-- ── FAQ ── -->
+  <section class="mel-section">
+    <div class="mel-section-header">
+      <div class="mel-accent-line"></div>
+      <h2>Common Questions</h2>
+    </div>
+    <div class="mel-faq-list">
+      <details class="mel-faq-item">
+        <summary>Is this an MLM?</summary>
+        <p>No. Melaleuca is a Consumer Direct Marketing company — validated by the Better Business Bureau and independent economists. You don't buy inventory, recruit downlines, or resell products. You simply refer people to great products, and they buy direct from Melaleuca. You earn a commission on their ongoing purchases.</p>
+      </details>
+      <details class="mel-faq-item">
+        <summary>How much does it cost to join?</summary>
+        <p>There's a small one-time enrollment fee (around $19–29). After that, Preferred Members commit to ordering at least 35 product points per month (roughly $55–75) — but you'd spend that at Target or Amazon on the same types of products anyway. The difference is these are safer, more effective, and often cheaper.</p>
+      </details>
+      <details class="mel-faq-item">
+        <summary>What's the monthly commitment?</summary>
+        <p>35 product points minimum per month. That's about the equivalent of a few cleaning products, a bottle of vitamins, and some personal care items. Most families easily hit this by just swapping out what they already buy.</p>
+      </details>
+      <details class="mel-faq-item">
+        <summary>Can I cancel anytime?</summary>
+        <p>Yes. There's no contract. If you decide it's not for you, you can cancel your membership. No penalties, no pressure.</p>
+      </details>
+      <details class="mel-faq-item">
+        <summary>How is this connected to U.S.M.C. Ministries?</summary>
+        <p>Adam Johns (founder of U.S.M.C. Ministries) personally uses and recommends Melaleuca products for his family and in his Airbnb hospitality business. This isn't a ministry program — it's a personal recommendation from someone who believes in stewardship of health, home, and finances.</p>
+      </details>
+    </div>
+  </section>
 
-<!-- ── FOOTER ── -->
-<footer style="text-align:center; padding:2rem; color:var(--gray); font-size:0.85rem; border-top:1px solid var(--border);">
-  <p>© 2026 U.S.M.C. Ministries — <a href="/">Home</a> · <a href="../about.html">About</a> · <a href="../coaching.html">Coaching</a></p>
-  <p style="margin-top:0.5rem; font-size:0.8rem;">This page reflects personal product recommendations. Melaleuca® is a registered trademark of Melaleuca, Inc.</p>
-</footer>
+  <!-- ── FINAL CTA ── -->
+  <section class="mel-final-cta">
+    <div class="mel-final-cta-content">
+      <h2>Ready to Make the Switch?</h2>
+      <p>I'd love to walk you through it personally. No pressure — just a 10-minute conversation about what products would make sense for your household.</p>
+      <a href="mailto:adam.l.johns@gmail.com?subject=Melaleuca%20—%20I'm%20Interested&body=Hey%20Adam%2C%0A%0AI'm%20interested%20in%20learning%20more%20about%20Melaleuca.%20Let's%20set%20up%20a%20quick%20call!" class="mel-hero-cta">
+        📧 Let's Talk
+      </a>
+    </div>
+  </section>
+
+  <!-- ── FOOTER ── -->
+  <footer class="mel-footer">
+    <p>© 2026 U.S.M.C. Ministries — <a href="/">Home</a> · <a href="../about.html">About</a> · <a href="../coaching.html">Coaching</a></p>
+    <p class="disclaimer">This page reflects personal product recommendations. Melaleuca® is a registered trademark of Melaleuca, Inc.</p>
+  </footer>
+
+</div>
 
 <script>
 // Theme toggle (matches main site)

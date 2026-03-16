@@ -1,0 +1,664 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Book Direct — Bow & Arrow Studio</title>
+    <link rel="stylesheet" href="assets/style.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.css">
+    <style>
+        /* === Public Page Header === */
+        .public-hero {
+            background: var(--warm-brown);
+            background-image:
+                linear-gradient(135deg, rgba(107,74,58,0.95) 0%, rgba(196,131,90,0.85) 100%),
+                url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+            padding: 3.5rem 2rem;
+            text-align: center;
+            color: var(--blush-light);
+        }
+        .public-hero .brand-script {
+            font-family: var(--font-script);
+            font-size: 3rem;
+            color: var(--blush-light);
+            margin-bottom: 0.25rem;
+        }
+        .public-hero h1 {
+            font-family: var(--font-serif);
+            font-size: 1.8rem;
+            color: white;
+            font-weight: 500;
+            margin-bottom: 0.75rem;
+        }
+        .public-hero p {
+            font-family: var(--font-serif);
+            font-size: 1.05rem;
+            color: var(--blush-light);
+            max-width: 600px;
+            margin: 0 auto;
+            font-style: italic;
+            line-height: 1.7;
+        }
+
+        /* === Public Nav === */
+        .public-nav {
+            background: var(--warm-brown);
+            padding: 0.5rem 1.75rem;
+            display: flex;
+            gap: 0.25rem;
+            flex-wrap: wrap;
+            align-items: center;
+            border-bottom: 3px solid var(--terracotta);
+        }
+        .public-nav .brand {
+            font-family: var(--font-script);
+            color: var(--blush-light);
+            font-size: 1.5rem;
+            margin-right: auto;
+            padding-right: 1rem;
+            text-decoration: none;
+        }
+        .public-nav a {
+            color: var(--blush-light);
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            font-size: 0.7rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            transition: all 0.25s;
+            border-bottom: 2px solid transparent;
+            font-family: var(--font-sans);
+        }
+        .public-nav a:hover { color: white; border-bottom-color: var(--terracotta); }
+        .public-nav a.active { color: white; border-bottom-color: var(--terracotta); background: rgba(196,131,90,0.15); }
+
+        /* === Property Listing Cards === */
+        .listing-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2.5rem;
+        }
+        .listing-card {
+            background: var(--warm-white);
+            border-radius: 2px;
+            overflow: hidden;
+            box-shadow: 0 2px 15px rgba(61,43,34,0.08);
+            border: 1px solid var(--light-gray);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .listing-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 30px rgba(61,43,34,0.12);
+        }
+        .listing-photo {
+            height: 180px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: var(--font-serif);
+            font-size: 1.3rem;
+            color: white;
+            font-weight: 600;
+            text-align: center;
+            padding: 1rem;
+        }
+        .listing-body { padding: 1.5rem; }
+        .listing-body h3 {
+            font-family: var(--font-serif);
+            font-size: 1.2rem;
+            color: var(--warm-brown);
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            text-transform: none;
+            letter-spacing: 0;
+        }
+        .listing-specs {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            margin-bottom: 0.75rem;
+            font-size: 0.85rem;
+            color: var(--gray);
+        }
+        .listing-specs span { display: flex; align-items: center; gap: 0.3rem; }
+        .listing-price {
+            font-family: var(--font-serif);
+            font-size: 1.4rem;
+            font-weight: 600;
+            color: var(--terracotta);
+            margin-bottom: 0.25rem;
+        }
+        .listing-price small {
+            font-size: 0.75rem;
+            font-weight: 400;
+            color: var(--gray);
+        }
+        .listing-note {
+            font-size: 0.75rem;
+            color: var(--gray);
+            font-style: italic;
+            font-family: var(--font-serif);
+            margin-bottom: 1rem;
+        }
+        .listing-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+        .btn-check {
+            display: inline-block;
+            padding: 0.7rem 1.25rem;
+            background: var(--terracotta);
+            color: white;
+            border: none;
+            border-radius: 2px;
+            font-size: 0.7rem;
+            cursor: pointer;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-family: var(--font-sans);
+            transition: background 0.3s;
+            text-align: center;
+            text-decoration: none;
+        }
+        .btn-check:hover { background: var(--terracotta-dark); }
+        .airbnb-link {
+            font-size: 0.8rem;
+            color: var(--blush);
+            text-decoration: none;
+            font-family: var(--font-serif);
+            font-style: italic;
+            transition: color 0.2s;
+        }
+        .airbnb-link:hover { color: var(--terracotta); }
+
+        /* === Calendar Section === */
+        .calendar-section { margin-bottom: 2.5rem; }
+        .calendar-filter {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+            margin-bottom: 1rem;
+        }
+        .calendar-filter button {
+            padding: 0.5rem 1rem;
+            border: 1px solid var(--blush);
+            background: var(--warm-white);
+            border-radius: 2px;
+            cursor: pointer;
+            font-size: 0.7rem;
+            font-weight: 600;
+            color: var(--warm-brown);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-family: var(--font-sans);
+            transition: all 0.25s;
+        }
+        .calendar-filter button:hover, .calendar-filter button.active {
+            border-color: var(--terracotta);
+            background: var(--terracotta);
+            color: white;
+        }
+        #calendarWidget {
+            background: var(--warm-white);
+            padding: 1.25rem;
+            border-radius: 2px;
+            border: 1px solid var(--light-gray);
+        }
+        .fc .fc-toolbar-title {
+            font-family: var(--font-serif) !important;
+            font-weight: 500 !important;
+            color: var(--warm-brown) !important;
+        }
+        .fc .fc-button-primary {
+            background: var(--terracotta) !important;
+            border-color: var(--terracotta) !important;
+            font-family: var(--font-sans) !important;
+            font-size: 0.7rem !important;
+            text-transform: uppercase !important;
+            letter-spacing: 1px !important;
+        }
+        .fc .fc-button-primary:hover { background: var(--terracotta-dark) !important; }
+        .fc .fc-day-today { background: var(--linen) !important; }
+        .calendar-note {
+            margin-top: 0.75rem;
+            font-size: 0.8rem;
+            color: var(--gray);
+            font-family: var(--font-serif);
+            font-style: italic;
+        }
+
+        /* === Booking Form === */
+        .booking-form-section {
+            background: var(--warm-white);
+            padding: 2.5rem;
+            border-radius: 2px;
+            border: 1px solid var(--light-gray);
+            box-shadow: 0 2px 15px rgba(61,43,34,0.05);
+            margin-bottom: 2.5rem;
+        }
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+        @media (max-width: 600px) { .form-row { grid-template-columns: 1fr; } }
+
+        /* === Payment Section === */
+        .payment-section {
+            background: var(--linen);
+            padding: 2rem 2.5rem;
+            border-radius: 2px;
+            margin-bottom: 2.5rem;
+        }
+        .payment-methods {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+        .payment-method {
+            background: var(--warm-white);
+            padding: 1.25rem;
+            border-radius: 2px;
+            text-align: center;
+            border: 1px solid var(--light-gray);
+        }
+        .payment-method .pm-icon { font-size: 1.8rem; margin-bottom: 0.5rem; }
+        .payment-method .pm-name {
+            font-family: var(--font-sans);
+            font-weight: 700;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: var(--warm-brown);
+            margin-bottom: 0.25rem;
+        }
+        .payment-method .pm-detail {
+            font-size: 0.85rem;
+            color: var(--gray);
+            word-break: break-all;
+        }
+
+        /* === Footer === */
+        .public-footer {
+            background: var(--warm-brown);
+            color: var(--blush-light);
+            padding: 2rem;
+            text-align: center;
+            margin-top: 2rem;
+        }
+        .public-footer a {
+            color: var(--blush-light);
+            text-decoration: none;
+            margin: 0 0.75rem;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            font-family: var(--font-sans);
+            transition: color 0.2s;
+        }
+        .public-footer a:hover { color: white; }
+        .public-footer .footer-email {
+            margin-top: 0.75rem;
+            font-family: var(--font-serif);
+            font-style: italic;
+            font-size: 0.9rem;
+        }
+        .public-footer .footer-brand {
+            font-family: var(--font-script);
+            font-size: 1.5rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .container { max-width: 1200px; margin: 0 auto; padding: 2rem; }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <div class="public-nav">
+        <a href="booking.html" class="brand">Bow & Arrow</a>
+        <a href="booking.html" class="active">Book Direct</a>
+        <a href="guests.html">Guest Info</a>
+        <a href="index.html">Dashboard Login</a>
+    </div>
+
+    <!-- Hero Section -->
+    <div class="public-hero">
+        <div class="brand-script">Bow & Arrow</div>
+        <div style="width:40px;height:1px;background:var(--blush);margin:1rem auto 1.25rem"></div>
+        <h1>Book Direct &amp; Save</h1>
+        <p>Book directly with us and save. No platform fees, direct communication, and the same 5&#8209;star experience you'll find on Airbnb.</p>
+    </div>
+
+    <div class="container">
+        <!-- Properties -->
+        <h2 class="section-title">Our Properties</h2>
+        <div class="listing-grid">
+            <!-- Apt #6 -->
+            <div class="listing-card">
+                <div class="listing-photo" style="background:linear-gradient(135deg, var(--terracotta), var(--blush));">Apt&nbsp;#6<br>Spacious Apartment</div>
+                <div class="listing-body">
+                    <h3>Apt #6 — Spacious Apartment</h3>
+                    <div class="listing-specs">
+                        <span>🛏 1 Bed</span> <span>🚿 1 Bath</span> <span>👥 2 Guests</span>
+                    </div>
+                    <div class="listing-price">$85 <small>/ night</small></div>
+                    <div class="listing-actions">
+                        <a href="#calendar" class="btn-check">Check Availability</a>
+                        <a href="https://www.airbnb.com/rooms/905712759173744005" target="_blank" class="airbnb-link">Also available on Airbnb →</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Apt #7 -->
+            <div class="listing-card">
+                <div class="listing-photo" style="background:linear-gradient(135deg, var(--sage), #6B8E5A);">Apt&nbsp;#7<br>Boho-Modern</div>
+                <div class="listing-body">
+                    <h3>Apt #7 — Boho-Modern</h3>
+                    <div class="listing-specs">
+                        <span>🛏 2 Beds</span> <span>🚿 2 Baths</span> <span>👥 7 Guests</span>
+                    </div>
+                    <div class="listing-price">$116 <small>/ night</small></div>
+                    <div class="listing-actions">
+                        <a href="#calendar" class="btn-check">Check Availability</a>
+                        <a href="https://www.airbnb.com/rooms/1090646500386918123" target="_blank" class="airbnb-link">Also available on Airbnb →</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Apt #8 -->
+            <div class="listing-card">
+                <div class="listing-photo" style="background:linear-gradient(135deg, #D4885A, #E8A870);">Apt&nbsp;#8<br>Orange</div>
+                <div class="listing-body">
+                    <h3>Apt #8 — Orange</h3>
+                    <div class="listing-specs">
+                        <span>🛏 1 Bed</span> <span>🚿 1 Bath</span> <span>👥 2 Guests</span>
+                    </div>
+                    <div class="listing-price">$93 <small>/ night</small></div>
+                    <div class="listing-actions">
+                        <a href="#calendar" class="btn-check">Check Availability</a>
+                        <a href="https://www.airbnb.com/rooms/905719383371226863" target="_blank" class="airbnb-link">Also available on Airbnb →</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Prof Row Cottage -->
+            <div class="listing-card">
+                <div class="listing-photo" style="background:linear-gradient(135deg, var(--warm-brown), var(--dark-brown));">Professor's Row<br>Cottage</div>
+                <div class="listing-body">
+                    <h3>Prof Row Cottage</h3>
+                    <div class="listing-specs">
+                        <span>🛏 3 Beds</span> <span>🚿 1 Bath</span> <span>👥 6 Guests</span>
+                    </div>
+                    <div class="listing-price">$43 <small>/ night</small></div>
+                    <div class="listing-note">30-night minimum stay</div>
+                    <div class="listing-actions">
+                        <a href="#calendar" class="btn-check">Check Availability</a>
+                        <a href="https://www.airbnb.com/rooms/783247530819918830" target="_blank" class="airbnb-link">Also available on Airbnb →</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Combined -->
+            <div class="listing-card">
+                <div class="listing-photo" style="background:linear-gradient(135deg, var(--dusty-rose), var(--terracotta));">Hanover Apts<br>Combined #6 + #8</div>
+                <div class="listing-body">
+                    <h3>Hanover Apts Combined (#6+#8)</h3>
+                    <div class="listing-specs">
+                        <span>🛏 2 Beds</span> <span>🚿 2 Baths</span> <span>👥 4 Guests</span>
+                    </div>
+                    <div class="listing-price">$150 <small>/ night</small></div>
+                    <div class="listing-actions">
+                        <a href="#calendar" class="btn-check">Check Availability</a>
+                        <a href="https://www.airbnb.com/rooms/905721414484005070" target="_blank" class="airbnb-link">Also available on Airbnb →</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Calendar -->
+        <h2 class="section-title" id="calendar">Availability Calendar</h2>
+        <div class="calendar-section">
+            <div class="calendar-filter">
+                <button class="active" onclick="filterCalendar('all', this)">All Properties</button>
+                <button onclick="filterCalendar('apt6', this)">Apt #6</button>
+                <button onclick="filterCalendar('apt7', this)">Apt #7</button>
+                <button onclick="filterCalendar('apt8', this)">Apt #8</button>
+                <button onclick="filterCalendar('profrow', this)">Prof Row</button>
+                <button onclick="filterCalendar('combined', this)">Combined</button>
+            </div>
+            <div id="calendarWidget"></div>
+            <p class="calendar-note">📅 Calendar syncs with Airbnb every 2 hours. Booked dates shown in color. For real-time availability, check individual Airbnb listings above.</p>
+        </div>
+
+        <!-- Booking Form -->
+        <h2 class="section-title" id="booking-form">Request a Booking</h2>
+        <div class="booking-form-section">
+            <form id="bookingForm" action="https://getform.io/f/YOUR_FORM_ID" method="POST" onsubmit="return handleBooking(event)">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="guestName">Full Name</label>
+                        <input type="text" id="guestName" name="name" required placeholder="Your name">
+                    </div>
+                    <div class="form-group">
+                        <label for="guestEmail">Email</label>
+                        <input type="email" id="guestEmail" name="email" required placeholder="you@email.com">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="guestPhone">Phone</label>
+                        <input type="tel" id="guestPhone" name="phone" placeholder="(555) 123-4567">
+                    </div>
+                    <div class="form-group">
+                        <label for="guestProperty">Property</label>
+                        <select id="guestProperty" name="property" required>
+                            <option value="">Select a property...</option>
+                            <option value="apt6">Apt #6 — Spacious Apartment ($85/night)</option>
+                            <option value="apt7">Apt #7 — Boho-Modern ($116/night)</option>
+                            <option value="apt8">Apt #8 — Orange ($93/night)</option>
+                            <option value="profrow">Prof Row Cottage ($43/night, 30-night min)</option>
+                            <option value="combined">Hanover Combined #6+#8 ($150/night)</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="checkin">Check-in Date</label>
+                        <input type="date" id="checkin" name="checkin" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="checkout">Check-out Date</label>
+                        <input type="date" id="checkout" name="checkout" required>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="numGuests">Number of Guests</label>
+                        <input type="number" id="numGuests" name="guests" min="1" max="10" value="1">
+                    </div>
+                    <div class="form-group"></div>
+                </div>
+                <div class="form-group">
+                    <label for="specialReqs">Special Requests</label>
+                    <textarea id="specialReqs" name="requests" rows="4" placeholder="Early check-in, extra towels, celebrations, etc."></textarea>
+                </div>
+                <button type="submit" class="btn-primary" style="width:100%; margin-top:0.5rem;">Submit Booking Request</button>
+            </form>
+            <p id="formSuccess" style="display:none; margin-top:1rem; color:var(--sage); font-family:var(--font-serif); font-style:italic; text-align:center;">✓ Your booking request has been sent! We'll respond within 24 hours.</p>
+        </div>
+
+        <!-- Payment -->
+        <h2 class="section-title">Payment Methods</h2>
+        <div class="payment-section">
+            <p style="font-family:var(--font-serif); font-style:italic; color:var(--warm-brown); margin-bottom:0.5rem;">Payment is collected after booking confirmation. We'll send you an invoice.</p>
+            <div class="payment-methods">
+                <div class="payment-method">
+                    <div class="pm-icon">💸</div>
+                    <div class="pm-name">Venmo</div>
+                    <div class="pm-detail">@BowAndArrowStudio</div>
+                </div>
+                <div class="payment-method">
+                    <div class="pm-icon">🏦</div>
+                    <div class="pm-name">Zelle</div>
+                    <div class="pm-detail">bowandarrowstudiollc@gmail.com</div>
+                </div>
+                <div class="payment-method">
+                    <div class="pm-icon">🅿️</div>
+                    <div class="pm-name">PayPal</div>
+                    <div class="pm-detail">bowandarrowstudiollc@gmail.com</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="public-footer">
+        <div class="footer-brand">Bow & Arrow</div>
+        <div>
+            <a href="index.html">Dashboard</a>
+            <a href="guests.html">Guest Info</a>
+            <a href="https://www.airbnb.com/users/show/505498041" target="_blank">Airbnb Profile</a>
+        </div>
+        <div class="footer-email">bowandarrowstudiollc@gmail.com</div>
+    </div>
+
+    <!-- FullCalendar -->
+    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/ical.js@2.0.1/dist/ical.min.js"></script>
+    <script>
+        // iCal feeds
+        const icalFeeds = {
+            apt6:     { url: 'https://www.airbnb.com/calendar/ical/905712759173744005.ics?t=debfb545936642c086b17590ea1706a7', color: '#C4835A', name: 'Apt #6' },
+            apt7:     { url: 'https://www.airbnb.com/calendar/ical/1090646500386918123.ics?t=146d72cbbc6f4162b79489c6d81dd1da', color: '#8B9E7E', name: 'Apt #7' },
+            apt8:     { url: 'https://www.airbnb.com/calendar/ical/905719383371226863.ics?t=042ebac60c594adc837d47ce5a080716', color: '#D4885A', name: 'Apt #8' },
+            profrow:  { url: 'https://www.airbnb.com/calendar/ical/783247530819918830.ics?t=ed6dfc639973460f99801dea73b56bc7', color: '#6B4A3A', name: 'Prof Row' },
+            combined: { url: 'https://www.airbnb.com/calendar/ical/905721414484005070.ics?t=13412ee899ea449083ae168d1cd36c19', color: '#C8918A', name: 'Combined' }
+        };
+
+        let calendar;
+        let allEvents = [];
+        let activeFilter = 'all';
+
+        // Try fetching iCal with CORS proxy fallback
+        async function fetchICal(url) {
+            const proxies = [
+                url, // direct attempt first
+                'https://api.allorigins.win/raw?url=' + encodeURIComponent(url),
+                'https://corsproxy.io/?' + encodeURIComponent(url)
+            ];
+            for (const proxyUrl of proxies) {
+                try {
+                    const resp = await fetch(proxyUrl, { signal: AbortSignal.timeout(8000) });
+                    if (resp.ok) {
+                        const text = await resp.text();
+                        if (text.includes('BEGIN:VCALENDAR')) return text;
+                    }
+                } catch (e) { /* try next */ }
+            }
+            return null;
+        }
+
+        function parseICalEvents(icalText, propertyKey) {
+            const events = [];
+            const feed = icalFeeds[propertyKey];
+            // Simple regex parser for VEVENT blocks
+            const veventRegex = /BEGIN:VEVENT[\s\S]*?END:VEVENT/g;
+            let match;
+            while ((match = veventRegex.exec(icalText)) !== null) {
+                const block = match[0];
+                const dtstart = (block.match(/DTSTART[^:]*:(\d{8})/) || [])[1];
+                const dtend = (block.match(/DTEND[^:]*:(\d{8})/) || [])[1];
+                const summary = (block.match(/SUMMARY:(.+)/) || [])[1] || 'Booked';
+                if (dtstart) {
+                    const start = dtstart.replace(/(\d{4})(\d{2})(\d{2})/, '$1-$2-$3');
+                    const end = dtend ? dtend.replace(/(\d{4})(\d{2})(\d{2})/, '$1-$2-$3') : start;
+                    events.push({
+                        title: feed.name + ' — ' + summary.trim(),
+                        start: start,
+                        end: end,
+                        color: feed.color,
+                        extendedProps: { property: propertyKey }
+                    });
+                }
+            }
+            return events;
+        }
+
+        async function loadCalendar() {
+            const calendarEl = document.getElementById('calendarWidget');
+            calendar = new FullCalendar.Calendar(calendarEl, {
+                initialView: 'dayGridMonth',
+                headerToolbar: { left: 'prev,next today', center: 'title', right: 'dayGridMonth' },
+                height: 'auto',
+                events: [],
+                eventDisplay: 'block',
+                displayEventTime: false
+            });
+            calendar.render();
+
+            // Load all feeds
+            let loaded = 0;
+            for (const [key, feed] of Object.entries(icalFeeds)) {
+                const icalText = await fetchICal(feed.url);
+                if (icalText) {
+                    const events = parseICalEvents(icalText, key);
+                    allEvents.push(...events);
+                    events.forEach(e => calendar.addEvent(e));
+                    loaded++;
+                }
+            }
+            if (loaded === 0) {
+                document.querySelector('.calendar-note').innerHTML =
+                    '⚠️ Calendar could not load due to cross-origin restrictions. Please check availability on the individual <a href="https://www.airbnb.com/users/show/505498041" target="_blank" style="color:var(--terracotta)">Airbnb listings</a> directly.';
+            }
+        }
+
+        function filterCalendar(property, btn) {
+            activeFilter = property;
+            document.querySelectorAll('.calendar-filter button').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+
+            // Remove all events, re-add filtered
+            calendar.getEvents().forEach(e => e.remove());
+            const filtered = property === 'all' ? allEvents : allEvents.filter(e => e.extendedProps.property === property);
+            filtered.forEach(e => calendar.addEvent(e));
+        }
+
+        // Booking form handler — uses mailto as fallback
+        function handleBooking(e) {
+            e.preventDefault();
+            const form = document.getElementById('bookingForm');
+            const data = new FormData(form);
+            const subject = encodeURIComponent('Booking Request: ' + (data.get('property') || 'Unknown'));
+            const body = encodeURIComponent(
+                'Name: ' + data.get('name') + '\n' +
+                'Email: ' + data.get('email') + '\n' +
+                'Phone: ' + data.get('phone') + '\n' +
+                'Property: ' + data.get('property') + '\n' +
+                'Check-in: ' + data.get('checkin') + '\n' +
+                'Check-out: ' + data.get('checkout') + '\n' +
+                'Guests: ' + data.get('guests') + '\n' +
+                'Special Requests: ' + data.get('requests')
+            );
+            window.location.href = 'mailto:bowandarrowstudiollc@gmail.com?subject=' + subject + '&body=' + body;
+            document.getElementById('formSuccess').style.display = 'block';
+            form.reset();
+            return false;
+        }
+
+        // Set min dates
+        document.addEventListener('DOMContentLoaded', function() {
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('checkin').min = today;
+            document.getElementById('checkout').min = today;
+            loadCalendar();
+        });
+    </script>
+</body>
+</html>

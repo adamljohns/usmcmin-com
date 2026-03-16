@@ -1,0 +1,598 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guest Info — Bow & Arrow Studio</title>
+    <link rel="stylesheet" href="assets/style.css">
+    <style>
+        /* === Public Nav === */
+        .public-nav {
+            background: var(--warm-brown);
+            padding: 0.5rem 1.75rem;
+            display: flex;
+            gap: 0.25rem;
+            flex-wrap: wrap;
+            align-items: center;
+            border-bottom: 3px solid var(--terracotta);
+        }
+        .public-nav .brand {
+            font-family: var(--font-script);
+            color: var(--blush-light);
+            font-size: 1.5rem;
+            margin-right: auto;
+            padding-right: 1rem;
+            text-decoration: none;
+        }
+        .public-nav a {
+            color: var(--blush-light);
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            font-size: 0.7rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            transition: all 0.25s;
+            border-bottom: 2px solid transparent;
+            font-family: var(--font-sans);
+        }
+        .public-nav a:hover { color: white; border-bottom-color: var(--terracotta); }
+        .public-nav a.active { color: white; border-bottom-color: var(--terracotta); background: rgba(196,131,90,0.15); }
+
+        /* === Hero === */
+        .guest-hero {
+            background: var(--warm-brown);
+            background-image:
+                linear-gradient(135deg, rgba(107,74,58,0.95) 0%, rgba(196,131,90,0.85) 100%);
+            padding: 3rem 2rem;
+            text-align: center;
+            color: var(--blush-light);
+        }
+        .guest-hero .brand-script {
+            font-family: var(--font-script);
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+        }
+        .guest-hero h1 {
+            font-family: var(--font-serif);
+            font-size: 1.8rem;
+            color: white;
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+        }
+        .guest-hero p {
+            font-family: var(--font-serif);
+            font-style: italic;
+            color: var(--blush-light);
+            max-width: 550px;
+            margin: 0 auto;
+        }
+
+        .container { max-width: 900px; margin: 0 auto; padding: 2rem; }
+
+        /* === Access Codes Box === */
+        .access-box {
+            background: var(--warm-white);
+            border: 2px solid var(--terracotta);
+            border-radius: 2px;
+            padding: 2rem;
+            text-align: center;
+            margin-bottom: 2.5rem;
+        }
+        .access-box h2 {
+            font-family: var(--font-serif);
+            color: var(--warm-brown);
+            font-weight: 500;
+            margin-bottom: 1rem;
+            font-size: 1.3rem;
+        }
+        .code-display {
+            display: inline-block;
+            background: var(--linen);
+            padding: 0.75rem 2rem;
+            border-radius: 2px;
+            margin: 0.5rem 0;
+        }
+        .code-display .code-label {
+            font-size: 0.65rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: var(--gray);
+            margin-bottom: 0.25rem;
+        }
+        .code-display .code-value {
+            font-family: var(--font-serif);
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--terracotta);
+            letter-spacing: 6px;
+        }
+        .access-note {
+            font-family: var(--font-serif);
+            font-style: italic;
+            color: var(--gray);
+            margin-top: 0.75rem;
+            font-size: 0.9rem;
+        }
+
+        /* === Accordion === */
+        .accordion { margin-bottom: 2.5rem; }
+        .accordion-item {
+            border: 1px solid var(--light-gray);
+            margin-bottom: 0.5rem;
+            border-radius: 2px;
+            overflow: hidden;
+        }
+        .accordion-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.15rem 1.5rem;
+            background: var(--warm-white);
+            cursor: pointer;
+            transition: background 0.2s;
+            user-select: none;
+        }
+        .accordion-header:hover { background: var(--linen); }
+        .accordion-header h3 {
+            font-family: var(--font-serif);
+            font-weight: 600;
+            color: var(--warm-brown);
+            font-size: 1.1rem;
+            text-transform: none;
+            letter-spacing: 0;
+        }
+        .accordion-header .arrow {
+            font-size: 0.8rem;
+            color: var(--gray);
+            transition: transform 0.3s;
+        }
+        .accordion-item.open .accordion-header .arrow { transform: rotate(180deg); }
+        .accordion-body {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.35s ease;
+            background: var(--cream);
+        }
+        .accordion-item.open .accordion-body { max-height: 600px; }
+        .accordion-content {
+            padding: 1.25rem 1.5rem;
+        }
+        .accordion-content p, .accordion-content li {
+            font-size: 0.9rem;
+            color: var(--dark-brown);
+            line-height: 1.7;
+            margin-bottom: 0.4rem;
+        }
+        .accordion-content ul {
+            list-style: none;
+            padding: 0;
+        }
+        .accordion-content ul li::before {
+            content: '→ ';
+            color: var(--terracotta);
+            font-weight: 700;
+        }
+        .accordion-content a {
+            color: var(--terracotta);
+            text-decoration: none;
+            font-weight: 600;
+        }
+        .accordion-content a:hover { text-decoration: underline; }
+
+        /* === Info Cards === */
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.25rem;
+            margin-bottom: 2.5rem;
+        }
+        .info-card {
+            background: var(--warm-white);
+            padding: 1.5rem;
+            border-radius: 2px;
+            border: 1px solid var(--light-gray);
+            text-align: center;
+        }
+        .info-card .icon { font-size: 2rem; margin-bottom: 0.5rem; }
+        .info-card h4 {
+            font-family: var(--font-sans);
+            font-size: 0.7rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: var(--gray);
+            margin-bottom: 0.5rem;
+        }
+        .info-card p {
+            font-size: 0.9rem;
+            color: var(--dark-brown);
+        }
+        .info-card a {
+            color: var(--terracotta);
+            text-decoration: none;
+            font-weight: 600;
+        }
+        .info-card a:hover { text-decoration: underline; }
+
+        /* === Link Grid === */
+        .link-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2.5rem;
+        }
+        .link-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 1rem 1.25rem;
+            background: var(--warm-white);
+            border: 1px solid var(--light-gray);
+            border-radius: 2px;
+            text-decoration: none;
+            color: var(--dark-brown);
+            transition: all 0.2s;
+        }
+        .link-item:hover {
+            border-color: var(--terracotta);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(61,43,34,0.08);
+        }
+        .link-item .link-icon { font-size: 1.5rem; flex-shrink: 0; }
+        .link-item .link-text {
+            font-size: 0.85rem;
+            font-weight: 600;
+            font-family: var(--font-sans);
+        }
+
+        /* === Policy Box === */
+        .policy-box {
+            background: var(--linen);
+            padding: 2rem 2.5rem;
+            border-radius: 2px;
+            margin-bottom: 2.5rem;
+        }
+        .policy-box h2 {
+            font-family: var(--font-serif);
+            color: var(--warm-brown);
+            font-weight: 500;
+            margin-bottom: 1rem;
+        }
+        .policy-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 0.75rem;
+        }
+        .policy-table td {
+            padding: 0.6rem 0.75rem;
+            border-bottom: 1px solid var(--light-gray);
+            font-size: 0.9rem;
+        }
+        .policy-table td:first-child { font-weight: 600; color: var(--warm-brown); }
+        .policy-note {
+            font-family: var(--font-serif);
+            font-style: italic;
+            color: var(--gray);
+            font-size: 0.85rem;
+        }
+
+        /* === Review CTA === */
+        .review-cta {
+            background: var(--warm-brown);
+            background-image: linear-gradient(135deg, rgba(107,74,58,0.95) 0%, rgba(196,131,90,0.85) 100%);
+            padding: 2.5rem;
+            border-radius: 2px;
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        .review-cta h2 {
+            font-family: var(--font-serif);
+            color: white;
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+            font-size: 1.4rem;
+        }
+        .review-cta p {
+            color: var(--blush-light);
+            font-family: var(--font-serif);
+            font-style: italic;
+            margin-bottom: 1.25rem;
+        }
+        .review-cta a {
+            display: inline-block;
+            padding: 0.85rem 2.5rem;
+            background: white;
+            color: var(--terracotta);
+            border-radius: 2px;
+            text-decoration: none;
+            font-size: 0.7rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 2.5px;
+            font-family: var(--font-sans);
+            transition: all 0.2s;
+        }
+        .review-cta a:hover { background: var(--cream); transform: translateY(-2px); }
+
+        /* === Footer === */
+        .public-footer {
+            background: var(--warm-brown);
+            color: var(--blush-light);
+            padding: 2rem;
+            text-align: center;
+        }
+        .public-footer a {
+            color: var(--blush-light);
+            text-decoration: none;
+            margin: 0 0.75rem;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            font-family: var(--font-sans);
+            transition: color 0.2s;
+        }
+        .public-footer a:hover { color: white; }
+        .public-footer .footer-brand {
+            font-family: var(--font-script);
+            font-size: 1.5rem;
+            margin-bottom: 0.75rem;
+        }
+        .public-footer .footer-email {
+            margin-top: 0.75rem;
+            font-family: var(--font-serif);
+            font-style: italic;
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <div class="public-nav">
+        <a href="booking.html" class="brand">Bow & Arrow</a>
+        <a href="booking.html">Book Direct</a>
+        <a href="guests.html" class="active">Guest Info</a>
+        <a href="index.html">Dashboard Login</a>
+    </div>
+
+    <!-- Hero -->
+    <div class="guest-hero">
+        <div class="brand-script">Bow & Arrow</div>
+        <h1>Welcome to Your Stay</h1>
+        <p>Everything you need for a wonderful experience in historic downtown Fredericksburg.</p>
+    </div>
+
+    <div class="container">
+
+        <!-- Access Codes -->
+        <div class="access-box">
+            <h2>Building Access</h2>
+            <div class="code-display">
+                <div class="code-label">Building Entrance Code</div>
+                <div class="code-value">3 5 2 4</div>
+            </div>
+            <p class="access-note">🔑 Your apartment lock code is the <strong>last 4 digits of your phone number</strong>.</p>
+            <p class="access-note" style="margin-top:0.25rem;">This was set during check-in. If you have trouble, message us right away.</p>
+        </div>
+
+        <!-- Property Quick Guides -->
+        <h2 class="section-title">Property Quick Guides</h2>
+        <div class="accordion">
+            <!-- Apt #6 -->
+            <div class="accordion-item">
+                <div class="accordion-header" onclick="toggleAccordion(this)">
+                    <h3>🏠 Apt #6 — Spacious Apartment</h3>
+                    <span class="arrow">▼</span>
+                </div>
+                <div class="accordion-body">
+                    <div class="accordion-content">
+                        <ul>
+                            <li><strong>Check-in:</strong> 4:00 PM &nbsp;|&nbsp; <strong>Check-out:</strong> 11:00 AM</li>
+                            <li><strong>WiFi Network:</strong> BowArrow_Apt6 &nbsp;|&nbsp; <strong>Password:</strong> <em>(see welcome message)</em></li>
+                            <li><strong>Smart Home:</strong> Google Home device available — "Hey Google" for music, alarms, questions</li>
+                            <li><strong>Thermostat:</strong> Smart thermostat — adjust freely during your stay</li>
+                            <li><strong>ADT Security:</strong> Auto-arms at midnight, disarms at 5 AM. Use your apartment lock code on the panel if it beeps.</li>
+                            <li><strong>Parking:</strong> <a href="https://youtu.be/AIUd3IFdKC8" target="_blank">Watch parking video →</a></li>
+                            <li><strong>Food Guide:</strong> <a href="https://www.bowandarrowphotographystudio.com/fredericksburg-virginia-downtown-food-guide/" target="_blank">Downtown Fredericksburg food guide →</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Apt #7 -->
+            <div class="accordion-item">
+                <div class="accordion-header" onclick="toggleAccordion(this)">
+                    <h3>🏠 Apt #7 — Boho-Modern</h3>
+                    <span class="arrow">▼</span>
+                </div>
+                <div class="accordion-body">
+                    <div class="accordion-content">
+                        <ul>
+                            <li><strong>Check-in:</strong> 4:00 PM &nbsp;|&nbsp; <strong>Check-out:</strong> 11:00 AM</li>
+                            <li><strong>WiFi Network:</strong> BowArrow_Apt7 &nbsp;|&nbsp; <strong>Password:</strong> <em>(see welcome message)</em></li>
+                            <li><strong>Smart Home:</strong> Google Home device available</li>
+                            <li><strong>Thermostat:</strong> Smart thermostat — adjust freely</li>
+                            <li><strong>ADT Security:</strong> Auto-arms at midnight, disarms at 5 AM. Use your lock code if panel beeps.</li>
+                            <li><strong>Parking:</strong> <a href="https://youtu.be/AIUd3IFdKC8" target="_blank">Watch parking video →</a></li>
+                            <li><strong>Food Guide:</strong> <a href="https://www.bowandarrowphotographystudio.com/fredericksburg-virginia-downtown-food-guide/" target="_blank">Downtown food guide →</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Apt #8 -->
+            <div class="accordion-item">
+                <div class="accordion-header" onclick="toggleAccordion(this)">
+                    <h3>🏠 Apt #8 — Orange</h3>
+                    <span class="arrow">▼</span>
+                </div>
+                <div class="accordion-body">
+                    <div class="accordion-content">
+                        <ul>
+                            <li><strong>Check-in:</strong> 4:00 PM &nbsp;|&nbsp; <strong>Check-out:</strong> 11:00 AM</li>
+                            <li><strong>WiFi Network:</strong> BowArrow_Apt8 &nbsp;|&nbsp; <strong>Password:</strong> <em>(see welcome message)</em></li>
+                            <li><strong>Smart Home:</strong> Google Home device available</li>
+                            <li><strong>Thermostat:</strong> Smart thermostat — adjust freely</li>
+                            <li><strong>ADT Security:</strong> Auto-arms at midnight, disarms at 5 AM. Use your lock code.</li>
+                            <li><strong>Parking:</strong> <a href="https://youtu.be/AIUd3IFdKC8" target="_blank">Watch parking video →</a></li>
+                            <li><strong>Food Guide:</strong> <a href="https://www.bowandarrowphotographystudio.com/fredericksburg-virginia-downtown-food-guide/" target="_blank">Downtown food guide →</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Prof Row -->
+            <div class="accordion-item">
+                <div class="accordion-header" onclick="toggleAccordion(this)">
+                    <h3>🏡 Prof Row Cottage</h3>
+                    <span class="arrow">▼</span>
+                </div>
+                <div class="accordion-body">
+                    <div class="accordion-content">
+                        <ul>
+                            <li><strong>Check-in:</strong> 4:00 PM &nbsp;|&nbsp; <strong>Check-out:</strong> 11:00 AM</li>
+                            <li><strong>WiFi Network:</strong> ProfRow_WiFi &nbsp;|&nbsp; <strong>Password:</strong> <em>(see welcome message)</em></li>
+                            <li><strong>Minimum Stay:</strong> 30 nights</li>
+                            <li><strong>Smart Home:</strong> Google Home device available</li>
+                            <li><strong>Thermostat:</strong> Smart thermostat — adjust freely</li>
+                            <li><strong>Parking:</strong> Dedicated parking on property</li>
+                            <li><strong>Food Guide:</strong> <a href="https://www.bowandarrowphotographystudio.com/fredericksburg-virginia-downtown-food-guide/" target="_blank">Downtown food guide →</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Combined -->
+            <div class="accordion-item">
+                <div class="accordion-header" onclick="toggleAccordion(this)">
+                    <h3>🏠 Hanover Apts Combined (#6 + #8)</h3>
+                    <span class="arrow">▼</span>
+                </div>
+                <div class="accordion-body">
+                    <div class="accordion-content">
+                        <ul>
+                            <li><strong>Check-in:</strong> 4:00 PM &nbsp;|&nbsp; <strong>Check-out:</strong> 11:00 AM</li>
+                            <li><strong>WiFi:</strong> Same as Apt #6 and Apt #8 networks</li>
+                            <li><strong>Smart Home:</strong> Google Home devices in both units</li>
+                            <li><strong>Thermostat:</strong> Smart thermostats in both units</li>
+                            <li><strong>ADT Security:</strong> Both units — auto-arms midnight, disarms 5 AM</li>
+                            <li><strong>Parking:</strong> <a href="https://youtu.be/AIUd3IFdKC8" target="_blank">Watch parking video →</a></li>
+                            <li><strong>Food Guide:</strong> <a href="https://www.bowandarrowphotographystudio.com/fredericksburg-virginia-downtown-food-guide/" target="_blank">Downtown food guide →</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Communication Channels -->
+        <h2 class="section-title">Contact Us</h2>
+        <div class="info-grid">
+            <div class="info-card">
+                <div class="icon">💬</div>
+                <h4>Airbnb Messaging</h4>
+                <p>Message us through Airbnb for the <strong>fastest response</strong></p>
+            </div>
+            <div class="info-card">
+                <div class="icon">📧</div>
+                <h4>Email</h4>
+                <p><a href="mailto:bowandarrowstudiollc@gmail.com">bowandarrowstudiollc@gmail.com</a></p>
+            </div>
+            <div class="info-card">
+                <div class="icon">📱</div>
+                <h4>Telegram Group</h4>
+                <p><a href="#">Join our guest community →</a><br><small style="color:var(--gray);">(Link coming soon)</small></p>
+            </div>
+            <div class="info-card">
+                <div class="icon">📞</div>
+                <h4>Phone</h4>
+                <p><em>Available upon booking confirmation</em></p>
+            </div>
+        </div>
+
+        <!-- Useful Links -->
+        <h2 class="section-title">Helpful Videos &amp; Links</h2>
+        <div class="link-grid">
+            <a href="https://youtube.com/shorts/7jQ2h7E-JwU" target="_blank" class="link-item">
+                <span class="link-icon">🎬</span>
+                <span class="link-text">Welcome Video</span>
+            </a>
+            <a href="https://youtu.be/1LC8fvV43y4" target="_blank" class="link-item">
+                <span class="link-icon">🏠</span>
+                <span class="link-text">Video Tour — Apt #6</span>
+            </a>
+            <a href="https://youtu.be/AIUd3IFdKC8" target="_blank" class="link-item">
+                <span class="link-icon">🅿️</span>
+                <span class="link-text">Parking Instructions</span>
+            </a>
+            <a href="https://youtu.be/QcZbi96Fs-E" target="_blank" class="link-item">
+                <span class="link-icon">🧹</span>
+                <span class="link-text">Post-Checkout Guide</span>
+            </a>
+            <a href="https://www.bowandarrowphotographystudio.com/fredericksburg-virginia-downtown-food-guide/" target="_blank" class="link-item">
+                <span class="link-icon">🍕</span>
+                <span class="link-text">Downtown Food Guide</span>
+            </a>
+            <a href="https://view.flodesk.com/pages/63c5697decc6781900625788" target="_blank" class="link-item">
+                <span class="link-icon">💌</span>
+                <span class="link-text">Newsletter Signup</span>
+            </a>
+        </div>
+
+        <!-- Early Check-in / Late Checkout -->
+        <h2 class="section-title">Early Check-in &amp; Late Checkout</h2>
+        <div class="policy-box">
+            <table class="policy-table">
+                <tr>
+                    <td>First hour free</td>
+                    <td>Check-in before 3 PM or checkout after 11:30 AM</td>
+                </tr>
+                <tr>
+                    <td>Early check-in</td>
+                    <td>$15 / hour (beyond the free first hour)</td>
+                </tr>
+                <tr>
+                    <td>Late checkout</td>
+                    <td>$20 / hour (beyond the free first hour)</td>
+                </tr>
+                <tr>
+                    <td>Half hours</td>
+                    <td>Charged at half rate</td>
+                </tr>
+            </table>
+            <p class="policy-note">📩 To request early check-in or late checkout, just send us a message through Airbnb or email. We'll do our best to accommodate!</p>
+        </div>
+
+        <!-- Review CTA -->
+        <div class="review-cta">
+            <h2>Loved Your Stay?</h2>
+            <p>Your review helps other travelers discover our little corner of Fredericksburg.</p>
+            <a href="https://www.airbnb.com/users/show/505498041" target="_blank">Leave a Review ★</a>
+        </div>
+
+    </div>
+
+    <!-- Footer -->
+    <div class="public-footer">
+        <div class="footer-brand">Bow & Arrow</div>
+        <div>
+            <a href="booking.html">Book Direct</a>
+            <a href="index.html">Dashboard</a>
+            <a href="https://www.airbnb.com/users/show/505498041" target="_blank">Airbnb Profile</a>
+        </div>
+        <div class="footer-email">bowandarrowstudiollc@gmail.com</div>
+    </div>
+
+    <script>
+        function toggleAccordion(header) {
+            const item = header.parentElement;
+            const wasOpen = item.classList.contains('open');
+            // Close all
+            document.querySelectorAll('.accordion-item').forEach(i => i.classList.remove('open'));
+            // Toggle clicked
+            if (!wasOpen) item.classList.add('open');
+        }
+    </script>
+</body>
+</html>

@@ -182,11 +182,11 @@ function renderRevenueSnapshot(financials) {
     const container = document.getElementById('revenueChart');
     const rev = financials.revenue;
     const streams = [
-        { label: 'Airbnb', value: rev.airbnb, color: '#8b4513' },
-        { label: 'Direct', value: rev.direct_booking, color: '#c8a882' },
-        { label: 'Merch', value: rev.merch, color: '#d4956a' },
-        { label: 'Vending', value: rev.vending, color: '#4a8c5c' },
-        { label: 'Car Rental', value: rev.car_rental, color: '#4a7c9c' },
+        { label: 'Airbnb', value: rev.airbnb, color: '#C4835A' },
+        { label: 'Direct', value: rev.direct_booking, color: '#D4A68C' },
+        { label: 'Merch', value: rev.merch, color: '#6B4A3A' },
+        { label: 'Vending', value: rev.vending, color: '#8B9E7E' },
+        { label: 'Car Rental', value: rev.car_rental, color: '#7B9AAE' },
     ].filter(s => s.value > 0);
 
     if (streams.length === 0) {

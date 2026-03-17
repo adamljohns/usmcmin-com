@@ -25,6 +25,7 @@
             <a href="calendar.html" class="active">Calendar</a>
             <a href="cleaning.html">Cleaning</a>
             <a href="financials.html">Financials</a>
+            <a href="maintenance.html">Maintenance</a>
             <a href="booking.html">Book Direct</a>
             <a href="guests.html">Guest Info</a>
             <a class="logout" onclick="logout()">Logout</a>
@@ -40,11 +41,14 @@
         </header>
 
         <!-- Legend -->
-        <div style="display:flex;gap:2rem;margin-bottom:1.25rem;font-size:0.75rem;flex-wrap:wrap;font-family:var(--font-sans);letter-spacing:0.5px">
-            <span><span style="display:inline-block;width:14px;height:14px;background:var(--sage-light);border-radius:2px;vertical-align:middle"></span> Occupied</span>
+        <div style="display:flex;gap:1.5rem;margin-bottom:1.25rem;font-size:0.75rem;flex-wrap:wrap;font-family:var(--font-sans);letter-spacing:0.5px">
+            <span><span style="display:inline-block;width:14px;height:14px;background:#C4835A;border-radius:2px;vertical-align:middle"></span> Apt #6</span>
+            <span><span style="display:inline-block;width:14px;height:14px;background:#8B9E7E;border-radius:2px;vertical-align:middle"></span> Apt #7</span>
+            <span><span style="display:inline-block;width:14px;height:14px;background:#D4885A;border-radius:2px;vertical-align:middle"></span> Apt #8</span>
+            <span><span style="display:inline-block;width:14px;height:14px;background:#6B4A3A;border-radius:2px;vertical-align:middle"></span> Cottage</span>
+            <span><span style="display:inline-block;width:14px;height:14px;background:#C8918A;border-radius:2px;vertical-align:middle"></span> Combined</span>
             <span><span style="display:inline-block;width:14px;height:14px;background:var(--warm-white);border:1px solid var(--light-gray);border-radius:2px;vertical-align:middle"></span> Vacant</span>
-            <span><span style="display:inline-block;width:14px;height:14px;background:#fff9c4;border-radius:2px;vertical-align:middle"></span> Cleaning</span>
-            <span><span style="display:inline-block;width:14px;height:14px;background:#ffcdd2;border-radius:2px;vertical-align:middle"></span> Blocked</span>
+            <span><span style="display:inline-block;width:14px;height:14px;background:var(--linen);border-radius:2px;vertical-align:middle"></span> Weekend</span>
         </div>
 
         <div style="overflow-x:auto">
@@ -62,21 +66,30 @@
     <script>
         initCalendar();
 
-        // Also render reservation list
+        // Also render reservation list with enhanced info
         (async function() {
             const reservations = DEMO.reservations;
             const container = document.getElementById('reservationList');
-            container.innerHTML = '<table><thead><tr><th>Guest</th><th>Property</th><th>Check-in</th><th>Check-out</th><th>Platform</th><th>Payout</th></tr></thead><tbody>' +
-                reservations.map(r => `
-                    <tr>
-                        <td style="font-weight:600;font-family:var(--font-serif)">${r.guest_name}</td>
-                        <td>Apt ${r.apt_number}</td>
-                        <td>${formatDate(r.checkin_date)}</td>
-                        <td>${formatDate(r.checkout_date)}</td>
-                        <td style="text-transform:capitalize">${r.platform}</td>
-                        <td style="font-weight:600">${formatCurrency(r.payout)}</td>
-                    </tr>
-                `).join('') + '</tbody></table>';
+            container.innerHTML = '<table><thead><tr><th>Guest</th><th>Property</th><th>Check-in</th><th>Check-out</th><th>Nights</th><th>Platform</th><th>Payout</th><th>$/Night</th><th>Status</th></tr></thead><tbody>' +
+                reservations.map(r => {
+                    const nights = nightsBetween(r.checkin_date, r.checkout_date);
+                    const perNight = nights > 0 ? Math.round(r.payout / nights) : 0;
+                    const statusColors = { checked_in: 'var(--sage)', confirmed: 'var(--blue)', completed: 'var(--gray)' };
+                    const statusLabels = { checked_in: '🟢 Active', confirmed: '📋 Confirmed', completed: '✅ Done' };
+                    return `
+                        <tr>
+                            <td style="font-weight:600;font-family:var(--font-serif)">${r.guest_name}</td>
+                            <td><span style="display:inline-block;width:8px;height:8px;border-radius:50%;vertical-align:middle;margin-right:4px;background:${(PROPERTY_COLORS[r.apt_number] || {bg:'#999'}).bg}"></span>Apt ${r.apt_number}</td>
+                            <td>${formatDate(r.checkin_date)}</td>
+                            <td>${formatDate(r.checkout_date)}</td>
+                            <td>${nights}</td>
+                            <td style="text-transform:capitalize">${r.platform}</td>
+                            <td style="font-weight:600">${formatCurrency(r.payout)}</td>
+                            <td style="color:var(--gray)">${formatCurrency(perNight)}</td>
+                            <td>${statusLabels[r.status] || r.status}</td>
+                        </tr>
+                    `;
+                }).join('') + '</tbody></table>';
         })();
     </script>
 </body>

@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bow & Arrow Studio — Maintenance Tracker</title>
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://usmcmin.com/bow-arrow/maintenance.html">
+    <meta property="og:title" content="Bow & Arrow Studio — Maintenance Tracker">
+    <meta property="og:description" content="Property maintenance tracking for Bow & Arrow Studio LLC.">
+    <link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+    <div class="dashboard">
+        <nav>
+            <span class="brand">Bow & Arrow</span>
+            <a href="dashboard.html">Dashboard</a>
+            <a href="calendar.html">Calendar</a>
+            <a href="cleaning.html">Cleaning</a>
+            <a href="financials.html">Financials</a>
+            <a href="maintenance.html" class="active">Maintenance</a>
+            <a href="booking.html">Book Direct</a>
+            <a href="guests.html">Guest Info</a>
+            <a class="logout" onclick="logout()">Logout</a>
+        </nav>
+
+        <header>
+            <h1>🔧 Maintenance Tracker</h1>
+        </header>
+
+        <!-- Summary Cards -->
+        <div class="grid" style="grid-template-columns: repeat(auto-fit, minmax(200px, 1fr))">
+            <div class="card">
+                <h3>Open Issues</h3>
+                <div class="value" style="color:var(--dusty-rose)" id="openCount">—</div>
+            </div>
+            <div class="card">
+                <h3>Scheduled</h3>
+                <div class="value" style="color:var(--yellow)" id="scheduledCount">—</div>
+            </div>
+            <div class="card">
+                <h3>Completed (March)</h3>
+                <div class="value" style="color:var(--sage)" id="completedCount">—</div>
+            </div>
+        </div>
+
+        <!-- Active Issues -->
+        <h2 class="section-title">Active & Scheduled Issues</h2>
+        <div class="card" id="maintenanceList">
+            <p style="color:var(--gray);font-family:var(--font-serif);font-style:italic">Loading...</p>
+        </div>
+
+        <!-- Log New Issue -->
+        <h2 class="section-title">Log New Maintenance Request</h2>
+        <div class="card">
+            <div class="two-col">
+                <div>
+                    <div class="form-group">
+                        <label>Property</label>
+                        <select id="maintProp">
+                            <option value="Apt #6">Apt #6</option>
+                            <option value="Apt #7">Apt #7</option>
+                            <option value="Apt #8">Apt #8</option>
+                            <option value="Cottage">Prof Row Cottage</option>
+                            <option value="General">General / Building</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Issue Description</label>
+                        <input type="text" id="maintIssue" placeholder="e.g., Leaky faucet in bathroom">
+                    </div>
+                    <div class="form-group">
+                        <label>Priority</label>
+                        <select id="maintPriority">
+                            <option value="low">Low — Can wait</option>
+                            <option value="medium" selected>Medium — Fix soon</option>
+                            <option value="high">High — Urgent</option>
+                        </select>
+                    </div>
+                </div>
+                <div>
+                    <div class="form-group">
+                        <label>Notes</label>
+                        <textarea id="maintNotes" rows="4" placeholder="Additional details, photos needed, vendor contacts..."></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>Estimated Cost ($)</label>
+                        <input type="number" id="maintCost" step="0.01" placeholder="0.00">
+                    </div>
+                </div>
+            </div>
+            <button class="btn-primary" onclick="alert('Saved! (Connect backend for persistence)')">Submit Request</button>
+        </div>
+    </div>
+
+    <script src="assets/dashboard.js"></script>
+    <script>
+        initMaintenance();
+
+        // Update summary counts
+        const maintenance = DEMO.maintenance;
+        document.getElementById('openCount').textContent = maintenance.filter(m => m.status === 'open').length;
+        document.getElementById('scheduledCount').textContent = maintenance.filter(m => m.status === 'scheduled').length;
+        document.getElementById('completedCount').textContent = maintenance.filter(m => m.status === 'completed').length;
+    </script>
+</body>
+</html>

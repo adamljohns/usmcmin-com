@@ -9,7 +9,10 @@
 // ── Config ──
 const API_BASE = localStorage.getItem('c5isr_api') || '';  // empty = demo mode
 const COINGECKO = 'https://api.coingecko.com/api/v3';
+const COINGECKO_FALLBACK = 'https://pro-api.coingecko.com/api/v3'; // fallback endpoint
 const REFRESH_INTERVAL = 30; // seconds
+const MAX_RETRIES = 3;
+const RETRY_DELAY_MS = 1000;
 const ASSETS = {
   bitcoin:            { symbol: 'BTC', name: 'Bitcoin',  color: '#f7931a' },
   ethereum:           { symbol: 'ETH', name: 'Ethereum', color: '#627eea' },
@@ -30,6 +33,41 @@ if (localStorage.getItem('c5isr_auth') !== 'true') {
   window.location.href = 'index.html';
 }
 
+// ── Retry Fetch with Exponential Backoff ──
+async function fetchWithRetry(url, options = {}, retries = MAX_RETRIES) {
+  for (let i = 0; i < retries; i++) {
+    try {
+      const r = await fetch(url, { signal: AbortSignal.timeout(10000), ...options });
+      if (r.status === 429) {
+        const wait = Math.min(RETRY_DELAY_MS * Math.pow(2, i), 10000);
+        showToast(`Rate limited — retrying in ${(wait/1000).toFixed(0)}s`, 'info');
+        await new Promise(res => setTimeout(res, wait));
+        continue;
+      }
+      if (!r.ok && i < retries - 1) {
+        await new Promise(res => setTimeout(res, RETRY_DELAY_MS * Math.pow(2, i)));
+        continue;
+      }
+      return r;
+    } catch (e) {
+      if (i === retries - 1) throw e;
+      await new Promise(res => setTimeout(res, RETRY_DELAY_MS * Math.pow(2, i)));
+    }
+  }
+  throw new Error('Max retries exceeded');
+}
+
+// ── Toast Notifications ──
+function showToast(msg, type = 'info') {
+  const existing = document.querySelectorAll('.toast');
+  existing.forEach(t => t.remove());
+  const t = document.createElement('div');
+  t.className = `toast toast-${type}`;
+  t.textContent = msg;
+  document.body.appendChild(t);
+  setTimeout(() => t.remove(), 3000);
+}
+
 // ── Init ──
 document.addEventListener('DOMContentLoaded', async () => {
   await checkBackend();
@@ -39,6 +77,9 @@ document.addEventListener('DOMContentLoaded', async () => {
     loadSignals(),
     loadChartData(currentChartAsset),
     loadBacktest(),
+    loadFearGreed(),
+    loadTrending(),
+    loadGlobalStats(),
   ]);
   startRefreshTimer();
   setupChartButtons();
@@ -93,7 +134,7 @@ async function loadPrices() {
 
 async function fetchCoinGeckoPrices() {
   const ids = Object.keys(ASSETS).join(',');
-  const r = await fetch(`${COINGECKO}/simple/price?ids=${ids}&vs_currencies=usd&include_24hr_change=true&include_24hr_vol=true&include_market_cap=true`);
+  const r = await fetchWithRetry(`${COINGECKO}/simple/price?ids=${ids}&vs_currencies=usd&include_24hr_change=true&include_24hr_vol=true&include_market_cap=true`);
   const data = await r.json();
   return Object.entries(ASSETS).map(([id, info]) => ({
     id,
@@ -156,7 +197,7 @@ async function generateDemoSignals() {
   const signals = [];
   for (const [id, info] of Object.entries(ASSETS)) {
     try {
-      const r = await fetch(`${COINGECKO}/coins/${id}/ohlc?vs_currency=usd&days=30`);
+      const r = await fetchWithRetry(`${COINGECKO}/coins/${id}/ohlc?vs_currency=usd&days=30`);
       const ohlc = await r.json();
       if (!Array.isArray(ohlc) || ohlc.length < 30) {
         signals.push({ asset_id: id, symbol: info.symbol, signal: 'HOLD', confidence: 50, reason: 'Insufficient data' });
@@ -507,7 +548,7 @@ async function loadBacktest() {
       result = await r.json();
     } else {
       // Demo backtest using CoinGecko data
-      const r = await fetch(`${COINGECKO}/coins/${assetId}/ohlc?vs_currency=usd&days=90`);
+      const r = await fetchWithRetry(`${COINGECKO}/coins/${assetId}/ohlc?vs_currency=usd&days=90`);
       const ohlc = await r.json();
       if (!Array.isArray(ohlc) || ohlc.length < 50) {
         el.innerHTML = '<div style="color:var(--text-muted)">Insufficient data for backtest</div>';
@@ -644,7 +685,7 @@ function initChart() {
 
 async function loadChartData(assetId) {
   try {
-    const r = await fetch(`${COINGECKO}/coins/${assetId}/ohlc?vs_currency=usd&days=30`);
+    const r = await fetchWithRetry(`${COINGECKO}/coins/${assetId}/ohlc?vs_currency=usd&days=30`);
     const ohlc = await r.json();
     if (!Array.isArray(ohlc)) return;
 
@@ -699,6 +740,14 @@ function startRefreshTimer() {
       loadPrices();
       loadSignals();
       loadChartData(currentChartAsset);
+      // Refresh these less frequently (every 2 cycles = 60s)
+      if (!window._refreshCycle) window._refreshCycle = 0;
+      window._refreshCycle++;
+      if (window._refreshCycle % 2 === 0) {
+        loadFearGreed();
+        loadTrending();
+        loadGlobalStats();
+      }
     }
   }, 1000);
 }
@@ -737,6 +786,106 @@ function logout() {
   localStorage.removeItem('c5isr_auth_time');
   localStorage.removeItem('c5isr_token');
   window.location.href = 'index.html';
+}
+
+// ── Fear & Greed Index ──
+async function loadFearGreed() {
+  try {
+    const r = await fetchWithRetry('https://api.alternative.me/fng/?limit=1');
+    const data = await r.json();
+    const fg = data.data?.[0];
+    if (!fg) return;
+
+    const value = parseInt(fg.value);
+    const label = fg.value_classification;
+    const el = document.getElementById('fearGreedValue');
+    const pointer = document.getElementById('fearGreedPointer');
+    const update = document.getElementById('fearGreedUpdate');
+
+    // Color based on value
+    let color;
+    if (value <= 25) color = 'var(--red)';
+    else if (value <= 45) color = '#ff6644';
+    else if (value <= 55) color = 'var(--amber)';
+    else if (value <= 75) color = '#88dd44';
+    else color = 'var(--green)';
+
+    el.innerHTML = `<span style="color:${color}">${value}</span> <span style="font-size:14px;color:var(--text-secondary)">${label}</span>`;
+    pointer.style.left = `${value}%`;
+
+    const updated = new Date(parseInt(fg.timestamp) * 1000);
+    update.textContent = `Updated: ${updated.toLocaleDateString()}`;
+  } catch (e) {
+    console.error('Fear & Greed load failed:', e);
+    document.getElementById('fearGreedValue').innerHTML = '<span style="color:var(--text-muted);font-size:14px">Unavailable</span>';
+  }
+}
+
+// ── Trending Coins ──
+async function loadTrending() {
+  try {
+    const r = await fetchWithRetry(`${COINGECKO}/search/trending`);
+    const data = await r.json();
+    const coins = data.coins?.slice(0, 7) || [];
+    const el = document.getElementById('trendingCoins');
+
+    if (coins.length === 0) {
+      el.innerHTML = '<div style="color:var(--text-muted)">No trending data available</div>';
+      return;
+    }
+
+    el.innerHTML = coins.map((c, i) => {
+      const item = c.item;
+      const priceChange = item.data?.price_change_percentage_24h?.usd;
+      const changeStr = priceChange != null
+        ? `<span class="price-change ${priceChange >= 0 ? 'positive' : 'negative'}">${priceChange >= 0 ? '▲' : '▼'} ${Math.abs(priceChange).toFixed(1)}%</span>`
+        : '';
+      const priceStr = item.data?.price ? `$${parseFloat(item.data.price).toFixed(item.data.price < 1 ? 6 : 2)}` : '';
+      return `
+        <div class="trending-coin">
+          <span class="trending-rank">#${i + 1}</span>
+          <img class="trending-coin-img" src="${item.small}" alt="${item.name}" loading="lazy" onerror="this.style.display='none'">
+          <div class="trending-coin-info">
+            <div class="trending-coin-name">${item.name}</div>
+            <div class="trending-coin-symbol">${item.symbol}</div>
+          </div>
+          <div class="trending-coin-price">
+            <div>${priceStr}</div>
+            ${changeStr}
+          </div>
+        </div>`;
+    }).join('');
+
+    document.getElementById('trendingUpdate').textContent = new Date().toLocaleTimeString();
+  } catch (e) {
+    console.error('Trending load failed:', e);
+    document.getElementById('trendingCoins').innerHTML = '<div style="color:var(--text-muted)">Failed to load trending coins</div>';
+  }
+}
+
+// ── Global Market Stats ──
+async function loadGlobalStats() {
+  try {
+    const r = await fetchWithRetry(`${COINGECKO}/global`);
+    const data = await r.json();
+    const g = data.data;
+    if (!g) return;
+
+    const fmt = (n) => {
+      if (n >= 1e12) return `$${(n / 1e12).toFixed(2)}T`;
+      if (n >= 1e9) return `$${(n / 1e9).toFixed(1)}B`;
+      if (n >= 1e6) return `$${(n / 1e6).toFixed(0)}M`;
+      return `$${n.toLocaleString()}`;
+    };
+
+    document.getElementById('globalMarketCap').textContent = fmt(g.total_market_cap?.usd || 0);
+    document.getElementById('global24hVol').textContent = fmt(g.total_volume?.usd || 0);
+    document.getElementById('btcDominance').textContent = `${(g.market_cap_percentage?.btc || 0).toFixed(1)}%`;
+    document.getElementById('ethDominance').textContent = `${(g.market_cap_percentage?.eth || 0).toFixed(1)}%`;
+    document.getElementById('activeCryptos').textContent = (g.active_cryptocurrencies || 0).toLocaleString();
+  } catch (e) {
+    console.error('Global stats load failed:', e);
+  }
 }
 
 // ── Helpers ──

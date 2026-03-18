@@ -26,6 +26,7 @@
             <a href="cleaning.html">Cleaning</a>
             <a href="financials.html">Financials</a>
             <a href="maintenance.html">Maintenance</a>
+            <a href="comms.html">Comms</a>
             <a href="booking.html">Book Direct</a>
             <a href="guests.html">Guest Info</a>
             <a class="logout" onclick="logout()">Logout</a>
@@ -100,7 +101,59 @@
         <div class="card" id="revenueChart">
             <p style="color:var(--gray);font-family:var(--font-serif);font-style:italic">Loading...</p>
         </div>
+
+        <!-- Cleaning Cost Calculator -->
+        <h2 class="section-title">🧹 Cleaning Cost Calculator</h2>
+        <div class="card" id="cleaningCalcSection">
+            <div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(200px, 1fr));gap:1rem;margin-bottom:1rem">
+                <div class="form-group">
+                    <label>Property Size</label>
+                    <select id="calcProperty" onchange="updateCalc()">
+                        <option value="small">Small (Apt #6 or #8) — ~1.5 hrs</option>
+                        <option value="medium">Medium (Apt #7) — ~2 hrs</option>
+                        <option value="large">Large (Combined #6+#8) — ~3 hrs</option>
+                        <option value="cottage">Cottage — ~2.5 hrs</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Cleaning Type</label>
+                    <select id="calcType" onchange="updateCalc()">
+                        <option value="turnover">Turnover</option>
+                        <option value="refresh">Refresh (quick)</option>
+                        <option value="deep">Deep Clean</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Hourly Rate ($)</label>
+                    <input type="number" id="calcRate" value="25" step="0.50" onchange="updateCalc()">
+                </div>
+            </div>
+            <div style="display:grid;grid-template-columns:repeat(3, 1fr);gap:1rem;text-align:center">
+                <div style="padding:1rem;background:var(--cream);border-radius:2px;border:1px solid var(--light-gray)">
+                    <div style="font-size:0.65rem;color:var(--gray);text-transform:uppercase;letter-spacing:2px;font-weight:600">Est. Hours</div>
+                    <div id="calcHours" style="font-family:var(--font-serif);font-size:1.6rem;font-weight:600;color:var(--warm-brown);margin-top:0.25rem">1.5</div>
+                </div>
+                <div style="padding:1rem;background:var(--cream);border-radius:2px;border:1px solid var(--light-gray)">
+                    <div style="font-size:0.65rem;color:var(--gray);text-transform:uppercase;letter-spacing:2px;font-weight:600">Est. Cost</div>
+                    <div id="calcCost" style="font-family:var(--font-serif);font-size:1.6rem;font-weight:600;color:var(--terracotta);margin-top:0.25rem">$37.50</div>
+                </div>
+                <div style="padding:1rem;background:var(--cream);border-radius:2px;border:1px solid var(--light-gray)">
+                    <div style="font-size:0.65rem;color:var(--gray);text-transform:uppercase;letter-spacing:2px;font-weight:600">Monthly Est. (4x)</div>
+                    <div id="calcMonthly" style="font-family:var(--font-serif);font-size:1.6rem;font-weight:600;color:var(--sage);margin-top:0.25rem">$150</div>
+                </div>
+            </div>
+            <div style="margin-top:1rem;padding:0.75rem 1rem;background:var(--linen);border-radius:2px;font-size:0.8rem;color:var(--gray);font-family:var(--font-serif);font-style:italic">
+                💡 Tip: Average cleaning cost across all B&A properties is ~$43/turnover. Tiffany completed 3 turnovers on Mar 15 for $130 total ($43.33/avg).
+            </div>
+        </div>
+
+        <!-- Per-Property Revenue -->
+        <h2 class="section-title">📊 Revenue by Property — March</h2>
+        <div class="card" id="propertyRevenue"></div>
     </div>
+
+    <!-- Toast Notification -->
+    <div id="toast" style="position:fixed;bottom:2rem;right:2rem;background:var(--warm-brown);color:white;padding:0.85rem 1.5rem;border-radius:2px;font-size:0.85rem;font-family:var(--font-sans);box-shadow:0 4px 20px rgba(0,0,0,0.2);z-index:200;transform:translateY(100px);opacity:0;transition:all 0.3s ease;pointer-events:none;"></div>
 
     <!-- Modals -->
     <div class="modal-overlay" id="cleaningModal">

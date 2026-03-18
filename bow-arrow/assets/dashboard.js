@@ -7,7 +7,7 @@ const API_BASE = ''; // Empty = use demo data (no backend running on GitHub Page
 const DEMO = {
     properties: [
         { id: 1, name: 'Spacious Apartment', apt_number: '6', beds: 1, baths: 1, base_nightly_rate: 85, status: 'active', current_guest: 'Jess', current_checkout: '2026-03-20', next_guest: 'Cleve', next_checkin: '2026-03-20', review_avg: 5.0, review_count: 24 },
-        { id: 2, name: 'Boho-Modern Apartment', apt_number: '7', beds: 2, baths: 2, base_nightly_rate: 116, status: 'active', current_guest: null, current_checkout: null, next_guest: 'Diane', next_checkin: '2026-03-19', review_avg: 5.0, review_count: 18 },
+        { id: 2, name: 'Boho-Modern Apartment', apt_number: '7', beds: 2, baths: 2, base_nightly_rate: 116, status: 'active', current_guest: null, current_checkout: null, next_guest: 'Diane (3 guests)', next_checkin: '2026-03-19', review_avg: 5.0, review_count: 18 },
         { id: 3, name: 'Orange Apartment', apt_number: '8', beds: 1, baths: 1, base_nightly_rate: 93, status: 'active', current_guest: 'Brandi', current_checkout: '2026-03-21', next_guest: null, next_checkin: null, review_avg: 5.0, review_count: 21 },
         { id: 4, name: 'Prof Row Cottage', apt_number: 'Cottage', beds: 3, baths: 1, base_nightly_rate: 43, min_nights: 30, status: 'active', current_guest: null, current_checkout: null, next_guest: 'Virginia Van Alstine', next_checkin: '2026-04-06', review_avg: 4.9, review_count: 8 },
         { id: 5, name: 'Hanover Combined', apt_number: '6+8', beds: 2, baths: 2, base_nightly_rate: 150, status: 'active', current_guest: null, current_checkout: null, next_guest: null, next_checkin: null, review_avg: 5.0, review_count: 6 },
@@ -36,12 +36,13 @@ const DEMO = {
         { month: '2026-03', revenue: 2250, expenses: 130, net: 2120 },
     ],
     alerts: [
-        { type: 'checkin', priority: 'high', message: 'Diane checks in to Apt 7 on Mar 19 (tomorrow!)', time: '2026-03-17T03:00:00' },
-        { type: 'checkout', priority: 'medium', message: 'Jess checks out of Apt 6 on Mar 20 (Thu)', time: '2026-03-17T03:00:00' },
-        { type: 'checkout', priority: 'medium', message: 'Brandi checks out of Apt 8 on Mar 21 (Fri)', time: '2026-03-17T03:00:00' },
-        { type: 'cleaning', priority: 'high', message: 'Apt 6 needs turnover after Jess (Mar 20) — Cleve arrives same day!', time: '2026-03-17T03:00:00' },
-        { type: 'cleaning', priority: 'medium', message: 'Apt 8 needs cleaning after Brandi (Mar 21). Suggest: Tiffany', time: '2026-03-17T03:00:00' },
-        { type: 'review', priority: 'low', message: '⭐ 5.00 perfect streak — 77 reviews! Keep it going!', time: '2026-03-17T03:00:00' },
+        { type: 'checkin', priority: 'high', message: 'Diane checks in to Apt #7 TOMORROW (Mar 19) — 3 guests, 7-night stay!', time: '2026-03-18T03:00:00' },
+        { type: 'checkout', priority: 'high', message: 'Jess checks out of Apt #6 on Mar 20 (Thu) — Same-day turnover for Cleve!', time: '2026-03-18T03:00:00' },
+        { type: 'cleaning', priority: 'high', message: '⚠️ CRITICAL: Apt #6 same-day turnover Thu Mar 20 — Jess out → Cleve in. Schedule cleaner NOW!', time: '2026-03-18T03:00:00' },
+        { type: 'checkout', priority: 'medium', message: 'Brandi checks out of Apt #8 on Mar 21 (Fri)', time: '2026-03-18T03:00:00' },
+        { type: 'cleaning', priority: 'medium', message: 'Apt #8 needs turnover after Brandi (Mar 21). Suggest: Tiffany (Fri)', time: '2026-03-18T03:00:00' },
+        { type: 'review', priority: 'low', message: '⭐ 5.00 perfect streak — 77 reviews! Keep it going!', time: '2026-03-18T03:00:00' },
+        { type: 'cleaning', priority: 'medium', message: 'Apt #7 turnover needed Mar 26 after Diane — Brittany arrives same day', time: '2026-03-18T03:00:00' },
     ],
     cleaningSchedule: {
         scheduled: [
@@ -50,9 +51,9 @@ const DEMO = {
             { property_name: 'Orange Apartment', apt_number: '8', date: '2026-03-15', cleaner: 'tiffany', type: 'turnover', completed: 1, hours: 1.5, pay: 42.50 },
         ],
         needed: [
-            { apt_number: '6', guest_name: 'Jess', checkout_date: '2026-03-20', suggested_cleaner: 'tiffany', urgency: 'critical', note: 'Same-day turnover — Cleve arriving!' },
-            { apt_number: '8', guest_name: 'Brandi', checkout_date: '2026-03-21', suggested_cleaner: 'tiffany', urgency: 'normal', note: '' },
-            { apt_number: '7', guest_name: 'Diane', checkout_date: '2026-03-26', suggested_cleaner: 'amanda', urgency: 'upcoming', note: 'Brittany arrives same day' },
+            { apt_number: '6', guest_name: 'Jess', checkout_date: '2026-03-20', suggested_cleaner: 'tiffany', urgency: 'critical', note: '⚠️ SAME-DAY TURNOVER — Cleve arriving same afternoon!' },
+            { apt_number: '8', guest_name: 'Brandi', checkout_date: '2026-03-21', suggested_cleaner: 'tiffany', urgency: 'normal', note: 'Friday checkout — Tiffany available' },
+            { apt_number: '7', guest_name: 'Diane', checkout_date: '2026-03-26', suggested_cleaner: 'amanda', urgency: 'upcoming', note: 'Same-day turnover — Brittany arrives Mar 26' },
         ]
     },
     occupancy: [
@@ -189,6 +190,8 @@ async function initDashboard() {
     renderAlerts(alerts);
     renderRevenueSnapshot(financials);
     renderUpcomingEvents(reservations);
+    renderPropertyRevenue(reservations);
+    if (typeof updateCalc === 'function') updateCalc();
 }
 
 function renderSummaryCards(properties, financials, reviews) {
@@ -743,6 +746,94 @@ document.addEventListener('keydown', function(e) {
         document.querySelectorAll('.modal-overlay.active').forEach(m => m.classList.remove('active'));
     }
 });
+
+// ===== CLEANING COST CALCULATOR =====
+function updateCalc() {
+    const sizes = { small: { turnover: 1.5, refresh: 0.75, deep: 2.5 }, medium: { turnover: 2, refresh: 1, deep: 3.5 }, large: { turnover: 3, refresh: 1.5, deep: 4.5 }, cottage: { turnover: 2.5, refresh: 1.25, deep: 4 } };
+    const prop = document.getElementById('calcProperty')?.value || 'small';
+    const type = document.getElementById('calcType')?.value || 'turnover';
+    const rate = parseFloat(document.getElementById('calcRate')?.value) || 25;
+    const hours = sizes[prop]?.[type] || 1.5;
+    const cost = hours * rate;
+
+    const hEl = document.getElementById('calcHours');
+    const cEl = document.getElementById('calcCost');
+    const mEl = document.getElementById('calcMonthly');
+    if (hEl) hEl.textContent = hours;
+    if (cEl) cEl.textContent = formatCurrency(cost);
+    if (mEl) mEl.textContent = formatCurrency(cost * 4);
+}
+
+// ===== PER-PROPERTY REVENUE =====
+function renderPropertyRevenue(reservations) {
+    const container = document.getElementById('propertyRevenue');
+    if (!container) return;
+
+    const propMap = {};
+    reservations.forEach(r => {
+        const key = 'Apt ' + r.apt_number;
+        if (!propMap[key]) propMap[key] = { revenue: 0, bookings: 0, nights: 0 };
+        propMap[key].revenue += r.payout || 0;
+        propMap[key].bookings++;
+        propMap[key].nights += nightsBetween(r.checkin_date, r.checkout_date);
+    });
+
+    const entries = Object.entries(propMap).sort((a, b) => b[1].revenue - a[1].revenue);
+    const maxRev = Math.max(...entries.map(([, v]) => v.revenue), 1);
+    const totalRev = entries.reduce((s, [, v]) => s + v.revenue, 0);
+
+    container.innerHTML = entries.map(([name, data], i) => {
+        const pct = ((data.revenue / totalRev) * 100).toFixed(1);
+        const barPct = (data.revenue / maxRev * 100);
+        const color = PROPERTY_COLORS[name.replace('Apt ', '')] || { bg: '#999' };
+        return `
+            <div style="margin-bottom:1rem;animation:fadeSlideUp 0.3s ease ${i * 0.08}s forwards;opacity:0">
+                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.35rem">
+                    <div>
+                        <span style="display:inline-block;width:10px;height:10px;border-radius:2px;background:${color.bg};vertical-align:middle;margin-right:6px"></span>
+                        <span style="font-weight:600;font-size:0.9rem">${name}</span>
+                        <span style="color:var(--gray);font-size:0.8rem;margin-left:0.5rem">${data.bookings} booking${data.bookings !== 1 ? 's' : ''} · ${data.nights} night${data.nights !== 1 ? 's' : ''}</span>
+                    </div>
+                    <div>
+                        <span style="font-weight:700;font-size:0.95rem">${formatCurrency(data.revenue)}</span>
+                        <span style="color:var(--gray);font-size:0.75rem;margin-left:0.4rem">(${pct}%)</span>
+                    </div>
+                </div>
+                <div style="background:var(--light-gray);border-radius:6px;height:20px;overflow:hidden">
+                    <div class="bar-animate" style="background:${color.bg};height:100%;width:0;border-radius:6px;transition:width 0.8s ease" data-width="${barPct}"></div>
+                </div>
+            </div>
+        `;
+    }).join('') +
+    `<div style="margin-top:1rem;padding-top:1rem;border-top:2px solid var(--terracotta);display:flex;justify-content:space-between;font-weight:700;font-size:1rem">
+        <span>Total March Revenue</span>
+        <span style="color:var(--terracotta)">${formatCurrency(totalRev)}</span>
+    </div>`;
+
+    // Animate bars
+    requestAnimationFrame(() => {
+        container.querySelectorAll('.bar-animate').forEach(bar => {
+            setTimeout(() => { bar.style.width = bar.dataset.width + '%'; }, 200);
+        });
+    });
+}
+
+// ===== TOAST SYSTEM =====
+function showToast(msg, duration = 3000) {
+    let toast = document.getElementById('toast');
+    if (!toast) return;
+    toast.textContent = msg;
+    toast.style.pointerEvents = 'auto';
+    requestAnimationFrame(() => {
+        toast.style.transform = 'translateY(0)';
+        toast.style.opacity = '1';
+        setTimeout(() => {
+            toast.style.transform = 'translateY(100px)';
+            toast.style.opacity = '0';
+            toast.style.pointerEvents = 'none';
+        }, duration);
+    });
+}
 
 // Auto-refresh dashboard every 60 seconds
 if (typeof initDashboard === 'function' && document.getElementById('propertyGrid')) {

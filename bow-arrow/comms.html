@@ -1,0 +1,595 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bow & Arrow Studio — Guest Communications</title>
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://usmcmin.com/bow-arrow/comms.html">
+    <meta property="og:title" content="Bow & Arrow Studio — Guest Communications">
+    <meta property="og:description" content="Guest communication log and message history for Bow & Arrow Studio.">
+    <link rel="stylesheet" href="assets/style.css">
+    <style>
+        .comms-container { display: grid; grid-template-columns: 280px 1fr; gap: 1.5rem; min-height: 500px; }
+        
+        /* Guest List Sidebar */
+        .guest-sidebar {
+            background: var(--warm-white);
+            border: 1px solid var(--light-gray);
+            border-radius: 2px;
+            overflow: hidden;
+        }
+        .guest-sidebar-header {
+            padding: 1rem 1.25rem;
+            background: var(--warm-brown);
+            color: var(--blush-light);
+            font-size: 0.65rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+        .guest-search {
+            padding: 0.75rem;
+            border-bottom: 1px solid var(--light-gray);
+        }
+        .guest-search input {
+            width: 100%;
+            padding: 8px 12px;
+            border: 1px solid var(--light-gray);
+            border-radius: 2px;
+            font-size: 0.85rem;
+            background: var(--cream);
+            font-family: var(--font-sans);
+        }
+        .guest-search input:focus { outline: none; border-color: var(--terracotta); }
+        .guest-list { max-height: 450px; overflow-y: auto; }
+        .guest-list-item {
+            padding: 0.85rem 1.25rem;
+            border-bottom: 1px solid var(--linen);
+            cursor: pointer;
+            transition: background 0.15s;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+        .guest-list-item:hover { background: var(--linen); }
+        .guest-list-item.active { background: var(--blush-light); border-left: 3px solid var(--terracotta); }
+        .guest-avatar {
+            width: 36px; height: 36px; border-radius: 50%;
+            background: var(--terracotta);
+            color: white; display: flex; align-items: center; justify-content: center;
+            font-family: var(--font-serif); font-weight: 700; font-size: 0.9rem;
+            flex-shrink: 0;
+        }
+        .guest-list-info { flex: 1; min-width: 0; }
+        .guest-list-name {
+            font-family: var(--font-serif); font-weight: 600; font-size: 0.9rem;
+            color: var(--warm-brown); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+        }
+        .guest-list-apt { font-size: 0.7rem; color: var(--gray); }
+        .guest-list-badge {
+            width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0;
+        }
+        .badge-active { background: var(--sage); }
+        .badge-upcoming { background: var(--blue); }
+        .badge-past { background: var(--light-gray); }
+
+        /* Conversation Panel */
+        .convo-panel {
+            background: var(--warm-white);
+            border: 1px solid var(--light-gray);
+            border-radius: 2px;
+            display: flex;
+            flex-direction: column;
+        }
+        .convo-header {
+            padding: 1rem 1.5rem;
+            border-bottom: 1px solid var(--light-gray);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: var(--cream);
+        }
+        .convo-header-info h3 {
+            font-family: var(--font-serif); font-weight: 600; font-size: 1.1rem;
+            color: var(--warm-brown); text-transform: none; letter-spacing: 0;
+        }
+        .convo-header-info .meta {
+            font-size: 0.75rem; color: var(--gray); margin-top: 0.15rem;
+        }
+        .convo-tags { display: flex; gap: 0.4rem; }
+        .convo-tag {
+            padding: 0.2rem 0.6rem; border-radius: 2px;
+            font-size: 0.6rem; font-weight: 700; text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .tag-checkin { background: var(--sage-light); color: var(--sage); }
+        .tag-checkout { background: #fce4e4; color: var(--dusty-rose); }
+        .tag-confirmed { background: #e3f2fd; color: var(--blue); }
+        .tag-review { background: #fff9c4; color: #b8860b; }
+
+        /* Message Thread */
+        .convo-messages {
+            flex: 1;
+            padding: 1.5rem;
+            overflow-y: auto;
+            max-height: 400px;
+        }
+        .msg-group { margin-bottom: 1.5rem; }
+        .msg-date {
+            text-align: center;
+            font-size: 0.7rem;
+            color: var(--gray);
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            position: relative;
+        }
+        .msg-date::before, .msg-date::after {
+            content: ''; position: absolute; top: 50%;
+            width: calc(50% - 60px); height: 1px; background: var(--light-gray);
+        }
+        .msg-date::before { left: 0; }
+        .msg-date::after { right: 0; }
+        .msg-bubble {
+            max-width: 80%;
+            padding: 0.85rem 1.15rem;
+            border-radius: 12px;
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+            line-height: 1.5;
+            position: relative;
+            animation: fadeSlideUp 0.2s ease;
+        }
+        .msg-host {
+            background: var(--terracotta);
+            color: white;
+            margin-left: auto;
+            border-bottom-right-radius: 4px;
+        }
+        .msg-guest {
+            background: var(--linen);
+            color: var(--dark-brown);
+            margin-right: auto;
+            border-bottom-left-radius: 4px;
+        }
+        .msg-system {
+            background: #fff9c4;
+            color: #8d6e00;
+            margin: 0 auto;
+            text-align: center;
+            font-size: 0.8rem;
+            font-style: italic;
+            border-radius: 6px;
+            max-width: 60%;
+        }
+        .msg-time {
+            font-size: 0.65rem;
+            color: rgba(255,255,255,0.7);
+            margin-top: 0.25rem;
+        }
+        .msg-guest .msg-time { color: var(--gray); }
+        .msg-system .msg-time { color: #b8860b; }
+
+        /* Compose */
+        .convo-compose {
+            padding: 1rem 1.5rem;
+            border-top: 1px solid var(--light-gray);
+            display: flex;
+            gap: 0.75rem;
+            align-items: flex-end;
+            background: var(--cream);
+        }
+        .convo-compose textarea {
+            flex: 1;
+            padding: 10px 14px;
+            border: 1px solid var(--light-gray);
+            border-radius: 8px;
+            font-size: 0.9rem;
+            resize: none;
+            min-height: 42px;
+            max-height: 100px;
+            background: var(--warm-white);
+            font-family: var(--font-sans);
+        }
+        .convo-compose textarea:focus { outline: none; border-color: var(--terracotta); }
+        .convo-compose button {
+            padding: 10px 20px;
+            background: var(--terracotta);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            cursor: pointer;
+            font-family: var(--font-sans);
+            transition: background 0.2s;
+            white-space: nowrap;
+        }
+        .convo-compose button:hover { background: var(--terracotta-dark); }
+
+        /* Quick Templates */
+        .quick-templates {
+            padding: 0.75rem 1.5rem;
+            border-top: 1px solid var(--linen);
+            background: var(--cream);
+            display: flex;
+            gap: 0.4rem;
+            flex-wrap: wrap;
+        }
+        .template-chip {
+            padding: 0.3rem 0.75rem;
+            border: 1px solid var(--blush);
+            border-radius: 20px;
+            font-size: 0.7rem;
+            color: var(--warm-brown);
+            cursor: pointer;
+            transition: all 0.15s;
+            font-family: var(--font-sans);
+            background: var(--warm-white);
+        }
+        .template-chip:hover {
+            background: var(--terracotta);
+            color: white;
+            border-color: var(--terracotta);
+        }
+
+        /* Empty State */
+        .empty-state {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            min-height: 400px;
+            color: var(--gray);
+        }
+        .empty-state .icon { font-size: 3rem; margin-bottom: 1rem; opacity: 0.5; }
+        .empty-state p { font-family: var(--font-serif); font-style: italic; }
+
+        /* Stats Bar */
+        .comms-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        .comms-stat {
+            background: var(--warm-white);
+            padding: 1.25rem;
+            border: 1px solid var(--light-gray);
+            border-radius: 2px;
+            text-align: center;
+        }
+        .comms-stat .stat-value {
+            font-family: var(--font-serif);
+            font-size: 1.8rem;
+            font-weight: 600;
+            color: var(--terracotta);
+        }
+        .comms-stat .stat-label {
+            font-size: 0.65rem;
+            color: var(--gray);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-weight: 600;
+            margin-top: 0.25rem;
+        }
+
+        @media (max-width: 768px) {
+            .comms-container {
+                grid-template-columns: 1fr;
+            }
+            .guest-sidebar { max-height: 250px; }
+            .guest-list { max-height: 200px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard">
+        <nav>
+            <span class="brand">Bow & Arrow</span>
+            <a href="dashboard.html">Dashboard</a>
+            <a href="calendar.html">Calendar</a>
+            <a href="cleaning.html">Cleaning</a>
+            <a href="financials.html">Financials</a>
+            <a href="maintenance.html">Maintenance</a>
+            <a href="comms.html" class="active">Comms</a>
+            <a href="booking.html">Book Direct</a>
+            <a href="guests.html">Guest Info</a>
+            <a class="logout" onclick="logout()">Logout</a>
+        </nav>
+
+        <header>
+            <h1>💬 Guest Communications</h1>
+            <span class="date-info" id="dateInfo"></span>
+        </header>
+
+        <!-- Stats -->
+        <div class="comms-stats">
+            <div class="comms-stat">
+                <div class="stat-value" id="activeConvos">3</div>
+                <div class="stat-label">Active Conversations</div>
+            </div>
+            <div class="comms-stat">
+                <div class="stat-value" id="avgResponse">&lt;15m</div>
+                <div class="stat-label">Avg Response Time</div>
+            </div>
+            <div class="comms-stat">
+                <div class="stat-value" id="msgToday">4</div>
+                <div class="stat-label">Messages Today</div>
+            </div>
+            <div class="comms-stat">
+                <div class="stat-value" id="responseRate">100%</div>
+                <div class="stat-label">Response Rate</div>
+            </div>
+        </div>
+
+        <!-- Main Layout -->
+        <div class="comms-container">
+            <!-- Sidebar -->
+            <div class="guest-sidebar">
+                <div class="guest-sidebar-header">Guests</div>
+                <div class="guest-search">
+                    <input type="text" placeholder="Search guests..." id="guestSearch" oninput="filterGuests(this.value)">
+                </div>
+                <div class="guest-list" id="guestList"></div>
+            </div>
+
+            <!-- Conversation -->
+            <div class="convo-panel" id="convoPanel">
+                <div class="empty-state" id="emptyState">
+                    <div class="icon">💬</div>
+                    <p>Select a guest to view conversation</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="assets/dashboard.js"></script>
+    <script>
+        if (!checkAuth()) { /* redirects */ }
+        initMobileNav();
+        document.getElementById('dateInfo').textContent = todayNice();
+
+        // Demo communication data
+        const COMMS = {
+            guests: [
+                {
+                    id: 1, name: 'Brandi', apt: '#8', status: 'active',
+                    checkin: '2026-03-15', checkout: '2026-03-21',
+                    avatar_color: '#C4835A',
+                    messages: [
+                        { from: 'system', text: 'Brandi booked Apt #8 (Mar 15–21) via Airbnb', time: '2026-03-10 14:00' },
+                        { from: 'host', text: 'Hi Brandi! Welcome to Bow & Arrow Studio. Looking forward to hosting you! Your check-in is at 4 PM on March 15th. The building code is 3524, and your apartment lock will be the last 4 digits of your phone number.', time: '2026-03-13 10:15' },
+                        { from: 'guest', text: 'Thank you so much! Is there parking available nearby?', time: '2026-03-13 11:30' },
+                        { from: 'host', text: 'Great question! Here\'s our parking guide video: https://youtu.be/AIUd3IFdKC8 — There\'s free street parking and a city lot within a block.', time: '2026-03-13 11:42' },
+                        { from: 'guest', text: 'Perfect, thank you!', time: '2026-03-13 11:45' },
+                        { from: 'system', text: 'Brandi checked in to Apt #8', time: '2026-03-15 16:20' },
+                        { from: 'guest', text: 'The apartment is beautiful! Love the orange theme 🧡', time: '2026-03-15 17:00' },
+                        { from: 'host', text: 'So glad you love it! Let us know if you need anything at all. Enjoy your stay in Fredericksburg!', time: '2026-03-15 17:08' },
+                    ]
+                },
+                {
+                    id: 2, name: 'Jess', apt: '#6', status: 'active',
+                    checkin: '2026-03-15', checkout: '2026-03-20',
+                    avatar_color: '#8B9E7E',
+                    messages: [
+                        { from: 'system', text: 'Jess booked Apt #6 (Mar 15–20) via Airbnb', time: '2026-03-08 09:00' },
+                        { from: 'host', text: 'Hey Jess! Can\'t wait to host you. Check-in is 4 PM on March 15th. Building code: 3524. Your door lock code will be set to the last 4 digits of your phone. Let me know if you have any questions!', time: '2026-03-12 14:00' },
+                        { from: 'guest', text: 'Thanks Adam! Can we do early check-in around 2 PM?', time: '2026-03-12 16:30' },
+                        { from: 'host', text: 'Absolutely! 2 PM works — first hour is free so you\'re all set. 😊', time: '2026-03-12 16:35' },
+                        { from: 'system', text: 'Jess checked in to Apt #6', time: '2026-03-15 14:10' },
+                        { from: 'guest', text: 'We love the space! The downtown location is amazing. Any restaurant recs?', time: '2026-03-16 11:00' },
+                        { from: 'host', text: 'So glad! Check out our food guide: bowandarrowphotographystudio.com/fredericksburg-virginia-downtown-food-guide/ — Personal faves: Foode for dinner, Eileen\'s for baked goods, and Orofino for Italian.', time: '2026-03-16 11:12' },
+                    ]
+                },
+                {
+                    id: 3, name: 'Diane', apt: '#7', status: 'upcoming',
+                    checkin: '2026-03-19', checkout: '2026-03-26',
+                    avatar_color: '#6B4A3A',
+                    messages: [
+                        { from: 'system', text: 'Diane booked Apt #7 (Mar 19–26) via Airbnb — 3 guests', time: '2026-03-05 11:00' },
+                        { from: 'host', text: 'Hi Diane! Looking forward to hosting you and your group in our Boho-Modern apartment. It\'s our largest unit with 2 beds and 2 baths — plenty of room! Check-in is at 4 PM on March 19th.', time: '2026-03-14 09:00' },
+                        { from: 'guest', text: 'Thank you! We\'re so excited. Is there a washer/dryer in the unit?', time: '2026-03-14 12:20' },
+                        { from: 'host', text: 'Yes! There\'s a full-size washer and dryer in the unit. Detergent pods are provided. 🧺', time: '2026-03-14 12:28' },
+                        { from: 'guest', text: 'Perfect, that\'s great to know. See you soon!', time: '2026-03-14 12:35' },
+                        { from: 'host', text: 'Just a reminder — your check-in is tomorrow! Building code: 3524. Your door code will be the last 4 digits of your phone number. I\'ll have everything ready for you. Safe travels! 🙌', time: '2026-03-18 10:00' },
+                    ]
+                },
+                {
+                    id: 4, name: 'Cleve', apt: '#6', status: 'upcoming',
+                    checkin: '2026-03-20', checkout: '2026-03-21',
+                    avatar_color: '#D4A68C',
+                    messages: [
+                        { from: 'system', text: 'Cleve booked Apt #6 (Mar 20–21) via Airbnb — 1 night', time: '2026-03-12 15:00' },
+                        { from: 'host', text: 'Hi Cleve! Welcome — looking forward to your one-night stay. Check-in is at 4 PM on March 20th. Building code is 3524.', time: '2026-03-16 10:00' },
+                        { from: 'guest', text: 'Thanks! Just passing through FXBG. Appreciate the quick booking.', time: '2026-03-16 14:00' },
+                    ]
+                },
+                {
+                    id: 5, name: 'Amy', apt: '#6', status: 'upcoming',
+                    checkin: '2026-03-23', checkout: '2026-03-28',
+                    avatar_color: '#C8918A',
+                    messages: [
+                        { from: 'system', text: 'Amy booked Apt #6 (Mar 23–28) via Airbnb — 2 guests', time: '2026-03-10 16:00' },
+                        { from: 'host', text: 'Hi Amy! Can\'t wait to host you. Your check-in is March 23rd at 4 PM. I\'ll send detailed instructions closer to the date!', time: '2026-03-15 09:00' },
+                    ]
+                },
+                {
+                    id: 6, name: 'Brittany', apt: '#7', status: 'upcoming',
+                    checkin: '2026-03-26', checkout: '2026-03-30',
+                    avatar_color: '#7B9AAE',
+                    messages: [
+                        { from: 'system', text: 'Brittany booked Apt #7 (Mar 26–30) via Airbnb — 2 guests', time: '2026-03-11 10:00' },
+                    ]
+                },
+                {
+                    id: 7, name: 'Virginia Van Alstine', apt: 'Cottage', status: 'upcoming',
+                    checkin: '2026-04-06', checkout: '2026-05-06',
+                    avatar_color: '#D4B85A',
+                    messages: [
+                        { from: 'system', text: 'Virginia booked Prof Row Cottage (Apr 6 – May 6) via Airbnb — 30-night stay', time: '2026-03-01 09:00' },
+                        { from: 'guest', text: 'Hi! I\'m relocating to the Fredericksburg area and need a place while house hunting. Is there good internet for remote work?', time: '2026-03-01 09:30' },
+                        { from: 'host', text: 'Welcome Virginia! Yes, we have high-speed WiFi — great for remote work. The cottage has a dedicated workspace area too. The location is perfect for exploring different neighborhoods while you house hunt.', time: '2026-03-01 10:15' },
+                        { from: 'guest', text: 'That sounds perfect. Thank you!', time: '2026-03-01 10:25' },
+                    ]
+                }
+            ],
+            templates: [
+                { label: '👋 Welcome', text: 'Hi {name}! Welcome to Bow & Arrow Studio. Check-in is at 4 PM. Building code: 3524. Your apartment lock code is the last 4 digits of your phone number. Let us know if you need anything!' },
+                { label: '🅿️ Parking', text: 'Great question! Here\'s our parking guide: https://youtu.be/AIUd3IFdKC8 — Free street parking and a city lot are within a block of the building.' },
+                { label: '🍕 Restaurants', text: 'Check out our food guide: bowandarrowphotographystudio.com/fredericksburg-virginia-downtown-food-guide/ — Top picks: Foode, Eileen\'s Bakery, Orofino Italian.' },
+                { label: '📅 Reminder', text: 'Just a reminder — your check-in is tomorrow! Building code: 3524. I\'ll have everything ready. Safe travels! 🙌' },
+                { label: '🧹 Checkout', text: 'Hope you had a wonderful stay! Checkout is at 11 AM. Quick checklist: start a load of towels/linens, take out trash, and lock the door behind you. We\'d love a review if you have a moment! ⭐' },
+                { label: '⭐ Review Ask', text: 'Thank you so much for staying with us! If you enjoyed your stay, we\'d really appreciate a review on Airbnb — it helps other travelers discover our little spot in Fredericksburg. 🙏' },
+                { label: '🕐 Early Check-in', text: 'Of course! Early check-in at {time} works — the first hour is free. See you then! 😊' },
+                { label: '🕐 Late Checkout', text: 'Late checkout until {time} is available! First hour is free, then $20/hr after that. Just let us know!' },
+            ]
+        };
+
+        let selectedGuest = null;
+
+        // Render guest list
+        function renderGuestList(filter = '') {
+            const list = document.getElementById('guestList');
+            const filtered = COMMS.guests.filter(g =>
+                g.name.toLowerCase().includes(filter.toLowerCase()) ||
+                g.apt.toLowerCase().includes(filter.toLowerCase())
+            );
+
+            list.innerHTML = filtered.map(g => {
+                const badgeClass = g.status === 'active' ? 'badge-active' : g.status === 'upcoming' ? 'badge-upcoming' : 'badge-past';
+                const lastMsg = g.messages[g.messages.length - 1];
+                const unread = g.messages.filter(m => m.from === 'guest').length > 0 && g.status === 'active';
+                return `
+                    <div class="guest-list-item${selectedGuest?.id === g.id ? ' active' : ''}" onclick="selectGuest(${g.id})">
+                        <div class="guest-avatar" style="background:${g.avatar_color}">${g.name.charAt(0)}</div>
+                        <div class="guest-list-info">
+                            <div class="guest-list-name">${g.name}</div>
+                            <div class="guest-list-apt">Apt ${g.apt} · ${formatDate(g.checkin)} – ${formatDate(g.checkout)}</div>
+                        </div>
+                        <div class="guest-list-badge ${badgeClass}"></div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function filterGuests(val) { renderGuestList(val); }
+
+        function selectGuest(id) {
+            selectedGuest = COMMS.guests.find(g => g.id === id);
+            renderGuestList(document.getElementById('guestSearch').value);
+            renderConversation(selectedGuest);
+        }
+
+        function renderConversation(guest) {
+            const panel = document.getElementById('convoPanel');
+            const statusTag = guest.status === 'active' ? '<span class="convo-tag tag-checkin">Checked In</span>' :
+                              guest.status === 'upcoming' ? '<span class="convo-tag tag-confirmed">Confirmed</span>' :
+                              '<span class="convo-tag tag-checkout">Past</span>';
+            const nights = nightsBetween(guest.checkin, guest.checkout);
+
+            // Group messages by date
+            const groups = {};
+            guest.messages.forEach(m => {
+                const date = m.time.split(' ')[0];
+                if (!groups[date]) groups[date] = [];
+                groups[date].push(m);
+            });
+
+            panel.innerHTML = `
+                <div class="convo-header">
+                    <div class="convo-header-info">
+                        <h3>${guest.name}</h3>
+                        <div class="meta">Apt ${guest.apt} · ${formatDate(guest.checkin)} → ${formatDate(guest.checkout)} · ${nights} night${nights !== 1 ? 's' : ''}</div>
+                    </div>
+                    <div class="convo-tags">${statusTag}</div>
+                </div>
+                <div class="convo-messages" id="convoMessages">
+                    ${Object.entries(groups).map(([date, msgs]) => `
+                        <div class="msg-group">
+                            <div class="msg-date">${formatDate(date)}</div>
+                            ${msgs.map(m => {
+                                const time = m.time.split(' ')[1] || '';
+                                const hrs = parseInt(time.split(':')[0]);
+                                const ampm = hrs >= 12 ? 'PM' : 'AM';
+                                const h12 = hrs > 12 ? hrs - 12 : hrs === 0 ? 12 : hrs;
+                                const timeStr = time ? `${h12}:${time.split(':')[1]} ${ampm}` : '';
+                                if (m.from === 'system') {
+                                    return `<div class="msg-bubble msg-system">${m.text}<div class="msg-time">${timeStr}</div></div>`;
+                                }
+                                return `<div class="msg-bubble msg-${m.from}">
+                                    ${m.text}
+                                    <div class="msg-time">${m.from === 'host' ? 'You · ' : ''}${timeStr}</div>
+                                </div>`;
+                            }).join('')}
+                        </div>
+                    `).join('')}
+                </div>
+                <div class="quick-templates" id="quickTemplates">
+                    ${COMMS.templates.map((t, i) => `<span class="template-chip" onclick="useTemplate(${i})">${t.label}</span>`).join('')}
+                </div>
+                <div class="convo-compose">
+                    <textarea id="composeMsg" placeholder="Type a message..." rows="1" onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendMsg()}"></textarea>
+                    <button onclick="sendMsg()">Send</button>
+                </div>
+            `;
+
+            // Scroll to bottom
+            const msgs = document.getElementById('convoMessages');
+            msgs.scrollTop = msgs.scrollHeight;
+        }
+
+        function useTemplate(index) {
+            const template = COMMS.templates[index];
+            const text = template.text.replace('{name}', selectedGuest?.name || 'Guest');
+            document.getElementById('composeMsg').value = text;
+            document.getElementById('composeMsg').focus();
+        }
+
+        function sendMsg() {
+            const input = document.getElementById('composeMsg');
+            const text = input.value.trim();
+            if (!text || !selectedGuest) return;
+
+            // Add to messages
+            const now = new Date();
+            const timeStr = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}-${String(now.getDate()).padStart(2,'0')} ${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}`;
+            selectedGuest.messages.push({ from: 'host', text, time: timeStr });
+            input.value = '';
+            renderConversation(selectedGuest);
+            showToast('Message sent (demo mode — connect backend for Airbnb sync)');
+        }
+
+        // Toast notification
+        function showToast(msg) {
+            let toast = document.getElementById('toast');
+            if (!toast) {
+                toast = document.createElement('div');
+                toast.id = 'toast';
+                toast.style.cssText = 'position:fixed;bottom:2rem;right:2rem;background:var(--warm-brown);color:white;padding:0.85rem 1.5rem;border-radius:2px;font-size:0.85rem;font-family:var(--font-sans);box-shadow:0 4px 20px rgba(0,0,0,0.2);z-index:200;transform:translateY(100px);opacity:0;transition:all 0.3s ease;';
+                document.body.appendChild(toast);
+            }
+            toast.textContent = msg;
+            requestAnimationFrame(() => {
+                toast.style.transform = 'translateY(0)';
+                toast.style.opacity = '1';
+                setTimeout(() => {
+                    toast.style.transform = 'translateY(100px)';
+                    toast.style.opacity = '0';
+                }, 3000);
+            });
+        }
+
+        // Initialize
+        renderGuestList();
+        // Auto-select first active guest
+        const firstActive = COMMS.guests.find(g => g.status === 'active');
+        if (firstActive) selectGuest(firstActive.id);
+    </script>
+</body>
+</html>

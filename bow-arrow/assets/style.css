@@ -953,6 +953,58 @@ table tr:hover { background: var(--linen); }
     header { flex-direction: column; align-items: flex-start; }
 }
 
+/* ===== URGENT PULSE ===== */
+.alert-item.urgent {
+    animation: urgentPulse 2s ease infinite;
+}
+
+@keyframes urgentPulse {
+    0%, 100% { background: transparent; }
+    50% { background: rgba(194, 112, 112, 0.06); }
+}
+
+/* ===== PAGE TRANSITION ===== */
+.dashboard {
+    animation: pageIn 0.35s ease;
+}
+
+@keyframes pageIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* ===== IMPROVED PROPERTY CARDS ===== */
+.property-card {
+    transition: transform 0.2s ease, box-shadow 0.2s ease, border-left-color 0.3s ease;
+}
+
+/* ===== ACTIVE NAV INDICATOR ===== */
+nav a.active {
+    position: relative;
+}
+
+nav a.active::after {
+    content: '';
+    position: absolute;
+    bottom: -3px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 4px;
+    height: 4px;
+    background: var(--terracotta);
+    border-radius: 50%;
+}
+
+/* ===== IMPROVED CALENDAR HOVER ===== */
+.cal-day {
+    transition: transform 0.1s ease, box-shadow 0.1s ease;
+}
+.cal-day.has-booking:hover {
+    transform: scale(1.05);
+    z-index: 5;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+}
+
 /* ===== SCROLLBAR ===== */
 ::-webkit-scrollbar { width: 6px; }
 ::-webkit-scrollbar-track { background: var(--linen); }

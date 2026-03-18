@@ -651,9 +651,188 @@ body {
   to { opacity: 0; }
 }
 
+/* ── Sparkline ── */
+.sparkline-container {
+  width: 80px;
+  height: 32px;
+  opacity: 0.8;
+}
+
+.sparkline-container svg {
+  display: block;
+}
+
+/* ── Price Card Extras ── */
+.price-card {
+  cursor: default;
+}
+
+.price-mcap {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
+/* ── Market Stat Change ── */
+.market-stat-change {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  margin-top: 1px;
+}
+
+.market-stat-change.positive { color: var(--green); }
+.market-stat-change.negative { color: var(--red); }
+
+/* ── Last Updated ── */
+.last-updated {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--text-muted);
+}
+
+/* ── Chart Legend ── */
+.chart-legend {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--text-secondary);
+  padding: 8px 0 0;
+  min-height: 24px;
+}
+
+/* ── Chart Timeframe Group ── */
+.chart-timeframe-group {
+  display: inline-flex;
+  gap: 4px;
+  margin-left: 12px;
+  padding-left: 12px;
+  border-left: 1px solid var(--border);
+}
+
+.chart-tf-btn.active {
+  border-color: var(--blue);
+  color: var(--blue);
+}
+
+/* ── Market Cap Rankings Table ── */
+.rankings-table {
+  overflow-x: auto;
+}
+
+.rankings-header,
+.rankings-row {
+  display: grid;
+  grid-template-columns: 40px 120px 110px 70px 70px 70px 100px 90px;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 0;
+  font-family: var(--font-mono);
+  font-size: 13px;
+}
+
+.rankings-header {
+  color: var(--text-muted);
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 10px;
+}
+
+.rankings-row {
+  border-bottom: 1px solid rgba(255,255,255,0.03);
+  transition: background 0.15s;
+}
+
+.rankings-row:hover {
+  background: rgba(255,255,255,0.02);
+}
+
+.rankings-row:last-child {
+  border-bottom: none;
+}
+
+.rank-col {
+  color: var(--text-muted);
+  text-align: center;
+}
+
+.rank-name-col {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.rank-coin-img {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+}
+
+.rank-coin-name {
+  font-weight: 600;
+}
+
+.rank-price-col {
+  color: var(--text-primary);
+  font-weight: 500;
+}
+
+.rank-change-col {
+  text-align: right;
+  font-size: 12px;
+}
+
+.rank-change-col.positive { color: var(--green); }
+.rank-change-col.negative { color: var(--red); }
+
+.rank-mcap-col {
+  color: var(--text-secondary);
+  text-align: right;
+  font-size: 12px;
+}
+
+.rank-spark-col {
+  width: 80px;
+  height: 24px;
+}
+
+/* ── Error Card ── */
+.error-card {
+  text-align: center;
+  padding: 24px;
+  color: var(--red);
+  font-size: 13px;
+  border-color: var(--red-dim);
+}
+
+/* ── Dashboard Footer ── */
+.dashboard-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 24px 0 16px;
+  margin-top: 32px;
+  border-top: 1px solid var(--border);
+  font-size: 11px;
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+/* ── Status Online Animation ── */
+.status-online {
+  box-shadow: 0 0 6px var(--green);
+}
+
 /* ── Responsive ── */
 @media (max-width: 1200px) {
   .grid-5 { grid-template-columns: repeat(3, 1fr); }
+  .rankings-header,
+  .rankings-row {
+    grid-template-columns: 30px 100px 100px 60px 60px 60px 90px 80px;
+    font-size: 12px;
+  }
 }
 
 @media (max-width: 900px) {
@@ -664,6 +843,13 @@ body {
   .header { padding: 12px 16px; flex-wrap: wrap; gap: 8px; }
   .market-stats-bar { padding: 8px 12px; justify-content: center; }
   .trending-container { grid-template-columns: repeat(2, 1fr); }
+  .rankings-header,
+  .rankings-row {
+    grid-template-columns: 30px 90px 90px 55px 55px 55px 80px;
+    font-size: 11px;
+  }
+  .rank-spark-col { display: none; }
+  .chart-timeframe-group { margin-left: 4px; padding-left: 4px; }
 }
 
 @media (max-width: 600px) {
@@ -674,4 +860,17 @@ body {
   .market-stat { flex-direction: row; gap: 8px; width: 100%; justify-content: space-between; }
   .trending-container { grid-template-columns: 1fr; }
   .fear-greed-value { font-size: 22px; }
+  .rankings-header,
+  .rankings-row {
+    grid-template-columns: 25px 80px 80px 50px 50px;
+    font-size: 10px;
+  }
+  .rank-change-col:last-of-type,
+  .rank-mcap-col,
+  .rank-spark-col { display: none; }
+  .sparkline-container { display: none; }
+  .chart-timeframe-group { display: none; }
+  .dashboard-footer { flex-direction: column; text-align: center; }
+  .last-updated { display: none; }
+  .btn-metamask { display: none; }
 }

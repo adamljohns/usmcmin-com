@@ -1,18 +1,26 @@
 /**
- * C5iSR Dashboard — Frontend Logic
+ * C5iSR Dashboard — Frontend Logic v2.0
  * 
- * Works in two modes:
- *   1. Backend mode: Pulls from FastAPI at API_BASE
- *   2. Demo mode: Falls back to CoinGecko direct API if backend offline
+ * Features:
+ *   - Dual mode: Backend FastAPI or CoinGecko demo
+ *   - localStorage caching with TTL to reduce API hits
+ *   - Sparkline mini-charts on price cards
+ *   - Market cap top 10 rankings
+ *   - Chart timeframe selector (7D/30D/90D/180D)
+ *   - Persistent alert history
+ *   - ETH gas price display
+ *   - Fear & Greed with yesterday comparison
+ *   - Retry with exponential backoff + rate limit handling
  */
 
 // ── Config ──
-const API_BASE = localStorage.getItem('c5isr_api') || '';  // empty = demo mode
+const API_BASE = localStorage.getItem('c5isr_api') || '';
 const COINGECKO = 'https://api.coingecko.com/api/v3';
-const COINGECKO_FALLBACK = 'https://pro-api.coingecko.com/api/v3'; // fallback endpoint
-const REFRESH_INTERVAL = 30; // seconds
+const REFRESH_INTERVAL = 30;
 const MAX_RETRIES = 3;
 const RETRY_DELAY_MS = 1000;
+const CACHE_TTL_MS = 25000; // 25s cache (refresh is 30s)
+const CACHE_TTL_LONG = 120000; // 2 min for trending/rankings
 const ASSETS = {
   bitcoin:            { symbol: 'BTC', name: 'Bitcoin',  color: '#f7931a' },
   ethereum:           { symbol: 'ETH', name: 'Ethereum', color: '#627eea' },
@@ -26,20 +34,46 @@ let refreshCountdown = REFRESH_INTERVAL;
 let refreshInterval = null;
 let chart = null;
 let candleSeries = null;
+let volumeSeries = null;
 let currentChartAsset = 'bitcoin';
+let currentChartDays = 30;
 
 // ── Auth Check ──
 if (localStorage.getItem('c5isr_auth') !== 'true') {
   window.location.href = 'index.html';
 }
 
+// ── Cache Layer ──
+const cache = {
+  set(key, data, ttl = CACHE_TTL_MS) {
+    try {
+      localStorage.setItem(`c5_cache_${key}`, JSON.stringify({
+        data, expires: Date.now() + ttl
+      }));
+    } catch { /* quota exceeded — ignore */ }
+  },
+  get(key) {
+    try {
+      const raw = localStorage.getItem(`c5_cache_${key}`);
+      if (!raw) return null;
+      const { data, expires } = JSON.parse(raw);
+      if (Date.now() > expires) {
+        localStorage.removeItem(`c5_cache_${key}`);
+        return null;
+      }
+      return data;
+    } catch { return null; }
+  }
+};
+
 // ── Retry Fetch with Exponential Backoff ──
 async function fetchWithRetry(url, options = {}, retries = MAX_RETRIES) {
   for (let i = 0; i < retries; i++) {
     try {
-      const r = await fetch(url, { signal: AbortSignal.timeout(10000), ...options });
+      const r = await fetch(url, { signal: AbortSignal.timeout(12000), ...options });
       if (r.status === 429) {
-        const wait = Math.min(RETRY_DELAY_MS * Math.pow(2, i), 10000);
+        const retryAfter = r.headers.get('Retry-After');
+        const wait = retryAfter ? parseInt(retryAfter) * 1000 : Math.min(RETRY_DELAY_MS * Math.pow(2, i), 15000);
         showToast(`Rate limited — retrying in ${(wait/1000).toFixed(0)}s`, 'info');
         await new Promise(res => setTimeout(res, wait));
         continue;
@@ -57,6 +91,16 @@ async function fetchWithRetry(url, options = {}, retries = MAX_RETRIES) {
   throw new Error('Max retries exceeded');
 }
 
+// Cached fetch helper
+async function cachedFetch(cacheKey, url, ttl = CACHE_TTL_MS) {
+  const cached = cache.get(cacheKey);
+  if (cached) return cached;
+  const r = await fetchWithRetry(url);
+  const data = await r.json();
+  cache.set(cacheKey, data, ttl);
+  return data;
+}
+
 // ── Toast Notifications ──
 function showToast(msg, type = 'info') {
   const existing = document.querySelectorAll('.toast');
@@ -65,24 +109,37 @@ function showToast(msg, type = 'info') {
   t.className = `toast toast-${type}`;
   t.textContent = msg;
   document.body.appendChild(t);
-  setTimeout(() => t.remove(), 3000);
+  setTimeout(() => t.remove(), 3500);
 }
 
 // ── Init ──
 document.addEventListener('DOMContentLoaded', async () => {
   await checkBackend();
   initChart();
-  await Promise.all([
-    loadPrices(),
-    loadSignals(),
-    loadChartData(currentChartAsset),
-    loadBacktest(),
-    loadFearGreed(),
-    loadTrending(),
-    loadGlobalStats(),
-  ]);
-  startRefreshTimer();
   setupChartButtons();
+  setupTimeframeButtons();
+
+  // Load in parallel, stagger CoinGecko calls slightly to avoid rate limits
+  await Promise.allSettled([
+    loadPrices(),
+    loadGlobalStats(),
+    loadFearGreed(),
+  ]);
+  // Second batch after a brief pause
+  await new Promise(r => setTimeout(r, 500));
+  await Promise.allSettled([
+    loadSignals(),
+    loadChartData(currentChartAsset, currentChartDays),
+    loadBacktest(),
+  ]);
+  await new Promise(r => setTimeout(r, 500));
+  await Promise.allSettled([
+    loadTrending(),
+    loadMarketRankings(),
+  ]);
+
+  startRefreshTimer();
+  updateLastUpdated();
 });
 
 // ── Backend Check ──
@@ -100,14 +157,21 @@ function setStatus(online) {
   const txt = document.getElementById('statusText');
   if (online) {
     dot.style.background = 'var(--green)';
+    dot.classList.add('status-online');
     txt.textContent = 'Backend Online';
   } else {
     dot.style.background = 'var(--amber)';
+    dot.classList.remove('status-online');
     txt.textContent = 'Demo Mode (CoinGecko)';
   }
 }
 
-// ── Price Loading ──
+function updateLastUpdated() {
+  const el = document.getElementById('lastUpdated');
+  if (el) el.textContent = `Updated ${new Date().toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })}`;
+}
+
+// ── Price Loading with Sparklines ──
 async function loadPrices() {
   try {
     let prices;
@@ -122,20 +186,22 @@ async function loadPrices() {
       prices = await fetchCoinGeckoPrices();
     }
     renderPrices(prices);
+    // Load sparklines in background
+    loadSparklines();
   } catch (e) {
     console.error('Price load failed:', e);
-    // Try CoinGecko fallback
     try {
       const prices = await fetchCoinGeckoPrices();
       renderPrices(prices);
-    } catch { }
+    } catch {
+      document.getElementById('priceGrid').innerHTML = '<div class="card error-card">⚠️ Failed to load prices. Retrying...</div>';
+    }
   }
 }
 
 async function fetchCoinGeckoPrices() {
   const ids = Object.keys(ASSETS).join(',');
-  const r = await fetchWithRetry(`${COINGECKO}/simple/price?ids=${ids}&vs_currencies=usd&include_24hr_change=true&include_24hr_vol=true&include_market_cap=true`);
-  const data = await r.json();
+  const data = await cachedFetch('prices', `${COINGECKO}/simple/price?ids=${ids}&vs_currencies=usd&include_24hr_change=true&include_24hr_vol=true&include_market_cap=true`);
   return Object.entries(ASSETS).map(([id, info]) => ({
     id,
     symbol: info.symbol,
@@ -154,14 +220,57 @@ function renderPrices(prices) {
     const isUp = change >= 0;
     const arrow = isUp ? '▲' : '▼';
     const cls = isUp ? 'positive' : 'negative';
+    const mcap = p.market_cap ? formatCompact(p.market_cap) : '';
     return `
-      <div class="card">
-        <div class="price-symbol">${ASSETS[p.id]?.symbol || p.symbol}</div>
-        <div class="price-name">${ASSETS[p.id]?.name || p.name}</div>
+      <div class="card card-animate price-card" data-asset="${p.id}">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start">
+          <div>
+            <div class="price-symbol" style="color:${ASSETS[p.id]?.color || '#fff'}">${ASSETS[p.id]?.symbol || p.symbol}</div>
+            <div class="price-name">${ASSETS[p.id]?.name || p.name}</div>
+          </div>
+          <div class="sparkline-container" id="sparkline-${p.id}"></div>
+        </div>
         <div class="price-value">$${formatPrice(p.price)}</div>
-        <div class="price-change ${cls}">${arrow} ${Math.abs(change).toFixed(2)}%</div>
+        <div style="display:flex;justify-content:space-between;align-items:center">
+          <div class="price-change ${cls}">${arrow} ${Math.abs(change).toFixed(2)}%</div>
+          <div class="price-mcap">${mcap}</div>
+        </div>
       </div>`;
   }).join('');
+}
+
+// ── Sparklines ──
+async function loadSparklines() {
+  for (const id of Object.keys(ASSETS)) {
+    try {
+      const data = cache.get(`spark_${id}`) || await (async () => {
+        const r = await fetchWithRetry(`${COINGECKO}/coins/${id}/market_chart?vs_currency=usd&days=7&interval=daily`);
+        const d = await r.json();
+        cache.set(`spark_${id}`, d.prices, CACHE_TTL_LONG);
+        return d.prices;
+      })();
+      const prices = Array.isArray(data) ? data.map(p => Array.isArray(p) ? p[1] : p) : [];
+      if (prices.length >= 2) drawSparkline(`sparkline-${id}`, prices, ASSETS[id]?.color || '#00ff88');
+    } catch { /* sparkline is non-critical */ }
+    await new Promise(r => setTimeout(r, 200)); // stagger
+  }
+}
+
+function drawSparkline(containerId, prices, color) {
+  const container = document.getElementById(containerId);
+  if (!container) return;
+  const w = 80, h = 32;
+  const min = Math.min(...prices);
+  const max = Math.max(...prices);
+  const range = max - min || 1;
+  const points = prices.map((p, i) => {
+    const x = (i / (prices.length - 1)) * w;
+    const y = h - ((p - min) / range) * h;
+    return `${x.toFixed(1)},${y.toFixed(1)}`;
+  }).join(' ');
+  const isUp = prices[prices.length - 1] >= prices[0];
+  const lineColor = isUp ? 'var(--green)' : 'var(--red)';
+  container.innerHTML = `<svg width="${w}" height="${h}" viewBox="0 0 ${w} ${h}"><polyline points="${points}" fill="none" stroke="${lineColor}" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
 }
 
 // ── Signal Loading ──
@@ -185,30 +294,26 @@ async function loadSignals() {
     updateAlertLog(signals);
   } catch (e) {
     console.error('Signal load failed:', e);
-    try {
-      const signals = await generateDemoSignals();
-      renderSignals(signals);
-    } catch {}
+    document.getElementById('signalGrid').innerHTML = '<div class="card error-card">⚠️ Signal computation failed</div>';
   }
 }
 
 async function generateDemoSignals() {
-  // Fetch OHLC from CoinGecko and compute signals client-side
   const signals = [];
   for (const [id, info] of Object.entries(ASSETS)) {
     try {
-      const r = await fetchWithRetry(`${COINGECKO}/coins/${id}/ohlc?vs_currency=usd&days=30`);
-      const ohlc = await r.json();
+      const cacheKey = `ohlc_${id}_30`;
+      const ohlc = await cachedFetch(cacheKey, `${COINGECKO}/coins/${id}/ohlc?vs_currency=usd&days=30`, CACHE_TTL_MS);
       if (!Array.isArray(ohlc) || ohlc.length < 30) {
         signals.push({ asset_id: id, symbol: info.symbol, signal: 'HOLD', confidence: 50, reason: 'Insufficient data' });
         continue;
       }
       const closes = ohlc.map(c => c[4]);
-      const signal = computeSignal(closes, id, info.symbol);
-      signals.push(signal);
+      signals.push(computeSignal(closes, id, info.symbol));
     } catch {
       signals.push({ asset_id: id, symbol: info.symbol, signal: 'HOLD', confidence: 50, reason: 'Fetch error' });
     }
+    await new Promise(r => setTimeout(r, 150)); // stagger
   }
   return signals;
 }
@@ -226,27 +331,22 @@ function computeSignal(prices, assetId, symbol) {
   const buySignals = [];
   const sellSignals = [];
 
-  // RSI
   if (rsiVal !== null) {
     if (rsiVal < 35) buySignals.push(`RSI oversold (${rsiVal.toFixed(1)})`);
     else if (rsiVal > 70) sellSignals.push(`RSI overbought (${rsiVal.toFixed(1)})`);
   }
 
-  // MACD
   if (macdData.bullishCross) buySignals.push('MACD bullish crossover');
   if (macdData.bearishCross) sellSignals.push('MACD bearish crossover');
 
-  // Bollinger
   if (bb.position === 'below_lower') buySignals.push('Price at lower BB');
   else if (bb.position === 'above_upper') sellSignals.push('Price at upper BB');
 
-  // EMA trend
   if (ema200 !== null) {
     if (currentPrice > ema200) buySignals.push('Above EMA 200');
     else sellSignals.push('Below EMA 200');
   }
 
-  // Determine regime
   let regime = 'SIDEWAYS';
   if (ema20 && ema50 && ema200) {
     if (ema20 > ema50 && ema50 > ema200) regime = 'BULL';
@@ -255,56 +355,42 @@ function computeSignal(prices, assetId, symbol) {
 
   let signal, confidence;
   if (buySignals.length >= 2 && buySignals.length > sellSignals.length) {
-    signal = 'BUY';
-    confidence = Math.min((buySignals.length / 4) * 100, 100);
+    signal = 'BUY'; confidence = Math.min((buySignals.length / 4) * 100, 100);
   } else if (sellSignals.length >= 2 && sellSignals.length > buySignals.length) {
-    signal = 'SELL';
-    confidence = Math.min((sellSignals.length / 4) * 100, 100);
+    signal = 'SELL'; confidence = Math.min((sellSignals.length / 4) * 100, 100);
   } else {
-    signal = 'HOLD';
-    confidence = 50;
+    signal = 'HOLD'; confidence = 50;
   }
 
-  // Build risk + DCA
   const isVolatile = ['BTC', 'ETH', 'SOL'].includes(symbol);
   const slPct = isVolatile ? 8 : 5;
   const slPrice = currentPrice * (1 - slPct / 100);
   const tpPrice = currentPrice * (1 + (slPct * 2) / 100);
 
   const result = {
-    asset_id: assetId,
-    symbol,
-    signal,
+    asset_id: assetId, symbol, signal,
     confidence: Math.round(confidence * 10) / 10,
     reason: [...buySignals, ...sellSignals].join(' | ') || 'No strong confluence',
-    buy_signals: buySignals,
-    sell_signals: sellSignals,
-    rsi: rsiVal,
-    macd: macdData.line,
-    macd_signal: macdData.signal,
+    buy_signals: buySignals, sell_signals: sellSignals,
+    rsi: rsiVal, macd: macdData.line, macd_signal: macdData.signal,
     bb_position: bb.position,
     ema_trend: ema200 ? (currentPrice > ema200 ? 'uptrend' : 'downtrend') : 'unknown',
     market_regime: regime,
     indicators: {
-      current_price: currentPrice,
-      rsi: rsiVal,
+      current_price: currentPrice, rsi: rsiVal,
       macd: { macd_line: macdData.line, signal_line: macdData.signal, histogram: macdData.histogram },
       bollinger: { upper: bb.upper, middle: bb.middle, lower: bb.lower },
       ema: { ema_20: ema20, ema_50: ema50, ema_200: ema200, regime },
     },
     risk: {
-      stop_loss_pct: slPct,
-      stop_loss_price: Math.round(slPrice * 100) / 100,
-      take_profit_price: Math.round(tpPrice * 100) / 100,
-      max_position_usd: 2500,
-      risk_reward_ratio: '1:2',
+      stop_loss_pct: slPct, stop_loss_price: round2(slPrice),
+      take_profit_price: round2(tpPrice), max_position_usd: 2500, risk_reward_ratio: '1:2',
     },
   };
 
   if (signal === 'BUY') {
     result.dca_plan = {
-      strategy: '3-Tranche DCA',
-      total_position_usd: 2500,
+      strategy: '3-Tranche DCA', total_position_usd: 2500,
       tranches: [
         { tranche: 1, entry_price: round2(currentPrice), amount_usd: 833, pct_of_position: 33.3 },
         { tranche: 2, entry_price: round2(currentPrice * 0.98), amount_usd: 833, pct_of_position: 33.3 },
@@ -313,11 +399,10 @@ function computeSignal(prices, assetId, symbol) {
       avg_entry_price: round2(currentPrice * 0.98),
     };
   }
-
   return result;
 }
 
-// ── Technical Indicator Functions (Client-Side) ──
+// ── Technical Indicator Functions ──
 function calcRSI(prices, period = 14) {
   if (prices.length < period + 1) return null;
   let avgGain = 0, avgLoss = 0;
@@ -325,8 +410,7 @@ function calcRSI(prices, period = 14) {
     const d = prices[i] - prices[i - 1];
     if (d > 0) avgGain += d; else avgLoss -= d;
   }
-  avgGain /= period;
-  avgLoss /= period;
+  avgGain /= period; avgLoss /= period;
   for (let i = period + 1; i < prices.length; i++) {
     const d = prices[i] - prices[i - 1];
     avgGain = (avgGain * (period - 1) + Math.max(d, 0)) / period;
@@ -340,51 +424,35 @@ function calcEMA(prices, period) {
   if (prices.length < period) return null;
   let ema = prices.slice(0, period).reduce((a, b) => a + b) / period;
   const m = 2 / (period + 1);
-  for (let i = period; i < prices.length; i++) {
-    ema = (prices[i] - ema) * m + ema;
-  }
+  for (let i = period; i < prices.length; i++) ema = (prices[i] - ema) * m + ema;
   return ema;
 }
 
 function calcMACD(prices) {
   const fast = 12, slow = 26, sig = 9;
   if (prices.length < slow + sig) return { line: null, signal: null, histogram: null, bullishCross: false, bearishCross: false };
-
-  // Compute full EMA arrays
   function emaArr(p, per) {
     const r = [];
     let e = p.slice(0, per).reduce((a, b) => a + b) / per;
     for (let i = 0; i < per; i++) r.push(null);
     r[per - 1] = e;
     const m = 2 / (per + 1);
-    for (let i = per; i < p.length; i++) {
-      e = (p[i] - e) * m + e;
-      r.push(e);
-    }
+    for (let i = per; i < p.length; i++) { e = (p[i] - e) * m + e; r.push(e); }
     return r;
   }
-
-  const ef = emaArr(prices, fast);
-  const es = emaArr(prices, slow);
+  const ef = emaArr(prices, fast), es = emaArr(prices, slow);
   const ml = ef.map((f, i) => f !== null && es[i] !== null ? f - es[i] : null);
   const valid = ml.filter(v => v !== null);
   const sl = valid.length >= sig ? (() => {
     let e = valid.slice(0, sig).reduce((a, b) => a + b) / sig;
-    const r = Array(sig - 1).fill(null);
-    r.push(e);
+    const r = Array(sig - 1).fill(null); r.push(e);
     const m = 2 / (sig + 1);
-    for (let i = sig; i < valid.length; i++) {
-      e = (valid[i] - e) * m + e;
-      r.push(e);
-    }
+    for (let i = sig; i < valid.length; i++) { e = (valid[i] - e) * m + e; r.push(e); }
     return r;
   })() : [];
-
   const line = valid.length ? valid[valid.length - 1] : null;
   const signal = sl.length ? sl[sl.length - 1] : null;
   const histogram = line !== null && signal !== null ? line - signal : null;
-
-  // Crossover check
   let bullishCross = false, bearishCross = false;
   if (valid.length >= 2 && sl.length >= 2) {
     const m1 = valid[valid.length - 2], m2 = valid[valid.length - 1];
@@ -394,7 +462,6 @@ function calcMACD(prices) {
       if (m1 > s1 && m2 < s2) bearishCross = true;
     }
   }
-
   return { line, signal, histogram, bullishCross, bearishCross };
 }
 
@@ -403,8 +470,7 @@ function calcBB(prices, period = 20) {
   const slice = prices.slice(-period);
   const middle = slice.reduce((a, b) => a + b) / period;
   const std = Math.sqrt(slice.reduce((s, v) => s + (v - middle) ** 2, 0) / period);
-  const upper = middle + 2 * std;
-  const lower = middle - 2 * std;
+  const upper = middle + 2 * std, lower = middle - 2 * std;
   const price = prices[prices.length - 1];
   let position = 'upper_half';
   if (price >= upper) position = 'above_upper';
@@ -423,31 +489,24 @@ function renderSignals(signals) {
     const rsiWidth = s.rsi != null ? s.rsi : 50;
     const confColor = s.confidence >= 70 ? 'var(--green)' : s.confidence >= 40 ? 'var(--amber)' : 'var(--red)';
     return `
-      <div class="card">
+      <div class="card card-animate">
         <div style="display:flex;justify-content:space-between;align-items:center">
-          <span style="font-family:var(--font-mono);font-weight:700;font-size:16px">${s.symbol}</span>
+          <span style="font-family:var(--font-mono);font-weight:700;font-size:16px;color:${ASSETS[s.asset_id]?.color || '#fff'}">${s.symbol}</span>
           <span class="signal-badge ${cls}">${s.signal}</span>
         </div>
         <div style="margin-top:12px">
           <div class="rsi-value">RSI: <span style="color:${rsiColor}">${rsi}</span></div>
-          <div class="rsi-gauge">
-            <div class="rsi-gauge-fill" style="width:${rsiWidth}%;background:${rsiColor}"></div>
-          </div>
+          <div class="rsi-gauge"><div class="rsi-gauge-fill" style="width:${rsiWidth}%;background:${rsiColor}"></div></div>
         </div>
-        <div style="margin-top:8px;font-size:12px;color:var(--text-muted)">
-          MACD: ${s.macd != null ? s.macd.toFixed(4) : '—'}
-        </div>
-        <div style="margin-top:4px;font-size:11px;color:var(--text-muted)">${s.reason || '—'}</div>
-        <div class="confidence-bar">
-          <div class="confidence-fill" style="width:${s.confidence}%;background:${confColor}"></div>
-        </div>
+        <div style="margin-top:8px;font-size:12px;color:var(--text-muted)">MACD: ${s.macd != null ? s.macd.toFixed(4) : '—'}</div>
+        <div style="margin-top:4px;font-size:11px;color:var(--text-muted);min-height:28px">${s.reason || '—'}</div>
+        <div class="confidence-bar"><div class="confidence-fill" style="width:${s.confidence}%;background:${confColor}"></div></div>
         <div style="text-align:right;font-size:11px;color:var(--text-muted);margin-top:4px">${s.confidence}% confidence</div>
       </div>`;
   }).join('');
 }
 
 function updateRegime(signals) {
-  // Use BTC's regime as the overall market indicator
   const btc = signals.find(s => s.symbol === 'BTC') || signals[0];
   const regime = btc?.market_regime || btc?.indicators?.ema?.regime || 'SIDEWAYS';
   const badge = document.getElementById('regimeBadge');
@@ -455,7 +514,6 @@ function updateRegime(signals) {
   const cls = regime === 'BULL' ? 'regime-bull' : regime === 'BEAR' ? 'regime-bear' : 'regime-sideways';
   badge.className = `regime-badge ${cls}`;
   badge.textContent = `${emoji} ${regime}`;
-
   const emaInfo = btc?.indicators?.ema;
   const align = document.getElementById('emaAlignment');
   if (emaInfo) {
@@ -487,12 +545,8 @@ function updateDCA(signals) {
 
 function updateRisk(signals) {
   const el = document.getElementById('riskContent');
-  // Show risk for first non-HOLD signal, or BTC
   const sig = signals.find(s => s.signal !== 'HOLD' && s.risk) || signals.find(s => s.symbol === 'BTC');
-  if (!sig?.risk) {
-    el.innerHTML = '<div style="color:var(--text-muted)">No risk data</div>';
-    return;
-  }
+  if (!sig?.risk) { el.innerHTML = '<div style="color:var(--text-muted)">No risk data</div>'; return; }
   const r = sig.risk;
   el.innerHTML = `
     <div style="font-family:var(--font-mono);font-size:14px;margin-bottom:12px">${sig.symbol} Risk Profile</div>
@@ -503,28 +557,61 @@ function updateRisk(signals) {
     <div class="risk-row"><span class="risk-label">Max Portfolio Risk</span><span class="risk-value">${r.max_portfolio_risk_pct || 5}%</span></div>`;
 }
 
+// ── Alert History (Persistent) ──
+function getAlertHistory() {
+  try {
+    return JSON.parse(localStorage.getItem('c5_alert_history') || '[]');
+  } catch { return []; }
+}
+
+function saveAlertHistory(alerts) {
+  try {
+    localStorage.setItem('c5_alert_history', JSON.stringify(alerts.slice(0, 50))); // keep last 50
+  } catch {}
+}
+
+function clearAlertHistory() {
+  localStorage.removeItem('c5_alert_history');
+  document.getElementById('alertLog').innerHTML = '<div style="color:var(--text-muted);padding:12px;text-align:center">Alert history cleared</div>';
+}
+
 function updateAlertLog(signals) {
   const el = document.getElementById('alertLog');
   const now = new Date();
-  const alerts = signals
+  const newAlerts = signals
     .filter(s => s.signal !== 'HOLD')
     .map(s => ({
-      time: now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' }),
+      time: now.toISOString(),
+      timeStr: now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' }),
+      dateStr: now.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }),
       symbol: s.symbol,
       type: s.signal,
       msg: s.reason,
     }));
 
-  if (alerts.length === 0) {
+  // Merge with history (deduplicate by symbol+type within last 5 minutes)
+  let history = getAlertHistory();
+  for (const a of newAlerts) {
+    const isDuplicate = history.some(h =>
+      h.symbol === a.symbol && h.type === a.type &&
+      (now - new Date(h.time)) < 300000
+    );
+    if (!isDuplicate) history.unshift(a);
+  }
+  history = history.slice(0, 50);
+  saveAlertHistory(history);
+
+  const display = history.slice(0, 10);
+  if (display.length === 0) {
     el.innerHTML = '<div style="color:var(--text-muted);padding:12px;text-align:center">All clear — no actionable signals right now</div>';
     return;
   }
 
-  el.innerHTML = alerts.map(a => {
+  el.innerHTML = display.map(a => {
     const color = a.type === 'BUY' ? 'var(--green)' : 'var(--red)';
     return `
       <div class="alert-item">
-        <span class="alert-time">${a.time}</span>
+        <span class="alert-time">${a.dateStr} ${a.timeStr}</span>
         <span class="alert-symbol" style="color:${color}">${a.symbol}</span>
         <span class="signal-badge ${a.type === 'BUY' ? 'signal-buy' : 'signal-sell'}">${a.type}</span>
         <span class="alert-msg">${a.msg}</span>
@@ -537,19 +624,14 @@ async function loadBacktest() {
   const assetId = document.getElementById('backtestAsset').value;
   const el = document.getElementById('backtestContent');
   el.innerHTML = '<div class="spinner"></div>';
-
   try {
     let result;
     if (backendOnline) {
       const token = localStorage.getItem('c5isr_token') || '';
-      const r = await fetch(`${API_BASE}/api/backtest/${assetId}`, {
-        headers: { Authorization: `Bearer ${token}` }
-      });
+      const r = await fetch(`${API_BASE}/api/backtest/${assetId}`, { headers: { Authorization: `Bearer ${token}` } });
       result = await r.json();
     } else {
-      // Demo backtest using CoinGecko data
-      const r = await fetchWithRetry(`${COINGECKO}/coins/${assetId}/ohlc?vs_currency=usd&days=90`);
-      const ohlc = await r.json();
+      const ohlc = await cachedFetch(`ohlc_${assetId}_90`, `${COINGECKO}/coins/${assetId}/ohlc?vs_currency=usd&days=90`, CACHE_TTL_LONG);
       if (!Array.isArray(ohlc) || ohlc.length < 50) {
         el.innerHTML = '<div style="color:var(--text-muted)">Insufficient data for backtest</div>';
         return;
@@ -558,7 +640,7 @@ async function loadBacktest() {
     }
     renderBacktest(result);
   } catch (e) {
-    el.innerHTML = `<div style="color:var(--red)">Backtest failed: ${e.message}</div>`;
+    el.innerHTML = `<div style="color:var(--red);font-size:12px">Backtest failed: ${e.message}</div>`;
   }
 }
 
@@ -566,166 +648,125 @@ function runClientBacktest(ohlc, assetId) {
   const closes = ohlc.map(c => c[4]);
   let capital = 10000, position = 0, entryPrice = 0;
   let trades = 0, wins = 0, maxDD = 0, peak = capital;
-
   for (let i = 50; i < closes.length; i++) {
     const price = closes[i];
     const equity = capital + position * price;
     if (equity > peak) peak = equity;
     const dd = (peak - equity) / peak * 100;
     if (dd > maxDD) maxDD = dd;
-
     const slice = closes.slice(0, i + 1);
     const rsiVal = calcRSI(slice);
     let buy = 0, sell = 0;
-    if (rsiVal < 35) buy++;
-    if (rsiVal > 70) sell++;
-
+    if (rsiVal < 35) buy++; if (rsiVal > 70) sell++;
     const ema200 = calcEMA(slice, 200);
     if (ema200 && price > ema200) buy++; else if (ema200) sell++;
-
-    if (buy >= 2 && position === 0) {
-      position = capital / price;
-      entryPrice = price;
-      capital = 0;
-    } else if (sell >= 2 && position > 0) {
-      capital = position * price;
-      trades++;
-      if (price > entryPrice) wins++;
-      position = 0;
-    }
+    if (buy >= 2 && position === 0) { position = capital / price; entryPrice = price; capital = 0; }
+    else if (sell >= 2 && position > 0) { capital = position * price; trades++; if (price > entryPrice) wins++; position = 0; }
   }
-  // Close open position
-  if (position > 0) {
-    capital = position * closes[closes.length - 1];
-    trades++;
-    if (closes[closes.length - 1] > entryPrice) wins++;
-  }
-
+  if (position > 0) { capital = position * closes[closes.length - 1]; trades++; if (closes[closes.length - 1] > entryPrice) wins++; }
   return {
     symbol: ASSETS[assetId]?.symbol || '???',
     total_return_pct: round2((capital - 10000) / 100),
     win_rate_pct: trades > 0 ? round2(wins / trades * 100) : 0,
-    max_drawdown_pct: round2(maxDD),
-    total_trades: trades,
-    final_capital: round2(capital),
+    max_drawdown_pct: round2(maxDD), total_trades: trades, final_capital: round2(capital),
   };
 }
 
 function renderBacktest(bt) {
-  if (bt.error) {
-    document.getElementById('backtestContent').innerHTML = `<div style="color:var(--text-muted)">${bt.error}</div>`;
-    return;
-  }
+  if (bt.error) { document.getElementById('backtestContent').innerHTML = `<div style="color:var(--text-muted)">${bt.error}</div>`; return; }
   const retColor = bt.total_return_pct >= 0 ? 'var(--green)' : 'var(--red)';
   document.getElementById('backtestContent').innerHTML = `
     <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:12px">
-      <div class="bt-stat">
-        <div class="bt-stat-value" style="color:${retColor}">${bt.total_return_pct >= 0 ? '+' : ''}${bt.total_return_pct}%</div>
-        <div class="bt-stat-label">Total Return</div>
-      </div>
-      <div class="bt-stat">
-        <div class="bt-stat-value">${bt.win_rate_pct}%</div>
-        <div class="bt-stat-label">Win Rate</div>
-      </div>
-      <div class="bt-stat">
-        <div class="bt-stat-value" style="color:var(--red)">${bt.max_drawdown_pct}%</div>
-        <div class="bt-stat-label">Max Drawdown</div>
-      </div>
-      <div class="bt-stat">
-        <div class="bt-stat-value">${bt.total_trades}</div>
-        <div class="bt-stat-label">Total Trades</div>
-      </div>
+      <div class="bt-stat"><div class="bt-stat-value" style="color:${retColor}">${bt.total_return_pct >= 0 ? '+' : ''}${bt.total_return_pct}%</div><div class="bt-stat-label">Total Return</div></div>
+      <div class="bt-stat"><div class="bt-stat-value">${bt.win_rate_pct}%</div><div class="bt-stat-label">Win Rate</div></div>
+      <div class="bt-stat"><div class="bt-stat-value" style="color:var(--red)">${bt.max_drawdown_pct}%</div><div class="bt-stat-label">Max Drawdown</div></div>
+      <div class="bt-stat"><div class="bt-stat-value">${bt.total_trades}</div><div class="bt-stat-label">Total Trades</div></div>
     </div>
     <div style="text-align:center;margin-top:12px;font-size:12px;color:var(--text-muted)">
       Final: $${(bt.final_capital || 0).toLocaleString(undefined, {maximumFractionDigits: 2})}
     </div>`;
 }
 
-// ── Chart ──
+// ── Chart with Timeframe Selector ──
 function initChart() {
   const container = document.getElementById('mainChart');
   chart = LightweightCharts.createChart(container, {
-    width: container.clientWidth,
-    height: 300,
-    layout: {
-      background: { type: 'solid', color: 'transparent' },
-      textColor: 'rgba(255,255,255,0.5)',
-      fontFamily: 'JetBrains Mono',
-    },
-    grid: {
-      vertLines: { color: 'rgba(255,255,255,0.03)' },
-      horzLines: { color: 'rgba(255,255,255,0.03)' },
-    },
-    crosshair: {
-      mode: LightweightCharts.CrosshairMode.Normal,
-    },
-    rightPriceScale: {
-      borderColor: 'rgba(255,255,255,0.08)',
-    },
-    timeScale: {
-      borderColor: 'rgba(255,255,255,0.08)',
-      timeVisible: true,
-    },
+    width: container.clientWidth, height: 350,
+    layout: { background: { type: 'solid', color: 'transparent' }, textColor: 'rgba(255,255,255,0.5)', fontFamily: 'JetBrains Mono' },
+    grid: { vertLines: { color: 'rgba(255,255,255,0.03)' }, horzLines: { color: 'rgba(255,255,255,0.03)' } },
+    crosshair: { mode: LightweightCharts.CrosshairMode.Normal },
+    rightPriceScale: { borderColor: 'rgba(255,255,255,0.08)' },
+    timeScale: { borderColor: 'rgba(255,255,255,0.08)', timeVisible: true },
   });
-
   candleSeries = chart.addCandlestickSeries({
-    upColor: '#00ff88',
-    downColor: '#ff3355',
-    borderUpColor: '#00ff88',
-    borderDownColor: '#ff3355',
-    wickUpColor: '#00ff88',
-    wickDownColor: '#ff3355',
+    upColor: '#00ff88', downColor: '#ff3355',
+    borderUpColor: '#00ff88', borderDownColor: '#ff3355',
+    wickUpColor: '#00ff88', wickDownColor: '#ff3355',
   });
+  volumeSeries = chart.addHistogramSeries({
+    color: '#26a69a33', priceFormat: { type: 'volume' },
+    priceScaleId: '', scaleMargins: { top: 0.85, bottom: 0 },
+  });
+  new ResizeObserver(() => { chart.applyOptions({ width: container.clientWidth }); }).observe(container);
 
-  // Responsive resize
-  new ResizeObserver(() => {
-    chart.applyOptions({ width: container.clientWidth });
-  }).observe(container);
+  // Crosshair legend
+  chart.subscribeCrosshairMove(param => {
+    const legend = document.getElementById('chartLegend');
+    if (!param.time || !param.seriesData) { legend.textContent = ''; return; }
+    const ohlc = param.seriesData.get(candleSeries);
+    if (ohlc) {
+      const cls = ohlc.close >= ohlc.open ? 'positive' : 'negative';
+      legend.innerHTML = `<span style="color:var(--text-muted)">O</span> $${formatPrice(ohlc.open)} <span style="color:var(--text-muted)">H</span> $${formatPrice(ohlc.high)} <span style="color:var(--text-muted)">L</span> $${formatPrice(ohlc.low)} <span style="color:var(--text-muted)">C</span> <span class="${cls}">$${formatPrice(ohlc.close)}</span>`;
+    }
+  });
 }
 
-async function loadChartData(assetId) {
+async function loadChartData(assetId, days = 30) {
   try {
-    const r = await fetchWithRetry(`${COINGECKO}/coins/${assetId}/ohlc?vs_currency=usd&days=30`);
-    const ohlc = await r.json();
+    const cacheKey = `chart_${assetId}_${days}`;
+    const ohlc = await cachedFetch(cacheKey, `${COINGECKO}/coins/${assetId}/ohlc?vs_currency=usd&days=${days}`, CACHE_TTL_MS);
     if (!Array.isArray(ohlc)) return;
-
-    const data = ohlc.map(c => ({
-      time: Math.floor(c[0] / 1000),
-      open: c[1],
-      high: c[2],
-      low: c[3],
-      close: c[4],
+    const data = ohlc.map(c => ({ time: Math.floor(c[0] / 1000), open: c[1], high: c[2], low: c[3], close: c[4] }));
+    // Estimate volume from price range
+    const volData = data.map(d => ({
+      time: d.time,
+      value: Math.abs(d.high - d.low) * 1000,
+      color: d.close >= d.open ? 'rgba(0,255,136,0.15)' : 'rgba(255,51,85,0.15)',
     }));
-
     candleSeries.setData(data);
+    volumeSeries.setData(volData);
     chart.timeScale().fitContent();
-
-    // Update chart title
     const titleEl = document.querySelector('.chart-container').closest('.card').querySelector('.card-title');
     if (titleEl) titleEl.textContent = `${ASSETS[assetId]?.symbol || '???'}/USD`;
-  } catch (e) {
-    console.error('Chart load failed:', e);
-  }
+  } catch (e) { console.error('Chart load failed:', e); }
 }
 
 function setupChartButtons() {
   document.querySelectorAll('.chart-asset-btn').forEach(btn => {
     btn.addEventListener('click', () => {
-      document.querySelectorAll('.chart-asset-btn').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('.chart-asset-btn').forEach(b => { b.classList.remove('active'); b.style.borderColor = ''; b.style.color = ''; });
       btn.classList.add('active');
-      btn.style.borderColor = 'var(--green)';
-      btn.style.color = 'var(--green)';
-      document.querySelectorAll('.chart-asset-btn:not(.active)').forEach(b => {
-        b.style.borderColor = '';
-        b.style.color = '';
-      });
+      btn.style.borderColor = 'var(--green)'; btn.style.color = 'var(--green)';
       currentChartAsset = btn.dataset.asset;
-      loadChartData(currentChartAsset);
+      loadChartData(currentChartAsset, currentChartDays);
     });
   });
-  // Style initial active
   const active = document.querySelector('.chart-asset-btn.active');
   if (active) { active.style.borderColor = 'var(--green)'; active.style.color = 'var(--green)'; }
+}
+
+function setupTimeframeButtons() {
+  document.querySelectorAll('.chart-tf-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.chart-tf-btn').forEach(b => { b.classList.remove('active'); b.style.borderColor = ''; b.style.color = ''; });
+      btn.classList.add('active');
+      btn.style.borderColor = 'var(--blue)'; btn.style.color = 'var(--blue)';
+      currentChartDays = parseInt(btn.dataset.days);
+      loadChartData(currentChartAsset, currentChartDays);
+    });
+  });
+  const active = document.querySelector('.chart-tf-btn.active');
+  if (active) { active.style.borderColor = 'var(--blue)'; active.style.color = 'var(--blue)'; }
 }
 
 // ── Refresh Timer ──
@@ -739,15 +780,12 @@ function startRefreshTimer() {
       refreshCountdown = REFRESH_INTERVAL;
       loadPrices();
       loadSignals();
-      loadChartData(currentChartAsset);
-      // Refresh these less frequently (every 2 cycles = 60s)
+      loadChartData(currentChartAsset, currentChartDays);
+      updateLastUpdated();
       if (!window._refreshCycle) window._refreshCycle = 0;
       window._refreshCycle++;
-      if (window._refreshCycle % 2 === 0) {
-        loadFearGreed();
-        loadTrending();
-        loadGlobalStats();
-      }
+      if (window._refreshCycle % 2 === 0) { loadFearGreed(); loadGlobalStats(); }
+      if (window._refreshCycle % 4 === 0) { loadTrending(); loadMarketRankings(); }
     }
   }, 1000);
 }
@@ -755,7 +793,7 @@ function startRefreshTimer() {
 // ── MetaMask ──
 async function connectMetaMask() {
   if (typeof window.ethereum === 'undefined') {
-    alert('MetaMask not detected. Install MetaMask to connect your wallet.');
+    showToast('MetaMask not detected. Install the extension first.', 'error');
     return;
   }
   try {
@@ -767,17 +805,11 @@ async function connectMetaMask() {
     document.getElementById('metamaskBtn').style.color = 'var(--green)';
     const walletInfo = document.getElementById('walletInfo');
     walletInfo.style.display = 'block';
-    walletInfo.textContent = `Connected: ${short}`;
-    // Get balance
-    const balance = await window.ethereum.request({
-      method: 'eth_getBalance',
-      params: [addr, 'latest']
-    });
+    const balance = await window.ethereum.request({ method: 'eth_getBalance', params: [addr, 'latest'] });
     const ethBalance = parseInt(balance, 16) / 1e18;
     walletInfo.textContent = `${short} | ${ethBalance.toFixed(4)} ETH`;
-  } catch (e) {
-    console.error('MetaMask connect failed:', e);
-  }
+    showToast(`Connected: ${short}`, 'success');
+  } catch (e) { showToast('MetaMask connection failed', 'error'); }
 }
 
 // ── Logout ──
@@ -788,21 +820,20 @@ function logout() {
   window.location.href = 'index.html';
 }
 
-// ── Fear & Greed Index ──
+// ── Fear & Greed Index (with yesterday comparison) ──
 async function loadFearGreed() {
   try {
-    const r = await fetchWithRetry('https://api.alternative.me/fng/?limit=1');
-    const data = await r.json();
+    const data = await cachedFetch('fng', 'https://api.alternative.me/fng/?limit=2', CACHE_TTL_LONG);
     const fg = data.data?.[0];
+    const fgYesterday = data.data?.[1];
     if (!fg) return;
-
     const value = parseInt(fg.value);
     const label = fg.value_classification;
     const el = document.getElementById('fearGreedValue');
     const pointer = document.getElementById('fearGreedPointer');
     const update = document.getElementById('fearGreedUpdate');
+    const yesterday = document.getElementById('fearGreedYesterday');
 
-    // Color based on value
     let color;
     if (value <= 25) color = 'var(--red)';
     else if (value <= 45) color = '#ff6644';
@@ -812,9 +843,16 @@ async function loadFearGreed() {
 
     el.innerHTML = `<span style="color:${color}">${value}</span> <span style="font-size:14px;color:var(--text-secondary)">${label}</span>`;
     pointer.style.left = `${value}%`;
-
     const updated = new Date(parseInt(fg.timestamp) * 1000);
     update.textContent = `Updated: ${updated.toLocaleDateString()}`;
+
+    if (fgYesterday) {
+      const yVal = parseInt(fgYesterday.value);
+      const diff = value - yVal;
+      const diffStr = diff > 0 ? `+${diff}` : `${diff}`;
+      const diffColor = diff > 0 ? 'var(--green)' : diff < 0 ? 'var(--red)' : 'var(--text-muted)';
+      yesterday.innerHTML = `Yesterday: ${yVal} (<span style="color:${diffColor}">${diffStr}</span>)`;
+    }
   } catch (e) {
     console.error('Fear & Greed load failed:', e);
     document.getElementById('fearGreedValue').innerHTML = '<span style="color:var(--text-muted);font-size:14px">Unavailable</span>';
@@ -824,16 +862,10 @@ async function loadFearGreed() {
 // ── Trending Coins ──
 async function loadTrending() {
   try {
-    const r = await fetchWithRetry(`${COINGECKO}/search/trending`);
-    const data = await r.json();
+    const data = await cachedFetch('trending', `${COINGECKO}/search/trending`, CACHE_TTL_LONG);
     const coins = data.coins?.slice(0, 7) || [];
     const el = document.getElementById('trendingCoins');
-
-    if (coins.length === 0) {
-      el.innerHTML = '<div style="color:var(--text-muted)">No trending data available</div>';
-      return;
-    }
-
+    if (coins.length === 0) { el.innerHTML = '<div style="color:var(--text-muted)">No trending data</div>'; return; }
     el.innerHTML = coins.map((c, i) => {
       const item = c.item;
       const priceChange = item.data?.price_change_percentage_24h?.usd;
@@ -849,13 +881,9 @@ async function loadTrending() {
             <div class="trending-coin-name">${item.name}</div>
             <div class="trending-coin-symbol">${item.symbol}</div>
           </div>
-          <div class="trending-coin-price">
-            <div>${priceStr}</div>
-            ${changeStr}
-          </div>
+          <div class="trending-coin-price"><div>${priceStr}</div>${changeStr}</div>
         </div>`;
     }).join('');
-
     document.getElementById('trendingUpdate').textContent = new Date().toLocaleTimeString();
   } catch (e) {
     console.error('Trending load failed:', e);
@@ -863,29 +891,98 @@ async function loadTrending() {
   }
 }
 
+// ── Top 10 Market Cap Rankings ──
+async function loadMarketRankings() {
+  try {
+    const data = await cachedFetch('rankings', `${COINGECKO}/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=10&page=1&sparkline=true&price_change_percentage=1h,24h,7d`, CACHE_TTL_LONG);
+    const el = document.getElementById('marketRankings');
+    if (!Array.isArray(data) || data.length === 0) { el.innerHTML = '<div style="color:var(--text-muted)">No ranking data</div>'; return; }
+
+    el.innerHTML = `
+      <div class="rankings-header">
+        <span class="rank-col">#</span>
+        <span class="rank-name-col">Name</span>
+        <span class="rank-price-col">Price</span>
+        <span class="rank-change-col">1h</span>
+        <span class="rank-change-col">24h</span>
+        <span class="rank-change-col">7d</span>
+        <span class="rank-mcap-col">Market Cap</span>
+        <span class="rank-spark-col">7D Chart</span>
+      </div>
+      ${data.map(coin => {
+        const h1 = coin.price_change_percentage_1h_in_currency;
+        const h24 = coin.price_change_percentage_24h_in_currency;
+        const d7 = coin.price_change_percentage_7d_in_currency;
+        const sparkPrices = coin.sparkline_in_7d?.price || [];
+        const sparkId = `rank-spark-${coin.id}`;
+        return `
+          <div class="rankings-row">
+            <span class="rank-col">${coin.market_cap_rank}</span>
+            <span class="rank-name-col">
+              <img src="${coin.image}" alt="" class="rank-coin-img" loading="lazy" onerror="this.style.display='none'">
+              <span class="rank-coin-name">${coin.symbol.toUpperCase()}</span>
+            </span>
+            <span class="rank-price-col">$${formatPrice(coin.current_price)}</span>
+            <span class="rank-change-col ${h1 >= 0 ? 'positive' : 'negative'}">${h1 != null ? (h1 >= 0 ? '+' : '') + h1.toFixed(1) + '%' : '—'}</span>
+            <span class="rank-change-col ${h24 >= 0 ? 'positive' : 'negative'}">${h24 != null ? (h24 >= 0 ? '+' : '') + h24.toFixed(1) + '%' : '—'}</span>
+            <span class="rank-change-col ${d7 >= 0 ? 'positive' : 'negative'}">${d7 != null ? (d7 >= 0 ? '+' : '') + d7.toFixed(1) + '%' : '—'}</span>
+            <span class="rank-mcap-col">${formatCompact(coin.market_cap)}</span>
+            <span class="rank-spark-col" id="${sparkId}"></span>
+          </div>`;
+      }).join('')}`;
+
+    // Draw mini sparklines for each
+    data.forEach(coin => {
+      const sparkPrices = coin.sparkline_in_7d?.price || [];
+      if (sparkPrices.length > 5) {
+        // Downsample to ~20 points for perf
+        const step = Math.max(1, Math.floor(sparkPrices.length / 20));
+        const sampled = sparkPrices.filter((_, i) => i % step === 0);
+        const isUp = sampled[sampled.length - 1] >= sampled[0];
+        drawSparkline(`rank-spark-${coin.id}`, sampled, isUp ? '#00ff88' : '#ff3355');
+      }
+    });
+
+    document.getElementById('rankingsUpdate').textContent = new Date().toLocaleTimeString();
+  } catch (e) {
+    console.error('Rankings load failed:', e);
+    document.getElementById('marketRankings').innerHTML = '<div style="color:var(--text-muted)">Failed to load rankings</div>';
+  }
+}
+
 // ── Global Market Stats ──
 async function loadGlobalStats() {
   try {
-    const r = await fetchWithRetry(`${COINGECKO}/global`);
-    const data = await r.json();
+    const data = await cachedFetch('global', `${COINGECKO}/global`, CACHE_TTL_MS);
     const g = data.data;
     if (!g) return;
-
-    const fmt = (n) => {
-      if (n >= 1e12) return `$${(n / 1e12).toFixed(2)}T`;
-      if (n >= 1e9) return `$${(n / 1e9).toFixed(1)}B`;
-      if (n >= 1e6) return `$${(n / 1e6).toFixed(0)}M`;
-      return `$${n.toLocaleString()}`;
-    };
-
-    document.getElementById('globalMarketCap').textContent = fmt(g.total_market_cap?.usd || 0);
-    document.getElementById('global24hVol').textContent = fmt(g.total_volume?.usd || 0);
+    document.getElementById('globalMarketCap').textContent = formatCompact(g.total_market_cap?.usd || 0);
+    document.getElementById('global24hVol').textContent = formatCompact(g.total_volume?.usd || 0);
     document.getElementById('btcDominance').textContent = `${(g.market_cap_percentage?.btc || 0).toFixed(1)}%`;
     document.getElementById('ethDominance').textContent = `${(g.market_cap_percentage?.eth || 0).toFixed(1)}%`;
     document.getElementById('activeCryptos').textContent = (g.active_cryptocurrencies || 0).toLocaleString();
-  } catch (e) {
-    console.error('Global stats load failed:', e);
-  }
+
+    // Market cap 24h change
+    const mcChange = g.market_cap_change_percentage_24h_usd;
+    if (mcChange != null) {
+      const changeEl = document.getElementById('globalMarketCapChange');
+      if (changeEl) {
+        changeEl.className = `market-stat-change ${mcChange >= 0 ? 'positive' : 'negative'}`;
+        changeEl.textContent = `${mcChange >= 0 ? '▲' : '▼'} ${Math.abs(mcChange).toFixed(1)}%`;
+      }
+    }
+  } catch (e) { console.error('Global stats load failed:', e); }
+
+  // ETH Gas (separate endpoint — Etherscan free API or estimate)
+  try {
+    const gasEl = document.getElementById('ethGas');
+    // Use a free gas estimate — Etherscan public, no key needed for basic
+    const gasData = await cachedFetch('ethgas', 'https://api.etherscan.io/api?module=gastracker&action=gasoracle', 60000);
+    if (gasData.status === '1' && gasData.result) {
+      const gas = gasData.result;
+      gasEl.innerHTML = `<span style="color:var(--green)">${gas.SafeGasPrice}</span>/<span style="color:var(--amber)">${gas.ProposeGasPrice}</span>`;
+    }
+  } catch { /* gas is non-critical */ }
 }
 
 // ── Helpers ──
@@ -895,6 +992,13 @@ function formatPrice(n) {
   if (n >= 1) return n.toFixed(2);
   if (n >= 0.01) return n.toFixed(4);
   return n.toFixed(6);
+}
+
+function formatCompact(n) {
+  if (n >= 1e12) return `$${(n / 1e12).toFixed(2)}T`;
+  if (n >= 1e9) return `$${(n / 1e9).toFixed(1)}B`;
+  if (n >= 1e6) return `$${(n / 1e6).toFixed(0)}M`;
+  return `$${n.toLocaleString()}`;
 }
 
 function round2(n) { return Math.round(n * 100) / 100; }

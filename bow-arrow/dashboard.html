@@ -150,6 +150,12 @@
         <!-- Per-Property Revenue -->
         <h2 class="section-title">📊 Revenue by Property — March</h2>
         <div class="card" id="propertyRevenue"></div>
+
+        <!-- Vacancy Gap Finder -->
+        <h2 class="section-title">🎯 Vacancy Gap Finder</h2>
+        <div id="vacancyGaps">
+            <p style="color:var(--gray);font-family:var(--font-serif);font-style:italic">Loading...</p>
+        </div>
     </div>
 
     <!-- Toast Notification -->
@@ -196,7 +202,7 @@
                 <label>Notes</label>
                 <textarea id="cleanNotes" rows="2"></textarea>
             </div>
-            <button class="btn-primary" onclick="alert('Saved! (Connect backend for persistence)'); closeModal('cleaningModal')">Save Cleaning</button>
+            <button class="btn-primary" onclick="saveCleaning()">Save Cleaning</button>
             <button style="margin-left:0.5rem;padding:0.75rem 1rem;border:none;background:none;cursor:pointer;color:var(--gray);font-family:var(--font-serif);font-style:italic" onclick="closeModal('cleaningModal')">Cancel</button>
         </div>
     </div>
@@ -238,7 +244,7 @@
                 <label>Payout ($)</label>
                 <input type="number" id="bookPayout" step="0.01">
             </div>
-            <button class="btn-primary" onclick="alert('Saved! (Connect backend for persistence)'); closeModal('bookingModal')">Save Booking</button>
+            <button class="btn-primary" onclick="saveBooking()">Save Booking</button>
             <button style="margin-left:0.5rem;padding:0.75rem 1rem;border:none;background:none;cursor:pointer;color:var(--gray);font-family:var(--font-serif);font-style:italic" onclick="closeModal('bookingModal')">Cancel</button>
         </div>
     </div>
@@ -275,7 +281,7 @@
                     <option value="4">Cottage</option>
                 </select>
             </div>
-            <button class="btn-primary" onclick="alert('Saved! (Connect backend for persistence)'); closeModal('expenseModal')">Save Expense</button>
+            <button class="btn-primary" onclick="saveExpense()">Save Expense</button>
             <button style="margin-left:0.5rem;padding:0.75rem 1rem;border:none;background:none;cursor:pointer;color:var(--gray);font-family:var(--font-serif);font-style:italic" onclick="closeModal('expenseModal')">Cancel</button>
         </div>
     </div>

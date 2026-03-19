@@ -191,7 +191,15 @@ async function initDashboard() {
     renderRevenueSnapshot(financials);
     renderUpcomingEvents(reservations);
     renderPropertyRevenue(reservations);
+    renderVacancyGaps(reservations);
     if (typeof updateCalc === 'function') updateCalc();
+
+    // Merge any locally-saved bookings into reservations for this session
+    const localBookings = loadLocalData('bookings', []);
+    if (localBookings.length) {
+        const existingIds = new Set(DEMO.reservations.map(r => r.id));
+        localBookings.forEach(b => { if (!existingIds.has(b.id)) DEMO.reservations.push(b); });
+    }
 }
 
 function renderSummaryCards(properties, financials, reviews) {
@@ -689,8 +697,51 @@ async function initMaintenance() {
     if (!checkAuth()) return;
     initMobileNav();
 
-    const maintenance = DEMO.maintenance;
-    renderMaintenanceList(maintenance);
+    // Merge locally saved maintenance items
+    const localItems = loadLocalData('maintenance', []);
+    const combined = [...DEMO.maintenance, ...localItems];
+    DEMO.maintenance = combined;
+    renderMaintenanceList(combined);
+}
+
+function saveMaintenanceRequest() {
+    const prop = document.getElementById('maintProp').value;
+    const issue = document.getElementById('maintIssue').value.trim();
+    const priority = document.getElementById('maintPriority').value;
+    const notes = document.getElementById('maintNotes').value.trim();
+    const cost = document.getElementById('maintCost').value;
+
+    if (!issue) { showToast('Please describe the issue.'); return; }
+
+    const entry = {
+        id: Date.now(),
+        property: prop,
+        issue,
+        priority,
+        status: 'open',
+        reported: today(),
+        notes,
+        estimated_cost: parseFloat(cost) || 0,
+        created: new Date().toISOString()
+    };
+
+    const items = loadLocalData('maintenance', []);
+    items.push(entry);
+    saveLocalData('maintenance', items);
+
+    // Update live display
+    DEMO.maintenance.push(entry);
+    renderMaintenanceList(DEMO.maintenance);
+
+    // Update counts
+    document.getElementById('openCount').textContent = DEMO.maintenance.filter(m => m.status === 'open').length;
+    document.getElementById('scheduledCount').textContent = DEMO.maintenance.filter(m => m.status === 'scheduled').length;
+    document.getElementById('completedCount').textContent = DEMO.maintenance.filter(m => m.status === 'completed').length;
+
+    document.getElementById('maintIssue').value = '';
+    document.getElementById('maintNotes').value = '';
+    document.getElementById('maintCost').value = '';
+    showToast(`🔧 Maintenance logged — ${prop}: ${issue}`);
 }
 
 function renderMaintenanceList(items) {
@@ -725,6 +776,9 @@ function openModal(id) {
     if (modal) {
         modal.classList.add('active');
         modal.style.animation = 'fadeIn 0.2s ease';
+        // Pre-fill dates if empty
+        const dateInputs = modal.querySelectorAll('input[type="date"]');
+        dateInputs.forEach(inp => { if (!inp.value) inp.value = today(); });
     }
 }
 
@@ -746,6 +800,141 @@ document.addEventListener('keydown', function(e) {
         document.querySelectorAll('.modal-overlay.active').forEach(m => m.classList.remove('active'));
     }
 });
+
+// ===== LOCAL STORAGE DATA PERSISTENCE =====
+function loadLocalData(key, fallback) {
+    try {
+        const stored = localStorage.getItem('ba_' + key);
+        return stored ? JSON.parse(stored) : fallback;
+    } catch(e) { return fallback; }
+}
+
+function saveLocalData(key, data) {
+    try {
+        localStorage.setItem('ba_' + key, JSON.stringify(data));
+    } catch(e) { console.warn('localStorage save failed:', e); }
+}
+
+function saveCleaning() {
+    const prop = document.getElementById('cleanProp');
+    const date = document.getElementById('cleanDate');
+    const cleaner = document.getElementById('cleanCleaner');
+    const hours = document.getElementById('cleanHours');
+    const type = document.getElementById('cleanType');
+    const notes = document.getElementById('cleanNotes');
+
+    if (!date.value) { showToast('Please select a date.'); return; }
+
+    const propNames = { '1': 'Apt #6', '2': 'Apt #7', '3': 'Apt #8', '4': 'Cottage', '5': 'Combined #6+#8' };
+    const entry = {
+        id: Date.now(),
+        property: propNames[prop.value] || prop.value,
+        property_id: parseInt(prop.value),
+        date: date.value,
+        cleaner: cleaner.value,
+        hours: parseFloat(hours.value) || 0,
+        type: type.value,
+        notes: notes.value,
+        completed: 0,
+        pay: (parseFloat(hours.value) || 0) * 25,
+        created: new Date().toISOString()
+    };
+
+    const cleanings = loadLocalData('cleanings', []);
+    cleanings.push(entry);
+    saveLocalData('cleanings', cleanings);
+
+    notes.value = '';
+    closeModal('cleaningModal');
+    showToast(`✅ Cleaning logged — ${entry.property} on ${formatDate(entry.date)}`);
+
+    // Refresh cleaning display if on that page
+    if (typeof renderCleanerSummaries === 'function') renderCleanerSummaries();
+}
+
+function saveBooking() {
+    const prop = document.getElementById('bookProp');
+    const guest = document.getElementById('bookGuest');
+    const checkin = document.getElementById('bookCheckin');
+    const checkout = document.getElementById('bookCheckout');
+    const platform = document.getElementById('bookPlatform');
+    const payout = document.getElementById('bookPayout');
+
+    if (!guest.value.trim()) { showToast('Please enter guest name.'); return; }
+    if (!checkin.value || !checkout.value) { showToast('Please select check-in and check-out dates.'); return; }
+    if (checkin.value >= checkout.value) { showToast('Check-out must be after check-in.'); return; }
+
+    const propNames = { '1': 'Apt #6', '2': 'Apt #7', '3': 'Apt #8', '4': 'Cottage', '5': 'Combined #6+#8' };
+    const aptNumbers = { '1': '6', '2': '7', '3': '8', '4': 'Cottage', '5': '6+8' };
+    const entry = {
+        id: Date.now(),
+        property_id: parseInt(prop.value),
+        apt_number: aptNumbers[prop.value],
+        property_name: propNames[prop.value],
+        guest_name: guest.value.trim(),
+        checkin_date: checkin.value,
+        checkout_date: checkout.value,
+        platform: platform.value,
+        payout: parseFloat(payout.value) || 0,
+        status: 'confirmed',
+        created: new Date().toISOString()
+    };
+
+    const bookings = loadLocalData('bookings', []);
+    bookings.push(entry);
+    saveLocalData('bookings', bookings);
+
+    // Merge into DEMO.reservations for this session
+    DEMO.reservations.push(entry);
+
+    guest.value = '';
+    checkin.value = '';
+    checkout.value = '';
+    payout.value = '';
+    closeModal('bookingModal');
+    showToast(`✅ Booking saved — ${entry.guest_name} at ${entry.property_name}`);
+
+    // Refresh vacancy gaps if displayed
+    if (document.getElementById('vacancyGaps')) renderVacancyGaps(DEMO.reservations);
+}
+
+function saveExpense() {
+    const category = document.getElementById('expCategory');
+    const amount = document.getElementById('expAmount');
+    const desc = document.getElementById('expDesc');
+    const propEl = document.getElementById('expProp');
+
+    if (!amount.value || parseFloat(amount.value) <= 0) { showToast('Please enter an amount.'); return; }
+    if (!desc.value.trim()) { showToast('Please enter a description.'); return; }
+
+    const entry = {
+        id: Date.now(),
+        category: category.value,
+        amount: parseFloat(amount.value),
+        description: desc.value.trim(),
+        property: propEl.value,
+        date: today(),
+        created: new Date().toISOString()
+    };
+
+    const expenses = loadLocalData('expenses', []);
+    expenses.push(entry);
+    saveLocalData('expenses', expenses);
+
+    // Update DEMO financials for this session
+    DEMO.financials.expenses.total += entry.amount;
+    if (entry.category === 'cleaning') {
+        DEMO.financials.expenses.cleaners = (DEMO.financials.expenses.cleaners || 0) + entry.amount;
+    } else {
+        DEMO.financials.expenses.general = (DEMO.financials.expenses.general || 0) + entry.amount;
+    }
+    DEMO.financials.net_profit = DEMO.financials.revenue.total - DEMO.financials.expenses.total;
+
+    amount.value = '';
+    desc.value = '';
+    closeModal('expenseModal');
+    showToast(`💸 Expense logged — ${formatCurrency(entry.amount)} (${entry.category})`);
+}
 
 // ===== CLEANING COST CALCULATOR =====
 function updateCalc() {
@@ -816,6 +1005,153 @@ function renderPropertyRevenue(reservations) {
             setTimeout(() => { bar.style.width = bar.dataset.width + '%'; }, 200);
         });
     });
+}
+
+// ===== VACANCY GAP FINDER =====
+function renderVacancyGaps(reservations) {
+    const container = document.getElementById('vacancyGaps');
+    if (!container) return;
+
+    const todayStr = today();
+    const lookAheadDays = 60;
+    const cutoff = new Date(Date.now() + lookAheadDays * 86400000).toISOString().split('T')[0];
+
+    const propRates = { '6': 85, '7': 116, '8': 93, 'Cottage': 43, '6+8': 150 };
+    const propColors = PROPERTY_COLORS;
+
+    // Group reservations by property
+    const byProp = {};
+    DEMO.properties.forEach(p => { byProp[p.id] = { prop: p, reservations: [] }; });
+    reservations.forEach(r => {
+        if (byProp[r.property_id]) byProp[r.property_id].reservations.push(r);
+    });
+
+    const gaps = [];
+    Object.values(byProp).forEach(({ prop, reservations: res }) => {
+        // Sort reservations by checkin
+        const sorted = res.filter(r => r.checkout_date >= todayStr)
+            .sort((a, b) => a.checkin_date.localeCompare(b.checkin_date));
+
+        // Check gap between now and first booking
+        if (sorted.length === 0) {
+            gaps.push({
+                apt: prop.apt_number,
+                property_name: prop.name,
+                start: todayStr,
+                end: cutoff,
+                days: lookAheadDays,
+                potential: prop.base_nightly_rate * lookAheadDays * 0.6, // 60% est occupancy
+                type: 'open'
+            });
+        } else {
+            // Gap from today to first booking
+            if (sorted[0].checkin_date > todayStr) {
+                const gapDays = daysUntil(sorted[0].checkin_date);
+                if (gapDays >= 2) {
+                    gaps.push({
+                        apt: prop.apt_number,
+                        property_name: prop.name,
+                        start: todayStr,
+                        end: sorted[0].checkin_date,
+                        days: gapDays,
+                        potential: prop.base_nightly_rate * gapDays,
+                        type: 'before_booking',
+                        next_guest: sorted[0].guest_name
+                    });
+                }
+            }
+
+            // Gaps between bookings
+            for (let i = 0; i < sorted.length - 1; i++) {
+                const gapStart = sorted[i].checkout_date;
+                const gapEnd = sorted[i+1].checkin_date;
+                if (gapEnd > gapStart && gapStart >= todayStr && gapEnd <= cutoff) {
+                    const gapDays = Math.ceil((new Date(gapEnd + 'T12:00:00') - new Date(gapStart + 'T12:00:00')) / 86400000);
+                    if (gapDays >= 2) {
+                        gaps.push({
+                            apt: prop.apt_number,
+                            property_name: prop.name,
+                            start: gapStart,
+                            end: gapEnd,
+                            days: gapDays,
+                            potential: prop.base_nightly_rate * gapDays,
+                            type: 'between',
+                            prev_guest: sorted[i].guest_name,
+                            next_guest: sorted[i+1].guest_name
+                        });
+                    }
+                }
+            }
+
+            // Gap after last booking within lookAhead
+            const last = sorted[sorted.length - 1];
+            if (last.checkout_date < cutoff) {
+                const gapDays = Math.ceil((new Date(cutoff + 'T12:00:00') - new Date(last.checkout_date + 'T12:00:00')) / 86400000);
+                if (gapDays >= 3) {
+                    gaps.push({
+                        apt: prop.apt_number,
+                        property_name: prop.name,
+                        start: last.checkout_date,
+                        end: cutoff,
+                        days: gapDays,
+                        potential: prop.base_nightly_rate * gapDays * 0.5,
+                        type: 'after_last',
+                        prev_guest: last.guest_name
+                    });
+                }
+            }
+        }
+    });
+
+    // Sort by potential revenue desc
+    gaps.sort((a, b) => b.potential - a.potential);
+
+    if (!gaps.length) {
+        container.innerHTML = '<div class="card"><p style="color:var(--sage);font-family:var(--font-serif);font-style:italic">🎉 Calendar is packed! No gaps found in the next 60 days.</p></div>';
+        return;
+    }
+
+    const totalPotential = gaps.reduce((s, g) => s + g.potential, 0);
+
+    container.innerHTML = `
+        <div style="background:var(--linen);border:1px solid var(--blush);border-radius:2px;padding:1rem 1.5rem;margin-bottom:1.25rem;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:0.75rem">
+            <div>
+                <div style="font-size:0.65rem;color:var(--gray);text-transform:uppercase;letter-spacing:2px;font-weight:600">Revenue Potential (next 60 days)</div>
+                <div style="font-family:var(--font-serif);font-size:2rem;font-weight:700;color:var(--terracotta)">${formatCurrency(totalPotential)}</div>
+            </div>
+            <div style="font-size:0.8rem;color:var(--gray);font-family:var(--font-serif);font-style:italic;max-width:300px">
+                ${gaps.length} vacancy window${gaps.length !== 1 ? 's' : ''} found across your properties. Fill these gaps to maximize revenue.
+            </div>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(280px, 1fr));gap:1rem">
+            ${gaps.map((g, i) => {
+                const color = (propColors[g.apt] || {bg:'#999'}).bg;
+                const typeLabel = g.type === 'between' ? `After ${g.prev_guest} → Before ${g.next_guest}`
+                    : g.type === 'before_booking' ? `Before ${g.next_guest}'s arrival`
+                    : g.type === 'after_last' ? `After ${g.prev_guest} checks out`
+                    : 'Fully open';
+                const urgencyDot = g.days <= 3 ? '🔴' : g.days <= 7 ? '🟡' : '🟢';
+                return `
+                    <div style="background:var(--warm-white);border:1px solid var(--light-gray);border-left:4px solid ${color};border-radius:2px;padding:1.25rem;animation:fadeSlideUp 0.3s ease ${i * 0.06}s forwards;opacity:0">
+                        <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:0.75rem">
+                            <div>
+                                <div style="font-family:var(--font-serif);font-weight:700;font-size:1rem;color:var(--warm-brown)">Apt ${g.apt}</div>
+                                <div style="font-size:0.75rem;color:var(--gray);margin-top:0.1rem">${typeLabel}</div>
+                            </div>
+                            <div style="text-align:right">
+                                <div style="font-family:var(--font-serif);font-size:1.3rem;font-weight:700;color:var(--sage)">${formatCurrency(g.potential)}</div>
+                                <div style="font-size:0.65rem;color:var(--gray)">potential</div>
+                            </div>
+                        </div>
+                        <div style="display:flex;justify-content:space-between;align-items:center">
+                            <div style="font-size:0.8rem;color:var(--dark-brown)">${urgencyDot} ${formatDate(g.start)} → ${formatDate(g.end)}</div>
+                            <div style="font-size:0.75rem;font-weight:700;color:var(--terracotta)">${g.days} night${g.days !== 1 ? 's' : ''}</div>
+                        </div>
+                    </div>
+                `;
+            }).join('')}
+        </div>
+    `;
 }
 
 // ===== TOAST SYSTEM =====

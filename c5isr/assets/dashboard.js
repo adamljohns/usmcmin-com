@@ -309,7 +309,7 @@ async function generateDemoSignals() {
         continue;
       }
       const closes = ohlc.map(c => c[4]);
-      signals.push(computeSignal(closes, id, info.symbol));
+      signals.push(computeSignal(closes, id, info.symbol, ohlc));
     } catch {
       signals.push({ asset_id: id, symbol: info.symbol, signal: 'HOLD', confidence: 50, reason: 'Fetch error' });
     }
@@ -319,13 +319,15 @@ async function generateDemoSignals() {
 }
 
 // ── Client-Side Signal Computation ──
-function computeSignal(prices, assetId, symbol) {
+function computeSignal(prices, assetId, symbol, ohlc = null) {
   const rsiVal = calcRSI(prices, 14);
   const macdData = calcMACD(prices);
   const bb = calcBB(prices);
   const ema20 = calcEMA(prices, 20);
   const ema50 = calcEMA(prices, 50);
   const ema200 = calcEMA(prices, 200);
+  const stochRSI = calcStochRSI(prices);
+  const atr = ohlc ? calcATR(ohlc) : null;
   const currentPrice = prices[prices.length - 1];
 
   const buySignals = [];
@@ -347,25 +349,40 @@ function computeSignal(prices, assetId, symbol) {
     else sellSignals.push('Below EMA 200');
   }
 
+  // StochRSI: 5th confluence indicator
+  if (stochRSI.k !== null) {
+    if (stochRSI.k < 20 && stochRSI.k > stochRSI.d) buySignals.push(`StochRSI oversold+cross (${stochRSI.k.toFixed(0)})`);
+    else if (stochRSI.k > 80 && stochRSI.k < stochRSI.d) sellSignals.push(`StochRSI overbought+cross (${stochRSI.k.toFixed(0)})`);
+  }
+
   let regime = 'SIDEWAYS';
   if (ema20 && ema50 && ema200) {
     if (ema20 > ema50 && ema50 > ema200) regime = 'BULL';
     else if (ema20 < ema50 && ema50 < ema200) regime = 'BEAR';
   }
 
+  // Scale confidence over 5 indicators now
   let signal, confidence;
   if (buySignals.length >= 2 && buySignals.length > sellSignals.length) {
-    signal = 'BUY'; confidence = Math.min((buySignals.length / 4) * 100, 100);
+    signal = 'BUY'; confidence = Math.min((buySignals.length / 5) * 100, 100);
   } else if (sellSignals.length >= 2 && sellSignals.length > buySignals.length) {
-    signal = 'SELL'; confidence = Math.min((sellSignals.length / 4) * 100, 100);
+    signal = 'SELL'; confidence = Math.min((sellSignals.length / 5) * 100, 100);
   } else {
     signal = 'HOLD'; confidence = 50;
   }
 
+  // ATR-based dynamic stop-loss (1.5× ATR) vs fixed pct fallback
   const isVolatile = ['BTC', 'ETH', 'SOL'].includes(symbol);
-  const slPct = isVolatile ? 8 : 5;
-  const slPrice = currentPrice * (1 - slPct / 100);
-  const tpPrice = currentPrice * (1 + (slPct * 2) / 100);
+  let slPrice, slPct, tpPrice;
+  if (atr !== null && atr > 0) {
+    slPrice = round2(currentPrice - 1.5 * atr);
+    slPct = round2(((currentPrice - slPrice) / currentPrice) * 100);
+    tpPrice = round2(currentPrice + 3 * atr); // 1:2 risk/reward
+  } else {
+    slPct = isVolatile ? 8 : 5;
+    slPrice = currentPrice * (1 - slPct / 100);
+    tpPrice = currentPrice * (1 + (slPct * 2) / 100);
+  }
 
   const result = {
     asset_id: assetId, symbol, signal,
@@ -374,6 +391,8 @@ function computeSignal(prices, assetId, symbol) {
     buy_signals: buySignals, sell_signals: sellSignals,
     rsi: rsiVal, macd: macdData.line, macd_signal: macdData.signal,
     bb_position: bb.position,
+    stoch_rsi: stochRSI,
+    atr: atr ? round2(atr) : null,
     ema_trend: ema200 ? (currentPrice > ema200 ? 'uptrend' : 'downtrend') : 'unknown',
     market_regime: regime,
     indicators: {
@@ -381,10 +400,13 @@ function computeSignal(prices, assetId, symbol) {
       macd: { macd_line: macdData.line, signal_line: macdData.signal, histogram: macdData.histogram },
       bollinger: { upper: bb.upper, middle: bb.middle, lower: bb.lower },
       ema: { ema_20: ema20, ema_50: ema50, ema_200: ema200, regime },
+      stoch_rsi: stochRSI,
+      atr: atr ? round2(atr) : null,
     },
     risk: {
       stop_loss_pct: slPct, stop_loss_price: round2(slPrice),
       take_profit_price: round2(tpPrice), max_position_usd: 2500, risk_reward_ratio: '1:2',
+      atr_based: atr !== null,
     },
   };
 
@@ -479,6 +501,56 @@ function calcBB(prices, period = 20) {
   return { upper, middle, lower, position };
 }
 
+// ── Stochastic RSI ──
+function calcRSIArray(prices, period = 14) {
+  if (prices.length < period + 1) return [];
+  const result = [];
+  let avgGain = 0, avgLoss = 0;
+  for (let i = 1; i <= period; i++) {
+    const d = prices[i] - prices[i - 1];
+    if (d > 0) avgGain += d; else avgLoss -= d;
+  }
+  avgGain /= period; avgLoss /= period;
+  result.push(avgLoss === 0 ? 100 : 100 - (100 / (1 + avgGain / avgLoss)));
+  for (let i = period + 1; i < prices.length; i++) {
+    const d = prices[i] - prices[i - 1];
+    avgGain = (avgGain * (period - 1) + Math.max(d, 0)) / period;
+    avgLoss = (avgLoss * (period - 1) + Math.max(-d, 0)) / period;
+    result.push(avgLoss === 0 ? 100 : 100 - (100 / (1 + avgGain / avgLoss)));
+  }
+  return result;
+}
+
+function calcStochRSI(prices, rsiPeriod = 14, stochPeriod = 14) {
+  const rsiArr = calcRSIArray(prices, rsiPeriod);
+  if (rsiArr.length < stochPeriod) return { k: null, d: null };
+  const recent = rsiArr.slice(-stochPeriod);
+  const minR = Math.min(...recent), maxR = Math.max(...recent);
+  const range = maxR - minR;
+  const lastRSI = rsiArr[rsiArr.length - 1];
+  const k = range === 0 ? 50 : ((lastRSI - minR) / range) * 100;
+  let d = k;
+  if (rsiArr.length >= stochPeriod + 2) {
+    const k3 = rsiArr.slice(-3).map(r => range === 0 ? 50 : ((r - minR) / range) * 100);
+    d = k3.reduce((a, b) => a + b) / k3.length;
+  }
+  return { k: Math.round(k * 10) / 10, d: Math.round(d * 10) / 10 };
+}
+
+// ── ATR (Average True Range) for dynamic stop-loss ──
+function calcATR(ohlc, period = 14) {
+  if (!ohlc || ohlc.length < period + 1) return null;
+  const tr = [];
+  for (let i = 1; i < ohlc.length; i++) {
+    const high = ohlc[i][2], low = ohlc[i][3], prevClose = ohlc[i - 1][4];
+    tr.push(Math.max(high - low, Math.abs(high - prevClose), Math.abs(low - prevClose)));
+  }
+  if (tr.length < period) return null;
+  let atr = tr.slice(0, period).reduce((a, b) => a + b) / period;
+  for (let i = period; i < tr.length; i++) atr = (atr * (period - 1) + tr[i]) / period;
+  return atr;
+}
+
 // ── Render Functions ──
 function renderSignals(signals) {
   const grid = document.getElementById('signalGrid');
@@ -498,7 +570,7 @@ function renderSignals(signals) {
           <div class="rsi-value">RSI: <span style="color:${rsiColor}">${rsi}</span></div>
           <div class="rsi-gauge"><div class="rsi-gauge-fill" style="width:${rsiWidth}%;background:${rsiColor}"></div></div>
         </div>
-        <div style="margin-top:8px;font-size:12px;color:var(--text-muted)">MACD: ${s.macd != null ? s.macd.toFixed(4) : '—'}</div>
+        <div style="margin-top:8px;font-size:12px;color:var(--text-muted)">MACD: ${s.macd != null ? s.macd.toFixed(4) : '—'} &nbsp;|&nbsp; StochRSI: ${s.stoch_rsi?.k != null ? s.stoch_rsi.k.toFixed(0) : '—'}</div>
         <div style="margin-top:4px;font-size:11px;color:var(--text-muted);min-height:28px">${s.reason || '—'}</div>
         <div class="confidence-bar"><div class="confidence-fill" style="width:${s.confidence}%;background:${confColor}"></div></div>
         <div style="text-align:right;font-size:11px;color:var(--text-muted);margin-top:4px">${s.confidence}% confidence</div>
@@ -550,7 +622,7 @@ function updateRisk(signals) {
   const r = sig.risk;
   el.innerHTML = `
     <div style="font-family:var(--font-mono);font-size:14px;margin-bottom:12px">${sig.symbol} Risk Profile</div>
-    <div class="risk-row"><span class="risk-label">Stop-Loss</span><span class="risk-value risk-stop">$${formatPrice(r.stop_loss_price)} (${r.stop_loss_pct}%)</span></div>
+    <div class="risk-row"><span class="risk-label">Stop-Loss${r.atr_based ? ' <span style="font-size:9px;color:var(--amber)">(ATR)</span>' : ''}</span><span class="risk-value risk-stop">$${formatPrice(r.stop_loss_price)} (${r.stop_loss_pct}%)</span></div>
     <div class="risk-row"><span class="risk-label">Take-Profit</span><span class="risk-value risk-target">$${formatPrice(r.take_profit_price)}</span></div>
     <div class="risk-row"><span class="risk-label">Max Position</span><span class="risk-value">$${r.max_position_usd?.toLocaleString() || '—'}</span></div>
     <div class="risk-row"><span class="risk-label">Risk/Reward</span><span class="risk-value">${r.risk_reward_ratio}</span></div>
@@ -843,6 +915,8 @@ async function loadFearGreed() {
 
     el.innerHTML = `<span style="color:${color}">${value}</span> <span style="font-size:14px;color:var(--text-secondary)">${label}</span>`;
     pointer.style.left = `${value}%`;
+    const fill = document.getElementById('fearGreedFill');
+    if (fill) { fill.style.width = `${value}%`; fill.style.background = color; }
     const updated = new Date(parseInt(fg.timestamp) * 1000);
     update.textContent = `Updated: ${updated.toLocaleDateString()}`;
 

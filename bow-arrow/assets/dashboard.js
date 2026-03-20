@@ -7,7 +7,7 @@ const API_BASE = ''; // Empty = use demo data (no backend running on GitHub Page
 const DEMO = {
     properties: [
         { id: 1, name: 'Spacious Apartment', apt_number: '6', beds: 1, baths: 1, base_nightly_rate: 85, status: 'active', current_guest: 'Jess', current_checkout: '2026-03-20', next_guest: 'Cleve', next_checkin: '2026-03-20', review_avg: 5.0, review_count: 24 },
-        { id: 2, name: 'Boho-Modern Apartment', apt_number: '7', beds: 2, baths: 2, base_nightly_rate: 116, status: 'active', current_guest: null, current_checkout: null, next_guest: 'Diane (3 guests)', next_checkin: '2026-03-19', review_avg: 5.0, review_count: 18 },
+        { id: 2, name: 'Boho-Modern Apartment', apt_number: '7', beds: 2, baths: 2, base_nightly_rate: 116, status: 'active', current_guest: 'Diane (3 guests)', current_checkout: '2026-03-26', next_guest: 'Brittany', next_checkin: '2026-03-26', review_avg: 5.0, review_count: 18 },
         { id: 3, name: 'Orange Apartment', apt_number: '8', beds: 1, baths: 1, base_nightly_rate: 93, status: 'active', current_guest: 'Brandi', current_checkout: '2026-03-21', next_guest: null, next_checkin: null, review_avg: 5.0, review_count: 21 },
         { id: 4, name: 'Prof Row Cottage', apt_number: 'Cottage', beds: 3, baths: 1, base_nightly_rate: 43, min_nights: 30, status: 'active', current_guest: null, current_checkout: null, next_guest: 'Virginia Van Alstine', next_checkin: '2026-04-06', review_avg: 4.9, review_count: 8 },
         { id: 5, name: 'Hanover Combined', apt_number: '6+8', beds: 2, baths: 2, base_nightly_rate: 150, status: 'active', current_guest: null, current_checkout: null, next_guest: null, next_checkin: null, review_avg: 5.0, review_count: 6 },
@@ -23,9 +23,10 @@ const DEMO = {
     ],
     financials: {
         month: '2026-03',
-        revenue: { airbnb: 2250, direct_booking: 0, merch: 0, vending: 0, car_rental: 0, total: 2250 },
+        // As of Mar 20: Brandi ($465) + Jess ($340) checked out/in, Diane ($650) active, Cleve ($85) confirmed today
+        revenue: { airbnb: 3790, direct_booking: 0, merch: 0, vending: 0, car_rental: 0, total: 3790 },
         expenses: { general: 0, cleaners: 130, total: 130 },
-        net_profit: 2120
+        net_profit: 3660
     },
     monthly: [
         { month: '2025-10', revenue: 1800, expenses: 380, net: 1420 },
@@ -33,17 +34,9 @@ const DEMO = {
         { month: '2025-12', revenue: 2600, expenses: 520, net: 2080 },
         { month: '2026-01', revenue: 1950, expenses: 350, net: 1600 },
         { month: '2026-02', revenue: 2300, expenses: 400, net: 1900 },
-        { month: '2026-03', revenue: 2250, expenses: 130, net: 2120 },
+        { month: '2026-03', revenue: 3790, expenses: 130, net: 3660 },
     ],
-    alerts: [
-        { type: 'checkin', priority: 'high', message: 'Diane checks in to Apt #7 TOMORROW (Mar 19) — 3 guests, 7-night stay!', time: '2026-03-18T03:00:00' },
-        { type: 'checkout', priority: 'high', message: 'Jess checks out of Apt #6 on Mar 20 (Thu) — Same-day turnover for Cleve!', time: '2026-03-18T03:00:00' },
-        { type: 'cleaning', priority: 'high', message: '⚠️ CRITICAL: Apt #6 same-day turnover Thu Mar 20 — Jess out → Cleve in. Schedule cleaner NOW!', time: '2026-03-18T03:00:00' },
-        { type: 'checkout', priority: 'medium', message: 'Brandi checks out of Apt #8 on Mar 21 (Fri)', time: '2026-03-18T03:00:00' },
-        { type: 'cleaning', priority: 'medium', message: 'Apt #8 needs turnover after Brandi (Mar 21). Suggest: Tiffany (Fri)', time: '2026-03-18T03:00:00' },
-        { type: 'review', priority: 'low', message: '⭐ 5.00 perfect streak — 77 reviews! Keep it going!', time: '2026-03-18T03:00:00' },
-        { type: 'cleaning', priority: 'medium', message: 'Apt #7 turnover needed Mar 26 after Diane — Brittany arrives same day', time: '2026-03-18T03:00:00' },
-    ],
+    alerts: [], // populated dynamically by generateDynamicAlerts()
     cleaningSchedule: {
         scheduled: [
             { property_name: 'Spacious Apartment', apt_number: '6', date: '2026-03-15', cleaner: 'tiffany', type: 'turnover', completed: 1, hours: 1.5, pay: 37.50 },
@@ -80,6 +73,115 @@ const DEMO = {
         { id: 3, property: 'Apt #8', issue: 'Replace smoke detector battery', priority: 'high', status: 'completed', reported: '2026-03-12', completed_date: '2026-03-13', notes: 'Done during turnover' },
     ]
 };
+
+// ===== DYNAMIC ALERTS GENERATOR =====
+// Generates context-aware alerts from live reservation + property data each page load.
+// Always up-to-date — no more stale hardcoded dates.
+function generateDynamicAlerts(reservations, properties, reviews) {
+    const alerts = [];
+    const todayStr = today();
+    const tomorrowStr = new Date(Date.now() + 86400000).toISOString().split('T')[0];
+    const in2DaysStr = new Date(Date.now() + 2 * 86400000).toISOString().split('T')[0];
+    const in7DaysStr = new Date(Date.now() + 7 * 86400000).toISOString().split('T')[0];
+    const now = new Date().toISOString();
+
+    reservations.forEach(r => {
+        const daysToCheckin  = daysUntil(r.checkin_date);
+        const daysToCheckout = daysUntil(r.checkout_date);
+
+        // Today checkouts
+        if (r.checkout_date === todayStr) {
+            alerts.push({ type: 'checkout', priority: 'high',
+                message: `🚪 ${r.guest_name} checks out TODAY from Apt #${r.apt_number}`, time: now });
+        }
+        // Today checkins
+        if (r.checkin_date === todayStr) {
+            alerts.push({ type: 'checkin', priority: 'high',
+                message: `🔑 ${r.guest_name} checks in TODAY to Apt #${r.apt_number}`, time: now });
+        }
+        // Tomorrow checkouts
+        if (r.checkout_date === tomorrowStr) {
+            alerts.push({ type: 'checkout', priority: 'high',
+                message: `🚪 ${r.guest_name} checks out TOMORROW from Apt #${r.apt_number}`, time: now });
+        }
+        // Tomorrow checkins
+        if (r.checkin_date === tomorrowStr) {
+            alerts.push({ type: 'checkin', priority: 'high',
+                message: `🔑 ${r.guest_name} checks in TOMORROW to Apt #${r.apt_number}`, time: now });
+        }
+        // In 2 days
+        if (r.checkin_date === in2DaysStr) {
+            alerts.push({ type: 'checkin', priority: 'medium',
+                message: `🔑 ${r.guest_name} arrives in 2 days — Apt #${r.apt_number}`, time: now });
+        }
+    });
+
+    // Same-day turnover detection (checkout + checkin same property, same day)
+    reservations.forEach(checkout => {
+        if (checkout.checkout_date < todayStr) return;
+        if (checkout.checkout_date > in7DaysStr) return;
+        const sameDay = reservations.find(checkin =>
+            checkin.property_id === checkout.property_id &&
+            checkin.checkin_date === checkout.checkout_date &&
+            checkin.id !== checkout.id
+        );
+        if (sameDay) {
+            const daysAway = daysUntil(checkout.checkout_date);
+            const when = daysAway === 0 ? 'TODAY' : daysAway === 1 ? 'TOMORROW' : `in ${daysAway} days`;
+            const priority = daysAway <= 1 ? 'high' : 'medium';
+            // Avoid duplicate same-day alerts (only emit once per pair)
+            const alreadyAdded = alerts.some(a => a.type === 'cleaning' &&
+                a.message.includes(`#${checkout.apt_number}`) &&
+                a.message.includes(checkout.guest_name));
+            if (!alreadyAdded) {
+                alerts.push({ type: 'cleaning', priority,
+                    message: `⚠️ Same-day turnover Apt #${checkout.apt_number} ${when} — ${checkout.guest_name} out → ${sameDay.guest_name} in. Schedule cleaner!`,
+                    time: now });
+            }
+        }
+    });
+
+    // Upcoming cleanings needed (checkout within 7 days, no same-day follow-on — routine turnover reminder)
+    reservations.forEach(r => {
+        if (r.checkout_date < todayStr || r.checkout_date > in7DaysStr) return;
+        const hasSameDayNext = reservations.some(n =>
+            n.property_id === r.property_id && n.checkin_date === r.checkout_date && n.id !== r.id);
+        if (!hasSameDayNext) {
+            const daysAway = daysUntil(r.checkout_date);
+            if (daysAway >= 0 && daysAway <= 7) {
+                const when = daysAway === 0 ? 'today' : daysAway === 1 ? 'tomorrow' : `in ${daysAway} days`;
+                const alreadyCleaning = alerts.some(a => a.type === 'cleaning' &&
+                    a.message.includes(`#${r.apt_number}`) && a.message.includes(r.guest_name));
+                if (!alreadyCleaning) {
+                    alerts.push({ type: 'cleaning', priority: daysAway <= 1 ? 'medium' : 'low',
+                        message: `🧹 Apt #${r.apt_number} needs turnover ${when} after ${r.guest_name}`,
+                        time: now });
+                }
+            }
+        }
+    });
+
+    // Review milestone alert
+    if (reviews) {
+        const nextMilestone = Math.ceil(reviews.perfect_streak / 25) * 25;
+        const toMilestone = nextMilestone - reviews.perfect_streak;
+        if (toMilestone <= 5) {
+            alerts.push({ type: 'review', priority: 'low',
+                message: `⭐ ${reviews.overall_avg.toFixed(2)} — ${reviews.perfect_streak} perfect reviews! ${toMilestone} away from ${nextMilestone} streak milestone! 🔥`,
+                time: now });
+        } else {
+            alerts.push({ type: 'review', priority: 'low',
+                message: `⭐ ${reviews.overall_avg.toFixed(2)} perfect score — ${reviews.perfect_streak} reviews & counting! Keep it up!`,
+                time: now });
+        }
+    }
+
+    // Sort: high first, then medium, then low; within same priority sort by date
+    const priorityOrder = { high: 0, medium: 1, low: 2 };
+    alerts.sort((a, b) => (priorityOrder[a.priority] || 2) - (priorityOrder[b.priority] || 2));
+
+    return alerts;
+}
 
 // ===== AUTH =====
 function checkAuth() {
@@ -179,10 +281,12 @@ async function initDashboard() {
     showSkeleton('propertyGrid', 5);
 
     const properties = (await fetchData('/api/properties')) || DEMO.properties;
-    const alerts = (await fetchData('/api/alerts')) || DEMO.alerts;
     const financials = (await fetchData('/api/financials/summary')) || DEMO.financials;
     const reservations = (await fetchData('/api/reservations')) || DEMO.reservations;
     const reviews = DEMO.reviews;
+
+    // Generate fresh, date-aware alerts every load (no stale hardcoded data)
+    const alerts = (await fetchData('/api/alerts')) || generateDynamicAlerts(reservations, properties, reviews);
 
     renderSummaryCards(properties, financials, reviews);
     renderPropertyGrid(properties);
@@ -657,13 +761,28 @@ function renderRevenueForecast(reservations) {
     if (!container) return;
 
     // Calculate forecast for next 3 months
+    // A reservation contributes to a month if any night falls within that month
     const months = ['2026-03', '2026-04', '2026-05'];
     const monthNames = { '2026-03': 'March', '2026-04': 'April', '2026-05': 'May' };
 
     const forecast = months.map(m => {
-        const monthRes = reservations.filter(r => r.checkin_date.startsWith(m) || (r.checkin_date < m + '-01' && r.checkout_date > m + '-01'));
-        const confirmed = monthRes.reduce((sum, r) => sum + (r.payout || 0), 0);
-        return { month: m, label: monthNames[m], confirmed, projected: confirmed };
+        const [yr, mo] = m.split('-').map(Number);
+        const monthStart = `${m}-01`;
+        const lastDay = new Date(yr, mo, 0).getDate();
+        const monthEnd = `${m}-${String(lastDay).padStart(2,'0')}`;
+
+        // Pro-rate payout by nights that fall within this month
+        let confirmed = 0;
+        reservations.forEach(r => {
+            if (r.checkout_date <= monthStart || r.checkin_date > monthEnd) return;
+            const totalNights = nightsBetween(r.checkin_date, r.checkout_date);
+            if (totalNights <= 0) return;
+            const overlapStart = r.checkin_date < monthStart ? monthStart : r.checkin_date;
+            const overlapEnd   = r.checkout_date > monthEnd   ? monthEnd   : r.checkout_date;
+            const overlapNights = nightsBetween(overlapStart, overlapEnd);
+            confirmed += (r.payout / totalNights) * overlapNights;
+        });
+        return { month: m, label: monthNames[m], confirmed: Math.round(confirmed), projected: Math.round(confirmed) };
     });
 
     // Estimate avg cleaning cost per booking

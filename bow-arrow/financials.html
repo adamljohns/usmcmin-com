@@ -34,7 +34,7 @@
 
         <header>
             <h1>Financial Dashboard</h1>
-            <span class="date-info">March 2026</span>
+            <span class="date-info" id="finMonthLabel"></span>
         </header>
 
         <!-- Top Line Numbers -->
@@ -92,6 +92,10 @@
     <script src="assets/dashboard.js"></script>
     <script>
         initFinancials();
+        // Dynamic month label
+        const _months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+        const _n = new Date();
+        document.getElementById('finMonthLabel').textContent = _months[_n.getMonth()] + ' ' + _n.getFullYear();
 
         // Occupancy table
         (async function() {

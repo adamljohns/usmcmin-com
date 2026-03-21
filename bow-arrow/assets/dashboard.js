@@ -22,7 +22,7 @@ const DEMO = {
         { id: 7, property_id: 4, guest_name: 'Virginia Van Alstine', checkin_date: '2026-04-06', checkout_date: '2026-05-06', platform: 'airbnb', payout: 1290, status: 'confirmed', apt_number: 'Cottage', property_name: 'Prof Row Cottage', guests: 2 },
     ],
     financials: {
-        month: '2026-03',
+        get month() { const n=new Date(); return `${n.getFullYear()}-${String(n.getMonth()+1).padStart(2,'0')}`; },
         // As of Mar 20: Brandi ($465) + Jess ($340) checked out/in, Diane ($650) active, Cleve ($85) confirmed today
         revenue: { airbnb: 3790, direct_booking: 0, merch: 0, vending: 0, car_rental: 0, total: 3790 },
         expenses: { general: 0, cleaners: 130, total: 130 },
@@ -276,6 +276,14 @@ async function initDashboard() {
     initMobileNav();
 
     document.getElementById('dateInfo').textContent = todayNice();
+
+    // Dynamic month labels in section titles
+    const _fullMonths = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+    const _thisMonth = _fullMonths[new Date().getMonth()];
+    const _revTitle = document.getElementById('revenueSnapshotTitle');
+    if (_revTitle) _revTitle.textContent = `Revenue by Stream — ${_thisMonth}`;
+    const _propRevTitle = document.getElementById('propertyRevenueTitle');
+    if (_propRevTitle) _propRevTitle.textContent = `📊 Revenue by Property — ${_thisMonth}`;
 
     // Show loading skeletons
     showSkeleton('propertyGrid', 5);
@@ -671,12 +679,35 @@ function renderCleaningSchedule(schedule) {
 }
 
 function renderCleanerSummaries() {
-    document.getElementById('amandaHours').textContent = '0';
-    document.getElementById('amandaPay').textContent = '$0';
-    document.getElementById('amandaCleanings').textContent = '0';
-    document.getElementById('tiffanyHours').textContent = '5';
-    document.getElementById('tiffanyPay').textContent = '$130';
-    document.getElementById('tiffanyCleanings').textContent = '3';
+    // Merge DEMO cleanings with any locally-saved ones
+    const localCleanings = loadLocalData('cleanings', []);
+    const allCleanings = [...(DEMO.cleaningSchedule.scheduled || []), ...localCleanings];
+
+    // Only count this calendar month
+    const now = new Date();
+    const thisMonth = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}`;
+
+    const byMonth = allCleanings.filter(c => c.date && c.date.startsWith(thisMonth));
+
+    const totals = {};
+    byMonth.forEach(c => {
+        const name = (c.cleaner || '').toLowerCase();
+        if (!totals[name]) totals[name] = { cleanings: 0, hours: 0, pay: 0 };
+        totals[name].cleanings++;
+        totals[name].hours += parseFloat(c.hours) || 0;
+        totals[name].pay += parseFloat(c.pay) || 0;
+    });
+
+    const setStats = (name, id) => {
+        const t = totals[name] || { cleanings: 0, hours: 0, pay: 0 };
+        const el = (s) => document.getElementById(id + s);
+        if (el('Cleanings')) el('Cleanings').textContent = t.cleanings;
+        if (el('Hours')) el('Hours').textContent = t.hours % 1 === 0 ? t.hours : t.hours.toFixed(1);
+        if (el('Pay')) el('Pay').textContent = formatCurrency(t.pay);
+    };
+
+    setStats('amanda', 'amanda');
+    setStats('tiffany', 'tiffany');
 }
 
 // ===== FINANCIALS PAGE =====
@@ -760,10 +791,17 @@ function renderRevenueForecast(reservations) {
     const container = document.getElementById('revenueForecast');
     if (!container) return;
 
-    // Calculate forecast for next 3 months
-    // A reservation contributes to a month if any night falls within that month
-    const months = ['2026-03', '2026-04', '2026-05'];
-    const monthNames = { '2026-03': 'March', '2026-04': 'April', '2026-05': 'May' };
+    // Calculate forecast for current + next 2 months (always relative to today)
+    const now = new Date();
+    const months = [];
+    const monthNames = {};
+    const fullMonthNames = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+    for (let i = 0; i < 3; i++) {
+        const d = new Date(now.getFullYear(), now.getMonth() + i, 1);
+        const key = `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`;
+        months.push(key);
+        monthNames[key] = fullMonthNames[d.getMonth()];
+    }
 
     const forecast = months.map(m => {
         const [yr, mo] = m.split('-').map(Number);
@@ -804,8 +842,8 @@ function renderRevenueForecast(reservations) {
             <ul style="list-style:none;padding:0;margin:0">
                 <li style="margin-bottom:0.25rem">→ <strong>${totalBookings}</strong> total confirmed reservations</li>
                 <li style="margin-bottom:0.25rem">→ Est. cleaning costs: ~<strong>${formatCurrency(totalBookings * avgCleanCost)}</strong> (${totalBookings} turnovers × ${formatCurrency(avgCleanCost)})</li>
-                <li style="margin-bottom:0.25rem">→ Prof Row Cottage booked Apr 6 – May 6 (<strong>${formatCurrency(1290)}</strong> payout)</li>
-                <li>→ Vacancy opportunity: Apt #8 open after Mar 21, Cottage open until Apr 6</li>
+                <li style="margin-bottom:0.25rem">→ Confirmed revenue: <strong>${formatCurrency(forecast.reduce((s,f)=>s+f.confirmed,0))}</strong> across next 3 months</li>
+                <li>→ Revenue from open gaps not included — fill vacancies to increase projection</li>
             </ul>
         </div>
     `;

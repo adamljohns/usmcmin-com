@@ -552,6 +552,65 @@ function calcATR(ohlc, period = 14) {
 }
 
 // ── Render Functions ──
+// ── Indicator Pill Builder ──
+function buildIndicatorPills(s) {
+  const pills = [];
+
+  // RSI pill
+  if (s.rsi != null) {
+    const v = s.rsi.toFixed(0);
+    if (s.rsi < 35) pills.push({ label: `RSI ${v}`, type: 'bull' });
+    else if (s.rsi > 70) pills.push({ label: `RSI ${v}`, type: 'bear' });
+    else pills.push({ label: `RSI ${v}`, type: 'neutral' });
+  }
+
+  // MACD pill
+  if (s.macd != null && s.macd_signal != null) {
+    const bullCross = s.buy_signals?.some(b => b.includes('MACD'));
+    const bearCross = s.sell_signals?.some(b => b.includes('MACD'));
+    if (bullCross) pills.push({ label: 'MACD ↑', type: 'bull' });
+    else if (bearCross) pills.push({ label: 'MACD ↓', type: 'bear' });
+    else pills.push({ label: `MACD ${s.macd > 0 ? '+' : ''}${s.macd.toFixed(0)}`, type: s.macd > 0 ? 'bull-dim' : 'bear-dim' });
+  }
+
+  // Bollinger pill
+  if (s.bb_position) {
+    const bbMap = {
+      below_lower: { label: 'BB Low ✓', type: 'bull' },
+      above_upper: { label: 'BB High ✗', type: 'bear' },
+      lower_half:  { label: 'BB Mid-Low', type: 'neutral' },
+      upper_half:  { label: 'BB Mid-High', type: 'neutral' },
+    };
+    const p = bbMap[s.bb_position];
+    if (p) pills.push(p);
+  }
+
+  // EMA Trend pill
+  if (s.ema_trend) {
+    pills.push({ label: s.ema_trend === 'uptrend' ? 'EMA ↑' : 'EMA ↓', type: s.ema_trend === 'uptrend' ? 'bull-dim' : 'bear-dim' });
+  }
+
+  // StochRSI pill
+  if (s.stoch_rsi?.k != null) {
+    const k = s.stoch_rsi.k;
+    if (k < 20) pills.push({ label: `StochRSI ${k.toFixed(0)}`, type: 'bull' });
+    else if (k > 80) pills.push({ label: `StochRSI ${k.toFixed(0)}`, type: 'bear' });
+    else pills.push({ label: `StochRSI ${k.toFixed(0)}`, type: 'neutral' });
+  }
+
+  const typeStyles = {
+    bull:     'background:rgba(0,255,136,0.18);color:#00ff88;border:1px solid rgba(0,255,136,0.35)',
+    bear:     'background:rgba(255,51,85,0.18);color:#ff3355;border:1px solid rgba(255,51,85,0.35)',
+    'bull-dim': 'background:rgba(0,255,136,0.08);color:rgba(0,255,136,0.6);border:1px solid rgba(0,255,136,0.15)',
+    'bear-dim': 'background:rgba(255,51,85,0.08);color:rgba(255,51,85,0.6);border:1px solid rgba(255,51,85,0.15)',
+    neutral:  'background:rgba(255,255,255,0.05);color:rgba(255,255,255,0.4);border:1px solid rgba(255,255,255,0.1)',
+  };
+
+  return pills.map(p =>
+    `<span style="display:inline-block;padding:2px 7px;border-radius:4px;font-size:10px;font-family:var(--font-mono);margin:2px 2px 0 0;${typeStyles[p.type] || typeStyles.neutral}">${p.label}</span>`
+  ).join('');
+}
+
 function renderSignals(signals) {
   const grid = document.getElementById('signalGrid');
   grid.innerHTML = signals.map(s => {
@@ -560,6 +619,7 @@ function renderSignals(signals) {
     const rsiColor = s.rsi < 35 ? 'var(--green)' : s.rsi > 70 ? 'var(--red)' : 'var(--amber)';
     const rsiWidth = s.rsi != null ? s.rsi : 50;
     const confColor = s.confidence >= 70 ? 'var(--green)' : s.confidence >= 40 ? 'var(--amber)' : 'var(--red)';
+    const pills = buildIndicatorPills(s);
     return `
       <div class="card card-animate">
         <div style="display:flex;justify-content:space-between;align-items:center">
@@ -570,9 +630,8 @@ function renderSignals(signals) {
           <div class="rsi-value">RSI: <span style="color:${rsiColor}">${rsi}</span></div>
           <div class="rsi-gauge"><div class="rsi-gauge-fill" style="width:${rsiWidth}%;background:${rsiColor}"></div></div>
         </div>
-        <div style="margin-top:8px;font-size:12px;color:var(--text-muted)">MACD: ${s.macd != null ? s.macd.toFixed(4) : '—'} &nbsp;|&nbsp; StochRSI: ${s.stoch_rsi?.k != null ? s.stoch_rsi.k.toFixed(0) : '—'}</div>
-        <div style="margin-top:4px;font-size:11px;color:var(--text-muted);min-height:28px">${s.reason || '—'}</div>
-        <div class="confidence-bar"><div class="confidence-fill" style="width:${s.confidence}%;background:${confColor}"></div></div>
+        <div style="margin-top:8px;line-height:1.6">${pills}</div>
+        <div class="confidence-bar" style="margin-top:8px"><div class="confidence-fill" style="width:${s.confidence}%;background:${confColor}"></div></div>
         <div style="text-align:right;font-size:11px;color:var(--text-muted);margin-top:4px">${s.confidence}% confidence</div>
       </div>`;
   }).join('');
@@ -882,6 +941,128 @@ async function connectMetaMask() {
     walletInfo.textContent = `${short} | ${ethBalance.toFixed(4)} ETH`;
     showToast(`Connected: ${short}`, 'success');
   } catch (e) { showToast('MetaMask connection failed', 'error'); }
+}
+
+// ── Portfolio Tracker ──
+const PORTFOLIO_ASSETS = [
+  { id: 'bitcoin',          symbol: 'BTC', color: '#f7931a' },
+  { id: 'ethereum',         symbol: 'ETH', color: '#627eea' },
+  { id: 'neo',              symbol: 'NEO', color: '#00e599' },
+  { id: 'flamingo-finance', symbol: 'FLM', color: '#fc5c7d' },
+  { id: 'solana',           symbol: 'SOL', color: '#9945ff' },
+];
+
+function getHoldings() {
+  try { return JSON.parse(localStorage.getItem('c5_holdings') || '{}'); } catch { return {}; }
+}
+function saveHoldings(h) {
+  try { localStorage.setItem('c5_holdings', JSON.stringify(h)); } catch {}
+}
+
+function updateHolding(assetId, qty, avgCost) {
+  const h = getHoldings();
+  if (!qty || isNaN(parseFloat(qty))) {
+    delete h[assetId];
+  } else {
+    h[assetId] = { qty: parseFloat(qty), avgCost: parseFloat(avgCost) || 0 };
+  }
+  saveHoldings(h);
+  renderPortfolio(null); // re-render with current prices if available
+}
+
+function clearHoldings() {
+  localStorage.removeItem('c5_holdings');
+  renderPortfolio(null);
+}
+
+// Call with live prices map { assetId -> price }
+function renderPortfolio(pricesMap) {
+  const holdings = getHoldings();
+  const el = document.getElementById('portfolioContent');
+  const totalEl = document.getElementById('portfolioTotal');
+
+  let totalValue = 0, totalCost = 0;
+
+  const rows = PORTFOLIO_ASSETS.map(asset => {
+    const h = holdings[asset.id];
+    const price = pricesMap ? (pricesMap[asset.id] || 0) : 0;
+    const qty = h?.qty || '';
+    const avgCost = h?.avgCost || '';
+    const currentValue = h ? (h.qty * price) : 0;
+    const costBasis = h ? (h.qty * (h.avgCost || 0)) : 0;
+    const pnl = currentValue - costBasis;
+    const pnlPct = costBasis > 0 ? (pnl / costBasis) * 100 : 0;
+    const pnlColor = pnl >= 0 ? 'var(--green)' : 'var(--red)';
+
+    if (h) { totalValue += currentValue; totalCost += costBasis; }
+
+    const pnlStr = h && price
+      ? `<span style="color:${pnlColor};font-family:var(--font-mono);font-size:12px">${pnl >= 0 ? '+' : ''}$${Math.abs(pnl).toFixed(2)} (${pnlPct >= 0 ? '+' : ''}${pnlPct.toFixed(1)}%)</span>`
+      : '<span style="color:var(--text-muted);font-size:12px">—</span>';
+
+    const valueStr = h && price
+      ? `<span style="font-family:var(--font-mono);font-size:13px;color:var(--text-secondary)">$${formatPrice(currentValue)}</span>`
+      : '<span style="color:var(--text-muted);font-size:12px">—</span>';
+
+    return `
+      <div class="portfolio-row">
+        <div class="portfolio-asset">
+          <span style="font-family:var(--font-mono);font-weight:700;color:${asset.color}">${asset.symbol}</span>
+          ${price ? `<span style="font-size:11px;color:var(--text-muted)">@$${formatPrice(price)}</span>` : ''}
+        </div>
+        <div class="portfolio-inputs">
+          <input class="portfolio-input" type="number" placeholder="Qty" step="any" min="0"
+            value="${qty}" data-asset="${asset.id}" data-field="qty"
+            onchange="onHoldingChange(this)" onblur="onHoldingChange(this)" />
+          <input class="portfolio-input" type="number" placeholder="Avg cost" step="any" min="0"
+            value="${avgCost}" data-asset="${asset.id}" data-field="cost"
+            onchange="onHoldingChange(this)" onblur="onHoldingChange(this)" />
+        </div>
+        <div class="portfolio-pnl">
+          ${valueStr}
+          ${pnlStr}
+        </div>
+      </div>`;
+  }).join('');
+
+  el.innerHTML = `<div class="portfolio-table">${rows}</div>`;
+
+  // Total row
+  const totalPnl = totalValue - totalCost;
+  const totalPnlPct = totalCost > 0 ? (totalPnl / totalCost) * 100 : 0;
+  const totalColor = totalPnl >= 0 ? 'var(--green)' : 'var(--red)';
+  if (totalValue > 0) {
+    totalEl.innerHTML = `
+      <div style="display:flex;justify-content:flex-end;gap:24px;padding:12px 0 4px;border-top:1px solid var(--border);margin-top:8px">
+        <div style="font-size:12px;color:var(--text-muted)">Total Value: <span style="color:var(--text-primary);font-family:var(--font-mono)">$${formatPrice(totalValue)}</span></div>
+        <div style="font-size:12px;color:var(--text-muted)">P&L: <span style="color:${totalColor};font-family:var(--font-mono)">${totalPnl >= 0 ? '+' : ''}$${Math.abs(totalPnl).toFixed(2)} (${totalPnlPct >= 0 ? '+' : ''}${totalPnlPct.toFixed(1)}%)</span></div>
+      </div>`;
+  } else {
+    totalEl.innerHTML = '<div style="font-size:11px;color:var(--text-muted);text-align:center;padding-top:8px">Enter your holdings above to track live P&L</div>';
+  }
+
+  document.getElementById('portfolioUpdated').textContent = pricesMap ? new Date().toLocaleTimeString() : '—';
+}
+
+const _holdingChangeBuf = {};
+function onHoldingChange(input) {
+  const assetId = input.dataset.asset;
+  if (!_holdingChangeBuf[assetId]) _holdingChangeBuf[assetId] = {};
+  _holdingChangeBuf[assetId][input.dataset.field] = input.value;
+  const row = _holdingChangeBuf[assetId];
+  updateHolding(assetId, row.qty ?? '', row.cost ?? '');
+}
+
+// Expose for price refresh integration
+let _lastPriceMap = {};
+
+// Patch into renderPrices to also update portfolio
+const _origRenderPrices = renderPrices;
+function renderPrices(prices) {
+  _origRenderPrices(prices);
+  _lastPriceMap = {};
+  prices.forEach(p => { _lastPriceMap[p.id] = p.price; });
+  renderPortfolio(_lastPriceMap);
 }
 
 // ── Logout ──

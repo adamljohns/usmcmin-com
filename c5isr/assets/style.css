@@ -825,6 +825,65 @@ body {
   box-shadow: 0 0 6px var(--green);
 }
 
+/* ── Portfolio Tracker ── */
+.portfolio-table {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.portfolio-row {
+  display: grid;
+  grid-template-columns: 120px 1fr auto;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 4px;
+  border-bottom: 1px solid var(--border);
+}
+
+.portfolio-row:last-child { border-bottom: none; }
+
+.portfolio-asset {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.portfolio-inputs {
+  display: flex;
+  gap: 8px;
+}
+
+.portfolio-input {
+  background: rgba(255,255,255,0.04);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  color: var(--text-primary);
+  font-family: var(--font-mono);
+  font-size: 12px;
+  padding: 6px 8px;
+  width: 110px;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.portfolio-input:focus {
+  border-color: var(--green);
+  background: rgba(0,255,136,0.04);
+}
+
+.portfolio-input::placeholder { color: var(--text-muted); }
+.portfolio-input::-webkit-inner-spin-button { -webkit-appearance: none; }
+
+.portfolio-pnl {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 2px;
+  min-width: 130px;
+  text-align: right;
+}
+
 /* ── Responsive ── */
 @media (max-width: 1200px) {
   .grid-5 { grid-template-columns: repeat(3, 1fr); }
@@ -850,6 +909,8 @@ body {
   }
   .rank-spark-col { display: none; }
   .chart-timeframe-group { margin-left: 4px; padding-left: 4px; }
+  .portfolio-row { grid-template-columns: 100px 1fr; }
+  .portfolio-pnl { grid-column: 1 / -1; flex-direction: row; justify-content: flex-end; }
 }
 
 @media (max-width: 600px) {
@@ -873,4 +934,8 @@ body {
   .dashboard-footer { flex-direction: column; text-align: center; }
   .last-updated { display: none; }
   .btn-metamask { display: none; }
+  .portfolio-row { grid-template-columns: 1fr; gap: 6px; }
+  .portfolio-inputs { flex-wrap: wrap; }
+  .portfolio-input { width: 100%; }
+  .portfolio-pnl { flex-direction: row; justify-content: space-between; width: 100%; }
 }

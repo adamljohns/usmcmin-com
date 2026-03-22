@@ -6,17 +6,20 @@ const API_BASE = ''; // Empty = use demo data (no backend running on GitHub Page
 // Demo data (seeded from real B&A data — used when backend is offline)
 const DEMO = {
     properties: [
-        { id: 1, name: 'Spacious Apartment', apt_number: '6', beds: 1, baths: 1, base_nightly_rate: 85, status: 'active', current_guest: 'Jess', current_checkout: '2026-03-20', next_guest: 'Cleve', next_checkin: '2026-03-20', review_avg: 5.0, review_count: 24 },
+        { id: 1, name: 'Spacious Apartment', apt_number: '6', beds: 1, baths: 1, base_nightly_rate: 85, status: 'active', current_guest: null, current_checkout: null, next_guest: 'Amy', next_checkin: '2026-03-23', review_avg: 5.0, review_count: 24 },
         { id: 2, name: 'Boho-Modern Apartment', apt_number: '7', beds: 2, baths: 2, base_nightly_rate: 116, status: 'active', current_guest: 'Diane (3 guests)', current_checkout: '2026-03-26', next_guest: 'Brittany', next_checkin: '2026-03-26', review_avg: 5.0, review_count: 18 },
-        { id: 3, name: 'Orange Apartment', apt_number: '8', beds: 1, baths: 1, base_nightly_rate: 93, status: 'active', current_guest: 'Brandi', current_checkout: '2026-03-21', next_guest: null, next_checkin: null, review_avg: 5.0, review_count: 21 },
+        { id: 3, name: 'Orange Apartment', apt_number: '8', beds: 1, baths: 1, base_nightly_rate: 93, status: 'active', current_guest: null, current_checkout: null, next_guest: null, next_checkin: null, review_avg: 5.0, review_count: 21 },
         { id: 4, name: 'Prof Row Cottage', apt_number: 'Cottage', beds: 3, baths: 1, base_nightly_rate: 43, min_nights: 30, status: 'active', current_guest: null, current_checkout: null, next_guest: 'Virginia Van Alstine', next_checkin: '2026-04-06', review_avg: 4.9, review_count: 8 },
         { id: 5, name: 'Hanover Combined', apt_number: '6+8', beds: 2, baths: 2, base_nightly_rate: 150, status: 'active', current_guest: null, current_checkout: null, next_guest: null, next_checkin: null, review_avg: 5.0, review_count: 6 },
     ],
     reservations: [
-        { id: 1, property_id: 3, guest_name: 'Brandi', checkin_date: '2026-03-15', checkout_date: '2026-03-21', platform: 'airbnb', payout: 465, status: 'checked_in', apt_number: '8', property_name: 'Orange Apartment', guests: 1 },
-        { id: 2, property_id: 1, guest_name: 'Jess', checkin_date: '2026-03-15', checkout_date: '2026-03-20', platform: 'airbnb', payout: 340, status: 'checked_in', apt_number: '6', property_name: 'Spacious Apartment', guests: 2 },
-        { id: 3, property_id: 2, guest_name: 'Diane', checkin_date: '2026-03-19', checkout_date: '2026-03-26', platform: 'airbnb', payout: 650, status: 'confirmed', apt_number: '7', property_name: 'Boho-Modern Apartment', guests: 3 },
-        { id: 4, property_id: 1, guest_name: 'Cleve', checkin_date: '2026-03-20', checkout_date: '2026-03-21', platform: 'airbnb', payout: 85, status: 'confirmed', apt_number: '6', property_name: 'Spacious Apartment', guests: 1 },
+        // --- COMPLETED (Mar) ---
+        { id: 1, property_id: 3, guest_name: 'Brandi', checkin_date: '2026-03-15', checkout_date: '2026-03-21', platform: 'airbnb', payout: 465, status: 'checked_out', apt_number: '8', property_name: 'Orange Apartment', guests: 1 },
+        { id: 2, property_id: 1, guest_name: 'Jess', checkin_date: '2026-03-15', checkout_date: '2026-03-20', platform: 'airbnb', payout: 340, status: 'checked_out', apt_number: '6', property_name: 'Spacious Apartment', guests: 2 },
+        { id: 4, property_id: 1, guest_name: 'Cleve', checkin_date: '2026-03-20', checkout_date: '2026-03-21', platform: 'airbnb', payout: 85, status: 'checked_out', apt_number: '6', property_name: 'Spacious Apartment', guests: 1 },
+        // --- ACTIVE ---
+        { id: 3, property_id: 2, guest_name: 'Diane', checkin_date: '2026-03-19', checkout_date: '2026-03-26', platform: 'airbnb', payout: 650, status: 'checked_in', apt_number: '7', property_name: 'Boho-Modern Apartment', guests: 3 },
+        // --- UPCOMING ---
         { id: 5, property_id: 1, guest_name: 'Amy', checkin_date: '2026-03-23', checkout_date: '2026-03-28', platform: 'airbnb', payout: 340, status: 'confirmed', apt_number: '6', property_name: 'Spacious Apartment', guests: 2 },
         { id: 6, property_id: 2, guest_name: 'Brittany', checkin_date: '2026-03-26', checkout_date: '2026-03-30', platform: 'airbnb', payout: 370, status: 'confirmed', apt_number: '7', property_name: 'Boho-Modern Apartment', guests: 2 },
         { id: 7, property_id: 4, guest_name: 'Virginia Van Alstine', checkin_date: '2026-04-06', checkout_date: '2026-05-06', platform: 'airbnb', payout: 1290, status: 'confirmed', apt_number: 'Cottage', property_name: 'Prof Row Cottage', guests: 2 },
@@ -74,6 +77,39 @@ const DEMO = {
     ]
 };
 
+// ===== DYNAMIC PROPERTY HYDRATION =====
+// Derives current_guest, current_checkout, next_guest, next_checkin from reservations.
+// This keeps property status accurate without manual data updates.
+function hydratePropertiesFromReservations(properties, reservations) {
+    const todayStr = today();
+    return properties.map(p => {
+        const propRes = reservations
+            .filter(r => r.property_id === p.id)
+            .sort((a, b) => a.checkin_date.localeCompare(b.checkin_date));
+
+        // Current guest = checked_in reservation that overlaps today
+        const current = propRes.find(r =>
+            r.checkin_date <= todayStr && r.checkout_date > todayStr &&
+            (r.status === 'checked_in' || r.status === 'confirmed')
+        );
+
+        // Next guest = earliest future reservation (checkin > today, or same day as a checkout)
+        const next = propRes.find(r =>
+            r.checkin_date > todayStr &&
+            (r.status === 'confirmed' || r.status === 'checked_in') &&
+            (!current || r.id !== current.id)
+        );
+
+        return {
+            ...p,
+            current_guest: current ? current.guest_name + (current.guests > 1 ? ` (${current.guests} guests)` : '') : null,
+            current_checkout: current ? current.checkout_date : null,
+            next_guest: next ? next.guest_name : null,
+            next_checkin: next ? next.checkin_date : null,
+        };
+    });
+}
+
 // ===== DYNAMIC ALERTS GENERATOR =====
 // Generates context-aware alerts from live reservation + property data each page load.
 // Always up-to-date — no more stale hardcoded dates.
@@ -86,6 +122,9 @@ function generateDynamicAlerts(reservations, properties, reviews) {
     const now = new Date().toISOString();
 
     reservations.forEach(r => {
+        // Skip already-completed reservations — no need to alert on past events
+        if (r.status === 'checked_out') return;
+
         const daysToCheckin  = daysUntil(r.checkin_date);
         const daysToCheckout = daysUntil(r.checkout_date);
 
@@ -118,6 +157,7 @@ function generateDynamicAlerts(reservations, properties, reviews) {
 
     // Same-day turnover detection (checkout + checkin same property, same day)
     reservations.forEach(checkout => {
+        if (checkout.status === 'checked_out') return;
         if (checkout.checkout_date < todayStr) return;
         if (checkout.checkout_date > in7DaysStr) return;
         const sameDay = reservations.find(checkin =>
@@ -143,6 +183,7 @@ function generateDynamicAlerts(reservations, properties, reviews) {
 
     // Upcoming cleanings needed (checkout within 7 days, no same-day follow-on — routine turnover reminder)
     reservations.forEach(r => {
+        if (r.status === 'checked_out') return;
         if (r.checkout_date < todayStr || r.checkout_date > in7DaysStr) return;
         const hasSameDayNext = reservations.some(n =>
             n.property_id === r.property_id && n.checkin_date === r.checkout_date && n.id !== r.id);
@@ -288,10 +329,13 @@ async function initDashboard() {
     // Show loading skeletons
     showSkeleton('propertyGrid', 5);
 
-    const properties = (await fetchData('/api/properties')) || DEMO.properties;
+    const rawProperties = (await fetchData('/api/properties')) || DEMO.properties;
     const financials = (await fetchData('/api/financials/summary')) || DEMO.financials;
     const reservations = (await fetchData('/api/reservations')) || DEMO.reservations;
     const reviews = DEMO.reviews;
+
+    // Derive live occupancy from reservations so property cards never show stale data
+    const properties = hydratePropertiesFromReservations(rawProperties, reservations);
 
     // Generate fresh, date-aware alerts every load (no stale hardcoded data)
     const alerts = (await fetchData('/api/alerts')) || generateDynamicAlerts(reservations, properties, reviews);
@@ -321,7 +365,8 @@ function renderSummaryCards(properties, financials, reviews) {
     document.getElementById('occupiedLabel').textContent = occupied > 0 ? `${occupied} occupied tonight` : 'All vacant';
 
     animateValue('revenueTotal', formatCurrency(financials.revenue.total));
-    document.getElementById('revenueLabel').textContent = 'March Revenue';
+    const _revMonths = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+    document.getElementById('revenueLabel').textContent = _revMonths[new Date().getMonth()] + ' Revenue';
 
     animateValue('netProfit', formatCurrency(financials.net_profit));
     document.getElementById('netLabel').textContent = `${((financials.net_profit / financials.revenue.total) * 100).toFixed(0)}% margin`;
@@ -484,6 +529,8 @@ function renderUpcomingEvents(reservations) {
 
     const events = [];
     reservations.forEach(r => {
+        // Only show future/today events; skip completed reservations
+        if (r.status === 'checked_out') return;
         if (r.checkout_date >= todayStr && r.checkout_date <= weekEnd) {
             events.push({ date: r.checkout_date, type: '🚪 Checkout', name: r.guest_name, apt: r.apt_number, days: daysUntil(r.checkout_date) });
         }
@@ -514,8 +561,9 @@ async function initCalendar() {
     if (!checkAuth()) return;
     initMobileNav();
 
-    const properties = (await fetchData('/api/properties')) || DEMO.properties;
+    const rawProperties = (await fetchData('/api/properties')) || DEMO.properties;
     const reservations = (await fetchData('/api/reservations')) || DEMO.reservations;
+    const properties = hydratePropertiesFromReservations(rawProperties, reservations);
 
     const now = new Date();
     renderCalendar(properties, reservations, now.getFullYear(), now.getMonth());
@@ -1152,7 +1200,7 @@ function renderPropertyRevenue(reservations) {
         `;
     }).join('') +
     `<div style="margin-top:1rem;padding-top:1rem;border-top:2px solid var(--terracotta);display:flex;justify-content:space-between;font-weight:700;font-size:1rem">
-        <span>Total March Revenue</span>
+        <span>Total ${['January','February','March','April','May','June','July','August','September','October','November','December'][new Date().getMonth()]} Revenue</span>
         <span style="color:var(--terracotta)">${formatCurrency(totalRev)}</span>
     </div>`;
 

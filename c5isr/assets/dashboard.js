@@ -114,6 +114,7 @@ function showToast(msg, type = 'info') {
 
 // ── Init ──
 document.addEventListener('DOMContentLoaded', async () => {
+  loadScripture();
   await checkBackend();
   initChart();
   setupChartButtons();
@@ -1238,6 +1239,52 @@ async function loadGlobalStats() {
       gasEl.innerHTML = `<span style="color:var(--green)">${gas.SafeGasPrice}</span>/<span style="color:var(--amber)">${gas.ProposeGasPrice}</span>`;
     }
   } catch { /* gas is non-critical */ }
+}
+
+// ── Scripture of the Day ──
+const SCRIPTURES = [
+  { text: "The plans of the diligent lead surely to abundance, but everyone who is hasty comes only to poverty.", ref: "Proverbs 21:5" },
+  { text: "For God gave us a spirit not of fear but of power and love and self-control.", ref: "2 Timothy 1:7" },
+  { text: "Trust in the LORD with all your heart, and do not lean on your own understanding.", ref: "Proverbs 3:5" },
+  { text: "But seek first the kingdom of God and his righteousness, and all these things will be added to you.", ref: "Matthew 6:33" },
+  { text: "Commit your work to the LORD, and your plans will be established.", ref: "Proverbs 16:3" },
+  { text: "I can do all things through him who strengthens me.", ref: "Philippians 4:13" },
+  { text: "The earth is the LORD's, and everything in it, the world, and all who live in it.", ref: "Psalm 24:1" },
+  { text: "Honor the LORD with your wealth and with the firstfruits of all your produce.", ref: "Proverbs 3:9" },
+  { text: "Do not be conformed to this world, but be transformed by the renewal of your mind.", ref: "Romans 12:2" },
+  { text: "Whatever you do, work heartily, as for the Lord and not for men.", ref: "Colossians 3:23" },
+  { text: "The blessing of the LORD makes rich, and he adds no sorrow with it.", ref: "Proverbs 10:22" },
+  { text: "Wealth gained hastily will dwindle, but whoever gathers little by little will increase it.", ref: "Proverbs 13:11" },
+  { text: "A good man leaves an inheritance to his children's children.", ref: "Proverbs 13:22" },
+  { text: "The steadfast love of the LORD never ceases; his mercies never come to an end.", ref: "Lamentations 3:22" },
+  { text: "For I know the plans I have for you, declares the LORD, plans for welfare and not for evil, to give you a future and a hope.", ref: "Jeremiah 29:11" },
+  { text: "He who is faithful in a very little thing is faithful also in much.", ref: "Luke 16:10" },
+  { text: "The heart of man plans his way, but the LORD establishes his steps.", ref: "Proverbs 16:9" },
+  { text: "Be strong and courageous. Do not be frightened, and do not be dismayed, for the LORD your God is with you.", ref: "Joshua 1:9" },
+  { text: "Now faith is the assurance of things hoped for, the conviction of things not seen.", ref: "Hebrews 11:1" },
+  { text: "If any of you lacks wisdom, let him ask God, who gives generously to all without reproach.", ref: "James 1:5" },
+  { text: "And my God will supply every need of yours according to his riches in glory in Christ Jesus.", ref: "Philippians 4:19" },
+  { text: "No one can serve two masters. You cannot serve God and money.", ref: "Matthew 6:24" },
+  { text: "Whoever can be trusted with very little can also be trusted with much.", ref: "Luke 16:10 (NIV)" },
+  { text: "But godliness with contentment is great gain.", ref: "1 Timothy 6:6" },
+  { text: "The LORD is my shepherd; I shall not want.", ref: "Psalm 23:1" },
+  { text: "Keep your life free from love of money, and be content with what you have.", ref: "Hebrews 13:5" },
+  { text: "Bring the full tithe into the storehouse, and thereby put me to the test, says the LORD.", ref: "Malachi 3:10" },
+  { text: "Each one must give as he has decided in his heart, not reluctantly or under compulsion, for God loves a cheerful giver.", ref: "2 Corinthians 9:7" },
+  { text: "Where your treasure is, there your heart will be also.", ref: "Matthew 6:21" },
+  { text: "The fear of the LORD is the beginning of wisdom.", ref: "Proverbs 9:10" },
+  { text: "Better is a little with righteousness than great revenues with injustice.", ref: "Proverbs 16:8" },
+];
+
+function loadScripture() {
+  const el = document.getElementById('scriptureText');
+  const refEl = document.getElementById('scriptureRef');
+  if (!el || !refEl) return;
+  // Deterministic daily rotation — changes at midnight local time
+  const dayOfYear = Math.floor((Date.now() - new Date(new Date().getFullYear(), 0, 0)) / 86400000);
+  const verse = SCRIPTURES[dayOfYear % SCRIPTURES.length];
+  el.textContent = `"${verse.text}"`;
+  refEl.textContent = `— ${verse.ref}`;
 }
 
 // ── Helpers ──

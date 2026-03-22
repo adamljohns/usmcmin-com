@@ -884,6 +884,57 @@ body {
   text-align: right;
 }
 
+/* ── Scripture Banner ── */
+.scripture-banner {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  background: linear-gradient(135deg, rgba(0,255,136,0.04) 0%, rgba(170,85,255,0.04) 100%);
+  border: 1px solid rgba(0,255,136,0.12);
+  border-radius: var(--radius);
+  padding: 14px 20px;
+  margin-bottom: 16px;
+  animation: scriptureIn 0.6s ease both;
+}
+
+@keyframes scriptureIn {
+  from { opacity: 0; transform: translateY(-8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.scripture-cross {
+  font-size: 22px;
+  color: rgba(0,255,136,0.5);
+  flex-shrink: 0;
+  line-height: 1;
+}
+
+.scripture-content { flex: 1; min-width: 0; }
+
+.scripture-text {
+  font-style: italic;
+  font-size: 14px;
+  color: rgba(255,255,255,0.75);
+  line-height: 1.6;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.scripture-ref {
+  margin-top: 4px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: rgba(0,255,136,0.55);
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+@media (max-width: 600px) {
+  .scripture-text { white-space: normal; font-size: 13px; }
+  .scripture-cross { font-size: 18px; }
+}
+
 /* ── Responsive ── */
 @media (max-width: 1200px) {
   .grid-5 { grid-template-columns: repeat(3, 1fr); }

@@ -1,5 +1,5 @@
 /* Bow & Arrow Studio OS — Dashboard JavaScript
-   v2.0 — March 2026 Refinement */
+   v2.1 — March 2026 Refinement (Today at a Glance + live data sync) */
 
 const API_BASE = ''; // Empty = use demo data (no backend running on GitHub Pages)
 
@@ -19,14 +19,15 @@ const DEMO = {
         { id: 4, property_id: 1, guest_name: 'Cleve', checkin_date: '2026-03-20', checkout_date: '2026-03-21', platform: 'airbnb', payout: 85, status: 'checked_out', apt_number: '6', property_name: 'Spacious Apartment', guests: 1 },
         // --- ACTIVE ---
         { id: 3, property_id: 2, guest_name: 'Diane', checkin_date: '2026-03-19', checkout_date: '2026-03-26', platform: 'airbnb', payout: 650, status: 'checked_in', apt_number: '7', property_name: 'Boho-Modern Apartment', guests: 3 },
+        // --- ACTIVE ---
+        { id: 5, property_id: 1, guest_name: 'Amy', checkin_date: '2026-03-23', checkout_date: '2026-03-28', platform: 'airbnb', payout: 340, status: 'checked_in', apt_number: '6', property_name: 'Spacious Apartment', guests: 2 },
         // --- UPCOMING ---
-        { id: 5, property_id: 1, guest_name: 'Amy', checkin_date: '2026-03-23', checkout_date: '2026-03-28', platform: 'airbnb', payout: 340, status: 'confirmed', apt_number: '6', property_name: 'Spacious Apartment', guests: 2 },
         { id: 6, property_id: 2, guest_name: 'Brittany', checkin_date: '2026-03-26', checkout_date: '2026-03-30', platform: 'airbnb', payout: 370, status: 'confirmed', apt_number: '7', property_name: 'Boho-Modern Apartment', guests: 2 },
         { id: 7, property_id: 4, guest_name: 'Virginia Van Alstine', checkin_date: '2026-04-06', checkout_date: '2026-05-06', platform: 'airbnb', payout: 1290, status: 'confirmed', apt_number: 'Cottage', property_name: 'Prof Row Cottage', guests: 2 },
     ],
     financials: {
         get month() { const n=new Date(); return `${n.getFullYear()}-${String(n.getMonth()+1).padStart(2,'0')}`; },
-        // As of Mar 20: Brandi ($465) + Jess ($340) checked out/in, Diane ($650) active, Cleve ($85) confirmed today
+        // As of Mar 24: Amy ($340) + Diane ($650) active; Brandi/Jess/Cleve checked out; Virginia upcoming
         revenue: { airbnb: 3790, direct_booking: 0, merch: 0, vending: 0, car_rental: 0, total: 3790 },
         expenses: { general: 0, cleaners: 130, total: 130 },
         net_profit: 3660
@@ -76,6 +77,71 @@ const DEMO = {
         { id: 3, property: 'Apt #8', issue: 'Replace smoke detector battery', priority: 'high', status: 'completed', reported: '2026-03-12', completed_date: '2026-03-13', notes: 'Done during turnover' },
     ]
 };
+
+// ===== TODAY AT A GLANCE =====
+// Hero ops strip — shows what's happening right now: active guests, today's check-ins/outs, cleaning needs.
+function renderTodayGlance(properties, reservations) {
+    const container = document.getElementById('todayGlance');
+    if (!container) return;
+
+    const todayStr = today();
+    const tomorrowStr = new Date(Date.now() + 86400000).toISOString().split('T')[0];
+
+    const activeGuests = reservations.filter(r =>
+        (r.status === 'checked_in' || (r.status === 'confirmed' && r.checkin_date <= todayStr && r.checkout_date > todayStr))
+    );
+    const todayCheckouts = reservations.filter(r => r.checkout_date === todayStr && r.status !== 'checked_out');
+    const todayCheckins  = reservations.filter(r => r.checkin_date === todayStr);
+    const tomorrowCheckins = reservations.filter(r => r.checkin_date === tomorrowStr);
+    const tomorrowCheckouts = reservations.filter(r => r.checkout_date === tomorrowStr && r.status !== 'checked_out');
+
+    // Turnovers today (checkout + checkin same property same day)
+    const sameDayTurnovers = todayCheckouts.filter(co =>
+        reservations.some(ci => ci.property_id === co.property_id && ci.checkin_date === todayStr && ci.id !== co.id)
+    );
+
+    const pills = [];
+
+    if (activeGuests.length) {
+        pills.push({ icon: '🏠', label: `${activeGuests.length} Active`, sub: activeGuests.map(r => `Apt ${r.apt_number}: ${r.guest_name}`).join(' · '), color: 'var(--sage)' });
+    } else {
+        pills.push({ icon: '🏠', label: 'All Vacant', sub: 'No active guests', color: 'var(--gray)' });
+    }
+
+    if (todayCheckouts.length) {
+        pills.push({ icon: '🚪', label: `${todayCheckouts.length} Checkout${todayCheckouts.length > 1 ? 's' : ''} Today`, sub: todayCheckouts.map(r => `Apt ${r.apt_number}: ${r.guest_name}`).join(' · '), color: 'var(--dusty-rose)' });
+    }
+    if (todayCheckins.length) {
+        pills.push({ icon: '🔑', label: `${todayCheckins.length} Check-in${todayCheckins.length > 1 ? 's' : ''} Today`, sub: todayCheckins.map(r => `Apt ${r.apt_number}: ${r.guest_name}`).join(' · '), color: 'var(--terracotta)' });
+    }
+    if (sameDayTurnovers.length) {
+        pills.push({ icon: '⚡', label: 'Same-Day Turnover!', sub: sameDayTurnovers.map(r => `Apt ${r.apt_number} — schedule cleaner NOW`).join(' · '), color: 'var(--red)' });
+    }
+    if (tomorrowCheckins.length) {
+        pills.push({ icon: '📋', label: `${tomorrowCheckins.length} Arriving Tomorrow`, sub: tomorrowCheckins.map(r => `Apt ${r.apt_number}: ${r.guest_name}`).join(' · '), color: 'var(--blue)' });
+    }
+    if (tomorrowCheckouts.length && !tomorrowCheckins.length) {
+        pills.push({ icon: '🧹', label: `Prep Cleaning Tomorrow`, sub: tomorrowCheckouts.map(r => `Apt ${r.apt_number} turnover needed`).join(' · '), color: 'var(--yellow)' });
+    }
+
+    if (!todayCheckouts.length && !todayCheckins.length && !activeGuests.length) {
+        pills.push({ icon: '☕', label: 'Quiet Day', sub: 'No check-ins, check-outs, or turnovers today', color: 'var(--gray)' });
+    }
+
+    container.innerHTML = `
+        <div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(220px, 1fr));gap:0.85rem">
+            ${pills.map((p, i) => `
+                <div style="background:var(--warm-white);border-left:4px solid ${p.color};border-radius:2px;padding:1rem 1.25rem;animation:fadeSlideUp 0.25s ease ${i * 0.07}s forwards;opacity:0;box-shadow:0 1px 4px rgba(61,43,34,0.06)">
+                    <div style="display:flex;align-items:center;gap:0.5rem;margin-bottom:0.3rem">
+                        <span style="font-size:1.25rem">${p.icon}</span>
+                        <span style="font-weight:700;font-size:0.9rem;color:${p.color}">${p.label}</span>
+                    </div>
+                    <div style="font-size:0.78rem;color:var(--gray);font-family:var(--font-serif);font-style:italic;line-height:1.4">${p.sub}</div>
+                </div>
+            `).join('')}
+        </div>
+    `;
+}
 
 // ===== DYNAMIC PROPERTY HYDRATION =====
 // Derives current_guest, current_checkout, next_guest, next_checkin from reservations.
@@ -340,6 +406,7 @@ async function initDashboard() {
     // Generate fresh, date-aware alerts every load (no stale hardcoded data)
     const alerts = (await fetchData('/api/alerts')) || generateDynamicAlerts(reservations, properties, reviews);
 
+    renderTodayGlance(properties, reservations);
     renderSummaryCards(properties, financials, reviews);
     renderPropertyGrid(properties);
     renderReviewTracker(reviews);

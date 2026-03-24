@@ -223,7 +223,7 @@ function renderPrices(prices) {
     const cls = isUp ? 'positive' : 'negative';
     const mcap = p.market_cap ? formatCompact(p.market_cap) : '';
     return `
-      <div class="card card-animate price-card" data-asset="${p.id}">
+      <div class="card card-animate price-card price-card-clickable" data-asset="${p.id}" title="Click to view ${ASSETS[p.id]?.name || p.name} chart" onclick="switchChartFromCard('${p.id}')">
         <div style="display:flex;justify-content:space-between;align-items:flex-start">
           <div>
             <div class="price-symbol" style="color:${ASSETS[p.id]?.color || '#fff'}">${ASSETS[p.id]?.symbol || p.symbol}</div>
@@ -236,8 +236,28 @@ function renderPrices(prices) {
           <div class="price-change ${cls}">${arrow} ${Math.abs(change).toFixed(2)}%</div>
           <div class="price-mcap">${mcap}</div>
         </div>
+        <div class="price-card-hint">📈 tap for chart</div>
       </div>`;
   }).join('');
+}
+
+function switchChartFromCard(assetId) {
+  if (!ASSETS[assetId]) return;
+  // Update chart asset buttons
+  document.querySelectorAll('.chart-asset-btn').forEach(b => {
+    b.classList.remove('active'); b.style.borderColor = ''; b.style.color = '';
+  });
+  const assetBtn = document.querySelector(`.chart-asset-btn[data-asset="${assetId}"]`);
+  if (assetBtn) { assetBtn.classList.add('active'); assetBtn.style.borderColor = 'var(--green)'; assetBtn.style.color = 'var(--green)'; }
+  currentChartAsset = assetId;
+  loadChartData(currentChartAsset, currentChartDays);
+  // Highlight the active price card
+  document.querySelectorAll('.price-card-clickable').forEach(c => c.classList.remove('price-card-active'));
+  const card = document.querySelector(`.price-card-clickable[data-asset="${assetId}"]`);
+  if (card) card.classList.add('price-card-active');
+  // Scroll smoothly to chart
+  const chartSection = document.getElementById('mainChart');
+  if (chartSection) { chartSection.closest('.card')?.scrollIntoView({ behavior: 'smooth', block: 'start' }); }
 }
 
 // ── Sparklines ──
@@ -1243,37 +1263,106 @@ async function loadGlobalStats() {
 
 // ── Scripture of the Day ──
 const SCRIPTURES = [
+  // Stewardship & Wealth
   { text: "The plans of the diligent lead surely to abundance, but everyone who is hasty comes only to poverty.", ref: "Proverbs 21:5" },
-  { text: "For God gave us a spirit not of fear but of power and love and self-control.", ref: "2 Timothy 1:7" },
-  { text: "Trust in the LORD with all your heart, and do not lean on your own understanding.", ref: "Proverbs 3:5" },
-  { text: "But seek first the kingdom of God and his righteousness, and all these things will be added to you.", ref: "Matthew 6:33" },
-  { text: "Commit your work to the LORD, and your plans will be established.", ref: "Proverbs 16:3" },
-  { text: "I can do all things through him who strengthens me.", ref: "Philippians 4:13" },
-  { text: "The earth is the LORD's, and everything in it, the world, and all who live in it.", ref: "Psalm 24:1" },
   { text: "Honor the LORD with your wealth and with the firstfruits of all your produce.", ref: "Proverbs 3:9" },
-  { text: "Do not be conformed to this world, but be transformed by the renewal of your mind.", ref: "Romans 12:2" },
-  { text: "Whatever you do, work heartily, as for the Lord and not for men.", ref: "Colossians 3:23" },
   { text: "The blessing of the LORD makes rich, and he adds no sorrow with it.", ref: "Proverbs 10:22" },
   { text: "Wealth gained hastily will dwindle, but whoever gathers little by little will increase it.", ref: "Proverbs 13:11" },
   { text: "A good man leaves an inheritance to his children's children.", ref: "Proverbs 13:22" },
-  { text: "The steadfast love of the LORD never ceases; his mercies never come to an end.", ref: "Lamentations 3:22" },
-  { text: "For I know the plans I have for you, declares the LORD, plans for welfare and not for evil, to give you a future and a hope.", ref: "Jeremiah 29:11" },
-  { text: "He who is faithful in a very little thing is faithful also in much.", ref: "Luke 16:10" },
-  { text: "The heart of man plans his way, but the LORD establishes his steps.", ref: "Proverbs 16:9" },
-  { text: "Be strong and courageous. Do not be frightened, and do not be dismayed, for the LORD your God is with you.", ref: "Joshua 1:9" },
-  { text: "Now faith is the assurance of things hoped for, the conviction of things not seen.", ref: "Hebrews 11:1" },
-  { text: "If any of you lacks wisdom, let him ask God, who gives generously to all without reproach.", ref: "James 1:5" },
-  { text: "And my God will supply every need of yours according to his riches in glory in Christ Jesus.", ref: "Philippians 4:19" },
-  { text: "No one can serve two masters. You cannot serve God and money.", ref: "Matthew 6:24" },
-  { text: "Whoever can be trusted with very little can also be trusted with much.", ref: "Luke 16:10 (NIV)" },
-  { text: "But godliness with contentment is great gain.", ref: "1 Timothy 6:6" },
-  { text: "The LORD is my shepherd; I shall not want.", ref: "Psalm 23:1" },
-  { text: "Keep your life free from love of money, and be content with what you have.", ref: "Hebrews 13:5" },
+  { text: "Better is a little with righteousness than great revenues with injustice.", ref: "Proverbs 16:8" },
   { text: "Bring the full tithe into the storehouse, and thereby put me to the test, says the LORD.", ref: "Malachi 3:10" },
   { text: "Each one must give as he has decided in his heart, not reluctantly or under compulsion, for God loves a cheerful giver.", ref: "2 Corinthians 9:7" },
   { text: "Where your treasure is, there your heart will be also.", ref: "Matthew 6:21" },
+  { text: "No one can serve two masters. You cannot serve God and money.", ref: "Matthew 6:24" },
+  { text: "But godliness with contentment is great gain.", ref: "1 Timothy 6:6" },
+  { text: "Keep your life free from love of money, and be content with what you have.", ref: "Hebrews 13:5" },
+  { text: "The earth is the LORD's, and everything in it, the world, and all who live in it.", ref: "Psalm 24:1" },
+  { text: "He who is faithful in a very little thing is faithful also in much.", ref: "Luke 16:10" },
+  { text: "For the love of money is a root of all kinds of evils.", ref: "1 Timothy 6:10" },
+  { text: "Command them to do good, to be rich in good deeds, and to be generous and willing to share.", ref: "1 Timothy 6:18" },
+  { text: "One person gives freely, yet gains even more; another withholds unduly, but comes to poverty.", ref: "Proverbs 11:24" },
+  { text: "The rich rule over the poor, and the borrower is slave to the lender.", ref: "Proverbs 22:7" },
+  { text: "Dishonest money dwindles away, but whoever gathers money little by little makes it grow.", ref: "Proverbs 13:11 (NIV)" },
+  { text: "Good will come to those who are generous and lend freely, who conduct their affairs with justice.", ref: "Psalm 112:5" },
+
+  // Faith & Trust
+  { text: "Trust in the LORD with all your heart, and do not lean on your own understanding.", ref: "Proverbs 3:5" },
+  { text: "But seek first the kingdom of God and his righteousness, and all these things will be added to you.", ref: "Matthew 6:33" },
+  { text: "Commit your work to the LORD, and your plans will be established.", ref: "Proverbs 16:3" },
+  { text: "Now faith is the assurance of things hoped for, the conviction of things not seen.", ref: "Hebrews 11:1" },
+  { text: "The steadfast love of the LORD never ceases; his mercies never come to an end.", ref: "Lamentations 3:22" },
+  { text: "For I know the plans I have for you, declares the LORD, plans for welfare and not for evil, to give you a future and a hope.", ref: "Jeremiah 29:11" },
+  { text: "And my God will supply every need of yours according to his riches in glory in Christ Jesus.", ref: "Philippians 4:19" },
+  { text: "The LORD is my shepherd; I shall not want.", ref: "Psalm 23:1" },
+  { text: "The heart of man plans his way, but the LORD establishes his steps.", ref: "Proverbs 16:9" },
+  { text: "Do not be anxious about anything, but in everything by prayer and supplication with thanksgiving let your requests be made known to God.", ref: "Philippians 4:6" },
+  { text: "Cast your cares on the LORD and he will sustain you; he will never let the righteous be shaken.", ref: "Psalm 55:22" },
+  { text: "Blessed is the man who trusts in the LORD, whose trust is the LORD.", ref: "Jeremiah 17:7" },
+  { text: "For we live by faith, not by sight.", ref: "2 Corinthians 5:7" },
+  { text: "Without faith it is impossible to please God, because anyone who comes to him must believe that he exists and that he rewards those who earnestly seek him.", ref: "Hebrews 11:6" },
+  { text: "Those who hope in the LORD will renew their strength. They will soar on wings like eagles.", ref: "Isaiah 40:31" },
+
+  // Courage & Strength
+  { text: "For God gave us a spirit not of fear but of power and love and self-control.", ref: "2 Timothy 1:7" },
+  { text: "Be strong and courageous. Do not be frightened, and do not be dismayed, for the LORD your God is with you.", ref: "Joshua 1:9" },
+  { text: "I can do all things through him who strengthens me.", ref: "Philippians 4:13" },
+  { text: "The LORD is my light and my salvation; whom shall I fear?", ref: "Psalm 27:1" },
+  { text: "Be strong in the Lord and in his mighty power.", ref: "Ephesians 6:10" },
+  { text: "So do not fear, for I am with you; do not be dismayed, for I am your God. I will strengthen you and help you.", ref: "Isaiah 41:10" },
+  { text: "The LORD your God is in your midst, a mighty one who will save.", ref: "Zephaniah 3:17" },
+  { text: "Have I not commanded you? Be strong and courageous.", ref: "Joshua 1:9" },
+  { text: "For nothing will be impossible with God.", ref: "Luke 1:37" },
+  { text: "God is our refuge and strength, an ever-present help in trouble.", ref: "Psalm 46:1" },
+
+  // Wisdom & Discernment
+  { text: "If any of you lacks wisdom, let him ask God, who gives generously to all without reproach.", ref: "James 1:5" },
   { text: "The fear of the LORD is the beginning of wisdom.", ref: "Proverbs 9:10" },
-  { text: "Better is a little with righteousness than great revenues with injustice.", ref: "Proverbs 16:8" },
+  { text: "Do not be conformed to this world, but be transformed by the renewal of your mind.", ref: "Romans 12:2" },
+  { text: "Get wisdom, and whatever you get, get insight.", ref: "Proverbs 4:7" },
+  { text: "The wise person has eyes in his head, but the fool walks in darkness.", ref: "Ecclesiastes 2:14" },
+  { text: "Plans fail for lack of counsel, but with many advisers they succeed.", ref: "Proverbs 15:22" },
+  { text: "A wise man thinks ahead; a fool doesn't, and even brags about it.", ref: "Proverbs 13:16 (TLB)" },
+  { text: "By wisdom a house is built, and through understanding it is established.", ref: "Proverbs 24:3" },
+  { text: "The discerning heart seeks knowledge, but the mouth of a fool feeds on folly.", ref: "Proverbs 15:14" },
+  { text: "As iron sharpens iron, so one person sharpens another.", ref: "Proverbs 27:17" },
+
+  // Work & Purpose
+  { text: "Whatever you do, work heartily, as for the Lord and not for men.", ref: "Colossians 3:23" },
+  { text: "For we are God's handiwork, created in Christ Jesus to do good works.", ref: "Ephesians 2:10" },
+  { text: "Let your light shine before others, that they may see your good deeds and glorify your Father in heaven.", ref: "Matthew 5:16" },
+  { text: "Lazy hands make for poverty, but diligent hands bring wealth.", ref: "Proverbs 10:4" },
+  { text: "All hard work brings a profit, but mere talk leads only to poverty.", ref: "Proverbs 14:23" },
+  { text: "She sets about her work vigorously; her arms are strong for her tasks.", ref: "Proverbs 31:17" },
+  { text: "Do not grow weary in doing good, for in due season you will reap, if you do not give up.", ref: "Galatians 6:9" },
+  { text: "Commit to the LORD whatever you do, and he will establish your plans.", ref: "Proverbs 16:3 (NIV)" },
+  { text: "The soul of the diligent is richly supplied.", ref: "Proverbs 13:4" },
+  { text: "Work willingly at whatever you do, as though you were working for the Lord rather than for people.", ref: "Colossians 3:23 (NLT)" },
+
+  // Peace & Contentment
+  { text: "I have learned, in whatever situation I am, to be content.", ref: "Philippians 4:11" },
+  { text: "Peace I leave with you; my peace I give to you. Not as the world gives do I give to you.", ref: "John 14:27" },
+  { text: "You will keep in perfect peace those whose minds are steadfast, because they trust in you.", ref: "Isaiah 26:3" },
+  { text: "The LORD gives strength to his people; the LORD blesses his people with peace.", ref: "Psalm 29:11" },
+  { text: "Better is a dry morsel with quiet than a house full of feasting with strife.", ref: "Proverbs 17:1" },
+  { text: "Godliness with contentment is great gain. For we brought nothing into the world, and we can take nothing out of it.", ref: "1 Timothy 6:6-7" },
+  { text: "May the God of hope fill you with all joy and peace as you trust in him.", ref: "Romans 15:13" },
+
+  // Integrity & Character
+  { text: "The integrity of the upright guides them, but the unfaithful are destroyed by their duplicity.", ref: "Proverbs 11:3" },
+  { text: "Better a poor person who walks in his integrity than one who is crooked in speech and is a fool.", ref: "Proverbs 19:1" },
+  { text: "A good name is more desirable than great riches; to be esteemed is better than silver or gold.", ref: "Proverbs 22:1" },
+  { text: "Do to others as you would have them do to you.", ref: "Luke 6:31" },
+  { text: "Let your yes be yes and your no be no.", ref: "Matthew 5:37" },
+  { text: "He who walks in integrity walks securely.", ref: "Proverbs 10:9" },
+  { text: "Do not take advantage of each other, but fear your God.", ref: "Leviticus 25:17" },
+  { text: "A false balance is an abomination to the LORD, but a just weight is his delight.", ref: "Proverbs 11:1" },
+
+  // Giving & Generosity
+  { text: "Give, and it will be given to you. A good measure, pressed down, shaken together and running over.", ref: "Luke 6:38" },
+  { text: "Whoever is generous to the poor lends to the LORD, and he will repay him for his deed.", ref: "Proverbs 19:17" },
+  { text: "Remember this: Whoever sows sparingly will also reap sparingly, and whoever sows generously will also reap generously.", ref: "2 Corinthians 9:6" },
+  { text: "In all things I have shown you that by working hard in this way we must help the weak.", ref: "Acts 20:35" },
+  { text: "The world of the generous gets larger and larger; the world of the stingy gets smaller and smaller.", ref: "Proverbs 11:24 (MSG)" },
 ];
 
 function loadScripture() {

@@ -1,5 +1,5 @@
 /**
- * C5iSR Dashboard — Frontend Logic v2.0
+ * C5iSR Dashboard — Frontend Logic v2.3
  * 
  * Features:
  *   - Dual mode: Backend FastAPI or CoinGecko demo
@@ -11,6 +11,8 @@
  *   - ETH gas price display
  *   - Fear & Greed with yesterday comparison
  *   - Retry with exponential backoff + rate limit handling
+ *   - Market Intelligence Brief (regime + F&G + signal tally + top pick + assessment)
+ *   - Backtest uses full 5-indicator computeSignal (consistent with live signals)
  */
 
 // ── Config ──
@@ -313,6 +315,7 @@ async function loadSignals() {
     updateDCA(signals);
     updateRisk(signals);
     updateAlertLog(signals);
+    updateIntelBrief(signals, null);
   } catch (e) {
     console.error('Signal load failed:', e);
     document.getElementById('signalGrid').innerHTML = '<div class="card error-card">⚠️ Signal computation failed</div>';
@@ -727,6 +730,115 @@ function clearAlertHistory() {
   document.getElementById('alertLog').innerHTML = '<div style="color:var(--text-muted);padding:12px;text-align:center">Alert history cleared</div>';
 }
 
+// ── Market Intelligence Brief ──
+function updateIntelBrief(signals, fearGreedValue) {
+  const el = document.getElementById('intelBriefContent');
+  if (!el) return;
+
+  // Tally signals
+  const buys = signals.filter(s => s.signal === 'BUY');
+  const sells = signals.filter(s => s.signal === 'SELL');
+  const holds = signals.filter(s => s.signal === 'HOLD');
+
+  // Best buy candidate (highest confidence)
+  const topBuy = buys.sort((a, b) => b.confidence - a.confidence)[0];
+  const topSell = sells.sort((a, b) => b.confidence - a.confidence)[0];
+
+  // Determine market bias
+  const btcSignal = signals.find(s => s.symbol === 'BTC');
+  const regime = btcSignal?.market_regime || btcSignal?.indicators?.ema?.regime || 'SIDEWAYS';
+  const regimeEmoji = regime === 'BULL' ? '🐂' : regime === 'BEAR' ? '🐻' : '↔️';
+
+  // Fear & Greed from current state
+  const fgEl = document.getElementById('fearGreedValue');
+  const fgText = fgEl ? fgEl.textContent.trim() : '—';
+  const fgVal = fearGreedValue ?? parseInt(fgText) || 50;
+  const fgLabel = fgVal <= 25 ? 'Extreme Fear' : fgVal <= 45 ? 'Fear' : fgVal <= 55 ? 'Neutral' : fgVal <= 75 ? 'Greed' : 'Extreme Greed';
+  const fgColor = fgVal <= 25 ? 'var(--red)' : fgVal <= 45 ? '#ff6644' : fgVal <= 55 ? 'var(--amber)' : fgVal <= 75 ? '#88dd44' : 'var(--green)';
+
+  // Average confidence
+  const allConf = signals.map(s => s.confidence);
+  const avgConf = Math.round(allConf.reduce((a, b) => a + b, 0) / allConf.length);
+
+  // Build assessment
+  let assessment = '';
+  let assessColor = 'var(--text-muted)';
+  if (buys.length >= 3 && regime === 'BULL') {
+    assessment = '🟢 Strong bull confluence — broad BUY signals in uptrend. Consider scaling in with DCA.';
+    assessColor = 'var(--green)';
+  } else if (buys.length >= 2) {
+    assessment = '🟡 Moderate bullish setup — selective entries. Prioritize highest-confidence signals.';
+    assessColor = 'var(--amber)';
+  } else if (sells.length >= 3 && regime === 'BEAR') {
+    assessment = '🔴 Strong bear confluence — broad SELL signals in downtrend. Risk-off posture advised.';
+    assessColor = 'var(--red)';
+  } else if (sells.length >= 2) {
+    assessment = '🟠 Bearish pressure building — reduce exposure or wait for reversal confirmation.';
+    assessColor = '#ff6644';
+  } else if (fgVal <= 20) {
+    assessment = '💡 Extreme Fear often precedes reversals. Watch for BUY signal confluence before entering.';
+    assessColor = '#88dd44';
+  } else if (fgVal >= 80) {
+    assessment = '⚠️ Extreme Greed — market likely overbought. Tighten stops, avoid chasing.';
+    assessColor = 'var(--amber)';
+  } else {
+    assessment = '⏸ Mixed signals — no clear edge. Hold positions, wait for cleaner setups.';
+    assessColor = 'var(--text-muted)';
+  }
+
+  // Top pick
+  const topPick = topBuy || topSell;
+  const topPickHtml = topPick
+    ? `<div style="display:inline-flex;align-items:center;gap:8px;padding:6px 12px;border-radius:6px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08)">
+        <span style="font-family:var(--font-mono);font-weight:700;color:${ASSETS[topPick.asset_id]?.color || '#fff'}">${topPick.symbol}</span>
+        <span class="signal-badge ${topPick.signal === 'BUY' ? 'signal-buy' : 'signal-sell'}" style="font-size:10px;padding:2px 7px">${topPick.signal}</span>
+        <span style="font-size:11px;color:var(--text-muted)">${topPick.confidence}% conf</span>
+      </div>`
+    : '<span style="color:var(--text-muted);font-size:12px">No actionable picks</span>';
+
+  el.innerHTML = `
+    <div style="display:flex;flex-wrap:wrap;gap:16px;align-items:flex-start">
+      <!-- Stats Row -->
+      <div style="display:flex;gap:16px;flex-wrap:wrap;flex:1;min-width:280px">
+        <div style="text-align:center;min-width:60px">
+          <div style="font-family:var(--font-mono);font-size:20px;font-weight:700;color:var(--green)">${buys.length}</div>
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:1px">BUY</div>
+        </div>
+        <div style="text-align:center;min-width:60px">
+          <div style="font-family:var(--font-mono);font-size:20px;font-weight:700;color:var(--amber)">${holds.length}</div>
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:1px">HOLD</div>
+        </div>
+        <div style="text-align:center;min-width:60px">
+          <div style="font-family:var(--font-mono);font-size:20px;font-weight:700;color:var(--red)">${sells.length}</div>
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:1px">SELL</div>
+        </div>
+        <div style="text-align:center;min-width:70px">
+          <div style="font-family:var(--font-mono);font-size:20px;font-weight:700">${regimeEmoji} ${regime}</div>
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:1px">Regime</div>
+        </div>
+        <div style="text-align:center;min-width:70px">
+          <div style="font-family:var(--font-mono);font-size:20px;font-weight:700;color:${fgColor}">${fgVal}</div>
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:1px">${fgLabel}</div>
+        </div>
+        <div style="text-align:center;min-width:70px">
+          <div style="font-family:var(--font-mono);font-size:20px;font-weight:700;color:var(--text-secondary)">${avgConf}%</div>
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:1px">Avg Conf</div>
+        </div>
+      </div>
+
+      <!-- Top Pick + Assessment -->
+      <div style="flex:2;min-width:260px;display:flex;flex-direction:column;gap:10px">
+        <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+          <span style="font-size:11px;color:var(--text-muted);text-transform:uppercase;letter-spacing:1px">Top Pick:</span>
+          ${topPickHtml}
+        </div>
+        <div style="font-size:13px;color:${assessColor};line-height:1.5">${assessment}</div>
+      </div>
+    </div>`;
+
+  document.getElementById('intelBriefTime').textContent = new Date().toLocaleTimeString();
+}
+
 function updateAlertLog(signals) {
   const el = document.getElementById('alertLog');
   const now = new Date();
@@ -797,30 +909,56 @@ async function loadBacktest() {
 }
 
 function runClientBacktest(ohlc, assetId) {
+  const info = ASSETS[assetId] || { symbol: '???' };
   const closes = ohlc.map(c => c[4]);
+  // Need sufficient history for all indicators (EMA-200 needs 200 points)
+  const startIdx = Math.min(Math.max(50, ohlc.length - 90), ohlc.length - 10);
+  if (closes.length < startIdx + 5) {
+    return { symbol: info.symbol, error: 'Insufficient history for full backtest' };
+  }
+
   let capital = 10000, position = 0, entryPrice = 0;
   let trades = 0, wins = 0, maxDD = 0, peak = capital;
-  for (let i = 50; i < closes.length; i++) {
+  let lastSignal = 'HOLD';
+
+  for (let i = startIdx; i < closes.length; i++) {
     const price = closes[i];
     const equity = capital + position * price;
     if (equity > peak) peak = equity;
     const dd = (peak - equity) / peak * 100;
     if (dd > maxDD) maxDD = dd;
-    const slice = closes.slice(0, i + 1);
-    const rsiVal = calcRSI(slice);
-    let buy = 0, sell = 0;
-    if (rsiVal < 35) buy++; if (rsiVal > 70) sell++;
-    const ema200 = calcEMA(slice, 200);
-    if (ema200 && price > ema200) buy++; else if (ema200) sell++;
-    if (buy >= 2 && position === 0) { position = capital / price; entryPrice = price; capital = 0; }
-    else if (sell >= 2 && position > 0) { capital = position * price; trades++; if (price > entryPrice) wins++; position = 0; }
+
+    // Use the same full 5-indicator computeSignal used for live signals
+    const slicePrices = closes.slice(0, i + 1);
+    const sliceOhlc = ohlc.slice(0, i + 1);
+    const sig = computeSignal(slicePrices, assetId, info.symbol, sliceOhlc);
+
+    if (sig.signal === 'BUY' && lastSignal !== 'BUY' && position === 0 && capital > 0) {
+      position = capital / price;
+      entryPrice = price;
+      capital = 0;
+      lastSignal = 'BUY';
+    } else if (sig.signal === 'SELL' && lastSignal !== 'SELL' && position > 0) {
+      capital = position * price;
+      trades++;
+      if (price > entryPrice) wins++;
+      position = 0;
+      lastSignal = 'SELL';
+    }
   }
-  if (position > 0) { capital = position * closes[closes.length - 1]; trades++; if (closes[closes.length - 1] > entryPrice) wins++; }
+  // Close any open position at last candle
+  if (position > 0) {
+    capital = position * closes[closes.length - 1];
+    trades++;
+    if (closes[closes.length - 1] > entryPrice) wins++;
+  }
   return {
-    symbol: ASSETS[assetId]?.symbol || '???',
+    symbol: info.symbol,
     total_return_pct: round2((capital - 10000) / 100),
     win_rate_pct: trades > 0 ? round2(wins / trades * 100) : 0,
-    max_drawdown_pct: round2(maxDD), total_trades: trades, final_capital: round2(capital),
+    max_drawdown_pct: round2(maxDD),
+    total_trades: trades,
+    final_capital: round2(capital),
   };
 }
 

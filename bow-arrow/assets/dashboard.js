@@ -1,15 +1,16 @@
 /* Bow & Arrow Studio OS — Dashboard JavaScript
-   v2.1 — March 2026 Refinement (Today at a Glance + live data sync) */
+   v2.2 — March 2026 Refinement (Dynamic cleanings needed + live cleaning log) */
 
 const API_BASE = ''; // Empty = use demo data (no backend running on GitHub Pages)
 
 // Demo data (seeded from real B&A data — used when backend is offline)
 const DEMO = {
     properties: [
-        { id: 1, name: 'Spacious Apartment', apt_number: '6', beds: 1, baths: 1, base_nightly_rate: 85, status: 'active', current_guest: null, current_checkout: null, next_guest: 'Amy', next_checkin: '2026-03-23', review_avg: 5.0, review_count: 24 },
-        { id: 2, name: 'Boho-Modern Apartment', apt_number: '7', beds: 2, baths: 2, base_nightly_rate: 116, status: 'active', current_guest: 'Diane (3 guests)', current_checkout: '2026-03-26', next_guest: 'Brittany', next_checkin: '2026-03-26', review_avg: 5.0, review_count: 18 },
+        // NOTE: current_guest/next_guest hydrated live from reservations via hydratePropertiesFromReservations()
+        { id: 1, name: 'Spacious Apartment', apt_number: '6', beds: 1, baths: 1, base_nightly_rate: 85, status: 'active', current_guest: null, current_checkout: null, next_guest: null, next_checkin: null, review_avg: 5.0, review_count: 24 },
+        { id: 2, name: 'Boho-Modern Apartment', apt_number: '7', beds: 2, baths: 2, base_nightly_rate: 116, status: 'active', current_guest: null, current_checkout: null, next_guest: null, next_checkin: null, review_avg: 5.0, review_count: 18 },
         { id: 3, name: 'Orange Apartment', apt_number: '8', beds: 1, baths: 1, base_nightly_rate: 93, status: 'active', current_guest: null, current_checkout: null, next_guest: null, next_checkin: null, review_avg: 5.0, review_count: 21 },
-        { id: 4, name: 'Prof Row Cottage', apt_number: 'Cottage', beds: 3, baths: 1, base_nightly_rate: 43, min_nights: 30, status: 'active', current_guest: null, current_checkout: null, next_guest: 'Virginia Van Alstine', next_checkin: '2026-04-06', review_avg: 4.9, review_count: 8 },
+        { id: 4, name: 'Prof Row Cottage', apt_number: 'Cottage', beds: 3, baths: 1, base_nightly_rate: 43, min_nights: 30, status: 'active', current_guest: null, current_checkout: null, next_guest: null, next_checkin: null, review_avg: 4.9, review_count: 8 },
         { id: 5, name: 'Hanover Combined', apt_number: '6+8', beds: 2, baths: 2, base_nightly_rate: 150, status: 'active', current_guest: null, current_checkout: null, next_guest: null, next_checkin: null, review_avg: 5.0, review_count: 6 },
     ],
     reservations: [
@@ -27,10 +28,12 @@ const DEMO = {
     ],
     financials: {
         get month() { const n=new Date(); return `${n.getFullYear()}-${String(n.getMonth()+1).padStart(2,'0')}`; },
-        // As of Mar 24: Amy ($340) + Diane ($650) active; Brandi/Jess/Cleve checked out; Virginia upcoming
-        revenue: { airbnb: 3790, direct_booking: 0, merch: 0, vending: 0, car_rental: 0, total: 3790 },
+        // As of Mar 25: Amy ($340) + Diane ($650) active; Brandi ($465)/Jess ($340)/Cleve ($85) checked out
+        // March confirmed total: $465+$340+$85+$650+$340 = $1,880 + upcoming Brittany $370 (Mar 26-30)
+        // March revenue (booked/active this month): $1,880 (confirmed in-month payouts)
+        revenue: { airbnb: 1880, direct_booking: 0, merch: 0, vending: 0, car_rental: 0, total: 1880 },
         expenses: { general: 0, cleaners: 130, total: 130 },
-        net_profit: 3660
+        net_profit: 1750
     },
     monthly: [
         { month: '2025-10', revenue: 1800, expenses: 380, net: 1420 },
@@ -38,7 +41,7 @@ const DEMO = {
         { month: '2025-12', revenue: 2600, expenses: 520, net: 2080 },
         { month: '2026-01', revenue: 1950, expenses: 350, net: 1600 },
         { month: '2026-02', revenue: 2300, expenses: 400, net: 1900 },
-        { month: '2026-03', revenue: 3790, expenses: 130, net: 3660 },
+        { month: '2026-03', revenue: 2250, expenses: 130, net: 2120 },  // $1,880 confirmed + $370 Brittany upcoming
     ],
     alerts: [], // populated dynamically by generateDynamicAlerts()
     cleaningSchedule: {
@@ -747,9 +750,88 @@ async function initCleaning() {
     if (!checkAuth()) return;
     initMobileNav();
 
-    const schedule = (await fetchData('/api/cleaning-schedule')) || DEMO.cleaningSchedule;
+    const reservations = (await fetchData('/api/reservations')) || DEMO.reservations;
+
+    // Dynamically derive needed cleanings from live reservations (no stale hardcoded dates)
+    const neededCleanings = generateNeededCleanings(reservations);
+
+    // Merge locally saved cleanings with DEMO scheduled set
+    const localCleanings = loadLocalData('cleanings', []);
+    const schedule = {
+        scheduled: [...(DEMO.cleaningSchedule.scheduled || []), ...localCleanings],
+        needed: neededCleanings
+    };
+
     renderCleaningSchedule(schedule);
     renderCleanerSummaries();
+
+    // Pre-fill date on log form
+    const logDate = document.getElementById('logCleanDate');
+    if (logDate && !logDate.value) logDate.value = today();
+}
+
+// ===== DYNAMIC NEEDED CLEANINGS GENERATOR =====
+// Derives turnovers and upcoming cleanings from live reservation data.
+// No hardcoded dates — always accurate regardless of when the page is loaded.
+function generateNeededCleanings(reservations) {
+    const todayStr = today();
+    const in14DaysStr = new Date(Date.now() + 14 * 86400000).toISOString().split('T')[0];
+    const needed = [];
+
+    // Sort reservations by checkout date
+    const relevant = reservations
+        .filter(r => r.status !== 'checked_out' && r.checkout_date >= todayStr && r.checkout_date <= in14DaysStr)
+        .sort((a, b) => a.checkout_date.localeCompare(b.checkout_date));
+
+    relevant.forEach(r => {
+        const daysAway = daysUntil(r.checkout_date);
+
+        // Check for same-day turnover (another guest arriving same day)
+        const sameDayNext = reservations.find(n =>
+            n.property_id === r.property_id &&
+            n.checkin_date === r.checkout_date &&
+            n.id !== r.id &&
+            n.status !== 'checked_out'
+        );
+
+        let urgency = 'upcoming';
+        let note = '';
+
+        if (daysAway <= 0) {
+            urgency = 'critical';
+        } else if (daysAway === 1) {
+            urgency = 'critical';
+        } else if (daysAway <= 3) {
+            urgency = 'normal';
+        }
+
+        if (sameDayNext) {
+            urgency = daysAway <= 1 ? 'critical' : 'normal';
+            note = `⚡ SAME-DAY TURNOVER — ${sameDayNext.guest_name} arrives ${daysAway === 0 ? 'today' : daysAway === 1 ? 'tomorrow' : 'in ' + daysAway + ' days'}. Schedule cleaner ASAP!`;
+        } else if (daysAway <= 0) {
+            note = `⚠️ ${r.guest_name} checked out — needs immediate turnover`;
+        } else if (daysAway === 1) {
+            note = `Tomorrow checkout — schedule cleaner now`;
+        } else {
+            note = daysAway <= 3 ? `Checkout in ${daysAway} days — confirm cleaner` : `Upcoming turnover in ${daysAway} days`;
+        }
+
+        // Suggest cleaner based on checkout day of week (Tiffany: Fri/Sat, Amanda: Thu)
+        const checkoutDay = new Date(r.checkout_date + 'T12:00:00').getDay();
+        const suggested_cleaner = (checkoutDay === 5 || checkoutDay === 6) ? 'tiffany' : 'amanda';
+
+        needed.push({
+            apt_number: r.apt_number,
+            property_name: r.property_name,
+            guest_name: r.guest_name,
+            checkout_date: r.checkout_date,
+            suggested_cleaner,
+            urgency,
+            note
+        });
+    });
+
+    return needed;
 }
 
 function renderCleaningSchedule(schedule) {
@@ -801,6 +883,7 @@ function renderCleanerSummaries() {
     // Only count this calendar month
     const now = new Date();
     const thisMonth = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}`;
+    const monthName = ['January','February','March','April','May','June','July','August','September','October','November','December'][now.getMonth()];
 
     const byMonth = allCleanings.filter(c => c.date && c.date.startsWith(thisMonth));
 
@@ -811,6 +894,12 @@ function renderCleanerSummaries() {
         totals[name].cleanings++;
         totals[name].hours += parseFloat(c.hours) || 0;
         totals[name].pay += parseFloat(c.pay) || 0;
+    });
+
+    // Update month labels dynamically
+    ['amanda', 'tiffany'].forEach(name => {
+        const labelEl = document.getElementById(name + 'MonthLabel');
+        if (labelEl) labelEl.textContent = `Cleanings (${monthName})`;
     });
 
     const setStats = (name, id) => {
@@ -1441,6 +1530,58 @@ function showToast(msg, duration = 3000) {
             toast.style.pointerEvents = 'none';
         }, duration);
     });
+}
+
+// ===== CLEANING PAGE INLINE LOG SAVE =====
+// Wired to the "Save Cleaning" button on cleaning.html (separate form from dashboard modal)
+function saveCleaningFromPage() {
+    const prop  = document.getElementById('logCleanProp');
+    const date  = document.getElementById('logCleanDate');
+    const cleaner = document.getElementById('logCleanCleaner');
+    const hours = document.getElementById('logCleanHours');
+    const type  = document.getElementById('logCleanType');
+    const notes = document.getElementById('logCleanNotes');
+
+    if (!date || !date.value) { showToast('Please select a date.'); return; }
+    if (!hours || parseFloat(hours.value) <= 0) { showToast('Please enter valid hours.'); return; }
+
+    const propNames   = { '1': 'Apt #6', '2': 'Apt #7', '3': 'Apt #8', '4': 'Cottage', '5': 'Combined #6+#8' };
+    const aptNumbers  = { '1': '6', '2': '7', '3': '8', '4': 'Cottage', '5': '6+8' };
+    const hoursVal    = parseFloat(hours.value) || 2;
+    const rate        = 25; // $25/hr
+    const entry = {
+        id: Date.now(),
+        property:    propNames[prop.value] || prop.value,
+        property_id: parseInt(prop.value),
+        apt_number:  aptNumbers[prop.value] || prop.value,
+        date:        date.value,
+        cleaner:     cleaner.value,
+        hours:       hoursVal,
+        type:        type.value,
+        notes:       notes.value.trim(),
+        completed:   1,
+        pay:         hoursVal * rate,
+        created:     new Date().toISOString()
+    };
+
+    const cleanings = loadLocalData('cleanings', []);
+    cleanings.push(entry);
+    saveLocalData('cleanings', cleanings);
+
+    // Refresh the page sections with updated data
+    const schedule = {
+        scheduled: [...(DEMO.cleaningSchedule.scheduled || []), ...cleanings],
+        needed: generateNeededCleanings(DEMO.reservations)
+    };
+    renderCleaningSchedule(schedule);
+    renderCleanerSummaries();
+
+    // Reset form
+    if (notes) notes.value = '';
+    if (hours) hours.value = '2';
+    date.value = today();
+
+    showToast(`✅ Cleaning logged — ${entry.property} on ${formatDate(entry.date)} (${cleaner.value}, ${hoursVal}h · ${formatCurrency(entry.pay)})`);
 }
 
 // Auto-refresh dashboard every 60 seconds

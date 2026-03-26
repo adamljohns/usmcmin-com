@@ -1,5 +1,5 @@
 /**
- * C5iSR Dashboard — Frontend Logic v2.3
+ * C5iSR Dashboard — Frontend Logic v2.4
  * 
  * Features:
  *   - Dual mode: Backend FastAPI or CoinGecko demo
@@ -11,7 +11,8 @@
  *   - ETH gas price display
  *   - Fear & Greed with yesterday comparison
  *   - Retry with exponential backoff + rate limit handling
- *   - Market Intelligence Brief (regime + F&G + signal tally + top pick + assessment)
+ *   - Market Intelligence Brief (regime + F&G + signal tally + top pick + assessment + Stewardship Score)
+ *   - Signal cards show current price, stop-loss & take-profit targets
  *   - Backtest uses full 5-indicator computeSignal (consistent with live signals)
  */
 
@@ -637,6 +638,20 @@ function buildIndicatorPills(s) {
 
 function renderSignals(signals) {
   const grid = document.getElementById('signalGrid');
+  // Build a price lookup from currently rendered price cards
+  const priceMap = {};
+  document.querySelectorAll('.price-card-clickable').forEach(card => {
+    const assetId = card.dataset.asset;
+    const valEl = card.querySelector('.price-value');
+    if (assetId && valEl) priceMap[assetId] = valEl.textContent.trim();
+  });
+  // Also pull from cached window state if set
+  if (window._lastPrices) {
+    window._lastPrices.forEach(p => {
+      if (p.id && p.price) priceMap[p.id] = '$' + formatPrice(p.price);
+    });
+  }
+
   grid.innerHTML = signals.map(s => {
     const cls = s.signal === 'BUY' ? 'signal-buy' : s.signal === 'SELL' ? 'signal-sell' : 'signal-hold';
     const rsi = s.rsi != null ? s.rsi.toFixed(1) : '—';
@@ -644,16 +659,39 @@ function renderSignals(signals) {
     const rsiWidth = s.rsi != null ? s.rsi : 50;
     const confColor = s.confidence >= 70 ? 'var(--green)' : s.confidence >= 40 ? 'var(--amber)' : 'var(--red)';
     const pills = buildIndicatorPills(s);
+
+    // Current price: prefer live indicator data, then priceMap, then stop-loss back-calc
+    let currentPrice = s.indicators?.current_price || null;
+    const priceDisplay = currentPrice
+      ? `<span style="font-family:var(--font-mono);font-size:13px;color:var(--text-secondary)">$${formatPrice(currentPrice)}</span>`
+      : (priceMap[s.asset_id]
+          ? `<span style="font-family:var(--font-mono);font-size:13px;color:var(--text-secondary)">${priceMap[s.asset_id]}</span>`
+          : '');
+
+    // Stop-loss & take-profit mini row (only when relevant)
+    const risk = s.risk;
+    const riskHtml = (risk && s.signal !== 'HOLD' && risk.stop_loss_price > 0)
+      ? `<div style="display:flex;gap:10px;margin-top:6px;font-family:var(--font-mono);font-size:10px;flex-wrap:wrap">
+           <span style="color:var(--red)">SL $${formatPrice(risk.stop_loss_price)}</span>
+           <span style="color:var(--green)">TP $${formatPrice(risk.take_profit_price)}</span>
+           <span style="color:var(--text-muted)">${risk.risk_reward_ratio}</span>
+         </div>`
+      : '';
+
     return `
       <div class="card card-animate">
         <div style="display:flex;justify-content:space-between;align-items:center">
-          <span style="font-family:var(--font-mono);font-weight:700;font-size:16px;color:${ASSETS[s.asset_id]?.color || '#fff'}">${s.symbol}</span>
+          <div>
+            <span style="font-family:var(--font-mono);font-weight:700;font-size:16px;color:${ASSETS[s.asset_id]?.color || '#fff'}">${s.symbol}</span>
+            ${priceDisplay ? `<div style="margin-top:2px">${priceDisplay}</div>` : ''}
+          </div>
           <span class="signal-badge ${cls}">${s.signal}</span>
         </div>
-        <div style="margin-top:12px">
+        <div style="margin-top:10px">
           <div class="rsi-value">RSI: <span style="color:${rsiColor}">${rsi}</span></div>
           <div class="rsi-gauge"><div class="rsi-gauge-fill" style="width:${rsiWidth}%;background:${rsiColor}"></div></div>
         </div>
+        ${riskHtml}
         <div style="margin-top:8px;line-height:1.6">${pills}</div>
         <div class="confidence-bar" style="margin-top:8px"><div class="confidence-fill" style="width:${s.confidence}%;background:${confColor}"></div></div>
         <div style="text-align:right;font-size:11px;color:var(--text-muted);margin-top:4px">${s.confidence}% confidence</div>
@@ -760,6 +798,22 @@ function updateIntelBrief(signals, fearGreedValue) {
   const allConf = signals.map(s => s.confidence);
   const avgConf = Math.round(allConf.reduce((a, b) => a + b, 0) / allConf.length);
 
+  // ── Stewardship Score (0-100) ──
+  // Composite of: regime (30pts) + F&G neutrality (20pts) + signal balance (30pts) + avg confidence (20pts)
+  let ssRegime = regime === 'BULL' ? 30 : regime === 'BEAR' ? 10 : 20;
+  // F&G: score peaks near neutral (50), drops at extremes
+  const fgNeutral = 50 - Math.abs(fgVal - 50); // 0-50 → rescale to 0-20
+  const ssFG = Math.round((fgNeutral / 50) * 20);
+  // Signal balance: more BUYs = higher (max 30), net neutral = 15, all SELL = 0
+  const total = signals.length || 1;
+  const ssSignals = Math.round(((buys.length / total) * 30));
+  // Confidence component (0-20)
+  const ssConf = Math.round((avgConf / 100) * 20);
+  const stewScore = Math.min(100, ssRegime + ssFG + ssSignals + ssConf);
+  const stewGrade = stewScore >= 80 ? 'A' : stewScore >= 65 ? 'B' : stewScore >= 50 ? 'C' : stewScore >= 35 ? 'D' : 'F';
+  const stewColor = stewScore >= 70 ? 'var(--green)' : stewScore >= 50 ? 'var(--amber)' : stewScore >= 35 ? '#ff6644' : 'var(--red)';
+  const stewLabel = stewScore >= 80 ? 'Strong' : stewScore >= 65 ? 'Favorable' : stewScore >= 50 ? 'Neutral' : stewScore >= 35 ? 'Caution' : 'Risk-Off';
+
   // Build assessment
   let assessment = '';
   let assessColor = 'var(--text-muted)';
@@ -823,6 +877,11 @@ function updateIntelBrief(signals, fearGreedValue) {
         <div style="text-align:center;min-width:70px">
           <div style="font-family:var(--font-mono);font-size:20px;font-weight:700;color:var(--text-secondary)">${avgConf}%</div>
           <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:1px">Avg Conf</div>
+        </div>
+        <div style="text-align:center;min-width:80px;border-left:1px solid var(--border);padding-left:16px">
+          <div style="font-family:var(--font-mono);font-size:22px;font-weight:700;color:${stewColor}">${stewScore}<span style="font-size:14px;opacity:0.7">/${stewGrade}</span></div>
+          <div style="font-size:10px;color:${stewColor};text-transform:uppercase;letter-spacing:1px">Stewardship</div>
+          <div style="font-size:9px;color:var(--text-muted);margin-top:2px">${stewLabel}</div>
         </div>
       </div>
 
@@ -1221,6 +1280,8 @@ function renderPrices(prices) {
   _origRenderPrices(prices);
   _lastPriceMap = {};
   prices.forEach(p => { _lastPriceMap[p.id] = p.price; });
+  // Cache for signal card price display
+  window._lastPrices = prices;
   renderPortfolio(_lastPriceMap);
 }
 

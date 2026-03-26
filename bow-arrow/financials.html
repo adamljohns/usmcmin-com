@@ -84,6 +84,10 @@
             <p style="color:var(--gray);font-family:var(--font-serif);font-style:italic">Loading...</p>
         </div>
 
+        <!-- YTD Performance -->
+        <h2 class="section-title">📈 Year-to-Date Performance — 2026</h2>
+        <div class="card" id="ytdSection"></div>
+
         <!-- Occupancy Metrics -->
         <h2 class="section-title">Occupancy Metrics — 30 Day</h2>
         <div class="card" id="occupancyTable"></div>
@@ -96,6 +100,67 @@
         const _months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
         const _n = new Date();
         document.getElementById('finMonthLabel').textContent = _months[_n.getMonth()] + ' ' + _n.getFullYear();
+
+        // YTD Performance block
+        (function renderYTD() {
+            const ytdData = DEMO.monthly.filter(m => m.month.startsWith('2026'));
+            const ytdRev = ytdData.reduce((s, m) => s + m.revenue, 0);
+            const ytdExp = ytdData.reduce((s, m) => s + m.expenses, 0);
+            const ytdNet = ytdData.reduce((s, m) => s + m.net, 0);
+            const ytdMargin = ytdRev > 0 ? ((ytdNet / ytdRev) * 100).toFixed(0) : 0;
+            const avgMonthRev = ytdData.length > 0 ? Math.round(ytdRev / ytdData.length) : 0;
+            const monthNames = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+
+            const container = document.getElementById('ytdSection');
+            if (!container) return;
+
+            container.innerHTML = `
+                <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:1rem;margin-bottom:1.5rem">
+                    <div style="text-align:center;padding:1.25rem;background:var(--cream);border-radius:2px;border:1px solid var(--light-gray)">
+                        <div style="font-size:0.6rem;color:var(--gray);text-transform:uppercase;letter-spacing:2px;font-weight:600">YTD Revenue</div>
+                        <div style="font-family:var(--font-serif);font-size:1.8rem;font-weight:700;color:var(--terracotta);margin:0.4rem 0">${formatCurrency(ytdRev)}</div>
+                        <div style="font-size:0.7rem;color:var(--gray)">${ytdData.length} months tracked</div>
+                    </div>
+                    <div style="text-align:center;padding:1.25rem;background:var(--cream);border-radius:2px;border:1px solid var(--light-gray)">
+                        <div style="font-size:0.6rem;color:var(--gray);text-transform:uppercase;letter-spacing:2px;font-weight:600">YTD Net Profit</div>
+                        <div style="font-family:var(--font-serif);font-size:1.8rem;font-weight:700;color:var(--sage);margin:0.4rem 0">${formatCurrency(ytdNet)}</div>
+                        <div style="font-size:0.7rem;color:var(--gray)">${ytdMargin}% margin</div>
+                    </div>
+                    <div style="text-align:center;padding:1.25rem;background:var(--cream);border-radius:2px;border:1px solid var(--light-gray)">
+                        <div style="font-size:0.6rem;color:var(--gray);text-transform:uppercase;letter-spacing:2px;font-weight:600">YTD Expenses</div>
+                        <div style="font-family:var(--font-serif);font-size:1.8rem;font-weight:700;color:var(--dusty-rose);margin:0.4rem 0">${formatCurrency(ytdExp)}</div>
+                        <div style="font-size:0.7rem;color:var(--gray)">Avg ${formatCurrency(Math.round(ytdExp/Math.max(ytdData.length,1)))}/mo</div>
+                    </div>
+                    <div style="text-align:center;padding:1.25rem;background:var(--cream);border-radius:2px;border:1px solid var(--light-gray)">
+                        <div style="font-size:0.6rem;color:var(--gray);text-transform:uppercase;letter-spacing:2px;font-weight:600">Avg Monthly Rev</div>
+                        <div style="font-family:var(--font-serif);font-size:1.8rem;font-weight:700;color:var(--warm-brown);margin:0.4rem 0">${formatCurrency(avgMonthRev)}</div>
+                        <div style="font-size:0.7rem;color:var(--gray)">Run rate: ${formatCurrency(avgMonthRev * 12)}/yr</div>
+                    </div>
+                </div>
+                <table>
+                    <thead><tr><th>Month</th><th>Revenue</th><th>Expenses</th><th>Net Profit</th><th>Margin</th><th>vs Prior Mo.</th></tr></thead>
+                    <tbody>
+                        ${ytdData.map((m, i) => {
+                            const margin = m.revenue > 0 ? ((m.net / m.revenue) * 100).toFixed(0) : 0;
+                            const prior = ytdData[i - 1];
+                            const delta = prior ? m.revenue - prior.revenue : null;
+                            const deltaStr = delta !== null
+                                ? `<span style="color:${delta >= 0 ? 'var(--sage)' : 'var(--dusty-rose)'};font-weight:600">${delta >= 0 ? '▲' : '▼'} ${formatCurrency(Math.abs(delta))}</span>`
+                                : '<span style="color:var(--gray)">—</span>';
+                            const moLabel = monthNames[parseInt(m.month.split('-')[1]) - 1] + ' ' + m.month.split('-')[0];
+                            return '<tr>' +
+                                '<td style="font-family:var(--font-serif);font-weight:600">' + moLabel + '</td>' +
+                                '<td style="color:var(--terracotta);font-weight:600">' + formatCurrency(m.revenue) + '</td>' +
+                                '<td>' + formatCurrency(m.expenses) + '</td>' +
+                                '<td style="color:var(--sage);font-weight:600">' + formatCurrency(m.net) + '</td>' +
+                                '<td>' + margin + '%</td>' +
+                                '<td>' + deltaStr + '</td>' +
+                                '</tr>';
+                        }).join('')}
+                    </tbody>
+                </table>
+            `;
+        })();
 
         // Occupancy table
         (async function() {

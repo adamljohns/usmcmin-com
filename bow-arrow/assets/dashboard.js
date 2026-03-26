@@ -1,5 +1,5 @@
 /* Bow & Arrow Studio OS — Dashboard JavaScript
-   v2.2 — March 2026 Refinement (Dynamic cleanings needed + live cleaning log) */
+   v2.3 — March 2026 Refinement (Fix March financials + YTD Performance section) */
 
 const API_BASE = ''; // Empty = use demo data (no backend running on GitHub Pages)
 
@@ -28,12 +28,12 @@ const DEMO = {
     ],
     financials: {
         get month() { const n=new Date(); return `${n.getFullYear()}-${String(n.getMonth()+1).padStart(2,'0')}`; },
-        // As of Mar 25: Amy ($340) + Diane ($650) active; Brandi ($465)/Jess ($340)/Cleve ($85) checked out
-        // March confirmed total: $465+$340+$85+$650+$340 = $1,880 + upcoming Brittany $370 (Mar 26-30)
-        // March revenue (booked/active this month): $1,880 (confirmed in-month payouts)
-        revenue: { airbnb: 1880, direct_booking: 0, merch: 0, vending: 0, car_rental: 0, total: 1880 },
-        expenses: { general: 0, cleaners: 130, total: 130 },
-        net_profit: 1750
+        // As of Mar 26: Amy ($340) + Diane->Brittany turnover ($650+$370) + Brandi ($465)/Jess ($340)/Cleve ($85) checked out
+        // March confirmed total: $465+$340+$85+$650+$340+$370 = $2,250
+        // Expenses: Tiffany cleaning Mar 15 ($130) + Mar 26 turnover cleaning est. ($50) = $180
+        revenue: { airbnb: 2250, direct_booking: 0, merch: 0, vending: 0, car_rental: 0, total: 2250 },
+        expenses: { general: 0, cleaners: 180, total: 180 },
+        net_profit: 2070
     },
     monthly: [
         { month: '2025-10', revenue: 1800, expenses: 380, net: 1420 },
@@ -41,7 +41,7 @@ const DEMO = {
         { month: '2025-12', revenue: 2600, expenses: 520, net: 2080 },
         { month: '2026-01', revenue: 1950, expenses: 350, net: 1600 },
         { month: '2026-02', revenue: 2300, expenses: 400, net: 1900 },
-        { month: '2026-03', revenue: 2250, expenses: 130, net: 2120 },  // $1,880 confirmed + $370 Brittany upcoming
+        { month: '2026-03', revenue: 2250, expenses: 180, net: 2070 },  // All Mar bookings confirmed: $465+$340+$85+$650+$340+$370
     ],
     alerts: [], // populated dynamically by generateDynamicAlerts()
     cleaningSchedule: {
@@ -49,11 +49,12 @@ const DEMO = {
             { property_name: 'Spacious Apartment', apt_number: '6', date: '2026-03-15', cleaner: 'tiffany', type: 'turnover', completed: 1, hours: 1.5, pay: 37.50 },
             { property_name: 'Boho-Modern Apartment', apt_number: '7', date: '2026-03-15', cleaner: 'tiffany', type: 'turnover', completed: 1, hours: 2, pay: 50 },
             { property_name: 'Orange Apartment', apt_number: '8', date: '2026-03-15', cleaner: 'tiffany', type: 'turnover', completed: 1, hours: 1.5, pay: 42.50 },
+            { property_name: 'Boho-Modern Apartment', apt_number: '7', date: '2026-03-26', cleaner: 'amanda', type: 'turnover', completed: 0, hours: 2, pay: 50 },
         ],
         needed: [
-            { apt_number: '6', guest_name: 'Jess', checkout_date: '2026-03-20', suggested_cleaner: 'tiffany', urgency: 'critical', note: '⚠️ SAME-DAY TURNOVER — Cleve arriving same afternoon!' },
-            { apt_number: '8', guest_name: 'Brandi', checkout_date: '2026-03-21', suggested_cleaner: 'tiffany', urgency: 'normal', note: 'Friday checkout — Tiffany available' },
-            { apt_number: '7', guest_name: 'Diane', checkout_date: '2026-03-26', suggested_cleaner: 'amanda', urgency: 'upcoming', note: 'Same-day turnover — Brittany arrives Mar 26' },
+            { apt_number: '7', guest_name: 'Diane', checkout_date: '2026-03-26', suggested_cleaner: 'amanda', urgency: 'critical', note: '⚠️ SAME-DAY TURNOVER — Brittany arrives Mar 26!' },
+            { apt_number: '6', guest_name: 'Amy', checkout_date: '2026-03-28', suggested_cleaner: 'tiffany', urgency: 'upcoming', note: 'Saturday checkout — schedule Tiffany for turnover' },
+            { apt_number: '7', guest_name: 'Brittany', checkout_date: '2026-03-30', suggested_cleaner: 'tiffany', urgency: 'upcoming', note: 'Sunday checkout — Tiffany or Amanda for deep clean' },
         ]
     },
     occupancy: [

@@ -40,7 +40,7 @@
                 <div class="value" style="color:var(--yellow)" id="scheduledCount">—</div>
             </div>
             <div class="card">
-                <h3>Completed (March)</h3>
+                <h3>Completed (<span id="completedMonthLabel">This Month</span>)</h3>
                 <div class="value" style="color:var(--sage)" id="completedCount">—</div>
             </div>
         </div>
@@ -99,10 +99,17 @@
         initMaintenance();
 
         // Update summary counts
+        // Dynamic month label
+        const _maintMonths = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+        const _maintNow = new Date();
+        const _maintMonthLabel = document.getElementById('completedMonthLabel');
+        if (_maintMonthLabel) _maintMonthLabel.textContent = _maintMonths[_maintNow.getMonth()];
+
         const maintenance = DEMO.maintenance;
+        const thisMonthStr = `${_maintNow.getFullYear()}-${String(_maintNow.getMonth()+1).padStart(2,'0')}`;
         document.getElementById('openCount').textContent = maintenance.filter(m => m.status === 'open').length;
         document.getElementById('scheduledCount').textContent = maintenance.filter(m => m.status === 'scheduled').length;
-        document.getElementById('completedCount').textContent = maintenance.filter(m => m.status === 'completed').length;
+        document.getElementById('completedCount').textContent = maintenance.filter(m => m.status === 'completed' && (m.completed_date || m.reported || '').startsWith(thisMonthStr)).length;
     </script>
 </body>
 </html>

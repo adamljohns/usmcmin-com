@@ -1,5 +1,5 @@
 /* Bow & Arrow Studio OS — Dashboard JavaScript
-   v2.3 — March 2026 Refinement (Fix March financials + YTD Performance section) */
+   v2.4 — March 2026 Refinement (Update Mar 26 statuses: Diane out, Brittany in; Amanda cleaning complete) */
 
 const API_BASE = ''; // Empty = use demo data (no backend running on GitHub Pages)
 
@@ -18,19 +18,19 @@ const DEMO = {
         { id: 1, property_id: 3, guest_name: 'Brandi', checkin_date: '2026-03-15', checkout_date: '2026-03-21', platform: 'airbnb', payout: 465, status: 'checked_out', apt_number: '8', property_name: 'Orange Apartment', guests: 1 },
         { id: 2, property_id: 1, guest_name: 'Jess', checkin_date: '2026-03-15', checkout_date: '2026-03-20', platform: 'airbnb', payout: 340, status: 'checked_out', apt_number: '6', property_name: 'Spacious Apartment', guests: 2 },
         { id: 4, property_id: 1, guest_name: 'Cleve', checkin_date: '2026-03-20', checkout_date: '2026-03-21', platform: 'airbnb', payout: 85, status: 'checked_out', apt_number: '6', property_name: 'Spacious Apartment', guests: 1 },
-        // --- ACTIVE ---
-        { id: 3, property_id: 2, guest_name: 'Diane', checkin_date: '2026-03-19', checkout_date: '2026-03-26', platform: 'airbnb', payout: 650, status: 'checked_in', apt_number: '7', property_name: 'Boho-Modern Apartment', guests: 3 },
+        // --- CHECKED OUT Mar 26 ---
+        { id: 3, property_id: 2, guest_name: 'Diane', checkin_date: '2026-03-19', checkout_date: '2026-03-26', platform: 'airbnb', payout: 650, status: 'checked_out', apt_number: '7', property_name: 'Boho-Modern Apartment', guests: 3 },
         // --- ACTIVE ---
         { id: 5, property_id: 1, guest_name: 'Amy', checkin_date: '2026-03-23', checkout_date: '2026-03-28', platform: 'airbnb', payout: 340, status: 'checked_in', apt_number: '6', property_name: 'Spacious Apartment', guests: 2 },
-        // --- UPCOMING ---
-        { id: 6, property_id: 2, guest_name: 'Brittany', checkin_date: '2026-03-26', checkout_date: '2026-03-30', platform: 'airbnb', payout: 370, status: 'confirmed', apt_number: '7', property_name: 'Boho-Modern Apartment', guests: 2 },
+        // --- ACTIVE (checked in Mar 26) ---
+        { id: 6, property_id: 2, guest_name: 'Brittany', checkin_date: '2026-03-26', checkout_date: '2026-03-30', platform: 'airbnb', payout: 370, status: 'checked_in', apt_number: '7', property_name: 'Boho-Modern Apartment', guests: 2 },
         { id: 7, property_id: 4, guest_name: 'Virginia Van Alstine', checkin_date: '2026-04-06', checkout_date: '2026-05-06', platform: 'airbnb', payout: 1290, status: 'confirmed', apt_number: 'Cottage', property_name: 'Prof Row Cottage', guests: 2 },
     ],
     financials: {
         get month() { const n=new Date(); return `${n.getFullYear()}-${String(n.getMonth()+1).padStart(2,'0')}`; },
-        // As of Mar 26: Amy ($340) + Diane->Brittany turnover ($650+$370) + Brandi ($465)/Jess ($340)/Cleve ($85) checked out
-        // March confirmed total: $465+$340+$85+$650+$340+$370 = $2,250
-        // Expenses: Tiffany cleaning Mar 15 ($130) + Mar 26 turnover cleaning est. ($50) = $180
+        // As of Mar 26 EOD: Diane checked out, Brittany checked in to Apt 7. Amy active in Apt 6.
+        // March confirmed total: $465+$340+$85+$650+$340+$370 = $2,250 (all in — Brittany payout included)
+        // Expenses: Tiffany Mar 15 3x turnovers ($130) + Amanda Apt 7 Mar 26 turnover ($50) = $180
         revenue: { airbnb: 2250, direct_booking: 0, merch: 0, vending: 0, car_rental: 0, total: 2250 },
         expenses: { general: 0, cleaners: 180, total: 180 },
         net_profit: 2070
@@ -49,12 +49,12 @@ const DEMO = {
             { property_name: 'Spacious Apartment', apt_number: '6', date: '2026-03-15', cleaner: 'tiffany', type: 'turnover', completed: 1, hours: 1.5, pay: 37.50 },
             { property_name: 'Boho-Modern Apartment', apt_number: '7', date: '2026-03-15', cleaner: 'tiffany', type: 'turnover', completed: 1, hours: 2, pay: 50 },
             { property_name: 'Orange Apartment', apt_number: '8', date: '2026-03-15', cleaner: 'tiffany', type: 'turnover', completed: 1, hours: 1.5, pay: 42.50 },
-            { property_name: 'Boho-Modern Apartment', apt_number: '7', date: '2026-03-26', cleaner: 'amanda', type: 'turnover', completed: 0, hours: 2, pay: 50 },
+            { property_name: 'Boho-Modern Apartment', apt_number: '7', date: '2026-03-26', cleaner: 'amanda', type: 'turnover', completed: 1, hours: 2, pay: 50 },
         ],
         needed: [
-            { apt_number: '7', guest_name: 'Diane', checkout_date: '2026-03-26', suggested_cleaner: 'amanda', urgency: 'critical', note: '⚠️ SAME-DAY TURNOVER — Brittany arrives Mar 26!' },
             { apt_number: '6', guest_name: 'Amy', checkout_date: '2026-03-28', suggested_cleaner: 'tiffany', urgency: 'upcoming', note: 'Saturday checkout — schedule Tiffany for turnover' },
             { apt_number: '7', guest_name: 'Brittany', checkout_date: '2026-03-30', suggested_cleaner: 'tiffany', urgency: 'upcoming', note: 'Sunday checkout — Tiffany or Amanda for deep clean' },
+            { apt_number: 'Cottage', guest_name: null, checkout_date: null, suggested_cleaner: null, urgency: 'none', note: '🟢 Cottage vacant — next guest Virginia arrives Apr 6. No cleaning needed yet.' },
         ]
     },
     occupancy: [

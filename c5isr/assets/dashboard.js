@@ -1285,6 +1285,87 @@ function renderPrices(prices) {
   renderPortfolio(_lastPriceMap);
 }
 
+// ── Copy Signal Report (Telegram-ready) ──
+function copySignalReport() {
+  // Gather signal data from last computed signals
+  const signalCards = document.querySelectorAll('#signalGrid .card');
+  if (!signalCards.length) {
+    showToast('No signals loaded yet', 'error');
+    return;
+  }
+
+  const now = new Date();
+  const dateStr = now.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' });
+  const timeStr = now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', timeZoneName: 'short' });
+
+  // Regime & F&G
+  const regimeTxt = document.getElementById('regimeBadge')?.textContent?.trim() || '—';
+  const fgTxt = document.getElementById('fearGreedValue')?.textContent?.trim() || '—';
+  const stewScore = (() => {
+    const el = document.querySelector('#intelBriefContent');
+    if (!el) return null;
+    // Extract Stewardship score number from the brief HTML
+    const match = el.innerHTML.match(/(\d{1,3})<span[^>]*>\/([A-F][+-]?)</);
+    if (match) return `${match[1]}/${match[2]}`;
+    return null;
+  })();
+
+  // Global market cap
+  const mcap = document.getElementById('globalMarketCap')?.textContent?.trim() || '—';
+  const mcapChange = document.getElementById('globalMarketCapChange')?.textContent?.trim() || '';
+
+  // Build signal lines from signal cards
+  const signalLines = [];
+  signalCards.forEach(card => {
+    const symbolEl = card.querySelector('[style*="font-weight:700"][style*="font-family:var(--font-mono)"]');
+    const badgeEl = card.querySelector('.signal-badge');
+    const rsiEl = card.querySelector('.rsi-value');
+    const confEl = card.querySelector('[style*="confidence"]');
+    const slEl = card.querySelector('[style*="color:var(--red)"]');
+    const tpEl = card.querySelector('[style*="color:var(--green)"]');
+
+    if (!symbolEl || !badgeEl) return;
+    const sym = symbolEl.textContent.trim();
+    const sig = badgeEl.textContent.trim();
+    const rsi = rsiEl ? rsiEl.textContent.replace('RSI:', '').trim() : '—';
+    const conf = confEl ? (confEl.textContent.match(/(\d+)%/) || [])[1] : null;
+
+    let emoji = sig === 'BUY' ? '🟢' : sig === 'SELL' ? '🔴' : '⚪';
+    let line = `${emoji} *${sym}* — ${sig}  (RSI ${rsi}${conf ? `, ${conf}% conf` : ''})`;
+    signalLines.push(line);
+  });
+
+  // Assessment snippet from brief
+  const assessEl = document.querySelector('#intelBriefContent [style*="line-height:1.5"]');
+  const assessment = assessEl ? assessEl.textContent.trim() : '';
+
+  const report = [
+    `✝️ *C5iSR Market Brief* — ${dateStr} ${timeStr}`,
+    ``,
+    `📊 *Market Regime:* ${regimeTxt}`,
+    `😱 *Fear & Greed:* ${fgTxt}`,
+    `🌍 *Market Cap:* ${mcap} ${mcapChange}`,
+    stewScore ? `🏅 *Stewardship Score:* ${stewScore}` : null,
+    ``,
+    `*Signal Summary:*`,
+    ...signalLines,
+    ``,
+    assessment ? `💡 ${assessment}` : null,
+    ``,
+    `_"The plans of the diligent lead surely to abundance." — Prov 21:5_`,
+    `📈 usmcmin.com/c5isr/dashboard.html`,
+  ].filter(l => l !== null).join('\n');
+
+  navigator.clipboard.writeText(report).then(() => {
+    const btn = document.getElementById('copyReportBtn');
+    if (btn) { btn.textContent = '✅ Copied!'; setTimeout(() => { btn.textContent = '📋 Copy Report'; }, 2500); }
+    showToast('Signal report copied to clipboard!', 'success');
+  }).catch(() => {
+    // Fallback: show in a prompt
+    window.prompt('Copy this report:', report);
+  });
+}
+
 // ── Logout ──
 function logout() {
   localStorage.removeItem('c5isr_auth');

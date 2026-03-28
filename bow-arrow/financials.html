@@ -162,9 +162,9 @@
             `;
         })();
 
-        // Occupancy table
+        // Occupancy table — always computed live from reservation data
         (async function() {
-            const occ = (await fetchData('/api/occupancy')) || DEMO.occupancy;
+            const occ = (await fetchData('/api/occupancy')) || calculateOccupancy(DEMO.properties, DEMO.reservations);
             const container = document.getElementById('occupancyTable');
             container.innerHTML = '<table><thead><tr><th>Property</th><th>Occupancy</th><th>ADR</th><th>RevPAR</th></tr></thead><tbody>' +
                 occ.map(o => `

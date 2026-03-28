@@ -1,5 +1,5 @@
 /* Bow & Arrow Studio OS — Dashboard JavaScript
-   v2.4 — March 2026 Refinement (Update Mar 26 statuses: Diane out, Brittany in; Amanda cleaning complete) */
+   v2.5 — Mar 28 Refinement: dynamic occupancy calculator + current-month property revenue pro-rating */
 
 const API_BASE = ''; // Empty = use demo data (no backend running on GitHub Pages)
 
@@ -57,14 +57,8 @@ const DEMO = {
             { apt_number: 'Cottage', guest_name: null, checkout_date: null, suggested_cleaner: null, urgency: 'none', note: '🟢 Cottage vacant — next guest Virginia arrives Apr 6. No cleaning needed yet.' },
         ]
     },
-    occupancy: [
-        { apt_number: '6', property_name: 'Spacious Apartment', occupancy_30d: 46.7, adr: 85.0, revpar: 39.7 },
-        { apt_number: '7', property_name: 'Boho-Modern Apartment', occupancy_30d: 23.3, adr: 116.0, revpar: 27.1 },
-        { apt_number: '8', property_name: 'Orange Apartment', occupancy_30d: 20.0, adr: 93.0, revpar: 18.6 },
-        { apt_number: 'Cottage', property_name: 'Prof Row Cottage', occupancy_30d: 0, adr: 0, revpar: 0 },
-        { apt_number: '6+8', property_name: 'Hanover Combined', occupancy_30d: 0, adr: 0, revpar: 0 },
-        { apt_number: 'ALL', property_name: 'Overall', occupancy_30d: 18.0, adr: 88.5, revpar: 15.9 },
-    ],
+    // occupancy is computed live from reservations via calculateOccupancy() — no stale hardcoded data
+    occupancy: null,
     reviews: {
         overall_avg: 5.0,
         total_count: 77,
@@ -835,6 +829,74 @@ function generateNeededCleanings(reservations) {
     return needed;
 }
 
+// ===== LIVE OCCUPANCY CALCULATOR =====
+// Computes occupancy %, ADR, and RevPAR from actual reservation data.
+// Always accurate — no stale hardcoded numbers.
+// lookbackDays: how many trailing days to measure (default 30)
+function calculateOccupancy(properties, reservations, lookbackDays = 30) {
+    const todayStr = today();
+    const startDate = new Date(Date.now() - lookbackDays * 86400000).toISOString().split('T')[0];
+
+    const results = properties.map(p => {
+        // All reservations for this property overlapping the lookback window
+        const propRes = reservations.filter(r =>
+            r.property_id === p.id &&
+            r.checkout_date > startDate &&
+            r.checkin_date < todayStr
+        );
+
+        // Count nights occupied within the window
+        let occupiedNights = 0;
+        let totalRevenue = 0;
+        let totalBookings = 0;
+
+        propRes.forEach(r => {
+            const overlapStart = r.checkin_date < startDate ? startDate : r.checkin_date;
+            const overlapEnd   = r.checkout_date > todayStr ? todayStr : r.checkout_date;
+            const nights = Math.max(0, Math.ceil(
+                (new Date(overlapEnd + 'T12:00:00') - new Date(overlapStart + 'T12:00:00')) / 86400000
+            ));
+            if (nights > 0) {
+                occupiedNights += nights;
+                // Pro-rate payout to overlap window
+                const totalNights = nightsBetween(r.checkin_date, r.checkout_date);
+                if (totalNights > 0) totalRevenue += (r.payout / totalNights) * nights;
+                totalBookings++;
+            }
+        });
+
+        const occupancy_30d = parseFloat(((occupiedNights / lookbackDays) * 100).toFixed(1));
+        const adr = totalBookings > 0 ? parseFloat((totalRevenue / Math.max(occupiedNights, 1)).toFixed(2)) : 0;
+        const revpar = parseFloat(((totalRevenue / lookbackDays)).toFixed(2));
+
+        return {
+            apt_number: p.apt_number,
+            property_name: p.name,
+            occupancy_30d,
+            adr,
+            revpar
+        };
+    });
+
+    // Overall row (weighted across all units)
+    const totalOccNights = results.reduce((s, r) => s + (r.occupancy_30d / 100 * lookbackDays), 0);
+    const totalRevPar    = results.reduce((s, r) => s + r.revpar, 0);
+    const avgOcc         = parseFloat(((totalOccNights / (properties.length * lookbackDays)) * 100).toFixed(1));
+    const weightedADR    = results.filter(r => r.adr > 0).length
+        ? parseFloat((results.filter(r => r.adr > 0).reduce((s, r) => s + r.adr, 0) / results.filter(r => r.adr > 0).length).toFixed(2))
+        : 0;
+
+    results.push({
+        apt_number: 'ALL',
+        property_name: 'Overall',
+        occupancy_30d: avgOcc,
+        adr: weightedADR,
+        revpar: parseFloat(totalRevPar.toFixed(2))
+    });
+
+    return results;
+}
+
 function renderCleaningSchedule(schedule) {
     const scheduled = document.getElementById('scheduledCleanings');
     const needed = document.getElementById('neededCleanings');
@@ -1316,17 +1378,38 @@ function updateCalc() {
 }
 
 // ===== PER-PROPERTY REVENUE =====
+// Shows current-month revenue, pro-rated by how many nights fall within the month.
 function renderPropertyRevenue(reservations) {
     const container = document.getElementById('propertyRevenue');
     if (!container) return;
 
+    // Current month window
+    const now = new Date();
+    const yr = now.getFullYear();
+    const mo = now.getMonth();
+    const monthStart = `${yr}-${String(mo+1).padStart(2,'0')}-01`;
+    const lastDay = new Date(yr, mo+1, 0).getDate();
+    const monthEnd = `${yr}-${String(mo+1).padStart(2,'0')}-${String(lastDay).padStart(2,'0')}`;
+
     const propMap = {};
     reservations.forEach(r => {
+        // Skip reservations entirely outside this month
+        if (r.checkout_date < monthStart || r.checkin_date > monthEnd) return;
+
+        const totalNights = nightsBetween(r.checkin_date, r.checkout_date);
+        if (totalNights <= 0) return;
+
+        // Pro-rate nights that fall within this month
+        const overlapStart = r.checkin_date < monthStart ? monthStart : r.checkin_date;
+        const overlapEnd   = r.checkout_date > monthEnd   ? monthEnd   : r.checkout_date;
+        const overlapNights = nightsBetween(overlapStart, overlapEnd);
+        const proRatedRevenue = (r.payout / totalNights) * overlapNights;
+
         const key = 'Apt ' + r.apt_number;
         if (!propMap[key]) propMap[key] = { revenue: 0, bookings: 0, nights: 0 };
-        propMap[key].revenue += r.payout || 0;
+        propMap[key].revenue += proRatedRevenue;
         propMap[key].bookings++;
-        propMap[key].nights += nightsBetween(r.checkin_date, r.checkout_date);
+        propMap[key].nights += overlapNights;
     });
 
     const entries = Object.entries(propMap).sort((a, b) => b[1].revenue - a[1].revenue);
@@ -1356,9 +1439,12 @@ function renderPropertyRevenue(reservations) {
             </div>
         `;
     }).join('') +
-    `<div style="margin-top:1rem;padding-top:1rem;border-top:2px solid var(--terracotta);display:flex;justify-content:space-between;font-weight:700;font-size:1rem">
-        <span>Total ${['January','February','March','April','May','June','July','August','September','October','November','December'][new Date().getMonth()]} Revenue</span>
-        <span style="color:var(--terracotta)">${formatCurrency(totalRev)}</span>
+    `<div style="margin-top:1rem;padding-top:1rem;border-top:2px solid var(--terracotta);display:flex;justify-content:space-between;align-items:baseline;font-weight:700;font-size:1rem">
+        <div>
+            <span>${['January','February','March','April','May','June','July','August','September','October','November','December'][new Date().getMonth()]} Revenue</span>
+            <span style="font-size:0.65rem;font-weight:400;color:var(--gray);margin-left:0.4rem">(pro-rated, this month only)</span>
+        </div>
+        <span style="color:var(--terracotta)">${formatCurrency(Math.round(totalRev))}</span>
     </div>`;
 
     // Animate bars

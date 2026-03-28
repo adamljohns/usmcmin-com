@@ -1,5 +1,5 @@
 /**
- * C5iSR Dashboard — Frontend Logic v2.4
+ * C5iSR Dashboard — Frontend Logic v2.5
  * 
  * Features:
  *   - Dual mode: Backend FastAPI or CoinGecko demo
@@ -951,7 +951,7 @@ async function loadBacktest() {
     let result;
     if (backendOnline) {
       const token = localStorage.getItem('c5isr_token') || '';
-      const r = await fetch(`${API_BASE}/api/backtest/${assetId}`, { headers: { Authorization: `Bearer ${token}` } });
+      const r = await fetch(`${API_BASE}/api/backtest/${assetId}?days=90`, { headers: { Authorization: `Bearer ${token}` } });
       result = await r.json();
     } else {
       const ohlc = await cachedFetch(`ohlc_${assetId}_90`, `${COINGECKO}/coins/${assetId}/ohlc?vs_currency=usd&days=90`, CACHE_TTL_LONG);

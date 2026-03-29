@@ -1,5 +1,5 @@
 /* Bow & Arrow Studio OS — Dashboard JavaScript
-   v2.5 — Mar 28 Refinement: dynamic occupancy calculator + current-month property revenue pro-rating */
+   v2.6 — Mar 29 Refinement: April vacancy macro-alert + monthly revenue goal tracker */
 
 const API_BASE = ''; // Empty = use demo data (no backend running on GitHub Pages)
 
@@ -21,7 +21,7 @@ const DEMO = {
         // --- CHECKED OUT Mar 26 ---
         { id: 3, property_id: 2, guest_name: 'Diane', checkin_date: '2026-03-19', checkout_date: '2026-03-26', platform: 'airbnb', payout: 650, status: 'checked_out', apt_number: '7', property_name: 'Boho-Modern Apartment', guests: 3 },
         // --- ACTIVE ---
-        { id: 5, property_id: 1, guest_name: 'Amy', checkin_date: '2026-03-23', checkout_date: '2026-03-28', platform: 'airbnb', payout: 340, status: 'checked_in', apt_number: '6', property_name: 'Spacious Apartment', guests: 2 },
+        { id: 5, property_id: 1, guest_name: 'Amy', checkin_date: '2026-03-23', checkout_date: '2026-03-29', platform: 'airbnb', payout: 340, status: 'checked_in', apt_number: '6', property_name: 'Spacious Apartment', guests: 2 },
         // --- ACTIVE (checked in Mar 26) ---
         { id: 6, property_id: 2, guest_name: 'Brittany', checkin_date: '2026-03-26', checkout_date: '2026-03-30', platform: 'airbnb', payout: 370, status: 'checked_in', apt_number: '7', property_name: 'Boho-Modern Apartment', guests: 2 },
         { id: 7, property_id: 4, guest_name: 'Virginia Van Alstine', checkin_date: '2026-04-06', checkout_date: '2026-05-06', platform: 'airbnb', payout: 1290, status: 'confirmed', apt_number: 'Cottage', property_name: 'Prof Row Cottage', guests: 2 },
@@ -266,6 +266,44 @@ function generateDynamicAlerts(reservations, properties, reviews) {
         }
     });
 
+    // Forward-month vacancy macro-alert
+    // Check if next full calendar month has very low confirmed bookings
+    const nextMonthDate = new Date();
+    nextMonthDate.setDate(1);
+    nextMonthDate.setMonth(nextMonthDate.getMonth() + 1);
+    const nextMonthKey = `${nextMonthDate.getFullYear()}-${String(nextMonthDate.getMonth()+1).padStart(2,'0')}`;
+    const nextMonthEnd = new Date(nextMonthDate.getFullYear(), nextMonthDate.getMonth()+1, 0);
+    const nextMonthEndKey = `${nextMonthDate.getFullYear()}-${String(nextMonthDate.getMonth()+1).padStart(2,'0')}-${String(nextMonthEnd.getDate()).padStart(2,'0')}`;
+    const nextMonthStart = nextMonthKey + '-01';
+    const daysInNextMonth = nextMonthEnd.getDate();
+    const fullMonthNamesAlert = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+    const nextMonthName = fullMonthNamesAlert[nextMonthDate.getMonth()];
+
+    // Count total occupied nights across all properties in next month
+    let nextMonthOccupiedNights = 0;
+    const activePropertyCount = (properties && properties.length) ? properties.filter(p=>p.status==='active').length : 4;
+    const totalPropertyNights = activePropertyCount * daysInNextMonth;
+
+    reservations.forEach(r => {
+        if (r.status === 'checked_out') return;
+        if (r.checkout_date <= nextMonthStart || r.checkin_date > nextMonthEndKey) return;
+        const overlapStart = r.checkin_date < nextMonthStart ? nextMonthStart : r.checkin_date;
+        const overlapEnd   = r.checkout_date > nextMonthEndKey ? nextMonthEndKey : r.checkout_date;
+        const nights = Math.max(0, Math.ceil((new Date(overlapEnd+'T12:00:00') - new Date(overlapStart+'T12:00:00')) / 86400000));
+        nextMonthOccupiedNights += nights;
+    });
+
+    const nextMonthOccRate = totalPropertyNights > 0 ? (nextMonthOccupiedNights / totalPropertyNights * 100) : 0;
+    if (nextMonthOccRate < 25) {
+        alerts.push({ type: 'maintenance', priority: 'high',
+            message: `🚨 ${nextMonthName} is ${nextMonthOccRate.toFixed(0)}% booked — only ${nextMonthOccupiedNights} nights confirmed across all units. Open dates need bookings NOW!`,
+            time: now });
+    } else if (nextMonthOccRate < 50) {
+        alerts.push({ type: 'maintenance', priority: 'medium',
+            message: `📅 ${nextMonthName} is ${nextMonthOccRate.toFixed(0)}% booked — open nights remaining. Push availability and drop prices!`,
+            time: now });
+    }
+
     // Review milestone alert
     if (reviews) {
         const nextMilestone = Math.ceil(reviews.perfect_streak / 25) * 25;
@@ -423,6 +461,9 @@ async function initDashboard() {
     }
 }
 
+// Monthly revenue goal — adjust this to change the target
+const MONTHLY_REVENUE_GOAL = 3000;
+
 function renderSummaryCards(properties, financials, reviews) {
     const occupied = properties.filter(p => p.current_guest).length;
 
@@ -434,7 +475,7 @@ function renderSummaryCards(properties, financials, reviews) {
     document.getElementById('revenueLabel').textContent = _revMonths[new Date().getMonth()] + ' Revenue';
 
     animateValue('netProfit', formatCurrency(financials.net_profit));
-    document.getElementById('netLabel').textContent = `${((financials.net_profit / financials.revenue.total) * 100).toFixed(0)}% margin`;
+    document.getElementById('netLabel').textContent = `${((financials.net_profit / Math.max(financials.revenue.total, 1)) * 100).toFixed(0)}% margin`;
 
     // Review card
     const reviewCard = document.getElementById('reviewCard');
@@ -442,6 +483,38 @@ function renderSummaryCards(properties, financials, reviews) {
         animateValue('reviewScore', reviews.overall_avg.toFixed(2));
         document.getElementById('reviewLabel').textContent = `${reviews.total_count} reviews · ${reviews.perfect_streak} perfect streak`;
     }
+
+    // Revenue Goal Progress Bar (injected below revenue card)
+    renderRevenueGoalBar(financials.revenue.total, MONTHLY_REVENUE_GOAL);
+}
+
+function renderRevenueGoalBar(current, goal) {
+    let goalEl = document.getElementById('revenueGoalBar');
+    if (!goalEl) return;
+
+    const pct = Math.min(100, (current / goal * 100));
+    const remaining = Math.max(0, goal - current);
+    const isOver = current >= goal;
+    const barColor = isOver ? 'var(--sage)' : pct >= 75 ? 'var(--terracotta)' : pct >= 50 ? 'var(--yellow)' : 'var(--blush)';
+    const statusMsg = isOver
+        ? `🎉 Goal crushed! +${formatCurrency(current - goal)} over target`
+        : `${formatCurrency(remaining)} to reach ${formatCurrency(goal)} goal`;
+
+    goalEl.innerHTML = `
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.35rem">
+            <span style="font-size:0.65rem;font-weight:700;color:var(--gray);text-transform:uppercase;letter-spacing:1.5px">Monthly Goal</span>
+            <span style="font-size:0.75rem;font-weight:700;color:${barColor}">${pct.toFixed(0)}%</span>
+        </div>
+        <div style="background:var(--light-gray);border-radius:6px;height:8px;overflow:hidden;margin-bottom:0.35rem">
+            <div style="background:${barColor};height:100%;width:0;border-radius:6px;transition:width 1s ease" id="goalBarFill" data-width="${pct}"></div>
+        </div>
+        <div style="font-size:0.72rem;color:var(--gray);font-family:var(--font-serif);font-style:italic">${statusMsg}</div>
+    `;
+
+    requestAnimationFrame(() => {
+        const fill = document.getElementById('goalBarFill');
+        if (fill) setTimeout(() => { fill.style.width = fill.dataset.width + '%'; }, 100);
+    });
 }
 
 function animateValue(elementId, finalValue) {

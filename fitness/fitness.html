@@ -1,0 +1,755 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Fitness Coaching Intake — U.S.M.C. Ministries</title>
+  <meta name="description" content="NASM Certified Personal Training. Body composition, nutrition, and lifestyle assessment. Your body is a temple.">
+  <meta property="og:title" content="Fitness Coaching Intake — U.S.M.C. Ministries">
+  <meta property="og:description" content="NASM Certified Coaching. Body composition, nutrition, and lifestyle assessment. Your body is a temple.">
+  <meta property="og:image" content="https://usmcmin.com/assets/og/og-brain.jpg">
+  <meta property="og:url" content="https://usmcmin.com/fitness/fitness.html">
+  <meta property="og:type" content="website">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="stylesheet" href="../assets/css/main.css">
+  <link rel="icon" href="../assets/img/favicon.png" type="image/png">
+  <style>
+    /* Fitness intake specific styles */
+    .fitness-hero {
+      text-align: center;
+      padding: 50px 20px 30px;
+      background: linear-gradient(180deg, rgba(212,175,55,0.10) 0%, transparent 100%);
+      border-bottom: 1px solid var(--border);
+    }
+    .fitness-hero h1 { font-size: 1.9rem; color: var(--gold); margin-bottom: 8px; line-height: 1.2; }
+    .fitness-hero .subtitle { color: var(--gray); font-size: 0.95rem; margin-top: 6px; }
+    .fitness-hero .tagline { color: var(--white, #e8e8e8); font-size: 0.9rem; font-style: italic; margin-top: 8px; opacity: 0.75; }
+    .cert-badges { display: inline-flex; gap: 10px; flex-wrap: wrap; justify-content: center; margin-top: 14px; }
+    .cert-badge-pill {
+      background: rgba(212,175,55,0.12);
+      border: 1px solid var(--gold);
+      color: var(--gold);
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      padding: 4px 10px;
+      border-radius: 20px;
+      text-decoration: none;
+    }
+    .cert-badge-pill:hover { background: rgba(212,175,55,0.25); }
+
+    .intake-container { max-width: 650px; margin: 0 auto; padding: 20px; }
+
+    .progress-wrap { margin: 20px 0; }
+    .intake-progress-bar { height: 6px; background: var(--bg-card, #111); border-radius: 3px; overflow: hidden; }
+    .intake-progress-fill { height: 100%; background: var(--gold); border-radius: 3px; transition: width 0.4s ease; }
+    .progress-text { text-align: center; color: var(--gray); font-size: 0.8rem; margin-top: 6px; }
+
+    .intake-section { display: none; }
+    .intake-section.active { display: block; }
+
+    .intake-card {
+      background: var(--bg-card, #111);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 25px;
+      margin: 15px 0;
+    }
+    .intake-card h2 { color: var(--gold); font-size: 1.2rem; margin-bottom: 6px; display: flex; align-items: center; gap: 8px; }
+    .intake-card .section-desc { color: var(--gray); font-size: 0.82rem; margin-bottom: 18px; line-height: 1.5; }
+    .intake-card h3 { color: var(--gold); font-size: 0.95rem; margin: 18px 0 8px; opacity: 0.85; }
+
+    .intake-field { margin: 14px 0; }
+    .intake-field label { display: block; color: var(--gray); font-size: 0.85rem; margin-bottom: 6px; }
+    .intake-field input, .intake-field textarea, .intake-field select {
+      width: 100%; background: var(--bg, #0a0a0a); border: 1px solid var(--border);
+      border-radius: 8px; color: var(--white, #e8e8e8); padding: 12px;
+      font-family: inherit; font-size: 0.95rem; transition: border-color 0.2s;
+    }
+    .intake-field input:focus, .intake-field textarea:focus, .intake-field select:focus {
+      border-color: var(--gold); outline: none;
+    }
+    .intake-field textarea { min-height: 70px; resize: vertical; }
+
+    .radio-group { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 6px; }
+    .radio-opt {
+      background: var(--bg, #0a0a0a); border: 1px solid var(--border); border-radius: 8px;
+      padding: 10px 16px; cursor: pointer; font-size: 0.88rem; transition: all 0.2s;
+      flex: 1; min-width: 110px; text-align: center; user-select: none;
+    }
+    .radio-opt.selected { border-color: var(--gold); background: rgba(212,175,55,0.12); color: var(--gold); font-weight: 600; }
+    .radio-opt:hover { border-color: var(--gold); }
+
+    .check-group { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 6px; }
+    .check-opt {
+      background: var(--bg, #0a0a0a); border: 1px solid var(--border); border-radius: 8px;
+      padding: 8px 14px; cursor: pointer; font-size: 0.85rem; transition: all 0.2s; user-select: none;
+    }
+    .check-opt.selected { border-color: var(--gold); background: rgba(212,175,55,0.12); color: var(--gold); font-weight: 600; }
+    .check-opt:hover { border-color: var(--gold); }
+
+    .slider-wrap { position: relative; margin-top: 6px; }
+    input[type="range"] { width: 100%; -webkit-appearance: none; height: 6px; border-radius: 3px; background: #333; outline: none; }
+    input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; width: 22px; height: 22px; border-radius: 50%; background: var(--gold); cursor: pointer; border: 2px solid #000; }
+    .slider-val { text-align: center; color: var(--gold); font-weight: 700; font-size: 1.3rem; margin-top: 8px; }
+    .slider-labels { display: flex; justify-content: space-between; color: var(--gray); font-size: 0.75rem; margin-top: 4px; }
+
+    .btn-row { display: flex; gap: 10px; margin-top: 20px; }
+    .btn-back-intake {
+      flex: 1; padding: 14px; border-radius: 10px; font-weight: 700; font-size: 1rem;
+      cursor: pointer; font-family: inherit; background: transparent;
+      border: 2px solid var(--border); color: var(--gray); transition: all 0.2s;
+    }
+    .btn-back-intake:hover { border-color: var(--gold); color: var(--gold); }
+    .btn-next-intake {
+      flex: 1; padding: 14px; border-radius: 10px; font-weight: 700; font-size: 1rem;
+      cursor: pointer; font-family: inherit; background: var(--gold); color: #000; border: none; transition: all 0.2s;
+    }
+    .btn-next-intake:hover { opacity: 0.85; }
+
+    .parq-warning {
+      background: rgba(231,76,60,0.1); border: 1px solid var(--red, #E74C3C);
+      border-radius: 8px; padding: 15px; margin: 15px 0; display: none;
+    }
+    .parq-warning p { color: var(--red, #E74C3C); font-size: 0.9rem; }
+
+    .results-card {
+      background: var(--bg-card, #111); border: 1px solid var(--gold);
+      border-radius: 12px; padding: 28px; margin: 15px 0;
+    }
+    .metric { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid #222; gap: 10px; }
+    .metric:last-child { border-bottom: none; }
+    .metric-label { color: var(--gray); font-size: 0.9rem; }
+    .metric-value { color: var(--gold); font-weight: 700; font-size: 0.9rem; text-align: right; }
+
+    .hint { color: #555; font-size: 0.78rem; margin-top: 4px; font-style: italic; }
+
+    .coaching-note {
+      background: rgba(212,175,55,0.08); border-left: 3px solid var(--gold);
+      border-radius: 0 8px 8px 0; padding: 15px 18px; margin: 18px 0;
+    }
+    .coaching-note .note-label { color: var(--gold); font-size: 0.75rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 6px; }
+    .coaching-note p { font-size: 0.92rem; line-height: 1.6; }
+
+    .scripture-card {
+      background: var(--bg, #0a0a0a); border: 1px solid var(--border);
+      border-radius: 10px; padding: 18px 20px; margin: 18px 0; text-align: center;
+    }
+    .scripture-card .verse-text { font-style: italic; font-size: 1rem; line-height: 1.6; margin-bottom: 8px; }
+    .scripture-card .verse-ref { color: var(--gold); font-size: 0.82rem; }
+
+    .cta-block {
+      background: var(--gold); border-radius: 10px; padding: 20px; margin: 18px 0; text-align: center;
+    }
+    .cta-block p { color: #000; font-weight: 700; font-size: 1rem; margin-bottom: 12px; }
+    .cta-block a {
+      display: inline-block; background: #000; color: var(--gold);
+      font-weight: 700; font-size: 0.95rem; padding: 12px 28px; border-radius: 8px; text-decoration: none;
+    }
+    .cta-block a:hover { opacity: 0.85; }
+  </style>
+</head>
+<body>
+
+<!-- ── NAV ── -->
+<nav>
+  <a href="/" class="nav-brand" style="text-decoration:none">
+    <img src="../assets/img/logo.png" alt="U.S.M.C. Ministries" style="object-fit:contain">
+    <div class="nav-brand-text">
+      <div class="name">U.S.M.C. Ministries</div>
+      <div class="tag">Warriors Equipped</div>
+    </div>
+  </a>
+  <ul class="nav-links">
+    <li><a href="../shop.html">Shop</a></li>
+    <li><a href="../books.html">Books</a></li>
+    <li><a href="../coaching.html">Coaching</a></li>
+    <li class="nav-dropdown">
+      <a href="fitness.html" class="active">Fitness ▾</a>
+      <ul class="dropdown-menu">
+        <li><a href="fitness.html">Intake Form</a></li>
+        <li><a href="trainer.html">About the Trainer</a></li>
+        <li><a href="cert-cpt.html">NASM CPT</a></li>
+        <li><a href="cert-cnc.html">NASM CNC</a></li>
+        <li><a href="cert-wls.html">NASM WLS</a></li>
+        <li><a href="cert-pes.html">NASM PES</a></li>
+        <li><a href="cert-fit20.html">fit20 Certified</a></li>
+      </ul>
+    </li>
+    <li><a href="../about.html">About</a></li>
+    <li><a href="https://usmcmin.org" target="_blank">Ministry Site</a></li>
+  </ul>
+  <a href="../coaching.html" class="btn nav-cta">Book a Session</a>
+  <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme" title="Switch light/dark mode">🌙</button>
+  <button class="nav-toggle" aria-label="Menu"><span></span><span></span><span></span></button>
+</nav>
+
+<!-- ── HERO ── -->
+<div class="fitness-hero">
+  <h1><img src="../assets/icons/shields/shield-dumbbell.png" alt="fitness" width="28" style="vertical-align:middle;margin-right:8px">Fitness Coaching Intake</h1>
+  <p class="tagline">Strong, calm, unshakeable — the Fit Shepherd framework</p>
+  <p class="subtitle">Health as spiritual stewardship · Discipline · Longevity</p>
+  <div class="cert-badges">
+    <a href="cert-cpt.html" class="cert-badge-pill">NASM CPT</a>
+    <a href="cert-cnc.html" class="cert-badge-pill">CNC</a>
+    <a href="cert-wls.html" class="cert-badge-pill">WLS</a>
+    <a href="cert-pes.html" class="cert-badge-pill">PES</a>
+    <a href="cert-fit20.html" class="cert-badge-pill">fit20 Certified</a>
+  </div>
+</div>
+
+<div class="intake-container">
+  <div class="progress-wrap">
+    <div class="intake-progress-bar"><div class="intake-progress-fill" id="progressFill" style="width:11.1%"></div></div>
+    <p class="progress-text" id="progressText">Step 1 of 9</p>
+  </div>
+
+  <!-- SECTION 1 -->
+  <div class="intake-section active" id="sec-1">
+    <div class="intake-card">
+      <h2><img src="../assets/icons/shields/shield-dumbbell.png" alt="fitness" width="20" style="vertical-align:middle;margin-right:6px"> Personal Information</h2>
+      <p class="section-desc">Let's start with the basics so Coach Moop can personalize your program.</p>
+      <div class="intake-field"><label>First Name</label><input type="text" id="firstName" placeholder="Your first name"></div>
+      <div class="intake-field"><label>Last Name</label><input type="text" id="lastName" placeholder="Your last name"></div>
+      <div class="intake-field"><label>Age</label><input type="number" id="age" placeholder="Age" min="13" max="100"></div>
+      <div class="intake-field">
+        <label>Gender</label>
+        <div class="radio-group" data-field="gender">
+          <div class="radio-opt" onclick="selectRadio(this,'gender')">Male</div>
+          <div class="radio-opt" onclick="selectRadio(this,'gender')">Female</div>
+        </div>
+      </div>
+      <div class="intake-field"><label>Email</label><input type="email" id="email" placeholder="your@email.com"></div>
+      <div class="intake-field"><label>Phone</label><input type="tel" id="phone" placeholder="(555) 555-5555"></div>
+    </div>
+    <div class="btn-row"><div style="flex:1"></div><button class="btn-next-intake" onclick="nextSec()">Next →</button></div>
+  </div>
+
+  <!-- SECTION 2: PAR-Q -->
+  <div class="intake-section" id="sec-2">
+    <div class="intake-card">
+      <h2><img src="../assets/icons/shields/shield-star.png" alt="star" width="20" style="vertical-align:middle;margin-right:6px"> PAR-Q Health Screening</h2>
+      <p class="section-desc">Physical Activity Readiness Questionnaire — standard NASM pre-screening. Please answer honestly.</p>
+      <div class="intake-field"><label>Has your doctor ever said you have a heart condition?</label>
+        <div class="radio-group" data-field="parq1"><div class="radio-opt" onclick="selectRadio(this,'parq1')">Yes</div><div class="radio-opt" onclick="selectRadio(this,'parq1')">No</div></div>
+      </div>
+      <div class="intake-field"><label>Do you feel pain in your chest during physical activity?</label>
+        <div class="radio-group" data-field="parq2"><div class="radio-opt" onclick="selectRadio(this,'parq2')">Yes</div><div class="radio-opt" onclick="selectRadio(this,'parq2')">No</div></div>
+      </div>
+      <div class="intake-field"><label>Do you lose balance due to dizziness or lose consciousness?</label>
+        <div class="radio-group" data-field="parq3"><div class="radio-opt" onclick="selectRadio(this,'parq3')">Yes</div><div class="radio-opt" onclick="selectRadio(this,'parq3')">No</div></div>
+      </div>
+      <div class="intake-field"><label>Do you have a bone or joint problem that could be worsened by exercise?</label>
+        <div class="radio-group" data-field="parq4"><div class="radio-opt" onclick="selectRadio(this,'parq4')">Yes</div><div class="radio-opt" onclick="selectRadio(this,'parq4')">No</div></div>
+      </div>
+      <div class="intake-field"><label>Are you currently taking medication for blood pressure or a heart condition?</label>
+        <div class="radio-group" data-field="parq5"><div class="radio-opt" onclick="selectRadio(this,'parq5')">Yes</div><div class="radio-opt" onclick="selectRadio(this,'parq5')">No</div></div>
+      </div>
+      <div class="intake-field"><label>Is there any other reason you should not engage in physical activity?</label>
+        <div class="radio-group" data-field="parq6"><div class="radio-opt" onclick="selectRadio(this,'parq6')">Yes</div><div class="radio-opt" onclick="selectRadio(this,'parq6')">No</div></div>
+      </div>
+      <div class="parq-warning" id="parqWarning">
+        <p>⚠ Based on your answers, please consult a physician before beginning an exercise program. Coach Moop will still review your intake, but medical clearance is recommended before starting.</p>
+      </div>
+      <div class="intake-field"><label>Known injuries, surgeries, or physical limitations</label><textarea id="injuries" placeholder="Knee surgery, back pain, shoulder impingement, etc."></textarea></div>
+    </div>
+    <div class="btn-row"><button class="btn-back-intake" onclick="prevSec()">← Back</button><button class="btn-next-intake" onclick="nextSec()">Next →</button></div>
+  </div>
+
+  <!-- SECTION 3: Movement -->
+  <div class="intake-section" id="sec-3">
+    <div class="intake-card">
+      <h2><img src="../assets/icons/shields/shield-dumbbell.png" alt="fitness" width="20" style="vertical-align:middle;margin-right:6px"> Movement & Training</h2>
+      <p class="section-desc">Understanding how you move is just as important as what you lift. NEAT accounts for up to 30% of daily calorie burn.</p>
+      <h3>Training Background</h3>
+      <div class="intake-field">
+        <label>Primary training modality</label>
+        <div class="radio-group" data-field="trainingModality">
+          <div class="radio-opt" onclick="selectRadio(this,'trainingModality')">fit20 / Slow Motion HIT</div>
+          <div class="radio-opt" onclick="selectRadio(this,'trainingModality')">Barbell / Powerlifting</div>
+          <div class="radio-opt" onclick="selectRadio(this,'trainingModality')">Weight Training / Machines</div>
+          <div class="radio-opt" onclick="selectRadio(this,'trainingModality')">Cardio (Running / Swimming)</div>
+          <div class="radio-opt" onclick="selectRadio(this,'trainingModality')">HIIT</div>
+          <div class="radio-opt" onclick="selectRadio(this,'trainingModality')">Hiking / Outdoor / Other</div>
+        </div>
+      </div>
+      <div class="intake-field">
+        <label>Training experience level</label>
+        <div class="radio-group" data-field="experience">
+          <div class="radio-opt" onclick="selectRadio(this,'experience')">Beginner (0–1 yr)</div>
+          <div class="radio-opt" onclick="selectRadio(this,'experience')">Intermediate (1–3 yr)</div>
+          <div class="radio-opt" onclick="selectRadio(this,'experience')">Advanced (3+ yr)</div>
+        </div>
+      </div>
+      <div class="intake-field">
+        <label>Sessions per week</label>
+        <div class="radio-group" data-field="weeklySessions">
+          <div class="radio-opt" onclick="selectRadio(this,'weeklySessions')">0</div>
+          <div class="radio-opt" onclick="selectRadio(this,'weeklySessions')">1–2</div>
+          <div class="radio-opt" onclick="selectRadio(this,'weeklySessions')">3–4</div>
+          <div class="radio-opt" onclick="selectRadio(this,'weeklySessions')">5+</div>
+        </div>
+      </div>
+      <div class="intake-field"><label>Current routine description</label><textarea id="currentRoutine" placeholder="What does a typical week of exercise look like?"></textarea></div>
+      <h3>Daily Movement (NEAT)</h3>
+      <div class="intake-field">
+        <label>Average daily steps</label>
+        <div class="radio-group" data-field="dailySteps">
+          <div class="radio-opt" onclick="selectRadio(this,'dailySteps')">Under 5,000</div>
+          <div class="radio-opt" onclick="selectRadio(this,'dailySteps')">5,000–8,000</div>
+          <div class="radio-opt" onclick="selectRadio(this,'dailySteps')">8,000–12,000</div>
+          <div class="radio-opt" onclick="selectRadio(this,'dailySteps')">12,000+</div>
+        </div>
+      </div>
+      <div class="intake-field">
+        <label>Occupation type</label>
+        <div class="radio-group" data-field="occupation">
+          <div class="radio-opt" onclick="selectRadio(this,'occupation')">Desk / Sedentary</div>
+          <div class="radio-opt" onclick="selectRadio(this,'occupation')">Active / Physical</div>
+          <div class="radio-opt" onclick="selectRadio(this,'occupation')">Mixed</div>
+        </div>
+      </div>
+    </div>
+    <div class="btn-row"><button class="btn-back-intake" onclick="prevSec()">← Back</button><button class="btn-next-intake" onclick="nextSec()">Next →</button></div>
+  </div>
+
+  <!-- SECTION 4: Body Composition -->
+  <div class="intake-section" id="sec-4">
+    <div class="intake-card">
+      <h2><img src="../assets/icons/shields/shield-gear.png" alt="gear" width="20" style="vertical-align:middle;margin-right:6px"> Body Composition</h2>
+      <p class="section-desc">We focus on body composition — not just the scale. Visceral fat reduction and muscle retention are the real targets.</p>
+      <h3>Current Stats</h3>
+      <div class="intake-field"><label>Height (inches)</label><input type="number" id="height" placeholder="e.g., 70" min="48" max="96"></div>
+      <div class="intake-field"><label>Current Weight (lbs)</label><input type="number" id="weight" placeholder="e.g., 210"></div>
+      <div class="intake-field"><label>Waist Circumference (inches)</label><input type="number" id="waist" placeholder="e.g., 38" step="0.5"></div>
+      <div class="intake-field"><label>Body Fat % (if known)</label><input type="number" id="bodyFat" placeholder="e.g., 22" step="0.1"><p class="hint">DEXA, InBody, or home scale estimate.</p></div>
+      <div class="intake-field"><label>Visceral Fat Score (if known)</label><input type="number" id="visceralFat" placeholder="e.g., 12"><p class="hint">Shown on InBody, Tanita, or Withings scales. Priority metric.</p></div>
+      <h3>Goals</h3>
+      <div class="intake-field"><label>Goal Weight (lbs)</label><input type="number" id="goalWeight" placeholder="e.g., 190"></div>
+      <div class="intake-field">
+        <label>Primary goal</label>
+        <div class="radio-group" data-field="primaryGoal">
+          <div class="radio-opt" onclick="selectRadio(this,'primaryGoal')">Fat Loss</div>
+          <div class="radio-opt" onclick="selectRadio(this,'primaryGoal')">Muscle Building</div>
+          <div class="radio-opt" onclick="selectRadio(this,'primaryGoal')">Body Recomposition</div>
+          <div class="radio-opt" onclick="selectRadio(this,'primaryGoal')">Performance</div>
+          <div class="radio-opt" onclick="selectRadio(this,'primaryGoal')">Longevity</div>
+          <div class="radio-opt" onclick="selectRadio(this,'primaryGoal')">Lifestyle / Maintenance</div>
+        </div>
+      </div>
+      <div class="intake-field">
+        <label>Additional goals</label>
+        <div class="check-group" data-field="additionalGoals">
+          <div class="check-opt" onclick="toggleCheck(this)">Visceral fat reduction</div>
+          <div class="check-opt" onclick="toggleCheck(this)">Strength</div>
+          <div class="check-opt" onclick="toggleCheck(this)">Endurance</div>
+          <div class="check-opt" onclick="toggleCheck(this)">Flexibility</div>
+          <div class="check-opt" onclick="toggleCheck(this)">Energy / Vitality</div>
+          <div class="check-opt" onclick="toggleCheck(this)">Pain Relief</div>
+          <div class="check-opt" onclick="toggleCheck(this)">Sports Performance</div>
+          <div class="check-opt" onclick="toggleCheck(this)">Mental Clarity</div>
+        </div>
+      </div>
+    </div>
+    <div class="btn-row"><button class="btn-back-intake" onclick="prevSec()">← Back</button><button class="btn-next-intake" onclick="nextSec()">Next →</button></div>
+  </div>
+
+  <!-- SECTION 5: Nutrition -->
+  <div class="intake-section" id="sec-5">
+    <div class="intake-card">
+      <h2><img src="../assets/icons/shields/shield-dumbbell.png" alt="fitness" width="20" style="vertical-align:middle;margin-right:6px"> Nutrition Profile</h2>
+      <p class="section-desc">Nutrition is 80% of body composition. Coach Moop will build a plan around your real habits — not an ideal that doesn't fit your life.</p>
+      <div class="intake-field">
+        <label>Overall diet quality right now</label>
+        <div class="radio-group" data-field="dietQuality">
+          <div class="radio-opt" onclick="selectRadio(this,'dietQuality')">Poor</div>
+          <div class="radio-opt" onclick="selectRadio(this,'dietQuality')">Fair</div>
+          <div class="radio-opt" onclick="selectRadio(this,'dietQuality')">Good</div>
+          <div class="radio-opt" onclick="selectRadio(this,'dietQuality')">Excellent</div>
+        </div>
+      </div>
+      <div class="intake-field">
+        <label>Estimated daily protein intake</label>
+        <p class="hint">Target: ~1g per lb of goal body weight.</p>
+        <div class="radio-group" data-field="proteinRange">
+          <div class="radio-opt" onclick="selectRadio(this,'proteinRange')">Under 100g</div>
+          <div class="radio-opt" onclick="selectRadio(this,'proteinRange')">100–130g</div>
+          <div class="radio-opt" onclick="selectRadio(this,'proteinRange')">130–160g</div>
+          <div class="radio-opt" onclick="selectRadio(this,'proteinRange')">160g+</div>
+        </div>
+      </div>
+      <div class="intake-field"><label>Meals per day</label><input type="number" id="mealsPerDay" placeholder="e.g., 3" min="1" max="8"></div>
+      <div class="intake-field">
+        <label>Meal timing approach</label>
+        <div class="radio-group" data-field="mealTiming">
+          <div class="radio-opt" onclick="selectRadio(this,'mealTiming')">Intermittent Fasting</div>
+          <div class="radio-opt" onclick="selectRadio(this,'mealTiming')">3 Meals / Day</div>
+          <div class="radio-opt" onclick="selectRadio(this,'mealTiming')">Frequent Small Meals</div>
+          <div class="radio-opt" onclick="selectRadio(this,'mealTiming')">No Structure</div>
+        </div>
+      </div>
+      <div class="intake-field" id="ifProtocolGroup" style="display:none;">
+        <label>Intermittent Fasting Protocol</label>
+        <div class="radio-group" data-field="ifProtocol">
+          <div class="radio-opt" onclick="selectRadio(this,'ifProtocol')">12:12</div>
+          <div class="radio-opt" onclick="selectRadio(this,'ifProtocol')">16:8 (most common)</div>
+          <div class="radio-opt" onclick="selectRadio(this,'ifProtocol')">18:6</div>
+          <div class="radio-opt" onclick="selectRadio(this,'ifProtocol')">20:4</div>
+          <div class="radio-opt" onclick="selectRadio(this,'ifProtocol')">OMAD</div>
+        </div>
+      </div>
+      <div class="intake-field"><label>Daily water intake (oz)</label><input type="number" id="waterIntake" placeholder="e.g., 80"></div>
+      <div class="intake-field"><label>Dietary restrictions or allergies</label><input type="text" id="dietRestrictions" placeholder="Gluten-free, dairy-free, etc."></div>
+      <div class="intake-field">
+        <label>Current supplements</label>
+        <div class="check-group" data-field="currentSupps">
+          <div class="check-opt" onclick="toggleCheck(this)">Protein powder</div>
+          <div class="check-opt" onclick="toggleCheck(this)">Creatine</div>
+          <div class="check-opt" onclick="toggleCheck(this)">Multivitamin</div>
+          <div class="check-opt" onclick="toggleCheck(this)">Omega-3</div>
+          <div class="check-opt" onclick="toggleCheck(this)">Pre-workout</div>
+          <div class="check-opt" onclick="toggleCheck(this)">Magnesium</div>
+          <div class="check-opt" onclick="toggleCheck(this)">Vitamin D</div>
+          <div class="check-opt" onclick="toggleCheck(this)">None</div>
+        </div>
+      </div>
+    </div>
+    <div class="btn-row"><button class="btn-back-intake" onclick="prevSec()">← Back</button><button class="btn-next-intake" onclick="nextSec()">Next →</button></div>
+  </div>
+
+  <!-- SECTION 6: Recovery -->
+  <div class="intake-section" id="sec-6">
+    <div class="intake-card">
+      <h2><img src="../assets/icons/shields/shield-star.png" alt="star" width="20" style="vertical-align:middle;margin-right:6px"> Recovery & Sleep</h2>
+      <p class="section-desc">Recovery is where adaptation happens. Poor sleep and unmanaged stress erase gains.</p>
+      <div class="intake-field"><label>Average hours of sleep per night</label><input type="number" id="sleep" placeholder="e.g., 7" min="1" max="14" step="0.5"></div>
+      <div class="intake-field">
+        <label>Sleep quality</label>
+        <div class="radio-group" data-field="sleepQuality">
+          <div class="radio-opt" onclick="selectRadio(this,'sleepQuality')">Poor</div>
+          <div class="radio-opt" onclick="selectRadio(this,'sleepQuality')">Fair</div>
+          <div class="radio-opt" onclick="selectRadio(this,'sleepQuality')">Good</div>
+          <div class="radio-opt" onclick="selectRadio(this,'sleepQuality')">Excellent</div>
+        </div>
+      </div>
+      <div class="intake-field">
+        <label>CPAP or sleep apnea?</label>
+        <div class="radio-group" data-field="cpap">
+          <div class="radio-opt" onclick="selectRadio(this,'cpap')">Yes — CPAP</div>
+          <div class="radio-opt" onclick="selectRadio(this,'cpap')">Diagnosed, untreated</div>
+          <div class="radio-opt" onclick="selectRadio(this,'cpap')">No</div>
+        </div>
+      </div>
+      <div class="intake-field">
+        <label>Do you track HRV?</label>
+        <p class="hint">WHOOP, Garmin, Apple Watch, Oura.</p>
+        <div class="radio-group" data-field="trackHRV">
+          <div class="radio-opt" onclick="selectRadio(this,'trackHRV')">Yes — regularly</div>
+          <div class="radio-opt" onclick="selectRadio(this,'trackHRV')">Sometimes</div>
+          <div class="radio-opt" onclick="selectRadio(this,'trackHRV')">No</div>
+        </div>
+      </div>
+      <div class="intake-field"><label>HRV baseline (ms), if known</label><input type="number" id="hrvBaseline" placeholder="e.g., 45"></div>
+      <div class="intake-field">
+        <label>Current stress level (1–10)</label>
+        <div class="slider-wrap">
+          <input type="range" id="stressLevel" min="1" max="10" value="5" oninput="document.getElementById('stressVal').textContent=this.value">
+          <div class="slider-val" id="stressVal">5</div>
+          <div class="slider-labels"><span>1 — Zen</span><span>10 — Overwhelmed</span></div>
+        </div>
+      </div>
+      <div class="intake-field">
+        <label>Recovery modalities you use</label>
+        <div class="check-group" data-field="recoveryMods">
+          <div class="check-opt" onclick="toggleCheck(this)">Foam rolling / Mobility</div>
+          <div class="check-opt" onclick="toggleCheck(this)">Massage</div>
+          <div class="check-opt" onclick="toggleCheck(this)">Red light therapy</div>
+          <div class="check-opt" onclick="toggleCheck(this)">Cold therapy</div>
+          <div class="check-opt" onclick="toggleCheck(this)">Sauna</div>
+          <div class="check-opt" onclick="toggleCheck(this)">Prayer / Meditation</div>
+          <div class="check-opt" onclick="toggleCheck(this)">None currently</div>
+        </div>
+      </div>
+    </div>
+    <div class="btn-row"><button class="btn-back-intake" onclick="prevSec()">← Back</button><button class="btn-next-intake" onclick="nextSec()">Next →</button></div>
+  </div>
+
+  <!-- SECTION 7: Readiness -->
+  <div class="intake-section" id="sec-7">
+    <div class="intake-card">
+      <h2><img src="../assets/icons/shields/shield-swords.png" alt="swords" width="20" style="vertical-align:middle;margin-right:6px"> Readiness Assessment</h2>
+      <p class="section-desc">Behavioral readiness before programming. Willpower is a resource; systems are the solution.</p>
+      <div class="intake-field">
+        <label>How ready are you to make consistent changes right now? (1–10)</label>
+        <div class="slider-wrap">
+          <input type="range" id="readinessScore" min="1" max="10" value="7" oninput="document.getElementById('readinessVal').textContent=this.value">
+          <div class="slider-val" id="readinessVal">7</div>
+          <div class="slider-labels"><span>1 — Just exploring</span><span>10 — All in</span></div>
+        </div>
+      </div>
+      <div class="intake-field">
+        <label>What has prevented you from reaching your goals before?</label>
+        <div class="check-group" data-field="pastBarriers">
+          <div class="check-opt" onclick="toggleCheck(this)">Time / Schedule</div>
+          <div class="check-opt" onclick="toggleCheck(this)">Consistency / Motivation</div>
+          <div class="check-opt" onclick="toggleCheck(this)">Injury or pain</div>
+          <div class="check-opt" onclick="toggleCheck(this)">Nutrition knowledge</div>
+          <div class="check-opt" onclick="toggleCheck(this)">No accountability</div>
+          <div class="check-opt" onclick="toggleCheck(this)">Cost / Access</div>
+          <div class="check-opt" onclick="toggleCheck(this)">Stress / Life events</div>
+          <div class="check-opt" onclick="toggleCheck(this)">Haven't truly started</div>
+        </div>
+      </div>
+      <div class="intake-field">
+        <label>Core motivation</label>
+        <div class="radio-group" data-field="coreMotivation">
+          <div class="radio-opt" onclick="selectRadio(this,'coreMotivation')">Health & longevity</div>
+          <div class="radio-opt" onclick="selectRadio(this,'coreMotivation')">Appearance</div>
+          <div class="radio-opt" onclick="selectRadio(this,'coreMotivation')">Athletic performance</div>
+          <div class="radio-opt" onclick="selectRadio(this,'coreMotivation')">Faith & Discipline</div>
+          <div class="radio-opt" onclick="selectRadio(this,'coreMotivation')">Family example</div>
+          <div class="radio-opt" onclick="selectRadio(this,'coreMotivation')">Brotherhood / Accountability</div>
+        </div>
+      </div>
+      <div class="intake-field"><label>How does your faith intersect with your health goals?</label>
+        <textarea id="faithFitness" placeholder="Optional — but this shapes how Coach Moop coaches you. Body as temple? Discipline as worship?"></textarea>
+      </div>
+    </div>
+    <div class="btn-row"><button class="btn-back-intake" onclick="prevSec()">← Back</button><button class="btn-next-intake" onclick="nextSec()">Next →</button></div>
+  </div>
+
+  <!-- SECTION 8: Goals & Timeline -->
+  <div class="intake-section" id="sec-8">
+    <div class="intake-card">
+      <h2><img src="../assets/icons/shields/shield-swords.png" alt="target" width="20" style="vertical-align:middle;margin-right:6px"> Goals & Timeline</h2>
+      <p class="section-desc">Paint the picture. The more specific you are, the better your roadmap.</p>
+      <div class="intake-field">
+        <label>Primary goal timeline</label>
+        <div class="radio-group" data-field="goalTimeline">
+          <div class="radio-opt" onclick="selectRadio(this,'goalTimeline')">4 weeks</div>
+          <div class="radio-opt" onclick="selectRadio(this,'goalTimeline')">8 weeks</div>
+          <div class="radio-opt" onclick="selectRadio(this,'goalTimeline')">3 months</div>
+          <div class="radio-opt" onclick="selectRadio(this,'goalTimeline')">6 months</div>
+          <div class="radio-opt" onclick="selectRadio(this,'goalTimeline')">1 year</div>
+        </div>
+      </div>
+      <div class="intake-field"><label>What does success look like in your own words?</label>
+        <textarea id="successVision" placeholder="What will be different about how you feel, move, look, or perform?"></textarea>
+      </div>
+      <div class="intake-field"><label>The ONE thing that would make this a home run?</label>
+        <textarea id="homeRun" placeholder="The result that would make you say 'that changed everything'..."></textarea>
+      </div>
+      <div class="intake-field"><label>Anything else Coach Moop should know?</label>
+        <textarea id="additionalNotes" placeholder="Family schedule, travel, faith commitments, accountability partners, etc."></textarea>
+      </div>
+    </div>
+    <div class="btn-row"><button class="btn-back-intake" onclick="prevSec()">← Back</button><button class="btn-next-intake" onclick="nextSec()">Next →</button></div>
+  </div>
+
+  <!-- SECTION 9: Review & Submit -->
+  <div class="intake-section" id="sec-9">
+    <div class="intake-card">
+      <h2><img src="../assets/icons/shields/shield-star.png" alt="star" width="20" style="vertical-align:middle;margin-right:6px"> Review & Submit</h2>
+      <p class="section-desc">Review your intake summary below, then submit. Coach Moop will reach out within 24 hours.</p>
+      <div id="summaryContent"></div>
+    </div>
+    <div class="btn-row">
+      <button class="btn-back-intake" onclick="prevSec()">← Back</button>
+      <button class="btn-next-intake" onclick="submitForm()">Submit Intake →</button>
+    </div>
+  </div>
+
+  <!-- COMPLETION -->
+  <div class="intake-section" id="sec-done">
+    <div class="results-card">
+      <div style="text-align:center;margin-bottom:20px;">
+        <h2 style="color:var(--gold);font-size:1.5rem;margin-bottom:8px;">Intake Complete!</h2>
+        <p style="color:var(--gray);">Your assessment is saved. Let's build something unshakeable.</p>
+      </div>
+      <div id="estimatesSection"></div>
+      <div id="coachingNoteSection"></div>
+      <div id="scriptureSection"></div>
+      <div class="cta-block">
+        <p>Your assessment has been saved. Coach Moop will be in touch within 24 hours.</p>
+        <a href="https://cal.com/usmcministries2022" target="_blank" rel="noopener">📅 Book a Free Intro Call</a>
+        <br><a href="../coaching.html" style="color:#000;font-size:0.9rem;display:block;margin-top:10px;text-decoration:underline;">⚔️ View paid coaching packages →</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-top">
+      <div class="footer-brand">
+        <div class="name">U.S.M.C. Ministries</div>
+        <div class="tag">Warriors Equipped. Kingdom Advancing.</div>
+      </div>
+      <div class="footer-col">
+        <h4>Fitness</h4>
+        <ul>
+          <li><a href="fitness.html">Intake Form</a></li>
+          <li><a href="trainer.html">About the Trainer</a></li>
+          <li><a href="cert-cpt.html">NASM CPT</a></li>
+          <li><a href="cert-fit20.html">fit20 Certified</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Site</h4>
+        <ul>
+          <li><a href="../index.html">Home</a></li>
+          <li><a href="../coaching.html">Coaching</a></li>
+          <li><a href="../about.html">About</a></li>
+          <li><a href="https://usmcmin.org" target="_blank">Ministry Site</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <div class="verse">"Do you not know that your bodies are temples of the Holy Spirit?" — 1 Cor 6:19</div>
+      <div style="color:var(--gray);font-size:0.8rem">© 2026 U.S.M.C. Ministries. All rights reserved.</div>
+    </div>
+  </div>
+</footer>
+
+<script>
+let currentSec = 1;
+const totalSec = 9;
+const formData = {};
+
+function selectRadio(el, field) {
+  el.parentElement.querySelectorAll('.radio-opt').forEach(o => o.classList.remove('selected'));
+  el.classList.add('selected');
+  formData[field] = el.textContent.trim();
+  if (field.startsWith('parq')) checkParq();
+  if (field === 'mealTiming') {
+    const ifG = document.getElementById('ifProtocolGroup');
+    if (ifG) ifG.style.display = el.textContent.includes('Intermittent') ? 'block' : 'none';
+  }
+}
+
+function toggleCheck(el) { el.classList.toggle('selected'); }
+
+function checkParq() {
+  const hasYes = ['parq1','parq2','parq3','parq4','parq5','parq6'].some(f => formData[f] === 'Yes');
+  document.getElementById('parqWarning').style.display = hasYes ? 'block' : 'none';
+}
+
+function nextSec() {
+  if (currentSec >= totalSec) return;
+  document.getElementById('sec-' + currentSec).classList.remove('active');
+  currentSec++;
+  document.getElementById('sec-' + currentSec).classList.add('active');
+  updateProgress();
+  if (currentSec === totalSec) buildSummary();
+  window.scrollTo(0, 0);
+}
+
+function prevSec() {
+  if (currentSec <= 1) return;
+  document.getElementById('sec-' + currentSec).classList.remove('active');
+  currentSec--;
+  document.getElementById('sec-' + currentSec).classList.add('active');
+  updateProgress();
+  window.scrollTo(0, 0);
+}
+
+function updateProgress() {
+  const pct = (currentSec / totalSec) * 100;
+  document.getElementById('progressFill').style.width = pct + '%';
+  document.getElementById('progressText').textContent = 'Step ' + currentSec + ' of ' + totalSec;
+}
+
+function getVal(id) { const el = document.getElementById(id); return el ? el.value.trim() : ''; }
+function getChecked(field) {
+  const items = [];
+  document.querySelectorAll('[data-field="' + field + '"] .selected').forEach(e => items.push(e.textContent.trim()));
+  return items;
+}
+
+function buildSummary() {
+  const rows = [
+    ['Name', getVal('firstName') + ' ' + getVal('lastName')],
+    ['Age / Gender', (getVal('age') || '—') + ' / ' + (formData.gender || '—')],
+    ['Email', getVal('email') || '—'],
+    ['Height / Weight', (getVal('height') ? getVal('height') + '"' : '—') + ' / ' + (getVal('weight') ? getVal('weight') + ' lbs' : '—')],
+    ['Primary Goal', formData.primaryGoal || '—'],
+    ['Training Modality', formData.trainingModality || '—'],
+    ['Goal Timeline', formData.goalTimeline || '—'],
+    ['Readiness Score', (getVal('readinessScore') || '7') + '/10'],
+    ['Core Motivation', formData.coreMotivation || '—'],
+  ];
+  document.getElementById('summaryContent').innerHTML = rows.map(([label, val]) =>
+    `<div class="metric"><span class="metric-label">${label}</span><span class="metric-value">${val || '—'}</span></div>`
+  ).join('');
+}
+
+const coachingNotes = {
+  'Fat Loss': 'Fat loss is a caloric equation — visceral fat reduction happens through resistance training, NEAT, and protein prioritization.',
+  'Muscle Building': 'Hypertrophy requires progressive overload and sufficient protein. The fit20 slow-rep method produces significant muscle stimulus.',
+  'Body Recomposition': 'Recomp is the long game — losing fat and building muscle simultaneously. High protein, consistent resistance training, and patience.',
+  'Performance': 'Performance-focused training prioritizes movement quality, strength expression, and recovery.',
+  'Longevity': 'Longevity training focuses on muscle mass, cardiovascular efficiency, and mobility. Strong and capable at 80.',
+  'Lifestyle / Maintenance': 'Maintenance requires consistent effort and smart systems. We build habits that run on autopilot.',
+  'default': 'Coach Moop will design a personalized plan using the NASM OPT model — building from stabilization through strength.'
+};
+
+const scriptures = [
+  { text: '"Do you not know that your bodies are temples of the Holy Spirit? You are not your own; you were bought at a price. Therefore honor God with your bodies."', ref: '1 Corinthians 6:19–20' },
+  { text: '"For physical training is of some value, but godliness has value for all things."', ref: '1 Timothy 4:8' }
+];
+
+function submitForm() {
+  const wt = parseFloat(getVal('weight')) || 0;
+  const ht = parseFloat(getVal('height')) || 0;
+  const age = parseFloat(getVal('age')) || 30;
+  const isMale = formData.gender !== 'Female';
+  const bmi = ht > 0 ? ((wt / (ht * ht)) * 703).toFixed(1) : null;
+  const htCm = ht * 2.54; const wtKg = wt * 0.4536;
+  let bmr = wt > 0 && ht > 0 ? Math.round(isMale ? (10*wtKg+6.25*htCm-5*age+5) : (10*wtKg+6.25*htCm-5*age-161)) : null;
+  const tdee = bmr ? Math.round(bmr * 1.4) : null;
+  const proteinTarget = Math.round(parseFloat(getVal('goalWeight')) || wt * 0.9);
+
+  let estHtml = '<h3 style="color:var(--gold);margin:20px 0 12px;">Initial Estimates</h3>';
+  if (bmi) estHtml += `<div class="metric"><span class="metric-label">BMI</span><span class="metric-value">${bmi}</span></div>`;
+  if (bmr) estHtml += `<div class="metric"><span class="metric-label">BMR</span><span class="metric-value">${bmr.toLocaleString()} cal/day</span></div>`;
+  if (tdee) estHtml += `<div class="metric"><span class="metric-label">Est. TDEE</span><span class="metric-value">${tdee.toLocaleString()} cal/day</span></div>`;
+  estHtml += `<div class="metric"><span class="metric-label">Protein Target</span><span class="metric-value">~${proteinTarget}g/day</span></div>`;
+  document.getElementById('estimatesSection').innerHTML = estHtml;
+
+  const goal = formData.primaryGoal || 'default';
+  const note = coachingNotes[goal] || coachingNotes['default'];
+  document.getElementById('coachingNoteSection').innerHTML = `<div class="coaching-note"><div class="note-label">Coach Moop · NASM CNC Assessment Note</div><p>${note}</p></div>`;
+
+  const sc = scriptures[Math.floor(Math.random() * scriptures.length)];
+  document.getElementById('scriptureSection').innerHTML = `<div class="scripture-card"><div class="verse-text">${sc.text}</div><div class="verse-ref">— ${sc.ref}</div></div>`;
+
+  document.getElementById('sec-' + currentSec).classList.remove('active');
+  document.getElementById('sec-done').classList.add('active');
+  document.getElementById('progressFill').style.width = '100%';
+  document.getElementById('progressText').textContent = 'Complete!';
+  window.scrollTo(0, 0);
+}
+</script>
+
+<script>
+(function() {
+  var navToggle = document.querySelector('.nav-toggle');
+  var navLinks = document.querySelector('.nav-links');
+  if (navToggle && navLinks) navToggle.addEventListener('click', function() { navLinks.classList.toggle('open'); });
+})();
+(function() {
+  const toggle = document.getElementById('themeToggle');
+  if (!toggle) return;
+  const saved = localStorage.getItem('usmc-theme');
+  if (saved === 'dark') { document.documentElement.setAttribute('data-theme', 'dark'); toggle.textContent = '☀️'; }
+  toggle.addEventListener('click', function() {
+    const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+    if (isDark) { document.documentElement.removeAttribute('data-theme'); localStorage.setItem('usmc-theme', 'light'); toggle.textContent = '🌙'; }
+    else { document.documentElement.setAttribute('data-theme', 'dark'); localStorage.setItem('usmc-theme', 'dark'); toggle.textContent = '☀️'; }
+  });
+})();
+</script>
+</body>
+</html>

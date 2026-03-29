@@ -1,6 +1,6 @@
 /**
- * C5iSR Dashboard — Frontend Logic v2.5
- * 
+ * C5iSR Dashboard — Frontend Logic v2.6
+ *
  * Features:
  *   - Dual mode: Backend FastAPI or CoinGecko demo
  *   - localStorage caching with TTL to reduce API hits
@@ -14,6 +14,9 @@
  *   - Market Intelligence Brief (regime + F&G + signal tally + top pick + assessment + Stewardship Score)
  *   - Signal cards show current price, stop-loss & take-profit targets
  *   - Backtest uses full 5-indicator computeSignal (consistent with live signals)
+ *   - Structured Telegram report with full SL/TP/price data (no DOM scraping)
+ *   - Keyboard shortcuts: R = refresh, C = copy report
+ *   - Header flash on fresh data load
  */
 
 // ── Config ──
@@ -144,7 +147,35 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   startRefreshTimer();
   updateLastUpdated();
+  setupKeyboardShortcuts();
 });
+
+// ── Keyboard Shortcuts ──
+// R = force refresh now, C = copy signal report
+function setupKeyboardShortcuts() {
+  document.addEventListener('keydown', (e) => {
+    // Ignore when typing in inputs
+    if (e.target.tagName === 'INPUT' || e.target.tagName === 'SELECT' || e.target.tagName === 'TEXTAREA') return;
+    if (e.key === 'r' || e.key === 'R') {
+      showToast('⚡ Refreshing…', 'info');
+      Promise.allSettled([loadPrices(), loadSignals(), loadFearGreed(), loadGlobalStats()]).then(() => {
+        updateLastUpdated();
+        flashHeader();
+      });
+    } else if (e.key === 'c' || e.key === 'C') {
+      copySignalReport();
+    }
+  });
+}
+
+// ── Header Flash (visual feedback on data refresh) ──
+function flashHeader() {
+  const header = document.querySelector('.header');
+  if (!header) return;
+  header.style.transition = 'box-shadow 0.2s ease';
+  header.style.boxShadow = '0 0 20px rgba(0,255,136,0.4)';
+  setTimeout(() => { header.style.boxShadow = ''; }, 800);
+}
 
 // ── Backend Check ──
 async function checkBackend() {
@@ -311,6 +342,7 @@ async function loadSignals() {
     } else {
       signals = await generateDemoSignals();
     }
+    window._lastSignals = signals; // cache for structured report
     renderSignals(signals);
     updateRegime(signals);
     updateDCA(signals);
@@ -1131,6 +1163,7 @@ function startRefreshTimer() {
       loadSignals();
       loadChartData(currentChartAsset, currentChartDays);
       updateLastUpdated();
+      flashHeader();
       if (!window._refreshCycle) window._refreshCycle = 0;
       window._refreshCycle++;
       if (window._refreshCycle % 2 === 0) { loadFearGreed(); loadGlobalStats(); }
@@ -1286,11 +1319,12 @@ function renderPrices(prices) {
 }
 
 // ── Copy Signal Report (Telegram-ready) ──
+// v2.6: Uses structured window._lastSignals instead of fragile DOM scraping
+// Produces full-fidelity report with price, SL, TP, RSI, and confidence per signal
 function copySignalReport() {
-  // Gather signal data from last computed signals
-  const signalCards = document.querySelectorAll('#signalGrid .card');
-  if (!signalCards.length) {
-    showToast('No signals loaded yet', 'error');
+  const signals = window._lastSignals;
+  if (!signals || !signals.length) {
+    showToast('No signals loaded yet — wait for data', 'error');
     return;
   }
 
@@ -1298,59 +1332,76 @@ function copySignalReport() {
   const dateStr = now.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' });
   const timeStr = now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', timeZoneName: 'short' });
 
-  // Regime & F&G
-  const regimeTxt = document.getElementById('regimeBadge')?.textContent?.trim() || '—';
-  const fgTxt = document.getElementById('fearGreedValue')?.textContent?.trim() || '—';
+  // Regime from BTC signal data
+  const btcSig = signals.find(s => s.symbol === 'BTC');
+  const regime = btcSig?.market_regime || btcSig?.indicators?.ema?.regime || 'SIDEWAYS';
+  const regimeEmoji = regime === 'BULL' ? '🐂' : regime === 'BEAR' ? '🐻' : '↔️';
+
+  // Fear & Greed (display string only — not in structured signal data)
+  const fgEl = document.getElementById('fearGreedValue');
+  const fgTxt = fgEl ? fgEl.textContent.replace(/\s+/g, ' ').trim() : '—';
+
+  // Market cap
+  const mcap = document.getElementById('globalMarketCap')?.textContent?.trim() || '—';
+  const mcapChange = document.getElementById('globalMarketCapChange')?.textContent?.trim() || '';
+
+  // Stewardship score from rendered brief HTML
   const stewScore = (() => {
     const el = document.querySelector('#intelBriefContent');
     if (!el) return null;
-    // Extract Stewardship score number from the brief HTML
     const match = el.innerHTML.match(/(\d{1,3})<span[^>]*>\/([A-F][+-]?)</);
     if (match) return `${match[1]}/${match[2]}`;
     return null;
   })();
 
-  // Global market cap
-  const mcap = document.getElementById('globalMarketCap')?.textContent?.trim() || '—';
-  const mcapChange = document.getElementById('globalMarketCapChange')?.textContent?.trim() || '';
+  // Signal lines — built from structured data for full accuracy
+  const signalLines = signals.map(s => {
+    const emoji = s.signal === 'BUY' ? '🟢' : s.signal === 'SELL' ? '🔴' : '⚪';
+    const price = s.indicators?.current_price
+      ? ` @ $${formatPrice(s.indicators.current_price)}`
+      : (_lastPriceMap[s.asset_id] ? ` @ $${formatPrice(_lastPriceMap[s.asset_id])}` : '');
+    const rsi = s.rsi != null ? `RSI ${s.rsi.toFixed(0)}` : null;
+    const conf = `${s.confidence}% conf`;
+    const meta = [rsi, conf].filter(Boolean).join(', ');
 
-  // Build signal lines from signal cards
-  const signalLines = [];
-  signalCards.forEach(card => {
-    const symbolEl = card.querySelector('[style*="font-weight:700"][style*="font-family:var(--font-mono)"]');
-    const badgeEl = card.querySelector('.signal-badge');
-    const rsiEl = card.querySelector('.rsi-value');
-    const confEl = card.querySelector('[style*="confidence"]');
-    const slEl = card.querySelector('[style*="color:var(--red)"]');
-    const tpEl = card.querySelector('[style*="color:var(--green)"]');
+    let line = `${emoji} *${s.symbol}*${price} — ${s.signal}  (${meta})`;
 
-    if (!symbolEl || !badgeEl) return;
-    const sym = symbolEl.textContent.trim();
-    const sig = badgeEl.textContent.trim();
-    const rsi = rsiEl ? rsiEl.textContent.replace('RSI:', '').trim() : '—';
-    const conf = confEl ? (confEl.textContent.match(/(\d+)%/) || [])[1] : null;
+    // Add SL/TP for actionable signals
+    if (s.signal !== 'HOLD' && s.risk?.stop_loss_price > 0) {
+      const atrNote = s.risk.atr_based ? ' ⚡ATR' : '';
+      line += `\n   └ SL $${formatPrice(s.risk.stop_loss_price)} → TP $${formatPrice(s.risk.take_profit_price)}  ${s.risk.risk_reward_ratio || '1:2'}${atrNote}`;
+    }
 
-    let emoji = sig === 'BUY' ? '🟢' : sig === 'SELL' ? '🔴' : '⚪';
-    let line = `${emoji} *${sym}* — ${sig}  (RSI ${rsi}${conf ? `, ${conf}% conf` : ''})`;
-    signalLines.push(line);
+    // Key confluence reasons (max 2)
+    if (s.signal !== 'HOLD' && s.reason && s.reason !== 'No strong confluence') {
+      const shortReason = s.reason.split(' | ').slice(0, 2).join(' | ');
+      line += `\n   ↳ _${shortReason}_`;
+    }
+
+    return line;
   });
 
-  // Assessment snippet from brief
-  const assessEl = document.querySelector('#intelBriefContent [style*="line-height:1.5"]');
-  const assessment = assessEl ? assessEl.textContent.trim() : '';
+  // Assessment derived from signal data
+  const buys = signals.filter(s => s.signal === 'BUY');
+  const sells = signals.filter(s => s.signal === 'SELL');
+  let assessment = '';
+  if (buys.length >= 3 && regime === 'BULL') assessment = '🟢 Strong bull confluence — broad BUY signals in uptrend.';
+  else if (buys.length >= 2) assessment = '🟡 Moderate bullish setup — selective entries advised.';
+  else if (sells.length >= 3 && regime === 'BEAR') assessment = '🔴 Strong bear confluence — risk-off posture advised.';
+  else if (sells.length >= 2) assessment = '🟠 Bearish pressure — reduce exposure or await reversal.';
+  else assessment = '⏸ Mixed signals — no clear edge. Hold and wait for confluence.';
 
   const report = [
     `✝️ *C5iSR Market Brief* — ${dateStr} ${timeStr}`,
     ``,
-    `📊 *Market Regime:* ${regimeTxt}`,
-    `😱 *Fear & Greed:* ${fgTxt}`,
-    `🌍 *Market Cap:* ${mcap} ${mcapChange}`,
+    `📊 *Regime:* ${regimeEmoji} ${regime}  |  😱 *F&G:* ${fgTxt}`,
+    `🌍 *Market Cap:* ${mcap}${mcapChange ? '  ' + mcapChange : ''}`,
     stewScore ? `🏅 *Stewardship Score:* ${stewScore}` : null,
     ``,
-    `*Signal Summary:*`,
+    `*── Signals ──*`,
     ...signalLines,
     ``,
-    assessment ? `💡 ${assessment}` : null,
+    `💡 ${assessment}`,
     ``,
     `_"The plans of the diligent lead surely to abundance." — Prov 21:5_`,
     `📈 usmcmin.com/c5isr/dashboard.html`,
@@ -1359,13 +1410,11 @@ function copySignalReport() {
   navigator.clipboard.writeText(report).then(() => {
     const btn = document.getElementById('copyReportBtn');
     if (btn) { btn.textContent = '✅ Copied!'; setTimeout(() => { btn.textContent = '📋 Copy Report'; }, 2500); }
-    showToast('Signal report copied to clipboard!', 'success');
+    showToast('Signal report copied — ready to paste into Telegram!', 'success');
   }).catch(() => {
-    // Fallback: show in a prompt
     window.prompt('Copy this report:', report);
   });
 }
-
 // ── Logout ──
 function logout() {
   localStorage.removeItem('c5isr_auth');

@@ -353,7 +353,9 @@
   <div class="intake-section" id="sec-5">
     <div class="intake-card">
       <h2><img src="../assets/icons/shields/shield-dumbbell.png" alt="fitness" width="20" style="vertical-align:middle;margin-right:6px"> Nutrition Profile</h2>
-      <p class="section-desc">Nutrition is 80% of body composition. Coach Moop will build a plan around your real habits — not an ideal that doesn't fit your life.</p>
+      <p class="section-desc">Nutrition is 80% of body composition. Coach Moop will build a plan around your real habits — not an ideal that doesn't fit your life. Answer honestly; this data directly shapes your program.</p>
+
+      <h3>Diet Overview</h3>
       <div class="intake-field">
         <label>Overall diet quality right now</label>
         <div class="radio-group" data-field="dietQuality">
@@ -361,18 +363,67 @@
           <div class="radio-opt" onclick="selectRadio(this,'dietQuality')">Fair</div>
           <div class="radio-opt" onclick="selectRadio(this,'dietQuality')">Good</div>
           <div class="radio-opt" onclick="selectRadio(this,'dietQuality')">Excellent</div>
+          <div class="radio-opt" onclick="selectRadio(this,'dietQuality')">Unsure</div>
         </div>
       </div>
       <div class="intake-field">
+        <label>Do you track calories?</label>
+        <div class="radio-group" data-field="trackCalories">
+          <div class="radio-opt" onclick="selectRadio(this,'trackCalories')">Yes — daily</div>
+          <div class="radio-opt" onclick="selectRadio(this,'trackCalories')">Occasionally</div>
+          <div class="radio-opt" onclick="selectRadio(this,'trackCalories')">No</div>
+          <div class="radio-opt" onclick="selectRadio(this,'trackCalories')">Used to</div>
+        </div>
+      </div>
+      <div class="intake-field">
+        <label>Estimated daily calorie intake</label>
+        <div class="radio-group" data-field="calsPerDay">
+          <div class="radio-opt" onclick="selectRadio(this,'calsPerDay')">Under 1,500</div>
+          <div class="radio-opt" onclick="selectRadio(this,'calsPerDay')">1,500–2,000</div>
+          <div class="radio-opt" onclick="selectRadio(this,'calsPerDay')">2,000–2,500</div>
+          <div class="radio-opt" onclick="selectRadio(this,'calsPerDay')">2,500–3,000</div>
+          <div class="radio-opt" onclick="selectRadio(this,'calsPerDay')">3,000+</div>
+          <div class="radio-opt" onclick="selectRadio(this,'calsPerDay')">No idea</div>
+        </div>
+      </div>
+
+      <h3>Macro Awareness</h3>
+      <div class="intake-field">
         <label>Estimated daily protein intake</label>
-        <p class="hint">Target: ~1g per lb of goal body weight.</p>
+        <p class="hint">Target: ~1g per lb of goal body weight. Protein is the #1 lever for body recomposition.</p>
         <div class="radio-group" data-field="proteinRange">
           <div class="radio-opt" onclick="selectRadio(this,'proteinRange')">Under 100g</div>
           <div class="radio-opt" onclick="selectRadio(this,'proteinRange')">100–130g</div>
           <div class="radio-opt" onclick="selectRadio(this,'proteinRange')">130–160g</div>
           <div class="radio-opt" onclick="selectRadio(this,'proteinRange')">160g+</div>
+          <div class="radio-opt" onclick="selectRadio(this,'proteinRange')">Unsure</div>
         </div>
       </div>
+      <div class="intake-field">
+        <label>Primary carbohydrate sources</label>
+        <div class="check-group" data-field="carbSources">
+          <div class="check-opt" onclick="toggleCheck(this)">Whole grains / rice</div>
+          <div class="check-opt" onclick="toggleCheck(this)">Fruit</div>
+          <div class="check-opt" onclick="toggleCheck(this)">Vegetables</div>
+          <div class="check-opt" onclick="toggleCheck(this)">Bread / pasta</div>
+          <div class="check-opt" onclick="toggleCheck(this)">Processed / packaged</div>
+          <div class="check-opt" onclick="toggleCheck(this)">Sugar / sweets</div>
+          <div class="check-opt" onclick="toggleCheck(this)">Low-carb / keto</div>
+        </div>
+      </div>
+      <div class="intake-field">
+        <label>Primary fat sources</label>
+        <div class="check-group" data-field="fatSources">
+          <div class="check-opt" onclick="toggleCheck(this)">Avocado / olive oil</div>
+          <div class="check-opt" onclick="toggleCheck(this)">Nuts / seeds</div>
+          <div class="check-opt" onclick="toggleCheck(this)">Dairy / cheese</div>
+          <div class="check-opt" onclick="toggleCheck(this)">Fatty meats</div>
+          <div class="check-opt" onclick="toggleCheck(this)">MCT / coconut oil</div>
+          <div class="check-opt" onclick="toggleCheck(this)">Processed / fried</div>
+        </div>
+      </div>
+
+      <h3>Meal Timing & Habits</h3>
       <div class="intake-field"><label>Meals per day</label><input type="number" id="mealsPerDay" placeholder="e.g., 3" min="1" max="8"></div>
       <div class="intake-field">
         <label>Meal timing approach</label>
@@ -393,8 +444,65 @@
           <div class="radio-opt" onclick="selectRadio(this,'ifProtocol')">OMAD</div>
         </div>
       </div>
+      <div class="intake-field">
+        <label>First meal of the day typically at</label>
+        <div class="radio-group" data-field="firstMealTime">
+          <div class="radio-opt" onclick="selectRadio(this,'firstMealTime')">Before 8 AM</div>
+          <div class="radio-opt" onclick="selectRadio(this,'firstMealTime')">8–10 AM</div>
+          <div class="radio-opt" onclick="selectRadio(this,'firstMealTime')">10 AM–Noon</div>
+          <div class="radio-opt" onclick="selectRadio(this,'firstMealTime')">After Noon</div>
+        </div>
+      </div>
+      <div class="intake-field">
+        <label>Behavioral eating patterns</label>
+        <p class="hint">Honest answers here are gold — these patterns drive 80% of nutrition outcomes.</p>
+        <div class="check-group" data-field="eatingBehaviors">
+          <div class="check-opt" onclick="toggleCheck(this)">Emotional eating</div>
+          <div class="check-opt" onclick="toggleCheck(this)">Stress eating</div>
+          <div class="check-opt" onclick="toggleCheck(this)">Night snacking</div>
+          <div class="check-opt" onclick="toggleCheck(this)">Skipping meals</div>
+          <div class="check-opt" onclick="toggleCheck(this)">Binge / restrict cycles</div>
+          <div class="check-opt" onclick="toggleCheck(this)">Mindless eating</div>
+          <div class="check-opt" onclick="toggleCheck(this)">None of the above</div>
+        </div>
+      </div>
+
+      <h3>Hydration & Stimulants</h3>
       <div class="intake-field"><label>Daily water intake (oz)</label><input type="number" id="waterIntake" placeholder="e.g., 80"></div>
+      <div class="intake-field">
+        <label>Daily caffeine intake</label>
+        <div class="radio-group" data-field="caffeineAmount">
+          <div class="radio-opt" onclick="selectRadio(this,'caffeineAmount')">None</div>
+          <div class="radio-opt" onclick="selectRadio(this,'caffeineAmount')">1–2 cups</div>
+          <div class="radio-opt" onclick="selectRadio(this,'caffeineAmount')">3–4 cups</div>
+          <div class="radio-opt" onclick="selectRadio(this,'caffeineAmount')">5+ cups</div>
+        </div>
+      </div>
+      <div class="intake-field">
+        <label>Last caffeine of the day</label>
+        <p class="hint">Caffeine has a ~5-hour half-life. Cutoff after 2 PM can disrupt sleep quality significantly.</p>
+        <div class="radio-group" data-field="caffeineCutoff">
+          <div class="radio-opt" onclick="selectRadio(this,'caffeineCutoff')">Before noon</div>
+          <div class="radio-opt" onclick="selectRadio(this,'caffeineCutoff')">Noon–2 PM</div>
+          <div class="radio-opt" onclick="selectRadio(this,'caffeineCutoff')">2–4 PM</div>
+          <div class="radio-opt" onclick="selectRadio(this,'caffeineCutoff')">After 4 PM</div>
+          <div class="radio-opt" onclick="selectRadio(this,'caffeineCutoff')">No cutoff</div>
+        </div>
+      </div>
+      <div class="intake-field">
+        <label>Alcohol consumption</label>
+        <p class="hint">Alcohol displaces fat oxidation and disrupts sleep architecture — major body composition variable.</p>
+        <div class="radio-group" data-field="alcoholConsumption">
+          <div class="radio-opt" onclick="selectRadio(this,'alcoholConsumption')">None</div>
+          <div class="radio-opt" onclick="selectRadio(this,'alcoholConsumption')">Occasional (1–2x/week)</div>
+          <div class="radio-opt" onclick="selectRadio(this,'alcoholConsumption')">Moderate (3–5x/week)</div>
+          <div class="radio-opt" onclick="selectRadio(this,'alcoholConsumption')">Daily</div>
+          <div class="radio-opt" onclick="selectRadio(this,'alcoholConsumption')">Prefer not to say</div>
+        </div>
+      </div>
       <div class="intake-field"><label>Dietary restrictions or allergies</label><input type="text" id="dietRestrictions" placeholder="Gluten-free, dairy-free, etc."></div>
+
+      <h3>Supplementation</h3>
       <div class="intake-field">
         <label>Current supplements</label>
         <div class="check-group" data-field="currentSupps">
@@ -405,8 +513,14 @@
           <div class="check-opt" onclick="toggleCheck(this)">Pre-workout</div>
           <div class="check-opt" onclick="toggleCheck(this)">Magnesium</div>
           <div class="check-opt" onclick="toggleCheck(this)">Vitamin D</div>
+          <div class="check-opt" onclick="toggleCheck(this)">MCT oil</div>
+          <div class="check-opt" onclick="toggleCheck(this)">Collagen</div>
+          <div class="check-opt" onclick="toggleCheck(this)">Probiotics</div>
           <div class="check-opt" onclick="toggleCheck(this)">None</div>
         </div>
+      </div>
+      <div class="intake-field"><label>Other supplements, wellness products, or functional nutrition (e.g., Melaleuca, Thorne, etc.)</label>
+        <textarea id="otherSupps" placeholder="List any other supplements, wellness products, or protocols you use..."></textarea>
       </div>
     </div>
     <div class="btn-row"><button class="btn-back-intake" onclick="prevSec()">← Back</button><button class="btn-next-intake" onclick="nextSec()">Next →</button></div>
@@ -416,7 +530,9 @@
   <div class="intake-section" id="sec-6">
     <div class="intake-card">
       <h2><img src="../assets/icons/shields/shield-star.png" alt="star" width="20" style="vertical-align:middle;margin-right:6px"> Recovery & Sleep</h2>
-      <p class="section-desc">Recovery is where adaptation happens. Poor sleep and unmanaged stress erase gains.</p>
+      <p class="section-desc">Recovery is where adaptation happens. Poor sleep and unmanaged stress erase gains — this is non-negotiable in the program.</p>
+
+      <h3>Sleep</h3>
       <div class="intake-field"><label>Average hours of sleep per night</label><input type="number" id="sleep" placeholder="e.g., 7" min="1" max="14" step="0.5"></div>
       <div class="intake-field">
         <label>Sleep quality</label>
@@ -428,25 +544,83 @@
         </div>
       </div>
       <div class="intake-field">
+        <label>Typical bedtime</label>
+        <div class="radio-group" data-field="bedtime">
+          <div class="radio-opt" onclick="selectRadio(this,'bedtime')">Before 9 PM</div>
+          <div class="radio-opt" onclick="selectRadio(this,'bedtime')">9–10 PM</div>
+          <div class="radio-opt" onclick="selectRadio(this,'bedtime')">10–11 PM</div>
+          <div class="radio-opt" onclick="selectRadio(this,'bedtime')">11 PM–Midnight</div>
+          <div class="radio-opt" onclick="selectRadio(this,'bedtime')">After Midnight</div>
+        </div>
+      </div>
+      <div class="intake-field">
         <label>CPAP or sleep apnea?</label>
         <div class="radio-group" data-field="cpap">
-          <div class="radio-opt" onclick="selectRadio(this,'cpap')">Yes — CPAP</div>
+          <div class="radio-opt" onclick="selectRadio(this,'cpap')">Yes — CPAP user</div>
           <div class="radio-opt" onclick="selectRadio(this,'cpap')">Diagnosed, untreated</div>
+          <div class="radio-opt" onclick="selectRadio(this,'cpap')">Suspected, undiagnosed</div>
           <div class="radio-opt" onclick="selectRadio(this,'cpap')">No</div>
         </div>
       </div>
       <div class="intake-field">
+        <label>Common sleep disruptors</label>
+        <div class="check-group" data-field="sleepDisruptors">
+          <div class="check-opt" onclick="toggleCheck(this)">Waking during night</div>
+          <div class="check-opt" onclick="toggleCheck(this)">Hard to fall asleep</div>
+          <div class="check-opt" onclick="toggleCheck(this)">Racing thoughts</div>
+          <div class="check-opt" onclick="toggleCheck(this)">Partner / kids</div>
+          <div class="check-opt" onclick="toggleCheck(this)">Stress / anxiety</div>
+          <div class="check-opt" onclick="toggleCheck(this)">Late screen time</div>
+          <div class="check-opt" onclick="toggleCheck(this)">None — I sleep well</div>
+        </div>
+      </div>
+
+      <h3>HRV &amp; Biometrics</h3>
+      <p class="hint" style="margin-bottom:10px;">HRV (Heart Rate Variability) is the gold standard for daily readiness. If you're not tracking it, that's something we can fix.</p>
+      <div class="intake-field">
         <label>Do you track HRV?</label>
-        <p class="hint">WHOOP, Garmin, Apple Watch, Oura.</p>
         <div class="radio-group" data-field="trackHRV">
           <div class="radio-opt" onclick="selectRadio(this,'trackHRV')">Yes — regularly</div>
           <div class="radio-opt" onclick="selectRadio(this,'trackHRV')">Sometimes</div>
           <div class="radio-opt" onclick="selectRadio(this,'trackHRV')">No</div>
+          <div class="radio-opt" onclick="selectRadio(this,'trackHRV')">Unsure what HRV is</div>
         </div>
       </div>
-      <div class="intake-field"><label>HRV baseline (ms), if known</label><input type="number" id="hrvBaseline" placeholder="e.g., 45"></div>
       <div class="intake-field">
-        <label>Current stress level (1–10)</label>
+        <label>Wearable / tracking device</label>
+        <div class="check-group" data-field="wearable">
+          <div class="check-opt" onclick="toggleCheck(this)">Garmin</div>
+          <div class="check-opt" onclick="toggleCheck(this)">Apple Watch</div>
+          <div class="check-opt" onclick="toggleCheck(this)">WHOOP</div>
+          <div class="check-opt" onclick="toggleCheck(this)">Oura Ring</div>
+          <div class="check-opt" onclick="toggleCheck(this)">Fitbit</div>
+          <div class="check-opt" onclick="toggleCheck(this)">Samsung</div>
+          <div class="check-opt" onclick="toggleCheck(this)">No wearable</div>
+        </div>
+      </div>
+      <div class="intake-field"><label>HRV baseline (ms), if known</label><input type="number" id="hrvBaseline" placeholder="e.g., 45" step="1"><p class="hint">Your personal average over 60–90 days — more meaningful than single readings.</p></div>
+      <div class="intake-field"><label>Resting Heart Rate (bpm), if known</label><input type="number" id="restingHR" placeholder="e.g., 58" step="1"><p class="hint">Trends in RHR are a strong indicator of recovery and cardiovascular fitness.</p></div>
+      <div class="intake-field">
+        <label>Do you track daily steps?</label>
+        <div class="radio-group" data-field="trackSteps">
+          <div class="radio-opt" onclick="selectRadio(this,'trackSteps')">Yes — automatically (watch/phone)</div>
+          <div class="radio-opt" onclick="selectRadio(this,'trackSteps')">Manually sometimes</div>
+          <div class="radio-opt" onclick="selectRadio(this,'trackSteps')">No</div>
+        </div>
+      </div>
+      <div class="intake-field">
+        <label>Do you track body weight?</label>
+        <div class="radio-group" data-field="trackWeight">
+          <div class="radio-opt" onclick="selectRadio(this,'trackWeight')">Daily</div>
+          <div class="radio-opt" onclick="selectRadio(this,'trackWeight')">Weekly</div>
+          <div class="radio-opt" onclick="selectRadio(this,'trackWeight')">Occasionally</div>
+          <div class="radio-opt" onclick="selectRadio(this,'trackWeight')">Never</div>
+        </div>
+      </div>
+
+      <h3>Stress &amp; Recovery</h3>
+      <div class="intake-field">
+        <label>Current overall stress level (1–10)</label>
         <div class="slider-wrap">
           <input type="range" id="stressLevel" min="1" max="10" value="5" oninput="document.getElementById('stressVal').textContent=this.value">
           <div class="slider-val" id="stressVal">5</div>
@@ -454,15 +628,40 @@
         </div>
       </div>
       <div class="intake-field">
-        <label>Recovery modalities you use</label>
+        <label>Primary stress sources</label>
+        <div class="check-group" data-field="stressSources">
+          <div class="check-opt" onclick="toggleCheck(this)">Work / career</div>
+          <div class="check-opt" onclick="toggleCheck(this)">Financial</div>
+          <div class="check-opt" onclick="toggleCheck(this)">Marriage / relationship</div>
+          <div class="check-opt" onclick="toggleCheck(this)">Parenting</div>
+          <div class="check-opt" onclick="toggleCheck(this)">Health / injury</div>
+          <div class="check-opt" onclick="toggleCheck(this)">Low stress overall</div>
+          <div class="check-opt" onclick="toggleCheck(this)">Prefer not to say</div>
+        </div>
+      </div>
+      <div class="intake-field">
+        <label>Recovery modalities you currently use</label>
         <div class="check-group" data-field="recoveryMods">
           <div class="check-opt" onclick="toggleCheck(this)">Foam rolling / Mobility</div>
-          <div class="check-opt" onclick="toggleCheck(this)">Massage</div>
+          <div class="check-opt" onclick="toggleCheck(this)">Percussion / massage gun</div>
+          <div class="check-opt" onclick="toggleCheck(this)">Professional massage</div>
           <div class="check-opt" onclick="toggleCheck(this)">Red light therapy</div>
-          <div class="check-opt" onclick="toggleCheck(this)">Cold therapy</div>
+          <div class="check-opt" onclick="toggleCheck(this)">Cold therapy / ice bath</div>
+          <div class="check-opt" onclick="toggleCheck(this)">Cold showers</div>
           <div class="check-opt" onclick="toggleCheck(this)">Sauna</div>
-          <div class="check-opt" onclick="toggleCheck(this)">Prayer / Meditation</div>
+          <div class="check-opt" onclick="toggleCheck(this)">Prayer / Scripture meditation</div>
+          <div class="check-opt" onclick="toggleCheck(this)">Breathwork</div>
           <div class="check-opt" onclick="toggleCheck(this)">None currently</div>
+        </div>
+      </div>
+      <div class="intake-field">
+        <label>Energy levels throughout the day</label>
+        <div class="radio-group" data-field="energyLevels">
+          <div class="radio-opt" onclick="selectRadio(this,'energyLevels')">Consistently high</div>
+          <div class="radio-opt" onclick="selectRadio(this,'energyLevels')">Good in AM, drops PM</div>
+          <div class="radio-opt" onclick="selectRadio(this,'energyLevels')">Inconsistent / unpredictable</div>
+          <div class="radio-opt" onclick="selectRadio(this,'energyLevels')">Generally low</div>
+          <div class="radio-opt" onclick="selectRadio(this,'energyLevels')">Crashes mid-afternoon</div>
         </div>
       </div>
     </div>

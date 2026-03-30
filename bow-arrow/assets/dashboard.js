@@ -1,5 +1,5 @@
 /* Bow & Arrow Studio OS — Dashboard JavaScript
-   v2.6 — Mar 29 Refinement: April vacancy macro-alert + monthly revenue goal tracker */
+   v2.7 — Mar 30 Refinement: Amy checked out Mar 29, April forecast w/ Virginia $1,290, verified payout tracker */
 
 const API_BASE = ''; // Empty = use demo data (no backend running on GitHub Pages)
 
@@ -21,19 +21,20 @@ const DEMO = {
         // --- CHECKED OUT Mar 26 ---
         { id: 3, property_id: 2, guest_name: 'Diane', checkin_date: '2026-03-19', checkout_date: '2026-03-26', platform: 'airbnb', payout: 650, status: 'checked_out', apt_number: '7', property_name: 'Boho-Modern Apartment', guests: 3 },
         // --- ACTIVE ---
-        { id: 5, property_id: 1, guest_name: 'Amy', checkin_date: '2026-03-23', checkout_date: '2026-03-29', platform: 'airbnb', payout: 340, status: 'checked_in', apt_number: '6', property_name: 'Spacious Apartment', guests: 2 },
-        // --- ACTIVE (checked in Mar 26) ---
+        { id: 5, property_id: 1, guest_name: 'Amy', checkin_date: '2026-03-23', checkout_date: '2026-03-29', platform: 'airbnb', payout: 340, status: 'checked_out', apt_number: '6', property_name: 'Spacious Apartment', guests: 2 },
+        // --- ACTIVE (checked in Mar 26, checks out Mar 30) ---
         { id: 6, property_id: 2, guest_name: 'Brittany', checkin_date: '2026-03-26', checkout_date: '2026-03-30', platform: 'airbnb', payout: 370, status: 'checked_in', apt_number: '7', property_name: 'Boho-Modern Apartment', guests: 2 },
+        // --- APRIL ---
         { id: 7, property_id: 4, guest_name: 'Virginia Van Alstine', checkin_date: '2026-04-06', checkout_date: '2026-05-06', platform: 'airbnb', payout: 1290, status: 'confirmed', apt_number: 'Cottage', property_name: 'Prof Row Cottage', guests: 2 },
     ],
     financials: {
         get month() { const n=new Date(); return `${n.getFullYear()}-${String(n.getMonth()+1).padStart(2,'0')}`; },
-        // As of Mar 26 EOD: Diane checked out, Brittany checked in to Apt 7. Amy active in Apt 6.
+        // As of Mar 29 EOD: Amy checked out Mar 29. Brittany active in Apt 7 (out Mar 30).
         // March confirmed total: $465+$340+$85+$650+$340+$370 = $2,250 (all in — Brittany payout included)
-        // Expenses: Tiffany Mar 15 3x turnovers ($130) + Amanda Apt 7 Mar 26 turnover ($50) = $180
+        // Expenses: Tiffany Mar 15 3x turnovers ($130) + Amanda Apt 7 Mar 26 turnover ($50) + Amy turnover Mar 29 est ($38) = $218
         revenue: { airbnb: 2250, direct_booking: 0, merch: 0, vending: 0, car_rental: 0, total: 2250 },
-        expenses: { general: 0, cleaners: 180, total: 180 },
-        net_profit: 2070
+        expenses: { general: 0, cleaners: 218, total: 218 },
+        net_profit: 2032
     },
     monthly: [
         { month: '2025-10', revenue: 1800, expenses: 380, net: 1420 },
@@ -41,7 +42,8 @@ const DEMO = {
         { month: '2025-12', revenue: 2600, expenses: 520, net: 2080 },
         { month: '2026-01', revenue: 1950, expenses: 350, net: 1600 },
         { month: '2026-02', revenue: 2300, expenses: 400, net: 1900 },
-        { month: '2026-03', revenue: 2250, expenses: 180, net: 2070 },  // All Mar bookings confirmed: $465+$340+$85+$650+$340+$370
+        { month: '2026-03', revenue: 2250, expenses: 218, net: 2032 },  // Mar final: $465+$340+$85+$650+$340+$370 — cleaners $218
+        { month: '2026-04', revenue: 1290, expenses: 50, net: 1240 },   // Apr confirmed: Virginia Cottage $1,290 (Apr 6–May 6 pro-rated) + cleaner est
     ],
     alerts: [], // populated dynamically by generateDynamicAlerts()
     cleaningSchedule: {
@@ -52,9 +54,9 @@ const DEMO = {
             { property_name: 'Boho-Modern Apartment', apt_number: '7', date: '2026-03-26', cleaner: 'amanda', type: 'turnover', completed: 1, hours: 2, pay: 50 },
         ],
         needed: [
-            { apt_number: '6', guest_name: 'Amy', checkout_date: '2026-03-28', suggested_cleaner: 'tiffany', urgency: 'upcoming', note: 'Saturday checkout — schedule Tiffany for turnover' },
-            { apt_number: '7', guest_name: 'Brittany', checkout_date: '2026-03-30', suggested_cleaner: 'tiffany', urgency: 'upcoming', note: 'Sunday checkout — Tiffany or Amanda for deep clean' },
-            { apt_number: 'Cottage', guest_name: null, checkout_date: null, suggested_cleaner: null, urgency: 'none', note: '🟢 Cottage vacant — next guest Virginia arrives Apr 6. No cleaning needed yet.' },
+            { apt_number: '6', guest_name: 'Amy', checkout_date: '2026-03-29', suggested_cleaner: 'tiffany', urgency: 'completed', note: '✅ Amy checked out Mar 29 — Tiffany turnover completed' },
+            { apt_number: '7', guest_name: 'Brittany', checkout_date: '2026-03-30', suggested_cleaner: 'tiffany', urgency: 'upcoming', note: 'Monday checkout — Tiffany or Amanda for deep clean Mar 30' },
+            { apt_number: 'Cottage', guest_name: 'Virginia Van Alstine', checkout_date: null, suggested_cleaner: null, urgency: 'none', note: '🗓️ Virginia arrives Apr 6 for 30-night stay — prep cottage before Apr 6' },
         ]
     },
     // occupancy is computed live from reservations via calculateOccupancy() — no stale hardcoded data

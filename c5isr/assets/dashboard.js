@@ -1,5 +1,5 @@
 /**
- * C5iSR Dashboard — Frontend Logic v2.6
+ * C5iSR Dashboard — Frontend Logic v2.7
  *
  * Features:
  *   - Dual mode: Backend FastAPI or CoinGecko demo
@@ -17,6 +17,7 @@
  *   - Structured Telegram report with full SL/TP/price data (no DOM scraping)
  *   - Keyboard shortcuts: R = refresh, C = copy report
  *   - Header flash on fresh data load
+ *   - Gold (XAU) & Silver (XAG) live spot prices via metals.live (no key required)
  */
 
 // ── Config ──
@@ -143,6 +144,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   await Promise.allSettled([
     loadTrending(),
     loadMarketRankings(),
+    loadMetals(),
   ]);
 
   startRefreshTimer();
@@ -1168,8 +1170,100 @@ function startRefreshTimer() {
       window._refreshCycle++;
       if (window._refreshCycle % 2 === 0) { loadFearGreed(); loadGlobalStats(); }
       if (window._refreshCycle % 4 === 0) { loadTrending(); loadMarketRankings(); }
+      if (window._refreshCycle % 8 === 0) { loadMetals(); } // Metals refresh every ~4 min (less volatile)
     }
   }, 1000);
+}
+
+// ── Gold & Silver Live Spot Prices ──
+// Uses metals.live free public API (no key required)
+// Falls back to frankfurter.app currency endpoint for XAU/XAG in USD
+async function loadMetals() {
+  const el = document.getElementById('metalsCard');
+  if (!el) return;
+
+  try {
+    // metals.live provides XAU (oz) and XAG (oz) in USD — free, CORS-friendly
+    const data = await cachedFetch('metals', 'https://metals.live/api/spot', 120000);
+    // Response: [{ metal: "gold", price: 3123.45, currency: "USD", weight: "troy_ounce", change: 12.3, change_percentage: 0.4 }, ...]
+    const gold = Array.isArray(data) ? data.find(m => m.metal === 'gold') : null;
+    const silver = Array.isArray(data) ? data.find(m => m.metal === 'silver') : null;
+
+    if (gold || silver) {
+      renderMetals(gold, silver);
+      return;
+    }
+  } catch (e) { /* fall through to backup */ }
+
+  // Fallback: frankfurter.app converts XAU/XAG via ECB rates (less precise for metals but free)
+  try {
+    const [xauRes, xagRes] = await Promise.all([
+      cachedFetch('xau_usd', 'https://api.frankfurter.app/latest?from=XAU&to=USD', 120000),
+      cachedFetch('xag_usd', 'https://api.frankfurter.app/latest?from=XAG&to=USD', 120000),
+    ]);
+    const xauUsd = xauRes?.rates?.USD || null;
+    const xagUsd = xagRes?.rates?.USD || null;
+    if (xauUsd || xagUsd) {
+      renderMetals(
+        xauUsd ? { metal: 'gold',   price: xauUsd, currency: 'USD', change: null, change_percentage: null } : null,
+        xagUsd ? { metal: 'silver', price: xagUsd, currency: 'USD', change: null, change_percentage: null } : null,
+      );
+      return;
+    }
+  } catch (e) { /* silent fallback failure */ }
+
+  // Both failed — show graceful degraded state
+  el.innerHTML = `
+    <div class="metals-item">
+      <div class="metals-symbol" style="color:#ffd700">XAU</div>
+      <div class="metals-name">Gold</div>
+      <div class="metals-price" style="color:var(--text-muted)">Unavailable</div>
+    </div>
+    <div class="metals-item">
+      <div class="metals-symbol" style="color:#c0c0c0">XAG</div>
+      <div class="metals-name">Silver</div>
+      <div class="metals-price" style="color:var(--text-muted)">Unavailable</div>
+    </div>`;
+  const updEl = document.getElementById('metalsUpdated');
+  if (updEl) updEl.textContent = 'API unavailable';
+}
+
+function renderMetals(gold, silver) {
+  const el = document.getElementById('metalsCard');
+  const updEl = document.getElementById('metalsUpdated');
+  if (!el) return;
+
+  const renderItem = (item, symbol, label, color) => {
+    if (!item) return '';
+    const price = item.price;
+    const change = item.change_percentage;
+    const isUp = change != null ? change >= 0 : null;
+    const arrow = isUp === true ? '▲' : isUp === false ? '▼' : '';
+    const changeStr = change != null
+      ? `<div class="metals-change ${isUp ? 'positive' : 'negative'}">${arrow} ${Math.abs(change).toFixed(2)}%</div>`
+      : '';
+    const absDollarChange = item.change != null
+      ? `<div style="font-size:10px;color:var(--text-muted);margin-top:2px">${item.change >= 0 ? '+' : ''}$${Math.abs(item.change).toFixed(2)}/oz</div>`
+      : '';
+    return `
+      <div class="metals-item">
+        <div>
+          <div class="metals-symbol" style="color:${color}">${symbol}</div>
+          <div class="metals-name">${label}</div>
+        </div>
+        <div style="text-align:right">
+          <div class="metals-price">$${price >= 1000 ? price.toLocaleString(undefined, {minimumFractionDigits:2,maximumFractionDigits:2}) : price.toFixed(2)}</div>
+          ${changeStr}
+          ${absDollarChange}
+        </div>
+      </div>`;
+  };
+
+  el.innerHTML = `
+    ${renderItem(gold,   'XAU', 'Gold (troy oz)',   '#ffd700')}
+    ${renderItem(silver, 'XAG', 'Silver (troy oz)', '#c0c0c0')}`;
+
+  if (updEl) updEl.textContent = new Date().toLocaleTimeString();
 }
 
 // ── MetaMask ──

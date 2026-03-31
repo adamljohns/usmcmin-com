@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>C5iSR Stewardship Dashboard — Example Family Financial Command | U.S.M.C. Ministries</title>
+  <meta name="description" content="See what a C5iSR-recommended family financial command center looks like. Budget, investments, business P&L, and tax prep — filtered through Biblical stewardship principles.">
+  <meta property="og:title" content="C5iSR Stewardship Dashboard — Example">
+  <meta property="og:description" content="A Christ-centered family financial command center. The 3 Laws. The 5 Capital Lanes. Real stewardship in action.">
+  <meta property="og:image" content="https://usmcmin.com/assets/og/og-brain.jpg">
+  <meta property="og:url" content="https://usmcmin.com/finance/stewardship-dashboard.html">
+  <link rel="stylesheet" href="../assets/css/main.css">
+  <link rel="icon" href="../assets/img/favicon.png" type="image/png">
+  <style>
+    .dashboard { max-width: 1400px; margin: 0 auto; padding: 20px; }
+    .dash-header { text-align: center; padding: 30px 0 20px; border-bottom: 1px solid var(--border); margin-bottom: 24px; }
+    .dash-header h1 { font-size: 1.6rem; color: var(--gold); letter-spacing: 1px; }
+    .dash-subtitle { color: var(--gray-light, #888); font-size: 0.9rem; margin-top: 6px; }
+    .example-badge { display: inline-block; background: rgba(255,193,7,0.15); border: 1px solid var(--gold); color: var(--gold); font-size: 0.75rem; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; padding: 4px 12px; border-radius: 20px; margin-top: 10px; }
+    .dash-doctrine { color: var(--gold); font-size: 0.85rem; margin-top: 14px; font-style: italic; }
+    .three-laws { display: flex; justify-content: center; gap: 20px; flex-wrap: wrap; margin: 16px 0 0; }
+    .law-pill { background: rgba(255,193,7,0.08); border: 1px solid var(--border); border-radius: 8px; padding: 8px 16px; font-size: 0.8rem; color: var(--gray-light, #888); text-align: center; }
+    .law-num { color: var(--gold); font-weight: 700; display: block; font-size: 1.1rem; margin-bottom: 2px; }
+
+    .dash-tabs { display: flex; gap: 8px; margin-bottom: 24px; flex-wrap: wrap; border-bottom: 1px solid var(--border); padding-bottom: 12px; }
+    .dash-tab { padding: 8px 20px; border-radius: 8px; border: 1px solid var(--border); background: transparent; color: var(--gray-light, #888); cursor: pointer; font-size: 0.9rem; transition: all 0.2s; font-family: inherit; }
+    .dash-tab.active { background: var(--gold); color: #000; border-color: var(--gold); font-weight: 600; }
+    .dash-tab:hover:not(.active) { border-color: var(--gold); color: var(--gold); }
+    .tab-panel { display: none; }
+    .tab-panel.active { display: block; }
+
+    .dash-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 20px; margin-bottom: 24px; }
+    .dash-grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; margin-bottom: 24px; }
+    .dash-card { background: var(--bg-card, #111); border: 1px solid var(--border); border-radius: 12px; padding: 20px; }
+    .dash-card h2 { color: var(--gold); font-size: 1.0rem; margin-bottom: 16px; display: flex; align-items: center; gap: 8px; }
+    .dash-card-full { background: var(--bg-card, #111); border: 1px solid var(--border); border-radius: 12px; padding: 20px; margin-bottom: 20px; }
+
+    .stat-row { display: flex; justify-content: space-between; align-items: center; padding: 9px 0; border-bottom: 1px solid var(--border); }
+    .stat-row:last-child { border-bottom: none; }
+    .stat-label { color: var(--gray-light, #888); font-size: 0.88rem; }
+    .stat-value { font-weight: 600; font-size: 0.92rem; }
+    .stat-value.positive { color: #4ade80; }
+    .stat-value.negative { color: #f87171; }
+    .stat-value.gold { color: var(--gold); }
+    .stat-value.neutral { color: var(--gray-light, #888); }
+
+    .big-num { font-size: 2rem; font-weight: 700; color: var(--gold); }
+    .big-label { color: var(--gray-light, #888); font-size: 0.82rem; margin-top: 4px; }
+    .big-sub { color: var(--gray-light, #888); font-size: 0.78rem; margin-top: 2px; font-style: italic; }
+
+    .kpi-row { display: flex; gap: 16px; flex-wrap: wrap; margin-bottom: 24px; }
+    .kpi-card { background: var(--bg-card, #111); border: 1px solid var(--border); border-radius: 10px; padding: 16px 20px; flex: 1; min-width: 160px; }
+    .kpi-label { color: var(--gray-light, #888); font-size: 0.78rem; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px; }
+    .kpi-value { font-size: 1.5rem; font-weight: 700; }
+    .kpi-trend { font-size: 0.8rem; margin-top: 4px; }
+
+    .progress-wrap { margin: 10px 0; }
+    .progress-label { display: flex; justify-content: space-between; font-size: 0.82rem; margin-bottom: 4px; color: var(--gray-light, #888); }
+    .progress-bar { height: 8px; background: var(--border); border-radius: 4px; overflow: hidden; }
+    .progress-fill { height: 100%; border-radius: 4px; transition: width 0.6s ease; }
+    .fill-green { background: #4ade80; }
+    .fill-gold { background: var(--gold); }
+    .fill-red { background: #f87171; }
+    .fill-blue { background: #60a5fa; }
+
+    .section-title { color: var(--gold); font-size: 1.1rem; margin: 24px 0 14px; padding-bottom: 8px; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 8px; }
+
+    .fin-table { width: 100%; border-collapse: collapse; font-size: 0.88rem; }
+    .fin-table th { color: var(--gold); text-align: left; padding: 9px 8px; border-bottom: 2px solid var(--border); font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.5px; }
+    .fin-table td { padding: 9px 8px; border-bottom: 1px solid var(--border); }
+    .fin-table tr:last-child td { border-bottom: none; }
+    .fin-table tr:hover td { background: rgba(255,255,255,0.025); }
+
+    .lane-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; margin-bottom: 20px; }
+    .lane-card { background: rgba(255,193,7,0.05); border: 1px solid var(--border); border-radius: 10px; padding: 14px; text-align: center; }
+    .lane-icon { font-size: 1.6rem; margin-bottom: 6px; }
+    .lane-name { font-size: 0.78rem; text-transform: uppercase; letter-spacing: 1px; color: var(--gray-light, #888); margin-bottom: 4px; }
+    .lane-value { font-size: 1.2rem; font-weight: 700; color: var(--gold); }
+    .lane-pct { font-size: 0.78rem; color: var(--gray-light, #888); }
+
+    .health-dot { width: 9px; height: 9px; border-radius: 50%; display: inline-block; margin-right: 6px; }
+    .health-green { background: #4ade80; }
+    .health-yellow { background: var(--gold); }
+    .health-red { background: #f87171; }
+
+    .debt-item { border: 1px solid var(--border); border-radius: 8px; padding: 14px; margin-bottom: 12px; }
+    .debt-name { font-weight: 600; margin-bottom: 8px; font-size: 0.95rem; }
+    .debt-meta { display: flex; gap: 16px; flex-wrap: wrap; margin-bottom: 10px; }
+    .debt-meta span { font-size: 0.8rem; color: var(--gray-light, #888); }
+    .debt-meta strong { color: var(--white, #e8e8e8); }
+
+    .law-alert { background: rgba(255,193,7,0.07); border-left: 3px solid var(--gold); border-radius: 0 8px 8px 0; padding: 12px 16px; margin-bottom: 12px; font-size: 0.88rem; }
+    .law-alert strong { color: var(--gold); display: block; margin-bottom: 4px; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1px; }
+
+    .cta-band { background: rgba(255,193,7,0.07); border: 1px solid var(--gold); border-radius: 12px; padding: 28px; text-align: center; margin-top: 30px; }
+    .cta-band h2 { color: var(--gold); margin-bottom: 8px; }
+    .cta-band p { color: var(--gray-light, #888); margin-bottom: 20px; font-size: 0.95rem; max-width: 560px; margin-left: auto; margin-right: auto; }
+    .cta-btns { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+    .btn-gold { background: var(--gold); color: #000; border: none; padding: 12px 28px; border-radius: 8px; font-weight: 700; font-size: 0.95rem; cursor: pointer; text-decoration: none; display: inline-block; }
+    .btn-outline { background: transparent; color: var(--gold); border: 1px solid var(--gold); padding: 12px 28px; border-radius: 8px; font-weight: 600; font-size: 0.95rem; cursor: pointer; text-decoration: none; display: inline-block; }
+    .btn-gold:hover { opacity: 0.85; }
+    .btn-outline:hover { background: rgba(255,193,7,0.1); }
+
+    .scripture-card { background: rgba(255,193,7,0.05); border-left: 3px solid var(--gold); border-radius: 0 10px 10px 0; padding: 16px 20px; margin-bottom: 20px; font-style: italic; font-size: 0.9rem; color: var(--gray-light, #888); }
+    .scripture-ref { color: var(--gold); font-weight: 600; font-style: normal; display: block; margin-top: 8px; font-size: 0.82rem; }
+
+    .disclaimer { text-align: center; color: var(--gray-light, #888); font-size: 0.78rem; padding: 20px; border-top: 1px solid var(--border); margin-top: 30px; line-height: 1.6; }
+
+    @media(max-width:768px){
+      .dash-grid, .dash-grid-3 { grid-template-columns: 1fr; }
+      .kpi-row { gap: 10px; }
+      .kpi-card { min-width: 130px; }
+      .dashboard { padding: 12px; }
+      .lane-grid { grid-template-columns: repeat(3, 1fr); }
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a href="/" class="nav-brand" style="text-decoration:none">
+    <img src="../assets/img/logo.png" alt="U.S.M.C. Ministries" style="object-fit:contain">
+    <div class="nav-brand-text"><div class="name">U.S.M.C. Ministries</div><div class="tag">Warriors Equipped</div></div>
+  </a>
+  <ul class="nav-links">
+    <li><a href="../shop.html">Shop</a></li>
+    <li><a href="../books.html">Books</a></li>
+    <li><a href="../coaching.html">Coaching</a></li>
+    <li><a href="../fitness/fitness.html">Fitness</a></li>
+    <li><a href="financial-intake.html">Finance</a></li>
+    <li><a href="../about.html">About</a></li>
+    <li><a href="https://usmcmin.org" target="_blank">Ministry Site</a></li>
+  </ul>
+  <a href="financial-intake.html" class="btn nav-cta">Get Started</a>
+  <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">🌙</button>
+  <button class="nav-toggle" aria-label="Menu"><span></span><span></span><span></span></button>
+</nav>
+
+<div class="dashboard">
+
+  <!-- Header -->
+  <div class="dash-header">
+    <div style="font-size:2.2rem;margin-bottom:8px">🛡️</div>
+    <h1>C5iSR Stewardship Dashboard</h1>
+    <p class="dash-subtitle">Family Financial Command Center — Household · Business · Tax Prep</p>
+    <div class="example-badge">⚠️ Example — All data is illustrative</div>
+    <p class="dash-doctrine">"The earth is the Lord's and everything in it. Manage accordingly."</p>
+    <div class="three-laws">
+      <div class="law-pill"><span class="law-num">①</span>Don't get scammed</div>
+      <div class="law-pill"><span class="law-num">②</span>Don't get liquidated</div>
+      <div class="law-pill"><span class="law-num">③</span>Don't run out of money</div>
+    </div>
+  </div>
+
+  <!-- Tabs -->
+  <div class="dash-tabs">
+    <button class="dash-tab active" onclick="showTab('overview')">📊 Overview</button>
+    <button class="dash-tab" onclick="showTab('household')">🏠 Household</button>
+    <button class="dash-tab" onclick="showTab('business')">💼 Business</button>
+    <button class="dash-tab" onclick="showTab('taxprep')">🧾 Tax Prep</button>
+  </div>
+
+  <!-- ===== OVERVIEW TAB ===== -->
+  <div id="tab-overview" class="tab-panel active">
+
+    <div class="scripture-card">
+      "Be sure you know the condition of your flocks, give careful attention to your herds; for riches do not endure forever."
+      <span class="scripture-ref">— Proverbs 27:23–24</span>
+    </div>
+
+    <!-- KPIs -->
+    <div class="kpi-row">
+      <div class="kpi-card">
+        <div class="kpi-label">Total Assets</div>
+        <div class="kpi-value positive">$387,400</div>
+        <div class="kpi-trend positive">↑ +$12,200 vs last quarter</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-label">Total Liabilities</div>
+        <div class="kpi-value negative">$241,800</div>
+        <div class="kpi-trend negative">↓ -$3,400 paid down this month</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-label">Net Worth</div>
+        <div class="kpi-value gold">$145,600</div>
+        <div class="kpi-trend positive">↑ Building</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-label">Monthly Cash Flow</div>
+        <div class="kpi-value positive">+$1,240</div>
+        <div class="kpi-trend neutral">After all expenses</div>
+      </div>
+    </div>
+
+    <!-- 5 Capital Lanes -->
+    <div class="section-title">⚡ 5 Capital Lanes — Allocation</div>
+    <div class="lane-grid">
+      <div class="lane-card">
+        <div class="lane-icon">💵</div>
+        <div class="lane-name">Cash / Liquidity</div>
+        <div class="lane-value">$18,400</div>
+        <div class="lane-pct">4.8% of assets</div>
+        <div class="progress-wrap" style="margin-top:8px"><div class="progress-bar"><div class="progress-fill fill-green" style="width:40%"></div></div></div>
+      </div>
+      <div class="lane-card">
+        <div class="lane-icon">₿</div>
+        <div class="lane-name">Crypto</div>
+        <div class="lane-value">$34,200</div>
+        <div class="lane-pct">8.8% of assets</div>
+        <div class="progress-wrap" style="margin-top:8px"><div class="progress-bar"><div class="progress-fill fill-gold" style="width:70%"></div></div></div>
+      </div>
+      <div class="lane-card">
+        <div class="lane-icon">🪙</div>
+        <div class="lane-name">Precious Metals</div>
+        <div class="lane-value">$22,800</div>
+        <div class="lane-pct">5.9% of assets</div>
+        <div class="progress-wrap" style="margin-top:8px"><div class="progress-bar"><div class="progress-fill fill-gold" style="width:55%"></div></div></div>
+      </div>
+      <div class="lane-card">
+        <div class="lane-icon">🏗️</div>
+        <div class="lane-name">Business Investment</div>
+        <div class="lane-value">$62,000</div>
+        <div class="lane-pct">16.0% of assets</div>
+        <div class="progress-wrap" style="margin-top:8px"><div class="progress-bar"><div class="progress-fill fill-blue" style="width:85%"></div></div></div>
+      </div>
+      <div class="lane-card">
+        <div class="lane-icon">🏠</div>
+        <div class="lane-name">Real Assets</div>
+        <div class="lane-value">$250,000</div>
+        <div class="lane-pct">64.5% of assets</div>
+        <div class="progress-wrap" style="margin-top:8px"><div class="progress-bar"><div class="progress-fill fill-green" style="width:95%"></div></div></div>
+      </div>
+    </div>
+
+    <!-- Law Alerts -->
+    <div class="section-title">🚨 Stewardship Watch Items</div>
+    <div class="law-alert">
+      <strong>Law ① — Don't Get Scammed</strong>
+      No suspicious DeFi platforms detected. All holdings on established exchanges. ✅
+    </div>
+    <div class="law-alert">
+      <strong>Law ② — Don't Get Liquidated</strong>
+      Credit utilization at 62%. Review DeFi collateral health factors monthly. Citi 0% expires Nov — schedule paydown.
+    </div>
+    <div class="law-alert">
+      <strong>Law ③ — Don't Run Out of Money</strong>
+      Cash runway: 4.2 months of expenses. Target: 6 months. Short $5,400. Build Emergency Fund next.
+    </div>
+
+    <!-- Net Worth Trend (Visual) -->
+    <div class="dash-card" style="margin-top:20px">
+      <h2>📈 Net Worth Trajectory (12 months)</h2>
+      <div style="display:flex;gap:4px;align-items:flex-end;height:80px;padding:8px 0">
+        <div style="flex:1;background:var(--border);border-radius:3px 3px 0 0;height:40%"></div>
+        <div style="flex:1;background:var(--border);border-radius:3px 3px 0 0;height:44%"></div>
+        <div style="flex:1;background:var(--border);border-radius:3px 3px 0 0;height:48%"></div>
+        <div style="flex:1;background:var(--border);border-radius:3px 3px 0 0;height:45%"></div>
+        <div style="flex:1;background:var(--border);border-radius:3px 3px 0 0;height:52%"></div>
+        <div style="flex:1;background:var(--border);border-radius:3px 3px 0 0;height:55%"></div>
+        <div style="flex:1;background:var(--border);border-radius:3px 3px 0 0;height:58%"></div>
+        <div style="flex:1;background:var(--border);border-radius:3px 3px 0 0;height:62%"></div>
+        <div style="flex:1;background:var(--border);border-radius:3px 3px 0 0;height:65%"></div>
+        <div style="flex:1;background:var(--border);border-radius:3px 3px 0 0;height:70%"></div>
+        <div style="flex:1;background:var(--border);border-radius:3px 3px 0 0;height:75%"></div>
+        <div style="flex:1;background:rgba(255,193,7,0.7);border-radius:3px 3px 0 0;height:82%"></div>
+      </div>
+      <div style="display:flex;justify-content:space-between;font-size:0.75rem;color:var(--gray-light,#888);margin-top:4px">
+        <span>Apr '25</span><span>Jul '25</span><span>Oct '25</span><span>Mar '26</span>
+      </div>
+      <p style="color:var(--gray-light,#888);font-size:0.82rem;margin-top:10px;text-align:center">Net worth grew $34,200 (+30.7%) over 12 months through consistent debt paydown + asset accumulation.</p>
+    </div>
+  </div>
+
+  <!-- ===== HOUSEHOLD TAB ===== -->
+  <div id="tab-household" class="tab-panel">
+
+    <div class="scripture-card">
+      "A good man leaves an inheritance for his children's children."
+      <span class="scripture-ref">— Proverbs 13:22</span>
+    </div>
+
+    <div class="dash-grid">
+      <!-- Income -->
+      <div class="dash-card">
+        <h2>💰 Monthly Income</h2>
+        <div class="stat-row"><span class="stat-label">Retirement / Pension</span><span class="stat-value positive">$3,200</span></div>
+        <div class="stat-row"><span class="stat-label">Disability / VA Benefits</span><span class="stat-value positive">$1,800</span></div>
+        <div class="stat-row"><span class="stat-label">Part-Time Employment</span><span class="stat-value positive">$900</span></div>
+        <div class="stat-row"><span class="stat-label">Spouse Income</span><span class="stat-value positive">$1,500</span></div>
+        <div class="stat-row"><span class="stat-label">Rental / Business Draw</span><span class="stat-value positive">$1,400</span></div>
+        <div class="stat-row" style="margin-top:8px;border-top:2px solid var(--border)"><span class="stat-label" style="font-weight:700">Total Monthly Income</span><span class="stat-value gold" style="font-size:1.1rem">$8,800</span></div>
+      </div>
+
+      <!-- Expenses -->
+      <div class="dash-card">
+        <h2>📤 Monthly Expenses</h2>
+        <div class="stat-row"><span class="stat-label">Mortgage / Rent</span><span class="stat-value negative">-$1,560</span></div>
+        <div class="stat-row"><span class="stat-label">Utilities & Internet</span><span class="stat-value negative">-$280</span></div>
+        <div class="stat-row"><span class="stat-label">Groceries</span><span class="stat-value negative">-$620</span></div>
+        <div class="stat-row"><span class="stat-label">Transportation</span><span class="stat-value negative">-$340</span></div>
+        <div class="stat-row"><span class="stat-label">Insurance (auto/home)</span><span class="stat-value negative">-$290</span></div>
+        <div class="stat-row"><span class="stat-label">Subscriptions / Services</span><span class="stat-value negative">-$180</span></div>
+        <div class="stat-row"><span class="stat-label">Debt Minimum Payments</span><span class="stat-value negative">-$740</span></div>
+        <div class="stat-row"><span class="stat-label">Giving / Tithe</span><span class="stat-value gold">-$880</span></div>
+        <div class="stat-row"><span class="stat-label">Miscellaneous</span><span class="stat-value negative">-$670</span></div>
+        <div class="stat-row" style="margin-top:8px;border-top:2px solid var(--border)"><span class="stat-label" style="font-weight:700">Total Expenses</span><span class="stat-value negative" style="font-size:1.1rem">-$5,560</span></div>
+      </div>
+    </div>
+
+    <!-- Cash Flow Summary -->
+    <div class="dash-card-full">
+      <h2 style="color:var(--gold);font-size:1.0rem;margin-bottom:14px">💧 Cash Flow Summary</h2>
+      <div class="dash-grid-3">
+        <div style="text-align:center">
+          <div class="big-num positive">$8,800</div>
+          <div class="big-label">Monthly Income</div>
+        </div>
+        <div style="text-align:center">
+          <div class="big-num negative">-$5,560</div>
+          <div class="big-label">Monthly Expenses</div>
+        </div>
+        <div style="text-align:center">
+          <div class="big-num positive">+$3,240</div>
+          <div class="big-label">Surplus to Deploy</div>
+          <div class="big-sub">After expenses, before debt attack</div>
+        </div>
+      </div>
+      <div style="margin-top:16px">
+        <div class="progress-wrap">
+          <div class="progress-label"><span>Expense Ratio (63%)</span><span>Target: under 70%</span></div>
+          <div class="progress-bar"><div class="progress-fill fill-green" style="width:63%"></div></div>
+        </div>
+        <div class="progress-wrap">
+          <div class="progress-label"><span>Giving Rate (10%)</span><span>Target: 10%+ ✅</span></div>
+          <div class="progress-bar"><div class="progress-fill fill-gold" style="width:100%"></div></div>
+        </div>
+        <div class="progress-wrap">
+          <div class="progress-label"><span>Emergency Fund (4.2 mo)</span><span>Target: 6 months</span></div>
+          <div class="progress-bar"><div class="progress-fill fill-blue" style="width:70%"></div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Debt Paydown -->
+    <div class="section-title">⚔️ Debt Paydown — Avalanche Method</div>
+    <div class="law-alert">
+      <strong>C5iSR Strategy: Avalanche + 0% Window Discipline</strong>
+      Attack highest-interest debt first. For 0% promo balances, pay off before the window closes — not a day late.
+    </div>
+
+    <div class="debt-item">
+      <div class="debt-name">Citi Dividend Card</div>
+      <div class="debt-meta">
+        <span>Balance: <strong class="negative">$18,400</strong></span>
+        <span>Rate: <strong class="positive">0% promo</strong></span>
+        <span>Expires: <strong class="gold">November 2026</strong></span>
+        <span>Min: <strong>$185/mo</strong></span>
+      </div>
+      <div class="progress-wrap"><div class="progress-label"><span>Paydown progress</span><span>$3,600 paid</span></div><div class="progress-bar"><div class="progress-fill fill-gold" style="width:16%"></div></div></div>
+    </div>
+
+    <div class="debt-item">
+      <div class="debt-name">Personal Credit Card (High Interest)</div>
+      <div class="debt-meta">
+        <span>Balance: <strong class="negative">$6,200</strong></span>
+        <span>Rate: <strong class="negative">24.99% APR</strong></span>
+        <span>Min: <strong>$125/mo</strong></span>
+      </div>
+      <div class="progress-wrap"><div class="progress-label"><span>Paydown progress</span><span>$1,200 paid</span></div><div class="progress-bar"><div class="progress-fill fill-red" style="width:16%"></div></div></div>
+    </div>
+
+    <div class="debt-item">
+      <div class="debt-name">Auto Loan</div>
+      <div class="debt-meta">
+        <span>Balance: <strong class="negative">$14,800</strong></span>
+        <span>Rate: <strong>6.99% APR</strong></span>
+        <span>Min: <strong>$340/mo</strong></span>
+      </div>
+      <div class="progress-wrap"><div class="progress-label"><span>Paydown progress</span><span>$8,200 paid</span></div><div class="progress-bar"><div class="progress-fill fill-blue" style="width:36%"></div></div></div>
+    </div>
+  </div>
+
+  <!-- ===== BUSINESS TAB ===== -->
+  <div id="tab-business" class="tab-panel">
+
+    <div class="scripture-card">
+      "The plans of the diligent lead surely to abundance, but everyone who is hasty comes only to poverty."
+      <span class="scripture-ref">— Proverbs 21:5</span>
+    </div>
+
+    <div class="dash-grid">
+      <!-- Business 1: Short-Term Rentals -->
+      <div class="dash-card">
+        <h2>🏘️ Short-Term Rental Business</h2>
+        <div class="stat-row"><span class="stat-label">Gross Revenue (March)</span><span class="stat-value positive">$8,400</span></div>
+        <div class="stat-row"><span class="stat-label">Platform Fees</span><span class="stat-value negative">-$840</span></div>
+        <div class="stat-row"><span class="stat-label">Cleaning / Supplies</span><span class="stat-value negative">-$620</span></div>
+        <div class="stat-row"><span class="stat-label">Lease / Rent (spaces)</span><span class="stat-value negative">-$3,200</span></div>
+        <div class="stat-row"><span class="stat-label">Insurance (business)</span><span class="stat-value negative">-$180</span></div>
+        <div class="stat-row"><span class="stat-label">Utilities / Misc</span><span class="stat-value negative">-$310</span></div>
+        <div class="stat-row" style="margin-top:8px;border-top:2px solid var(--border)"><span class="stat-label" style="font-weight:700">Net Profit</span><span class="stat-value gold">$3,250</span></div>
+        <div class="progress-wrap" style="margin-top:12px">
+          <div class="progress-label"><span>Occupancy Rate</span><span>73%</span></div>
+          <div class="progress-bar"><div class="progress-fill fill-green" style="width:73%"></div></div>
+        </div>
+      </div>
+
+      <!-- Business 2: Consulting -->
+      <div class="dash-card">
+        <h2>📡 Financial Consulting (C5iSR)</h2>
+        <div class="stat-row"><span class="stat-label">Client Sessions (March)</span><span class="stat-value gold">4 sessions</span></div>
+        <div class="stat-row"><span class="stat-label">Gross Revenue</span><span class="stat-value positive">$1,600</span></div>
+        <div class="stat-row"><span class="stat-label">Software / Tools</span><span class="stat-value negative">-$85</span></div>
+        <div class="stat-row"><span class="stat-label">Marketing</span><span class="stat-value negative">-$60</span></div>
+        <div class="stat-row" style="margin-top:8px;border-top:2px solid var(--border)"><span class="stat-label" style="font-weight:700">Net Profit</span><span class="stat-value gold">$1,455</span></div>
+        <div style="margin-top:12px;padding:10px;background:rgba(255,193,7,0.05);border-radius:8px;font-size:0.82rem;color:var(--gray-light,#888)">
+          At 2 sessions/week avg → <strong style="color:var(--gold)">$3,120/mo potential</strong> at full capacity.
+        </div>
+      </div>
+    </div>
+
+    <!-- Combined Business Summary -->
+    <div class="dash-card-full">
+      <h2 style="color:var(--gold);font-size:1.0rem;margin-bottom:14px">📊 Combined Business Summary</h2>
+      <table class="fin-table">
+        <thead><tr><th>Business</th><th>Revenue</th><th>Expenses</th><th>Net Profit</th><th>Margin</th></tr></thead>
+        <tbody>
+          <tr><td>Short-Term Rentals</td><td class="positive">$8,400</td><td class="negative">-$5,150</td><td class="positive">$3,250</td><td class="gold">38.7%</td></tr>
+          <tr><td>Financial Consulting</td><td class="positive">$1,600</td><td class="negative">-$145</td><td class="positive">$1,455</td><td class="gold">90.9%</td></tr>
+          <tr><td>Wellness Products</td><td class="positive">$320</td><td class="negative">-$210</td><td class="positive">$110</td><td class="gold">34.4%</td></tr>
+          <tr style="border-top:2px solid var(--border)"><td><strong>TOTAL</strong></td><td class="positive"><strong>$10,320</strong></td><td class="negative"><strong>-$5,505</strong></td><td class="positive"><strong>$4,815</strong></td><td class="gold"><strong>46.7%</strong></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ===== TAX PREP TAB ===== -->
+  <div id="tab-taxprep" class="tab-panel">
+
+    <div class="scripture-card">
+      "Give to Caesar what is Caesar's, and to God what is God's."
+      <span class="scripture-ref">— Matthew 22:21</span>
+    </div>
+
+    <div class="dash-grid">
+      <div class="dash-card">
+        <h2>📋 Deduction Checklist</h2>
+        <div class="stat-row"><span class="stat-label">✅ Home Office Deduction</span><span class="stat-value gold">tracked</span></div>
+        <div class="stat-row"><span class="stat-label">✅ Vehicle Mileage (business)</span><span class="stat-value gold">tracked</span></div>
+        <div class="stat-row"><span class="stat-label">✅ Mortgage Interest</span><span class="stat-value gold">tracked</span></div>
+        <div class="stat-row"><span class="stat-label">✅ Business Equipment</span><span class="stat-value gold">tracked</span></div>
+        <div class="stat-row"><span class="stat-label">✅ Professional Development</span><span class="stat-value gold">tracked</span></div>
+        <div class="stat-row"><span class="stat-label">⏳ Charitable Giving (non-cash)</span><span class="stat-value neutral">pending</span></div>
+        <div class="stat-row"><span class="stat-label">⏳ Health Insurance Premiums</span><span class="stat-value neutral">pending</span></div>
+        <div class="stat-row"><span class="stat-label">❌ Crypto Gains/Losses Report</span><span class="stat-value negative">needed</span></div>
+      </div>
+
+      <div class="dash-card">
+        <h2>🧮 Estimated Tax Position</h2>
+        <div class="stat-row"><span class="stat-label">Estimated Gross Income</span><span class="stat-value">$105,600</span></div>
+        <div class="stat-row"><span class="stat-label">Business Deductions</span><span class="stat-value positive">-$22,400</span></div>
+        <div class="stat-row"><span class="stat-label">Schedule C Income</span><span class="stat-value">$58,200</span></div>
+        <div class="stat-row"><span class="stat-label">SE Tax (~15.3%)</span><span class="stat-value negative">-$8,900</span></div>
+        <div class="stat-row"><span class="stat-label">Standard Deduction</span><span class="stat-value positive">-$29,200</span></div>
+        <div class="stat-row"><span class="stat-label">Est. Taxable Income</span><span class="stat-value gold">$45,300</span></div>
+        <div class="stat-row" style="margin-top:8px;border-top:2px solid var(--border)"><span class="stat-label" style="font-weight:700">Est. Fed Tax Owed</span><span class="stat-value negative" style="font-size:1.05rem">~$5,100</span></div>
+        <div style="margin-top:8px;font-size:0.8rem;color:var(--gray-light,#888)">⚠️ Estimate only. Consult your CPA.</div>
+      </div>
+    </div>
+
+    <!-- Key Dates -->
+    <div class="dash-card-full">
+      <h2 style="color:var(--gold);font-size:1.0rem;margin-bottom:14px">📅 Key Tax Dates</h2>
+      <table class="fin-table">
+        <thead><tr><th>Date</th><th>Item</th><th>Status</th></tr></thead>
+        <tbody>
+          <tr><td>Jan 15</td><td>Q4 Estimated Tax Payment</td><td class="positive">✅ Done</td></tr>
+          <tr><td>Apr 15</td><td>Federal Return Due / Q1 Est.</td><td class="gold">⏳ Upcoming</td></tr>
+          <tr><td>Jun 16</td><td>Q2 Estimated Tax Payment</td><td class="neutral">—</td></tr>
+          <tr><td>Sep 15</td><td>Q3 Estimated Tax Payment</td><td class="neutral">—</td></tr>
+          <tr><td>Oct 15</td><td>Extension Deadline (if filed)</td><td class="neutral">—</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="law-alert">
+      <strong>Crypto Tax Note</strong>
+      Every DeFi transaction is a taxable event. Earn rewards, swaps, and liquidations must all be reported. Use a crypto tax tool (Koinly, TaxBit, CoinTracker) to generate your Schedule D automatically.
+    </div>
+  </div>
+
+  <!-- CTA Band (shown on all tabs) -->
+  <div class="cta-band">
+    <h2>Want Your Own Command Center?</h2>
+    <p>This is what a C5iSR financial consulting client gets — clarity, systems, and a stewardship framework built around your actual life. Not just a spreadsheet. A command center.</p>
+    <div class="cta-btns">
+      <a href="financial-intake.html" class="btn-gold">Start Your Intake →</a>
+      <a href="../coaching.html" class="btn-outline">Book a Session</a>
+    </div>
+  </div>
+
+  <div class="disclaimer">
+    ⚠️ This dashboard contains <strong>example data only</strong> — all figures are illustrative and do not represent any real individual's finances.<br>
+    C5iSR consulting is educational and informational. Not registered investment advice. Consult a licensed CPA or financial advisor for personalized guidance.
+  </div>
+
+</div>
+
+<script>
+  function showTab(id) {
+    document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.dash-tab').forEach(t => t.classList.remove('active'));
+    document.getElementById('tab-' + id).classList.add('active');
+    event.target.classList.add('active');
+  }
+
+  // Theme toggle
+  const themeToggle = document.getElementById('themeToggle');
+  const savedTheme = localStorage.getItem('theme') || 'dark';
+  document.documentElement.setAttribute('data-theme', savedTheme);
+  themeToggle.textContent = savedTheme === 'dark' ? '☀️' : '🌙';
+  themeToggle.addEventListener('click', () => {
+    const current = document.documentElement.getAttribute('data-theme');
+    const next = current === 'dark' ? 'light' : 'dark';
+    document.documentElement.setAttribute('data-theme', next);
+    localStorage.setItem('theme', next);
+    themeToggle.textContent = next === 'dark' ? '☀️' : '🌙';
+  });
+
+  // Nav toggle
+  const navToggle = document.querySelector('.nav-toggle');
+  const navLinks = document.querySelector('.nav-links');
+  if (navToggle) navToggle.addEventListener('click', () => navLinks.classList.toggle('open'));
+</script>
+</body>
+</html>

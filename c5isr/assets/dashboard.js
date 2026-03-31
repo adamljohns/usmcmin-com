@@ -1,5 +1,5 @@
 /**
- * C5iSR Dashboard — Frontend Logic v2.7
+ * C5iSR Dashboard — Frontend Logic v2.8
  *
  * Features:
  *   - Dual mode: Backend FastAPI or CoinGecko demo
@@ -18,6 +18,8 @@
  *   - Keyboard shortcuts: R = refresh, C = copy report
  *   - Header flash on fresh data load
  *   - Gold (XAU) & Silver (XAG) live spot prices via metals.live (no key required)
+ *   - [v2.8] Prediction Tracker: logs BUY/SELL signals, evaluates WIN/LOSS/PENDING vs SL/TP
+ *   - [v2.8] Weekly Report Archive: daily intelligence brief snapshots with accordion view
  */
 
 // ── Config ──
@@ -1816,3 +1818,399 @@ function formatCompact(n) {
 }
 
 function round2(n) { return Math.round(n * 100) / 100; }
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// ── Prediction Tracker (v1.0) ── Added 2026-03-31 ──
+// Logs every BUY/SELL signal with entry price + SL/TP.
+// On each refresh, evaluates outcome vs current price.
+// Persists to localStorage under 'c5_predictions'.
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+const PRED_KEY = 'c5_predictions';
+const MAX_PREDICTIONS = 100;
+
+function getPredictions() {
+  try { return JSON.parse(localStorage.getItem(PRED_KEY) || '[]'); }
+  catch { return []; }
+}
+
+function savePredictions(preds) {
+  try { localStorage.setItem(PRED_KEY, JSON.stringify(preds.slice(0, MAX_PREDICTIONS))); }
+  catch { /* quota */ }
+}
+
+function clearPredictions() {
+  if (!confirm('Clear all prediction history?')) return;
+  localStorage.removeItem(PRED_KEY);
+  renderPredictionTracker([]);
+  showToast('Prediction history cleared', 'info');
+}
+
+/**
+ * Called after each signal load. Logs new BUY/SELL signals, then
+ * evaluates pending ones against the latest price map.
+ */
+function updatePredictionTracker(signals, priceMap) {
+  if (!signals || !signals.length) return;
+  let preds = getPredictions();
+  const now = Date.now();
+
+  // ── 1. Log new actionable signals (deduplicate by symbol+signal within 4h) ──
+  signals.forEach(s => {
+    if (s.signal === 'HOLD') return;
+    const entryPrice = priceMap[s.asset_id] || s.indicators?.current_price;
+    if (!entryPrice || entryPrice <= 0) return;
+    const slPrice = s.risk?.stop_loss_price;
+    const tpPrice = s.risk?.take_profit_price;
+    if (!slPrice || !tpPrice) return;
+
+    // Deduplicate: skip if same symbol+signal already logged in last 4h
+    const recent = preds.find(p =>
+      p.symbol === s.symbol &&
+      p.signal === s.signal &&
+      p.outcome === 'PENDING' &&
+      (now - p.timestamp) < 4 * 3600 * 1000
+    );
+    if (recent) return;
+
+    preds.unshift({
+      id: `${s.symbol}_${s.signal}_${now}`,
+      symbol: s.symbol,
+      asset_id: s.asset_id,
+      signal: s.signal,
+      entryPrice,
+      slPrice,
+      tpPrice,
+      confidence: s.confidence,
+      reason: s.reason || '',
+      timestamp: now,
+      dateStr: new Date(now).toLocaleDateString('en-US', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' }),
+      outcome: 'PENDING',
+      outcomePrice: null,
+      outcomeTime: null,
+    });
+  });
+
+  // ── 2. Evaluate pending predictions vs current prices ──
+  preds = preds.map(p => {
+    if (p.outcome !== 'PENDING') return p;
+    const currentPrice = priceMap[p.asset_id];
+    if (!currentPrice || currentPrice <= 0) return p;
+
+    let outcome = 'PENDING';
+    if (p.signal === 'BUY') {
+      if (currentPrice >= p.tpPrice) outcome = 'WIN';
+      else if (currentPrice <= p.slPrice) outcome = 'LOSS';
+    } else if (p.signal === 'SELL') {
+      // For SELL: WIN if price dropped to TP (below entry), LOSS if risen to SL (above entry)
+      if (currentPrice <= p.tpPrice) outcome = 'WIN';
+      else if (currentPrice >= p.slPrice) outcome = 'LOSS';
+    }
+
+    if (outcome !== 'PENDING') {
+      return { ...p, outcome, outcomePrice: currentPrice, outcomeTime: Date.now() };
+    }
+    return p;
+  });
+
+  savePredictions(preds);
+  renderPredictionTracker(preds, priceMap);
+}
+
+function renderPredictionTracker(preds, priceMap = {}) {
+  const statsEl = document.getElementById('predictionStats');
+  const logEl = document.getElementById('predictionLog');
+  const updEl = document.getElementById('predictionUpdated');
+  if (!statsEl || !logEl) return;
+
+  if (updEl) updEl.textContent = new Date().toLocaleTimeString();
+
+  // ── Stats summary ──
+  const resolved = preds.filter(p => p.outcome !== 'PENDING');
+  const wins = resolved.filter(p => p.outcome === 'WIN').length;
+  const losses = resolved.filter(p => p.outcome === 'LOSS').length;
+  const pending = preds.filter(p => p.outcome === 'PENDING').length;
+  const accuracy = resolved.length > 0 ? Math.round((wins / resolved.length) * 100) : null;
+  const accColor = accuracy == null ? 'var(--text-muted)' : accuracy >= 60 ? 'var(--green)' : accuracy >= 40 ? 'var(--amber)' : 'var(--red)';
+
+  statsEl.innerHTML = `
+    <div style="display:flex;gap:20px;flex-wrap:wrap;padding:8px 0 12px;border-bottom:1px solid var(--border);margin-bottom:12px">
+      <div style="text-align:center;min-width:60px">
+        <div style="font-family:var(--font-mono);font-size:22px;font-weight:700;color:var(--green)">${wins}</div>
+        <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:1px">Wins</div>
+      </div>
+      <div style="text-align:center;min-width:60px">
+        <div style="font-family:var(--font-mono);font-size:22px;font-weight:700;color:var(--red)">${losses}</div>
+        <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:1px">Losses</div>
+      </div>
+      <div style="text-align:center;min-width:60px">
+        <div style="font-family:var(--font-mono);font-size:22px;font-weight:700;color:var(--amber)">${pending}</div>
+        <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:1px">Pending</div>
+      </div>
+      <div style="text-align:center;min-width:80px;border-left:1px solid var(--border);padding-left:20px">
+        <div style="font-family:var(--font-mono);font-size:22px;font-weight:700;color:${accColor}">
+          ${accuracy !== null ? accuracy + '%' : '—'}
+        </div>
+        <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:1px">Accuracy</div>
+      </div>
+      <div style="text-align:center;min-width:60px">
+        <div style="font-family:var(--font-mono);font-size:22px;font-weight:700;color:var(--text-secondary)">${preds.length}</div>
+        <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:1px">Total</div>
+      </div>
+    </div>`;
+
+  // ── Log entries (show last 20) ──
+  const display = preds.slice(0, 20);
+  if (display.length === 0) {
+    logEl.innerHTML = '<div style="color:var(--text-muted);text-align:center;padding:16px">No predictions logged yet — signals will be tracked automatically on each refresh.</div>';
+    return;
+  }
+
+  logEl.innerHTML = display.map(p => {
+    const signalColor = p.signal === 'BUY' ? 'var(--green)' : 'var(--red)';
+    const outcomeColor = p.outcome === 'WIN' ? 'var(--green)' : p.outcome === 'LOSS' ? 'var(--red)' : 'var(--amber)';
+    const outcomeIcon = p.outcome === 'WIN' ? '✅' : p.outcome === 'LOSS' ? '❌' : '⏳';
+    const currentPrice = priceMap[p.asset_id];
+
+    // Price delta vs entry
+    let deltaHtml = '';
+    if (currentPrice && p.outcome === 'PENDING') {
+      const delta = ((currentPrice - p.entryPrice) / p.entryPrice * 100);
+      const sign = p.signal === 'BUY' ? 1 : -1;
+      const pnl = delta * sign;
+      const pnlColor = pnl >= 0 ? 'var(--green)' : 'var(--red)';
+      deltaHtml = `<span style="font-size:10px;color:${pnlColor};font-family:var(--font-mono)">${pnl >= 0 ? '+' : ''}${pnl.toFixed(1)}%</span>`;
+    }
+
+    const slPct = p.entryPrice > 0 ? Math.abs((p.slPrice - p.entryPrice) / p.entryPrice * 100).toFixed(1) : '?';
+    const tpPct = p.entryPrice > 0 ? Math.abs((p.tpPrice - p.entryPrice) / p.entryPrice * 100).toFixed(1) : '?';
+    const elapsed = formatElapsed(Date.now() - p.timestamp);
+
+    return `
+      <div style="display:flex;align-items:center;gap:10px;padding:8px 4px;border-bottom:1px solid rgba(255,255,255,0.04);flex-wrap:wrap">
+        <span style="font-size:15px">${outcomeIcon}</span>
+        <span style="font-family:var(--font-mono);font-weight:700;color:${signalColor};min-width:36px">${p.symbol}</span>
+        <span class="signal-badge ${p.signal === 'BUY' ? 'signal-buy' : 'signal-sell'}" style="font-size:10px;padding:2px 6px">${p.signal}</span>
+        <span style="font-family:var(--font-mono);font-size:11px;color:var(--text-secondary)">@ $${formatPrice(p.entryPrice)}</span>
+        <span style="font-size:10px;color:var(--text-muted)">SL $${formatPrice(p.slPrice)} (-${slPct}%)</span>
+        <span style="font-size:10px;color:var(--text-muted)">TP $${formatPrice(p.tpPrice)} (+${tpPct}%)</span>
+        ${deltaHtml}
+        <span style="margin-left:auto;font-size:10px;color:${outcomeColor};font-weight:600">${p.outcome}</span>
+        <span style="font-size:10px;color:var(--text-muted)">${elapsed} · ${p.confidence}% conf</span>
+      </div>`;
+  }).join('');
+}
+
+function formatElapsed(ms) {
+  const s = Math.floor(ms / 1000);
+  if (s < 60) return `${s}s ago`;
+  const m = Math.floor(s / 60);
+  if (m < 60) return `${m}m ago`;
+  const h = Math.floor(m / 60);
+  if (h < 24) return `${h}h ago`;
+  return `${Math.floor(h / 24)}d ago`;
+}
+
+// Hook into renderPrices to evaluate predictions when new prices arrive
+const _origRenderPricesForPred = renderPrices;
+// renderPrices already overridden once for portfolio — chain it
+const _prevRenderPrices = renderPrices;
+// Use a post-render hook via patching _lastPriceMap updates:
+// We'll call updatePredictionTracker from loadSignals instead (after signals available)
+// See: patchLoadSignals below
+
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// ── Weekly Report Archive (v1.0) ── Added 2026-03-31 ──
+// Snapshots the full intelligence brief + signal data once
+// per session (or when signals change significantly).
+// Archives last 28 entries in localStorage.
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+const ARCHIVE_KEY = 'c5_report_archive';
+const MAX_ARCHIVE = 28;
+let _lastArchiveSnapshot = null;
+
+function getReportArchive() {
+  try { return JSON.parse(localStorage.getItem(ARCHIVE_KEY) || '[]'); }
+  catch { return []; }
+}
+
+function saveReportArchive(entries) {
+  try { localStorage.setItem(ARCHIVE_KEY, JSON.stringify(entries.slice(0, MAX_ARCHIVE))); }
+  catch { /* quota */ }
+}
+
+function clearReportArchive() {
+  if (!confirm('Clear all archived reports?')) return;
+  localStorage.removeItem(ARCHIVE_KEY);
+  _lastArchiveSnapshot = null;
+  renderReportArchive([]);
+  showToast('Report archive cleared', 'info');
+}
+
+/**
+ * Saves a snapshot of the current market brief to the archive.
+ * Deduplicates by day — only one snapshot per calendar day.
+ * Called after signals + intel brief are rendered.
+ */
+function archiveCurrentReport(signals, priceMap, fearGreedValue) {
+  if (!signals || !signals.length) return;
+  const now = new Date();
+  const dayKey = now.toISOString().slice(0, 10); // YYYY-MM-DD
+
+  let archive = getReportArchive();
+
+  // Skip if we already snapshotted today
+  if (archive.length > 0 && archive[0].dayKey === dayKey) {
+    // Update the existing today entry (refresh it to latest data)
+    archive[0] = buildSnapshot(signals, priceMap, fearGreedValue, now, dayKey);
+  } else {
+    // New day — prepend
+    archive.unshift(buildSnapshot(signals, priceMap, fearGreedValue, now, dayKey));
+  }
+
+  saveReportArchive(archive);
+  renderReportArchive(archive);
+}
+
+function buildSnapshot(signals, priceMap, fgValue, now, dayKey) {
+  const buys = signals.filter(s => s.signal === 'BUY');
+  const sells = signals.filter(s => s.signal === 'SELL');
+  const holds = signals.filter(s => s.signal === 'HOLD');
+  const btcSig = signals.find(s => s.symbol === 'BTC');
+  const regime = btcSig?.market_regime || btcSig?.indicators?.ema?.regime || 'SIDEWAYS';
+  const avgConf = signals.length > 0
+    ? Math.round(signals.reduce((a, s) => a + s.confidence, 0) / signals.length)
+    : 0;
+
+  const prices = {};
+  signals.forEach(s => {
+    const p = priceMap[s.asset_id] || s.indicators?.current_price;
+    if (p) prices[s.symbol] = p;
+  });
+
+  // Stewardship score from DOM (best effort)
+  const stewEl = document.querySelector('#intelBriefContent');
+  const stewMatch = stewEl ? stewEl.innerHTML.match(/(\d{1,3})<span[^>]*>\/([A-F][+-]?)/) : null;
+  const stewScore = stewMatch ? `${stewMatch[1]}/${stewMatch[2]}` : null;
+
+  return {
+    dayKey,
+    timestamp: now.getTime(),
+    dateStr: now.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' }),
+    timeStr: now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' }),
+    regime,
+    fearGreed: fgValue,
+    buys: buys.length,
+    holds: holds.length,
+    sells: sells.length,
+    avgConf,
+    stewScore,
+    prices,
+    signals: signals.map(s => ({
+      symbol: s.symbol,
+      signal: s.signal,
+      confidence: s.confidence,
+      reason: s.reason,
+      slPrice: s.risk?.stop_loss_price,
+      tpPrice: s.risk?.take_profit_price,
+      price: priceMap[s.asset_id] || s.indicators?.current_price,
+    })),
+  };
+}
+
+function renderReportArchive(archive) {
+  const el = document.getElementById('reportArchive');
+  const countEl = document.getElementById('archiveCount');
+  if (!el) return;
+
+  if (countEl) countEl.textContent = `${archive.length} snapshot${archive.length !== 1 ? 's' : ''} stored`;
+
+  if (archive.length === 0) {
+    el.innerHTML = '<div style="color:var(--text-muted);text-align:center;padding:16px">No reports archived yet — snapshots are saved automatically once per day.</div>';
+    return;
+  }
+
+  el.innerHTML = archive.map((entry, idx) => {
+    const regimeEmoji = entry.regime === 'BULL' ? '🐂' : entry.regime === 'BEAR' ? '🐻' : '↔️';
+    const buySellBadge = entry.buys > 0
+      ? `<span style="color:var(--green);font-weight:600">${entry.buys}B</span>`
+      : '';
+    const sellBadge = entry.sells > 0
+      ? `<span style="color:var(--red);font-weight:600">${entry.sells}S</span>`
+      : '';
+    const holdBadge = entry.holds > 0
+      ? `<span style="color:var(--amber);font-weight:600">${entry.holds}H</span>`
+      : '';
+
+    const isToday = idx === 0;
+    const signalDetails = (entry.signals || []).map(s => {
+      const emoji = s.signal === 'BUY' ? '🟢' : s.signal === 'SELL' ? '🔴' : '⚪';
+      const priceStr = s.price ? ` @ $${formatPrice(s.price)}` : '';
+      return `<div style="font-size:11px;color:var(--text-secondary);padding:2px 0">
+        ${emoji} <b>${s.symbol}</b>${priceStr} — <span style="color:${s.signal === 'BUY' ? 'var(--green)' : s.signal === 'SELL' ? 'var(--red)' : 'var(--text-muted)'}">${s.signal}</span>
+        <span style="color:var(--text-muted)">${s.confidence}% · ${(s.reason || '').split(' | ').slice(0,2).join(' | ')}</span>
+      </div>`;
+    }).join('');
+
+    return `
+      <div style="border:1px solid var(--border);border-radius:8px;margin-bottom:8px;overflow:hidden">
+        <div style="display:flex;align-items:center;gap:10px;padding:10px 14px;background:rgba(255,255,255,0.02);cursor:pointer;flex-wrap:wrap"
+             onclick="this.nextElementSibling.style.display=this.nextElementSibling.style.display==='none'?'block':'none'">
+          <span style="font-weight:600;font-size:13px;color:${isToday ? 'var(--green)' : 'var(--text-primary)'}">${entry.dateStr}</span>
+          ${isToday ? '<span style="font-size:10px;background:var(--green);color:#000;padding:1px 6px;border-radius:4px;font-weight:700">TODAY</span>' : ''}
+          <span style="font-size:11px;color:var(--text-muted)">${entry.timeStr}</span>
+          <span style="font-family:var(--font-mono);font-size:12px">${regimeEmoji} ${entry.regime}</span>
+          <span style="font-size:11px;display:flex;gap:6px">${buySellBadge}${holdBadge}${sellBadge}</span>
+          ${entry.stewScore ? `<span style="font-size:11px;color:var(--text-muted)">🏅 ${entry.stewScore}</span>` : ''}
+          ${entry.fearGreed != null ? `<span style="font-size:11px;color:var(--text-muted)">F&G: ${entry.fearGreed}</span>` : ''}
+          <span style="margin-left:auto;font-size:11px;color:var(--text-muted)">${entry.avgConf}% avg conf ▾</span>
+        </div>
+        <div style="display:none;padding:12px 14px;border-top:1px solid var(--border)">
+          ${signalDetails}
+          ${entry.prices && Object.keys(entry.prices).length > 0
+            ? `<div style="margin-top:8px;padding-top:8px;border-top:1px solid rgba(255,255,255,0.04);font-size:10px;color:var(--text-muted)">
+                Prices: ${Object.entries(entry.prices).map(([sym, p]) => `${sym} $${formatPrice(p)}`).join(' · ')}
+               </div>`
+            : ''}
+        </div>
+      </div>`;
+  }).join('');
+}
+
+// ── Integration hook: called from loadSignals after signals render ──
+// Patches the existing loadSignals flow to trigger prediction + archive updates
+(function patchSignalFlow() {
+  // Intercept window._lastSignals assignment via a setter
+  let _signals = null;
+  Object.defineProperty(window, '_lastSignals', {
+    get() { return _signals; },
+    set(v) {
+      _signals = v;
+      // After a short delay to let prices settle
+      setTimeout(() => {
+        if (_signals && _signals.length && _lastPriceMap && Object.keys(_lastPriceMap).length) {
+          updatePredictionTracker(_signals, _lastPriceMap);
+          // Get F&G value from DOM
+          const fgEl = document.getElementById('fearGreedValue');
+          const fgText = fgEl ? fgEl.textContent.trim().match(/\d+/) : null;
+          const fgValue = fgText ? parseInt(fgText[0]) : null;
+          archiveCurrentReport(_signals, _lastPriceMap, fgValue);
+        }
+      }, 1500);
+    },
+    configurable: true,
+  });
+})();
+
+// ── Load archived data on boot ──
+document.addEventListener('DOMContentLoaded', () => {
+  // Show existing prediction & archive data immediately on load
+  setTimeout(() => {
+    const preds = getPredictions();
+    renderPredictionTracker(preds, {});
+    const archive = getReportArchive();
+    renderReportArchive(archive);
+  }, 500);
+});

@@ -1,5 +1,5 @@
 /**
- * C5iSR Dashboard — Frontend Logic v2.8
+ * C5iSR Dashboard — Frontend Logic v2.9
  *
  * Features:
  *   - Dual mode: Backend FastAPI or CoinGecko demo
@@ -20,6 +20,8 @@
  *   - Gold (XAU) & Silver (XAG) live spot prices via metals.live (no key required)
  *   - [v2.8] Prediction Tracker: logs BUY/SELL signals, evaluates WIN/LOSS/PENDING vs SL/TP
  *   - [v2.8] Weekly Report Archive: daily intelligence brief snapshots with accordion view
+ *   - [v2.9] Portfolio allocation bars: visual % breakdown + signal-alignment highlights
+ *   - [v2.9] Metals: 3rd fallback via fawazahmed0 CDN + XAU:BTC ratio display
  */
 
 // ── Config ──
@@ -826,7 +828,7 @@ function updateIntelBrief(signals, fearGreedValue) {
   // Fear & Greed from current state
   const fgEl = document.getElementById('fearGreedValue');
   const fgText = fgEl ? fgEl.textContent.trim() : '—';
-  const fgVal = fearGreedValue ?? parseInt(fgText) || 50;
+  const fgVal = fearGreedValue ?? (parseInt(fgText) || 50);
   const fgLabel = fgVal <= 25 ? 'Extreme Fear' : fgVal <= 45 ? 'Fear' : fgVal <= 55 ? 'Neutral' : fgVal <= 75 ? 'Greed' : 'Extreme Greed';
   const fgColor = fgVal <= 25 ? 'var(--red)' : fgVal <= 45 ? '#ff6644' : fgVal <= 55 ? 'var(--amber)' : fgVal <= 75 ? '#88dd44' : 'var(--green)';
 
@@ -1214,7 +1216,22 @@ async function loadMetals() {
     }
   } catch (e) { /* silent fallback failure */ }
 
-  // Both failed — show graceful degraded state
+  // 3rd fallback: fawazahmed0 currency API (daily rates, free CDN)
+  try {
+    const xauData = await cachedFetch('xau_fawaz', 'https://cdn.jsdelivr.net/npm/@fawazahmed0/currency-api@latest/v1/currencies/xau.json', 120000);
+    const xagData = await cachedFetch('xag_fawaz', 'https://cdn.jsdelivr.net/npm/@fawazahmed0/currency-api@latest/v1/currencies/xag.json', 120000);
+    const xauUsd = xauData?.xau?.usd ? (1 / xauData.xau.usd) : null;
+    const xagUsd = xagData?.xag?.usd ? (1 / xagData.xag.usd) : null;
+    if (xauUsd || xagUsd) {
+      renderMetals(
+        xauUsd ? { metal: 'gold',   price: xauUsd, currency: 'USD', change: null, change_percentage: null } : null,
+        xagUsd ? { metal: 'silver', price: xagUsd, currency: 'USD', change: null, change_percentage: null } : null,
+      );
+      return;
+    }
+  } catch (e) { /* silent */ }
+
+  // All sources failed — show graceful degraded state
   el.innerHTML = `
     <div class="metals-item">
       <div class="metals-symbol" style="color:#ffd700">XAU</div>
@@ -1261,9 +1278,28 @@ function renderMetals(gold, silver) {
       </div>`;
   };
 
+  // XAU:BTC ratio — how many oz of gold to buy 1 BTC
+  const btcPrice = (_lastPriceMap && _lastPriceMap['bitcoin']) || (window._lastPrices && window._lastPrices.find(p => p.id === 'bitcoin')?.price) || null;
+  let ratioHtml = '';
+  if (gold && gold.price > 0 && btcPrice && btcPrice > 0) {
+    const ratio = (btcPrice / gold.price).toFixed(1);
+    ratioHtml = `
+      <div class="metals-item" style="border-left:1px solid var(--border);padding-left:16px;margin-left:8px">
+        <div>
+          <div class="metals-symbol" style="color:#f7931a">BTC</div>
+          <div class="metals-name">oz of Gold</div>
+        </div>
+        <div style="text-align:right">
+          <div class="metals-price" style="color:#f7931a">${ratio} oz</div>
+          <div style="font-size:10px;color:var(--text-muted);margin-top:2px">XAU:BTC ratio</div>
+        </div>
+      </div>`;
+  }
+
   el.innerHTML = `
     ${renderItem(gold,   'XAU', 'Gold (troy oz)',   '#ffd700')}
-    ${renderItem(silver, 'XAG', 'Silver (troy oz)', '#c0c0c0')}`;
+    ${renderItem(silver, 'XAG', 'Silver (troy oz)', '#c0c0c0')}
+    ${ratioHtml}`;
 
   if (updEl) updEl.textContent = new Date().toLocaleTimeString();
 }
@@ -1374,15 +1410,50 @@ function renderPortfolio(pricesMap) {
 
   el.innerHTML = `<div class="portfolio-table">${rows}</div>`;
 
-  // Total row
+  // Total row + allocation bars
   const totalPnl = totalValue - totalCost;
   const totalPnlPct = totalCost > 0 ? (totalPnl / totalCost) * 100 : 0;
   const totalColor = totalPnl >= 0 ? 'var(--green)' : 'var(--red)';
+
+  // Current signals for alignment highlights
+  const activeSignals = window._lastSignals || [];
+  const signalMap = {};
+  activeSignals.forEach(s => { signalMap[s.asset_id] = s.signal; });
+
   if (totalValue > 0) {
+    // Build allocation bar segments
+    const allocations = PORTFOLIO_ASSETS
+      .filter(a => holdings[a.id] && (holdings[a.id].qty * ((pricesMap && pricesMap[a.id]) || 0)) > 0)
+      .map(a => {
+        const val = holdings[a.id].qty * (pricesMap[a.id] || 0);
+        const pct = (val / totalValue * 100).toFixed(1);
+        const sig = signalMap[a.id];
+        const sigBorder = sig === 'BUY' ? `outline:2px solid var(--green);` : sig === 'SELL' ? `outline:2px solid var(--red);` : '';
+        return `<div title="${a.symbol}: ${pct}% ($${formatPrice(val)})" style="flex:${pct};background:${a.color};height:100%;border-radius:2px;${sigBorder}transition:flex 0.4s"></div>`;
+      })
+      .join('');
+
+    const allocLegend = PORTFOLIO_ASSETS
+      .filter(a => holdings[a.id] && (holdings[a.id].qty * ((pricesMap && pricesMap[a.id]) || 0)) > 0)
+      .map(a => {
+        const val = holdings[a.id].qty * (pricesMap[a.id] || 0);
+        const pct = (val / totalValue * 100).toFixed(1);
+        const sig = signalMap[a.id];
+        const sigBadge = sig && sig !== 'HOLD'
+          ? `<span style="font-size:9px;padding:0 4px;border-radius:3px;background:${sig === 'BUY' ? 'var(--green-dim,rgba(0,255,136,0.15))' : 'rgba(255,68,68,0.15)'};color:${sig === 'BUY' ? 'var(--green)' : 'var(--red)'};">${sig}</span>`
+          : '';
+        return `<span style="display:inline-flex;align-items:center;gap:4px;font-size:11px;color:var(--text-muted)"><span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:${a.color}"></span>${a.symbol} ${pct}%${sigBadge}</span>`;
+      })
+      .join('<span style="color:var(--border);padding:0 4px">·</span>');
+
     totalEl.innerHTML = `
-      <div style="display:flex;justify-content:flex-end;gap:24px;padding:12px 0 4px;border-top:1px solid var(--border);margin-top:8px">
-        <div style="font-size:12px;color:var(--text-muted)">Total Value: <span style="color:var(--text-primary);font-family:var(--font-mono)">$${formatPrice(totalValue)}</span></div>
-        <div style="font-size:12px;color:var(--text-muted)">P&L: <span style="color:${totalColor};font-family:var(--font-mono)">${totalPnl >= 0 ? '+' : ''}$${Math.abs(totalPnl).toFixed(2)} (${totalPnlPct >= 0 ? '+' : ''}${totalPnlPct.toFixed(1)}%)</span></div>
+      <div style="margin-top:12px;border-top:1px solid var(--border);padding-top:10px">
+        <div style="display:flex;gap:4px;height:8px;border-radius:4px;overflow:hidden;margin-bottom:8px">${allocations || '<div style="flex:1;background:var(--border);height:100%"></div>'}</div>
+        <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:10px">${allocLegend}</div>
+        <div style="display:flex;justify-content:flex-end;gap:24px">
+          <div style="font-size:12px;color:var(--text-muted)">Total Value: <span style="color:var(--text-primary);font-family:var(--font-mono)">$${formatPrice(totalValue)}</span></div>
+          <div style="font-size:12px;color:var(--text-muted)">P&L: <span style="color:${totalColor};font-family:var(--font-mono)">${totalPnl >= 0 ? '+' : ''}$${Math.abs(totalPnl).toFixed(2)} (${totalPnlPct >= 0 ? '+' : ''}${totalPnlPct.toFixed(1)}%)</span></div>
+        </div>
       </div>`;
   } else {
     totalEl.innerHTML = '<div style="font-size:11px;color:var(--text-muted);text-align:center;padding-top:8px">Enter your holdings above to track live P&L</div>';

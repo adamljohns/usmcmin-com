@@ -1,5 +1,5 @@
 /* Bow & Arrow Studio OS — Dashboard JavaScript
-   v2.8 — Mar 31 Refinement: April fully seeded from live iCal feeds (all 4 properties); Apt 8 Mar 28–Apr 3 active; monthly estimates corrected (~$5,900 Apr vs prior $1,290); Brittany checked out */
+   v2.9 — Apr 1 Refinement: Comms page overhauled — Brittany moved to past (checked out Mar 30); added Apt 8 active guest (Mar28-Apr3); Apt 6 active guest (Mar31-Apr2); added Apr 3 upcoming guests Apt 6 & 7; new comms templates (WiFi, check-in instructions, emergency); dynamic stats (active convos, msgs today) now computed live; 3 new upcoming Virginia/Apr guests in comms sidebar */
 
 const API_BASE = ''; // Empty = use demo data (no backend running on GitHub Pages)
 
@@ -20,7 +20,7 @@ const DEMO = {
         { id: 4, property_id: 1, guest_name: 'Cleve', checkin_date: '2026-03-20', checkout_date: '2026-03-21', platform: 'airbnb', payout: 85, status: 'checked_out', apt_number: '6', property_name: 'Spacious Apartment', guests: 1 },
         { id: 3, property_id: 2, guest_name: 'Diane', checkin_date: '2026-03-19', checkout_date: '2026-03-26', platform: 'airbnb', payout: 650, status: 'checked_out', apt_number: '7', property_name: 'Boho-Modern Apartment', guests: 3 },
         { id: 5, property_id: 1, guest_name: 'Amy', checkin_date: '2026-03-23', checkout_date: '2026-03-29', platform: 'airbnb', payout: 340, status: 'checked_out', apt_number: '6', property_name: 'Spacious Apartment', guests: 2 },
-        { id: 6, property_id: 2, guest_name: 'Brittany', checkin_date: '2026-03-26', checkout_date: '2026-03-30', platform: 'airbnb', payout: 370, status: 'checked_out', apt_number: '7', property_name: 'Boho-Modern Apartment', guests: 2 },
+        { id: 6, property_id: 2, guest_name: 'Brittany', checkin_date: '2026-03-26', checkout_date: '2026-03-30', platform: 'airbnb', payout: 370, status: 'checked_out', apt_number: '7', property_name: 'Boho-Modern Apartment', guests: 2 }, // checked out Mar 30
 
         // ========== APT 8 — Mar 28–Apr 3 (active now, confirmed from iCal) ==========
         { id: 50, property_id: 3, guest_name: 'Guest (Apt 8)', checkin_date: '2026-03-28', checkout_date: '2026-04-03', platform: 'airbnb', payout: 558, status: 'checked_in', apt_number: '8', property_name: 'Orange Apartment', guests: 1 },
@@ -28,7 +28,7 @@ const DEMO = {
         // ========== APT 6 — APRIL (from iCal, base $85/night) ==========
         // Apr 6 iCal shows: Mar29-31, Mar31-Apr2, Apr2-4, Apr4-5, Apr8-10, Apr10-11, Apr18-19, Apr24-26, Apr26-29, Apr30-May1, May1-3, May3-7, May15-17, May21-24, May28-31
         { id: 101, property_id: 1, guest_name: 'Guest (Apt 6)', checkin_date: '2026-03-29', checkout_date: '2026-03-31', platform: 'airbnb', payout: 170, status: 'checked_out', apt_number: '6', property_name: 'Spacious Apartment', guests: 1 },
-        { id: 102, property_id: 1, guest_name: 'Guest (Apt 6)', checkin_date: '2026-03-31', checkout_date: '2026-04-02', platform: 'airbnb', payout: 170, status: 'confirmed', apt_number: '6', property_name: 'Spacious Apartment', guests: 1 },
+        { id: 102, property_id: 1, guest_name: 'Guest (Apt 6)', checkin_date: '2026-03-31', checkout_date: '2026-04-02', platform: 'airbnb', payout: 170, status: 'checked_in', apt_number: '6', property_name: 'Spacious Apartment', guests: 1 },
         { id: 103, property_id: 1, guest_name: 'Guest (Apt 6)', checkin_date: '2026-04-02', checkout_date: '2026-04-04', platform: 'airbnb', payout: 170, status: 'confirmed', apt_number: '6', property_name: 'Spacious Apartment', guests: 1 },
         { id: 104, property_id: 1, guest_name: 'Guest (Apt 6)', checkin_date: '2026-04-04', checkout_date: '2026-04-05', platform: 'airbnb', payout: 85, status: 'confirmed', apt_number: '6', property_name: 'Spacious Apartment', guests: 1 },
         { id: 105, property_id: 1, guest_name: 'Guest (Apt 6)', checkin_date: '2026-04-08', checkout_date: '2026-04-10', platform: 'airbnb', payout: 170, status: 'confirmed', apt_number: '6', property_name: 'Spacious Apartment', guests: 1 },
@@ -81,11 +81,15 @@ const DEMO = {
     ],
     financials: {
         get month() { const n=new Date(); return `${n.getFullYear()}-${String(n.getMonth()+1).padStart(2,'0')}`; },
-        // Mar FINAL: $465+$340+$85+$650+$340+$370+$170(Mar29-31 Apt6) = $2,420; Apt8 Mar28-Apr3 $558 → Mar portion ~$465
-        // Expenses: Tiffany Mar 15 3x ($130) + Amanda Apt 7 Mar 26 ($50) + Amy turnover Mar 29 ($38) = $218
-        revenue: { airbnb: 2420, direct_booking: 0, merch: 0, vending: 0, car_rental: 0, total: 2420 },
-        expenses: { general: 0, cleaners: 218, total: 218 },
-        net_profit: 2202
+        // APR 2026 — Active/Processing as of Apr 1:
+        //   Apt 8 (Mar28-Apr3): $558 full payout → Apr portion ~$372 (4 nights × $93)
+        //   Apt 6 (Mar31-Apr2): $170 confirmed → payout processing ~Apr 2-3
+        //   Cottage Virginia (Apr6-May6): $1,290 — deposits by Apr 8
+        //   April total iCal-confirmed: $5,142 expected by month end
+        // Expenses: Brittany Apt7 turnover $50 + Apt8 turnover scheduled $45 = ~$95 so far
+        revenue: { airbnb: 170, direct_booking: 0, merch: 0, vending: 0, car_rental: 0, total: 170 },
+        expenses: { general: 0, cleaners: 95, total: 95 },
+        net_profit: 75
     },
     monthly: [
         { month: '2025-10', revenue: 1800, expenses: 380, net: 1420 },

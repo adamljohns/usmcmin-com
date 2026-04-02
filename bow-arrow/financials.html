@@ -143,8 +143,8 @@
             </div>
         </div>
 
-        <!-- April Booking Breakdown -->
-        <h2 class="section-title">📅 April Confirmed Bookings (iCal-sourced)</h2>
+        <!-- Current-Month Booking Breakdown -->
+        <h2 class="section-title" id="aprilBookingsTitle">📅 Current Month Confirmed Bookings (iCal-sourced)</h2>
         <div class="card">
             <div style="margin-bottom:1rem;padding:0.75rem 1rem;background:var(--linen);border-left:4px solid var(--terracotta);border-radius:2px;font-size:0.8rem;color:var(--gray);font-family:var(--font-serif);font-style:italic">
                 📡 Sourced directly from live Airbnb iCal feeds — all 4 properties. Guest names unavailable via iCal (Airbnb policy); shown as "Reserved".
@@ -203,10 +203,14 @@
         const _months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
         const _n = new Date();
         document.getElementById('finMonthLabel').textContent = _months[_n.getMonth()] + ' ' + _n.getFullYear();
+        const _aprilTitle = document.getElementById('aprilBookingsTitle');
+        if (_aprilTitle) _aprilTitle.textContent = `📅 ${_months[_n.getMonth()]} Confirmed Bookings (iCal-sourced)`;
 
-        // YTD Performance block
+        // YTD Performance block — only show completed months + current (no future forecasts in YTD)
         (function renderYTD() {
-            const ytdData = DEMO.monthly.filter(m => m.month.startsWith('2026'));
+            const _now = new Date();
+            const _curMonthKey = `${_now.getFullYear()}-${String(_now.getMonth()+1).padStart(2,'0')}`;
+            const ytdData = DEMO.monthly.filter(m => m.month.startsWith('2026') && m.month <= _curMonthKey);
             const ytdRev = ytdData.reduce((s, m) => s + m.revenue, 0);
             const ytdExp = ytdData.reduce((s, m) => s + m.expenses, 0);
             const ytdNet = ytdData.reduce((s, m) => s + m.net, 0);

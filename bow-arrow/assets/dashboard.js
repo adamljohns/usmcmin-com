@@ -97,7 +97,7 @@ const DEMO = {
         { month: '2025-12', revenue: 2600, expenses: 520, net: 2080 },
         { month: '2026-01', revenue: 1950, expenses: 350, net: 1600 },
         { month: '2026-02', revenue: 2300, expenses: 400, net: 1900 },
-        { month: '2026-03', revenue: 2420, expenses: 218, net: 2202 },  // Mar final (iCal-confirmed incl Mar 29-31 Apt 6, Apt 8 Mar portion)
+        { month: '2026-03', revenue: 3162, expenses: 280, net: 2882 },  // Mar final — verified from ledger: $2,452 confirmed deposits + ~$710 Amy/Brittany processing = $3,162
         // April: Apt6 $1,275 + Apt7 $1,740 + Apt8 $837 + Cottage $1,290 = $5,142 confirmed from iCal
         { month: '2026-04', revenue: 5142, expenses: 450, net: 4692 },
         // May confirmed from iCal: Apt6 $1,190 + Apt7 $1,276 + Apt8 $1,023 + Cottage partial (Virginia May1-6 ~$258) = $3,747
@@ -473,6 +473,55 @@ function initMobileNav() {
     if (brand) brand.after(hamburger);
 }
 
+// ===== LIVE FINANCIAL SUMMARY =====
+// Computes current-month revenue dynamically from reservation data.
+// Replaces stale DEMO.financials snapshot so cards always reflect real bookings.
+function buildLiveFinancials(reservations) {
+    const now = new Date();
+    const yr = now.getFullYear();
+    const mo = now.getMonth();
+    const monthStart = `${yr}-${String(mo+1).padStart(2,'0')}-01`;
+    const lastDay = new Date(yr, mo+1, 0).getDate();
+    const monthEnd = `${yr}-${String(mo+1).padStart(2,'0')}-${String(lastDay).padStart(2,'0')}`;
+
+    let airbnbRev = 0;
+    reservations.forEach(r => {
+        if (r.checkout_date < monthStart || r.checkin_date > monthEnd) return;
+        const totalNights = nightsBetween(r.checkin_date, r.checkout_date);
+        if (totalNights <= 0) return;
+        const overlapStart = r.checkin_date < monthStart ? monthStart : r.checkin_date;
+        const overlapEnd   = r.checkout_date > monthEnd   ? monthEnd   : r.checkout_date;
+        const overlapNights = nightsBetween(overlapStart, overlapEnd);
+        airbnbRev += (r.payout / totalNights) * overlapNights;
+    });
+    airbnbRev = Math.round(airbnbRev);
+
+    // Expenses: load locally saved entries + base estimate
+    const savedExpenses = loadLocalData('expenses', []);
+    let cleanerCost = 0, generalCost = 0;
+    const monthPrefix = `${yr}-${String(mo+1).padStart(2,'0')}`;
+    savedExpenses.forEach(e => {
+        if (!e.date || !e.date.startsWith(monthPrefix)) return;
+        if (e.category === 'cleaning') cleanerCost += e.amount;
+        else generalCost += e.amount;
+    });
+    // Base cleaner estimate if no local data logged: $43/booking avg for month
+    if (cleanerCost === 0) {
+        const monthBookings = reservations.filter(r =>
+            r.checkin_date >= monthStart && r.checkin_date <= monthEnd
+        ).length;
+        cleanerCost = monthBookings * 43;
+    }
+    const totalExp = cleanerCost + generalCost;
+
+    return {
+        month: monthPrefix,
+        revenue: { airbnb: airbnbRev, direct_booking: 0, merch: 0, vending: 0, car_rental: 0, total: airbnbRev },
+        expenses: { general: Math.round(generalCost), cleaners: Math.round(cleanerCost), total: Math.round(totalExp) },
+        net_profit: airbnbRev - Math.round(totalExp)
+    };
+}
+
 // ===== DASHBOARD PAGE =====
 async function initDashboard() {
     if (!checkAuth()) return;
@@ -492,8 +541,9 @@ async function initDashboard() {
     showSkeleton('propertyGrid', 5);
 
     const rawProperties = (await fetchData('/api/properties')) || DEMO.properties;
-    const financials = (await fetchData('/api/financials/summary')) || DEMO.financials;
     const reservations = (await fetchData('/api/reservations')) || DEMO.reservations;
+    // Build financials live from reservation data so revenue cards always reflect real bookings
+    const financials = (await fetchData('/api/financials/summary')) || buildLiveFinancials(reservations);
     const reviews = DEMO.reviews;
 
     // Derive live occupancy from reservations so property cards never show stale data
@@ -1115,9 +1165,10 @@ async function initFinancials() {
     if (!checkAuth()) return;
     initMobileNav();
 
-    const summary = (await fetchData('/api/financials/summary')) || DEMO.financials;
-    const monthly = (await fetchData('/api/financials/monthly')) || DEMO.monthly;
     const reservations = (await fetchData('/api/reservations')) || DEMO.reservations;
+    // Build financials live from reservation data so totals reflect real bookings
+    const summary = (await fetchData('/api/financials/summary')) || buildLiveFinancials(reservations);
+    const monthly = (await fetchData('/api/financials/monthly')) || DEMO.monthly;
 
     renderFinancialSummary(summary);
     renderMonthlyChart(monthly);
@@ -1160,30 +1211,45 @@ function renderFinancialSummary(summary) {
 
 function renderMonthlyChart(monthly) {
     const container = document.getElementById('monthlyChart');
-    const maxRev = Math.max(...monthly.map(m => m.revenue), 1);
+
+    // Only show last 6 months + current month (no future months in bar chart — those belong in forecast)
+    const now = new Date();
+    const currentMonthKey = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}`;
+    const displayData = monthly.filter(m => m.month <= currentMonthKey).slice(-7);
+
+    const maxRev = Math.max(...displayData.map(m => m.revenue), 1);
 
     container.innerHTML = '<div style="display:flex;gap:0.5rem;align-items:flex-end;height:220px;padding-top:1rem">' +
-        monthly.map((m, i) => {
+        displayData.map((m, i) => {
+            const isCurrent = m.month === currentMonthKey;
             const height = (m.revenue / maxRev * 180);
             const netHeight = (m.net / maxRev * 180);
             const monthLabel = new Date(m.month + '-15').toLocaleDateString('en-US', { month: 'short' });
+            // Current month gets a dashed border + lighter color to signal "in progress"
+            const barStyle = isCurrent
+                ? `background:var(--blush);border:2px dashed var(--terracotta);border-bottom:none`
+                : `background:var(--terracotta)`;
+            const labelStyle = isCurrent
+                ? `font-size:0.75rem;color:var(--terracotta);margin-top:0.5rem;font-weight:700`
+                : `font-size:0.75rem;color:var(--gray);margin-top:0.5rem;font-weight:600`;
             return `
                 <div style="flex:1;text-align:center;animation:fadeSlideUp 0.3s ease ${i * 0.08}s forwards;opacity:0">
                     <div style="display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:200px">
-                        <div style="font-size:0.7rem;font-weight:600;margin-bottom:0.25rem">${formatCurrency(m.revenue)}</div>
-                        <div style="width:75%;height:${height}px;background:var(--terracotta);border-radius:6px 6px 0 0;position:relative;overflow:hidden">
+                        <div style="font-size:0.7rem;font-weight:600;margin-bottom:0.25rem;color:${isCurrent ? 'var(--terracotta)' : 'inherit'}">${formatCurrency(m.revenue)}${isCurrent ? ' ↗' : ''}</div>
+                        <div style="width:75%;height:${height}px;${barStyle};border-radius:6px 6px 0 0;position:relative;overflow:hidden">
                             <div style="position:absolute;bottom:0;left:0;right:0;height:${Math.max(0,netHeight)}px;background:var(--sage);opacity:0.6"></div>
                         </div>
                     </div>
-                    <div style="font-size:0.75rem;color:var(--gray);margin-top:0.5rem;font-weight:600">${monthLabel}</div>
+                    <div style="${labelStyle}">${monthLabel}${isCurrent ? ' *' : ''}</div>
                     <div style="font-size:0.65rem;color:var(--gray)">${m.month.split('-')[0].slice(2)}</div>
                 </div>
             `;
         }).join('') +
         '</div>' +
-        '<div style="display:flex;gap:1.5rem;justify-content:center;margin-top:1rem;font-size:0.8rem">' +
+        '<div style="display:flex;gap:1.5rem;justify-content:center;margin-top:1rem;font-size:0.8rem;flex-wrap:wrap">' +
         '<span><span style="display:inline-block;width:12px;height:12px;background:var(--terracotta);border-radius:2px;vertical-align:middle"></span> Revenue</span>' +
         '<span><span style="display:inline-block;width:12px;height:12px;background:var(--sage);opacity:0.6;border-radius:2px;vertical-align:middle"></span> Net Profit</span>' +
+        '<span style="color:var(--gray);font-size:0.75rem">* Current month (in progress)</span>' +
         '</div>';
 }
 

@@ -1093,3 +1093,117 @@ body {
   letter-spacing: 1px;
   margin-top: 2px;
 }
+
+/* ── Sticky Key Price Ticker (v3.0) ── */
+.price-ticker {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  padding: 6px 24px;
+  background: rgba(5,5,10,0.98);
+  border-bottom: 1px solid var(--border);
+  position: sticky;
+  top: 57px; /* just below the fixed header */
+  z-index: 99;
+  backdrop-filter: blur(12px);
+  overflow-x: auto;
+  scrollbar-width: none;
+  flex-shrink: 0;
+}
+.price-ticker::-webkit-scrollbar { display: none; }
+
+.ticker-item {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 0 12px;
+  white-space: nowrap;
+}
+
+.ticker-sym {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+}
+
+.ticker-price {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.ticker-chg {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  min-width: 44px;
+}
+.ticker-chg.up   { color: var(--green); }
+.ticker-chg.down { color: var(--red); }
+
+.ticker-divider {
+  width: 1px;
+  height: 14px;
+  background: var(--border);
+  flex-shrink: 0;
+}
+
+.ticker-spacer {
+  flex: 1;
+  min-width: 12px;
+}
+
+@media (max-width: 768px) {
+  .price-ticker { top: 50px; gap: 0; padding: 5px 12px; }
+  .ticker-item { padding: 0 8px; }
+  .ticker-chg { display: none; }
+}
+
+/* ── Prediction Range Bar (v3.0) ── */
+.pred-range-wrap {
+  width: 100%;
+  margin: 4px 0 2px;
+}
+.pred-range-track {
+  position: relative;
+  height: 4px;
+  background: rgba(255,255,255,0.06);
+  border-radius: 2px;
+  overflow: visible;
+}
+.pred-range-sl {
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 100%;
+  background: var(--red-dim, rgba(255,68,68,0.25));
+  border-radius: 2px 0 0 2px;
+}
+.pred-range-tp {
+  position: absolute;
+  right: 0;
+  top: 0;
+  height: 100%;
+  background: rgba(0,255,136,0.12);
+  border-radius: 0 2px 2px 0;
+}
+.pred-range-cursor {
+  position: absolute;
+  top: -3px;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  border: 2px solid #fff;
+  transform: translateX(-50%);
+  transition: left 0.4s;
+  z-index: 2;
+}
+.pred-range-labels {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 3px;
+  font-size: 9px;
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+}

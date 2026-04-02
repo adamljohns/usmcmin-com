@@ -1,5 +1,5 @@
 /**
- * C5iSR Dashboard — Frontend Logic v2.9
+ * C5iSR Dashboard — Frontend Logic v3.0
  *
  * Features:
  *   - Dual mode: Backend FastAPI or CoinGecko demo
@@ -22,6 +22,8 @@
  *   - [v2.8] Weekly Report Archive: daily intelligence brief snapshots with accordion view
  *   - [v2.9] Portfolio allocation bars: visual % breakdown + signal-alignment highlights
  *   - [v2.9] Metals: 3rd fallback via fawazahmed0 CDN + XAU:BTC ratio display
+ *   - [v3.0] Sticky Key Price Ticker: always-visible BTC/ETH/NEO/XAU/XAG strip below header
+ *   - [v3.0] Prediction Range Bars: visual SL→current→TP progress bar for PENDING signals
  */
 
 // ── Config ──
@@ -1302,6 +1304,9 @@ function renderMetals(gold, silver) {
     ${ratioHtml}`;
 
   if (updEl) updEl.textContent = new Date().toLocaleTimeString();
+
+  // Update sticky price ticker with metals data
+  updateTickerMetals(gold, silver);
 }
 
 // ── MetaMask ──
@@ -1474,7 +1479,7 @@ function onHoldingChange(input) {
 // Expose for price refresh integration
 let _lastPriceMap = {};
 
-// Patch into renderPrices to also update portfolio
+// Patch into renderPrices to also update portfolio + ticker
 const _origRenderPrices = renderPrices;
 function renderPrices(prices) {
   _origRenderPrices(prices);
@@ -1483,6 +1488,8 @@ function renderPrices(prices) {
   // Cache for signal card price display
   window._lastPrices = prices;
   renderPortfolio(_lastPriceMap);
+  // Update sticky price ticker
+  updateTicker(prices);
 }
 
 // ── Copy Signal Report (Telegram-ready) ──
@@ -1582,6 +1589,56 @@ function copySignalReport() {
     window.prompt('Copy this report:', report);
   });
 }
+// ── Sticky Key Price Ticker (v3.0) ──
+// Updates BTC/ETH/NEO/XAU/XAG in the always-visible strip below the header.
+// Called by renderPrices (crypto) and renderMetals (metals).
+let _tickerMetals = {}; // { xau: { price, change_pct }, xag: {...} }
+
+function updateTicker(priceArr) {
+  // priceArr: array of { id, symbol, price, change_24h }
+  if (priceArr) {
+    priceArr.forEach(p => {
+      const id = p.id || '';
+      const sym = (id === 'bitcoin' ? 'btc' : id === 'ethereum' ? 'eth' : id === 'neo' ? 'neo' : null);
+      if (!sym) return;
+      _setTickerCell(sym, p.price, p.change_24h);
+    });
+  }
+  // Also flush cached metals
+  if (_tickerMetals.xau) _setTickerCell('xau', _tickerMetals.xau.price, _tickerMetals.xau.change_pct);
+  if (_tickerMetals.xag) _setTickerCell('xag', _tickerMetals.xag.price, _tickerMetals.xag.change_pct);
+  const tsEl = document.getElementById('tickerTs');
+  if (tsEl) tsEl.textContent = new Date().toLocaleTimeString();
+}
+
+function updateTickerMetals(gold, silver) {
+  if (gold)   _tickerMetals.xau = { price: gold.price,   change_pct: gold.change_percentage };
+  if (silver) _tickerMetals.xag = { price: silver.price, change_pct: silver.change_percentage };
+  if (gold)   _setTickerCell('xau', gold.price,   gold.change_percentage);
+  if (silver) _setTickerCell('xag', silver.price, silver.change_percentage);
+  const tsEl = document.getElementById('tickerTs');
+  if (tsEl) tsEl.textContent = new Date().toLocaleTimeString();
+}
+
+function _setTickerCell(sym, price, changePct) {
+  const priceEl = document.getElementById(`tick-${sym}-price`);
+  const chgEl   = document.getElementById(`tick-${sym}-chg`);
+  if (!priceEl) return;
+  if (price == null) return;
+  // Format price
+  let priceStr;
+  if (price >= 1000)      priceStr = '$' + price.toLocaleString(undefined, {minimumFractionDigits:0, maximumFractionDigits:0});
+  else if (price >= 10)   priceStr = '$' + price.toFixed(2);
+  else if (price >= 1)    priceStr = '$' + price.toFixed(3);
+  else                    priceStr = '$' + price.toFixed(4);
+  priceEl.textContent = priceStr;
+  if (chgEl && changePct != null) {
+    const isUp = changePct >= 0;
+    chgEl.textContent = (isUp ? '▲' : '▼') + Math.abs(changePct).toFixed(2) + '%';
+    chgEl.className = 'ticker-chg ' + (isUp ? 'up' : 'down');
+  }
+}
+
 // ── Logout ──
 function logout() {
   localStorage.removeItem('c5isr_auth');
@@ -2057,17 +2114,55 @@ function renderPredictionTracker(preds, priceMap = {}) {
     const tpPct = p.entryPrice > 0 ? Math.abs((p.tpPrice - p.entryPrice) / p.entryPrice * 100).toFixed(1) : '?';
     const elapsed = formatElapsed(Date.now() - p.timestamp);
 
+    // ── Range bar for PENDING predictions ──
+    let rangeBarHtml = '';
+    if (p.outcome === 'PENDING' && currentPrice && p.slPrice && p.tpPrice && p.entryPrice) {
+      const lo = Math.min(p.slPrice, p.tpPrice, p.entryPrice, currentPrice);
+      const hi = Math.max(p.slPrice, p.tpPrice, p.entryPrice, currentPrice);
+      const span = hi - lo || 1;
+      const toPos = v => Math.max(0, Math.min(100, ((v - lo) / span) * 100));
+
+      const slPos      = toPos(p.slPrice);
+      const tpPos      = toPos(p.tpPrice);
+      const entryPos   = toPos(p.entryPrice);
+      const curPos     = toPos(currentPrice);
+      const cursorColor = p.signal === 'BUY'
+        ? (currentPrice >= p.entryPrice ? 'var(--green)' : 'var(--amber)')
+        : (currentPrice <= p.entryPrice ? 'var(--green)' : 'var(--amber)');
+
+      // For a BUY: sl is left, tp is right. SELL: reversed visually.
+      const dangerLeft  = p.signal === 'BUY' ? `${slPos}%`  : `${tpPos}%`;
+      const dangerWidth = p.signal === 'BUY' ? `${entryPos - slPos}%` : `${entryPos - tpPos}%`;
+      const gainLeft    = p.signal === 'BUY' ? `${entryPos}%` : `${slPos}%`;
+      const gainWidth   = p.signal === 'BUY' ? `${tpPos - entryPos}%` : `${entryPos - slPos}%`;
+
+      rangeBarHtml = `
+        <div class="pred-range-wrap">
+          <div class="pred-range-track">
+            <div class="pred-range-sl"  style="left:${dangerLeft};width:${dangerWidth}"></div>
+            <div class="pred-range-tp"  style="left:${gainLeft};width:${gainWidth}"></div>
+            <div class="pred-range-cursor" style="left:${curPos}%;background:${cursorColor}" title="Current: $${formatPrice(currentPrice)}"></div>
+          </div>
+          <div class="pred-range-labels">
+            <span style="color:var(--red)">SL $${formatPrice(p.slPrice)}</span>
+            <span style="color:var(--text-muted)">Entry $${formatPrice(p.entryPrice)}</span>
+            <span style="color:var(--green)">TP $${formatPrice(p.tpPrice)}</span>
+          </div>
+        </div>`;
+    }
+
     return `
-      <div style="display:flex;align-items:center;gap:10px;padding:8px 4px;border-bottom:1px solid rgba(255,255,255,0.04);flex-wrap:wrap">
-        <span style="font-size:15px">${outcomeIcon}</span>
-        <span style="font-family:var(--font-mono);font-weight:700;color:${signalColor};min-width:36px">${p.symbol}</span>
-        <span class="signal-badge ${p.signal === 'BUY' ? 'signal-buy' : 'signal-sell'}" style="font-size:10px;padding:2px 6px">${p.signal}</span>
-        <span style="font-family:var(--font-mono);font-size:11px;color:var(--text-secondary)">@ $${formatPrice(p.entryPrice)}</span>
-        <span style="font-size:10px;color:var(--text-muted)">SL $${formatPrice(p.slPrice)} (-${slPct}%)</span>
-        <span style="font-size:10px;color:var(--text-muted)">TP $${formatPrice(p.tpPrice)} (+${tpPct}%)</span>
-        ${deltaHtml}
-        <span style="margin-left:auto;font-size:10px;color:${outcomeColor};font-weight:600">${p.outcome}</span>
-        <span style="font-size:10px;color:var(--text-muted)">${elapsed} · ${p.confidence}% conf</span>
+      <div style="padding:10px 4px;border-bottom:1px solid rgba(255,255,255,0.04)">
+        <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+          <span style="font-size:15px">${outcomeIcon}</span>
+          <span style="font-family:var(--font-mono);font-weight:700;color:${signalColor};min-width:36px">${p.symbol}</span>
+          <span class="signal-badge ${p.signal === 'BUY' ? 'signal-buy' : 'signal-sell'}" style="font-size:10px;padding:2px 6px">${p.signal}</span>
+          <span style="font-family:var(--font-mono);font-size:11px;color:var(--text-secondary)">@ $${formatPrice(p.entryPrice)}</span>
+          ${deltaHtml}
+          <span style="margin-left:auto;font-size:10px;color:${outcomeColor};font-weight:600">${p.outcome}</span>
+          <span style="font-size:10px;color:var(--text-muted)">${elapsed} · ${p.confidence}% conf</span>
+        </div>
+        ${rangeBarHtml}
       </div>`;
   }).join('');
 }

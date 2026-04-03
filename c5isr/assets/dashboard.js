@@ -1,5 +1,5 @@
 /**
- * C5iSR Dashboard — Frontend Logic v3.0
+ * C5iSR Dashboard — Frontend Logic v3.1
  *
  * Features:
  *   - Dual mode: Backend FastAPI or CoinGecko demo
@@ -24,6 +24,8 @@
  *   - [v2.9] Metals: 3rd fallback via fawazahmed0 CDN + XAU:BTC ratio display
  *   - [v3.0] Sticky Key Price Ticker: always-visible BTC/ETH/NEO/XAU/XAG strip below header
  *   - [v3.0] Prediction Range Bars: visual SL→current→TP progress bar for PENDING signals
+ *   - [v3.1] Portfolio now includes XAU/XAG (gold/silver oz) alongside crypto — true stewardship view
+ *   - [v3.1] Prediction Tracker: Expected Value stat + filter tabs (All/Pending/Win/Loss)
  */
 
 // ── Config ──
@@ -1305,6 +1307,14 @@ function renderMetals(gold, silver) {
 
   if (updEl) updEl.textContent = new Date().toLocaleTimeString();
 
+  // Cache for portfolio tracker integration
+  window._lastMetalPrices = {
+    xau: gold ? gold.price : null,
+    xag: silver ? silver.price : null,
+  };
+  // Trigger portfolio re-render with metals data now available
+  renderPortfolio(_lastPriceMap || null);
+
   // Update sticky price ticker with metals data
   updateTickerMetals(gold, silver);
 }
@@ -1338,6 +1348,8 @@ const PORTFOLIO_ASSETS = [
   { id: 'neo',              symbol: 'NEO', color: '#00e599' },
   { id: 'flamingo-finance', symbol: 'FLM', color: '#fc5c7d' },
   { id: 'solana',           symbol: 'SOL', color: '#9945ff' },
+  { id: 'xau',              symbol: 'XAU', color: '#ffd700', isMetal: true, label: 'Gold (oz)' },
+  { id: 'xag',              symbol: 'XAG', color: '#c0c0c0', isMetal: true, label: 'Silver (oz)' },
 ];
 
 function getHoldings() {
@@ -1369,11 +1381,25 @@ function renderPortfolio(pricesMap) {
   const el = document.getElementById('portfolioContent');
   const totalEl = document.getElementById('portfolioTotal');
 
+  // Merge metal prices into map from cached metals render
+  const mergedPrices = Object.assign({}, pricesMap || {});
+  if (window._lastMetalPrices) {
+    if (window._lastMetalPrices.xau) mergedPrices['xau'] = window._lastMetalPrices.xau;
+    if (window._lastMetalPrices.xag) mergedPrices['xag'] = window._lastMetalPrices.xag;
+  }
+
   let totalValue = 0, totalCost = 0;
+  let prevWasCrypto = true;
 
   const rows = PORTFOLIO_ASSETS.map(asset => {
+    // Insert a subtle section separator between crypto and metals rows
+    const sectionBreak = (asset.isMetal && prevWasCrypto)
+      ? `<div style="height:1px;background:var(--border);margin:6px 0;opacity:0.5"></div><div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:1px;padding:2px 0 4px;opacity:0.7">⚜️ Precious Metals</div>`
+      : '';
+    prevWasCrypto = !asset.isMetal;
+
     const h = holdings[asset.id];
-    const price = pricesMap ? (pricesMap[asset.id] || 0) : 0;
+    const price = mergedPrices[asset.id] || 0;
     const qty = h?.qty || '';
     const avgCost = h?.avgCost || '';
     const currentValue = h ? (h.qty * price) : 0;
@@ -1392,14 +1418,16 @@ function renderPortfolio(pricesMap) {
       ? `<span style="font-family:var(--font-mono);font-size:13px;color:var(--text-secondary)">$${formatPrice(currentValue)}</span>`
       : '<span style="color:var(--text-muted);font-size:12px">—</span>';
 
-    return `
+    const qtyPlaceholder = asset.isMetal ? 'Oz owned' : 'Qty';
+    return `${sectionBreak}
       <div class="portfolio-row">
         <div class="portfolio-asset">
           <span style="font-family:var(--font-mono);font-weight:700;color:${asset.color}">${asset.symbol}</span>
+          ${asset.label ? `<span style="font-size:10px;color:var(--text-muted)">${asset.label}</span>` : ''}
           ${price ? `<span style="font-size:11px;color:var(--text-muted)">@$${formatPrice(price)}</span>` : ''}
         </div>
         <div class="portfolio-inputs">
-          <input class="portfolio-input" type="number" placeholder="Qty" step="any" min="0"
+          <input class="portfolio-input" type="number" placeholder="${qtyPlaceholder}" step="any" min="0"
             value="${qty}" data-asset="${asset.id}" data-field="qty"
             onchange="onHoldingChange(this)" onblur="onHoldingChange(this)" />
           <input class="portfolio-input" type="number" placeholder="Avg cost" step="any" min="0"
@@ -1428,9 +1456,9 @@ function renderPortfolio(pricesMap) {
   if (totalValue > 0) {
     // Build allocation bar segments
     const allocations = PORTFOLIO_ASSETS
-      .filter(a => holdings[a.id] && (holdings[a.id].qty * ((pricesMap && pricesMap[a.id]) || 0)) > 0)
+      .filter(a => holdings[a.id] && (holdings[a.id].qty * (mergedPrices[a.id] || 0)) > 0)
       .map(a => {
-        const val = holdings[a.id].qty * (pricesMap[a.id] || 0);
+        const val = holdings[a.id].qty * (mergedPrices[a.id] || 0);
         const pct = (val / totalValue * 100).toFixed(1);
         const sig = signalMap[a.id];
         const sigBorder = sig === 'BUY' ? `outline:2px solid var(--green);` : sig === 'SELL' ? `outline:2px solid var(--red);` : '';
@@ -1439,15 +1467,16 @@ function renderPortfolio(pricesMap) {
       .join('');
 
     const allocLegend = PORTFOLIO_ASSETS
-      .filter(a => holdings[a.id] && (holdings[a.id].qty * ((pricesMap && pricesMap[a.id]) || 0)) > 0)
+      .filter(a => holdings[a.id] && (holdings[a.id].qty * (mergedPrices[a.id] || 0)) > 0)
       .map(a => {
-        const val = holdings[a.id].qty * (pricesMap[a.id] || 0);
+        const val = holdings[a.id].qty * (mergedPrices[a.id] || 0);
         const pct = (val / totalValue * 100).toFixed(1);
         const sig = signalMap[a.id];
-        const sigBadge = sig && sig !== 'HOLD'
+        const sigBadge = sig && sig !== 'HOLD' && !a.isMetal
           ? `<span style="font-size:9px;padding:0 4px;border-radius:3px;background:${sig === 'BUY' ? 'var(--green-dim,rgba(0,255,136,0.15))' : 'rgba(255,68,68,0.15)'};color:${sig === 'BUY' ? 'var(--green)' : 'var(--red)'};">${sig}</span>`
           : '';
-        return `<span style="display:inline-flex;align-items:center;gap:4px;font-size:11px;color:var(--text-muted)"><span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:${a.color}"></span>${a.symbol} ${pct}%${sigBadge}</span>`;
+        const metalTag = a.isMetal ? '⚜️ ' : '';
+        return `<span style="display:inline-flex;align-items:center;gap:4px;font-size:11px;color:var(--text-muted)"><span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:${a.color}"></span>${metalTag}${a.symbol} ${pct}%${sigBadge}</span>`;
       })
       .join('<span style="color:var(--border);padding:0 4px">·</span>');
 
@@ -1464,7 +1493,7 @@ function renderPortfolio(pricesMap) {
     totalEl.innerHTML = '<div style="font-size:11px;color:var(--text-muted);text-align:center;padding-top:8px">Enter your holdings above to track live P&L</div>';
   }
 
-  document.getElementById('portfolioUpdated').textContent = pricesMap ? new Date().toLocaleTimeString() : '—';
+  document.getElementById('portfolioUpdated').textContent = (pricesMap || window._lastMetalPrices) ? new Date().toLocaleTimeString() : '—';
 }
 
 const _holdingChangeBuf = {};
@@ -1956,6 +1985,13 @@ function round2(n) { return Math.round(n * 100) / 100; }
 
 const PRED_KEY = 'c5_predictions';
 const MAX_PREDICTIONS = 100;
+let _predFilter = 'all'; // 'all' | 'pending' | 'win' | 'loss'
+
+function setPredFilter(f) {
+  _predFilter = f;
+  const preds = getPredictions();
+  renderPredictionTracker(preds, _lastPriceMap || {});
+}
 
 function getPredictions() {
   try { return JSON.parse(localStorage.getItem(PRED_KEY) || '[]'); }
@@ -2061,8 +2097,27 @@ function renderPredictionTracker(preds, priceMap = {}) {
   const accuracy = resolved.length > 0 ? Math.round((wins / resolved.length) * 100) : null;
   const accColor = accuracy == null ? 'var(--text-muted)' : accuracy >= 60 ? 'var(--green)' : accuracy >= 40 ? 'var(--amber)' : 'var(--red)';
 
+  // ── Expected Value (EV) per trade ── assumes 1:2 risk:reward from ATR calc
+  // EV = (winRate × TP_avg_pct) - (lossRate × SL_avg_pct)
+  let evHtml = '—';
+  if (resolved.length >= 3) {
+    const winRate = wins / resolved.length;
+    const lossRate = 1 - winRate;
+    const avgTPpct = preds
+      .filter(p => p.outcome === 'WIN' && p.entryPrice > 0 && p.tpPrice > 0)
+      .map(p => Math.abs((p.tpPrice - p.entryPrice) / p.entryPrice * 100));
+    const avgSLpct = preds
+      .filter(p => p.outcome === 'LOSS' && p.entryPrice > 0 && p.slPrice > 0)
+      .map(p => Math.abs((p.slPrice - p.entryPrice) / p.entryPrice * 100));
+    const avgTP = avgTPpct.length ? avgTPpct.reduce((a, b) => a + b, 0) / avgTPpct.length : 0;
+    const avgSL = avgSLpct.length ? avgSLpct.reduce((a, b) => a + b, 0) / avgSLpct.length : 0;
+    const ev = (winRate * avgTP) - (lossRate * avgSL);
+    const evColor = ev > 0 ? 'var(--green)' : ev < 0 ? 'var(--red)' : 'var(--amber)';
+    evHtml = `<span style="color:${evColor}">${ev >= 0 ? '+' : ''}${ev.toFixed(1)}%</span>`;
+  }
+
   statsEl.innerHTML = `
-    <div style="display:flex;gap:20px;flex-wrap:wrap;padding:8px 0 12px;border-bottom:1px solid var(--border);margin-bottom:12px">
+    <div style="display:flex;gap:20px;flex-wrap:wrap;padding:8px 0 12px;border-bottom:1px solid var(--border);margin-bottom:4px">
       <div style="text-align:center;min-width:60px">
         <div style="font-family:var(--font-mono);font-size:22px;font-weight:700;color:var(--green)">${wins}</div>
         <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:1px">Wins</div>
@@ -2081,14 +2136,29 @@ function renderPredictionTracker(preds, priceMap = {}) {
         </div>
         <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:1px">Accuracy</div>
       </div>
+      <div style="text-align:center;min-width:70px">
+        <div style="font-family:var(--font-mono);font-size:22px;font-weight:700">${evHtml}</div>
+        <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:1px">Exp. Value</div>
+      </div>
       <div style="text-align:center;min-width:60px">
         <div style="font-family:var(--font-mono);font-size:22px;font-weight:700;color:var(--text-secondary)">${preds.length}</div>
         <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:1px">Total</div>
       </div>
+    </div>
+    <div style="display:flex;gap:6px;margin-bottom:12px;flex-wrap:wrap">
+      ${['all','pending','win','loss'].map(f => {
+        const labels = { all: `All (${preds.length})`, pending: `⏳ Pending (${pending})`, win: `✅ Wins (${wins})`, loss: `❌ Losses (${losses})` };
+        const active = _predFilter === f;
+        return `<button onclick="setPredFilter('${f}')" class="btn-sm" style="font-size:10px;${active ? 'border-color:var(--green);color:var(--green);' : ''}">${labels[f]}</button>`;
+      }).join('')}
     </div>`;
 
-  // ── Log entries (show last 20) ──
-  const display = preds.slice(0, 20);
+  // ── Log entries filtered by tab ──
+  const filtered = _predFilter === 'all' ? preds :
+    _predFilter === 'pending' ? preds.filter(p => p.outcome === 'PENDING') :
+    _predFilter === 'win'     ? preds.filter(p => p.outcome === 'WIN') :
+    preds.filter(p => p.outcome === 'LOSS');
+  const display = filtered.slice(0, 20);
   if (display.length === 0) {
     logEl.innerHTML = '<div style="color:var(--text-muted);text-align:center;padding:16px">No predictions logged yet — signals will be tracked automatically on each refresh.</div>';
     return;

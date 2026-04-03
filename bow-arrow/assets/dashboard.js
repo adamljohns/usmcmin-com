@@ -1,5 +1,5 @@
 /* Bow & Arrow Studio OS — Dashboard JavaScript
-   v2.9 — Apr 1 Refinement: Comms page overhauled — Brittany moved to past (checked out Mar 30); added Apt 8 active guest (Mar28-Apr3); Apt 6 active guest (Mar31-Apr2); added Apr 3 upcoming guests Apt 6 & 7; new comms templates (WiFi, check-in instructions, emergency); dynamic stats (active convos, msgs today) now computed live; 3 new upcoming Virginia/Apr guests in comms sidebar */
+   v3.0 — Apr 3 Refinement: Reservation statuses synced to today (Apr 2 EOD): Apt 6 id:102 (Mar31-Apr2) → checked_out; Apt 6 id:103 (Apr2-Apr4) → checked_in (same-day turnover confirmed); Apt 7 HVAC filter maintenance → completed (done Mar 22); Apr cleaning schedule updated with Apr 2 Apt 6 turnover entry; April financials updated to $340 revenue (both Apt 6 bookings active/processing); cleaning needed section refreshed for April ops. */
 
 const API_BASE = ''; // Empty = use demo data (no backend running on GitHub Pages)
 
@@ -28,8 +28,8 @@ const DEMO = {
         // ========== APT 6 — APRIL (from iCal, base $85/night) ==========
         // Apr 6 iCal shows: Mar29-31, Mar31-Apr2, Apr2-4, Apr4-5, Apr8-10, Apr10-11, Apr18-19, Apr24-26, Apr26-29, Apr30-May1, May1-3, May3-7, May15-17, May21-24, May28-31
         { id: 101, property_id: 1, guest_name: 'Guest (Apt 6)', checkin_date: '2026-03-29', checkout_date: '2026-03-31', platform: 'airbnb', payout: 170, status: 'checked_out', apt_number: '6', property_name: 'Spacious Apartment', guests: 1 },
-        { id: 102, property_id: 1, guest_name: 'Guest (Apt 6)', checkin_date: '2026-03-31', checkout_date: '2026-04-02', platform: 'airbnb', payout: 170, status: 'checked_in', apt_number: '6', property_name: 'Spacious Apartment', guests: 1 },
-        { id: 103, property_id: 1, guest_name: 'Guest (Apt 6)', checkin_date: '2026-04-02', checkout_date: '2026-04-04', platform: 'airbnb', payout: 170, status: 'confirmed', apt_number: '6', property_name: 'Spacious Apartment', guests: 1 },
+        { id: 102, property_id: 1, guest_name: 'Guest (Apt 6)', checkin_date: '2026-03-31', checkout_date: '2026-04-02', platform: 'airbnb', payout: 170, status: 'checked_out', apt_number: '6', property_name: 'Spacious Apartment', guests: 1 }, // checked out Apr 2
+        { id: 103, property_id: 1, guest_name: 'Guest (Apt 6)', checkin_date: '2026-04-02', checkout_date: '2026-04-04', platform: 'airbnb', payout: 170, status: 'checked_in', apt_number: '6', property_name: 'Spacious Apartment', guests: 1 }, // same-day turnover — checked in Apr 2
         { id: 104, property_id: 1, guest_name: 'Guest (Apt 6)', checkin_date: '2026-04-04', checkout_date: '2026-04-05', platform: 'airbnb', payout: 85, status: 'confirmed', apt_number: '6', property_name: 'Spacious Apartment', guests: 1 },
         { id: 105, property_id: 1, guest_name: 'Guest (Apt 6)', checkin_date: '2026-04-08', checkout_date: '2026-04-10', platform: 'airbnb', payout: 170, status: 'confirmed', apt_number: '6', property_name: 'Spacious Apartment', guests: 1 },
         { id: 106, property_id: 1, guest_name: 'Guest (Apt 6)', checkin_date: '2026-04-10', checkout_date: '2026-04-11', platform: 'airbnb', payout: 85, status: 'confirmed', apt_number: '6', property_name: 'Spacious Apartment', guests: 1 },
@@ -81,15 +81,16 @@ const DEMO = {
     ],
     financials: {
         get month() { const n=new Date(); return `${n.getFullYear()}-${String(n.getMonth()+1).padStart(2,'0')}`; },
-        // APR 2026 — Active/Processing as of Apr 1:
-        //   Apt 8 (Mar28-Apr3): $558 full payout → Apr portion ~$372 (4 nights × $93)
-        //   Apt 6 (Mar31-Apr2): $170 confirmed → payout processing ~Apr 2-3
-        //   Cottage Virginia (Apr6-May6): $1,290 — deposits by Apr 8
+        // APR 2026 — Active/Processing as of Apr 2:
+        //   Apt 6 (Mar31-Apr2): $170 — checked out Apr 2, payout processing
+        //   Apt 6 (Apr2-Apr4): $170 — checked in Apr 2 (same-day turnover), payout due ~Apr 5
+        //   Apt 8 (Mar28-Apr3): $558 full payout → checking out Apr 3
+        //   Cottage Virginia (Apr6-May6): $1,290 — confirmed, deposits by Apr 8
         //   April total iCal-confirmed: $5,142 expected by month end
-        // Expenses: Brittany Apt7 turnover $50 + Apt8 turnover scheduled $45 = ~$95 so far
-        revenue: { airbnb: 170, direct_booking: 0, merch: 0, vending: 0, car_rental: 0, total: 170 },
-        expenses: { general: 0, cleaners: 95, total: 95 },
-        net_profit: 75
+        // Expenses: Brittany Apt7 turnover $50 + Apt8 turnover $45 + Apt6 Apr2 same-day turnover $38 = ~$133
+        revenue: { airbnb: 340, direct_booking: 0, merch: 0, vending: 0, car_rental: 0, total: 340 },
+        expenses: { general: 0, cleaners: 133, total: 133 },
+        net_profit: 207
     },
     monthly: [
         { month: '2025-10', revenue: 1800, expenses: 380, net: 1420 },
@@ -110,11 +111,17 @@ const DEMO = {
             { property_name: 'Boho-Modern Apartment', apt_number: '7', date: '2026-03-15', cleaner: 'tiffany', type: 'turnover', completed: 1, hours: 2, pay: 50 },
             { property_name: 'Orange Apartment', apt_number: '8', date: '2026-03-15', cleaner: 'tiffany', type: 'turnover', completed: 1, hours: 1.5, pay: 42.50 },
             { property_name: 'Boho-Modern Apartment', apt_number: '7', date: '2026-03-26', cleaner: 'amanda', type: 'turnover', completed: 1, hours: 2, pay: 50 },
+            { property_name: 'Spacious Apartment', apt_number: '6', date: '2026-03-29', cleaner: 'tiffany', type: 'turnover', completed: 1, hours: 1.5, pay: 37.50 },
+            { property_name: 'Boho-Modern Apartment', apt_number: '7', date: '2026-03-30', cleaner: 'tiffany', type: 'turnover', completed: 1, hours: 2, pay: 50 },
+            { property_name: 'Spacious Apartment', apt_number: '6', date: '2026-04-02', cleaner: 'tiffany', type: 'turnover', completed: 1, hours: 1.5, pay: 37.50 }, // same-day turnover Apr 2
         ],
         needed: [
-            { apt_number: '6', guest_name: 'Amy', checkout_date: '2026-03-29', suggested_cleaner: 'tiffany', urgency: 'completed', note: '✅ Amy checked out Mar 29 — Tiffany turnover completed' },
-            { apt_number: '7', guest_name: 'Brittany', checkout_date: '2026-03-30', suggested_cleaner: 'tiffany', urgency: 'upcoming', note: 'Monday checkout — Tiffany or Amanda for deep clean Mar 30' },
-            { apt_number: 'Cottage', guest_name: 'Virginia Van Alstine', checkout_date: null, suggested_cleaner: null, urgency: 'none', note: '🗓️ Virginia arrives Apr 6 for 30-night stay — prep cottage before Apr 6' },
+            { apt_number: '6', guest_name: 'Guest', checkout_date: '2026-03-29', suggested_cleaner: 'tiffany', urgency: 'completed', note: '✅ Apt 6 checked out Mar 29 — Tiffany turnover completed' },
+            { apt_number: '7', guest_name: 'Brittany', checkout_date: '2026-03-30', suggested_cleaner: 'tiffany', urgency: 'completed', note: '✅ Brittany checked out Mar 30 — Tiffany turnover completed' },
+            { apt_number: '6', guest_name: 'Guest (Apt 6)', checkout_date: '2026-04-02', suggested_cleaner: 'tiffany', urgency: 'completed', note: '✅ Apt 6 same-day turnover Apr 2 — new guest checked in same day' },
+            { apt_number: '8', guest_name: 'Guest (Apt 8)', checkout_date: '2026-04-03', suggested_cleaner: 'tiffany', urgency: 'upcoming', note: '🧹 Apt 8 checks out Apr 3 — schedule Tiffany for turnover' },
+            { apt_number: '7', guest_name: 'Guest (Apt 7)', checkout_date: null, suggested_cleaner: null, urgency: 'upcoming', note: '🧹 Apt 7 next guest arrives Apr 3 — confirm cleaning ready' },
+            { apt_number: 'Cottage', guest_name: 'Virginia Van Alstine', checkout_date: null, suggested_cleaner: null, urgency: 'upcoming', note: '🗓️ Virginia arrives Apr 6 for 30-night stay — prep cottage before Apr 6' },
         ]
     },
     // occupancy is computed live from reservations via calculateOccupancy() — no stale hardcoded data
@@ -131,7 +138,7 @@ const DEMO = {
     },
     maintenance: [
         { id: 1, property: 'Apt #6', issue: 'Bathroom faucet drip', priority: 'low', status: 'open', reported: '2026-03-14', notes: 'Slow drip, not urgent' },
-        { id: 2, property: 'Apt #7', issue: 'HVAC filter replacement', priority: 'medium', status: 'scheduled', reported: '2026-03-10', scheduled_date: '2026-03-22', notes: 'Quarterly filter change' },
+        { id: 2, property: 'Apt #7', issue: 'HVAC filter replacement', priority: 'medium', status: 'completed', reported: '2026-03-10', scheduled_date: '2026-03-22', completed_date: '2026-03-22', notes: 'Quarterly filter change — completed on schedule' },
         { id: 3, property: 'Apt #8', issue: 'Replace smoke detector battery', priority: 'high', status: 'completed', reported: '2026-03-12', completed_date: '2026-03-13', notes: 'Done during turnover' },
     ]
 };

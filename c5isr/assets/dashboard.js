@@ -1,5 +1,5 @@
 /**
- * C5iSR Dashboard — Frontend Logic v3.1
+ * C5iSR Dashboard — Frontend Logic v3.2
  *
  * Features:
  *   - Dual mode: Backend FastAPI or CoinGecko demo
@@ -26,6 +26,8 @@
  *   - [v3.0] Prediction Range Bars: visual SL→current→TP progress bar for PENDING signals
  *   - [v3.1] Portfolio now includes XAU/XAG (gold/silver oz) alongside crypto — true stewardship view
  *   - [v3.1] Prediction Tracker: Expected Value stat + filter tabs (All/Pending/Win/Loss)
+ *   - [v3.2] SOL added to sticky price ticker (all 6 tracked assets now visible)
+ *   - [v3.2] Kingdom Capital Ledger: tithe (10%) + missions (2%) tracker, giving log, progress bar
  */
 
 // ── Config ──
@@ -1628,7 +1630,7 @@ function updateTicker(priceArr) {
   if (priceArr) {
     priceArr.forEach(p => {
       const id = p.id || '';
-      const sym = (id === 'bitcoin' ? 'btc' : id === 'ethereum' ? 'eth' : id === 'neo' ? 'neo' : null);
+      const sym = (id === 'bitcoin' ? 'btc' : id === 'ethereum' ? 'eth' : id === 'neo' ? 'neo' : id === 'solana' ? 'sol' : null);
       if (!sym) return;
       _setTickerCell(sym, p.price, p.change_24h);
     });
@@ -2448,5 +2450,178 @@ document.addEventListener('DOMContentLoaded', () => {
     renderPredictionTracker(preds, {});
     const archive = getReportArchive();
     renderReportArchive(archive);
+    renderKingdomLedger();
   }, 500);
 });
+
+// ────────────────────────────────────────────────────────────────────────────
+// ── Kingdom Capital Ledger v1.0 ──
+//  Tracks realized P&L from closed trades, auto-calculates tithe (10%),
+//  gifts-to-missions, and displays giving vs income breakdown.
+// ────────────────────────────────────────────────────────────────────────────
+
+const TITHE_RATE = 0.10;       // 10% tithe
+const MISSIONS_RATE = 0.02;    // 2% additional missions giving target
+
+function getLedger() {
+  try { return JSON.parse(localStorage.getItem('c5_ledger') || '{"entries":[],"totalGiven":0}'); }
+  catch { return { entries: [], totalGiven: 0 }; }
+}
+function saveLedger(l) {
+  try { localStorage.setItem('c5_ledger', JSON.stringify(l)); } catch {}
+}
+function resetLedger() {
+  if (!confirm('Reset Kingdom Capital Ledger? This clears all trade P&L entries.')) return;
+  localStorage.removeItem('c5_ledger');
+  renderKingdomLedger();
+}
+
+function logTradeProfit(symbol, profitUSD, note = '') {
+  const ledger = getLedger();
+  const tithe = profitUSD * TITHE_RATE;
+  const missions = profitUSD * MISSIONS_RATE;
+  ledger.entries.unshift({
+    id: `${symbol}_${Date.now()}`,
+    symbol,
+    profitUSD,
+    tithe,
+    missions,
+    note,
+    date: new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }),
+    timestamp: Date.now(),
+  });
+  saveLedger(ledger);
+  renderKingdomLedger();
+}
+
+function recordGiving(amountUSD, note = '') {
+  const ledger = getLedger();
+  ledger.totalGiven = (ledger.totalGiven || 0) + amountUSD;
+  ledger.givingLog = ledger.givingLog || [];
+  ledger.givingLog.unshift({
+    amountUSD,
+    note,
+    date: new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }),
+    timestamp: Date.now(),
+  });
+  saveLedger(ledger);
+  renderKingdomLedger();
+}
+
+function renderKingdomLedger() {
+  const el = document.getElementById('ledgerContent');
+  const updEl = document.getElementById('ledgerUpdated');
+  if (!el) return;
+  if (updEl) updEl.textContent = new Date().toLocaleTimeString();
+
+  const ledger = getLedger();
+  const entries = ledger.entries || [];
+  const totalProfit = entries.reduce((s, e) => s + (e.profitUSD || 0), 0);
+  const totalTitheOwed = totalProfit > 0 ? totalProfit * TITHE_RATE : 0;
+  const totalMissionsOwed = totalProfit > 0 ? totalProfit * MISSIONS_RATE : 0;
+  const totalOwed = totalTitheOwed + totalMissionsOwed;
+  const totalGiven = ledger.totalGiven || 0;
+  const balance = totalOwed - totalGiven;
+  const balColor = balance <= 0 ? 'var(--green)' : 'var(--amber)';
+  const balLabel = balance <= 0 ? '✅ Faithful' : '⏳ Pending';
+
+  // Progress bar: giving vs owed
+  const givingPct = totalOwed > 0 ? Math.min((totalGiven / totalOwed) * 100, 100) : 0;
+  const barColor = givingPct >= 100 ? 'var(--green)' : givingPct >= 60 ? 'var(--amber)' : 'var(--red)';
+
+  el.innerHTML = `
+    <!-- Summary Stats -->
+    <div style="display:flex;gap:16px;flex-wrap:wrap;padding-bottom:14px;border-bottom:1px solid var(--border);margin-bottom:14px">
+      <div style="text-align:center;min-width:80px">
+        <div style="font-family:var(--font-mono);font-size:20px;font-weight:700;color:var(--green)">$${totalProfit.toLocaleString(undefined,{minimumFractionDigits:2,maximumFractionDigits:2})}</div>
+        <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:1px">Total Profit</div>
+      </div>
+      <div style="text-align:center;min-width:80px">
+        <div style="font-family:var(--font-mono);font-size:20px;font-weight:700;color:var(--amber)">$${totalTitheOwed.toFixed(2)}</div>
+        <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:1px">Tithe (10%)</div>
+      </div>
+      <div style="text-align:center;min-width:80px">
+        <div style="font-family:var(--font-mono);font-size:20px;font-weight:700;color:#8888ff">$${totalMissionsOwed.toFixed(2)}</div>
+        <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:1px">Missions (2%)</div>
+      </div>
+      <div style="text-align:center;min-width:80px;border-left:1px solid var(--border);padding-left:16px">
+        <div style="font-family:var(--font-mono);font-size:20px;font-weight:700;color:var(--green)">$${totalGiven.toFixed(2)}</div>
+        <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:1px">Given</div>
+      </div>
+      <div style="text-align:center;min-width:80px">
+        <div style="font-family:var(--font-mono);font-size:20px;font-weight:700;color:${balColor}">$${Math.abs(balance).toFixed(2)}</div>
+        <div style="font-size:10px;color:${balColor};text-transform:uppercase;letter-spacing:1px">${balance <= 0 ? 'Surplus' : 'Still Owed'}</div>
+      </div>
+      <div style="text-align:center;min-width:80px">
+        <div style="font-family:var(--font-mono);font-size:16px;font-weight:700;color:${balColor}">${balLabel}</div>
+        <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:1px">Status</div>
+      </div>
+    </div>
+
+    <!-- Giving Progress Bar -->
+    <div style="margin-bottom:14px">
+      <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--text-muted);margin-bottom:4px">
+        <span>Giving Progress (${givingPct.toFixed(0)}% of obligation fulfilled)</span>
+        <span>$${totalGiven.toFixed(0)} / $${totalOwed.toFixed(0)}</span>
+      </div>
+      <div style="height:8px;background:rgba(255,255,255,0.06);border-radius:4px;overflow:hidden">
+        <div style="height:100%;width:${givingPct}%;background:${barColor};border-radius:4px;transition:width 0.4s"></div>
+      </div>
+    </div>
+
+    <!-- Action Row: Log Trade Profit / Record Giving -->
+    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px">
+      <div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap">
+        <span style="font-size:11px;color:var(--text-muted)">Log profit:</span>
+        <select id="ledgerSymbol" class="btn-sm" style="background:transparent;color:var(--text-secondary);width:70px">
+          ${Object.values(ASSETS).map(a => `<option value="${a.symbol}">${a.symbol}</option>`).join('')}
+          <option value="XAU">XAU</option><option value="XAG">XAG</option>
+        </select>
+        <input id="ledgerProfitAmt" type="number" class="portfolio-input" placeholder="P&L ($)" step="0.01" style="width:90px" />
+        <input id="ledgerProfitNote" type="text" class="portfolio-input" placeholder="Note (optional)" style="width:130px" />
+        <button class="btn-sm" onclick="(function(){const sym=document.getElementById('ledgerSymbol').value;const amt=parseFloat(document.getElementById('ledgerProfitAmt').value);const note=document.getElementById('ledgerProfitNote').value;if(!amt||isNaN(amt))return;logTradeProfit(sym,amt,note);document.getElementById('ledgerProfitAmt').value='';document.getElementById('ledgerProfitNote').value='';})()">+ Log</button>
+      </div>
+      <div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap">
+        <span style="font-size:11px;color:var(--text-muted)">Record giving:</span>
+        <input id="ledgerGivingAmt" type="number" class="portfolio-input" placeholder="Amount ($)" step="0.01" style="width:100px" />
+        <input id="ledgerGivingNote" type="text" class="portfolio-input" placeholder="Where (e.g. Church)" style="width:130px" />
+        <button class="btn-sm" style="border-color:var(--green);color:var(--green)" onclick="(function(){const amt=parseFloat(document.getElementById('ledgerGivingAmt').value);const note=document.getElementById('ledgerGivingNote').value;if(!amt||isNaN(amt))return;recordGiving(amt,note);document.getElementById('ledgerGivingAmt').value='';document.getElementById('ledgerGivingNote').value='';})()">+ Give</button>
+      </div>
+    </div>
+
+    <!-- Trade P&L Entries -->
+    ${entries.length > 0 ? `
+      <div style="font-size:11px;color:var(--text-muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:6px">Trade History</div>
+      <div style="max-height:220px;overflow-y:auto">
+        ${entries.slice(0, 15).map(e => {
+          const profColor = e.profitUSD >= 0 ? 'var(--green)' : 'var(--red)';
+          return `<div style="display:flex;align-items:center;gap:10px;padding:6px 0;border-bottom:1px solid rgba(255,255,255,0.04);flex-wrap:wrap">
+            <span style="font-family:var(--font-mono);font-weight:700;font-size:12px;color:${ASSETS[e.symbol.toLowerCase()] ? ASSETS[e.symbol.toLowerCase()]?.color : 'var(--text-secondary)'};min-width:35px">${e.symbol}</span>
+            <span style="font-family:var(--font-mono);font-size:13px;color:${profColor};min-width:80px">${e.profitUSD >= 0 ? '+' : ''}$${e.profitUSD.toFixed(2)}</span>
+            <span style="font-size:10px;color:var(--amber)">Tithe: $${e.tithe.toFixed(2)}</span>
+            <span style="font-size:10px;color:#8888ff">Missions: $${e.missions.toFixed(2)}</span>
+            ${e.note ? `<span style="font-size:10px;color:var(--text-muted);font-style:italic">${e.note}</span>` : ''}
+            <span style="font-size:10px;color:var(--text-muted);margin-left:auto">${e.date}</span>
+          </div>`;
+        }).join('')}
+      </div>
+    ` : '<div style="color:var(--text-muted);font-size:12px;text-align:center;padding:12px">No trades logged yet — log your first closed P&L above to begin tracking stewardship.</div>'}
+
+    <!-- Giving Log -->
+    ${(ledger.givingLog || []).length > 0 ? `
+      <div style="font-size:11px;color:var(--text-muted);text-transform:uppercase;letter-spacing:1px;margin:12px 0 6px">Giving History</div>
+      ${(ledger.givingLog || []).slice(0, 5).map(g => `
+        <div style="display:flex;gap:10px;align-items:center;padding:4px 0;font-size:12px;color:var(--text-secondary)">
+          <span style="color:var(--green);font-family:var(--font-mono)">+$${g.amountUSD.toFixed(2)}</span>
+          ${g.note ? `<span style="color:var(--text-muted)">${g.note}</span>` : ''}
+          <span style="margin-left:auto;color:var(--text-muted);font-size:10px">${g.date}</span>
+        </div>`).join('')}
+    ` : ''}
+
+    <div style="font-size:10px;color:var(--text-muted);margin-top:10px;border-top:1px solid var(--border);padding-top:8px;text-align:right">
+      "Honor the LORD with your wealth and with the firstfruits of all your produce." — Proverbs 3:9
+    </div>`;
+}
+// Expose for external calls (e.g. from prediction tracker on outcome)
+window.logTradeProfit = logTradeProfit;
+window.recordGiving = recordGiving;

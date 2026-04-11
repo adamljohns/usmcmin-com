@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RESOLUTE Citizen Scorecard — Table View | U.S.M.C. Ministries</title>
+  <meta name="description" content="Side-by-side comparison of Virginia candidates. RESOLUTE Citizen 6-category Christian voter scorecard based on public records and Reformed Christian values.">
+  <link rel="stylesheet" href="assets/css/main.css">
+  <link rel="icon" href="assets/img/favicon.png" type="image/png">
+  <style>
+    .sc-container { max-width: 1300px; margin: 0 auto; padding: 20px; }
+
+    .sc-hero {
+      text-align: center;
+      padding: 48px 20px 36px;
+      border-bottom: 2px solid var(--border);
+      background: linear-gradient(180deg, rgba(30,58,95,0.08) 0%, transparent 100%);
+    }
+    [data-theme="dark"] .sc-hero {
+      background: linear-gradient(180deg, rgba(30,58,95,0.25) 0%, transparent 100%);
+    }
+    .sc-hero-badge {
+      display: inline-block;
+      font-size: 0.68rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 3px;
+      color: #c9a84c;
+      background: rgba(201,168,76,0.12);
+      border: 1px solid rgba(201,168,76,0.25);
+      padding: 6px 18px;
+      border-radius: 20px;
+      margin-bottom: 20px;
+    }
+    .sc-hero h1 {
+      font-size: clamp(1.8rem, 4vw, 2.8rem);
+      color: var(--white);
+      margin-bottom: 6px;
+      font-weight: 800;
+    }
+    .sc-hero h1 .resolute { color: #c9a84c; }
+    .sc-hero h1 .citizen { color: var(--accent); }
+    .sc-hero .subtitle {
+      color: var(--gray);
+      font-size: 0.9rem;
+      max-width: 600px;
+      margin: 0 auto 16px;
+      line-height: 1.6;
+    }
+
+    /* View toggle */
+    .view-toggle { display: flex; justify-content: center; gap: 8px; margin: 16px 0; }
+    .view-toggle a { color: var(--gray); text-decoration: none; font-size: 0.82rem; padding: 6px 18px; border-radius: 20px; border: 1px solid var(--border); transition: all 0.2s; }
+    .view-toggle a:hover { border-color: var(--accent); color: var(--accent); }
+    .view-toggle a.active { background: var(--accent-dim); border-color: var(--accent); color: var(--accent); }
+
+    /* Filter */
+    .sc-filter { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; justify-content: center; padding: 14px 0; border-bottom: 1px solid var(--border); margin-bottom: 20px; }
+    .sc-filter select, .sc-filter input { background: var(--bg-card); border: 1px solid var(--border); color: var(--white); padding: 7px 10px; border-radius: 6px; font-size: 0.82rem; outline: none; }
+    .sc-filter select:focus, .sc-filter input:focus { border-color: var(--accent); }
+
+    /* Jurisdiction section */
+    .jurisdiction-section { margin-bottom: 36px; }
+    .jurisdiction-header {
+      font-family: var(--font-main); font-size: 1.3rem; color: var(--accent);
+      padding: 12px 0; border-bottom: 2px solid var(--accent); margin-bottom: 0;
+    }
+
+    /* Table */
+    .sc-table { width: 100%; border-collapse: collapse; background: var(--bg-card); border: 1px solid var(--border); border-radius: 8px; overflow: hidden; margin-bottom: 4px; }
+    .sc-table thead { background: rgba(30, 58, 95, 0.4); }
+    [data-theme="dark"] .sc-table thead { background: rgba(30, 58, 95, 0.6); }
+    .sc-table th { padding: 10px 8px; font-size: 0.72rem; color: var(--accent); text-transform: uppercase; letter-spacing: 0.5px; font-weight: 600; text-align: center; border-bottom: 2px solid var(--accent); white-space: nowrap; }
+    .sc-table th:first-child { text-align: left; padding-left: 14px; }
+    .sc-table th:nth-child(2) { text-align: left; }
+    .sc-table th:nth-child(3) { text-align: center; }
+    .sc-table th img { vertical-align: middle; opacity: 0.7; }
+    .sc-table td { padding: 10px 8px; font-size: 0.88rem; text-align: center; border-bottom: 1px solid var(--border); }
+    .sc-table td:first-child { text-align: left; font-weight: 600; padding-left: 14px; color: var(--white); }
+    .sc-table td:nth-child(2) { text-align: left; font-size: 0.78rem; color: var(--gray); }
+    .sc-table td:nth-child(3) { text-align: center; font-weight: 700; }
+    .sc-table tr:hover { background: var(--accent-dim); }
+    .sc-table tr:last-child td { border-bottom: none; }
+
+    /* Party badges */
+    .party-r { color: #ef4444; font-weight: 700; font-size: 0.78rem; }
+    .party-d { color: #3b82f6; font-weight: 700; font-size: 0.78rem; }
+    .party-u { color: var(--gray); font-weight: 700; font-size: 0.78rem; }
+
+    /* Score colors */
+    .s10 { color: #4CAF50; font-weight: 700; }
+    .s8 { color: #7edd80; font-weight: 600; }
+    .s6 { color: #FFC107; font-weight: 600; }
+    .s4 { color: #ff9800; font-weight: 600; }
+    .s2 { color: #f44336; font-weight: 600; }
+    .s0 { color: #666; }
+    .s-null { color: #444; font-size: 0.75rem; }
+
+    /* Total score */
+    .total-high { color: #4CAF50; font-weight: 700; font-size: 1rem; }
+    .total-mid { color: #FFC107; font-weight: 700; font-size: 1rem; }
+    .total-low { color: #f44336; font-weight: 700; font-size: 1rem; }
+    .total-none { color: #666; font-size: 0.85rem; }
+
+    /* Candidate link */
+    .cand-link { color: var(--white); text-decoration: none; }
+    .cand-link:hover { color: var(--accent); text-decoration: underline; }
+
+    /* Category header icons */
+    .cat-th { display: flex; flex-direction: column; align-items: center; gap: 2px; }
+    .cat-th img { display: block; }
+    .cat-th span { font-size: 0.6rem; }
+
+    /* Perfect score highlight */
+    .perfect-cell { background: rgba(76,175,80,0.15); }
+
+    /* Level badges in table */
+    .level-tag { font-size: 0.6rem; padding: 1px 4px; border-radius: 2px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.3px; }
+    .level-tag-federal { background: rgba(201,168,76,0.15); color: #c9a84c; }
+    .level-tag-state { background: rgba(107,114,128,0.12); color: #9ca3af; }
+    .level-tag-local { background: rgba(76,175,80,0.1); color: #66bb6a; }
+
+    footer { text-align: center; padding: 30px 20px; color: var(--gray); font-size: 0.82rem; border-top: 1px solid var(--border); margin-top: 40px; }
+    footer a { color: var(--accent); text-decoration: none; }
+
+    @media (max-width: 768px) {
+      .sc-table { font-size: 0.75rem; }
+      .sc-table th, .sc-table td { padding: 6px 4px; }
+      .sc-table td:first-child { padding-left: 8px; }
+      .cat-th span { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a href="/" class="nav-brand" style="text-decoration:none">
+    <img src="assets/img/logo.png" alt="U.S.M.C. Ministries" style="object-fit:contain">
+    <div class="nav-brand-text">
+      <div class="name">U.S.M.C. Ministries</div>
+      <div class="tag">Warriors Equipped</div>
+    </div>
+  </a>
+  <ul class="nav-links">
+    <li><a href="citizen.html" class="active">RESOLUTE Citizen</a></li>
+    <li><a href="shop.html">Shop</a></li>
+    <li><a href="coaching.html">Coaching</a></li>
+    <li><a href="about.html">About</a></li>
+  </ul>
+</nav>
+
+<div class="sc-container">
+  <div class="sc-hero">
+    <span class="sc-hero-badge">U.S.M.C. Ministries</span>
+    <img src="assets/icons/shield-star.png" alt="" width="80" height="80" style="display:block;margin:0 auto 16px;opacity:0.9;">
+    <h1><span class="resolute">RESOLUTE</span> <span class="citizen">Citizen</span></h1>
+    <p class="subtitle">Compare candidates side-by-side. All scores from public records, official votes, campaign platforms, and primary sources only.</p>
+  </div>
+
+  <div class="view-toggle">
+    <a href="citizen.html">Candidates</a>
+    <a href="citizen-table.html" class="active">Table View</a>
+    <a href="citizen-issues.html">Issues</a>
+  </div>
+
+  <div class="sc-filter">
+    <input type="text" id="searchInput" placeholder="Search by name..." oninput="renderTables()">
+    <select id="filterLevel" onchange="renderTables()">
+      <option value="all">All Levels</option>
+      <option value="federal">Federal</option>
+      <option value="state">State</option>
+      <option value="local">Local</option>
+    </select>
+    <select id="filterParty" onchange="renderTables()">
+      <option value="all">All Parties</option>
+      <option value="R">Republican</option>
+      <option value="D">Democrat</option>
+    </select>
+    <select id="filterSort" onchange="renderTables()">
+      <option value="score-desc">Highest Score</option>
+      <option value="score-asc">Lowest Score</option>
+      <option value="name">Alphabetical</option>
+      <option value="district">By District</option>
+    </select>
+  </div>
+
+  <div id="tablesContainer"></div>
+</div>
+
+<footer>
+  <p><strong>RESOLUTE Citizen</strong> &mdash; a module of <a href="https://usmcmin.org">U.S.M.C. Ministries</a></p>
+  <p style="margin-top:6px;font-size:0.72rem;">Scores based on public records &amp; primary sources only. &mdash; Each True = +2 points &middot; Max 60 &middot; <a href="https://usmcmin.org/bible.html?ref=Proverbs+29:2">Proverbs 29:2</a></p>
+  <p style="margin-top:6px;font-size:0.72rem;color:var(--gray);">Disclaimer: Educational tool grounded in Reformed Christian values. Not an official endorsement. &mdash; <a href="https://usmcmin.org/bible.html?ref=Proverbs+27:17">Proverbs 27:17</a></p>
+</footer>
+
+<script>
+let DATA = null;
+var POINTS_PER_TRUE = 2;
+var MAX_PER_TOPIC = 10;
+var MAX_TOTAL = 60;
+
+fetch('data/scorecard.json')
+  .then(r => r.json())
+  .then(data => { DATA = data; renderTables(); });
+
+function calcCatScore(answers) {
+  if (!answers) return { score: 0, answered: 0 };
+  var s = 0, a = 0;
+  answers.forEach(function(v) { if (v === true) { s++; a++; } else if (v === false) { a++; } });
+  return { score: s * POINTS_PER_TRUE, raw: s, answered: a };
+}
+
+function calcTotal(scores) {
+  var t = 0, a = 0;
+  DATA.categories.forEach(function(cat) {
+    var cs = calcCatScore(scores[cat.id]);
+    t += cs.score; a += cs.answered;
+  });
+  return { score: t, answered: a };
+}
+
+function scoreClass(score, answered) {
+  if (answered === 0) return 's-null';
+  if (score === 10) return 's10';
+  if (score >= 8) return 's8';
+  if (score >= 6) return 's6';
+  if (score >= 4) return 's4';
+  if (score >= 2) return 's2';
+  return 's0';
+}
+
+function totalClass(score, answered) {
+  if (answered === 0) return 'total-none';
+  var pct = score / MAX_TOTAL;
+  if (pct >= 0.7) return 'total-high';
+  if (pct >= 0.4) return 'total-mid';
+  return 'total-low';
+}
+
+function partyHtml(party) {
+  if (party === 'R') return '<span class="party-r">Republican</span>';
+  if (party === 'D') return '<span class="party-d">Democrat</span>';
+  return '<span class="party-u">' + party + '</span>';
+}
+
+function renderTables() {
+  var search = (document.getElementById('searchInput').value || '').toLowerCase();
+  var level = document.getElementById('filterLevel').value;
+  var party = document.getElementById('filterParty').value;
+  var sort = document.getElementById('filterSort').value;
+
+  var groups = {};
+  var groupOrder = [
+    'United States Senate',
+    'United States House of Representatives',
+    'Commonwealth of Virginia',
+    'Virginia State Senate',
+    'Virginia House of Delegates',
+    'Spotsylvania County',
+    'City of Fredericksburg',
+    'Stafford County'
+  ];
+
+  DATA.candidates.forEach(function(c) {
+    if (search && !c.name.toLowerCase().includes(search) && !c.office.toLowerCase().includes(search)) return;
+    if (level !== 'all' && c.level !== level) return;
+    if (party !== 'all' && c.party !== party) return;
+    if (!groups[c.jurisdiction]) groups[c.jurisdiction] = [];
+    groups[c.jurisdiction].push(c);
+  });
+
+  Object.keys(groups).forEach(function(j) {
+    groups[j].sort(function(a, b) {
+      if (sort === 'score-desc') return calcTotal(b.scores).score - calcTotal(a.scores).score;
+      if (sort === 'score-asc') return calcTotal(a.scores).score - calcTotal(b.scores).score;
+      if (sort === 'district') return (a.district || 0) - (b.district || 0);
+      return a.name.localeCompare(b.name);
+    });
+  });
+
+  var catHeaders = '';
+  DATA.categories.forEach(function(cat) {
+    var shortLabel = cat.label.length > 10 ? cat.label.substring(0, 9) + '.' : cat.label;
+    catHeaders += '<th><div class="cat-th"><img src="assets/icons/' + cat.icon + '" alt="" width="18" height="18"><span>' + shortLabel + '</span></div></th>';
+  });
+
+  var html = '';
+
+  function renderGroup(jurisdiction) {
+    if (!groups[jurisdiction] || !groups[jurisdiction].length) return;
+    var candidates = groups[jurisdiction];
+
+    html += '<div class="jurisdiction-section">';
+    html += '<h2 class="jurisdiction-header">' + jurisdiction + ' <span style="font-size:0.7rem;color:var(--gray);font-weight:400;">(' + candidates.length + ')</span></h2>';
+    html += '<table class="sc-table"><thead><tr>';
+    html += '<th>Candidate</th><th>Party</th><th>Total/' + MAX_TOTAL + '</th>';
+    html += catHeaders;
+    html += '</tr></thead><tbody>';
+
+    candidates.forEach(function(c) {
+      var total = calcTotal(c.scores);
+      var tc = totalClass(total.score, total.answered);
+
+      html += '<tr>';
+      html += '<td><a class="cand-link" href="candidates/' + c.slug + '.html">' + c.name + '</a><br><span style="font-size:0.7rem;color:var(--gray);font-weight:400;">' + c.office + '</span></td>';
+      html += '<td>' + partyHtml(c.party) + '</td>';
+      html += '<td><span class="' + tc + '">' + total.score + '/' + MAX_TOTAL + '</span></td>';
+
+      DATA.categories.forEach(function(cat) {
+        var cs = calcCatScore(c.scores[cat.id]);
+        var sc = scoreClass(cs.score, cs.answered);
+        var cellClass = cs.score === MAX_PER_TOPIC ? ' class="perfect-cell"' : '';
+        if (cs.answered === 0) {
+          html += '<td' + cellClass + '><span class="s-null">&mdash;</span></td>';
+        } else {
+          html += '<td' + cellClass + '><span class="' + sc + '">' + cs.score + '</span></td>';
+        }
+      });
+
+      html += '</tr>';
+    });
+
+    html += '</tbody></table></div>';
+  }
+
+  groupOrder.forEach(renderGroup);
+
+  // Any remaining jurisdictions
+  Object.keys(groups).forEach(function(j) {
+    if (groupOrder.includes(j)) return;
+    renderGroup(j);
+  });
+
+  document.getElementById('tablesContainer').innerHTML = html;
+}
+</script>
+</body>
+</html>

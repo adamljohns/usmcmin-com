@@ -1,0 +1,678 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RESOLUTE Citizen Scorecard — U.S.M.C. Ministries</title>
+  <meta name="description" content="The RESOLUTE Citizen Scorecard equips Christians to vote confidently. 6-category scorecard based on public records. America First, Life, Marriage, Immigration, Christian Nationalism, Self-Defense.">
+  <meta property="og:title" content="RESOLUTE Citizen Scorecard — U.S.M.C. Ministries">
+  <meta property="og:description" content="Equipping Christians to vote confidently. 6-category scorecard for local, state, and federal candidates.">
+  <meta property="og:type" content="website">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="stylesheet" href="assets/css/main.css">
+  <link rel="icon" href="assets/img/favicon.png" type="image/png">
+  <style>
+    .sc-container { max-width: 1200px; margin: 0 auto; padding: 20px; }
+
+    /* Hero */
+    .sc-hero {
+      text-align: center;
+      padding: 56px 20px 40px;
+      border-bottom: 2px solid var(--border);
+      background: linear-gradient(180deg, rgba(30,58,95,0.08) 0%, transparent 100%);
+    }
+    [data-theme="dark"] .sc-hero {
+      background: linear-gradient(180deg, rgba(30,58,95,0.25) 0%, transparent 100%);
+    }
+    .sc-hero-badge {
+      display: inline-block;
+      font-size: 0.68rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 3px;
+      color: #c9a84c;
+      background: rgba(201,168,76,0.12);
+      border: 1px solid rgba(201,168,76,0.25);
+      padding: 6px 18px;
+      border-radius: 20px;
+      margin-bottom: 20px;
+    }
+    .sc-hero h1 {
+      font-size: clamp(2rem, 5vw, 3.2rem);
+      color: var(--white);
+      margin-bottom: 6px;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+    }
+    .sc-hero h1 .resolute { color: #c9a84c; }
+    .sc-hero h1 .citizen { color: var(--accent); }
+    .sc-hero .tagline {
+      font-size: 1.05rem;
+      color: var(--gray);
+      margin-bottom: 18px;
+      font-style: italic;
+    }
+    .sc-hero .subtitle {
+      color: var(--gray);
+      font-size: 0.92rem;
+      margin-bottom: 16px;
+      max-width: 680px;
+      margin-left: auto;
+      margin-right: auto;
+      line-height: 1.7;
+    }
+    .sc-hero .methodology {
+      color: var(--gray-light);
+      font-size: 0.82rem;
+      font-style: italic;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+    .sc-hero .methodology a { color: var(--accent); }
+
+    /* Stats bar */
+    .sc-stats {
+      display: flex;
+      justify-content: center;
+      gap: 32px;
+      padding: 18px 0;
+      border-bottom: 1px solid var(--border);
+      flex-wrap: wrap;
+    }
+    .sc-stat {
+      text-align: center;
+    }
+    .sc-stat-num {
+      font-size: 1.6rem;
+      font-weight: 800;
+      color: #c9a84c;
+    }
+    .sc-stat-label {
+      font-size: 0.7rem;
+      color: var(--gray);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    /* View toggle */
+    .view-toggle {
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      margin: 16px 0;
+    }
+    .view-toggle a {
+      color: var(--gray);
+      text-decoration: none;
+      font-size: 0.82rem;
+      padding: 6px 18px;
+      border-radius: 20px;
+      border: 1px solid var(--border);
+      transition: all 0.2s;
+    }
+    .view-toggle a:hover { border-color: var(--accent); color: var(--accent); }
+    .view-toggle a.active { background: var(--accent-dim); border-color: var(--accent); color: var(--accent); }
+
+    /* Filter */
+    .sc-filter {
+      padding: 16px 0;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+      justify-content: center;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 20px;
+    }
+    .sc-filter select, .sc-filter input {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      color: var(--white);
+      padding: 8px 12px;
+      border-radius: var(--radius);
+      font-size: 0.85rem;
+      outline: none;
+    }
+    .sc-filter select:focus, .sc-filter input:focus { border-color: var(--accent); }
+    .sc-filter input { width: 220px; }
+    .sc-count {
+      text-align: center;
+      font-size: 0.82rem;
+      color: var(--gray);
+      margin-bottom: 16px;
+    }
+    .sc-count span { color: var(--accent); font-weight: 600; }
+
+    /* Category Legend */
+    .sc-legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      justify-content: center;
+      margin-bottom: 24px;
+      padding: 14px;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+    }
+    .sc-legend-item {
+      font-size: 0.75rem;
+      color: var(--gray);
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .sc-legend-item img { opacity: 0.6; }
+    .sc-legend-item abbr {
+      font-weight: 600;
+      color: var(--accent);
+      text-decoration: none;
+      border-bottom: 1px dotted var(--gray);
+      cursor: help;
+    }
+
+    /* Scoring colors */
+    .sc-green { color: #4CAF50; }
+    .sc-yellow { color: #FFC107; }
+    .sc-red { color: #f44336; }
+    .sc-gray { color: #666; }
+
+    /* Card grid */
+    .sc-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+      gap: 18px;
+    }
+
+    /* Candidate Card */
+    .sc-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+      transition: border-color 0.2s, box-shadow 0.2s, transform 0.2s;
+    }
+    .sc-card:hover {
+      border-color: var(--accent);
+      box-shadow: 0 6px 24px rgba(0,0,0,0.18);
+      transform: translateY(-2px);
+    }
+    .sc-card-header {
+      padding: 16px 18px 12px;
+      border-bottom: 1px solid var(--border);
+    }
+    .sc-card-header h3 {
+      font-size: 1.05rem;
+      color: var(--white);
+      margin-bottom: 4px;
+      font-family: var(--font-main);
+    }
+    .sc-card-header .office { font-size: 0.78rem; color: var(--gray); }
+    .sc-card-header .jurisdiction {
+      font-size: 0.72rem;
+      color: var(--accent);
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .sc-card-header .level-badge {
+      display: inline-block;
+      font-size: 0.6rem;
+      font-weight: 600;
+      padding: 1px 6px;
+      border-radius: 3px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-left: 6px;
+    }
+    .level-federal { background: rgba(201,168,76,0.15); color: #c9a84c; border: 1px solid rgba(201,168,76,0.3); }
+    .level-state { background: rgba(107,114,128,0.15); color: #9ca3af; border: 1px solid rgba(107,114,128,0.3); }
+    .level-local { background: rgba(76,175,80,0.12); color: #66bb6a; border: 1px solid rgba(76,175,80,0.25); }
+    .sc-card-header .party-badge {
+      display: inline-block;
+      font-size: 0.68rem;
+      font-weight: 700;
+      padding: 2px 8px;
+      border-radius: 4px;
+      margin-left: 8px;
+    }
+    .party-r { background: rgba(220,38,38,0.15); color: #ef4444; border: 1px solid rgba(220,38,38,0.3); }
+    .party-d { background: rgba(37,99,235,0.15); color: #3b82f6; border: 1px solid rgba(37,99,235,0.3); }
+    .party-unknown { background: rgba(107,114,128,0.15); color: #9ca3af; border: 1px solid rgba(107,114,128,0.3); }
+
+    /* Score bar */
+    .sc-scores {
+      padding: 14px 18px;
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      gap: 6px;
+    }
+    .sc-score-cell { text-align: center; }
+    .sc-score-cell .cat-label {
+      font-size: 0.6rem;
+      color: var(--gray);
+      text-transform: uppercase;
+      letter-spacing: 0.3px;
+      display: block;
+      margin-bottom: 4px;
+    }
+    .sc-score-cell .cat-score { font-size: 1.1rem; font-weight: 700; }
+    .sc-score-cell .cat-max { font-size: 0.6rem; color: var(--gray); }
+
+    /* Total score bar */
+    .sc-total {
+      padding: 10px 18px;
+      border-top: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .sc-total-label {
+      font-size: 0.78rem;
+      color: var(--gray);
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+    .sc-total-score { font-size: 1.3rem; font-weight: 700; }
+    .sc-total-bar {
+      flex: 1;
+      height: 6px;
+      background: var(--border);
+      border-radius: 3px;
+      margin: 0 14px;
+      overflow: hidden;
+    }
+    .sc-total-fill {
+      height: 100%;
+      border-radius: 3px;
+      transition: width 0.3s;
+    }
+
+    /* Card footer */
+    .sc-card-footer {
+      padding: 10px 18px;
+      border-top: 1px solid var(--border);
+      text-align: center;
+    }
+    .sc-card-footer a {
+      color: var(--accent);
+      text-decoration: none;
+      font-size: 0.82rem;
+      font-weight: 500;
+    }
+    .sc-card-footer a:hover { text-decoration: underline; }
+
+    /* Methodology section */
+    .sc-methodology {
+      margin-top: 40px;
+      padding: 24px;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+    }
+    .sc-methodology h3 {
+      color: var(--accent);
+      font-family: var(--font-main);
+      margin-bottom: 12px;
+    }
+    .sc-methodology p {
+      color: var(--gray);
+      font-size: 0.88rem;
+      line-height: 1.7;
+      margin-bottom: 10px;
+    }
+    .sc-methodology .cat-detail {
+      padding: 10px 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .sc-methodology .cat-detail:last-child { border-bottom: none; }
+    .sc-methodology .cat-detail h4 {
+      color: var(--white);
+      font-size: 0.9rem;
+      margin-bottom: 6px;
+    }
+    .sc-methodology .cat-detail ol {
+      margin-left: 20px;
+      color: var(--gray-light);
+      font-size: 0.82rem;
+    }
+    .sc-methodology .cat-detail ol li { margin-bottom: 3px; }
+
+    /* Scripture callout */
+    .sc-scripture {
+      text-align: center;
+      padding: 24px;
+      margin: 32px 0;
+      background: rgba(201,168,76,0.06);
+      border: 1px solid rgba(201,168,76,0.15);
+      border-radius: var(--radius);
+    }
+    .sc-scripture blockquote {
+      font-style: italic;
+      color: var(--gray);
+      font-size: 0.95rem;
+      line-height: 1.7;
+      max-width: 600px;
+      margin: 0 auto 8px;
+    }
+    .sc-scripture cite {
+      color: #c9a84c;
+      font-size: 0.82rem;
+      font-style: normal;
+      font-weight: 600;
+    }
+
+    @media (max-width: 600px) {
+      .sc-grid { grid-template-columns: 1fr; }
+      .sc-scores { grid-template-columns: repeat(3, 1fr); gap: 8px; }
+      .sc-stats { gap: 16px; }
+    }
+
+    footer {
+      text-align: center;
+      padding: 30px 20px;
+      color: var(--gray);
+      font-size: 0.82rem;
+      border-top: 1px solid var(--border);
+      margin-top: 40px;
+    }
+    footer a { color: var(--accent); text-decoration: none; }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="/" class="nav-brand" style="text-decoration:none">
+    <img src="assets/img/logo.png" alt="U.S.M.C. Ministries" style="object-fit:contain">
+    <div class="nav-brand-text">
+      <div class="name">U.S.M.C. Ministries</div>
+      <div class="tag">Warriors Equipped</div>
+    </div>
+  </a>
+  <ul class="nav-links">
+    <li><a href="citizen.html" class="active">RESOLUTE Citizen</a></li>
+    <li><a href="shop.html">Shop</a></li>
+    <li><a href="coaching.html">Coaching</a></li>
+    <li><a href="about.html">About</a></li>
+  </ul>
+</nav>
+
+<div class="sc-container">
+  <!-- Hero -->
+  <div class="sc-hero">
+    <span class="sc-hero-badge">U.S.M.C. Ministries</span>
+    <img src="assets/icons/shield-star.png" alt="" width="80" height="80" style="display:block;margin:0 auto 16px;opacity:0.9;">
+    <h1><span class="resolute">RESOLUTE</span> <span class="citizen">Citizen</span></h1>
+    <p class="tagline">Equipping Christians to vote with conviction, not confusion.</p>
+    <p class="subtitle">Every score is based on public records, official votes, and stated positions &mdash; not opinion. 6 categories selected from a survey of 250 Christian men identifying their top political priorities.</p>
+    <p class="methodology">6 categories &times; 5 questions &times; 2 pts = 60 points max &middot; Grounded in Reformed Christian values &middot; <a href="#methodology">View full methodology</a></p>
+  </div>
+
+  <!-- Stats -->
+  <div class="sc-stats">
+    <div class="sc-stat">
+      <div class="sc-stat-num" id="totalCount">0</div>
+      <div class="sc-stat-label">Candidates</div>
+    </div>
+    <div class="sc-stat">
+      <div class="sc-stat-num" id="scoredCount">0</div>
+      <div class="sc-stat-label">Scored</div>
+    </div>
+    <div class="sc-stat">
+      <div class="sc-stat-num" id="jurisdictionCount">0</div>
+      <div class="sc-stat-label">Jurisdictions</div>
+    </div>
+    <div class="sc-stat">
+      <div class="sc-stat-num">60</div>
+      <div class="sc-stat-label">Max Score</div>
+    </div>
+  </div>
+
+  <!-- View Toggle -->
+  <div class="view-toggle">
+    <a href="citizen.html" class="active">Candidates</a>
+    <a href="citizen-table.html">Table View</a>
+    <a href="citizen-issues.html">Issues</a>
+  </div>
+
+  <!-- Filter Bar -->
+  <div class="sc-filter">
+    <input type="text" id="searchInput" placeholder="Search by name or office..." oninput="renderCards()">
+    <select id="filterJurisdiction" onchange="renderCards()">
+      <option value="all">All Jurisdictions</option>
+    </select>
+    <select id="filterLevel" onchange="renderCards()">
+      <option value="all">All Levels</option>
+      <option value="federal">Federal</option>
+      <option value="state">State</option>
+      <option value="local">Local</option>
+    </select>
+    <select id="filterParty" onchange="renderCards()">
+      <option value="all">All Parties</option>
+      <option value="R">Republican</option>
+      <option value="D">Democrat</option>
+      <option value="Unknown">Independent / Unknown</option>
+    </select>
+    <select id="filterSort" onchange="renderCards()">
+      <option value="score-desc">Highest Score First</option>
+      <option value="score-asc">Lowest Score First</option>
+      <option value="name">Alphabetical</option>
+    </select>
+  </div>
+  <div class="sc-count">Showing <span id="visibleCount">&mdash;</span> of <span id="totalCountInline">&mdash;</span> candidates</div>
+
+  <!-- Category Legend -->
+  <div class="sc-legend" id="categoryLegend"></div>
+
+  <!-- Card Grid -->
+  <div class="sc-grid" id="cardGrid"></div>
+
+  <!-- Scripture -->
+  <div class="sc-scripture">
+    <blockquote>"When the righteous are in authority, the people rejoice; but when the wicked beareth rule, the people mourn."</blockquote>
+    <cite>&mdash; Proverbs 29:2 (KJV)</cite>
+  </div>
+
+  <!-- Methodology -->
+  <div class="sc-methodology" id="methodologyPanel"></div>
+</div>
+
+<footer>
+  <p><strong>RESOLUTE Citizen</strong> &mdash; a module of <a href="https://usmcmin.org">U.S.M.C. Ministries</a></p>
+  <p style="margin-top:6px;font-size:0.75rem;color:var(--gray);">Powered by MOOPbot Pro &mdash; <a href="https://usmcmin.org/bible.html?ref=Proverbs+27:17">Proverbs 27:17</a></p>
+  <p style="margin-top:6px;font-size:0.72rem;color:var(--gray);">Disclaimer: Scores are based on publicly available records and stated positions. null = not yet verified. This tool is for educational purposes and does not constitute an official endorsement.</p>
+</footer>
+
+<script>
+let DATA = null;
+var POINTS_PER_TRUE = 2;
+var MAX_PER_TOPIC = 10;
+var MAX_TOTAL = 60;
+
+fetch('data/scorecard.json')
+  .then(r => r.json())
+  .then(data => {
+    DATA = data;
+    buildJurisdictionFilter();
+    buildLegend();
+    buildMethodology();
+    renderCards();
+    // Stats
+    document.getElementById('totalCount').textContent = data.candidates.length;
+    document.getElementById('totalCountInline').textContent = data.candidates.length;
+    // Count scored
+    var scored = 0;
+    data.candidates.forEach(function(c) {
+      var hasScore = false;
+      Object.keys(c.scores).forEach(function(k) {
+        c.scores[k].forEach(function(a) { if (a !== null) hasScore = true; });
+      });
+      if (hasScore) scored++;
+    });
+    document.getElementById('scoredCount').textContent = scored;
+    // Count jurisdictions
+    var jurisdictions = new Set();
+    data.candidates.forEach(function(c) { jurisdictions.add(c.jurisdiction); });
+    document.getElementById('jurisdictionCount').textContent = jurisdictions.size;
+  });
+
+function getPartyClass(party) {
+  if (party === 'R') return 'party-r';
+  if (party === 'D') return 'party-d';
+  return 'party-unknown';
+}
+
+function getPartyLabel(party) {
+  if (party === 'R') return 'GOP';
+  if (party === 'D') return 'DEM';
+  return 'IND';
+}
+
+function getLevelClass(level) {
+  return 'level-' + (level || 'state');
+}
+
+function calcCategoryScore(answers) {
+  if (!answers) return { score: 0, max: MAX_PER_TOPIC, answered: 0 };
+  var raw = 0, answered = 0;
+  answers.forEach(function(a) {
+    if (a === true) { raw++; answered++; }
+    else if (a === false) { answered++; }
+  });
+  return { score: raw * POINTS_PER_TRUE, raw: raw, max: MAX_PER_TOPIC, answered: answered };
+}
+
+function calcTotalScore(scores) {
+  var total = 0, maxAnswered = 0;
+  DATA.categories.forEach(function(cat) {
+    var cs = calcCategoryScore(scores[cat.id]);
+    total += cs.score;
+    maxAnswered += cs.answered;
+  });
+  return { score: total, max: MAX_TOTAL, answered: maxAnswered };
+}
+
+function getScoreColor(score, max) {
+  var pct = max > 0 ? score / max : 0;
+  if (pct >= 0.8) return '#4CAF50';
+  if (pct >= 0.5) return '#FFC107';
+  if (pct > 0) return '#f44336';
+  return '#666';
+}
+
+function buildJurisdictionFilter() {
+  var jurisdictions = [];
+  var seen = new Set();
+  DATA.candidates.forEach(function(c) {
+    if (!seen.has(c.jurisdiction)) {
+      seen.add(c.jurisdiction);
+      jurisdictions.push(c.jurisdiction);
+    }
+  });
+  // Sort with federal first, then state, then local
+  var order = { 'federal': 0, 'state': 1, 'local': 2 };
+  var levelMap = {};
+  DATA.candidates.forEach(function(c) { levelMap[c.jurisdiction] = c.level; });
+  jurisdictions.sort(function(a, b) {
+    var la = order[levelMap[a]] || 1;
+    var lb = order[levelMap[b]] || 1;
+    if (la !== lb) return la - lb;
+    return a.localeCompare(b);
+  });
+
+  var sel = document.getElementById('filterJurisdiction');
+  jurisdictions.forEach(function(j) {
+    var opt = document.createElement('option');
+    opt.value = j;
+    opt.textContent = j;
+    sel.appendChild(opt);
+  });
+}
+
+function buildLegend() {
+  var el = document.getElementById('categoryLegend');
+  var html = '';
+  DATA.categories.forEach(function(cat) {
+    html += '<span class="sc-legend-item"><img src="assets/icons/' + cat.icon + '" alt="" width="14" height="14"> <abbr title="' + cat.description + '">' + cat.label + '</abbr></span>';
+  });
+  el.innerHTML = html;
+}
+
+function buildMethodology() {
+  var el = document.getElementById('methodologyPanel');
+  el.id = 'methodology';
+  var html = '<h3>Scoring Methodology</h3>';
+  html += '<p>' + DATA.meta.description + '</p>';
+  html += '<p><strong>How it works:</strong> ' + DATA.meta.methodology + '</p>';
+  html += '<p style="font-size:0.8rem;color:var(--gray);">Each <strong>True = +2 points</strong>, each False or "no evidence found" = +0. Max per topic = 10. Max total = 60. <em>null</em> entries = not yet verified from primary sources. Only primary sources used: campaign websites, legislative voting records, sponsored bills, official statements, and candidate social media.</p>';
+  DATA.categories.forEach(function(cat) {
+    html += '<div class="cat-detail"><h4>' + cat.label + '</h4><p style="font-size:0.8rem;color:var(--gray);margin-bottom:4px;">' + cat.description + '</p><ol>';
+    cat.questions.forEach(function(q) {
+      html += '<li>' + q + '</li>';
+    });
+    html += '</ol></div>';
+  });
+  el.innerHTML = html;
+}
+
+function renderCards() {
+  var search = (document.getElementById('searchInput').value || '').toLowerCase();
+  var jurisdiction = document.getElementById('filterJurisdiction').value;
+  var level = document.getElementById('filterLevel').value;
+  var party = document.getElementById('filterParty').value;
+  var sort = document.getElementById('filterSort').value;
+
+  var filtered = DATA.candidates.filter(function(c) {
+    if (search && !c.name.toLowerCase().includes(search) && !c.office.toLowerCase().includes(search)) return false;
+    if (jurisdiction !== 'all' && c.jurisdiction !== jurisdiction) return false;
+    if (level !== 'all' && c.level !== level) return false;
+    if (party !== 'all' && c.party !== party) return false;
+    return true;
+  });
+
+  filtered.sort(function(a, b) {
+    if (sort === 'score-desc') return calcTotalScore(b.scores).score - calcTotalScore(a.scores).score;
+    if (sort === 'score-asc') return calcTotalScore(a.scores).score - calcTotalScore(b.scores).score;
+    return a.name.localeCompare(b.name);
+  });
+
+  var html = '';
+  filtered.forEach(function(c) {
+    var total = calcTotalScore(c.scores);
+    var totalColor = getScoreColor(total.score, total.max);
+    var barWidth = total.max > 0 ? Math.round((total.score / total.max) * 100) : 0;
+
+    html += '<div class="sc-card">';
+    html += '<div class="sc-card-header">';
+    html += '<div class="jurisdiction">' + c.jurisdiction + ' <span class="level-badge ' + getLevelClass(c.level) + '">' + (c.level || 'state') + '</span></div>';
+    html += '<h3>' + c.name + '<span class="party-badge ' + getPartyClass(c.party) + '">' + getPartyLabel(c.party) + '</span></h3>';
+    html += '<div class="office">' + c.office + '</div>';
+    html += '</div>';
+
+    html += '<div class="sc-scores">';
+    DATA.categories.forEach(function(cat) {
+      var cs = calcCategoryScore(c.scores[cat.id]);
+      var color = cs.answered > 0 ? getScoreColor(cs.score, cs.max) : '#666';
+      var label = cat.label.length > 8 ? cat.label.substring(0, 7) + '.' : cat.label;
+      html += '<div class="sc-score-cell"><span class="cat-label">' + label + '</span><span class="cat-score" style="color:' + color + ';">' + (cs.answered > 0 ? cs.score : '—') + '</span><span class="cat-max">/' + MAX_PER_TOPIC + '</span></div>';
+    });
+    html += '</div>';
+
+    html += '<div class="sc-total">';
+    html += '<span class="sc-total-label">Total</span>';
+    html += '<div class="sc-total-bar"><div class="sc-total-fill" style="width:' + barWidth + '%;background:' + totalColor + ';"></div></div>';
+    html += '<span class="sc-total-score" style="color:' + totalColor + ';">' + total.score + '<span style="font-size:0.7rem;color:var(--gray);">/' + MAX_TOTAL + '</span></span>';
+    html += '</div>';
+
+    html += '<div class="sc-card-footer"><a href="candidates/' + c.slug + '.html">View Full Profile &rarr;</a></div>';
+    html += '</div>';
+  });
+
+  document.getElementById('cardGrid').innerHTML = html;
+  document.getElementById('visibleCount').textContent = filtered.length;
+}
+</script>
+</body>
+</html>

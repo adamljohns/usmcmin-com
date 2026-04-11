@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Christian Voter Scorecard — U.S.M.C. Ministries</title>
+  <meta name="description" content="Vote confidently for candidates who put Christ first. 6-category scorecard based on public records. America First, Life, Marriage, Immigration, Christian Nationalism, Self-Defense.">
+  <meta property="og:title" content="Christian Voter Scorecard — U.S.M.C. Ministries">
+  <meta property="og:description" content="Equipping Christians to vote confidently. 6-category scorecard for local and state candidates.">
+  <meta property="og:type" content="website">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="stylesheet" href="assets/css/main.css">
+  <link rel="icon" href="assets/img/favicon.png" type="image/png">
+  <style>
+    .sc-container { max-width: 1100px; margin: 0 auto; padding: 20px; }
+
+    /* Hero */
+    .sc-hero { text-align: center; padding: 48px 20px 36px; border-bottom: 1px solid var(--border); }
+    .sc-hero h1 { font-size: clamp(1.8rem, 4vw, 2.6rem); color: var(--white); margin-bottom: 10px; }
+    .sc-hero h1 span { color: var(--accent); }
+    .sc-hero .subtitle { color: var(--gray); font-size: 1rem; margin-bottom: 16px; max-width: 650px; margin-left: auto; margin-right: auto; line-height: 1.7; }
+    .sc-hero .methodology { color: var(--gray-light); font-size: 0.82rem; font-style: italic; max-width: 600px; margin: 0 auto; }
+    .sc-hero .methodology a { color: var(--accent); }
+
+    /* Filter */
+    .sc-filter { padding: 16px 0; display: flex; flex-wrap: wrap; gap: 10px; align-items: center; justify-content: center; border-bottom: 1px solid var(--border); margin-bottom: 20px; }
+    .sc-filter select, .sc-filter input { background: var(--bg-card); border: 1px solid var(--border); color: var(--white); padding: 8px 12px; border-radius: var(--radius); font-size: 0.85rem; outline: none; }
+    .sc-filter select:focus, .sc-filter input:focus { border-color: var(--accent); }
+    .sc-filter input { width: 200px; }
+    .sc-count { text-align: center; font-size: 0.82rem; color: var(--gray); margin-bottom: 16px; }
+    .sc-count span { color: var(--accent); font-weight: 600; }
+
+    /* Category Legend */
+    .sc-legend { display: flex; flex-wrap: wrap; gap: 12px; justify-content: center; margin-bottom: 24px; padding: 14px; background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); }
+    .sc-legend-item { font-size: 0.75rem; color: var(--gray); display: flex; align-items: center; gap: 4px; }
+    .sc-legend-item img { opacity: 0.6; }
+    .sc-legend-item abbr { font-weight: 600; color: var(--accent); text-decoration: none; border-bottom: 1px dotted var(--gray); cursor: help; }
+
+    /* Scoring colors */
+    .sc-green { color: #4CAF50; }
+    .sc-yellow { color: #FFC107; }
+    .sc-red { color: #f44336; }
+    .sc-gray { color: #666; }
+
+    /* Card grid */
+    .sc-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 18px; }
+
+    /* Candidate Card */
+    .sc-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; transition: border-color 0.2s, box-shadow 0.2s; }
+    .sc-card:hover { border-color: var(--accent); box-shadow: 0 4px 16px rgba(0,0,0,0.15); }
+    .sc-card-header { padding: 16px 18px 12px; border-bottom: 1px solid var(--border); }
+    .sc-card-header h3 { font-size: 1.05rem; color: var(--white); margin-bottom: 4px; font-family: var(--font-main); }
+    .sc-card-header .office { font-size: 0.78rem; color: var(--gray); }
+    .sc-card-header .jurisdiction { font-size: 0.72rem; color: var(--accent); font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
+    .sc-card-header .party-badge { display: inline-block; font-size: 0.68rem; font-weight: 700; padding: 2px 8px; border-radius: 4px; margin-left: 8px; }
+    .party-r { background: rgba(220,38,38,0.15); color: #ef4444; border: 1px solid rgba(220,38,38,0.3); }
+    .party-d { background: rgba(37,99,235,0.15); color: #3b82f6; border: 1px solid rgba(37,99,235,0.3); }
+    .party-unknown { background: rgba(107,114,128,0.15); color: #9ca3af; border: 1px solid rgba(107,114,128,0.3); }
+
+    /* Score bar */
+    .sc-scores { padding: 14px 18px; display: grid; grid-template-columns: repeat(6, 1fr); gap: 6px; }
+    .sc-score-cell { text-align: center; }
+    .sc-score-cell .cat-label { font-size: 0.6rem; color: var(--gray); text-transform: uppercase; letter-spacing: 0.3px; display: block; margin-bottom: 4px; }
+    .sc-score-cell .cat-score { font-size: 1.1rem; font-weight: 700; }
+    .sc-score-cell .cat-max { font-size: 0.6rem; color: var(--gray); }
+
+    /* Total score bar */
+    .sc-total { padding: 10px 18px; border-top: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; }
+    .sc-total-label { font-size: 0.78rem; color: var(--gray); font-weight: 600; text-transform: uppercase; letter-spacing: 1px; }
+    .sc-total-score { font-size: 1.3rem; font-weight: 700; }
+    .sc-total-bar { flex: 1; height: 6px; background: var(--border); border-radius: 3px; margin: 0 14px; overflow: hidden; }
+    .sc-total-fill { height: 100%; border-radius: 3px; transition: width 0.3s; }
+
+    /* Card footer */
+    .sc-card-footer { padding: 10px 18px; border-top: 1px solid var(--border); text-align: center; }
+    .sc-card-footer a { color: var(--accent); text-decoration: none; font-size: 0.82rem; font-weight: 500; }
+    .sc-card-footer a:hover { text-decoration: underline; }
+
+    /* Methodology section */
+    .sc-methodology { margin-top: 40px; padding: 24px; background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); }
+    .sc-methodology h3 { color: var(--accent); font-family: var(--font-main); margin-bottom: 12px; }
+    .sc-methodology p { color: var(--gray); font-size: 0.88rem; line-height: 1.7; margin-bottom: 10px; }
+    .sc-methodology .cat-detail { padding: 10px 0; border-bottom: 1px solid var(--border); }
+    .sc-methodology .cat-detail:last-child { border-bottom: none; }
+    .sc-methodology .cat-detail h4 { color: var(--white); font-size: 0.9rem; margin-bottom: 6px; }
+    .sc-methodology .cat-detail ol { margin-left: 20px; color: var(--gray-light); font-size: 0.82rem; }
+    .sc-methodology .cat-detail ol li { margin-bottom: 3px; }
+
+    @media (max-width: 600px) {
+      .sc-grid { grid-template-columns: 1fr; }
+      .sc-scores { grid-template-columns: repeat(3, 1fr); gap: 8px; }
+    }
+
+    footer { text-align: center; padding: 30px 20px; color: var(--gray); font-size: 0.82rem; border-top: 1px solid var(--border); margin-top: 40px; }
+    footer a { color: var(--accent); text-decoration: none; }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="/" class="nav-brand" style="text-decoration:none">
+    <img src="assets/img/logo.png" alt="U.S.M.C. Ministries" style="object-fit:contain">
+    <div class="nav-brand-text">
+      <div class="name">U.S.M.C. Ministries</div>
+      <div class="tag">Warriors Equipped</div>
+    </div>
+  </a>
+  <ul class="nav-links">
+    <li><a href="scorecard.html" class="active">Voter Scorecard</a></li>
+    <li><a href="shop.html">Shop</a></li>
+    <li><a href="coaching.html">Coaching</a></li>
+    <li><a href="about.html">About</a></li>
+  </ul>
+</nav>
+
+<div class="sc-container">
+  <!-- Hero -->
+  <div class="sc-hero">
+    <img src="assets/icons/shield-star.png" alt="" width="96" height="96" style="display:block;margin:0 auto 16px;opacity:0.9;">
+    <h1><span>Christian</span> Voter Scorecard</h1>
+    <p class="subtitle">Vote confidently for candidates who put Christ first. Every score is based on public records, official votes, and stated positions — not opinion.</p>
+    <p class="methodology">6 categories &times; 5 questions = 30 points max &middot; Designed by <strong>MOOP</strong> for <a href="https://usmcmin.org">U.S.M.C. Ministries</a> &middot; Categories selected from a survey of 250 Christian men</p>
+  </div>
+
+  <!-- Filter Bar -->
+  <div class="sc-filter">
+    <input type="text" id="searchInput" placeholder="Search by name..." oninput="renderCards()">
+    <select id="filterJurisdiction" onchange="renderCards()">
+      <option value="all">All Jurisdictions</option>
+    </select>
+    <select id="filterLevel" onchange="renderCards()">
+      <option value="all">All Levels</option>
+      <option value="local">Local</option>
+      <option value="state">State</option>
+      <option value="federal">Federal</option>
+    </select>
+    <select id="filterParty" onchange="renderCards()">
+      <option value="all">All Parties</option>
+      <option value="R">Republican</option>
+      <option value="D">Democrat</option>
+      <option value="Unknown">Unknown</option>
+    </select>
+    <select id="filterSort" onchange="renderCards()">
+      <option value="score-desc">Highest Score First</option>
+      <option value="score-asc">Lowest Score First</option>
+      <option value="name">Alphabetical</option>
+    </select>
+  </div>
+  <div class="sc-count">Showing <span id="visibleCount">—</span> of <span id="totalCount">—</span> candidates</div>
+
+  <!-- Category Legend -->
+  <div class="sc-legend" id="categoryLegend"></div>
+
+  <!-- Card Grid -->
+  <div class="sc-grid" id="cardGrid"></div>
+
+  <!-- Methodology -->
+  <div class="sc-methodology" id="methodologyPanel"></div>
+</div>
+
+<footer>
+  <p>U.S.M.C. Ministries &mdash; <a href="https://usmcmin.org">usmcmin.org</a> &middot; <a href="https://usmcmin.com">usmcmin.com</a></p>
+  <p style="margin-top:6px;font-size:0.75rem;color:var(--gray);">Powered by MOOPbot Pro &mdash; <a href="https://usmcmin.org/bible.html?ref=Proverbs+27:17">Proverbs 27:17</a></p>
+  <p style="margin-top:6px;font-size:0.72rem;color:var(--gray);">Disclaimer: Scores are based on publicly available records and stated positions. null = not yet verified. This tool is for educational purposes and does not constitute an official endorsement.</p>
+</footer>
+
+<script>
+let DATA = null;
+
+fetch('data/scorecard.json')
+  .then(r => r.json())
+  .then(data => {
+    DATA = data;
+    buildJurisdictionFilter();
+    buildLegend();
+    buildMethodology();
+    renderCards();
+    document.getElementById('totalCount').textContent = data.candidates.length;
+  });
+
+function getPartyClass(party) {
+  if (party === 'R') return 'party-r';
+  if (party === 'D') return 'party-d';
+  return 'party-unknown';
+}
+
+function getPartyLabel(party) {
+  if (party === 'R') return 'GOP';
+  if (party === 'D') return 'DEM';
+  return '—';
+}
+
+function calcCategoryScore(answers) {
+  if (!answers) return { score: 0, max: 5, answered: 0 };
+  var score = 0, answered = 0;
+  answers.forEach(function(a) {
+    if (a === true) { score++; answered++; }
+    else if (a === false) { answered++; }
+    // null = not yet verified
+  });
+  return { score: score, max: 5, answered: answered };
+}
+
+function calcTotalScore(scores) {
+  var total = 0, maxAnswered = 0;
+  DATA.categories.forEach(function(cat) {
+    var cs = calcCategoryScore(scores[cat.id]);
+    total += cs.score;
+    maxAnswered += cs.answered;
+  });
+  return { score: total, max: 30, answered: maxAnswered };
+}
+
+function getScoreColor(score, max) {
+  var pct = max > 0 ? score / max : 0;
+  if (pct >= 0.8) return '#4CAF50';
+  if (pct >= 0.5) return '#FFC107';
+  if (pct > 0) return '#f44336';
+  return '#666';
+}
+
+function buildJurisdictionFilter() {
+  var jurisdictions = new Set();
+  DATA.candidates.forEach(function(c) { jurisdictions.add(c.jurisdiction); });
+  var sel = document.getElementById('filterJurisdiction');
+  jurisdictions.forEach(function(j) {
+    var opt = document.createElement('option');
+    opt.value = j;
+    opt.textContent = j;
+    sel.appendChild(opt);
+  });
+}
+
+function buildLegend() {
+  var el = document.getElementById('categoryLegend');
+  var html = '';
+  DATA.categories.forEach(function(cat) {
+    html += '<span class="sc-legend-item"><img src="assets/icons/' + cat.icon + '" alt="" width="14" height="14"> <abbr title="' + cat.description + '">' + cat.label + '</abbr></span>';
+  });
+  el.innerHTML = html;
+}
+
+function buildMethodology() {
+  var el = document.getElementById('methodologyPanel');
+  var html = '<h3>Scoring Methodology</h3>';
+  html += '<p>' + DATA.meta.description + '</p>';
+  html += '<p><strong>How it works:</strong> ' + DATA.meta.methodology + '</p>';
+  html += '<p style="font-size:0.8rem;color:var(--gray);"><em>null</em> entries = not yet verified from public record. As records are confirmed, scores update. A score of 5/5 means all 5 questions answered affirmatively from public sources.</p>';
+  DATA.categories.forEach(function(cat) {
+    html += '<div class="cat-detail"><h4>' + cat.label + '</h4><p style="font-size:0.8rem;color:var(--gray);margin-bottom:4px;">' + cat.description + '</p><ol>';
+    cat.questions.forEach(function(q) {
+      html += '<li>' + q + '</li>';
+    });
+    html += '</ol></div>';
+  });
+  el.innerHTML = html;
+}
+
+function renderCards() {
+  var search = (document.getElementById('searchInput').value || '').toLowerCase();
+  var jurisdiction = document.getElementById('filterJurisdiction').value;
+  var level = document.getElementById('filterLevel').value;
+  var party = document.getElementById('filterParty').value;
+  var sort = document.getElementById('filterSort').value;
+
+  var filtered = DATA.candidates.filter(function(c) {
+    if (search && !c.name.toLowerCase().includes(search) && !c.office.toLowerCase().includes(search)) return false;
+    if (jurisdiction !== 'all' && c.jurisdiction !== jurisdiction) return false;
+    if (level !== 'all' && c.level !== level) return false;
+    if (party !== 'all' && c.party !== party) return false;
+    return true;
+  });
+
+  // Sort
+  filtered.sort(function(a, b) {
+    if (sort === 'score-desc') return calcTotalScore(b.scores).score - calcTotalScore(a.scores).score;
+    if (sort === 'score-asc') return calcTotalScore(a.scores).score - calcTotalScore(b.scores).score;
+    return a.name.localeCompare(b.name);
+  });
+
+  var html = '';
+  filtered.forEach(function(c) {
+    var total = calcTotalScore(c.scores);
+    var totalColor = getScoreColor(total.score, total.answered || 1);
+    var pct = total.answered > 0 ? Math.round((total.score / total.answered) * 100) : 0;
+    var barWidth = total.max > 0 ? Math.round((total.score / total.max) * 100) : 0;
+
+    html += '<div class="sc-card">';
+    html += '<div class="sc-card-header">';
+    html += '<div class="jurisdiction">' + c.jurisdiction + '</div>';
+    html += '<h3>' + c.name + '<span class="party-badge ' + getPartyClass(c.party) + '">' + getPartyLabel(c.party) + '</span></h3>';
+    html += '<div class="office">' + c.office + '</div>';
+    html += '</div>';
+
+    // Category scores
+    html += '<div class="sc-scores">';
+    DATA.categories.forEach(function(cat) {
+      var cs = calcCategoryScore(c.scores[cat.id]);
+      var color = getScoreColor(cs.score, cs.answered || 1);
+      var label = cat.label.length > 8 ? cat.label.substring(0, 7) + '.' : cat.label;
+      html += '<div class="sc-score-cell"><span class="cat-label">' + label + '</span><span class="cat-score" style="color:' + color + ';">' + cs.score + '</span><span class="cat-max">/' + cs.max + '</span></div>';
+    });
+    html += '</div>';
+
+    // Total
+    html += '<div class="sc-total">';
+    html += '<span class="sc-total-label">Total</span>';
+    html += '<div class="sc-total-bar"><div class="sc-total-fill" style="width:' + barWidth + '%;background:' + totalColor + ';"></div></div>';
+    html += '<span class="sc-total-score" style="color:' + totalColor + ';">' + total.score + '<span style="font-size:0.7rem;color:var(--gray);">/' + total.max + '</span></span>';
+    html += '</div>';
+
+    // Footer
+    html += '<div class="sc-card-footer"><a href="candidates/' + c.slug + '.html">View Full Profile &rarr;</a></div>';
+    html += '</div>';
+  });
+
+  document.getElementById('cardGrid').innerHTML = html;
+  document.getElementById('visibleCount').textContent = filtered.length;
+}
+</script>
+</body>
+</html>

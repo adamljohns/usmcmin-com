@@ -148,6 +148,7 @@
     <li><a href="coaching.html">Coaching</a></li>
     <li><a href="about.html">About</a></li>
   </ul>
+  <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme" title="Switch light/dark mode">🌙</button>
 </nav>
 
 <div class="sc-container">
@@ -178,6 +179,11 @@
       <option value="D">Democrat</option>
       <option value="I">Independent</option>
     </select>
+    <select id="filterFocus" onchange="renderTables()">
+      <option value="local-first">Local First</option>
+      <option value="federal-first">Federal First</option>
+      <option value="state-first">State First</option>
+    </select>
     <select id="filterSort" onchange="renderTables()">
       <option value="score-desc">Highest Score</option>
       <option value="score-asc">Lowest Score</option>
@@ -191,7 +197,7 @@
 
 <footer>
   <p><strong>RESOLUTE Citizen</strong> &mdash; a module of <a href="https://usmcmin.org">U.S.M.C. Ministries</a></p>
-  <p style="margin-top:6px;font-size:0.72rem;">Scores based on public records &amp; primary sources only. &mdash; Each True = +2 points &middot; Max 60 &middot; <a href="https://usmcmin.org/bible.html?ref=Proverbs+29:2">Proverbs 29:2</a></p>
+  <p style="margin-top:6px;font-size:0.72rem;">Scores based on public records &amp; primary sources only. &mdash; Each True = +2 points &middot; 7 categories &middot; Max 70 &middot; <a href="https://usmcmin.org/bible.html?ref=Proverbs+29:2">Proverbs 29:2</a></p>
   <p style="margin-top:6px;font-size:0.72rem;color:var(--gray);">Disclaimer: Educational tool grounded in Reformed Christian values. Not an official endorsement. &mdash; <a href="https://usmcmin.org/bible.html?ref=Proverbs+27:17">Proverbs 27:17</a></p>
 </footer>
 
@@ -199,7 +205,7 @@
 let DATA = null;
 var POINTS_PER_TRUE = 2;
 var MAX_PER_TOPIC = 10;
-var MAX_TOTAL = 60;
+var MAX_TOTAL = 70;
 
 fetch('data/scorecard.json')
   .then(r => r.json())
@@ -252,8 +258,20 @@ function renderTables() {
   var party = document.getElementById('filterParty').value;
   var sort = document.getElementById('filterSort').value;
 
+  var focus = document.getElementById('filterFocus').value;
   var groups = {};
-  var groupOrder = [
+
+  var localFirst = [
+    'Spotsylvania County',
+    'City of Fredericksburg',
+    'Stafford County',
+    'Commonwealth of Virginia',
+    'Virginia State Senate',
+    'Virginia House of Delegates',
+    'United States House of Representatives',
+    'United States Senate'
+  ];
+  var federalFirst = [
     'United States Senate',
     'United States House of Representatives',
     'Commonwealth of Virginia',
@@ -263,6 +281,18 @@ function renderTables() {
     'City of Fredericksburg',
     'Stafford County'
   ];
+  var stateFirst = [
+    'Commonwealth of Virginia',
+    'Virginia State Senate',
+    'Virginia House of Delegates',
+    'Spotsylvania County',
+    'City of Fredericksburg',
+    'Stafford County',
+    'United States Senate',
+    'United States House of Representatives'
+  ];
+
+  var groupOrder = focus === 'federal-first' ? federalFirst : focus === 'state-first' ? stateFirst : localFirst;
 
   DATA.candidates.forEach(function(c) {
     if (search && !c.name.toLowerCase().includes(search) && !c.office.toLowerCase().includes(search)) return;
@@ -336,6 +366,28 @@ function renderTables() {
 
   document.getElementById('tablesContainer').innerHTML = html;
 }
+</script>
+<script>
+(function() {
+  var toggle = document.getElementById('themeToggle');
+  var saved = localStorage.getItem('usmc-theme');
+  if (saved !== 'light') {
+    document.documentElement.setAttribute('data-theme', 'dark');
+    toggle.textContent = '☀️';
+  }
+  toggle.addEventListener('click', function() {
+    var isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+    if (isDark) {
+      document.documentElement.removeAttribute('data-theme');
+      localStorage.setItem('usmc-theme', 'light');
+      toggle.textContent = '🌙';
+    } else {
+      document.documentElement.setAttribute('data-theme', 'dark');
+      localStorage.setItem('usmc-theme', 'dark');
+      toggle.textContent = '☀️';
+    }
+  });
+})();
 </script>
 </body>
 </html>

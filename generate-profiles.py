@@ -5,7 +5,7 @@ import os
 
 POINTS_PER_TRUE = 2
 MAX_PER_TOPIC = 10
-MAX_TOTAL = 60
+MAX_TOTAL = 70
 
 def calc_cat_score(answers):
     if not answers:
@@ -95,6 +95,7 @@ def generate_profile(candidate, categories, meta):
 
     # Profile details
     profile_html = ''
+    twitter = profile.get('twitter', '')
     fields = [
         ('Religion', profile.get('religion')),
         ('Education', profile.get('education')),
@@ -104,6 +105,9 @@ def generate_profile(candidate, categories, meta):
         ('Previous Election Opponent', profile.get('prev_election_opponent')),
         ('Next Election Year', profile.get('next_election_year')),
     ]
+    if twitter:
+        handle = twitter.lstrip('@')
+        fields.append(('X / Twitter', f'<a href="https://x.com/{handle}" target="_blank" rel="noopener" style="color:var(--accent);">@{handle}</a>'))
     for label, val in fields:
         if val:
             profile_html += f'<div class="prof-detail"><strong>{label}:</strong> {val}</div>'

@@ -433,15 +433,15 @@
     <p class="methodology">7 categories &times; 5 questions &times; 2 pts = 70 points max &middot; Grounded in Reformed Christian values &middot; <a href="#methodology">View full methodology</a></p>
   </div>
 
-  <!-- State Selector -->
-  <div style="display:flex;justify-content:center;gap:8px;padding:16px 0;flex-wrap:wrap;" id="stateSelector"></div>
+  <!-- View Toggle -->
+  <div class="view-toggle">
+    <a href="citizen.html" class="active" id="linkCards">Candidates</a>
+    <a href="citizen-table.html" id="linkTable">Table View</a>
+    <a href="citizen-issues.html" id="linkIssues">Issues</a>
+  </div>
 
   <!-- Stats -->
   <div class="sc-stats">
-    <div class="sc-stat">
-      <div class="sc-stat-num" id="stateName">VA</div>
-      <div class="sc-stat-label">State</div>
-    </div>
     <div class="sc-stat">
       <div class="sc-stat-num" id="totalCount">0</div>
       <div class="sc-stat-label">Candidates</div>
@@ -460,18 +460,14 @@
     </div>
   </div>
 
-  <!-- View Toggle -->
-  <div class="view-toggle">
-    <a href="citizen.html" class="active" id="linkCards">Candidates</a>
-    <a href="citizen-table.html" id="linkTable">Table View</a>
-    <a href="citizen-issues.html" id="linkIssues">Issues</a>
-  </div>
-
   <!-- Quick Filters (built dynamically from data) -->
   <div style="display:flex;justify-content:center;gap:6px;padding:10px 0;flex-wrap:wrap;" id="quickFilters"></div>
 
   <!-- Filter Bar -->
   <div class="sc-filter">
+    <select id="filterState" onchange="switchState(this.value)" style="font-weight:600;color:#c9a84c;border-color:rgba(201,168,76,0.4);">
+      <option value="VA">Virginia</option>
+    </select>
     <input type="text" id="searchInput" placeholder="Search by name or office..." oninput="renderCards()">
     <select id="filterJurisdiction" onchange="renderCards()">
       <option value="all">All Jurisdictions</option>
@@ -558,16 +554,15 @@ function switchState(st) {
 
 function filterByState(st) {
   DATA.candidates = ALL_CANDIDATES.filter(function(c) { return c.state === st; });
-  document.getElementById('stateName').textContent = st;
   activeQuickFilter = 'all';
   activeMetro = null;
+  buildStateDropdown(st);
   buildQuickFilters();
   buildJurisdictionFilter();
   buildLegend();
   buildMethodology();
   renderCards();
   updateStats();
-  buildStateSelector(st);
   // Update view toggle links with state param
   var suffix = '?state=' + st;
   var lc = document.getElementById('linkCards');
@@ -596,23 +591,24 @@ function updateStats() {
   document.getElementById('jurisdictionCount').textContent = jurisdictions.size;
 }
 
-function buildStateSelector(currentState) {
+function buildStateDropdown(currentState) {
   var states = [];
   var seen = {};
   ALL_CANDIDATES.forEach(function(c) {
     if (!seen[c.state]) { seen[c.state] = true; states.push(c.state); }
   });
-  states.sort();
-  var el = document.getElementById('stateSelector');
-  if (states.length <= 1) { el.style.display = 'none'; return; }
-  el.style.display = 'flex';
-  var html = '';
-  states.forEach(function(st) {
-    var active = st === currentState ? ' style="background:var(--accent-dim);border-color:var(--accent);color:var(--accent);"' : '';
-    var name = STATE_NAMES[st] || st;
-    html += '<a href="javascript:void(0)" onclick="switchState(\'' + st + '\')" style="color:var(--gray);text-decoration:none;font-size:0.88rem;padding:8px 20px;border-radius:20px;border:1px solid var(--border);transition:all 0.2s;font-weight:600;"' + active + '>' + name + '</a>';
+  states.sort(function(a, b) {
+    return (STATE_NAMES[a] || a).localeCompare(STATE_NAMES[b] || b);
   });
-  el.innerHTML = html;
+  var sel = document.getElementById('filterState');
+  sel.innerHTML = '';
+  states.forEach(function(st) {
+    var opt = document.createElement('option');
+    opt.value = st;
+    opt.textContent = STATE_NAMES[st] || st;
+    if (st === currentState) opt.selected = true;
+    sel.appendChild(opt);
+  });
 }
 
 fetch('data/scorecard.json')

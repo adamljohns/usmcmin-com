@@ -165,9 +165,6 @@
     <p class="subtitle">Compare candidates side-by-side. All scores from public records, official votes, campaign platforms, and primary sources only.</p>
   </div>
 
-  <!-- State Selector -->
-  <div style="display:flex;justify-content:center;gap:8px;padding:16px 0;flex-wrap:wrap;" id="stateSelector"></div>
-
   <div class="view-toggle">
     <a href="citizen.html">Candidates</a>
     <a href="citizen-table.html" class="active">Table View</a>
@@ -175,6 +172,9 @@
   </div>
 
   <div class="sc-filter">
+    <select id="filterState" onchange="switchState(this.value)" style="font-weight:600;color:#c9a84c;border-color:rgba(201,168,76,0.4);">
+      <option value="VA">Virginia</option>
+    </select>
     <input type="text" id="searchInput" placeholder="Search by name..." oninput="renderTables()">
     <select id="filterLevel" onchange="renderTables()">
       <option value="all">All Levels</option>
@@ -238,22 +238,22 @@ function switchState(st) {
   url.searchParams.set('state', st);
   window.history.pushState({}, '', url);
   DATA.candidates = ALL_CANDIDATES.filter(function(c) { return c.state === st; });
+  buildStateDropdown(st);
   renderTables();
-  buildStateSelector(st);
 }
-function buildStateSelector(currentState) {
+function buildStateDropdown(currentState) {
   var states = [], seen = {};
   ALL_CANDIDATES.forEach(function(c) { if (!seen[c.state]) { seen[c.state] = true; states.push(c.state); } });
-  states.sort();
-  var el = document.getElementById('stateSelector');
-  if (states.length <= 1) { el.style.display = 'none'; return; }
-  el.style.display = 'flex';
-  var html = '';
+  states.sort(function(a, b) { return (STATE_NAMES[a]||a).localeCompare(STATE_NAMES[b]||b); });
+  var sel = document.getElementById('filterState');
+  sel.innerHTML = '';
   states.forEach(function(st) {
-    var active = st === currentState ? ' style="background:var(--accent-dim);border-color:var(--accent);color:var(--accent);"' : '';
-    html += '<a href="javascript:void(0)" onclick="switchState(\'' + st + '\')" style="color:var(--gray);text-decoration:none;font-size:0.88rem;padding:8px 20px;border-radius:20px;border:1px solid var(--border);font-weight:600;"' + active + '>' + (STATE_NAMES[st]||st) + '</a>';
+    var opt = document.createElement('option');
+    opt.value = st;
+    opt.textContent = STATE_NAMES[st] || st;
+    if (st === currentState) opt.selected = true;
+    sel.appendChild(opt);
   });
-  el.innerHTML = html;
 }
 
 fetch('data/scorecard.json')
@@ -263,8 +263,8 @@ fetch('data/scorecard.json')
     ALL_CANDIDATES = data.candidates.slice();
     var st = getStateParam();
     DATA.candidates = ALL_CANDIDATES.filter(function(c) { return c.state === st; });
+    buildStateDropdown(st);
     renderTables();
-    buildStateSelector(st);
   });
 
 function calcCatScore(answers) {

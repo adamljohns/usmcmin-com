@@ -344,11 +344,17 @@ def generate_profile(candidate, categories, meta):
     </div>
   </a>
   <ul class="nav-links">
-    <li><a href="../citizen.html" class="active">RESOLUTE Citizen</a></li>
     <li><a href="../shop.html">Shop</a></li>
+    <li><a href="../books.html">Books</a></li>
     <li><a href="../coaching.html">Coaching</a></li>
+    <li><a href="../fitness/fitness.html">Fitness</a></li>
+    <li><a href="../finance/financial-intake.html">Finance</a></li>
     <li><a href="../about.html">About</a></li>
+    <li><a href="https://usmcmin.org" target="_blank">Ministry Site</a></li>
   </ul>
+  <a href="../coaching.html" class="btn nav-cta">Book a Session</a>
+  <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">&#9789;</button>
+  <button class="nav-toggle" aria-label="Menu"><span></span><span></span><span></span></button>
 </nav>
 
 <div class="prof-container">
@@ -389,9 +395,40 @@ def generate_profile(candidate, categories, meta):
 
 <footer>
   <p><strong>RESOLUTE Citizen</strong> &mdash; a module of <a href="https://usmcmin.org">U.S.M.C. Ministries</a></p>
-  <p style="margin-top:6px;font-size:0.72rem;">Each True = +2 points &middot; Max 60 &middot; Primary sources only &middot; <a href="https://usmcmin.org/bible.html?ref=Proverbs+29:2">Proverbs 29:2</a></p>
+  <p style="margin-top:6px;font-size:0.72rem;">Each True = +2 points &middot; Max {MAX_TOTAL} &middot; Primary sources only &middot; <a href="https://usmcmin.org/bible.html?ref=Proverbs+29:2">Proverbs 29:2</a></p>
 </footer>
 
+<script>
+(function() {{
+  var navToggle = document.querySelector('.nav-toggle');
+  var navLinks = document.querySelector('.nav-links');
+  if (navToggle && navLinks) {{
+    navToggle.addEventListener('click', function() {{ navLinks.classList.toggle('open'); }});
+  }}
+}})();
+</script>
+<script>
+(function() {{
+  var toggle = document.getElementById('themeToggle');
+  var saved = localStorage.getItem('usmc-theme');
+  if (saved !== 'light') {{
+    document.documentElement.setAttribute('data-theme', 'dark');
+    toggle.textContent = '\\u2600\\uFE0F';
+  }}
+  toggle.addEventListener('click', function() {{
+    var isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+    if (isDark) {{
+      document.documentElement.removeAttribute('data-theme');
+      localStorage.setItem('usmc-theme', 'light');
+      toggle.textContent = '\\uD83C\\uDF19';
+    }} else {{
+      document.documentElement.setAttribute('data-theme', 'dark');
+      localStorage.setItem('usmc-theme', 'dark');
+      toggle.textContent = '\\u2600\\uFE0F';
+    }}
+  }});
+}})();
+</script>
 </body>
 </html>'''
 

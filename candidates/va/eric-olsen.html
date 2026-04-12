@@ -464,6 +464,40 @@
     </div>
 
   <div class="prof-sources"><h2>Sources &amp; Evidence</h2><a href="https://www.potomaclocal.com/2019/10/29/olsen-aims-to-keep-stafford-commonwealths-attorney-seat-says-gun-violence-a-major-issue/" target="_blank" rel="noopener">www.potomaclocal.com/2019/10/29/olsen-aims-to-keep-staffo...</a><a href="https://staffordgop.com/team-members/eric-olsen/" target="_blank" rel="noopener">staffordgop.com/team-members/eric-olsen/</a><a href="https://staffordcountyva.gov/government/elected_and_appointed_officials/commonwealth_s_attorney/index.php" target="_blank" rel="noopener">staffordcountyva.gov/government/elected_and_appointed_off...</a><a href="https://www.insidenova.com/news/stafford/olsen-announces-bid-for-commonwealths-attorney/" target="_blank" rel="noopener">www.insidenova.com/news/stafford/olsen-announces-bid-for-...</a><a href="https://www.loudountimes.com/news/judge-appoints-stafford-commonwealth-s-attorney-as-prosecutor-in-barts-recall/" target="_blank" rel="noopener">www.loudountimes.com/news/judge-appoints-stafford-commonw...</a></div>
+
+  <!-- Feedback Form -->
+  <div class="prof-feedback" style="padding:20px 24px;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);margin-top:16px;">
+    <h2 style="color:var(--accent);font-size:1rem;margin-bottom:8px;">Have Information About This Official?</h2>
+    <p style="color:var(--gray);font-size:0.82rem;margin-bottom:14px;line-height:1.6;">Help us improve this scorecard. If you have evidence of this official's positions — voting records, social media posts, public statements, or corrections — submit it below and we'll review and update the profile.</p>
+    <form id="feedbackForm" style="display:flex;flex-direction:column;gap:10px;">
+      <input type="hidden" name="candidate_name" value="Eric Olsen">
+      <input type="hidden" name="candidate_state" value="VA">
+      <input type="hidden" name="candidate_office" value="Commonwealth's Attorney">
+      <input type="text" name="submitter_name" placeholder="Your name" required style="padding:10px 14px;background:var(--bg-dark,#0A0A0A);border:1px solid var(--border);border-radius:8px;color:var(--white);font-size:0.9rem;">
+      <input type="email" name="submitter_email" placeholder="Your email" required style="padding:10px 14px;background:var(--bg-dark,#0A0A0A);border:1px solid var(--border);border-radius:8px;color:var(--white);font-size:0.9rem;">
+      <textarea name="feedback" rows="4" placeholder="What should we know? Include links to sources if possible..." required style="padding:10px 14px;background:var(--bg-dark,#0A0A0A);border:1px solid var(--border);border-radius:8px;color:var(--white);font-size:0.9rem;resize:vertical;"></textarea>
+      <button type="submit" style="background:linear-gradient(90deg,#c9a84c,#D4AF37);color:#000;font-weight:700;font-size:0.9rem;padding:11px 22px;border-radius:8px;border:none;cursor:pointer;align-self:flex-start;">Submit Feedback</button>
+    </form>
+    <div id="feedbackSuccess" style="display:none;padding:14px;background:rgba(76,175,80,.15);border:1px solid #4CAF50;border-radius:8px;color:#7edd80;margin-top:12px;font-size:0.88rem;">Thank you! We'll review your submission and update the profile if verified.</div>
+  </div>
+  <script>
+  document.getElementById('feedbackForm').addEventListener('submit',function(e){
+    e.preventDefault();
+    var fd=new FormData(this);
+    fd.append('_subject','RESOLUTE Citizen Feedback: Eric Olsen');
+    fd.append('_template','table');
+    fd.append('_captcha','false');
+    fetch('https://formsubmit.co/ajax/usmcministries2022@gmail.com',{method:'POST',body:fd})
+    .then(function(res){
+      if(!res.ok) throw new Error('Server error');
+      document.getElementById('feedbackForm').style.display='none';
+      document.getElementById('feedbackSuccess').style.display='block';
+    })
+    .catch(function(){
+      alert('Failed to submit. Please check your connection and try again.');
+    });
+  });
+  </script>
 </div>
 
 <footer>

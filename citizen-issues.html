@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>RESOLUTE Citizen — Issue Awareness | U.S.M.C. Ministries</title>
-  <meta name="description" content="RESOLUTE Citizen issue awareness cards. Know what's on the ballot before you vote. Redistricting, referendums, bond issues, and more.">
+  <meta name="description" content="RESOLUTE Citizen issue awareness. Know what's on the ballot before you vote. Redistricting, referendums, elections, and more — evaluated through Reformed Christian principles.">
   <link rel="stylesheet" href="assets/css/main.css">
   <link rel="icon" href="assets/img/favicon.png" type="image/png">
   <style>
@@ -20,214 +20,69 @@
       background: linear-gradient(180deg, rgba(30,58,95,0.25) 0%, transparent 100%);
     }
     .sc-hero-badge {
-      display: inline-block;
-      font-size: 0.68rem;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 3px;
-      color: #c9a84c;
-      background: rgba(201,168,76,0.12);
-      border: 1px solid rgba(201,168,76,0.25);
-      padding: 6px 18px;
-      border-radius: 20px;
-      margin-bottom: 20px;
+      display: inline-block; font-size: 0.68rem; font-weight: 700;
+      text-transform: uppercase; letter-spacing: 3px; color: #c9a84c;
+      background: rgba(201,168,76,0.12); border: 1px solid rgba(201,168,76,0.25);
+      padding: 6px 18px; border-radius: 20px; margin-bottom: 20px;
     }
-    .sc-hero h1 {
-      font-size: clamp(1.8rem, 4vw, 2.8rem);
-      color: var(--white);
-      margin-bottom: 6px;
-      font-weight: 800;
-    }
+    .sc-hero h1 { font-size: clamp(1.8rem, 4vw, 2.8rem); color: var(--white); margin-bottom: 6px; font-weight: 800; }
     .sc-hero h1 .resolute { color: #c9a84c; }
     .sc-hero h1 .citizen { color: var(--accent); }
-    .sc-hero .subtitle {
-      color: var(--gray);
-      font-size: 0.92rem;
-      max-width: 650px;
-      margin: 0 auto 16px;
-      line-height: 1.7;
-    }
+    .sc-hero .subtitle { color: var(--gray); font-size: 0.92rem; max-width: 650px; margin: 0 auto 16px; line-height: 1.7; }
 
-    /* Nav tabs */
-    .citizen-nav {
-      display: flex;
-      justify-content: center;
-      gap: 8px;
-      margin: 16px 0;
-    }
-    .citizen-nav a {
-      color: var(--gray);
-      text-decoration: none;
-      font-size: 0.82rem;
-      padding: 6px 18px;
-      border-radius: 20px;
-      border: 1px solid var(--border);
-      transition: all 0.2s;
-    }
+    .citizen-nav { display: flex; justify-content: center; gap: 8px; margin: 16px 0; flex-wrap: wrap; }
+    .citizen-nav a { color: var(--gray); text-decoration: none; font-size: 0.82rem; padding: 6px 18px; border-radius: 20px; border: 1px solid var(--border); transition: all 0.2s; }
     .citizen-nav a:hover { border-color: var(--accent); color: var(--accent); }
     .citizen-nav a.active { background: var(--accent-dim); border-color: var(--accent); color: var(--accent); }
 
-    /* Issue Cards */
-    .issue-grid {
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 24px;
-      margin-top: 24px;
+    .issue-filter {
+      display: flex; flex-wrap: wrap; gap: 10px; align-items: center;
+      justify-content: center; padding: 14px 0; border-bottom: 1px solid var(--border); margin-bottom: 20px;
     }
+    .issue-filter select, .issue-filter input {
+      background: var(--bg-card); border: 1px solid var(--border); color: var(--white);
+      padding: 8px 12px; border-radius: var(--radius); font-size: 0.85rem; outline: none;
+    }
+    .issue-filter select:focus, .issue-filter input:focus { border-color: var(--accent); }
+    .issue-count { text-align: center; font-size: 0.82rem; color: var(--gray); margin-bottom: 16px; }
+    .issue-count span { color: var(--accent); font-weight: 600; }
+
+    .issue-grid { display: grid; grid-template-columns: 1fr; gap: 20px; }
 
     .issue-card {
-      background: var(--bg-card);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      overflow: hidden;
-      transition: border-color 0.2s;
+      background: var(--bg-card); border: 1px solid var(--border);
+      border-radius: var(--radius); overflow: hidden; transition: border-color 0.2s;
     }
     .issue-card:hover { border-color: var(--accent); }
+    .issue-card-urgent { border-left: 4px solid #f44336; }
+    .issue-card-upcoming { border-left: 4px solid #FFC107; }
+    .issue-card-info { border-left: 4px solid var(--accent); }
 
-    .issue-card-urgent {
-      border-left: 4px solid #f44336;
-    }
-    .issue-card-upcoming {
-      border-left: 4px solid #FFC107;
-    }
-    .issue-card-info {
-      border-left: 4px solid var(--accent);
-    }
-
-    .issue-header {
-      padding: 20px 24px 16px;
-      border-bottom: 1px solid var(--border);
-    }
-    .issue-header .issue-date {
-      font-size: 0.72rem;
-      color: #c9a84c;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      margin-bottom: 6px;
-    }
-    .issue-header .issue-urgency {
-      display: inline-block;
-      font-size: 0.65rem;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      padding: 2px 8px;
-      border-radius: 4px;
-      margin-left: 8px;
-    }
+    .issue-header { padding: 20px 24px 16px; }
+    .issue-header .issue-date { font-size: 0.72rem; color: #c9a84c; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px; }
+    .issue-urgency { display: inline-block; font-size: 0.65rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; padding: 2px 8px; border-radius: 4px; margin-left: 8px; }
     .urgency-critical { background: rgba(244,67,54,0.15); color: #f44336; }
     .urgency-soon { background: rgba(255,193,7,0.15); color: #FFC107; }
     .urgency-info { background: rgba(107,114,128,0.15); color: #9ca3af; }
-    .issue-header h2 {
-      font-size: 1.3rem;
-      color: var(--white);
-      margin-bottom: 6px;
-    }
-    .issue-header .issue-location {
-      font-size: 0.82rem;
-      color: var(--gray);
-    }
+    .issue-header h2 { font-size: 1.2rem; color: var(--white); margin-bottom: 4px; }
+    .issue-header .issue-location { font-size: 0.82rem; color: var(--gray); }
 
-    .issue-body {
-      padding: 20px 24px;
-    }
-    .issue-body p {
-      color: var(--gray);
-      font-size: 0.9rem;
-      line-height: 1.7;
-      margin-bottom: 12px;
-    }
-    .issue-body h3 {
-      color: var(--white);
-      font-size: 1rem;
-      margin: 16px 0 8px;
-      font-family: var(--font-main);
-    }
-    .issue-body ul {
-      margin-left: 20px;
-      color: var(--gray);
-      font-size: 0.88rem;
-      line-height: 1.8;
-    }
-    .issue-body ul li { margin-bottom: 4px; }
+    .issue-summary { padding: 0 24px 16px; color: var(--gray); font-size: 0.9rem; line-height: 1.7; }
 
-    .issue-position {
-      padding: 16px 24px;
-      border-top: 1px solid var(--border);
-      background: rgba(201,168,76,0.04);
-    }
-    .issue-position h4 {
-      color: #c9a84c;
-      font-size: 0.85rem;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      margin-bottom: 8px;
-    }
-    .issue-position p {
-      color: var(--gray);
-      font-size: 0.88rem;
-      line-height: 1.7;
-    }
+    .issue-footer { padding: 12px 24px; border-top: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
+    .issue-footer a { color: var(--accent); text-decoration: none; font-size: 0.85rem; font-weight: 500; }
+    .issue-footer a:hover { text-decoration: underline; }
+    .issue-footer .source-count { font-size: 0.75rem; color: var(--gray); }
 
-    .issue-sources {
-      padding: 12px 24px;
-      border-top: 1px solid var(--border);
-    }
-    .issue-sources h5 {
-      color: var(--gray);
-      font-size: 0.72rem;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      margin-bottom: 6px;
-    }
-    .issue-sources a {
-      color: var(--accent);
-      font-size: 0.78rem;
-      text-decoration: none;
-      display: block;
-      margin-bottom: 3px;
-    }
-    .issue-sources a:hover { text-decoration: underline; }
-
-    /* Scripture */
     .sc-scripture {
-      text-align: center;
-      padding: 24px;
-      margin: 32px 0;
-      background: rgba(201,168,76,0.06);
-      border: 1px solid rgba(201,168,76,0.15);
-      border-radius: var(--radius);
+      text-align: center; padding: 24px; margin: 32px 0;
+      background: rgba(201,168,76,0.06); border: 1px solid rgba(201,168,76,0.15); border-radius: var(--radius);
     }
-    .sc-scripture blockquote {
-      font-style: italic;
-      color: var(--gray);
-      font-size: 0.95rem;
-      line-height: 1.7;
-      max-width: 600px;
-      margin: 0 auto 8px;
-    }
-    .sc-scripture cite {
-      color: #c9a84c;
-      font-size: 0.82rem;
-      font-style: normal;
-      font-weight: 600;
-    }
+    .sc-scripture blockquote { font-style: italic; color: var(--gray); font-size: 0.95rem; line-height: 1.7; max-width: 600px; margin: 0 auto 8px; }
+    .sc-scripture cite { color: #c9a84c; font-size: 0.82rem; font-style: normal; font-weight: 600; }
 
-    footer {
-      text-align: center;
-      padding: 30px 20px;
-      color: var(--gray);
-      font-size: 0.82rem;
-      border-top: 1px solid var(--border);
-      margin-top: 40px;
-    }
+    footer { text-align: center; padding: 30px 20px; color: var(--gray); font-size: 0.82rem; border-top: 1px solid var(--border); margin-top: 40px; }
     footer a { color: var(--accent); text-decoration: none; }
-
-    @media (max-width: 600px) {
-      .issue-header, .issue-body, .issue-position, .issue-sources { padding-left: 16px; padding-right: 16px; }
-    }
   </style>
 </head>
 <body>
@@ -243,7 +98,6 @@
   <ul class="nav-links">
     <li><a href="mission.html">Mission</a></li>
     <li><a href="shop.html">Shop</a></li>
-    <li><a href="books.html">Books</a></li>
     <li><a href="coaching.html">Coaching</a></li>
     <li><a href="fitness/fitness.html">Fitness</a></li>
     <li><a href="finance/financial-intake.html">Finance</a></li>
@@ -260,7 +114,7 @@
     <span class="sc-hero-badge">U.S.M.C. Ministries</span>
     <img src="assets/icons/shield-cross.png" alt="" width="80" height="80" style="display:block;margin:0 auto 16px;opacity:0.9;">
     <h1><span class="resolute">RESOLUTE</span> <span class="citizen">Citizen</span></h1>
-    <p class="subtitle">Issue Awareness &mdash; Know what's on the ballot before you vote. Every issue evaluated through the lens of Reformed Christian principles.</p>
+    <p class="subtitle">Issue Awareness — Know what's on the ballot before you vote. Every issue evaluated through the lens of Reformed Christian principles.</p>
   </div>
 
   <div class="citizen-nav">
@@ -269,163 +123,24 @@
     <a href="citizen-issues.html" class="active">Issues</a>
   </div>
 
-  <div class="issue-grid">
-
-    <!-- ISSUE: Virginia Redistricting Constitutional Amendment -->
-    <div class="issue-card issue-card-urgent">
-      <div class="issue-header">
-        <div class="issue-date">
-          April 21, 2026
-          <span class="issue-urgency urgency-critical">Action Required — 10 Days</span>
-        </div>
-        <h2>Virginia Congressional Redistricting Amendment</h2>
-        <div class="issue-location">Statewide — All Virginia Voters</div>
-      </div>
-      <div class="issue-body">
-        <p>This is a <strong>statewide constitutional amendment</strong> that would allow the Virginia General Assembly to redraw U.S. congressional district maps — overriding the bipartisan redistricting commission that voters approved in 2020.</p>
-
-        <h3>What's on the Ballot</h3>
-        <p>The ballot question asks whether the Constitution should be amended to "allow the General Assembly to temporarily adopt new congressional districts to restore fairness in the upcoming elections." Originates from House Joint Resolution 4007 (HJ6007). The legislature's authority would expire after October 31, 2030.</p>
-
-        <h3>What It Actually Does</h3>
-        <ul>
-          <li><strong>Strips the bipartisan commission:</strong> In 2020, Virginia voters approved a bipartisan redistricting commission. This amendment suspends that commission and hands map-drawing power back to the Democrat-controlled General Assembly.</li>
-          <li><strong>Current map:</strong> Republicans hold 5 seats, Democrats hold 6 seats (11 total).</li>
-          <li><strong>Proposed new map:</strong> Under maps favored by supporters, Democrats would hold <strong>10 of 11 seats</strong> — a gain of 4 seats.</li>
-          <li><strong>Trigger mechanism:</strong> Activates if another state redraws its own congressional districts before 2031 without court order.</li>
-          <li><strong>Funding disparity:</strong> "Virginians for Fair Elections" (YES) has raised <strong>$49 million</strong>. "Virginians for Fair Maps" (NO) has raised <strong>$9 million</strong>.</li>
-        </ul>
-
-        <h3>Who Supports YES</h3>
-        <ul>
-          <li>Governor Abigail Spanberger (D)</li>
-          <li>Former President Barack Obama</li>
-          <li>U.S. Senators Tim Kaine and Mark Warner (both D)</li>
-          <li>NAACP Virginia</li>
-          <li>Democratic Congressional Campaign Committee</li>
-        </ul>
-
-        <h3>Who Supports NO</h3>
-        <ul>
-          <li>Former Governor Glenn Youngkin (R)</li>
-          <li>Former Lt. Governor Winsome Earle-Sears (R)</li>
-          <li>U.S. Representatives Ben Cline, Morgan Griffith, Jen Kiggans (R)</li>
-          <li>Republican Party of Virginia</li>
-          <li>Some Democrats who originally fought for the independent commission</li>
-        </ul>
-
-        <h3>Polling</h3>
-        <p><strong>Washington Post/Schar School poll (March 26-31, 2026):</strong> Support 52%, Oppose 47% — tight margin. NBC News reported Democrats are "starting to sweat" as the outcome is "not a done deal."</p>
-
-        <h3>Fredericksburg Voting Info</h3>
-        <ul>
-          <li><strong>Early voting:</strong> March 6 – April 18 at FXBG City Center, 601 Caroline Street, 5th floor (weekdays 8:30 AM – 4:30 PM; Saturdays April 11 &amp; 18, 9 AM – 5 PM)</li>
-          <li><strong>Voter registration deadline:</strong> April 14, 2026</li>
-          <li><strong>Absentee ballot request deadline:</strong> April 10, 2026</li>
-          <li><strong>Election Day:</strong> April 21, 2026</li>
-        </ul>
-      </div>
-
-      <div class="issue-position">
-        <h4>Reformed Christian Analysis</h4>
-        <p>This amendment is a power grab dressed in the language of fairness. Virginia voters in 2020 chose to take redistricting out of partisan hands. This amendment reverses that decision and concentrates map-drawing power in a Democrat-controlled legislature that has voted to expand abortion, ban firearms, promote gender ideology in schools, and suppress parental rights. The proposed maps would eliminate conservative representation in 4 congressional districts. Christians who value the election of godly magistrates should understand what a YES vote means: fewer representatives who share their values in Congress.</p>
-        <p style="margin-top:12px;">A rally was held in Fredericksburg in late March 2026 where speakers urged voters to reject this amendment. "Vote No April 21" signs lined the roadway.</p>
-        <p style="margin-top:8px;font-style:italic;font-size:0.82rem;">"The king's heart is in the hand of the LORD, as the rivers of water: he turneth it whithersoever he will." &mdash; Proverbs 21:1</p>
-      </div>
-
-      <div class="issue-sources">
-        <h5>Sources &amp; Resources</h5>
-        <a href="https://www.elections.virginia.gov/election-law/proposed-amendment-for-april-2026-special-election/" target="_blank">VA Dept. of Elections — Proposed Amendment</a>
-        <a href="https://ballotpedia.org/Virginia_Use_of_Legislative_Congressional_Redistricting_Map_Amendment_(April_2026)" target="_blank">Ballotpedia — Virginia Redistricting Amendment</a>
-        <a href="https://virginiamercury.com/2026/02/26/a-voters-guide-to-virginias-2026-redistricting-push/" target="_blank">Virginia Mercury — Voter's Guide</a>
-        <a href="https://www.vpap.org/redistricting/2026/" target="_blank">VPAP — 2026 Congressional Redistricting</a>
-        <a href="https://www.thecentersquare.com/virginia/article_c667863e-d50b-4db4-8613-6bed79037757.html" target="_blank">Center Square — Fredericksburg Rally Urges No Vote</a>
-        <a href="https://www.nbcnews.com/politics/2026-election/not-done-deal-democrats-start-sweat-virginias-redistricting-referendum-rcna263726" target="_blank">NBC News — Democrats Start to Sweat</a>
-        <a href="https://www.fredericksburgva.gov/m/newsflash/home/detail/2139" target="_blank">Fredericksburg VA — April Special Election Info</a>
-        <a href="https://www.regionalwebtv.com/fredcc" target="_blank">Regional WebTV — Fredericksburg City Council Meetings</a>
-      </div>
-    </div>
-
-    <!-- ISSUE: 2025 Virginia Elections -->
-    <div class="issue-card issue-card-upcoming">
-      <div class="issue-header">
-        <div class="issue-date">
-          November 4, 2025
-          <span class="issue-urgency urgency-soon">Upcoming</span>
-        </div>
-        <h2>2025 Virginia Statewide Elections</h2>
-        <div class="issue-location">Commonwealth of Virginia</div>
-      </div>
-      <div class="issue-body">
-        <p>Virginia holds gubernatorial elections in odd years. In 2025, voters will elect a new Governor, Lieutenant Governor, and Attorney General, along with all 100 House of Delegates members.</p>
-
-        <h3>What's at Stake</h3>
-        <ul>
-          <li><strong>Governor:</strong> Controls executive branch, appoints judges and agency heads, sets enforcement priorities</li>
-          <li><strong>Lieutenant Governor:</strong> Presides over State Senate, breaks tie votes</li>
-          <li><strong>Attorney General:</strong> Chief law enforcement officer, sets legal policy, can challenge federal overreach</li>
-          <li><strong>100 House Delegates:</strong> All 100 seats up for election. Currently Democrat-controlled. Determines legislation on abortion, guns, education, and religious liberty</li>
-        </ul>
-
-        <h3>Christian Voter Priority</h3>
-        <ul>
-          <li>Will the next Governor sign or veto abortion restrictions?</li>
-          <li>Will the AG defend or attack religious liberty cases?</li>
-          <li>Will the House maintain or expand gun control measures passed in recent sessions?</li>
-          <li>Will parental rights in education be strengthened or weakened?</li>
-        </ul>
-      </div>
-
-      <div class="issue-position">
-        <h4>Reformed Christian Analysis</h4>
-        <p>Virginia's 2025 election is the most consequential state election in the nation. The Governor, AG, and House of Delegates control whether Virginia moves toward or away from Christian principles in law. Use the <a href="citizen.html" style="color:#c9a84c;">RESOLUTE Citizen Scorecard</a> to evaluate every candidate before you vote.</p>
-      </div>
-
-      <div class="issue-sources">
-        <h5>Sources &amp; Resources</h5>
-        <a href="https://www.vpap.org" target="_blank">VPAP.org — Virginia Public Access Project</a>
-        <a href="https://www.elections.virginia.gov" target="_blank">Virginia Department of Elections</a>
-      </div>
-    </div>
-
-    <!-- ISSUE: School Board Awareness -->
-    <div class="issue-card issue-card-info">
-      <div class="issue-header">
-        <div class="issue-date">
-          Ongoing
-          <span class="issue-urgency urgency-info">Awareness</span>
-        </div>
-        <h2>School Board Watch: Spotsylvania &amp; Stafford</h2>
-        <div class="issue-location">Spotsylvania County &amp; Stafford County, Virginia</div>
-      </div>
-      <div class="issue-body">
-        <p>School boards control curriculum, library materials, bathroom policies, and the moral environment your children spend 7+ hours in daily. Spotsylvania County's school board made national headlines for its conservative stance on removing sexually explicit materials from school libraries.</p>
-
-        <h3>Key Issues</h3>
-        <ul>
-          <li><strong>Sexually Explicit Materials:</strong> Are graphic books available in school libraries? Who decides what's appropriate?</li>
-          <li><strong>Gender Ideology:</strong> Are schools using preferred pronouns, allowing opposite-sex bathroom access, or teaching gender theory?</li>
-          <li><strong>Parental Notification:</strong> Are parents informed when their child expresses gender confusion at school?</li>
-          <li><strong>Critical Race Theory:</strong> Is CRT or DEI ideology embedded in curriculum or teacher training?</li>
-          <li><strong>Bible/Prayer:</strong> Is voluntary religious expression protected or suppressed?</li>
-        </ul>
-      </div>
-
-      <div class="issue-position">
-        <h4>Reformed Christian Analysis</h4>
-        <p>Parents, not the state, are the primary educators of their children under God's design (Deuteronomy 6:6-7). School boards that undermine parental authority or expose children to sexually explicit or ideologically corrupt material are acting contrary to biblical principles. Attend school board meetings. Know your board members. Hold them accountable.</p>
-      </div>
-
-      <div class="issue-sources">
-        <h5>Sources &amp; Resources</h5>
-        <a href="https://www.spotsylvania.k12.va.us" target="_blank">Spotsylvania County Public Schools</a>
-        <a href="https://www.staffordschools.net" target="_blank">Stafford County Public Schools</a>
-      </div>
-    </div>
-
+  <!-- Filters -->
+  <div class="issue-filter">
+    <select id="filterState" onchange="renderIssues()" style="font-weight:600;color:#c9a84c;border-color:rgba(201,168,76,0.4);">
+      <option value="all">All States</option>
+    </select>
+    <select id="filterUrgency" onchange="renderIssues()">
+      <option value="all">All Issues</option>
+      <option value="critical">Action Required</option>
+      <option value="soon">Active / Legislative</option>
+      <option value="info">Awareness</option>
+    </select>
+    <input type="text" id="searchInput" placeholder="Search issues..." oninput="renderIssues()">
   </div>
+  <div class="issue-count">Showing <span id="visibleCount">—</span> of <span id="totalCount">—</span> issues</div>
 
-  <!-- Scripture -->
+  <!-- Issue Cards -->
+  <div class="issue-grid" id="issueGrid"></div>
+
   <div class="sc-scripture">
     <blockquote>"If my people, which are called by my name, shall humble themselves, and pray, and seek my face, and turn from their wicked ways; then will I hear from heaven, and will forgive their sin, and will heal their land."</blockquote>
     <cite>&mdash; 2 Chronicles 7:14 (KJV)</cite>
@@ -433,10 +148,99 @@
 </div>
 
 <footer>
-  <p><strong>RESOLUTE Citizen</strong> &mdash; a module of <a href="https://usmcmin.org">U.S.M.C. Ministries</a></p>
-  <p style="margin-top:6px;font-size:0.72rem;">Issue awareness grounded in Reformed Christian values &middot; <a href="https://usmcmin.org/bible.html?ref=Proverbs+29:2">Proverbs 29:2</a></p>
+  <p><strong>RESOLUTE Citizen</strong> — a module of <a href="https://usmcmin.org">U.S.M.C. Ministries</a></p>
+  <p style="margin-top:6px;font-size:0.72rem;">Issue awareness grounded in Reformed Christian values | <a href="sitemap.html">Sitemap</a></p>
 </footer>
 
+<script>
+var ISSUES = [];
+var STATE_NAMES = {
+  'ALL':'National','VA':'Virginia','TX':'Texas','DC':'Washington D.C.','FL':'Florida',
+  'NC':'North Carolina','SC':'South Carolina','GA':'Georgia','TN':'Tennessee',
+  'AL':'Alabama','MD':'Maryland','PA':'Pennsylvania','NY':'New York','OH':'Ohio',
+  'WV':'West Virginia','KY':'Kentucky','LA':'Louisiana','MS':'Mississippi',
+  'AK':'Alaska','AZ':'Arizona','AR':'Arkansas','CA':'California','CO':'Colorado',
+  'CT':'Connecticut','DE':'Delaware','HI':'Hawaii','ID':'Idaho','IL':'Illinois',
+  'IN':'Indiana','IA':'Iowa','KS':'Kansas','ME':'Maine','MA':'Massachusetts',
+  'MI':'Michigan','MN':'Minnesota','MO':'Missouri','MT':'Montana','NE':'Nebraska',
+  'NV':'Nevada','NH':'New Hampshire','NJ':'New Jersey','NM':'New Mexico',
+  'ND':'North Dakota','OK':'Oklahoma','OR':'Oregon','RI':'Rhode Island',
+  'SD':'South Dakota','UT':'Utah','VT':'Vermont','WA':'Washington','WI':'Wisconsin','WY':'Wyoming'
+};
+
+fetch('data/issues.json')
+  .then(function(r) { return r.json(); })
+  .then(function(data) {
+    ISSUES = data.issues || [];
+    buildStateFilter();
+    renderIssues();
+    document.getElementById('totalCount').textContent = ISSUES.length;
+  });
+
+function buildStateFilter() {
+  var states = {};
+  ISSUES.forEach(function(issue) {
+    var st = issue.state || 'ALL';
+    states[st] = true;
+  });
+  var sel = document.getElementById('filterState');
+  sel.innerHTML = '<option value="all">All States</option>';
+  Object.keys(states).sort(function(a, b) {
+    return (STATE_NAMES[a]||a).localeCompare(STATE_NAMES[b]||b);
+  }).forEach(function(st) {
+    var opt = document.createElement('option');
+    opt.value = st;
+    opt.textContent = STATE_NAMES[st] || st;
+    sel.appendChild(opt);
+  });
+}
+
+function renderIssues() {
+  var state = document.getElementById('filterState').value;
+  var urgency = document.getElementById('filterUrgency').value;
+  var search = (document.getElementById('searchInput').value || '').toLowerCase();
+
+  var filtered = ISSUES.filter(function(issue) {
+    if (state !== 'all' && issue.state !== state && issue.state !== 'ALL') return false;
+    if (urgency !== 'all' && issue.urgency !== urgency) return false;
+    if (search && !issue.title.toLowerCase().includes(search) && !(issue.summary || '').toLowerCase().includes(search) && !(issue.location || '').toLowerCase().includes(search)) return false;
+    return true;
+  });
+
+  // Sort: critical first, then soon, then info
+  var urgencyOrder = { 'critical': 0, 'soon': 1, 'info': 2 };
+  filtered.sort(function(a, b) {
+    return (urgencyOrder[a.urgency] || 2) - (urgencyOrder[b.urgency] || 2);
+  });
+
+  var html = '';
+  filtered.forEach(function(issue) {
+    var cardClass = issue.urgency === 'critical' ? 'issue-card-urgent' : issue.urgency === 'soon' ? 'issue-card-upcoming' : 'issue-card-info';
+    var urgClass = issue.urgency === 'critical' ? 'urgency-critical' : issue.urgency === 'soon' ? 'urgency-soon' : 'urgency-info';
+    var sourceCount = (issue.sources || []).length;
+
+    html += '<div class="issue-card ' + cardClass + '">';
+    html += '<div class="issue-header">';
+    html += '<div class="issue-date">' + (issue.date || '') + ' <span class="issue-urgency ' + urgClass + '">' + (issue.urgency_label || '') + '</span></div>';
+    html += '<h2>' + issue.title + '</h2>';
+    html += '<div class="issue-location">' + (issue.location || '') + '</div>';
+    html += '</div>';
+    html += '<div class="issue-summary">' + (issue.summary || '') + '</div>';
+    html += '<div class="issue-footer">';
+    html += '<a href="issues/' + issue.slug + '.html">Read Full Analysis &rarr;</a>';
+    html += '<span class="source-count">' + sourceCount + ' source' + (sourceCount !== 1 ? 's' : '') + '</span>';
+    html += '</div>';
+    html += '</div>';
+  });
+
+  if (filtered.length === 0) {
+    html = '<div style="text-align:center;padding:40px;color:var(--gray);">No issues found for this filter. Try selecting a different state or clearing your search.</div>';
+  }
+
+  document.getElementById('issueGrid').innerHTML = html;
+  document.getElementById('visibleCount').textContent = filtered.length;
+}
+</script>
 <script>
 (function() {
   var navToggle = document.querySelector('.nav-toggle');

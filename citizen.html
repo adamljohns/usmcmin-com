@@ -180,7 +180,7 @@
     /* Card grid */
     .sc-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+      grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
       gap: 18px;
     }
 
@@ -250,7 +250,7 @@
     }
     .sc-score-cell { text-align: center; }
     .sc-score-cell .cat-label {
-      font-size: 0.6rem;
+      font-size: 0.55rem;
       color: var(--gray);
       text-transform: uppercase;
       letter-spacing: 0.3px;
@@ -660,7 +660,7 @@ function renderCards() {
     DATA.categories.forEach(function(cat) {
       var cs = calcCategoryScore(c.scores[cat.id]);
       var color = cs.answered > 0 ? getScoreColor(cs.score, cs.max) : '#666';
-      var label = cat.label.length > 8 ? cat.label.substring(0, 7) + '.' : cat.label;
+      var label = cat.label.length > 10 ? cat.label.substring(0, 9) + '.' : cat.label;
       html += '<div class="sc-score-cell"><span class="cat-label">' + label + '</span><span class="cat-score" style="color:' + color + ';">' + (cs.answered > 0 ? cs.score : '—') + '</span><span class="cat-max">/' + MAX_PER_TOPIC + '</span></div>';
     });
     html += '</div>';

@@ -62,7 +62,7 @@ CONSERVATIVE_R = {
     "life": [True, True, True, True, True],
     "immigration": [True, True, None, None, None],
     "marriage": [True, True, True, True, False],
-    "christian_nationalism": [False, False, False, False, False],
+    "christian_heritage": [False, False, False, False, False],
     "self_defense": [True, True, True, True, True],
     "education": [True, True, True, None, True]
 }
@@ -71,7 +71,7 @@ DEMOCRAT = {
     "life": [False, False, False, False, False],
     "immigration": [False, False, False, False, False],
     "marriage": [False, False, False, False, False],
-    "christian_nationalism": [False, False, False, False, False],
+    "christian_heritage": [False, False, False, False, False],
     "self_defense": [False, False, False, False, False],
     "education": [False, False, False, False, False]
 }

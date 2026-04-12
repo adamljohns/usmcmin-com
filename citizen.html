@@ -380,20 +380,6 @@
     }
     footer a { color: var(--accent); text-decoration: none; }
 
-    /* Quick filter buttons */
-    .qf-btn {
-      color: var(--gray);
-      text-decoration: none;
-      font-size: 0.82rem;
-      padding: 6px 16px;
-      border-radius: 20px;
-      border: 1px solid var(--border);
-      transition: all 0.2s;
-      font-weight: 500;
-      cursor: pointer;
-    }
-    .qf-btn:hover { border-color: var(--accent); color: var(--accent); }
-    .qf-active { background: var(--accent-dim); border-color: var(--accent); color: var(--accent); font-weight: 600; }
   </style>
 </head>
 <body>
@@ -440,58 +426,42 @@
     <a href="citizen-issues.html" id="linkIssues">Issues</a>
   </div>
 
-  <!-- Stats -->
-  <div class="sc-stats">
-    <div class="sc-stat">
-      <div class="sc-stat-num" id="totalCount">0</div>
-      <div class="sc-stat-label">Candidates</div>
-    </div>
-    <div class="sc-stat">
-      <div class="sc-stat-num" id="scoredCount">0</div>
-      <div class="sc-stat-label">Scored</div>
-    </div>
-    <div class="sc-stat">
-      <div class="sc-stat-num" id="jurisdictionCount">0</div>
-      <div class="sc-stat-label">Jurisdictions</div>
-    </div>
-    <div class="sc-stat">
-      <div class="sc-stat-num">70</div>
-      <div class="sc-stat-label">Max Score</div>
-    </div>
-  </div>
-
-  <!-- Quick Filters (built dynamically from data) -->
-  <div style="display:flex;justify-content:center;gap:6px;padding:10px 0;flex-wrap:wrap;" id="quickFilters"></div>
-
-  <!-- Filter Bar -->
+  <!-- Filter Bar (simplified: 4 controls) -->
   <div class="sc-filter">
     <select id="filterState" onchange="switchState(this.value)" style="font-weight:600;color:#c9a84c;border-color:rgba(201,168,76,0.4);">
       <option value="VA">Virginia</option>
     </select>
-    <input type="text" id="searchInput" placeholder="Search by name or office..." oninput="renderCards()">
-    <select id="filterJurisdiction" onchange="renderCards()">
-      <option value="all">All Jurisdictions</option>
-    </select>
-    <select id="filterLevel" onchange="renderCards()">
-      <option value="all">All Levels</option>
-      <option value="federal">Federal</option>
-      <option value="state">State</option>
-      <option value="local">Local</option>
+    <select id="filterView" onchange="renderCards()">
+      <option value="local">My Local Area</option>
+      <option value="state">State Officials</option>
+      <option value="federal">Federal Reps</option>
+      <option value="all">All Candidates</option>
     </select>
     <select id="filterParty" onchange="renderCards()">
       <option value="all">All Parties</option>
       <option value="R">Republican</option>
       <option value="D">Democrat</option>
       <option value="I">Independent</option>
-      <option value="Unknown">Unknown / Nonpartisan</option>
     </select>
-    <select id="filterSort" onchange="renderCards()">
-      <option value="score-desc">Highest Score First</option>
-      <option value="score-asc">Lowest Score First</option>
-      <option value="name">Alphabetical</option>
-    </select>
+    <input type="text" id="searchInput" placeholder="Search name, office, or city..." oninput="renderCards()">
   </div>
-  <div class="sc-count">Showing <span id="visibleCount">&mdash;</span> of <span id="totalCountInline">&mdash;</span> candidates</div>
+  <div class="sc-count">
+    Showing <span id="visibleCount">&mdash;</span> candidates
+    &middot; <span id="jurisdictionCount">0</span> jurisdictions
+    &middot; Max <span>70</span> pts
+    &middot; <a href="javascript:void(0)" onclick="showLocationModal()" style="color:#c9a84c;font-size:0.78rem;">Change Location</a>
+  </div>
+
+  <!-- Welcome Modal (first visit) -->
+  <div id="welcomeModal" style="display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.85);z-index:9999;display:none;align-items:center;justify-content:center;">
+    <div style="background:var(--bg-card,#141416);border:1px solid var(--border,#2A2D35);border-radius:16px;padding:40px;max-width:420px;width:90%;text-align:center;">
+      <img src="assets/icons/shield-star.png" alt="" width="64" height="64" style="margin-bottom:16px;opacity:0.9;">
+      <h2 style="color:var(--white,#F0F0F0);font-size:1.4rem;margin-bottom:8px;">Welcome to <span style="color:#c9a84c;">RESOLUTE</span> Citizen</h2>
+      <p style="color:var(--gray,#9CA3AF);font-size:0.9rem;margin-bottom:24px;line-height:1.6;">Select your state to see your local officials, state legislators, and federal representatives scored on Christian values.</p>
+      <select id="modalState" style="width:100%;padding:12px;background:var(--bg-dark,#0A0A0A);border:1px solid var(--border,#2A2D35);color:var(--white,#F0F0F0);border-radius:8px;font-size:1rem;margin-bottom:16px;"></select>
+      <button onclick="selectLocation()" style="width:100%;padding:14px;background:linear-gradient(90deg,#c9a84c,#D4AF37);color:#000;font-weight:700;font-size:1rem;border:none;border-radius:8px;cursor:pointer;">Show My Officials</button>
+    </div>
+  </div>
 
   <!-- Category Legend -->
   <div class="sc-legend" id="categoryLegend"></div>
@@ -536,34 +506,26 @@ var STATE_NAMES = {
   'VA':'Virginia','WA':'Washington','WV':'West Virginia','WI':'Wisconsin','WY':'Wyoming'
 };
 
-function getStateParam() {
-  var params = new URLSearchParams(window.location.search);
-  return params.get('state') || 'VA';
-}
-
-function setStateParam(st) {
-  var url = new URL(window.location);
-  url.searchParams.set('state', st);
-  window.history.pushState({}, '', url);
+// ---- Location / State Management ----
+function getInitialState() {
+  var urlState = new URLSearchParams(window.location.search).get('state');
+  if (urlState) return urlState;
+  var saved = localStorage.getItem('rc-state');
+  if (saved) return saved;
+  return null; // Will trigger welcome modal
 }
 
 function switchState(st) {
-  setStateParam(st);
-  filterByState(st);
-}
-
-function filterByState(st) {
+  localStorage.setItem('rc-state', st);
+  var url = new URL(window.location);
+  url.searchParams.set('state', st);
+  window.history.pushState({}, '', url);
   DATA.candidates = ALL_CANDIDATES.filter(function(c) { return c.state === st; });
-  activeQuickFilter = 'all';
-  activeMetro = null;
   buildStateDropdown(st);
-  buildQuickFilters();
-  buildJurisdictionFilter();
   buildLegend();
   buildMethodology();
   renderCards();
-  updateStats();
-  // Update view toggle links with state param
+  // Update view toggle links
   var suffix = '?state=' + st;
   var lc = document.getElementById('linkCards');
   var lt = document.getElementById('linkTable');
@@ -573,22 +535,33 @@ function filterByState(st) {
   if (li) li.href = 'citizen-issues.html' + suffix;
 }
 
-function updateStats() {
-  var candidates = DATA.candidates;
-  document.getElementById('totalCount').textContent = candidates.length;
-  document.getElementById('totalCountInline').textContent = candidates.length;
-  var scored = 0;
-  candidates.forEach(function(c) {
-    var hasScore = false;
-    Object.keys(c.scores).forEach(function(k) {
-      c.scores[k].forEach(function(a) { if (a !== null) hasScore = true; });
+function showLocationModal() {
+  var modal = document.getElementById('welcomeModal');
+  modal.style.display = 'flex';
+  // Populate modal state dropdown
+  var sel = document.getElementById('modalState');
+  if (sel.options.length <= 1) {
+    sel.innerHTML = '';
+    var states = [];
+    var seen = {};
+    ALL_CANDIDATES.forEach(function(c) {
+      if (!seen[c.state]) { seen[c.state] = true; states.push(c.state); }
     });
-    if (hasScore) scored++;
-  });
-  document.getElementById('scoredCount').textContent = scored;
-  var jurisdictions = new Set();
-  candidates.forEach(function(c) { jurisdictions.add(c.jurisdiction); });
-  document.getElementById('jurisdictionCount').textContent = jurisdictions.size;
+    states.sort(function(a, b) { return (STATE_NAMES[a]||a).localeCompare(STATE_NAMES[b]||b); });
+    states.forEach(function(st) {
+      var opt = document.createElement('option');
+      opt.value = st;
+      opt.textContent = STATE_NAMES[st] || st;
+      if (st === 'VA') opt.selected = true;
+      sel.appendChild(opt);
+    });
+  }
+}
+
+function selectLocation() {
+  var st = document.getElementById('modalState').value;
+  document.getElementById('welcomeModal').style.display = 'none';
+  switchState(st);
 }
 
 function buildStateDropdown(currentState) {
@@ -597,9 +570,7 @@ function buildStateDropdown(currentState) {
   ALL_CANDIDATES.forEach(function(c) {
     if (!seen[c.state]) { seen[c.state] = true; states.push(c.state); }
   });
-  states.sort(function(a, b) {
-    return (STATE_NAMES[a] || a).localeCompare(STATE_NAMES[b] || b);
-  });
+  states.sort(function(a, b) { return (STATE_NAMES[a]||a).localeCompare(STATE_NAMES[b]||b); });
   var sel = document.getElementById('filterState');
   sel.innerHTML = '';
   states.forEach(function(st) {
@@ -611,13 +582,29 @@ function buildStateDropdown(currentState) {
   });
 }
 
+// ---- Data Load ----
 fetch('data/scorecard.json')
   .then(r => r.json())
   .then(data => {
     DATA = data;
     ALL_CANDIDATES = data.candidates.slice();
-    var st = getStateParam();
-    filterByState(st);
+    var st = getInitialState();
+    if (!st) {
+      // First visit — show welcome modal, default to VA in background
+      st = 'VA';
+      DATA.candidates = ALL_CANDIDATES.filter(function(c) { return c.state === st; });
+      buildStateDropdown(st);
+      buildLegend();
+      buildMethodology();
+      renderCards();
+      showLocationModal();
+    } else {
+      DATA.candidates = ALL_CANDIDATES.filter(function(c) { return c.state === st; });
+      buildStateDropdown(st);
+      buildLegend();
+      buildMethodology();
+      renderCards();
+    }
   });
 
 function getPartyClass(party) {
@@ -666,34 +653,7 @@ function getScoreColor(score, max) {
   return '#666';
 }
 
-function buildJurisdictionFilter() {
-  var jurisdictions = [];
-  var seen = new Set();
-  DATA.candidates.forEach(function(c) {
-    if (!seen.has(c.jurisdiction)) {
-      seen.add(c.jurisdiction);
-      jurisdictions.push(c.jurisdiction);
-    }
-  });
-  // Sort with federal first, then state, then local
-  var order = { 'federal': 0, 'state': 1, 'local': 2 };
-  var levelMap = {};
-  DATA.candidates.forEach(function(c) { levelMap[c.jurisdiction] = c.level; });
-  jurisdictions.sort(function(a, b) {
-    var la = order[levelMap[a]] || 1;
-    var lb = order[levelMap[b]] || 1;
-    if (la !== lb) return la - lb;
-    return a.localeCompare(b);
-  });
-
-  var sel = document.getElementById('filterJurisdiction');
-  jurisdictions.forEach(function(j) {
-    var opt = document.createElement('option');
-    opt.value = j;
-    opt.textContent = j;
-    sel.appendChild(opt);
-  });
-}
+// buildJurisdictionFilter removed — replaced by View dropdown
 
 function buildLegend() {
   var el = document.getElementById('categoryLegend');
@@ -710,7 +670,7 @@ function buildMethodology() {
   var html = '<h3>Scoring Methodology</h3>';
   html += '<p>' + DATA.meta.description + '</p>';
   html += '<p><strong>How it works:</strong> ' + DATA.meta.methodology + '</p>';
-  html += '<p style="font-size:0.8rem;color:var(--gray);">Each <strong>True = +2 points</strong>, each False or "no evidence found" = +0. Max per topic = 10. Max total = 60. <em>null</em> entries = not yet verified from primary sources. Only primary sources used: campaign websites, legislative voting records, sponsored bills, official statements, and candidate social media.</p>';
+  html += '<p style="font-size:0.8rem;color:var(--gray);">Each <strong>True = +2 points</strong>, each False or "no evidence found" = +0. Max per topic = 10. Max total = 70. <em>null</em> entries = not yet verified from primary sources. Only primary sources used: campaign websites, legislative voting records, sponsored bills, official statements, and candidate social media.</p>';
   DATA.categories.forEach(function(cat) {
     html += '<div class="cat-detail"><h4>' + cat.label + '</h4><p style="font-size:0.8rem;color:var(--gray);margin-bottom:4px;">' + cat.description + '</p><ol>';
     cat.questions.forEach(function(q) {
@@ -721,83 +681,34 @@ function buildMethodology() {
   el.innerHTML = html;
 }
 
-// Metro areas: map metro name -> list of jurisdictions
-var METRO_AREAS = {
-  'Fredericksburg': ['Spotsylvania County', 'City of Fredericksburg', 'Stafford County'],
-  'Richmond': ['City of Richmond'],
-  'Hampton Roads': ['City of Norfolk', 'City of Virginia Beach', 'City of Hampton', 'City of Newport News', 'City of Suffolk', 'City of Chesapeake', 'City of Portsmouth'],
-  'DC': ['District of Columbia']
-};
-
-var activeQuickFilter = 'all';
-var activeMetro = null;
-
-function buildQuickFilters() {
-  var el = document.getElementById('quickFilters');
-  // Find which metros have candidates in current state data
-  var availableMetros = [];
-  Object.keys(METRO_AREAS).forEach(function(metro) {
-    var jurs = METRO_AREAS[metro];
-    var hasData = DATA.candidates.some(function(c) { return jurs.indexOf(c.jurisdiction) !== -1; });
-    if (hasData) availableMetros.push(metro);
-  });
-
-  var html = '<a href="javascript:void(0)" onclick="applyQuickFilter(\'all\')" class="qf-btn qf-active" data-qf="all">All</a>';
-  availableMetros.forEach(function(metro) {
-    html += '<a href="javascript:void(0)" onclick="applyQuickFilter(\'metro\',\'' + metro + '\')" class="qf-btn" data-qf="metro-' + metro + '">' + metro + ' Area</a>';
-  });
-  // Check if there are local candidates at all
-  var hasLocal = DATA.candidates.some(function(c) { return c.level === 'local'; });
-  if (hasLocal) {
-    html += '<a href="javascript:void(0)" onclick="applyQuickFilter(\'local\')" class="qf-btn" data-qf="local">All Local</a>';
-  }
-  html += '<a href="javascript:void(0)" onclick="applyQuickFilter(\'state\')" class="qf-btn" data-qf="state">State</a>';
-  html += '<a href="javascript:void(0)" onclick="applyQuickFilter(\'federal\')" class="qf-btn" data-qf="federal">Federal</a>';
-  el.innerHTML = html;
-}
-
-function applyQuickFilter(mode, metro) {
-  activeQuickFilter = mode;
-  activeMetro = metro || null;
-  // Update button states
-  document.querySelectorAll('.qf-btn').forEach(function(btn) { btn.classList.remove('qf-active'); });
-  var selector = mode === 'metro' ? '[data-qf="metro-' + metro + '"]' : '[data-qf="' + mode + '"]';
-  var activeBtn = document.querySelector(selector);
-  if (activeBtn) activeBtn.classList.add('qf-active');
-  // Reset dropdown filters
-  document.getElementById('filterJurisdiction').value = 'all';
-  document.getElementById('filterLevel').value = 'all';
-  renderCards();
-}
-
+// ---- Simplified Rendering ----
 function renderCards() {
   var search = (document.getElementById('searchInput').value || '').toLowerCase();
-  var jurisdiction = document.getElementById('filterJurisdiction').value;
-  var level = document.getElementById('filterLevel').value;
+  var view = document.getElementById('filterView').value;
   var party = document.getElementById('filterParty').value;
-  var sort = document.getElementById('filterSort').value;
 
   var filtered = DATA.candidates.filter(function(c) {
-    // Quick filter
-    if (activeQuickFilter === 'metro' && activeMetro && METRO_AREAS[activeMetro]) {
-      if (METRO_AREAS[activeMetro].indexOf(c.jurisdiction) === -1) return false;
-    }
-    if (activeQuickFilter === 'local' && c.level !== 'local') return false;
-    if (activeQuickFilter === 'state' && c.level !== 'state') return false;
-    if (activeQuickFilter === 'federal' && c.level !== 'federal') return false;
-    // Standard filters
-    if (search && !c.name.toLowerCase().includes(search) && !c.office.toLowerCase().includes(search)) return false;
-    if (jurisdiction !== 'all' && c.jurisdiction !== jurisdiction) return false;
-    if (level !== 'all' && c.level !== level) return false;
+    // View filter (replaces old quick filters + level dropdown)
+    if (view === 'local' && c.level !== 'local') return false;
+    if (view === 'state' && c.level !== 'state') return false;
+    if (view === 'federal' && c.level !== 'federal') return false;
+    // Party filter
     if (party !== 'all' && c.party !== party) return false;
+    // Search (matches name, office, AND jurisdiction/city)
+    if (search && !c.name.toLowerCase().includes(search) && !c.office.toLowerCase().includes(search) && !c.jurisdiction.toLowerCase().includes(search)) return false;
     return true;
   });
 
+  // Sort by score descending (highest first)
   filtered.sort(function(a, b) {
-    if (sort === 'score-desc') return calcTotalScore(b.scores).score - calcTotalScore(a.scores).score;
-    if (sort === 'score-asc') return calcTotalScore(a.scores).score - calcTotalScore(b.scores).score;
-    return a.name.localeCompare(b.name);
+    return calcTotalScore(b.scores).score - calcTotalScore(a.scores).score;
   });
+
+  // Update counts
+  document.getElementById('visibleCount').textContent = filtered.length;
+  var jurs = new Set();
+  filtered.forEach(function(c) { jurs.add(c.jurisdiction); });
+  document.getElementById('jurisdictionCount').textContent = jurs.size;
 
   var html = '';
   filtered.forEach(function(c) {

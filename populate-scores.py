@@ -48,7 +48,7 @@ PROFILE_STRONG_CN = {
     'life':          [True, True, True, True, True],      # 10/10
     'immigration':   [True, True, None, None, None],      # 4/10 - Q3-Q5 are extremely specific
     'marriage':      [True, True, True, True, None],      # 8/10 - Q5 (civil penalties) is extreme
-    'christian_nationalism': [None, None, None, None, None], # 0/10 - very few explicitly push this
+    'christian_heritage': [None, None, None, None, None], # 0/10 - very few explicitly push this
     'self_defense':  [True, True, True, True, True],      # 10/10
 }
 
@@ -58,7 +58,7 @@ PROFILE_CONSERVATIVE_R = {
     'life':          [True, False, False, True, True],     # 6/10 - few support total abolition
     'immigration':   [True, True, None, None, None],       # 4/10
     'marriage':      [True, True, True, True, False],      # 8/10
-    'christian_nationalism': [False, False, False, False, False], # 0/10
+    'christian_heritage': [False, False, False, False, False], # 0/10
     'self_defense':  [True, True, True, True, True],       # 10/10
 }
 
@@ -68,7 +68,7 @@ PROFILE_MODERATE_R = {
     'life':          [True, False, False, True, True],     # 6/10
     'immigration':   [True, True, None, None, None],       # 4/10
     'marriage':      [True, False, True, True, False],     # 6/10
-    'christian_nationalism': [False, False, False, False, False], # 0/10
+    'christian_heritage': [False, False, False, False, False], # 0/10
     'self_defense':  [True, True, False, True, True],      # 8/10
 }
 
@@ -78,7 +78,7 @@ PROFILE_DEMOCRAT = {
     'life':          [False, False, False, False, False],   # 0/10
     'immigration':   [False, False, False, False, False],   # 0/10
     'marriage':      [False, False, False, False, False],   # 0/10
-    'christian_nationalism': [False, False, False, False, False], # 0/10
+    'christian_heritage': [False, False, False, False, False], # 0/10
     'self_defense':  [False, False, False, False, False],   # 0/10
 }
 
@@ -88,7 +88,7 @@ PROFILE_MODERATE_D = {
     'life':          [False, False, False, False, False],   # 0/10
     'immigration':   [False, False, False, False, False],   # 0/10
     'marriage':      [False, False, False, False, False],   # 0/10
-    'christian_nationalism': [False, False, False, False, False], # 0/10
+    'christian_heritage': [False, False, False, False, False], # 0/10
     'self_defense':  [False, False, False, False, False],   # 0/10
 }
 
@@ -105,7 +105,7 @@ OVERRIDES = {
             'life':          [False, False, False, False, False],
             'immigration':   [False, False, False, False, False],
             'marriage':      [False, False, False, False, False],
-            'christian_nationalism': [False, False, False, False, False],
+            'christian_heritage': [False, False, False, False, False],
             'self_defense':  [False, False, False, False, False],
         },
         'profile': {
@@ -124,7 +124,7 @@ OVERRIDES = {
             'life':          [False, False, False, False, False],
             'immigration':   [False, False, False, False, False],
             'marriage':      [False, False, False, False, False],
-            'christian_nationalism': [False, False, False, False, False],
+            'christian_heritage': [False, False, False, False, False],
             'self_defense':  [False, False, False, False, False],
         },
         'profile': {
@@ -143,7 +143,7 @@ OVERRIDES = {
             'life':          [False, False, False, False, False],
             'immigration':   [False, False, False, False, False],
             'marriage':      [False, False, False, False, False],
-            'christian_nationalism': [False, False, False, False, False],
+            'christian_heritage': [False, False, False, False, False],
             'self_defense':  [False, False, False, False, False],
         },
         'profile': {
@@ -164,7 +164,7 @@ OVERRIDES = {
             'life':          [True, True, True, True, True],
             'immigration':   [True, True, None, None, None],
             'marriage':      [True, True, True, True, False],
-            'christian_nationalism': [False, False, False, False, False],
+            'christian_heritage': [False, False, False, False, False],
             'self_defense':  [True, True, True, True, True],
         },
         'profile': {
@@ -181,7 +181,7 @@ OVERRIDES = {
             'life':          [True, False, True, True, True],
             'immigration':   [True, True, None, None, None],
             'marriage':      [True, True, True, True, False],
-            'christian_nationalism': [False, False, False, False, False],
+            'christian_heritage': [False, False, False, False, False],
             'self_defense':  [True, True, True, True, True],
         },
         'profile': {
@@ -198,7 +198,7 @@ OVERRIDES = {
             'life':          [True, True, True, True, True],
             'immigration':   [True, True, None, None, None],
             'marriage':      [True, True, True, True, False],
-            'christian_nationalism': [False, False, False, False, False],
+            'christian_heritage': [False, False, False, False, False],
             'self_defense':  [True, True, True, True, True],
         },
         'profile': {
@@ -215,7 +215,7 @@ OVERRIDES = {
             'life':          [True, False, True, True, True],
             'immigration':   [True, True, None, None, None],
             'marriage':      [True, True, True, True, False],
-            'christian_nationalism': [False, False, False, False, False],
+            'christian_heritage': [False, False, False, False, False],
             'self_defense':  [True, True, True, True, True],
         },
         'profile': {
@@ -234,7 +234,7 @@ OVERRIDES = {
             'life':          [False, False, False, False, False],
             'immigration':   [False, False, False, False, False],
             'marriage':      [False, False, False, False, False],
-            'christian_nationalism': [False, False, False, False, False],
+            'christian_heritage': [False, False, False, False, False],
             'self_defense':  [False, False, False, False, False],
         },
         'profile': {
@@ -251,7 +251,7 @@ OVERRIDES = {
             'life':          [False, False, False, False, False],
             'immigration':   [False, False, False, False, False],
             'marriage':      [False, False, False, False, False],
-            'christian_nationalism': [False, False, False, False, False],
+            'christian_heritage': [False, False, False, False, False],
             'self_defense':  [False, False, False, False, False],
         },
         'profile': {
@@ -268,7 +268,7 @@ OVERRIDES = {
             'life':          [False, False, False, False, False],
             'immigration':   [False, False, False, False, False],
             'marriage':      [False, False, False, False, False],
-            'christian_nationalism': [False, False, False, False, False],
+            'christian_heritage': [False, False, False, False, False],
             'self_defense':  [False, False, False, False, False],
         },
         'profile': {
@@ -323,7 +323,7 @@ HOUSE_OVERRIDES = {
             'life':          [True, True, True, True, True],
             'immigration':   [True, True, None, None, None],
             'marriage':      [True, True, True, True, False],
-            'christian_nationalism': [False, False, False, False, False],
+            'christian_heritage': [False, False, False, False, False],
             'self_defense':  [True, True, True, True, True],
         },
         'notes': 'Former Speaker of the House. Conservative Republican from Shenandoah Valley. NRA A-rated. Strong pro-life record. Attorney.',
@@ -334,7 +334,7 @@ HOUSE_OVERRIDES = {
             'life':          [True, False, True, True, True],
             'immigration':   [True, True, None, None, None],
             'marriage':      [True, True, True, True, False],
-            'christian_nationalism': [False, False, False, False, False],
+            'christian_heritage': [False, False, False, False, False],
             'self_defense':  [True, True, True, True, True],
         },
         'notes': 'Longest-serving member of the House. Conservative Republican. Farmer and businessman.',
@@ -382,7 +382,7 @@ def main():
 
         # Check if scores are still all null (no override applied)
         all_null = True
-        for cat_id in ['america_first', 'life', 'immigration', 'marriage', 'christian_nationalism', 'self_defense']:
+        for cat_id in ['america_first', 'life', 'immigration', 'marriage', 'christian_heritage', 'self_defense']:
             existing = candidate['scores'].get(cat_id, [None]*5)
             if any(a is not None for a in existing):
                 all_null = False

@@ -379,6 +379,21 @@
       margin-top: 40px;
     }
     footer a { color: var(--accent); text-decoration: none; }
+
+    /* Quick filter buttons */
+    .qf-btn {
+      color: var(--gray);
+      text-decoration: none;
+      font-size: 0.82rem;
+      padding: 6px 16px;
+      border-radius: 20px;
+      border: 1px solid var(--border);
+      transition: all 0.2s;
+      font-weight: 500;
+      cursor: pointer;
+    }
+    .qf-btn:hover { border-color: var(--accent); color: var(--accent); }
+    .qf-active { background: var(--accent-dim); border-color: var(--accent); color: var(--accent); font-weight: 600; }
   </style>
 </head>
 <body>
@@ -450,6 +465,14 @@
     <a href="citizen.html" class="active" id="linkCards">Candidates</a>
     <a href="citizen-table.html" id="linkTable">Table View</a>
     <a href="citizen-issues.html" id="linkIssues">Issues</a>
+  </div>
+
+  <!-- Quick Filters -->
+  <div style="display:flex;justify-content:center;gap:6px;padding:10px 0;flex-wrap:wrap;" id="quickFilters">
+    <a href="javascript:void(0)" onclick="applyQuickFilter('all')" class="qf-btn qf-active" id="qfAll">All Candidates</a>
+    <a href="javascript:void(0)" onclick="applyQuickFilter('local')" class="qf-btn" id="qfLocal">Fredericksburg Area</a>
+    <a href="javascript:void(0)" onclick="applyQuickFilter('state')" class="qf-btn" id="qfState">State Officials</a>
+    <a href="javascript:void(0)" onclick="applyQuickFilter('federal')" class="qf-btn" id="qfFederal">Federal Reps</a>
   </div>
 
   <!-- Filter Bar -->
@@ -696,6 +719,21 @@ function buildMethodology() {
   el.innerHTML = html;
 }
 
+var LOCAL_JURISDICTIONS = ['Spotsylvania County', 'City of Fredericksburg', 'Stafford County'];
+var activeQuickFilter = 'all';
+
+function applyQuickFilter(mode) {
+  activeQuickFilter = mode;
+  // Update button states
+  document.querySelectorAll('.qf-btn').forEach(function(btn) { btn.classList.remove('qf-active'); });
+  var btnId = mode === 'all' ? 'qfAll' : mode === 'local' ? 'qfLocal' : mode === 'state' ? 'qfState' : 'qfFederal';
+  document.getElementById(btnId).classList.add('qf-active');
+  // Reset dropdown filters
+  document.getElementById('filterJurisdiction').value = 'all';
+  document.getElementById('filterLevel').value = 'all';
+  renderCards();
+}
+
 function renderCards() {
   var search = (document.getElementById('searchInput').value || '').toLowerCase();
   var jurisdiction = document.getElementById('filterJurisdiction').value;
@@ -704,6 +742,11 @@ function renderCards() {
   var sort = document.getElementById('filterSort').value;
 
   var filtered = DATA.candidates.filter(function(c) {
+    // Quick filter
+    if (activeQuickFilter === 'local' && LOCAL_JURISDICTIONS.indexOf(c.jurisdiction) === -1) return false;
+    if (activeQuickFilter === 'state' && c.level !== 'state') return false;
+    if (activeQuickFilter === 'federal' && c.level !== 'federal') return false;
+    // Standard filters
     if (search && !c.name.toLowerCase().includes(search) && !c.office.toLowerCase().includes(search)) return false;
     if (jurisdiction !== 'all' && c.jurisdiction !== jurisdiction) return false;
     if (level !== 'all' && c.level !== level) return false;

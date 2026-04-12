@@ -102,12 +102,18 @@ def generate_profile(candidate, categories, meta):
         ('Birthplace', profile.get('birthplace')),
         ('Background', profile.get('background')),
         ('Net Worth', profile.get('net_worth')),
+        ('NRA Rating', profile.get('nra_rating')),
+        ('Heritage Action Score', profile.get('heritage_action')),
+        ('Committees', profile.get('committees')),
         ('Previous Election Opponent', profile.get('prev_election_opponent')),
         ('Next Election Year', profile.get('next_election_year')),
     ]
     if twitter:
         handle = twitter.lstrip('@')
         fields.append(('X / Twitter', f'<a href="https://x.com/{handle}" target="_blank" rel="noopener" style="color:var(--accent);">@{handle}</a>'))
+    campaign_website = profile.get('campaign_website', '')
+    if campaign_website:
+        fields.append(('Campaign Website', f'<a href="{campaign_website}" target="_blank" rel="noopener" style="color:var(--accent);">{campaign_website}</a>'))
     for label, val in fields:
         if val:
             profile_html += f'<div class="prof-detail"><strong>{label}:</strong> {val}</div>'

@@ -40,13 +40,17 @@ def party_label(party):
         return 'Republican'
     if party == 'D':
         return 'Democrat'
-    return 'Independent'
+    if party == 'I':
+        return 'Independent'
+    return 'Nonpartisan'
 
 def party_class(party):
     if party == 'R':
         return 'party-r'
     if party == 'D':
         return 'party-d'
+    if party == 'I':
+        return 'party-i'
     return 'party-unknown'
 
 def answer_display(val):
@@ -110,6 +114,16 @@ def generate_profile(candidate, categories, meta):
 
     notes = c.get('notes', '')
     website = c.get('website', '')
+    sources = c.get('sources', [])
+    sources_html = ''
+    if sources:
+        sources_html = '<div class="prof-sources"><h2>Sources &amp; Evidence</h2>'
+        for src in sources:
+            display = src.replace('https://', '').replace('http://', '')
+            if len(display) > 60:
+                display = display[:57] + '...'
+            sources_html += f'<a href="{src}" target="_blank" rel="noopener">{display}</a>'
+        sources_html += '</div>'
 
     return f'''<!DOCTYPE html>
 <html lang="en">
@@ -160,7 +174,31 @@ def generate_profile(candidate, categories, meta):
     }}
     .party-r {{ background: rgba(220,38,38,0.15); color: #ef4444; border: 1px solid rgba(220,38,38,0.3); }}
     .party-d {{ background: rgba(37,99,235,0.15); color: #3b82f6; border: 1px solid rgba(37,99,235,0.3); }}
+    .party-i {{ background: rgba(168,85,247,0.15); color: #a855f7; border: 1px solid rgba(168,85,247,0.3); }}
     .party-unknown {{ background: rgba(107,114,128,0.15); color: #9ca3af; border: 1px solid rgba(107,114,128,0.3); }}
+
+    .prof-sources {{
+      padding: 16px 24px;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      margin-top: 16px;
+    }}
+    .prof-sources h2 {{
+      color: var(--accent);
+      font-size: 1rem;
+      margin-bottom: 10px;
+      font-family: var(--font-main);
+    }}
+    .prof-sources a {{
+      color: var(--accent);
+      text-decoration: none;
+      font-size: 0.82rem;
+      display: block;
+      margin-bottom: 4px;
+      word-break: break-all;
+    }}
+    .prof-sources a:hover {{ text-decoration: underline; }}
 
     .prof-total {{
       display: flex;
@@ -341,6 +379,8 @@ def generate_profile(candidate, categories, meta):
 
   <h2 style="color:var(--accent);font-family:var(--font-main);margin-bottom:16px;">Category Breakdown</h2>
   {cat_html}
+
+  {sources_html}
 </div>
 
 <footer>

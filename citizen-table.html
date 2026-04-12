@@ -85,6 +85,7 @@
     /* Party badges */
     .party-r { color: #ef4444; font-weight: 700; font-size: 0.78rem; }
     .party-d { color: #3b82f6; font-weight: 700; font-size: 0.78rem; }
+    .party-i { color: #a855f7; font-weight: 700; font-size: 0.78rem; }
     .party-u { color: var(--gray); font-weight: 700; font-size: 0.78rem; }
 
     /* Score colors */
@@ -175,6 +176,7 @@
       <option value="all">All Parties</option>
       <option value="R">Republican</option>
       <option value="D">Democrat</option>
+      <option value="I">Independent</option>
     </select>
     <select id="filterSort" onchange="renderTables()">
       <option value="score-desc">Highest Score</option>
@@ -240,7 +242,8 @@ function totalClass(score, answered) {
 function partyHtml(party) {
   if (party === 'R') return '<span class="party-r">Republican</span>';
   if (party === 'D') return '<span class="party-d">Democrat</span>';
-  return '<span class="party-u">' + party + '</span>';
+  if (party === 'I') return '<span class="party-i">Independent</span>';
+  return '<span class="party-u">' + (party || '—') + '</span>';
 }
 
 function renderTables() {

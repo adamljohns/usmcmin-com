@@ -238,6 +238,7 @@
     }
     .party-r { background: rgba(220,38,38,0.15); color: #ef4444; border: 1px solid rgba(220,38,38,0.3); }
     .party-d { background: rgba(37,99,235,0.15); color: #3b82f6; border: 1px solid rgba(37,99,235,0.3); }
+    .party-i { background: rgba(168,85,247,0.15); color: #a855f7; border: 1px solid rgba(168,85,247,0.3); }
     .party-unknown { background: rgba(107,114,128,0.15); color: #9ca3af; border: 1px solid rgba(107,114,128,0.3); }
 
     /* Score bar */
@@ -453,7 +454,8 @@
       <option value="all">All Parties</option>
       <option value="R">Republican</option>
       <option value="D">Democrat</option>
-      <option value="Unknown">Independent / Unknown</option>
+      <option value="I">Independent</option>
+      <option value="Unknown">Unknown / Nonpartisan</option>
     </select>
     <select id="filterSort" onchange="renderCards()">
       <option value="score-desc">Highest Score First</option>
@@ -521,13 +523,15 @@ fetch('data/scorecard.json')
 function getPartyClass(party) {
   if (party === 'R') return 'party-r';
   if (party === 'D') return 'party-d';
+  if (party === 'I') return 'party-i';
   return 'party-unknown';
 }
 
 function getPartyLabel(party) {
   if (party === 'R') return 'GOP';
   if (party === 'D') return 'DEM';
-  return 'IND';
+  if (party === 'I') return 'IND';
+  return '—';
 }
 
 function getLevelClass(level) {

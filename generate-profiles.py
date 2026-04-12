@@ -344,6 +344,7 @@ def generate_profile(candidate, categories, meta):
     </div>
   </a>
   <ul class="nav-links">
+    <li><a href="../mission.html">Mission</a></li>
     <li><a href="../shop.html">Shop</a></li>
     <li><a href="../books.html">Books</a></li>
     <li><a href="../coaching.html">Coaching</a></li>

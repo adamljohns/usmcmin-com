@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Our Mission — U.S.M.C. Ministries</title>
+  <meta name="description" content="U.S.M.C. Ministries equips men to be HAPPY Husbands, FULFILLED Fathers, and RESOLUTE Citizens through biblical coaching, accountability, and discipleship.">
+  <meta property="og:title" content="Our Mission — U.S.M.C. Ministries">
+  <meta property="og:description" content="Helping men become better husbands, fathers, and citizens as they follow Jesus.">
+  <meta property="og:type" content="website">
+  <link rel="stylesheet" href="assets/css/main.css">
+  <link rel="icon" href="assets/img/favicon.png" type="image/png">
+  <style>
+    .mission-hero {
+      text-align: center;
+      padding: 64px 20px 48px;
+      border-bottom: 2px solid var(--border);
+      background: linear-gradient(180deg, rgba(30,58,95,0.08) 0%, transparent 100%);
+    }
+    [data-theme="dark"] .mission-hero {
+      background: linear-gradient(180deg, rgba(30,58,95,0.25) 0%, transparent 100%);
+    }
+    .mission-hero h1 {
+      font-size: clamp(2rem, 5vw, 3rem);
+      color: var(--white);
+      margin-bottom: 12px;
+      font-weight: 800;
+    }
+    .mission-hero .tagline {
+      font-size: 1.1rem;
+      color: var(--gray);
+      font-style: italic;
+      margin-bottom: 18px;
+    }
+    .mission-hero .subtitle {
+      color: var(--gray);
+      font-size: 0.95rem;
+      max-width: 700px;
+      margin: 0 auto;
+      line-height: 1.8;
+    }
+
+    .mission-container { max-width: 1000px; margin: 0 auto; padding: 20px; }
+
+    /* Three modules */
+    .modules-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 24px;
+      margin: 40px 0;
+    }
+    .module-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 32px 24px;
+      text-align: center;
+      transition: border-color 0.2s, transform 0.2s, box-shadow 0.2s;
+    }
+    .module-card:hover {
+      border-color: #c9a84c;
+      transform: translateY(-4px);
+      box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+    }
+    .module-card img { margin-bottom: 16px; opacity: 0.9; }
+    .module-card h2 {
+      font-size: 1.3rem;
+      color: var(--white);
+      margin-bottom: 4px;
+    }
+    .module-card h2 .gold { color: #c9a84c; }
+    .module-card .module-verse {
+      font-size: 0.78rem;
+      color: #c9a84c;
+      font-style: italic;
+      margin-bottom: 14px;
+    }
+    .module-card p {
+      color: var(--gray);
+      font-size: 0.88rem;
+      line-height: 1.7;
+      margin-bottom: 18px;
+    }
+    .module-card .module-acronym {
+      font-size: 0.78rem;
+      color: var(--gray);
+      margin-bottom: 18px;
+      line-height: 1.6;
+    }
+    .module-card .module-acronym strong { color: #c9a84c; }
+    .module-card .module-link {
+      display: inline-block;
+      background: rgba(201,168,76,0.12);
+      border: 1px solid rgba(201,168,76,0.3);
+      color: #c9a84c;
+      font-weight: 600;
+      font-size: 0.88rem;
+      padding: 10px 24px;
+      border-radius: 8px;
+      text-decoration: none;
+      transition: all 0.2s;
+    }
+    .module-card .module-link:hover {
+      background: rgba(201,168,76,0.2);
+      border-color: #c9a84c;
+    }
+
+    /* USMC breakdown */
+    .usmc-section {
+      margin: 48px 0;
+      text-align: center;
+    }
+    .usmc-section h2 {
+      color: var(--accent);
+      margin-bottom: 8px;
+      font-size: 1.4rem;
+    }
+    .usmc-section .usmc-sub {
+      color: var(--gray);
+      font-size: 0.92rem;
+      margin-bottom: 24px;
+    }
+    .usmc-pillars {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+    }
+    .usmc-pillar {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 24px 16px;
+      text-align: center;
+    }
+    .usmc-pillar .pillar-letter {
+      font-size: 2.2rem;
+      font-weight: 800;
+      color: #c9a84c;
+      margin-bottom: 8px;
+    }
+    .usmc-pillar h3 {
+      color: var(--white);
+      font-size: 0.95rem;
+      margin-bottom: 6px;
+    }
+    .usmc-pillar p {
+      color: var(--gray);
+      font-size: 0.82rem;
+      line-height: 1.6;
+    }
+
+    /* Partners */
+    .partners-section {
+      margin: 48px 0;
+      padding: 28px;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+    }
+    .partners-section h2 {
+      color: var(--accent);
+      font-size: 1.1rem;
+      margin-bottom: 16px;
+      text-align: center;
+    }
+    .partners-grid {
+      display: flex;
+      gap: 20px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+    .partner-card {
+      background: rgba(201,168,76,0.06);
+      border: 1px solid rgba(201,168,76,0.15);
+      border-radius: var(--radius);
+      padding: 20px 24px;
+      text-align: center;
+      min-width: 220px;
+      max-width: 300px;
+      transition: border-color 0.2s;
+    }
+    .partner-card:hover { border-color: #c9a84c; }
+    .partner-card h3 {
+      color: #c9a84c;
+      font-size: 1rem;
+      margin-bottom: 6px;
+    }
+    .partner-card p {
+      color: var(--gray);
+      font-size: 0.82rem;
+      line-height: 1.6;
+      margin-bottom: 12px;
+    }
+    .partner-card a {
+      color: var(--accent);
+      font-size: 0.82rem;
+      text-decoration: none;
+      font-weight: 600;
+    }
+    .partner-card a:hover { text-decoration: underline; }
+
+    /* Scripture */
+    .scripture-card {
+      text-align: center;
+      padding: 28px;
+      margin: 32px 0;
+      background: rgba(201,168,76,0.06);
+      border: 1px solid rgba(201,168,76,0.15);
+      border-radius: var(--radius);
+    }
+    .scripture-card blockquote {
+      font-style: italic;
+      color: var(--gray);
+      font-size: 0.95rem;
+      line-height: 1.7;
+      max-width: 600px;
+      margin: 0 auto 8px;
+    }
+    .scripture-card cite {
+      color: #c9a84c;
+      font-size: 0.82rem;
+      font-style: normal;
+      font-weight: 600;
+    }
+
+    footer { text-align: center; padding: 30px 20px; color: var(--gray); font-size: 0.82rem; border-top: 1px solid var(--border); margin-top: 40px; }
+    footer a { color: var(--accent); text-decoration: none; }
+
+    @media (max-width: 640px) {
+      .usmc-pillars { grid-template-columns: repeat(2, 1fr); }
+      .modules-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a href="/" class="nav-brand" style="text-decoration:none">
+    <img src="assets/img/logo.png" alt="U.S.M.C. Ministries" style="object-fit:contain">
+    <div class="nav-brand-text">
+      <div class="name">U.S.M.C. Ministries</div>
+      <div class="tag">Warriors Equipped</div>
+    </div>
+  </a>
+  <ul class="nav-links">
+    <li><a href="mission.html" class="active">Mission</a></li>
+    <li><a href="shop.html">Shop</a></li>
+    <li><a href="coaching.html">Coaching</a></li>
+    <li><a href="fitness/fitness.html">Fitness</a></li>
+    <li><a href="finance/financial-intake.html">Finance</a></li>
+    <li><a href="about.html">About</a></li>
+    <li><a href="https://usmcmin.org" target="_blank">Ministry Site</a></li>
+  </ul>
+  <a href="coaching.html" class="btn nav-cta">Book a Session</a>
+  <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme" title="Switch light/dark mode">&#9789;</button>
+  <button class="nav-toggle" aria-label="Menu"><span></span><span></span><span></span></button>
+</nav>
+
+<div class="mission-hero">
+  <img src="assets/icons/shield-star.png" alt="" width="80" height="80" style="display:block;margin:0 auto 16px;opacity:0.9;">
+  <h1>Our Mission</h1>
+  <p class="tagline">Warriors Equipped. Kingdom Advancing.</p>
+  <p class="subtitle">U.S.M.C. Ministries exists to equip men to be <strong>HAPPY Husbands</strong>, <strong>FULFILLED Fathers</strong>, and <strong>RESOLUTE Citizens</strong> through biblical coaching, accountability, and discipleship. Based in Fredericksburg, Virginia.</p>
+</div>
+
+<div class="mission-container">
+
+  <!-- USMC Pillars -->
+  <div class="usmc-section">
+    <h2>U.S.M.C.</h2>
+    <p class="usmc-sub">Uniting. Serving. Mentoring. Counseling.</p>
+    <div class="usmc-pillars">
+      <div class="usmc-pillar">
+        <div class="pillar-letter">U</div>
+        <h3>Uniting</h3>
+        <p>Bringing men together in Christian brotherhood and accountability.</p>
+      </div>
+      <div class="usmc-pillar">
+        <div class="pillar-letter">S</div>
+        <h3>Serving</h3>
+        <p>Equipping men to serve their families, churches, and communities.</p>
+      </div>
+      <div class="usmc-pillar">
+        <div class="pillar-letter">M</div>
+        <h3>Mentoring</h3>
+        <p>Older men discipling younger men in faith, marriage, and fatherhood.</p>
+      </div>
+      <div class="usmc-pillar">
+        <div class="pillar-letter">C</div>
+        <h3>Counseling</h3>
+        <p>Biblical counsel for men facing real battles at home, work, and in the public square.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Three Modules -->
+  <div class="modules-grid">
+
+    <!-- HAPPY Husband -->
+    <div class="module-card">
+      <img src="assets/icons/shield-family.png" alt="" width="64" height="64">
+      <h2><span class="gold">HAPPY</span> Husband</h2>
+      <div class="module-verse">Ephesians 5:25</div>
+      <p>A marriage self-evaluation framework. How are you leading your wife?</p>
+      <div class="module-acronym">
+        <strong>H</strong>onors &middot; <strong>A</strong>biding &middot; <strong>P</strong>rotecting &middot; <strong>P</strong>roviding &middot; <strong>Y</strong>ields
+      </div>
+      <a href="husband.html" class="module-link">Explore HAPPY Husband</a>
+    </div>
+
+    <!-- FULFILLED Father -->
+    <div class="module-card">
+      <img src="assets/icons/shield-cross.png" alt="" width="64" height="64">
+      <h2><span class="gold">FULFILLED</span> Father</h2>
+      <div class="module-verse">Ephesians 6:4</div>
+      <p>A fatherhood assessment. Are you raising your children in the fear and admonition of the Lord?</p>
+      <div class="module-acronym">
+        <strong>F</strong>aithful &middot; <strong>U</strong>nderstanding &middot; <strong>L</strong>oving &middot; <strong>F</strong>un &middot; <strong>I</strong>ntentional &middot; <strong>L</strong>istening &middot; <strong>L</strong>eading &middot; <strong>E</strong>ncouraging &middot; <strong>D</strong>iscipling
+      </div>
+      <a href="father.html" class="module-link">Explore FULFILLED Father</a>
+    </div>
+
+    <!-- RESOLUTE Citizen -->
+    <div class="module-card">
+      <img src="assets/icons/shield-star.png" alt="" width="64" height="64">
+      <h2><span class="gold">RESOLUTE</span> Citizen</h2>
+      <div class="module-verse">Proverbs 29:2</div>
+      <p>A Christian voter scorecard. Are you serving as salt and light in your community, or just taking up space?</p>
+      <div class="module-acronym">
+        204 candidates &middot; 7 categories &middot; 70-point max &middot; Primary sources only
+      </div>
+      <a href="citizen.html" class="module-link">Explore RESOLUTE Citizen</a>
+    </div>
+
+  </div>
+
+  <!-- Partners -->
+  <div class="partners-section">
+    <h2>Partners &amp; Like-Minded Ministries</h2>
+    <div class="partners-grid">
+      <div class="partner-card">
+        <h3>ChristFirst.Vote</h3>
+        <p>Vote for the Kingdom, not the party. A Christian voter scorecard evaluating candidates on biblical values. Currently covering Florida.</p>
+        <a href="https://christfirst.vote" target="_blank" rel="noopener">Visit ChristFirst.Vote &rarr;</a>
+      </div>
+      <div class="partner-card">
+        <h3>U.S.M.C. Ministries (.org)</h3>
+        <p>Bible reading plans, devotionals, theology, assessments, and discipleship resources. The ministry headquarters.</p>
+        <a href="https://usmcmin.org" target="_blank" rel="noopener">Visit usmcmin.org &rarr;</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scripture -->
+  <div class="scripture-card">
+    <blockquote>"As iron sharpeneth iron; so a man sharpeneth the countenance of his friend."</blockquote>
+    <cite>Proverbs 27:17 (KJV)</cite>
+  </div>
+
+</div>
+
+<footer>
+  <p><strong>U.S.M.C. Ministries</strong> &mdash; Warriors Equipped. Kingdom Advancing.</p>
+  <p style="margin-top:6px;font-size:0.75rem;color:var(--gray);"><a href="https://usmcmin.org">usmcmin.org</a> | <a href="sitemap.html">Sitemap</a> | <a href="about.html">About</a></p>
+</footer>
+
+<script>
+(function() {
+  var navToggle = document.querySelector('.nav-toggle');
+  var navLinks = document.querySelector('.nav-links');
+  if (navToggle && navLinks) {
+    navToggle.addEventListener('click', function() { navLinks.classList.toggle('open'); });
+  }
+})();
+</script>
+<script>
+(function() {
+  var toggle = document.getElementById('themeToggle');
+  var saved = localStorage.getItem('usmc-theme');
+  if (saved !== 'light') {
+    document.documentElement.setAttribute('data-theme', 'dark');
+    toggle.textContent = '\u2600\uFE0F';
+  }
+  toggle.addEventListener('click', function() {
+    var isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+    if (isDark) {
+      document.documentElement.removeAttribute('data-theme');
+      localStorage.setItem('usmc-theme', 'light');
+      toggle.textContent = '\uD83C\uDF19';
+    } else {
+      document.documentElement.setAttribute('data-theme', 'dark');
+      localStorage.setItem('usmc-theme', 'dark');
+      toggle.textContent = '\u2600\uFE0F';
+    }
+  });
+})();
+</script>
+</body>
+</html>

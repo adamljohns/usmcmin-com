@@ -418,8 +418,15 @@
     <p class="methodology">7 categories &times; 5 questions &times; 2 pts = 70 points max &middot; Grounded in Reformed Christian values &middot; <a href="#methodology">View full methodology</a></p>
   </div>
 
+  <!-- State Selector -->
+  <div style="display:flex;justify-content:center;gap:8px;padding:16px 0;flex-wrap:wrap;" id="stateSelector"></div>
+
   <!-- Stats -->
   <div class="sc-stats">
+    <div class="sc-stat">
+      <div class="sc-stat-num" id="stateName">VA</div>
+      <div class="sc-stat-label">State</div>
+    </div>
     <div class="sc-stat">
       <div class="sc-stat-num" id="totalCount">0</div>
       <div class="sc-stat-label">Candidates</div>
@@ -440,9 +447,9 @@
 
   <!-- View Toggle -->
   <div class="view-toggle">
-    <a href="citizen.html" class="active">Candidates</a>
-    <a href="citizen-table.html">Table View</a>
-    <a href="citizen-issues.html">Issues</a>
+    <a href="citizen.html" class="active" id="linkCards">Candidates</a>
+    <a href="citizen-table.html" id="linkTable">Table View</a>
+    <a href="citizen-issues.html" id="linkIssues">Issues</a>
   </div>
 
   <!-- Filter Bar -->
@@ -496,35 +503,96 @@
 
 <script>
 let DATA = null;
+var ALL_CANDIDATES = [];
 var POINTS_PER_TRUE = 2;
 var MAX_PER_TOPIC = 10;
 var MAX_TOTAL = 70;
+
+var STATE_NAMES = {
+  'VA': 'Virginia', 'TX': 'Texas', 'FL': 'Florida', 'NC': 'North Carolina',
+  'SC': 'South Carolina', 'GA': 'Georgia', 'TN': 'Tennessee', 'AL': 'Alabama',
+  'MD': 'Maryland', 'PA': 'Pennsylvania', 'NY': 'New York', 'OH': 'Ohio'
+};
+
+function getStateParam() {
+  var params = new URLSearchParams(window.location.search);
+  return params.get('state') || 'VA';
+}
+
+function setStateParam(st) {
+  var url = new URL(window.location);
+  url.searchParams.set('state', st);
+  window.history.pushState({}, '', url);
+}
+
+function switchState(st) {
+  setStateParam(st);
+  filterByState(st);
+}
+
+function filterByState(st) {
+  DATA.candidates = ALL_CANDIDATES.filter(function(c) { return c.state === st; });
+  document.getElementById('stateName').textContent = st;
+  buildJurisdictionFilter();
+  buildLegend();
+  buildMethodology();
+  renderCards();
+  updateStats();
+  buildStateSelector(st);
+  // Update view toggle links with state param
+  var suffix = '?state=' + st;
+  var lc = document.getElementById('linkCards');
+  var lt = document.getElementById('linkTable');
+  var li = document.getElementById('linkIssues');
+  if (lc) lc.href = 'citizen.html' + suffix;
+  if (lt) lt.href = 'citizen-table.html' + suffix;
+  if (li) li.href = 'citizen-issues.html' + suffix;
+}
+
+function updateStats() {
+  var candidates = DATA.candidates;
+  document.getElementById('totalCount').textContent = candidates.length;
+  document.getElementById('totalCountInline').textContent = candidates.length;
+  var scored = 0;
+  candidates.forEach(function(c) {
+    var hasScore = false;
+    Object.keys(c.scores).forEach(function(k) {
+      c.scores[k].forEach(function(a) { if (a !== null) hasScore = true; });
+    });
+    if (hasScore) scored++;
+  });
+  document.getElementById('scoredCount').textContent = scored;
+  var jurisdictions = new Set();
+  candidates.forEach(function(c) { jurisdictions.add(c.jurisdiction); });
+  document.getElementById('jurisdictionCount').textContent = jurisdictions.size;
+}
+
+function buildStateSelector(currentState) {
+  var states = [];
+  var seen = {};
+  ALL_CANDIDATES.forEach(function(c) {
+    if (!seen[c.state]) { seen[c.state] = true; states.push(c.state); }
+  });
+  states.sort();
+  var el = document.getElementById('stateSelector');
+  if (states.length <= 1) { el.style.display = 'none'; return; }
+  el.style.display = 'flex';
+  var html = '';
+  states.forEach(function(st) {
+    var active = st === currentState ? ' style="background:var(--accent-dim);border-color:var(--accent);color:var(--accent);"' : '';
+    var name = STATE_NAMES[st] || st;
+    html += '<a href="javascript:void(0)" onclick="switchState(\'' + st + '\')" style="color:var(--gray);text-decoration:none;font-size:0.88rem;padding:8px 20px;border-radius:20px;border:1px solid var(--border);transition:all 0.2s;font-weight:600;"' + active + '>' + name + '</a>';
+  });
+  el.innerHTML = html;
+}
 
 fetch('data/scorecard.json')
   .then(r => r.json())
   .then(data => {
     DATA = data;
-    buildJurisdictionFilter();
-    buildLegend();
-    buildMethodology();
-    renderCards();
-    // Stats
-    document.getElementById('totalCount').textContent = data.candidates.length;
-    document.getElementById('totalCountInline').textContent = data.candidates.length;
-    // Count scored
-    var scored = 0;
-    data.candidates.forEach(function(c) {
-      var hasScore = false;
-      Object.keys(c.scores).forEach(function(k) {
-        c.scores[k].forEach(function(a) { if (a !== null) hasScore = true; });
-      });
-      if (hasScore) scored++;
-    });
-    document.getElementById('scoredCount').textContent = scored;
-    // Count jurisdictions
-    var jurisdictions = new Set();
-    data.candidates.forEach(function(c) { jurisdictions.add(c.jurisdiction); });
-    document.getElementById('jurisdictionCount').textContent = jurisdictions.size;
+    ALL_CANDIDATES = data.candidates.slice();
+    var st = getStateParam();
+    filterByState(st);
   });
 
 function getPartyClass(party) {
@@ -677,7 +745,7 @@ function renderCards() {
     html += '<span class="sc-total-score" style="color:' + totalColor + ';">' + total.score + '<span style="font-size:0.7rem;color:var(--gray);">/' + MAX_TOTAL + '</span></span>';
     html += '</div>';
 
-    html += '<div class="sc-card-footer"><a href="candidates/' + c.slug + '.html">View Full Profile &rarr;</a></div>';
+    html += '<div class="sc-card-footer"><a href="candidates/' + (c.state || 'va').toLowerCase() + '/' + c.slug + '.html">View Full Profile &rarr;</a></div>';
     html += '</div>';
   });
 

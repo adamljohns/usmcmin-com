@@ -75,7 +75,7 @@ def generate_profile(candidate, categories, meta):
         cat_html += f'''
     <div class="prof-category">
       <div class="prof-cat-header">
-        <img src="../assets/icons/{cat['icon']}" alt="" width="24" height="24">
+        <img src="../../assets/icons/{cat['icon']}" alt="" width="24" height="24">
         <h3>{cat['label']}</h3>
         <span class="prof-cat-score" style="color:{color};">{cs['score']}/{MAX_PER_TOPIC}</span>
       </div>
@@ -136,8 +136,8 @@ def generate_profile(candidate, categories, meta):
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>{c['name']} — RESOLUTE Citizen Scorecard | U.S.M.C. Ministries</title>
   <meta name="description" content="RESOLUTE Citizen Scorecard for {c['name']} ({party_label(c['party'])}). {c['office']}, {c['jurisdiction']}. Score: {total['score']}/{MAX_TOTAL}.">
-  <link rel="stylesheet" href="../assets/css/main.css">
-  <link rel="icon" href="../assets/img/favicon.png" type="image/png">
+  <link rel="stylesheet" href="../../assets/css/main.css">
+  <link rel="icon" href="../../assets/img/favicon.png" type="image/png">
   <style>
     .prof-container {{ max-width: 900px; margin: 0 auto; padding: 20px; }}
     .prof-back {{ display: inline-block; color: var(--accent); text-decoration: none; font-size: 0.85rem; margin-bottom: 20px; }}
@@ -337,29 +337,29 @@ def generate_profile(candidate, categories, meta):
 
 <nav>
   <a href="/" class="nav-brand" style="text-decoration:none">
-    <img src="../assets/img/logo.png" alt="U.S.M.C. Ministries" style="object-fit:contain">
+    <img src="../../assets/img/logo.png" alt="U.S.M.C. Ministries" style="object-fit:contain">
     <div class="nav-brand-text">
       <div class="name">U.S.M.C. Ministries</div>
       <div class="tag">Warriors Equipped</div>
     </div>
   </a>
   <ul class="nav-links">
-    <li><a href="../mission.html">Mission</a></li>
-    <li><a href="../shop.html">Shop</a></li>
-    <li><a href="../books.html">Books</a></li>
-    <li><a href="../coaching.html">Coaching</a></li>
-    <li><a href="../fitness/fitness.html">Fitness</a></li>
-    <li><a href="../finance/financial-intake.html">Finance</a></li>
-    <li><a href="../about.html">About</a></li>
+    <li><a href="../../mission.html">Mission</a></li>
+    <li><a href="../../shop.html">Shop</a></li>
+    <li><a href="../../books.html">Books</a></li>
+    <li><a href="../../coaching.html">Coaching</a></li>
+    <li><a href="../../fitness/fitness.html">Fitness</a></li>
+    <li><a href="../../finance/financial-intake.html">Finance</a></li>
+    <li><a href="../../about.html">About</a></li>
     <li><a href="https://usmcmin.org" target="_blank">Ministry Site</a></li>
   </ul>
-  <a href="../coaching.html" class="btn nav-cta">Book a Session</a>
+  <a href="../../coaching.html" class="btn nav-cta">Book a Session</a>
   <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">&#9789;</button>
   <button class="nav-toggle" aria-label="Menu"><span></span><span></span><span></span></button>
 </nav>
 
 <div class="prof-container">
-  <a href="../citizen.html" class="prof-back">&larr; Back to Scorecard</a>
+  <a href="../../citizen.html?state={c.get('state', 'VA')}" class="prof-back">&larr; Back to Scorecard</a>
 
   <div class="prof-header">
     <div class="prof-jurisdiction">{c['jurisdiction']}</div>
@@ -446,18 +446,23 @@ def main():
     categories = data['categories']
     meta = data['meta']
     count = 0
+    states_seen = set()
 
     for candidate in data['candidates']:
         slug = candidate.get('slug', '')
         if not slug:
             continue
+        state = (candidate.get('state', 'VA') or 'VA').lower()
+        states_seen.add(state)
+        state_dir = os.path.join(candidates_dir, state)
+        os.makedirs(state_dir, exist_ok=True)
         html = generate_profile(candidate, categories, meta)
-        filepath = os.path.join(candidates_dir, f'{slug}.html')
+        filepath = os.path.join(state_dir, f'{slug}.html')
         with open(filepath, 'w') as f:
             f.write(html)
         count += 1
 
-    print(f'Generated {count} candidate profile pages in {candidates_dir}/')
+    print(f'Generated {count} candidate profile pages across {len(states_seen)} states: {", ".join(sorted(states_seen))}')
 
 if __name__ == '__main__':
     main()

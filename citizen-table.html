@@ -165,6 +165,9 @@
     <p class="subtitle">Compare candidates side-by-side. All scores from public records, official votes, campaign platforms, and primary sources only.</p>
   </div>
 
+  <!-- State Selector -->
+  <div style="display:flex;justify-content:center;gap:8px;padding:16px 0;flex-wrap:wrap;" id="stateSelector"></div>
+
   <div class="view-toggle">
     <a href="citizen.html">Candidates</a>
     <a href="citizen-table.html" class="active">Table View</a>
@@ -209,13 +212,48 @@
 
 <script>
 let DATA = null;
+var ALL_CANDIDATES = [];
 var POINTS_PER_TRUE = 2;
 var MAX_PER_TOPIC = 10;
 var MAX_TOTAL = 70;
+var STATE_NAMES = {'VA':'Virginia','TX':'Texas','FL':'Florida','NC':'North Carolina','SC':'South Carolina','GA':'Georgia','TN':'Tennessee','MD':'Maryland','PA':'Pennsylvania'};
+
+function getStateParam() {
+  return new URLSearchParams(window.location.search).get('state') || 'VA';
+}
+function switchState(st) {
+  var url = new URL(window.location);
+  url.searchParams.set('state', st);
+  window.history.pushState({}, '', url);
+  DATA.candidates = ALL_CANDIDATES.filter(function(c) { return c.state === st; });
+  renderTables();
+  buildStateSelector(st);
+}
+function buildStateSelector(currentState) {
+  var states = [], seen = {};
+  ALL_CANDIDATES.forEach(function(c) { if (!seen[c.state]) { seen[c.state] = true; states.push(c.state); } });
+  states.sort();
+  var el = document.getElementById('stateSelector');
+  if (states.length <= 1) { el.style.display = 'none'; return; }
+  el.style.display = 'flex';
+  var html = '';
+  states.forEach(function(st) {
+    var active = st === currentState ? ' style="background:var(--accent-dim);border-color:var(--accent);color:var(--accent);"' : '';
+    html += '<a href="javascript:void(0)" onclick="switchState(\'' + st + '\')" style="color:var(--gray);text-decoration:none;font-size:0.88rem;padding:8px 20px;border-radius:20px;border:1px solid var(--border);font-weight:600;"' + active + '>' + (STATE_NAMES[st]||st) + '</a>';
+  });
+  el.innerHTML = html;
+}
 
 fetch('data/scorecard.json')
   .then(r => r.json())
-  .then(data => { DATA = data; renderTables(); });
+  .then(data => {
+    DATA = data;
+    ALL_CANDIDATES = data.candidates.slice();
+    var st = getStateParam();
+    DATA.candidates = ALL_CANDIDATES.filter(function(c) { return c.state === st; });
+    renderTables();
+    buildStateSelector(st);
+  });
 
 function calcCatScore(answers) {
   if (!answers) return { score: 0, answered: 0 };
@@ -267,38 +305,23 @@ function renderTables() {
   var focus = document.getElementById('filterFocus').value;
   var groups = {};
 
-  var localFirst = [
-    'Spotsylvania County',
-    'City of Fredericksburg',
-    'Stafford County',
-    'Commonwealth of Virginia',
-    'Virginia State Senate',
-    'Virginia House of Delegates',
-    'United States House of Representatives',
-    'United States Senate'
-  ];
-  var federalFirst = [
-    'United States Senate',
-    'United States House of Representatives',
-    'Commonwealth of Virginia',
-    'Virginia State Senate',
-    'Virginia House of Delegates',
-    'Spotsylvania County',
-    'City of Fredericksburg',
-    'Stafford County'
-  ];
-  var stateFirst = [
-    'Commonwealth of Virginia',
-    'Virginia State Senate',
-    'Virginia House of Delegates',
-    'Spotsylvania County',
-    'City of Fredericksburg',
-    'Stafford County',
-    'United States Senate',
-    'United States House of Representatives'
-  ];
+  // Build dynamic group order from actual jurisdictions in data
+  var levelOrder = { 'local': 0, 'state': 1, 'federal': 2 };
+  if (focus === 'federal-first') levelOrder = { 'federal': 0, 'state': 1, 'local': 2 };
+  else if (focus === 'state-first') levelOrder = { 'state': 0, 'local': 1, 'federal': 2 };
 
-  var groupOrder = focus === 'federal-first' ? federalFirst : focus === 'state-first' ? stateFirst : localFirst;
+  // Collect all jurisdictions with their level
+  var jurLevels = {};
+  DATA.candidates.forEach(function(c) {
+    if (!jurLevels[c.jurisdiction]) jurLevels[c.jurisdiction] = c.level || 'state';
+  });
+
+  var groupOrder = Object.keys(jurLevels).sort(function(a, b) {
+    var la = levelOrder[jurLevels[a]] || 1;
+    var lb = levelOrder[jurLevels[b]] || 1;
+    if (la !== lb) return la - lb;
+    return a.localeCompare(b);
+  });
 
   DATA.candidates.forEach(function(c) {
     if (search && !c.name.toLowerCase().includes(search) && !c.office.toLowerCase().includes(search)) return;
@@ -341,7 +364,7 @@ function renderTables() {
       var tc = totalClass(total.score, total.answered);
 
       html += '<tr>';
-      html += '<td><a class="cand-link" href="candidates/' + c.slug + '.html">' + c.name + '</a><br><span style="font-size:0.7rem;color:var(--gray);font-weight:400;">' + c.office + '</span></td>';
+      html += '<td><a class="cand-link" href="candidates/' + (c.state || 'va').toLowerCase() + '/' + c.slug + '.html">' + c.name + '</a><br><span style="font-size:0.7rem;color:var(--gray);font-weight:400;">' + c.office + '</span></td>';
       html += '<td>' + partyHtml(c.party) + '</td>';
       html += '<td><span class="' + tc + '">' + total.score + '/' + MAX_TOTAL + '</span></td>';
 

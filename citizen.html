@@ -225,6 +225,8 @@
       letter-spacing: 0.5px;
       margin-left: 6px;
     }
+    .level-executive { background: rgba(220,38,38,0.12); color: #ef4444; border: 1px solid rgba(220,38,38,0.25); }
+    .level-judicial { background: rgba(168,85,247,0.12); color: #a855f7; border: 1px solid rgba(168,85,247,0.25); }
     .level-federal { background: rgba(201,168,76,0.15); color: #c9a84c; border: 1px solid rgba(201,168,76,0.3); }
     .level-state { background: rgba(107,114,128,0.15); color: #9ca3af; border: 1px solid rgba(107,114,128,0.3); }
     .level-local { background: rgba(76,175,80,0.12); color: #66bb6a; border: 1px solid rgba(76,175,80,0.25); }
@@ -433,11 +435,6 @@
     </select>
     <select id="filterView" onchange="renderCards()">
       <option value="all">All Officials</option>
-      <option value="executive">Executive Branch</option>
-      <option value="judicial">Judicial Branch</option>
-      <option value="federal">Federal Legislators</option>
-      <option value="state">State Officials</option>
-      <option value="local">Local Only</option>
     </select>
     <select id="filterParty" onchange="renderCards()">
       <option value="all">All Parties</option>
@@ -518,6 +515,38 @@ function getInitialState() {
   return null; // Will trigger welcome modal
 }
 
+function buildViewDropdown() {
+  var levels = {};
+  DATA.candidates.forEach(function(c) { levels[c.level] = true; });
+
+  var VIEW_OPTIONS = [
+    { value: 'all', label: 'All Officials', always: true },
+    { value: 'executive', label: 'Executive Branch', level: 'executive' },
+    { value: 'judicial', label: 'Judicial Branch', level: 'judicial' },
+    { value: 'federal', label: 'Federal Legislators', level: 'federal' },
+    { value: 'state', label: 'State Officials', level: 'state' },
+    { value: 'local', label: 'Local Officials', level: 'local' }
+  ];
+
+  var sel = document.getElementById('filterView');
+  var currentVal = sel.value;
+  sel.innerHTML = '';
+  var hasCurrentVal = false;
+
+  VIEW_OPTIONS.forEach(function(opt) {
+    if (opt.always || levels[opt.level]) {
+      var o = document.createElement('option');
+      o.value = opt.value;
+      o.textContent = opt.label;
+      if (opt.value === currentVal) { o.selected = true; hasCurrentVal = true; }
+      sel.appendChild(o);
+    }
+  });
+
+  // If previous selection no longer exists, default to 'all'
+  if (!hasCurrentVal) sel.value = 'all';
+}
+
 function switchState(st) {
   localStorage.setItem('rc-state', st);
   var url = new URL(window.location);
@@ -525,6 +554,7 @@ function switchState(st) {
   window.history.pushState({}, '', url);
   DATA.candidates = ALL_CANDIDATES.filter(function(c) { return c.state === st; });
   buildStateDropdown(st);
+  buildViewDropdown();
   buildLegend();
   buildMethodology();
   renderCards();
@@ -593,10 +623,10 @@ fetch('data/scorecard.json')
     ALL_CANDIDATES = data.candidates.slice();
     var st = getInitialState();
     if (!st) {
-      // First visit — show welcome modal, default to VA in background
       st = 'VA';
       DATA.candidates = ALL_CANDIDATES.filter(function(c) { return c.state === st; });
       buildStateDropdown(st);
+      buildViewDropdown();
       buildLegend();
       buildMethodology();
       renderCards();
@@ -604,6 +634,7 @@ fetch('data/scorecard.json')
     } else {
       DATA.candidates = ALL_CANDIDATES.filter(function(c) { return c.state === st; });
       buildStateDropdown(st);
+      buildViewDropdown();
       buildLegend();
       buildMethodology();
       renderCards();

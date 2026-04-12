@@ -432,9 +432,11 @@
       <option value="VA">Virginia</option>
     </select>
     <select id="filterView" onchange="renderCards()">
-      <option value="all">All Candidates</option>
+      <option value="all">All Officials</option>
+      <option value="executive">Executive Branch</option>
+      <option value="judicial">Judicial Branch</option>
+      <option value="federal">Federal Legislators</option>
       <option value="state">State Officials</option>
-      <option value="federal">Federal Reps</option>
       <option value="local">Local Only</option>
     </select>
     <select id="filterParty" onchange="renderCards()">
@@ -688,10 +690,12 @@ function renderCards() {
   var party = document.getElementById('filterParty').value;
 
   var filtered = DATA.candidates.filter(function(c) {
-    // View filter (replaces old quick filters + level dropdown)
+    // View filter
     if (view === 'local' && c.level !== 'local') return false;
     if (view === 'state' && c.level !== 'state') return false;
     if (view === 'federal' && c.level !== 'federal') return false;
+    if (view === 'executive' && c.level !== 'executive') return false;
+    if (view === 'judicial' && c.level !== 'judicial') return false;
     // Party filter
     if (party !== 'all' && c.party !== party) return false;
     // Search (matches name, office, AND jurisdiction/city)

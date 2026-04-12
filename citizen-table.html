@@ -175,7 +175,10 @@
     <select id="filterState" onchange="switchState(this.value)" style="font-weight:600;color:#c9a84c;border-color:rgba(201,168,76,0.4);">
       <option value="VA">Virginia</option>
     </select>
-    <input type="text" id="searchInput" placeholder="Search by name..." oninput="renderTables()">
+    <input type="text" id="searchInput" placeholder="Search name, office, or city..." oninput="renderTables()">
+    <select id="filterJurisdiction" onchange="renderTables()">
+      <option value="all">All Jurisdictions</option>
+    </select>
     <select id="filterLevel" onchange="renderTables()">
       <option value="all">All Levels</option>
       <option value="federal">Federal</option>
@@ -239,7 +242,25 @@ function switchState(st) {
   window.history.pushState({}, '', url);
   DATA.candidates = ALL_CANDIDATES.filter(function(c) { return c.state === st; });
   buildStateDropdown(st);
+  buildJurisdictionDropdown();
   renderTables();
+}
+
+function buildJurisdictionDropdown() {
+  var jurs = [];
+  var seen = {};
+  DATA.candidates.forEach(function(c) {
+    if (!seen[c.jurisdiction]) { seen[c.jurisdiction] = true; jurs.push(c.jurisdiction); }
+  });
+  jurs.sort();
+  var sel = document.getElementById('filterJurisdiction');
+  sel.innerHTML = '<option value="all">All Jurisdictions</option>';
+  jurs.forEach(function(j) {
+    var opt = document.createElement('option');
+    opt.value = j;
+    opt.textContent = j;
+    sel.appendChild(opt);
+  });
 }
 function buildStateDropdown(currentState) {
   var states = [], seen = {};
@@ -264,6 +285,7 @@ fetch('data/scorecard.json')
     var st = getStateParam();
     DATA.candidates = ALL_CANDIDATES.filter(function(c) { return c.state === st; });
     buildStateDropdown(st);
+    buildJurisdictionDropdown();
     renderTables();
   });
 
@@ -310,6 +332,7 @@ function partyHtml(party) {
 
 function renderTables() {
   var search = (document.getElementById('searchInput').value || '').toLowerCase();
+  var jurisdiction = document.getElementById('filterJurisdiction').value;
   var level = document.getElementById('filterLevel').value;
   var party = document.getElementById('filterParty').value;
   var sort = document.getElementById('filterSort').value;
@@ -336,7 +359,8 @@ function renderTables() {
   });
 
   DATA.candidates.forEach(function(c) {
-    if (search && !c.name.toLowerCase().includes(search) && !c.office.toLowerCase().includes(search)) return;
+    if (search && !c.name.toLowerCase().includes(search) && !c.office.toLowerCase().includes(search) && !c.jurisdiction.toLowerCase().includes(search)) return;
+    if (jurisdiction !== 'all' && c.jurisdiction !== jurisdiction) return;
     if (level !== 'all' && c.level !== level) return;
     if (party !== 'all' && c.party !== party) return;
     if (!groups[c.jurisdiction]) groups[c.jurisdiction] = [];

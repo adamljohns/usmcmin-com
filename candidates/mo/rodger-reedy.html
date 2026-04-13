@@ -228,7 +228,19 @@
 </nav>
 
 <div class="prof-container">
-  <a href="../../citizen.html?state=MO" class="prof-back">&larr; Back to Scorecard</a>
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;">
+    <a href="../../citizen.html?state=MO" class="prof-back" style="margin-bottom:0;">&larr; Back to Scorecard</a>
+    <span id="pageViews" style="font-size:0.72rem;color:var(--gray);"></span>
+  </div>
+  <script>
+  (function(){
+    var p = window.location.pathname;
+    fetch('https://usmcmin.goatcounter.com/counter/' + encodeURIComponent(p) + '.json')
+      .then(function(r){ return r.json(); })
+      .then(function(d){ document.getElementById('pageViews').textContent = d.count + ' views'; })
+      .catch(function(){});
+  })();
+  </script>
 
   <div class="prof-header">
     <div class="prof-jurisdiction">Missouri House of Representatives</div>
@@ -532,6 +544,7 @@
   });
 })();
 </script>
-<script data-goatcounter="https://usmcministries.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
+<script data-goatcounter="https://usmcmin.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
+<noscript><img src="https://usmcmin.goatcounter.com/count?p=/candidates/mo/rodger-reedy" alt=""></noscript>
 </body>
 </html>

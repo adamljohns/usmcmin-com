@@ -423,8 +423,6 @@
 
   <!-- View Toggle -->
   <div class="view-toggle">
-    <a href="citizen.html" class="active" id="linkCards">State &amp; Local</a>
-    <a href="javascript:void(0)" onclick="switchState('US')" id="linkNational" style="cursor:pointer;">Executive &amp; Judicial</a>
     <a href="citizen-table.html" id="linkTable">Table View</a>
     <a href="citizen-issues.html" id="linkIssues">Issues</a>
   </div>
@@ -449,7 +447,7 @@
     Showing <span id="visibleCount">&mdash;</span> officials
     &middot; <span id="jurisdictionCount">0</span> jurisdictions
     &middot; Max <span>70</span> pts
-    &middot; <a href="javascript:void(0)" onclick="showLocationModal()" style="color:#c9a84c;font-size:0.78rem;">Change Location</a>
+    &middot; <a href="javascript:void(0)" onclick="clearLocation()" style="color:#c9a84c;font-size:0.78rem;">Change State</a>
   </div>
 
   <!-- Welcome Modal (first visit) -->
@@ -509,11 +507,18 @@ var STATE_NAMES = {
 
 // ---- Location / State Management ----
 function getInitialState() {
+  // URL param takes priority (shareable links)
   var urlState = new URLSearchParams(window.location.search).get('state');
   if (urlState) return urlState;
+  // localStorage only used if user hasn't cleared it
   var saved = localStorage.getItem('rc-state');
   if (saved) return saved;
   return null; // Will trigger welcome modal
+}
+
+function clearLocation() {
+  localStorage.removeItem('rc-state');
+  showLocationModal();
 }
 
 function buildViewDropdown() {
@@ -581,7 +586,18 @@ function showLocationModal() {
   var sel = document.getElementById('modalState');
   if (sel.options.length <= 1 && INDEX_DATA) {
     sel.innerHTML = '';
-    var states = Object.keys(INDEX_DATA.states);
+    // National first
+    if (INDEX_DATA.states['US']) {
+      var usOpt = document.createElement('option');
+      usOpt.value = 'US';
+      usOpt.textContent = 'President, Cabinet & Supreme Court';
+      sel.appendChild(usOpt);
+      var sep = document.createElement('option');
+      sep.disabled = true;
+      sep.textContent = '─── States ───';
+      sel.appendChild(sep);
+    }
+    var states = Object.keys(INDEX_DATA.states).filter(function(s) { return s !== 'US'; });
     states.sort(function(a, b) { return (STATE_NAMES[a]||a).localeCompare(STATE_NAMES[b]||b); });
     states.forEach(function(st) {
       var opt = document.createElement('option');
@@ -603,10 +619,27 @@ var INDEX_DATA = null;
 
 function buildStateDropdown(currentState) {
   if (!INDEX_DATA) return;
-  var states = Object.keys(INDEX_DATA.states);
+  var states = Object.keys(INDEX_DATA.states).filter(function(s) { return s !== 'US'; });
   states.sort(function(a, b) { return (STATE_NAMES[a]||a).localeCompare(STATE_NAMES[b]||b); });
   var sel = document.getElementById('filterState');
   sel.innerHTML = '';
+
+  // National always first (for Executive + Judicial access)
+  if (INDEX_DATA.states['US']) {
+    var usOpt = document.createElement('option');
+    usOpt.value = 'US';
+    usOpt.textContent = '★ President, Cabinet & Supreme Court (' + INDEX_DATA.states['US'].count + ')';
+    usOpt.style.fontWeight = '700';
+    if (currentState === 'US') usOpt.selected = true;
+    sel.appendChild(usOpt);
+
+    // Separator
+    var sep = document.createElement('option');
+    sep.disabled = true;
+    sep.textContent = '─── Select Your State ───';
+    sel.appendChild(sep);
+  }
+
   states.forEach(function(st) {
     var opt = document.createElement('option');
     opt.value = st;

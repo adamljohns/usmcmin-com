@@ -552,34 +552,35 @@ function switchState(st) {
   var url = new URL(window.location);
   url.searchParams.set('state', st);
   window.history.pushState({}, '', url);
-  DATA.candidates = ALL_CANDIDATES.filter(function(c) { return c.state === st; });
-  buildStateDropdown(st);
-  buildViewDropdown();
-  buildLegend();
-  buildMethodology();
-  renderCards();
-  // Update view toggle links
-  var suffix = '?state=' + st;
-  var lc = document.getElementById('linkCards');
-  var lt = document.getElementById('linkTable');
-  var li = document.getElementById('linkIssues');
-  if (lc) lc.href = 'citizen.html' + suffix;
-  if (lt) lt.href = 'citizen-table.html' + suffix;
-  if (li) li.href = 'citizen-issues.html' + suffix;
+  // Fetch per-state JSON (much smaller than full 11MB file)
+  var stateFile = 'data/states/' + st.toLowerCase() + '.json';
+  fetch(stateFile)
+    .then(function(r) { return r.json(); })
+    .then(function(stateData) {
+      DATA.candidates = stateData.candidates;
+      buildStateDropdown(st);
+      buildViewDropdown();
+      buildLegend();
+      buildMethodology();
+      renderCards();
+      // Update view toggle links
+      var suffix = '?state=' + st;
+      var lc = document.getElementById('linkCards');
+      var lt = document.getElementById('linkTable');
+      var li = document.getElementById('linkIssues');
+      if (lc) lc.href = 'citizen.html' + suffix;
+      if (lt) lt.href = 'citizen-table.html' + suffix;
+      if (li) li.href = 'citizen-issues.html' + suffix;
+    });
 }
 
 function showLocationModal() {
   var modal = document.getElementById('welcomeModal');
   modal.style.display = 'flex';
-  // Populate modal state dropdown
   var sel = document.getElementById('modalState');
-  if (sel.options.length <= 1) {
+  if (sel.options.length <= 1 && INDEX_DATA) {
     sel.innerHTML = '';
-    var states = [];
-    var seen = {};
-    ALL_CANDIDATES.forEach(function(c) {
-      if (!seen[c.state]) { seen[c.state] = true; states.push(c.state); }
-    });
+    var states = Object.keys(INDEX_DATA.states);
     states.sort(function(a, b) { return (STATE_NAMES[a]||a).localeCompare(STATE_NAMES[b]||b); });
     states.forEach(function(st) {
       var opt = document.createElement('option');
@@ -597,48 +598,45 @@ function selectLocation() {
   switchState(st);
 }
 
+var INDEX_DATA = null;
+
 function buildStateDropdown(currentState) {
-  var states = [];
-  var seen = {};
-  ALL_CANDIDATES.forEach(function(c) {
-    if (!seen[c.state]) { seen[c.state] = true; states.push(c.state); }
-  });
+  if (!INDEX_DATA) return;
+  var states = Object.keys(INDEX_DATA.states);
   states.sort(function(a, b) { return (STATE_NAMES[a]||a).localeCompare(STATE_NAMES[b]||b); });
   var sel = document.getElementById('filterState');
   sel.innerHTML = '';
   states.forEach(function(st) {
     var opt = document.createElement('option');
     opt.value = st;
-    opt.textContent = STATE_NAMES[st] || st;
+    var info = INDEX_DATA.states[st];
+    opt.textContent = (STATE_NAMES[st] || st) + ' (' + info.count + ')';
     if (st === currentState) opt.selected = true;
     sel.appendChild(opt);
   });
 }
 
-// ---- Data Load ----
-fetch('data/scorecard.json')
-  .then(r => r.json())
-  .then(data => {
-    DATA = data;
-    ALL_CANDIDATES = data.candidates.slice();
+// ---- Data Load (index first, then per-state) ----
+fetch('data/index.json')
+  .then(function(r) { return r.json(); })
+  .then(function(index) {
+    INDEX_DATA = index;
+    DATA.categories = index.categories;
+    DATA.meta = index.meta;
+
     var st = getInitialState();
-    if (!st) {
-      st = 'VA';
-      DATA.candidates = ALL_CANDIDATES.filter(function(c) { return c.state === st; });
+    if (!st) st = 'VA';
+
+    var stateFile = 'data/states/' + st.toLowerCase() + '.json';
+    return fetch(stateFile).then(function(r) { return r.json(); }).then(function(stateData) {
+      DATA.candidates = stateData.candidates;
       buildStateDropdown(st);
       buildViewDropdown();
       buildLegend();
       buildMethodology();
       renderCards();
-      showLocationModal();
-    } else {
-      DATA.candidates = ALL_CANDIDATES.filter(function(c) { return c.state === st; });
-      buildStateDropdown(st);
-      buildViewDropdown();
-      buildLegend();
-      buildMethodology();
-      renderCards();
-    }
+      if (!getInitialState()) showLocationModal();
+    });
   });
 
 function getPartyClass(party) {

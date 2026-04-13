@@ -167,7 +167,7 @@ def generate_issue_page(issue):
   </div>
 
   <div class="issue-analysis">
-    <h2>Reformed Christian Analysis</h2>
+    <h2>RESOLUTE Citizen Analysis</h2>
     <p>{issue.get('analysis', '')}</p>
     <div class="scripture">
       <p>"{issue.get('scripture', '')}"</p>

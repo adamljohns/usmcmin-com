@@ -484,8 +484,7 @@
 </footer>
 
 <script>
-let DATA = null;
-var ALL_CANDIDATES = [];
+var DATA = { categories: [], candidates: [], meta: {} };
 var POINTS_PER_TRUE = 2;
 var MAX_PER_TOPIC = 10;
 var MAX_TOTAL = 70;
@@ -523,6 +522,7 @@ function clearLocation() {
 
 function buildViewDropdown() {
   var levels = {};
+  if (!DATA.candidates) return;
   DATA.candidates.forEach(function(c) { levels[c.level] = true; });
 
   var VIEW_OPTIONS = [
@@ -558,25 +558,26 @@ function switchState(st) {
   var url = new URL(window.location);
   url.searchParams.set('state', st);
   window.history.pushState({}, '', url);
-  // Fetch per-state JSON (much smaller than full 11MB file)
   var stateFile = 'data/states/' + st.toLowerCase() + '.json';
   fetch(stateFile)
-    .then(function(r) { return r.json(); })
+    .then(function(r) {
+      if (!r.ok) throw new Error('State not found: ' + st);
+      return r.json();
+    })
     .then(function(stateData) {
-      DATA.candidates = stateData.candidates;
+      DATA.candidates = stateData.candidates || [];
       buildStateDropdown(st);
       buildViewDropdown();
-      buildLegend();
-      buildMethodology();
       renderCards();
-      // Update view toggle links
+      // Update nav links
       var suffix = '?state=' + st;
-      var lc = document.getElementById('linkCards');
       var lt = document.getElementById('linkTable');
       var li = document.getElementById('linkIssues');
-      if (lc) lc.href = 'citizen.html' + suffix;
       if (lt) lt.href = 'citizen-table.html' + suffix;
       if (li) li.href = 'citizen-issues.html' + suffix;
+    })
+    .catch(function(err) {
+      console.error('Switch state error:', err);
     });
 }
 
@@ -652,25 +653,38 @@ function buildStateDropdown(currentState) {
 
 // ---- Data Load (index first, then per-state) ----
 fetch('data/index.json')
-  .then(function(r) { return r.json(); })
+  .then(function(r) {
+    if (!r.ok) throw new Error('Failed to load index');
+    return r.json();
+  })
   .then(function(index) {
     INDEX_DATA = index;
     DATA.categories = index.categories;
     DATA.meta = index.meta;
 
     var st = getInitialState();
+    var showModal = !st;
     if (!st) st = 'VA';
 
     var stateFile = 'data/states/' + st.toLowerCase() + '.json';
-    return fetch(stateFile).then(function(r) { return r.json(); }).then(function(stateData) {
-      DATA.candidates = stateData.candidates;
-      buildStateDropdown(st);
-      buildViewDropdown();
-      buildLegend();
-      buildMethodology();
-      renderCards();
-      if (!getInitialState()) showLocationModal();
-    });
+    return fetch(stateFile)
+      .then(function(r) {
+        if (!r.ok) throw new Error('Failed to load state: ' + st);
+        return r.json();
+      })
+      .then(function(stateData) {
+        DATA.candidates = stateData.candidates || [];
+        buildStateDropdown(st);
+        buildViewDropdown();
+        buildLegend();
+        buildMethodology();
+        renderCards();
+        if (showModal) showLocationModal();
+      });
+  })
+  .catch(function(err) {
+    console.error('Data load error:', err);
+    document.getElementById('visibleCount').textContent = 'Error loading data';
   });
 
 function getPartyClass(party) {

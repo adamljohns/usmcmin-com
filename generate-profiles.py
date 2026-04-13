@@ -470,7 +470,7 @@ def generate_profile(candidate, categories, meta):
   }});
 }})();
 </script>
-<script data-goatcounter="https://usmcmin.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
+<script data-goatcounter="https://usmcministries.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
 </body>
 </html>'''
 

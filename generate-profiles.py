@@ -125,14 +125,51 @@ def generate_profile(candidate, categories, meta):
     notes = c.get('notes', '')
     website = c.get('website', '')
     sources = c.get('sources', [])
+    # Smart source labels based on domain
+    SOURCE_LABELS = {
+        'ballotpedia.org': 'Ballotpedia Profile',
+        'vpap.org': 'VPAP — Virginia Public Access Project',
+        'lis.virginia.gov': 'Virginia Legislative Information System',
+        'heritageaction.com': 'Heritage Action Scorecard',
+        'congress.gov': 'Congress.gov — Official Record',
+        'senate.gov': 'Official Senate Page',
+        'house.gov': 'Official House Page',
+        'supremecourt.gov': 'U.S. Supreme Court',
+        'whitehouse.gov': 'The White House',
+        'nrapvf.org': 'NRA Political Victory Fund',
+        'plannedparenthoodaction.org': 'Planned Parenthood Action',
+        'choicetracker.org': 'Choice Tracker — Abortion Votes',
+        'votesmart.org': 'Vote Smart — Voting Record',
+        'opensecrets.org': 'OpenSecrets — Campaign Finance',
+        'fredericksburgva.gov': 'City of Fredericksburg Official',
+        'spotsylvania.va.us': 'Spotsylvania County Official',
+        'staffordcountyva.gov': 'Stafford County Official',
+        'fredericksburgfreepress.com': 'Fredericksburg Free Press',
+        'fxbgadvance.com': 'FXBG Advance',
+        'progressivevotersguide.com': 'Progressive Voters Guide',
+        'x.com': 'X / Twitter',
+        'twitter.com': 'X / Twitter',
+        'capitol.texas.gov': 'Texas Capitol — Legislature',
+        'legislature.idaho.gov': 'Idaho Legislature',
+        'gov.texas.gov': 'Texas Governor Official',
+    }
+
+    def get_source_label(url):
+        for domain, label in SOURCE_LABELS.items():
+            if domain in url:
+                return label
+        # Fallback: clean display
+        display = url.replace('https://', '').replace('http://', '')
+        if len(display) > 55:
+            display = display[:52] + '...'
+        return display
+
     sources_html = ''
     if sources:
         sources_html = '<div class="prof-sources"><h2>Sources &amp; Evidence</h2>'
         for src in sources:
-            display = src.replace('https://', '').replace('http://', '')
-            if len(display) > 60:
-                display = display[:57] + '...'
-            sources_html += f'<a href="{src}" target="_blank" rel="noopener">{display}</a>'
+            label = get_source_label(src)
+            sources_html += f'<a href="{src}" target="_blank" rel="noopener">{label}</a>'
         sources_html += '</div>'
 
     return f'''<!DOCTYPE html>

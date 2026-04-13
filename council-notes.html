@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>City Council Meeting Notes — RESOLUTE Citizen | U.S.M.C. Ministries</title>
+  <meta name="description" content="City council meeting notes, votes, and policy analysis. Track what your local officials are doing in real-time. Fredericksburg, VA and expanding nationwide.">
+  <link rel="stylesheet" href="assets/css/main.css">
+  <link rel="icon" href="assets/img/favicon.png" type="image/png">
+  <style>
+    .notes-container { max-width: 900px; margin: 0 auto; padding: 20px; }
+
+    .notes-hero {
+      text-align: center;
+      padding: 48px 20px 36px;
+      border-bottom: 2px solid var(--border);
+      background: linear-gradient(180deg, rgba(30,58,95,0.08) 0%, transparent 100%);
+    }
+    [data-theme="dark"] .notes-hero {
+      background: linear-gradient(180deg, rgba(30,58,95,0.25) 0%, transparent 100%);
+    }
+    .notes-hero h1 { font-size: clamp(1.6rem, 4vw, 2.4rem); color: var(--white); margin-bottom: 8px; font-weight: 800; }
+    .notes-hero h1 .gold { color: #c9a84c; }
+    .notes-hero .subtitle { color: var(--gray); font-size: 0.92rem; max-width: 650px; margin: 0 auto; line-height: 1.7; }
+
+    .notes-nav { display: flex; justify-content: center; gap: 8px; margin: 16px 0; flex-wrap: wrap; }
+    .notes-nav a { color: var(--gray); text-decoration: none; font-size: 0.82rem; padding: 6px 18px; border-radius: 20px; border: 1px solid var(--border); transition: all 0.2s; }
+    .notes-nav a:hover { border-color: var(--accent); color: var(--accent); }
+    .notes-nav a.active { background: var(--accent-dim); border-color: var(--accent); color: var(--accent); }
+
+    .meeting-card {
+      background: var(--bg-card); border: 1px solid var(--border);
+      border-radius: var(--radius); margin-bottom: 20px; overflow: hidden;
+    }
+    .meeting-header {
+      padding: 18px 24px; border-bottom: 1px solid var(--border);
+      display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;
+    }
+    .meeting-date { font-size: 0.72rem; color: #c9a84c; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; }
+    .meeting-city { font-size: 0.82rem; color: var(--gray); }
+    .meeting-title { font-size: 1.1rem; color: var(--white); font-weight: 700; margin: 0; }
+    .meeting-video { font-size: 0.78rem; color: var(--accent); text-decoration: none; }
+    .meeting-video:hover { text-decoration: underline; }
+
+    .meeting-body { padding: 18px 24px; }
+    .meeting-body h3 { color: var(--accent); font-size: 0.95rem; margin: 14px 0 8px; font-family: var(--font-main); }
+    .meeting-body p { color: var(--gray); font-size: 0.88rem; line-height: 1.7; margin-bottom: 10px; }
+
+    .vote-table { width: 100%; border-collapse: collapse; margin: 10px 0; font-size: 0.85rem; }
+    .vote-table th { text-align: left; padding: 6px 10px; color: var(--accent); font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 2px solid var(--accent); }
+    .vote-table td { padding: 6px 10px; border-bottom: 1px solid var(--border); color: var(--gray); }
+    .vote-yes { color: #4CAF50; font-weight: 700; }
+    .vote-no { color: #f44336; font-weight: 700; }
+    .vote-absent { color: #666; font-style: italic; }
+
+    .policy-tag { display: inline-block; font-size: 0.68rem; font-weight: 600; padding: 2px 8px; border-radius: 4px; margin-right: 4px; margin-bottom: 4px; }
+    .tag-budget { background: rgba(201,168,76,0.15); color: #c9a84c; }
+    .tag-zoning { background: rgba(107,114,128,0.15); color: #9ca3af; }
+    .tag-guns { background: rgba(220,38,38,0.15); color: #ef4444; }
+    .tag-equity { background: rgba(168,85,247,0.15); color: #a855f7; }
+    .tag-environment { background: rgba(76,175,80,0.12); color: #66bb6a; }
+
+    .submit-section {
+      padding: 24px; background: var(--bg-card); border: 1px solid var(--border);
+      border-radius: var(--radius); margin: 30px 0; text-align: center;
+    }
+    .submit-section h2 { color: var(--accent); font-size: 1.1rem; margin-bottom: 8px; }
+    .submit-section p { color: var(--gray); font-size: 0.88rem; margin-bottom: 16px; line-height: 1.6; }
+
+    footer { text-align: center; padding: 30px 20px; color: var(--gray); font-size: 0.82rem; border-top: 1px solid var(--border); margin-top: 40px; }
+    footer a { color: var(--accent); text-decoration: none; }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a href="/" class="nav-brand" style="text-decoration:none">
+    <img src="assets/img/logo.png" alt="U.S.M.C. Ministries" style="object-fit:contain">
+    <div class="nav-brand-text">
+      <div class="name">U.S.M.C. Ministries</div>
+      <div class="tag">Warriors Equipped</div>
+    </div>
+  </a>
+  <ul class="nav-links">
+    <li><a href="mission.html">Mission</a></li>
+    <li><a href="citizen.html">Scorecard</a></li>
+    <li><a href="coaching.html">Coaching</a></li>
+    <li><a href="about.html">About</a></li>
+    <li><a href="https://usmcmin.org" target="_blank">Ministry Site</a></li>
+  </ul>
+  <a href="coaching.html" class="btn nav-cta">Book a Session</a>
+  <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">🌙</button>
+  <button class="nav-toggle" aria-label="Menu"><span></span><span></span><span></span></button>
+</nav>
+
+<div class="notes-hero">
+  <img src="assets/icons/shield-star.png" alt="" width="64" height="64" style="display:block;margin:0 auto 14px;opacity:0.9;">
+  <h1><span class="gold">Council</span> Watch</h1>
+  <p class="subtitle">Track what your city council is actually doing. Meeting notes, key votes, and policy analysis — because the decisions that affect your family most happen at the local level.</p>
+</div>
+
+<div class="notes-container">
+
+  <div class="notes-nav">
+    <a href="council-notes.html" class="active">Fredericksburg</a>
+    <a href="citizen.html">Back to Scorecard</a>
+    <a href="citizen-issues.html">State Issues</a>
+  </div>
+
+  <p style="text-align:center;color:var(--gray);font-size:0.88rem;margin:20px 0;line-height:1.7;">
+    Meeting videos available at <a href="https://www.regionalwebtv.com/fredcc" target="_blank" style="color:#c9a84c;">Regional WebTV &mdash; Fredericksburg City Council</a>.
+    Meetings are typically held on the 2nd and 4th Tuesdays at 7:30 PM.
+  </p>
+
+  <!-- SAMPLE MEETING NOTE -->
+  <div class="meeting-card">
+    <div class="meeting-header">
+      <div>
+        <div class="meeting-date">Coming Soon</div>
+        <h2 class="meeting-title">Fredericksburg City Council Meeting Notes</h2>
+        <div class="meeting-city">City of Fredericksburg, Virginia</div>
+      </div>
+      <a href="https://www.regionalwebtv.com/fredcc" target="_blank" class="meeting-video">Watch Meetings</a>
+    </div>
+    <div class="meeting-body">
+      <p>We are building a tool to automatically transcribe and analyze city council meetings from Fredericksburg and other cities. This page will track:</p>
+      <ul style="color:var(--gray);font-size:0.88rem;line-height:1.8;margin-left:20px;">
+        <li><strong>Key votes</strong> — how each council member voted on every motion</li>
+        <li><strong>Policy tags</strong> — budget, zoning, guns, equity, environment, education</li>
+        <li><strong>Public comment highlights</strong> — what citizens are saying to their government</li>
+        <li><strong>Scorecard impact</strong> — which votes affect RESOLUTE Citizen scores</li>
+      </ul>
+
+      <h3>How It Will Work</h3>
+      <p>City council meetings in Fredericksburg are recorded and streamed via <a href="https://www.regionalwebtv.com/fredcc" target="_blank" style="color:var(--accent);">Regional WebTV</a>. We will:</p>
+      <ol style="color:var(--gray);font-size:0.88rem;line-height:1.8;margin-left:20px;">
+        <li>Watch and transcribe each meeting</li>
+        <li>Extract every recorded vote with how each member voted</li>
+        <li>Tag policies by category (budget, zoning, public safety, DEI, environment)</li>
+        <li>Analyze statements and votes through the RESOLUTE Citizen framework</li>
+        <li>Update official scores on the scorecard with evidence links</li>
+      </ol>
+
+      <h3>Example: What a Meeting Note Will Look Like</h3>
+      <table class="vote-table">
+        <thead>
+          <tr><th>Member</th><th>Motion: FY2027 Budget Adoption</th><th>Motion: Renewable Energy Resolution</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Kerry Devine (Mayor)</td><td class="vote-yes">YES</td><td class="vote-yes">YES</td></tr>
+          <tr><td>Chuck Frye Jr.</td><td class="vote-yes">YES</td><td class="vote-yes">YES</td></tr>
+          <tr><td>Jonathan Gerlach</td><td class="vote-yes">YES</td><td class="vote-yes">YES</td></tr>
+          <tr><td>Jannan Holmes</td><td class="vote-yes">YES</td><td class="vote-yes">YES</td></tr>
+          <tr><td>Will Mackintosh</td><td class="vote-yes">YES</td><td class="vote-yes">YES</td></tr>
+          <tr><td>Susanna Finn</td><td class="vote-yes">YES</td><td class="vote-yes">YES</td></tr>
+        </tbody>
+      </table>
+      <p style="font-size:0.78rem;color:var(--gray);font-style:italic;">Sample format only — actual meeting data coming soon.</p>
+
+      <div style="margin-top:16px;">
+        <span class="policy-tag tag-budget">Budget</span>
+        <span class="policy-tag tag-environment">Environment</span>
+        <span class="policy-tag tag-equity">DEI/Equity</span>
+        <span class="policy-tag tag-guns">Public Safety</span>
+        <span class="policy-tag tag-zoning">Zoning</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Submit Section -->
+  <div class="submit-section">
+    <h2>Want Council Watch in Your City?</h2>
+    <p>We're starting with Fredericksburg, VA and expanding to other cities based on demand. If you want us to cover your city council, let us know.</p>
+    <form id="councilWatchForm" style="display:flex;flex-direction:column;gap:10px;max-width:400px;margin:0 auto;">
+      <input type="text" name="city" placeholder="Your city and state" required style="padding:10px 14px;background:var(--bg-dark,#0A0A0A);border:1px solid var(--border);border-radius:8px;color:var(--white);font-size:0.9rem;">
+      <input type="text" name="submitter_name" placeholder="Your name" required style="padding:10px 14px;background:var(--bg-dark,#0A0A0A);border:1px solid var(--border);border-radius:8px;color:var(--white);font-size:0.9rem;">
+      <input type="email" name="submitter_email" placeholder="Your email" required style="padding:10px 14px;background:var(--bg-dark,#0A0A0A);border:1px solid var(--border);border-radius:8px;color:var(--white);font-size:0.9rem;">
+      <textarea name="notes" rows="3" placeholder="What issues matter most in your city? Any meeting links?" style="padding:10px 14px;background:var(--bg-dark,#0A0A0A);border:1px solid var(--border);border-radius:8px;color:var(--white);font-size:0.9rem;resize:vertical;"></textarea>
+      <button type="submit" style="background:linear-gradient(90deg,#c9a84c,#D4AF37);color:#000;font-weight:700;font-size:0.9rem;padding:11px 22px;border-radius:8px;border:none;cursor:pointer;align-self:flex-start;">Request Council Watch</button>
+    </form>
+    <div id="councilWatchSuccess" style="display:none;padding:14px;background:rgba(76,175,80,.15);border:1px solid #4CAF50;border-radius:8px;color:#7edd80;margin-top:12px;font-size:0.88rem;">Thank you! We'll prioritize cities based on demand.</div>
+  </div>
+  <script>
+  document.getElementById('councilWatchForm').addEventListener('submit',function(e){
+    e.preventDefault();
+    var fd=new FormData(this);
+    fd.append('_subject','Council Watch Request: ' + fd.get('city'));
+    fd.append('_template','table');
+    fd.append('_captcha','false');
+    fetch('https://formsubmit.co/ajax/usmcministries2022@gmail.com',{method:'POST',body:fd})
+    .then(function(res){
+      if(!res.ok) throw new Error('Server error');
+      document.getElementById('councilWatchForm').style.display='none';
+      document.getElementById('councilWatchSuccess').style.display='block';
+    })
+    .catch(function(){
+      alert('Failed to submit. Please check your connection and try again.');
+    });
+  });
+  </script>
+
+  <div style="text-align:center;padding:24px;margin:20px 0;background:rgba(201,168,76,0.06);border:1px solid rgba(201,168,76,0.15);border-radius:var(--radius);">
+    <blockquote style="font-style:italic;color:var(--gray);font-size:0.95rem;line-height:1.7;max-width:600px;margin:0 auto 8px;">"Son of man, I have made thee a watchman unto the house of Israel: therefore hear the word at my mouth, and give them warning from me."</blockquote>
+    <cite style="color:#c9a84c;font-size:0.82rem;font-style:normal;font-weight:600;">Ezekiel 3:17 (KJV)</cite>
+  </div>
+</div>
+
+<footer>
+  <p><strong>Council Watch</strong> — a RESOLUTE Citizen tool by <a href="https://usmcmin.org">U.S.M.C. Ministries</a></p>
+  <p style="margin-top:6px;font-size:0.72rem;"><a href="citizen.html">Scorecard</a> | <a href="citizen-issues.html">Issues</a> | <a href="sitemap.html">Sitemap</a></p>
+</footer>
+
+<script>
+(function() {
+  var navToggle = document.querySelector('.nav-toggle');
+  var navLinks = document.querySelector('.nav-links');
+  if (navToggle && navLinks) {
+    navToggle.addEventListener('click', function() { navLinks.classList.toggle('open'); });
+  }
+})();
+</script>
+<script>
+(function() {
+  var toggle = document.getElementById('themeToggle');
+  var saved = localStorage.getItem('usmc-theme');
+  if (saved !== 'light') {
+    document.documentElement.setAttribute('data-theme', 'dark');
+    toggle.textContent = '☀️';
+  }
+  toggle.addEventListener('click', function() {
+    var isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+    if (isDark) {
+      document.documentElement.removeAttribute('data-theme');
+      localStorage.setItem('usmc-theme', 'light');
+      toggle.textContent = '🌙';
+    } else {
+      document.documentElement.setAttribute('data-theme', 'dark');
+      localStorage.setItem('usmc-theme', 'dark');
+      toggle.textContent = '☀️';
+    }
+  });
+})();
+</script>
+<script data-goatcounter="https://usmcmin.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
+</body>
+</html>

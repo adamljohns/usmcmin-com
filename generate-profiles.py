@@ -389,7 +389,7 @@ def generate_profile(candidate, categories, meta):
   </div>
 
   {f"""<div class="prof-details">
-    <h2>Candidate Profile</h2>
+    <h2>Official Profile</h2>
     {profile_html}
     {f'<div class="prof-notes">{notes}</div>' if notes else ''}
   </div>""" if profile_html or notes else ''}

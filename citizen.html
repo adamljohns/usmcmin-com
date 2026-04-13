@@ -761,9 +761,42 @@ function buildMethodology() {
   el.innerHTML = html;
 }
 
+// ---- Fuzzy Search Helper ----
+function fuzzyMatch(haystack, needle) {
+  // Trim whitespace, handle extra spaces
+  needle = needle.trim().replace(/\s+/g, ' ');
+  if (!needle) return true;
+  haystack = haystack.toLowerCase();
+
+  // Exact substring match first
+  if (haystack.includes(needle)) return true;
+
+  // Split search into words — all words must match somewhere
+  var words = needle.split(' ');
+  var allMatch = words.every(function(word) {
+    if (word.length < 2) return true; // skip single chars
+    // Allow 1-char typo for words 4+ chars (simple fuzzy)
+    if (word.length >= 4) {
+      // Check if any substring of haystack is within 1 edit of the word
+      for (var i = 0; i <= haystack.length - word.length + 1; i++) {
+        var chunk = haystack.substr(i, word.length);
+        var diffs = 0;
+        for (var j = 0; j < word.length && diffs < 2; j++) {
+          if (chunk[j] !== word[j]) diffs++;
+        }
+        if (diffs <= 1) return true;
+      }
+      return false;
+    }
+    return haystack.includes(word);
+  });
+  return allMatch;
+}
+
 // ---- Simplified Rendering ----
 function renderCards() {
-  var search = (document.getElementById('searchInput').value || '').toLowerCase();
+  var rawSearch = document.getElementById('searchInput').value || '';
+  var search = rawSearch.toLowerCase().trim();
   var view = document.getElementById('filterView').value;
   var party = document.getElementById('filterParty').value;
 
@@ -776,8 +809,8 @@ function renderCards() {
     if (view === 'judicial' && c.level !== 'judicial') return false;
     // Party filter
     if (party !== 'all' && c.party !== party) return false;
-    // Search (matches name, office, AND jurisdiction/city)
-    if (search && !c.name.toLowerCase().includes(search) && !c.office.toLowerCase().includes(search) && !c.jurisdiction.toLowerCase().includes(search)) return false;
+    // Fuzzy search (matches name, office, jurisdiction — tolerates typos and trailing spaces)
+    if (search && !fuzzyMatch(c.name.toLowerCase(), search) && !fuzzyMatch(c.office.toLowerCase(), search) && !fuzzyMatch(c.jurisdiction.toLowerCase(), search)) return false;
     return true;
   });
 

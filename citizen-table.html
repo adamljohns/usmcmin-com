@@ -358,6 +358,9 @@ function renderTables() {
     return a.localeCompare(b);
   });
 
+  // Trim search whitespace
+  search = search.trim().replace(/\s+/g, ' ');
+
   DATA.candidates.forEach(function(c) {
     if (search && !c.name.toLowerCase().includes(search) && !c.office.toLowerCase().includes(search) && !c.jurisdiction.toLowerCase().includes(search)) return;
     if (jurisdiction !== 'all' && c.jurisdiction !== jurisdiction) return;

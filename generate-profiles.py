@@ -60,12 +60,184 @@ def answer_display(val):
         return '<span style="color:#f44336;font-weight:700;">FALSE (0)</span>'
     return '<span style="color:#666;font-style:italic;">Not yet verified</span>'
 
-def generate_profile(candidate, categories, meta):
+# ---- Navigation & photo helpers (added for prev/next + initials fallback) ----
+
+STATE_NAMES_FULL = {
+    'AL': 'Alabama', 'AK': 'Alaska', 'AZ': 'Arizona', 'AR': 'Arkansas',
+    'CA': 'California', 'CO': 'Colorado', 'CT': 'Connecticut', 'DE': 'Delaware',
+    'FL': 'Florida', 'GA': 'Georgia', 'HI': 'Hawaii', 'ID': 'Idaho',
+    'IL': 'Illinois', 'IN': 'Indiana', 'IA': 'Iowa', 'KS': 'Kansas',
+    'KY': 'Kentucky', 'LA': 'Louisiana', 'ME': 'Maine', 'MD': 'Maryland',
+    'MA': 'Massachusetts', 'MI': 'Michigan', 'MN': 'Minnesota', 'MS': 'Mississippi',
+    'MO': 'Missouri', 'MT': 'Montana', 'NE': 'Nebraska', 'NV': 'Nevada',
+    'NH': 'New Hampshire', 'NJ': 'New Jersey', 'NM': 'New Mexico', 'NY': 'New York',
+    'NC': 'North Carolina', 'ND': 'North Dakota', 'OH': 'Ohio', 'OK': 'Oklahoma',
+    'OR': 'Oregon', 'PA': 'Pennsylvania', 'RI': 'Rhode Island', 'SC': 'South Carolina',
+    'SD': 'South Dakota', 'TN': 'Tennessee', 'TX': 'Texas', 'UT': 'Utah',
+    'VT': 'Vermont', 'VA': 'Virginia', 'WA': 'Washington', 'WV': 'West Virginia',
+    'WI': 'Wisconsin', 'WY': 'Wyoming', 'DC': 'District of Columbia', 'US': 'National',
+}
+
+LEVEL_RANK = {'executive': 1, 'judicial': 2, 'federal': 3, 'state': 4, 'local': 5}
+
+def level_rank(level):
+    return LEVEL_RANK.get(level or 'state', 6)
+
+def initials(name):
+    """Two-letter initials from a name. 'Abigail Spanberger' -> 'AS'."""
+    if not name:
+        return '??'
+    parts = [p for p in name.strip().split() if p and not p.endswith('.')]
+    if not parts:
+        return name.strip()[:2].upper()
+    if len(parts) == 1:
+        return parts[0][:2].upper()
+    return (parts[0][0] + parts[-1][0]).upper()
+
+# Dignified palette — derived from a stable hash of the slug so the same person
+# always gets the same swatch. No silhouettes, no guessing — initials on a
+# named-color block reads as intentional.
+INITIALS_PALETTE = [
+    ('#1e3a5f', '#93c5fd'),  # navy / light blue
+    ('#14532d', '#86efac'),  # forest / mint
+    ('#7c2d12', '#fdba74'),  # burnt / tan
+    ('#3b0764', '#c4b5fd'),  # plum / lavender
+    ('#713f12', '#fde68a'),  # bronze / straw
+    ('#064e3b', '#6ee7b7'),  # pine / seafoam
+    ('#581c87', '#d8b4fe'),  # royal purple / orchid
+    ('#1f2937', '#cbd5e1'),  # slate / silver
+    ('#4c1d95', '#a78bfa'),  # indigo / periwinkle
+    ('#854d0e', '#fcd34d'),  # umber / gold
+]
+
+def color_for_slug(slug):
+    """Stable color pair (bg, fg) for an initials badge."""
+    if not slug:
+        return INITIALS_PALETTE[0]
+    h = 0
+    for ch in slug:
+        h = (h * 31 + ord(ch)) & 0xFFFFFFFF
+    return INITIALS_PALETTE[h % len(INITIALS_PALETTE)]
+
+def compute_nav_groups(candidates, categories):
+    """
+    Group candidates by (state, level, jurisdiction). Within each group sort by
+    score descending, then alphabetically by name. Return a dict keyed by
+    candidate id → {prev, next, position, group_size, group_label}.
+
+    prev/next are (slug, name, state) tuples or None at group edges.
+    """
+    # Score lookup (once per candidate) so we don't recompute during sort.
+    scored = []
+    for c in candidates:
+        t = calc_total(c.get('scores', {}), categories)
+        scored.append((c, t['score']))
+
+    # Group key = (state, level_rank, jurisdiction)
+    groups = {}
+    for c, score in scored:
+        key = (
+            (c.get('state') or 'XX').upper(),
+            level_rank(c.get('level')),
+            c.get('jurisdiction') or '',
+        )
+        groups.setdefault(key, []).append((c, score))
+
+    # Sort each group: score desc, then name asc (tiebreak)
+    nav = {}
+    for key, members in groups.items():
+        members.sort(key=lambda x: (-x[1], (x[0].get('name') or '').lower()))
+        group_label = key[2] or 'Unsorted'
+        size = len(members)
+        for i, (c, _score) in enumerate(members):
+            prev_c = members[i - 1][0] if i > 0 else None
+            next_c = members[i + 1][0] if i < size - 1 else None
+            nav[c.get('id')] = {
+                'position': i + 1,
+                'group_size': size,
+                'group_label': group_label,
+                'prev': prev_c,
+                'next': next_c,
+            }
+    return nav
+
+def generate_profile(candidate, categories, meta, nav=None):
     c = candidate
     total = calc_total(c['scores'], categories)
     total_color = score_color(total['score'], MAX_TOTAL)
     bar_width = round((total['score'] / MAX_TOTAL) * 100) if MAX_TOTAL > 0 else 0
     profile = c.get('profile', {}) or {}
+
+    state_code = (c.get('state') or 'VA').upper()
+    state_name = STATE_NAMES_FULL.get(state_code, state_code)
+    nav = nav or {}
+    prev_c = nav.get('prev')
+    next_c = nav.get('next')
+    position = nav.get('position', 1)
+    group_size = nav.get('group_size', 1)
+    group_label = nav.get('group_label') or c.get('jurisdiction') or ''
+
+    # ---- Breadcrumb (replaces single back link) ----
+    crumbs = [
+        '<a href="../../citizen.html">RESOLUTE Citizen</a>',
+        f'<a href="../../citizen.html?state={state_code}">{state_name}</a>',
+    ]
+    if group_label and group_label != state_name:
+        crumbs.append(f'<a href="../../citizen.html?state={state_code}">{group_label}</a>')
+    crumbs.append(f'<span class="crumb-current">{c["name"]}</span>')
+    breadcrumb_html = '<nav class="prof-breadcrumb" aria-label="Breadcrumb">' + ' <span class="crumb-sep">›</span> '.join(crumbs) + '</nav>'
+
+    # ---- Prev / Next nav ----
+    def nav_link(neighbor, direction, label_arrow):
+        if not neighbor:
+            return f'<span class="prof-nav-btn prof-nav-disabled">{label_arrow}</span>'
+        n_state = (neighbor.get('state') or state_code).lower()
+        n_slug = neighbor.get('slug', '')
+        n_name = neighbor.get('name', '')
+        n_office = neighbor.get('office', '')
+        href = f'{n_slug}.html' if n_state == state_code.lower() else f'../{n_state}/{n_slug}.html'
+        return (
+            f'<a class="prof-nav-btn" href="{href}" data-direction="{direction}">'
+            f'<span class="prof-nav-arrow">{label_arrow}</span>'
+            f'<span class="prof-nav-text"><span class="prof-nav-name">{n_name}</span>'
+            f'<span class="prof-nav-office">{n_office}</span></span></a>'
+        )
+
+    position_html = (
+        f'<div class="prof-nav-position">{position} of {group_size}'
+        + (f' &middot; {group_label}' if group_label else '')
+        + '</div>'
+    )
+    prev_html = nav_link(prev_c, 'prev', '← Prev')
+    next_html = nav_link(next_c, 'next', 'Next →')
+    prevnext_bar = (
+        '<div class="prof-nav-bar">'
+        f'{prev_html}{position_html}{next_html}'
+        '</div>'
+    )
+
+    # Hidden data attributes for keyboard shortcuts (left/right arrows)
+    prev_href = ''
+    next_href = ''
+    if prev_c:
+        n_state = (prev_c.get('state') or state_code).lower()
+        prev_href = f"{prev_c.get('slug','')}.html" if n_state == state_code.lower() else f"../{n_state}/{prev_c.get('slug','')}.html"
+    if next_c:
+        n_state = (next_c.get('state') or state_code).lower()
+        next_href = f"{next_c.get('slug','')}.html" if n_state == state_code.lower() else f"../{n_state}/{next_c.get('slug','')}.html"
+
+    # ---- Photo / initials badge ----
+    photo_path = c.get('photo') or ''
+    if photo_path:
+        photo_html = f'<img class="prof-photo" src="../../{photo_path}" alt="{c["name"]}" loading="lazy">'
+    else:
+        badge_bg, badge_fg = color_for_slug(c.get('slug', ''))
+        badge_text = initials(c['name'])
+        photo_html = (
+            f'<div class="prof-photo prof-initials" '
+            f'style="background:{badge_bg};color:{badge_fg};" '
+            f'aria-hidden="true">{badge_text}</div>'
+        )
 
     # Build category breakdown
     cat_html = ''
@@ -185,6 +357,170 @@ def generate_profile(candidate, categories, meta):
     .prof-container {{ max-width: 900px; margin: 0 auto; padding: 20px; }}
     .prof-back {{ display: inline-block; color: var(--accent); text-decoration: none; font-size: 0.85rem; margin-bottom: 20px; }}
     .prof-back:hover {{ text-decoration: underline; }}
+
+    /* Breadcrumb */
+    .prof-breadcrumb {{
+      font-size: 0.78rem;
+      color: var(--gray);
+      margin-bottom: 14px;
+      line-height: 1.6;
+      word-break: break-word;
+    }}
+    .prof-breadcrumb a {{
+      color: var(--accent);
+      text-decoration: none;
+    }}
+    .prof-breadcrumb a:hover {{ text-decoration: underline; }}
+    .prof-breadcrumb .crumb-sep {{ color: var(--gray); margin: 0 2px; opacity: 0.6; }}
+    .prof-breadcrumb .crumb-current {{ color: var(--white); font-weight: 600; }}
+
+    /* Jump-to dropdown */
+    .prof-jump {{
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 18px;
+      flex-wrap: wrap;
+    }}
+    .prof-jump label {{
+      font-size: 0.78rem;
+      color: var(--gray);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }}
+    .prof-jump select {{
+      flex: 1;
+      min-width: 220px;
+      padding: 8px 12px;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      color: var(--white);
+      font-size: 0.85rem;
+      cursor: pointer;
+    }}
+    .prof-jump select:hover {{ border-color: var(--accent); }}
+
+    /* Prev / Next nav bar */
+    .prof-nav-bar {{
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      align-items: stretch;
+      gap: 10px;
+      margin: 18px 0;
+    }}
+    .prof-nav-btn {{
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 12px 14px;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      color: var(--white);
+      text-decoration: none;
+      font-size: 0.82rem;
+      line-height: 1.3;
+      min-height: 54px;
+      transition: border-color 0.15s, background 0.15s;
+    }}
+    .prof-nav-btn:hover {{
+      border-color: var(--accent);
+      background: rgba(212,175,55,0.06);
+    }}
+    .prof-nav-btn[data-direction="next"] {{
+      justify-content: flex-end;
+      text-align: right;
+      flex-direction: row-reverse;
+    }}
+    .prof-nav-btn.prof-nav-disabled {{
+      opacity: 0.35;
+      cursor: default;
+      pointer-events: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--gray);
+    }}
+    .prof-nav-arrow {{
+      font-weight: 700;
+      color: var(--accent);
+      flex-shrink: 0;
+    }}
+    .prof-nav-text {{
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      overflow: hidden;
+    }}
+    .prof-nav-name {{
+      font-weight: 600;
+      color: var(--white);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }}
+    .prof-nav-office {{
+      font-size: 0.72rem;
+      color: var(--gray);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }}
+    .prof-nav-position {{
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 10px 16px;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      font-size: 0.78rem;
+      color: var(--gray);
+      text-align: center;
+      white-space: nowrap;
+    }}
+    @media (max-width: 640px) {{
+      .prof-nav-bar {{
+        grid-template-columns: 1fr 1fr;
+        grid-template-rows: auto auto;
+      }}
+      .prof-nav-position {{
+        grid-column: 1 / -1;
+        order: -1;
+      }}
+    }}
+
+    /* Photo / initials */
+    .prof-header-row {{
+      display: flex;
+      gap: 20px;
+      align-items: flex-start;
+    }}
+    .prof-header-row .prof-header-text {{ flex: 1; min-width: 0; }}
+    .prof-photo {{
+      width: 96px;
+      height: 96px;
+      border-radius: 50%;
+      flex-shrink: 0;
+      object-fit: cover;
+      border: 2px solid var(--border);
+    }}
+    .prof-initials {{
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-main);
+      font-size: 2rem;
+      font-weight: 800;
+      letter-spacing: 1px;
+      user-select: none;
+    }}
+    @media (max-width: 520px) {{
+      .prof-header-row {{ flex-direction: column; align-items: center; text-align: center; }}
+      .prof-photo {{ width: 80px; height: 80px; }}
+      .prof-initials {{ font-size: 1.7rem; }}
+    }}
 
     .prof-header {{
       padding: 32px 24px;
@@ -402,26 +738,28 @@ def generate_profile(candidate, categories, meta):
 </nav>
 
 <div class="prof-container">
-  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;">
-    <a href="../../citizen.html?state={c.get('state', 'VA')}" class="prof-back" style="margin-bottom:0;">&larr; Back to Scorecard</a>
-    <span id="pageViews" style="font-size:0.72rem;color:var(--gray);"></span>
+  {breadcrumb_html}
+
+  <div class="prof-jump">
+    <label for="profJumpSelect">Jump to:</label>
+    <select id="profJumpSelect" data-state="{state_code}" data-current-slug="{c.get('slug','')}">
+      <option value="">Loading {state_name} officials…</option>
+    </select>
   </div>
-  <script>
-  (function(){{
-    var p = window.location.pathname;
-    fetch('https://usmcmin.goatcounter.com/counter/' + encodeURIComponent(p) + '.json')
-      .then(function(r){{ return r.json(); }})
-      .then(function(d){{ document.getElementById('pageViews').textContent = d.count + ' views'; }})
-      .catch(function(){{}});
-  }})();
-  </script>
+
+  {prevnext_bar}
 
   <div class="prof-header">
-    <div class="prof-jurisdiction">{c['jurisdiction']}</div>
-    <h1 class="prof-name">{c['name']}</h1>
-    <div class="prof-office">{c['office']}</div>
-    <span class="prof-party {party_class(c['party'])}">{party_label(c['party'])}</span>
-    {f'<a href="{website}" target="_blank" rel="noopener" style="margin-left:12px;color:var(--accent);font-size:0.85rem;">Campaign Website &rarr;</a>' if website else ''}
+    <div class="prof-header-row">
+      {photo_html}
+      <div class="prof-header-text">
+        <div class="prof-jurisdiction">{c['jurisdiction']}</div>
+        <h1 class="prof-name">{c['name']}</h1>
+        <div class="prof-office">{c['office']}</div>
+        <span class="prof-party {party_class(c['party'])}">{party_label(c['party'])}</span>
+        {f'<a href="{website}" target="_blank" rel="noopener" style="margin-left:12px;color:var(--accent);font-size:0.85rem;">Campaign Website &rarr;</a>' if website else ''}
+      </div>
+    </div>
   </div>
 
   <div class="prof-total">
@@ -447,6 +785,9 @@ def generate_profile(candidate, categories, meta):
   {cat_html}
 
   {sources_html}
+
+  <!-- Bottom prev/next -->
+  {prevnext_bar}
 
   <!-- Feedback Form -->
   <div class="prof-feedback" style="padding:20px 24px;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);margin-top:16px;">
@@ -486,7 +827,84 @@ def generate_profile(candidate, categories, meta):
 <footer>
   <p><strong>RESOLUTE Citizen</strong> &mdash; a module of <a href="https://usmcmin.org">U.S.M.C. Ministries</a></p>
   <p style="margin-top:6px;font-size:0.72rem;">Each True = +2 points &middot; Max {MAX_TOTAL} &middot; Primary sources only &middot; <a href="https://usmcmin.org/bible.html?ref=Proverbs+29:2">Proverbs 29:2</a></p>
+  <p style="margin-top:6px;font-size:0.7rem;"><span id="pageViews"></span></p>
 </footer>
+<script>
+(function(){{
+  var p = window.location.pathname;
+  fetch('https://usmcmin.goatcounter.com/counter/' + encodeURIComponent(p) + '.json')
+    .then(function(r){{ return r.json(); }})
+    .then(function(d){{
+      var el = document.getElementById('pageViews');
+      if (el && d && typeof d.count !== 'undefined') el.textContent = d.count + ' views';
+    }})
+    .catch(function(){{}});
+}})();
+</script>
+
+<!-- Keyboard shortcuts: left/right = prev/next -->
+<script>
+(function(){{
+  var prev = {('"' + prev_href + '"') if prev_href else 'null'};
+  var next = {('"' + next_href + '"') if next_href else 'null'};
+  document.addEventListener('keydown', function(e){{
+    // Ignore when typing in inputs/textareas
+    var t = e.target;
+    if (t && (t.tagName === 'INPUT' || t.tagName === 'TEXTAREA' || t.isContentEditable)) return;
+    if (e.metaKey || e.ctrlKey || e.altKey) return;
+    if (e.key === 'ArrowLeft' && prev) {{ window.location.href = prev; }}
+    else if (e.key === 'ArrowRight' && next) {{ window.location.href = next; }}
+  }});
+}})();
+</script>
+
+<!-- Jump-to dropdown: load peers from per-state JSON -->
+<script>
+(function(){{
+  var sel = document.getElementById('profJumpSelect');
+  if (!sel) return;
+  var st = (sel.getAttribute('data-state') || 'VA').toLowerCase();
+  var currentSlug = sel.getAttribute('data-current-slug') || '';
+  fetch('../../data/states/' + st + '.json')
+    .then(function(r){{ return r.json(); }})
+    .then(function(data){{
+      var cands = (data && data.candidates) || [];
+      // Group by jurisdiction
+      var groups = {{}};
+      cands.forEach(function(c){{
+        var j = c.jurisdiction || 'Other';
+        if (!groups[j]) groups[j] = [];
+        groups[j].push(c);
+      }});
+      var groupNames = Object.keys(groups).sort();
+      sel.innerHTML = '<option value="">Jump to another official…</option>';
+      groupNames.forEach(function(g){{
+        var og = document.createElement('optgroup');
+        og.label = g + ' (' + groups[g].length + ')';
+        groups[g].sort(function(a, b){{
+          return (a.name || '').localeCompare(b.name || '');
+        }});
+        groups[g].forEach(function(c){{
+          var opt = document.createElement('option');
+          opt.value = c.slug + '.html';
+          opt.textContent = c.name + (c.office ? ' — ' + c.office : '');
+          if (c.slug === currentSlug) {{
+            opt.selected = true;
+            opt.textContent = '★ ' + opt.textContent + ' (current)';
+          }}
+          og.appendChild(opt);
+        }});
+        sel.appendChild(og);
+      }});
+      sel.addEventListener('change', function(){{
+        if (sel.value) window.location.href = sel.value;
+      }});
+    }})
+    .catch(function(){{
+      sel.innerHTML = '<option value="">Could not load officials list</option>';
+    }});
+}})();
+</script>
 
 <script>
 (function() {{
@@ -539,6 +957,10 @@ def main():
     count = 0
     states_seen = set()
 
+    # Build navigation map once: for each candidate id, know prev/next peers
+    # within the same (state, level, jurisdiction) group, ordered by score desc.
+    nav_map = compute_nav_groups(data['candidates'], categories)
+
     for candidate in data['candidates']:
         slug = candidate.get('slug', '')
         if not slug:
@@ -547,7 +969,8 @@ def main():
         states_seen.add(state)
         state_dir = os.path.join(candidates_dir, state)
         os.makedirs(state_dir, exist_ok=True)
-        html = generate_profile(candidate, categories, meta)
+        nav = nav_map.get(candidate.get('id'))
+        html = generate_profile(candidate, categories, meta, nav=nav)
         filepath = os.path.join(state_dir, f'{slug}.html')
         with open(filepath, 'w') as f:
             f.write(html)

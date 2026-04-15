@@ -22,6 +22,7 @@ Sources used for scoring basis:
 """
 import json
 import os
+import sys
 import copy
 
 def load_data():
@@ -422,6 +423,15 @@ def main():
 
     save_data(data)
     print('Data saved to scorecard.json')
+
+    # Rebuild per-state files + index.json so the fast-loader (citizen.html)
+    # and profile jump-to see the updated scores.
+    import subprocess  # local import keeps top of file minimal
+    print('\nRebuilding per-state files and index.json via build-data.py...')
+    subprocess.run(
+        [sys.executable, os.path.join(os.path.dirname(os.path.abspath(__file__)), 'build-data.py')],
+        check=True,
+    )
 
 if __name__ == '__main__':
     main()

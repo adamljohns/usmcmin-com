@@ -16,6 +16,7 @@ The input file should have structure:
 }
 """
 import json
+import subprocess
 import sys
 import os
 
@@ -172,6 +173,14 @@ def main():
 
     print(f'\nTotal added: {total_added}')
     print(f'Grand total: {len(data["candidates"])} candidates across {len(data["meta"]["states"])} states')
+
+    # Rebuild data/states/*.json + data/index.json from the updated scorecard
+    # so the fast-loader (citizen.html) and profile jump-to see the new data.
+    print('\nRebuilding per-state files and index.json via build-data.py...')
+    subprocess.run(
+        [sys.executable, os.path.join(base_dir, 'build-data.py')],
+        check=True,
+    )
 
 if __name__ == '__main__':
     main()

@@ -13,6 +13,7 @@ Plus any profile fields to update:
   committees, next_election
 """
 import json
+import subprocess
 import sys
 import os
 
@@ -105,6 +106,14 @@ def main():
         json.dump(data, f, indent=2)
 
     print(f'Enriched {updated} candidate profiles from {research_file}')
+
+    # Rebuild per-state files + index.json so the fast-loader (citizen.html)
+    # and profile jump-to see the enriched data.
+    print('\nRebuilding per-state files and index.json via build-data.py...')
+    subprocess.run(
+        [sys.executable, os.path.join(base_dir, 'build-data.py')],
+        check=True,
+    )
 
 if __name__ == '__main__':
     main()

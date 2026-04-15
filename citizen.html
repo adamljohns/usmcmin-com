@@ -441,6 +441,14 @@
       <option value="D">Democrat</option>
       <option value="I">Independent</option>
     </select>
+    <select id="filterSort" onchange="onSortChange()">
+      <option value="score-desc">Sort: Score High → Low</option>
+      <option value="score-asc">Sort: Score Low → High</option>
+      <option value="name">Sort: Name A → Z</option>
+      <option value="level-score">Sort: Level + Score</option>
+      <option value="jurisdiction-score">Sort: Jurisdiction + Score</option>
+      <option value="party-score">Sort: Party + Score</option>
+    </select>
     <input type="text" id="searchInput" placeholder="Search name, office, or city..." oninput="renderCards()">
   </div>
   <div class="sc-count">
@@ -678,6 +686,7 @@ fetch('data/index.json')
         buildViewDropdown();
         buildLegend();
         buildMethodology();
+        initSortDropdown();
         renderCards();
         if (showModal) showLocationModal();
       });
@@ -793,6 +802,85 @@ function fuzzyMatch(haystack, needle) {
   return allMatch;
 }
 
+// ---- Sort Comparators (shared with profile prev/next override) ----
+// Returns a comparator function suitable for Array.sort(). All sorts apply
+// a stable name-asc tiebreaker so reloads produce identical order.
+var LEVEL_RANK = { executive: 1, judicial: 2, federal: 3, state: 4, local: 5 };
+var PARTY_RANK = { R: 1, D: 2, I: 3 }; // Republican first, then Democrat, Independent, Unknown
+function makeComparator(sortKey) {
+  function totalOf(c) { return calcTotalScore(c.scores).score; }
+  function nameOf(c) { return (c.name || '').toLowerCase(); }
+  function nameTiebreak(a, b) { return nameOf(a).localeCompare(nameOf(b)); }
+  function levelRank(c) { return LEVEL_RANK[c.level] || 6; }
+  function partyRank(c) { return PARTY_RANK[c.party] || 4; }
+
+  switch (sortKey) {
+    case 'score-asc':
+      return function(a, b) { return (totalOf(a) - totalOf(b)) || nameTiebreak(a, b); };
+    case 'name':
+      return nameTiebreak;
+    case 'level-score':
+      return function(a, b) {
+        return (levelRank(a) - levelRank(b))
+            || (totalOf(b) - totalOf(a))
+            || nameTiebreak(a, b);
+      };
+    case 'jurisdiction-score':
+      return function(a, b) {
+        var ja = (a.jurisdiction || '').toLowerCase();
+        var jb = (b.jurisdiction || '').toLowerCase();
+        return ja.localeCompare(jb)
+            || (totalOf(b) - totalOf(a))
+            || nameTiebreak(a, b);
+      };
+    case 'party-score':
+      return function(a, b) {
+        return (partyRank(a) - partyRank(b))
+            || (totalOf(b) - totalOf(a))
+            || nameTiebreak(a, b);
+      };
+    case 'score-desc':
+    default:
+      return function(a, b) { return (totalOf(b) - totalOf(a)) || nameTiebreak(a, b); };
+  }
+}
+
+// Valid sort values for THIS page (card view). Used to gracefully ignore
+// a stored value from another page (e.g. table view's 'district').
+var VALID_SORTS_CARD = {
+  'score-desc': 1, 'score-asc': 1, 'name': 1,
+  'level-score': 1, 'jurisdiction-score': 1, 'party-score': 1
+};
+
+function onSortChange() {
+  var sel = document.getElementById('filterSort');
+  if (!sel) return;
+  var val = sel.value;
+  // Persist to localStorage (shared with table view + profile prev/next)
+  try { localStorage.setItem('rc-sort', val); } catch(e) {}
+  // Reflect in URL so links can be shared
+  try {
+    var url = new URL(window.location);
+    if (val === 'score-desc') url.searchParams.delete('sort');
+    else url.searchParams.set('sort', val);
+    window.history.replaceState({}, '', url);
+  } catch(e) {}
+  renderCards();
+}
+
+// Initialize the sort dropdown from URL ?sort= or localStorage on first paint.
+function initSortDropdown() {
+  var sel = document.getElementById('filterSort');
+  if (!sel) return;
+  var fromUrl = null;
+  try { fromUrl = new URL(window.location).searchParams.get('sort'); } catch(e) {}
+  var fromStorage = null;
+  try { fromStorage = localStorage.getItem('rc-sort'); } catch(e) {}
+  var pick = fromUrl || fromStorage || 'score-desc';
+  if (!VALID_SORTS_CARD[pick]) pick = 'score-desc';
+  sel.value = pick;
+}
+
 // ---- Simplified Rendering ----
 function renderCards() {
   var rawSearch = document.getElementById('searchInput').value || '';
@@ -814,10 +902,9 @@ function renderCards() {
     return true;
   });
 
-  // Sort by score descending (highest first)
-  filtered.sort(function(a, b) {
-    return calcTotalScore(b.scores).score - calcTotalScore(a.scores).score;
-  });
+  // Apply user-selected sort (default: score desc)
+  var sortKey = (document.getElementById('filterSort') || {}).value || 'score-desc';
+  filtered.sort(makeComparator(sortKey));
 
   // Update counts
   document.getElementById('visibleCount').textContent = filtered.length;

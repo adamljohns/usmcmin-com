@@ -695,34 +695,136 @@
 })();
 </script>
 
-<!-- Keyboard shortcuts: left/right = prev/next -->
+<!-- Keyboard shortcuts: left/right = prev/next. Reads current hrefs from the
+     DOM so that the sort-override pass below can update them and the keys
+     follow automatically. -->
 <script>
 (function(){
-  var prev = "stephen-a-huffman.html";
-  var next = "susan-manchester.html";
   document.addEventListener('keydown', function(e){
-    // Ignore when typing in inputs/textareas
     var t = e.target;
     if (t && (t.tagName === 'INPUT' || t.tagName === 'TEXTAREA' || t.isContentEditable)) return;
     if (e.metaKey || e.ctrlKey || e.altKey) return;
-    if (e.key === 'ArrowLeft' && prev) { window.location.href = prev; }
-    else if (e.key === 'ArrowRight' && next) { window.location.href = next; }
+    if (e.key !== 'ArrowLeft' && e.key !== 'ArrowRight') return;
+    var dir = e.key === 'ArrowLeft' ? 'prev' : 'next';
+    var btn = document.querySelector('a.prof-nav-btn[data-direction="' + dir + '"]');
+    if (btn && btn.href) { window.location.href = btn.href; }
   });
 })();
 </script>
 
-<!-- Jump-to dropdown: load peers from per-state JSON -->
+<!-- Jump-to dropdown + Prev/Next sort override.
+     The static prev/next baked in at generation time walks (level, jurisdiction,
+     score-desc). When the user has chosen a sort on the list page (?sort= or
+     localStorage rc-sort), this script re-fetches the state JSON, recomputes
+     the order across the entire state, and rewrites both nav-bars so prev/next
+     follows the order the user just saw. No sort active = static order wins. -->
 <script>
 (function(){
   var sel = document.getElementById('profJumpSelect');
   if (!sel) return;
   var st = (sel.getAttribute('data-state') || 'VA').toLowerCase();
   var currentSlug = sel.getAttribute('data-current-slug') || '';
+
+  // ---- Score helpers (mirror server-side, no categories needed) ----
+  // Per-state JSONs do not include the categories array, so we compute the
+  // total directly by walking the keys of candidate.scores.
+  var POINTS_PER_TRUE = 2;
+  function calcTotal(scores){
+    if (!scores) return 0;
+    var t = 0;
+    for (var k in scores) {
+      if (!Object.prototype.hasOwnProperty.call(scores, k)) continue;
+      var arr = scores[k] || [];
+      for (var i = 0; i < arr.length; i++) {
+        if (arr[i] === true) t += POINTS_PER_TRUE;
+      }
+    }
+    return t;
+  }
+
+  var LEVEL_RANK = { executive: 1, judicial: 2, federal: 3, state: 4, local: 5 };
+  var PARTY_RANK = { R: 1, D: 2, I: 3 };
+
+  function makeComparator(sortKey){
+    function totalOf(c){ return calcTotal(c.scores); }
+    function nameTie(a, b){ return (a.name||'').toLowerCase().localeCompare((b.name||'').toLowerCase()); }
+    switch (sortKey) {
+      case 'score-asc':
+        return function(a, b){ return (totalOf(a) - totalOf(b)) || nameTie(a, b); };
+      case 'name':
+        return nameTie;
+      case 'level-score':
+        return function(a, b){
+          return ((LEVEL_RANK[a.level]||6) - (LEVEL_RANK[b.level]||6))
+              || (totalOf(b) - totalOf(a))
+              || nameTie(a, b);
+        };
+      case 'jurisdiction-score':
+        return function(a, b){
+          return ((a.jurisdiction||'').toLowerCase().localeCompare((b.jurisdiction||'').toLowerCase()))
+              || (totalOf(b) - totalOf(a))
+              || nameTie(a, b);
+        };
+      case 'party-score':
+        return function(a, b){
+          return ((PARTY_RANK[a.party]||4) - (PARTY_RANK[b.party]||4))
+              || (totalOf(b) - totalOf(a))
+              || nameTie(a, b);
+        };
+      case 'score-desc':
+      default:
+        return function(a, b){ return (totalOf(b) - totalOf(a)) || nameTie(a, b); };
+    }
+  }
+
+  var SORT_LABELS = {
+    'score-desc': 'Score High → Low',
+    'score-asc': 'Score Low → High',
+    'name': 'Name A → Z',
+    'level-score': 'Level + Score',
+    'jurisdiction-score': 'Jurisdiction + Score',
+    'party-score': 'Party + Score'
+  };
+
+  function activeSort(){
+    var fromUrl = null;
+    try { fromUrl = new URL(window.location).searchParams.get('sort'); } catch(e) {}
+    var fromStorage = null;
+    try { fromStorage = localStorage.getItem('rc-sort'); } catch(e) {}
+    var v = fromUrl || fromStorage;
+    return SORT_LABELS[v] ? v : null; // null = no override, keep static order
+  }
+
+  function buildNavBtnHtml(neighbor, direction, arrow){
+    if (!neighbor) {
+      return '<span class="prof-nav-btn prof-nav-disabled">' + arrow + '</span>';
+    }
+    var name = (neighbor.name || '').replace(/[<>]/g, '');
+    var office = (neighbor.office || '').replace(/[<>]/g, '');
+    var href = (neighbor.slug || '') + '.html';
+    return '<a class="prof-nav-btn" href="' + href + '" data-direction="' + direction + '">'
+      + '<span class="prof-nav-arrow">' + arrow + '</span>'
+      + '<span class="prof-nav-text"><span class="prof-nav-name">' + name + '</span>'
+      + '<span class="prof-nav-office">' + office + '</span></span></a>';
+  }
+
+  function rerenderNav(prev, next, position, total, sortLabel){
+    var bars = document.querySelectorAll('.prof-nav-bar');
+    var prevHtml = buildNavBtnHtml(prev, 'prev', '← Prev');
+    var nextHtml = buildNavBtnHtml(next, 'next', 'Next →');
+    var posHtml = '<div class="prof-nav-position">' + position + ' of ' + total
+                + (sortLabel ? ' &middot; ' + sortLabel : '') + '</div>';
+    bars.forEach(function(bar){
+      bar.innerHTML = prevHtml + posHtml + nextHtml;
+    });
+  }
+
   fetch('../../data/states/' + st + '.json')
     .then(function(r){ return r.json(); })
     .then(function(data){
       var cands = (data && data.candidates) || [];
-      // Group by jurisdiction
+
+      // ---- Jump-to dropdown (alphabetical within jurisdiction groups) ----
       var groups = {};
       cands.forEach(function(c){
         var j = c.jurisdiction || 'Other';
@@ -752,6 +854,20 @@
       sel.addEventListener('change', function(){
         if (sel.value) window.location.href = sel.value;
       });
+
+      // ---- Prev/Next sort override ----
+      // If no sort is active, leave the baked-in static order alone.
+      var sortKey = activeSort();
+      if (!sortKey) return;
+      var sorted = cands.slice().sort(makeComparator(sortKey));
+      var idx = -1;
+      for (var i = 0; i < sorted.length; i++) {
+        if (sorted[i].slug === currentSlug) { idx = i; break; }
+      }
+      if (idx === -1) return;
+      var prev = idx > 0 ? sorted[idx - 1] : null;
+      var next = idx < sorted.length - 1 ? sorted[idx + 1] : null;
+      rerenderNav(prev, next, idx + 1, sorted.length, SORT_LABELS[sortKey]);
     })
     .catch(function(){
       sel.innerHTML = '<option value="">Could not load officials list</option>';

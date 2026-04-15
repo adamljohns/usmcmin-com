@@ -196,11 +196,12 @@
       <option value="federal-first">Federal First</option>
       <option value="state-first">State First</option>
     </select>
-    <select id="filterSort" onchange="renderTables()">
-      <option value="score-desc">Highest Score</option>
-      <option value="score-asc">Lowest Score</option>
-      <option value="name">Alphabetical</option>
-      <option value="district">By District</option>
+    <select id="filterSort" onchange="onSortChange()">
+      <option value="score-desc">Sort: Score High → Low</option>
+      <option value="score-asc">Sort: Score Low → High</option>
+      <option value="name">Sort: Name A → Z</option>
+      <option value="party-score">Sort: Party + Score</option>
+      <option value="district">Sort: By District</option>
     </select>
   </div>
 
@@ -277,6 +278,37 @@ function buildStateDropdown(currentState) {
   });
 }
 
+// Shared sort handling: rc-sort localStorage + ?sort= URL param.
+// Card view supports a few sorts that table view doesn't (level-score,
+// jurisdiction-score) — those gracefully fall back to score-desc here.
+var VALID_SORTS_TABLE = {
+  'score-desc': 1, 'score-asc': 1, 'name': 1, 'district': 1, 'party-score': 1
+};
+function onSortChange() {
+  var sel = document.getElementById('filterSort');
+  if (!sel) return;
+  var val = sel.value;
+  try { localStorage.setItem('rc-sort', val); } catch(e) {}
+  try {
+    var url = new URL(window.location);
+    if (val === 'score-desc') url.searchParams.delete('sort');
+    else url.searchParams.set('sort', val);
+    window.history.replaceState({}, '', url);
+  } catch(e) {}
+  renderTables();
+}
+function initSortDropdown() {
+  var sel = document.getElementById('filterSort');
+  if (!sel) return;
+  var fromUrl = null;
+  try { fromUrl = new URL(window.location).searchParams.get('sort'); } catch(e) {}
+  var fromStorage = null;
+  try { fromStorage = localStorage.getItem('rc-sort'); } catch(e) {}
+  var pick = fromUrl || fromStorage || 'score-desc';
+  if (!VALID_SORTS_TABLE[pick]) pick = 'score-desc';
+  sel.value = pick;
+}
+
 fetch('data/scorecard.json')
   .then(r => r.json())
   .then(data => {
@@ -286,6 +318,7 @@ fetch('data/scorecard.json')
     DATA.candidates = ALL_CANDIDATES.filter(function(c) { return c.state === st; });
     buildStateDropdown(st);
     buildJurisdictionDropdown();
+    initSortDropdown();
     renderTables();
   });
 
@@ -370,12 +403,18 @@ function renderTables() {
     groups[c.jurisdiction].push(c);
   });
 
+  var PARTY_RANK = { R: 1, D: 2, I: 3 };
   Object.keys(groups).forEach(function(j) {
     groups[j].sort(function(a, b) {
-      if (sort === 'score-desc') return calcTotal(b.scores).score - calcTotal(a.scores).score;
-      if (sort === 'score-asc') return calcTotal(a.scores).score - calcTotal(b.scores).score;
-      if (sort === 'district') return (a.district || 0) - (b.district || 0);
-      return a.name.localeCompare(b.name);
+      var nameTie = a.name.localeCompare(b.name);
+      if (sort === 'score-desc') return (calcTotal(b.scores).score - calcTotal(a.scores).score) || nameTie;
+      if (sort === 'score-asc')  return (calcTotal(a.scores).score - calcTotal(b.scores).score) || nameTie;
+      if (sort === 'district')   return ((a.district || 0) - (b.district || 0)) || nameTie;
+      if (sort === 'party-score') {
+        var pa = PARTY_RANK[a.party] || 4, pb = PARTY_RANK[b.party] || 4;
+        return (pa - pb) || (calcTotal(b.scores).score - calcTotal(a.scores).score) || nameTie;
+      }
+      return nameTie; // 'name'
     });
   });
 

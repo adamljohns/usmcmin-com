@@ -399,7 +399,7 @@ function generateDynamicAlerts(reservations, properties, reviews) {
 // ===== AUTH =====
 function checkAuth() {
     if (localStorage.getItem('ba_auth') !== 'steward-2026') {
-        window.location.href = 'index.html';
+        window.location.href = 'login.html';
         return false;
     }
     return true;

@@ -18,14 +18,26 @@ ROOT = Path(__file__).parent
 BASE_URL = "https://usmcmin.com"
 TODAY = date.today().isoformat()
 
-# Auth-gated pages — exclude from sitemap, also disallowed in robots.txt
+# Auth-gated / private pages — exclude from sitemap, also disallowed in robots.txt.
+# Criteria: page shows personal finances, booking ops data, or the login page itself.
+# bow-arrow/booking.html and bow-arrow/guests.html are PUBLIC (direct-book + guest info).
 EXCLUDE = {
-    "bow-arrow/dashboard.html", "bow-arrow/booking.html",
-    "bow-arrow/calendar.html", "bow-arrow/cleaning.html",
-    "bow-arrow/comms.html", "bow-arrow/financials.html",
-    "bow-arrow/guests.html", "bow-arrow/maintenance.html",
+    # Finance dashboards (personal / family financial data)
+    "finance/finance.html",
+    "finance/financial-command.html",
+    "finance/financial-onboarding.html",
+    "finance/stewardship-dashboard.html",
+    # Crypto dashboard (shows positions)
     "c5isr/dashboard.html",
-    "finance/financial-command.html", "finance/stewardship-dashboard.html",
+    # Bow & Arrow ops (internal; shows revenue, expenses, guest data)
+    "bow-arrow/dashboard.html",
+    "bow-arrow/calendar.html",
+    "bow-arrow/cleaning.html",
+    "bow-arrow/comms.html",
+    "bow-arrow/financials.html",
+    "bow-arrow/maintenance.html",
+    # Login page itself — no SEO value
+    "bow-arrow/login.html",
 }
 
 # Priority overrides for high-value pages

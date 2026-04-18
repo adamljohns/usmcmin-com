@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+<meta name="robots" content="noindex, nofollow">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>C5iSR Stewardship Dashboard — Example Family Financial Command | U.S.M.C. Ministries</title>
   <meta name="description" content="See what a C5iSR-recommended family financial command center looks like. Budget, investments, business P&L, and tax prep — filtered through Biblical stewardship principles.">
@@ -116,6 +117,60 @@
   </style>
 </head>
 <body>
+<!-- MOOP_AUTH_GATE -->
+<style id="moop-auth-style">
+  .moop-auth-gate{position:fixed;inset:0;background:#0a0a0a;z-index:99999;display:flex;align-items:center;justify-content:center;padding:20px;font-family:system-ui,-apple-system,sans-serif}
+  .moop-auth-card{max-width:400px;width:100%;background:#141416;border:1px solid #2A2D35;border-radius:12px;padding:36px 28px;text-align:center;color:#F0F0F0;box-shadow:0 24px 60px rgba(0,0,0,0.5)}
+  .moop-auth-card .moop-auth-icon{font-size:1.8rem;margin-bottom:10px;opacity:0.85}
+  .moop-auth-card h2{color:#D4AF37;font-size:1.35rem;margin-bottom:8px;font-weight:700}
+  .moop-auth-card p{color:#9CA3AF;margin-bottom:22px;font-size:0.9rem;line-height:1.55}
+  .moop-auth-card input{width:100%;padding:13px 16px;background:#0a0a0a;border:1px solid #2A2D35;border-radius:8px;color:#F0F0F0;font-size:1rem;text-align:center;letter-spacing:2px;outline:none;margin-bottom:12px;font-family:inherit;box-sizing:border-box}
+  .moop-auth-card input:focus{border-color:#D4AF37}
+  .moop-auth-card input.moop-auth-error{border-color:#E74C3C}
+  .moop-auth-card button{width:100%;padding:13px;background:#D4AF37;color:#000;border:none;border-radius:8px;font-weight:700;cursor:pointer;font-size:0.95rem;font-family:inherit;transition:opacity 0.2s}
+  .moop-auth-card button:hover{opacity:0.88}
+  .moop-auth-card .moop-auth-hint{margin-top:16px;font-size:0.75rem;color:#6B7280}
+  .moop-auth-card .moop-auth-hint a{color:#D4AF37;text-decoration:none}
+</style>
+<div id="moopAuthGate" class="moop-auth-gate">
+  <div class="moop-auth-card">
+    <div class="moop-auth-icon">🔒</div>
+    <h2>Private — Steward Access</h2>
+    <p>This page contains personal financial information for the Johns family and approved stewards only.</p>
+    <input type="password" id="moopAuthPass" placeholder="Access code" autocomplete="current-password" autofocus onkeydown="if(event.key===&apos;Enter&apos;)moopAuth()">
+    <button onclick="moopAuth()">Unlock</button>
+    <div class="moop-auth-hint"><a href="../index.html">← Back to usmcmin.com</a></div>
+  </div>
+</div>
+<script>
+(function(){
+  var authed = localStorage.getItem('moop_steward_auth')==='true'
+            || localStorage.getItem('moop_finance_auth')==='steward-2026'
+            || localStorage.getItem('ba_auth')==='steward-2026'
+            || localStorage.getItem('c5isr_auth')==='true';
+  if(authed){
+    var g=document.getElementById('moopAuthGate');if(g)g.style.display='none';
+  } else {
+    document.documentElement.style.overflow='hidden';
+  }
+})();
+function moopAuth(){
+  var el=document.getElementById('moopAuthPass'),pass=el.value;
+  if(pass==='steward'){
+    localStorage.setItem('moop_steward_auth','true');
+    localStorage.setItem('moop_finance_auth','steward-2026');
+    localStorage.setItem('ba_auth','steward-2026');
+    localStorage.setItem('c5isr_auth','true');
+    document.getElementById('moopAuthGate').style.display='none';
+    document.documentElement.style.overflow='';
+  } else {
+    el.classList.add('moop-auth-error');el.value='';el.placeholder='Invalid code';
+    setTimeout(function(){el.classList.remove('moop-auth-error');el.focus();},1200);
+  }
+}
+</script>
+<!-- /MOOP_AUTH_GATE -->
+
 
 <nav>
   <a href="/" class="nav-brand" style="text-decoration:none">

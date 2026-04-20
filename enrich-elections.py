@@ -162,56 +162,159 @@ def enrich_executive(c):
     return changed
 
 
-def enrich_fl_state(c):
-    """Florida state-level election timing.
+def enrich_state_level(c):
+    """Apply state-specific election timing to state-level candidates.
 
-    - FL House: all 120 seats up every 2 years. Next: Nov 3, 2026.
-    - FL Senate: 4-year staggered terms. Even-numbered districts up in
-      midterm years (2022, 2026), odd-numbered up in presidential years
-      (2024, 2028). So for 2026: even districts are up.
-    - Governor + Cabinet (AG, CFO, Agriculture Commissioner, Lt Gov):
-      4-year terms on midterm cycle. Next: Nov 3, 2026. DeSantis is
-      term-limited; Cabinet seats are open races.
-    - FL Supreme Court justices: nonpartisan retention elections every 6
-      years; handled in enrich_judicial (default: not up next general).
+    Each state has its own rules for state senate staggering. Where I'm
+    confident about the staggering rule, we populate seat_up_next precisely.
+    Where I'm uncertain, we populate next_election_date (so the countdown
+    renders) but leave seat_up_next=False as a conservative default (better
+    to say "not up" and be wrong than to mislead a voter).
+
+    Covered states (same states where we have county coverage in places.json):
+    FL, VA, TX, CA, NY, PA, IL, OH. Others fall through unchanged.
     """
-    if (c.get('state') or '').upper() != 'FL' or c.get('level') != 'state':
+    state = (c.get('state') or '').upper()
+    if c.get('level') != 'state':
         return False
     profile = c.setdefault('profile', {})
-    jurisdiction = (c.get('jurisdiction') or '').lower()
+    jurisdiction = (c.get('jurisdiction') or '')
+    jlo = jurisdiction.lower()
     office = (c.get('office') or '').lower()
-    district = c.get('district')
+    district = c.get('district') if isinstance(c.get('district'), int) else None
     changed = False
 
     new_date = None
     seat_up = False
 
-    if jurisdiction == 'florida house of representatives':
-        new_date = '2026-11-03'
-        seat_up = True  # all 120 FL House seats up every 2 years
-    elif jurisdiction == 'florida state senate':
-        new_date = '2026-11-03'
-        # Even-numbered districts up in midterm cycle
-        if isinstance(district, int):
-            seat_up = (district % 2 == 0)
-        else:
-            seat_up = False
-    elif jurisdiction == 'state of florida':
-        # Statewide offices: Gov, Lt Gov, AG, CFO, Agriculture Commissioner
-        # all on 4-year midterm cycle. 2022 -> 2026 -> 2030.
-        new_date = '2026-11-03'
-        seat_up = True
+    # ---- Florida ----
+    if state == 'FL':
+        # All 120 FL House seats up every 2 years. FL Senate even districts
+        # up in midterm cycle. Statewide offices 4-year midterm cycle.
+        if jlo == 'florida house of representatives':
+            new_date = '2026-11-03'
+            seat_up = True
+        elif jlo == 'florida state senate':
+            new_date = '2026-11-03'
+            seat_up = (district is not None and district % 2 == 0)
+        elif jlo == 'state of florida':
+            new_date = '2026-11-03'
+            seat_up = True  # Gov term-limited but seat still up
 
+    # ---- Virginia (off-year state elections — nothing up in 2026) ----
+    elif state == 'VA':
+        # VA holds state elections in ODD years. Gov/Lt Gov/AG elected 2025,
+        # next 2029. House of Delegates every 2 years (2023, 2025, 2027).
+        # State Senate every 4 years (2023, 2027).
+        if 'House of Delegates' in jurisdiction:
+            new_date = '2027-11-02'
+            seat_up = True
+        elif jurisdiction in ('Virginia State Senate', 'Senate of Virginia'):
+            new_date = '2027-11-02'
+            seat_up = True
+        elif jurisdiction == 'Commonwealth of Virginia':
+            new_date = '2029-11-06'
+            seat_up = False  # Spanberger et al. just elected 2025
+
+    # ---- Texas ----
+    elif state == 'TX':
+        if jlo == 'state of texas':
+            new_date = '2026-11-03'
+            seat_up = True  # Gov + statewide 4-year midterm cycle
+        elif 'Texas House' in jurisdiction or 'House of Representatives' in jurisdiction:
+            new_date = '2026-11-03'
+            seat_up = True  # all 150 TX House seats up every 2 years
+        elif 'Senate' in jurisdiction:
+            # TX Senate staggering isn't a simple parity rule — uncertain
+            new_date = '2026-11-03'
+            seat_up = False
+
+    # ---- California ----
+    elif state == 'CA':
+        if jlo == 'state of california':
+            new_date = '2026-11-03'
+            seat_up = True
+        elif 'Assembly' in jurisdiction:
+            new_date = '2026-11-03'
+            seat_up = True  # all 80 CA Assembly seats every 2 years
+        elif 'State Senate' in jurisdiction or jurisdiction == 'California State Senate':
+            # CA Senate even districts up midterm (2022, 2026, 2030)
+            new_date = '2026-11-03'
+            seat_up = (district is not None and district % 2 == 0)
+
+    # ---- New York ----
+    elif state == 'NY':
+        if jlo == 'state of new york':
+            new_date = '2026-11-03'
+            seat_up = True
+        elif 'Assembly' in jurisdiction:
+            new_date = '2026-11-03'
+            seat_up = True  # NY Assembly all up every 2 years
+        elif 'Senate' in jurisdiction:
+            # NY Senate: 2-year terms, ALL seats up every 2 years
+            new_date = '2026-11-03'
+            seat_up = True
+
+    # ---- Pennsylvania ----
+    elif state == 'PA':
+        if jlo == 'commonwealth of pennsylvania':
+            # Gov + Lt Gov up 2026. AG/Auditor/Treasurer elected in presidential
+            # cycle (2024) — next 2028.
+            if 'governor' in office:
+                new_date = '2026-11-03'
+                seat_up = True
+            else:
+                new_date = '2028-11-07'
+                seat_up = False
+        elif 'Pennsylvania House' in jurisdiction or 'House of Representatives' in jurisdiction:
+            new_date = '2026-11-03'
+            seat_up = True  # PA House all up every 2 years
+        elif 'Senate' in jurisdiction:
+            # PA Senate even districts up midterm (2022, 2026)
+            new_date = '2026-11-03'
+            seat_up = (district is not None and district % 2 == 0)
+
+    # ---- Illinois ----
+    elif state == 'IL':
+        if jlo == 'state of illinois':
+            new_date = '2026-11-03'
+            seat_up = True
+        elif 'Illinois House' in jurisdiction or 'House of Representatives' in jurisdiction:
+            new_date = '2026-11-03'
+            seat_up = True  # IL House all up every 2 years
+        elif 'Senate' in jurisdiction:
+            # IL Senate staggering is complex (district terms rotate) — uncertain
+            new_date = '2026-11-03'
+            seat_up = False
+
+    # ---- Ohio ----
+    elif state == 'OH':
+        if jlo == 'state of ohio':
+            new_date = '2026-11-03'
+            seat_up = True
+        elif 'Ohio House' in jurisdiction or 'House of Representatives' in jurisdiction:
+            new_date = '2026-11-03'
+            seat_up = True  # OH House all up every 2 years
+        elif 'Senate' in jurisdiction:
+            # OH Senate even districts up midterm
+            new_date = '2026-11-03'
+            seat_up = (district is not None and district % 2 == 0)
+
+    # Apply
     if new_date and profile.get('next_election_date') != new_date:
         profile['next_election_date'] = new_date
         changed = True
-    if profile.get('next_election_type') != 'general':
+    if new_date and profile.get('next_election_type') != 'general':
         profile['next_election_type'] = 'general'
         changed = True
-    if profile.get('seat_up_next') != seat_up:
+    if new_date and profile.get('seat_up_next') != seat_up:
         profile['seat_up_next'] = seat_up
         changed = True
     return changed
+
+
+# Backward-compat alias (in case anything still imports the old name)
+enrich_fl_state = enrich_state_level
 
 
 def enrich_judicial(c):
@@ -235,7 +338,7 @@ def main():
     federal_changed = 0
     executive_changed = 0
     judicial_changed = 0
-    fl_state_changed = 0
+    state_changed_by = {}
     for c in data['candidates']:
         level = c.get('level', '')
         if level == 'federal':
@@ -248,13 +351,17 @@ def main():
             if enrich_judicial(c):
                 judicial_changed += 1
         elif level == 'state':
-            if enrich_fl_state(c):
-                fl_state_changed += 1
+            if enrich_state_level(c):
+                s = (c.get('state') or '?').upper()
+                state_changed_by[s] = state_changed_by.get(s, 0) + 1
 
     print(f"Federal enriched: {federal_changed}")
     print(f"Executive enriched: {executive_changed}")
     print(f"Judicial enriched: {judicial_changed}")
-    print(f"FL state enriched: {fl_state_changed}")
+    print(f"State-level enriched by state:")
+    for s in sorted(state_changed_by.keys()):
+        print(f"  {s}: {state_changed_by[s]}")
+    print(f"  Total: {sum(state_changed_by.values())}")
 
     with open(SCORECARD_PATH, 'w') as f:
         json.dump(data, f, indent=2)

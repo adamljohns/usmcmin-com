@@ -282,6 +282,7 @@ def generate_profile(candidate, categories, meta, nav=None):
     # ---- Breadcrumb (replaces single back link) ----
     crumbs = [
         '<a href="../../citizen.html">RESOLUTE Citizen</a>',
+        '<a href="../../find-my-reps.html">Find My Reps</a>',
         f'<a href="../../citizen.html?state={state_code}">{state_name}</a>',
     ]
     if group_label and group_label != state_name:

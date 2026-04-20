@@ -1,0 +1,854 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Find My Representatives — RESOLUTE Citizen | U.S.M.C. Ministries</title>
+  <meta name="description" content="Type your city, county, or state to see all your elected representatives — federal, state, and local. Call them, message them, hold them accountable. RESOLUTE Citizen by U.S.M.C. Ministries.">
+  <meta property="og:title" content="Find My Representatives — RESOLUTE Citizen">
+  <meta property="og:description" content="Type your city or county and see every official who represents you — with photos, scores, sources, and tap-to-call contact info.">
+  <meta property="og:type" content="website">
+  <link rel="stylesheet" href="assets/css/main.css">
+  <link rel="icon" href="assets/img/favicon.png" type="image/png">
+  <style>
+    .fmr-container { max-width: 1100px; margin: 0 auto; padding: 20px; }
+
+    .fmr-hero {
+      text-align: center;
+      padding: 44px 20px 28px;
+      border-bottom: 2px solid var(--border);
+      background: linear-gradient(180deg, rgba(30,58,95,0.08) 0%, transparent 100%);
+    }
+    [data-theme="dark"] .fmr-hero {
+      background: linear-gradient(180deg, rgba(30,58,95,0.25) 0%, transparent 100%);
+    }
+    .fmr-hero-badge {
+      display: inline-block;
+      font-size: 0.68rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 3px;
+      color: #c9a84c;
+      background: rgba(201,168,76,0.12);
+      border: 1px solid rgba(201,168,76,0.25);
+      padding: 6px 18px;
+      border-radius: 20px;
+      margin-bottom: 16px;
+    }
+    .fmr-hero h1 {
+      font-size: clamp(1.8rem, 4vw, 2.8rem);
+      color: var(--white);
+      margin-bottom: 10px;
+      font-weight: 800;
+    }
+    .fmr-hero h1 .gold { color: #c9a84c; }
+    .fmr-hero .subtitle {
+      color: var(--gray);
+      font-size: 0.95rem;
+      max-width: 600px;
+      margin: 0 auto 8px;
+      line-height: 1.6;
+    }
+
+    /* Search box */
+    .fmr-search-wrap {
+      max-width: 640px;
+      margin: 24px auto 0;
+      position: relative;
+    }
+    .fmr-search {
+      width: 100%;
+      padding: 16px 20px;
+      background: var(--bg-card);
+      border: 2px solid var(--border);
+      border-radius: 12px;
+      color: var(--white);
+      font-size: 1.05rem;
+      outline: none;
+      transition: border-color 0.15s, box-shadow 0.15s;
+      box-sizing: border-box;
+    }
+    .fmr-search:focus {
+      border-color: #c9a84c;
+      box-shadow: 0 0 0 4px rgba(201,168,76,0.15);
+    }
+    .fmr-search::placeholder {
+      color: var(--gray);
+      opacity: 0.8;
+    }
+    .fmr-suggestions {
+      position: absolute;
+      top: calc(100% + 4px);
+      left: 0; right: 0;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      max-height: 320px;
+      overflow-y: auto;
+      display: none;
+      z-index: 100;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.4);
+    }
+    .fmr-suggestions.active { display: block; }
+    .fmr-suggestion {
+      padding: 11px 16px;
+      cursor: pointer;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 0.9rem;
+      color: var(--white);
+      transition: background 0.1s;
+    }
+    .fmr-suggestion:last-child { border-bottom: none; }
+    .fmr-suggestion:hover, .fmr-suggestion.highlighted {
+      background: rgba(201,168,76,0.12);
+    }
+    .fmr-suggestion-type {
+      font-size: 0.65rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: #c9a84c;
+      background: rgba(201,168,76,0.15);
+      padding: 2px 8px;
+      border-radius: 10px;
+      flex-shrink: 0;
+    }
+    .fmr-search-note {
+      text-align: center;
+      color: var(--gray);
+      font-size: 0.78rem;
+      margin-top: 10px;
+    }
+
+    /* Results */
+    .fmr-results { padding: 28px 0 40px; }
+    .fmr-results.hidden { display: none; }
+    .fmr-selected {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-left: 4px solid #c9a84c;
+      border-radius: var(--radius);
+      padding: 16px 20px;
+      margin-bottom: 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+    .fmr-selected-label {
+      font-size: 0.72rem;
+      color: var(--gray);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 4px;
+    }
+    .fmr-selected-place {
+      font-size: 1.15rem;
+      color: var(--white);
+      font-weight: 700;
+    }
+    .fmr-change {
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--accent);
+      padding: 8px 14px;
+      border-radius: 6px;
+      font-size: 0.82rem;
+      cursor: pointer;
+    }
+    .fmr-change:hover { border-color: #c9a84c; color: #c9a84c; }
+
+    .fmr-group {
+      margin-bottom: 28px;
+    }
+    .fmr-group-header {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      padding-bottom: 8px;
+      margin-bottom: 14px;
+      border-bottom: 2px solid var(--accent);
+    }
+    .fmr-group-title {
+      font-family: var(--font-main);
+      font-size: 1.2rem;
+      color: var(--accent);
+      margin: 0;
+    }
+    .fmr-group-title .icon { margin-right: 6px; }
+    .fmr-group-count {
+      color: var(--gray);
+      font-size: 0.82rem;
+    }
+    .fmr-group-empty {
+      padding: 14px 16px;
+      background: var(--bg-card);
+      border: 1px dashed var(--border);
+      border-radius: var(--radius);
+      color: var(--gray);
+      font-size: 0.85rem;
+      line-height: 1.5;
+    }
+    .fmr-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 12px;
+    }
+    .fmr-rep-card {
+      display: flex;
+      gap: 12px;
+      padding: 12px 14px;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      text-decoration: none;
+      color: var(--white);
+      transition: border-color 0.15s, transform 0.1s;
+    }
+    .fmr-rep-card:hover {
+      border-color: #c9a84c;
+      transform: translateY(-1px);
+    }
+    .fmr-rep-photo {
+      width: 54px;
+      height: 54px;
+      border-radius: 50%;
+      flex-shrink: 0;
+      object-fit: cover;
+      border: 1px solid var(--border);
+    }
+    .fmr-rep-initials {
+      width: 54px;
+      height: 54px;
+      border-radius: 50%;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-main);
+      font-weight: 800;
+      font-size: 1.1rem;
+      letter-spacing: 0.5px;
+    }
+    .fmr-rep-body { flex: 1; min-width: 0; }
+    .fmr-rep-name {
+      font-weight: 700;
+      color: var(--white);
+      font-size: 0.94rem;
+      margin-bottom: 2px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .fmr-rep-office {
+      color: var(--gray);
+      font-size: 0.78rem;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .fmr-rep-meta {
+      display: flex;
+      gap: 6px;
+      align-items: center;
+      margin-top: 6px;
+    }
+    .fmr-rep-party {
+      font-size: 0.68rem;
+      font-weight: 700;
+      padding: 2px 6px;
+      border-radius: 3px;
+    }
+    .party-r { background: rgba(220,38,38,0.15); color: #ef4444; }
+    .party-d { background: rgba(37,99,235,0.15); color: #3b82f6; }
+    .party-i { background: rgba(168,85,247,0.15); color: #a855f7; }
+    .party-unknown, .party-n { background: rgba(107,114,128,0.15); color: #9ca3af; }
+    .fmr-rep-score {
+      font-size: 0.74rem;
+      font-weight: 700;
+    }
+    .score-high { color: #4CAF50; }
+    .score-mid { color: #FFC107; }
+    .score-low { color: #f44336; }
+    .score-none { color: var(--gray); font-weight: 400; }
+
+    /* Loading / empty states */
+    .fmr-loading, .fmr-empty {
+      text-align: center;
+      padding: 40px 20px;
+      color: var(--gray);
+    }
+    .fmr-intro {
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 20px 16px;
+      text-align: center;
+      color: var(--gray);
+      font-size: 0.88rem;
+      line-height: 1.7;
+    }
+
+    footer {
+      text-align: center;
+      padding: 30px 20px;
+      color: var(--gray);
+      font-size: 0.82rem;
+      border-top: 1px solid var(--border);
+      margin-top: 40px;
+    }
+    footer a { color: var(--accent); text-decoration: none; }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a href="/" class="nav-brand" style="text-decoration:none">
+    <img src="assets/img/logo.png" alt="U.S.M.C. Ministries" style="object-fit:contain">
+    <div class="nav-brand-text">
+      <div class="name">U.S.M.C. Ministries</div>
+      <div class="tag">Warriors Equipped</div>
+    </div>
+  </a>
+  <ul class="nav-links">
+    <li><a href="mission.html">Mission</a></li>
+    <li><a href="shop.html">Shop</a></li>
+    <li><a href="books.html">Books</a></li>
+    <li><a href="coaching.html">Coaching</a></li>
+    <li><a href="fitness/fitness.html">Fitness</a></li>
+    <li><a href="finance/">Finance</a></li>
+    <li><a href="about.html">About</a></li>
+    <li><a href="https://usmcmin.org" target="_blank">Ministry Site</a></li>
+  </ul>
+  <a href="coaching.html" class="btn nav-cta">Book a Session</a>
+  <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme" title="Switch light/dark mode">&#9789;</button>
+  <button class="nav-toggle" aria-label="Menu"><span></span><span></span><span></span></button>
+</nav>
+
+<div class="fmr-container">
+  <div class="fmr-hero">
+    <span class="fmr-hero-badge">RESOLUTE Citizen Tool</span>
+    <h1>Find <span class="gold">My</span> Representatives</h1>
+    <p class="subtitle">Type your city, county, or state. See every elected official who represents you — with scores, sources, and tap-to-call contact info.</p>
+
+    <div class="fmr-search-wrap">
+      <input
+        type="text" id="fmrSearch"
+        class="fmr-search"
+        placeholder="Type a city, county, or state (e.g., Melbourne, FL)"
+        autocomplete="off"
+        autocapitalize="words"
+        spellcheck="false">
+      <div id="fmrSuggestions" class="fmr-suggestions" role="listbox"></div>
+    </div>
+    <div class="fmr-search-note">No address required — broad civic map of your area.</div>
+  </div>
+
+  <div id="fmrIntro" class="fmr-intro">
+    <p>Start typing above. You'll see matches for U.S. states, Florida counties, and major cities. Select one to see your full civic stack — from U.S. Senators to your city council.</p>
+    <p style="margin-top:10px;">Don't see your city? Type your <strong>state name</strong> or <strong>county name</strong> — you'll still get all your federal and state reps.</p>
+  </div>
+
+  <div id="fmrResults" class="fmr-results hidden"></div>
+</div>
+
+<footer>
+  <p><strong>RESOLUTE Citizen</strong> &mdash; a module of <a href="https://usmcmin.org">U.S.M.C. Ministries</a></p>
+  <p style="margin-top:6px;font-size:0.72rem;">
+    <a href="citizen.html">Back to Scorecard</a> &middot;
+    <a href="https://usmcmin.org/bible.html?ref=Proverbs+29:2">Proverbs 29:2</a>
+  </p>
+</footer>
+
+<script>
+(function(){
+  // ---- Constants ----
+  var STATE_NAMES = {
+    'AL':'Alabama','AK':'Alaska','AZ':'Arizona','AR':'Arkansas','CA':'California',
+    'CO':'Colorado','CT':'Connecticut','DE':'Delaware','FL':'Florida','GA':'Georgia',
+    'HI':'Hawaii','ID':'Idaho','IL':'Illinois','IN':'Indiana','IA':'Iowa','KS':'Kansas',
+    'KY':'Kentucky','LA':'Louisiana','ME':'Maine','MD':'Maryland','MA':'Massachusetts',
+    'MI':'Michigan','MN':'Minnesota','MS':'Mississippi','MO':'Missouri','MT':'Montana',
+    'NE':'Nebraska','NV':'Nevada','NH':'New Hampshire','NJ':'New Jersey','NM':'New Mexico',
+    'NY':'New York','NC':'North Carolina','ND':'North Dakota','OH':'Ohio','OK':'Oklahoma',
+    'OR':'Oregon','PA':'Pennsylvania','RI':'Rhode Island','SC':'South Carolina',
+    'SD':'South Dakota','TN':'Tennessee','TX':'Texas','UT':'Utah','VT':'Vermont',
+    'VA':'Virginia','WA':'Washington','WV':'West Virginia','WI':'Wisconsin','WY':'Wyoming',
+    'DC':'District of Columbia'
+  };
+
+  var PALETTE = [
+    ['#1e3a5f','#93c5fd'], ['#14532d','#86efac'], ['#7c2d12','#fdba74'],
+    ['#3b0764','#c4b5fd'], ['#713f12','#fde68a'], ['#064e3b','#6ee7b7'],
+    ['#581c87','#d8b4fe'], ['#1f2937','#cbd5e1'], ['#4c1d95','#a78bfa'],
+    ['#854d0e','#fcd34d']
+  ];
+  function colorFor(slug) {
+    slug = slug || '';
+    var h = 0;
+    for (var i = 0; i < slug.length; i++) h = ((h * 31) + slug.charCodeAt(i)) >>> 0;
+    return PALETTE[h % PALETTE.length];
+  }
+  function initials(name) {
+    if (!name) return '??';
+    var parts = name.trim().split(/\s+/).filter(function(p){ return p && !p.endsWith('.'); });
+    if (parts.length === 0) return name.trim().slice(0,2).toUpperCase();
+    if (parts.length === 1) return parts[0].slice(0,2).toUpperCase();
+    return (parts[0][0] + parts[parts.length-1][0]).toUpperCase();
+  }
+
+  // ---- Score calc (same formula as generate-profiles.py) ----
+  var POINTS_PER_TRUE = 2;
+  var MAX_TOTAL = 70;
+  function calcTotal(scores) {
+    if (!scores) return 0;
+    var t = 0;
+    for (var k in scores) {
+      if (!Object.prototype.hasOwnProperty.call(scores, k)) continue;
+      var arr = scores[k] || [];
+      for (var i = 0; i < arr.length; i++) if (arr[i] === true) t += POINTS_PER_TRUE;
+    }
+    return t;
+  }
+  function scoreClass(score, max) {
+    if (max === 0) return 'score-none';
+    var p = score / max;
+    if (p >= 0.7) return 'score-high';
+    if (p >= 0.4) return 'score-mid';
+    if (p > 0) return 'score-low';
+    return 'score-none';
+  }
+
+  // ---- Elements ----
+  var searchEl = document.getElementById('fmrSearch');
+  var sugEl = document.getElementById('fmrSuggestions');
+  var resultsEl = document.getElementById('fmrResults');
+  var introEl = document.getElementById('fmrIntro');
+
+  // ---- Load places.json on first focus (lazy) ----
+  var PLACES = null;
+  var placesLoading = null;
+  function loadPlaces() {
+    if (PLACES) return Promise.resolve(PLACES);
+    if (placesLoading) return placesLoading;
+    placesLoading = fetch('data/places.json')
+      .then(function(r){ return r.json(); })
+      .then(function(data){
+        PLACES = data;
+        // Flatten into a single search array with type markers
+        PLACES.all = [];
+        (data.cities || []).forEach(function(p){
+          PLACES.all.push({kind:'city', name:p.name, state:p.state, county:p.county, display:p.display, aliases:p.aliases});
+        });
+        (data.counties || []).forEach(function(p){
+          PLACES.all.push({kind:'county', name:p.name, state:p.state, display:p.display, aliases:p.aliases});
+        });
+        (data.states || []).forEach(function(p){
+          PLACES.all.push({kind:'state', name:p.name, state:p.code, display:p.display, aliases:p.aliases});
+        });
+        return PLACES;
+      });
+    return placesLoading;
+  }
+
+  // ---- Autocomplete ----
+  function search(q) {
+    if (!PLACES) return [];
+    q = q.toLowerCase().trim();
+    if (!q) return [];
+    var exact = [], prefix = [], contains = [];
+    PLACES.all.forEach(function(p){
+      var matched = false;
+      for (var i = 0; i < p.aliases.length; i++) {
+        var a = p.aliases[i];
+        if (a === q) { exact.push(p); matched = true; break; }
+        if (a.indexOf(q) === 0) { prefix.push(p); matched = true; break; }
+        if (a.indexOf(q) !== -1) { contains.push(p); matched = true; break; }
+      }
+      if (!matched && p.display.toLowerCase().indexOf(q) !== -1) {
+        contains.push(p);
+      }
+    });
+    // Cities and counties rank above bare state names
+    function kindRank(p){ return p.kind === 'city' ? 0 : (p.kind === 'county' ? 1 : 2); }
+    exact.sort(function(a,b){ return kindRank(a) - kindRank(b); });
+    prefix.sort(function(a,b){ return kindRank(a) - kindRank(b); });
+    contains.sort(function(a,b){ return kindRank(a) - kindRank(b); });
+    return exact.concat(prefix).concat(contains).slice(0, 12);
+  }
+
+  var highlighted = 0;
+  function renderSuggestions(list) {
+    sugEl.innerHTML = '';
+    if (list.length === 0) {
+      sugEl.classList.remove('active');
+      return;
+    }
+    list.forEach(function(p, i){
+      var div = document.createElement('div');
+      div.className = 'fmr-suggestion' + (i === highlighted ? ' highlighted' : '');
+      div.setAttribute('role', 'option');
+      div.setAttribute('data-index', i);
+      var typeLabel = p.kind === 'city' ? 'City' : p.kind === 'county' ? 'County' : 'State';
+      div.innerHTML = '<span class="fmr-suggestion-type">' + typeLabel + '</span><span>' + p.display + '</span>';
+      div.addEventListener('click', function(){ selectPlace(p); });
+      sugEl.appendChild(div);
+    });
+    sugEl.classList.add('active');
+  }
+
+  searchEl.addEventListener('focus', function(){
+    loadPlaces();
+  });
+  searchEl.addEventListener('input', function(){
+    loadPlaces().then(function(){
+      highlighted = 0;
+      renderSuggestions(search(searchEl.value));
+    });
+  });
+  searchEl.addEventListener('keydown', function(e){
+    if (!sugEl.classList.contains('active')) return;
+    var items = sugEl.querySelectorAll('.fmr-suggestion');
+    if (e.key === 'ArrowDown') {
+      e.preventDefault();
+      highlighted = Math.min(highlighted + 1, items.length - 1);
+      items.forEach(function(it, i){ it.classList.toggle('highlighted', i === highlighted); });
+    } else if (e.key === 'ArrowUp') {
+      e.preventDefault();
+      highlighted = Math.max(highlighted - 1, 0);
+      items.forEach(function(it, i){ it.classList.toggle('highlighted', i === highlighted); });
+    } else if (e.key === 'Enter') {
+      e.preventDefault();
+      var list = search(searchEl.value);
+      if (list[highlighted]) selectPlace(list[highlighted]);
+    } else if (e.key === 'Escape') {
+      sugEl.classList.remove('active');
+    }
+  });
+  document.addEventListener('click', function(e){
+    if (!searchEl.contains(e.target) && !sugEl.contains(e.target)) {
+      sugEl.classList.remove('active');
+    }
+  });
+
+  // ---- Select a place and render results ----
+  function selectPlace(p) {
+    searchEl.value = p.display;
+    sugEl.classList.remove('active');
+    renderResults(p);
+  }
+
+  // Rough US House district assignments for FL counties that fit entirely
+  // within a single district (so we can highlight "your US Rep" specifically
+  // for those users). Counties not in this map span multiple districts, and
+  // we show all the state's US House delegation.
+  var FL_COUNTY_TO_US_HOUSE = {
+    'Brevard': 8,        // Mike Haridopolos
+    'Escambia': 1,       // Patronis (formerly Gaetz)
+    'Alachua': 3,
+    'Marion': 3,
+    'Nassau': 4,
+    'Seminole': 7,
+    'Indian River': 8,
+    'Polk': 15,
+    'Highlands': 17,
+    'Collier': 19,
+    'Lee': 19,
+    'Charlotte': 19,
+  };
+
+  function filterCandidates(all, place) {
+    // Returns candidates grouped by section based on user's place selection.
+    var state = place.state;
+    var county = place.county;
+    var city = place.name;
+    var sameState = function(c){ return (c.state || '').toUpperCase() === state; };
+
+    var federal = all.filter(function(c){ return sameState(c) && c.level === 'federal'; });
+    var executive = all.filter(function(c){ return sameState(c) && c.level === 'executive'; });
+    var judicial = all.filter(function(c){ return sameState(c) && c.level === 'judicial'; });
+    // State-level split into statewide offices (Gov, Lt Gov, AG, CFO, Ag Comm, etc.)
+    // and legislature (state sens + reps). The statewide set is small and always
+    // relevant; the legislature is noisy unless we can filter to a specific
+    // district — which we don't know without the user's exact address.
+    var stateAll = all.filter(function(c){ return sameState(c) && c.level === 'state'; });
+    var stateName = STATE_NAMES[state] || state;
+    var statewide = stateAll.filter(function(c){
+      var j = (c.jurisdiction || '').toLowerCase();
+      return j === ('state of ' + stateName).toLowerCase() ||
+             j === ('commonwealth of ' + stateName).toLowerCase() ||
+             j === 'supreme court of ' + stateName.toLowerCase();
+    });
+    var legislature = stateAll.filter(function(c){
+      return statewide.indexOf(c) === -1;
+    });
+    var local = all.filter(function(c){
+      return sameState(c) && c.level === 'local';
+    });
+
+    // Now narrow county and city
+    var countyOfficials = [], cityOfficials = [];
+    if (county) {
+      countyOfficials = local.filter(function(c){
+        var j = (c.jurisdiction || '').toLowerCase();
+        return j.indexOf(county.toLowerCase() + ' county') !== -1 ||
+               j === county.toLowerCase() + ' county' ||
+               j === county.toLowerCase();
+      });
+    }
+    if (place.kind === 'city' && city) {
+      var cityKey = city.toLowerCase();
+      cityOfficials = local.filter(function(c){
+        var j = (c.jurisdiction || '').toLowerCase();
+        return j.indexOf('city of ' + cityKey) !== -1 ||
+               j.indexOf('town of ' + cityKey) !== -1;
+      });
+    }
+
+    // Highlight "your US House rep" if we can
+    var yourUsHouseDistrict = null;
+    if (state === 'FL' && county && FL_COUNTY_TO_US_HOUSE[county] != null) {
+      yourUsHouseDistrict = FL_COUNTY_TO_US_HOUSE[county];
+    }
+
+    return {
+      federal: federal,
+      executive: executive,
+      judicial: judicial,
+      statewide: statewide,
+      legislature: legislature,
+      countyOfficials: countyOfficials,
+      cityOfficials: cityOfficials,
+      yourUsHouseDistrict: yourUsHouseDistrict,
+    };
+  }
+
+  function repCardHtml(c, isDirect) {
+    var total = calcTotal(c.scores);
+    var klass = scoreClass(total, MAX_TOTAL);
+    var party = (c.party || '').toUpperCase();
+    var partyClass = party === 'R' ? 'party-r' : party === 'D' ? 'party-d' : party === 'I' ? 'party-i' : 'party-unknown';
+    var partyLabel = party === 'R' ? 'R' : party === 'D' ? 'D' : party === 'I' ? 'I' : (party || 'N');
+
+    var photoHtml;
+    if (c.photo) {
+      photoHtml = '<img class="fmr-rep-photo" src="' + c.photo + '" alt="' + c.name + '" loading="lazy">';
+    } else {
+      var col = colorFor(c.slug);
+      photoHtml = '<div class="fmr-rep-initials" style="background:' + col[0] + ';color:' + col[1] + ';" aria-hidden="true">' + initials(c.name) + '</div>';
+    }
+    var directBadge = isDirect ? '<span style="color:#c9a84c;font-size:0.68rem;margin-left:4px;">★ YOU</span>' : '';
+
+    var href = 'candidates/' + (c.state || 'us').toLowerCase() + '/' + c.slug + '.html';
+    var office = c.office || c.jurisdiction || '';
+    return '<a class="fmr-rep-card" href="' + href + '">' +
+      photoHtml +
+      '<div class="fmr-rep-body">' +
+        '<div class="fmr-rep-name">' + c.name + directBadge + '</div>' +
+        '<div class="fmr-rep-office">' + office + '</div>' +
+        '<div class="fmr-rep-meta">' +
+          '<span class="fmr-rep-party ' + partyClass + '">' + partyLabel + '</span>' +
+          '<span class="fmr-rep-score ' + klass + '">' + total + '/' + MAX_TOTAL + '</span>' +
+        '</div>' +
+      '</div>' +
+    '</a>';
+  }
+
+  function groupHtml(title, icon, reps, emptyMsg, isDirectFn) {
+    var cards = reps.map(function(c){
+      var direct = isDirectFn ? isDirectFn(c) : false;
+      return repCardHtml(c, direct);
+    }).join('');
+    var body = reps.length > 0
+      ? '<div class="fmr-grid">' + cards + '</div>'
+      : '<div class="fmr-group-empty">' + emptyMsg + '</div>';
+    return '<section class="fmr-group">' +
+      '<div class="fmr-group-header">' +
+        '<h2 class="fmr-group-title"><span class="icon">' + icon + '</span>' + title + '</h2>' +
+        '<span class="fmr-group-count">' + reps.length + ' official' + (reps.length === 1 ? '' : 's') + '</span>' +
+      '</div>' +
+      body +
+    '</section>';
+  }
+
+  function renderResults(place) {
+    introEl.style.display = 'none';
+    resultsEl.classList.remove('hidden');
+    resultsEl.innerHTML = '<div class="fmr-loading">Loading your representatives…</div>';
+
+    // Load per-state JSON
+    var stateCode = place.state;
+    fetch('data/states/' + stateCode.toLowerCase() + '.json')
+      .then(function(r){
+        if (!r.ok) throw new Error('State not covered yet: ' + stateCode);
+        return r.json();
+      })
+      .then(function(data){
+        var all = data.candidates || [];
+        var grouped = filterCandidates(all, place);
+
+        var selected = '<div class="fmr-selected">' +
+          '<div><div class="fmr-selected-label">Your representatives for</div>' +
+          '<div class="fmr-selected-place">' + place.display + '</div></div>' +
+          '<button class="fmr-change" onclick="document.getElementById(\'fmrSearch\').focus(); document.getElementById(\'fmrSearch\').select();">Change location</button>' +
+          '</div>';
+
+        var html = selected;
+
+        // Federal
+        var federalWithDistrict = grouped.federal.slice();
+        federalWithDistrict.sort(function(a, b){
+          // Senators first (no district), then House by district
+          var aJ = (a.jurisdiction || '').toLowerCase();
+          var bJ = (b.jurisdiction || '').toLowerCase();
+          var aSen = aJ.indexOf('senate') !== -1 ? 0 : 1;
+          var bSen = bJ.indexOf('senate') !== -1 ? 0 : 1;
+          if (aSen !== bSen) return aSen - bSen;
+          return (a.district || 0) - (b.district || 0);
+        });
+
+        html += groupHtml('Federal', '&#127963;&#65039;', federalWithDistrict,
+          'No federal officials found for this state.',
+          function(c){
+            if (grouped.yourUsHouseDistrict != null &&
+                c.district === grouped.yourUsHouseDistrict &&
+                (c.jurisdiction||'').indexOf('House') !== -1) return true;
+            // Both senators always represent you
+            return (c.jurisdiction||'').indexOf('Senate') !== -1;
+          });
+
+        // Executive + Judicial (National only — President/Cabinet/SCOTUS)
+        if (grouped.executive.length || grouped.judicial.length) {
+          var execJud = grouped.executive.concat(grouped.judicial);
+          if (execJud.length > 0) {
+            html += groupHtml('Executive & Judicial Branch', '&#127963;&#65039;', execJud,
+              '', null);
+          }
+        }
+
+        // State level — split into statewide (always shown) and legislature (collapsed)
+        var stateTitle = STATE_NAMES[stateCode] || stateCode;
+        html += groupHtml(stateTitle + ' Statewide Offices', '&#127963;&#65039;',
+          grouped.statewide,
+          'No statewide officials found.',
+          null);
+
+        // Legislature — show in a collapsible section since it can be 100+ entries
+        if (grouped.legislature.length > 0) {
+          var legId = 'leg-' + stateCode;
+          var legCards = grouped.legislature.map(function(c){ return repCardHtml(c, false); }).join('');
+          html += '<section class="fmr-group">' +
+            '<div class="fmr-group-header">' +
+              '<h2 class="fmr-group-title"><span class="icon">&#127963;&#65039;</span>' + stateTitle + ' State Legislature</h2>' +
+              '<span class="fmr-group-count">' + grouped.legislature.length + ' legislators</span>' +
+            '</div>' +
+            '<div style="padding:12px 14px;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);font-size:0.82rem;color:var(--gray);line-height:1.6;">' +
+              '<p><strong>Your specific state senator and state representative</strong> depend on your exact address. Click below to see the full delegation — or visit the <a href="citizen.html?state=' + stateCode + '" style="color:var(--accent);">full scorecard</a> to filter by chamber.</p>' +
+              '<button id="' + legId + '-btn" class="fmr-change" style="margin-top:10px;" onclick="var el=document.getElementById(\'' + legId + '\'); var btn=document.getElementById(\'' + legId + '-btn\'); if(el.style.display===\'none\'){el.style.display=\'\';btn.textContent=\'Hide legislators\';} else {el.style.display=\'none\';btn.textContent=\'Show all ' + grouped.legislature.length + ' legislators\';}">Show all ' + grouped.legislature.length + ' legislators</button>' +
+              '<div id="' + legId + '" style="display:none;margin-top:14px;"><div class="fmr-grid">' + legCards + '</div></div>' +
+            '</div>' +
+          '</section>';
+        }
+
+        // County
+        if (place.kind === 'city' || place.kind === 'county') {
+          var countyLabel = grouped.countyOfficials.length
+            ? (place.county || place.name) + ' County'
+            : (place.county ? place.county + ' County' : 'County');
+          var countyMsg = place.kind === 'county' || place.county
+            ? 'We don\'t have county-level officials for ' + countyLabel + ' yet. Help us add them by contacting usmcministries2022@gmail.com.'
+            : 'Type a county name above to see county officials.';
+          html += groupHtml(countyLabel, '&#127961;&#65039;', grouped.countyOfficials, countyMsg, null);
+        }
+
+        // City
+        if (place.kind === 'city') {
+          html += groupHtml(place.name + ' City Government', '&#127960;&#65039;', grouped.cityOfficials,
+            'We don\'t have city officials for ' + place.name + ' yet. Help us add them by contacting usmcministries2022@gmail.com.',
+            null);
+        }
+
+        // Footer CTA
+        html += '<div style="text-align:center;margin-top:20px;padding:16px;border-top:1px dashed var(--border);">' +
+          '<a href="citizen.html?state=' + stateCode + '" style="color:var(--accent);font-size:0.9rem;">' +
+            'View all ' + stateTitle + ' officials on the scorecard &rarr;' +
+          '</a></div>';
+
+        resultsEl.innerHTML = html;
+
+        // Update URL for shareability
+        try {
+          var url = new URL(window.location);
+          url.searchParams.set('place', place.kind + ':' + stateCode + (place.county ? ':' + place.county : '') + (place.kind === 'city' ? ':' + place.name : ''));
+          window.history.replaceState({}, '', url);
+        } catch(e) {}
+
+        window.scrollTo({ top: resultsEl.offsetTop - 20, behavior: 'smooth' });
+      })
+      .catch(function(err){
+        resultsEl.innerHTML = '<div class="fmr-empty">' +
+          '<p>We don\'t have data for that area yet.</p>' +
+          '<p style="margin-top:10px;font-size:0.82rem;">' + err.message + '</p>' +
+        '</div>';
+      });
+  }
+
+  // ---- Load from URL param if present ----
+  (function loadFromUrl(){
+    try {
+      var p = new URL(window.location).searchParams.get('place');
+      if (!p) return;
+      // Format: kind:STATE[:county][:city]
+      var parts = p.split(':');
+      var kind = parts[0];
+      var state = parts[1];
+      if (!state || !STATE_NAMES[state]) return;
+      loadPlaces().then(function(){
+        var place;
+        if (kind === 'city' && parts.length >= 4) {
+          place = { kind: 'city', name: parts[3], state: state, county: parts[2], display: parts[3] + ', ' + STATE_NAMES[state] + (parts[2] ? ' (' + parts[2] + ' County)' : '') };
+        } else if (kind === 'county' && parts.length >= 3) {
+          place = { kind: 'county', name: parts[2] + ' County', state: state, display: parts[2] + ' County, ' + STATE_NAMES[state] };
+        } else if (kind === 'state') {
+          place = { kind: 'state', name: STATE_NAMES[state], state: state, display: STATE_NAMES[state] };
+        }
+        if (place) selectPlace(place);
+      });
+    } catch(e) {}
+  })();
+
+  // Nav helpers (theme toggle + mobile menu — lifted from citizen.html)
+  (function(){
+    var toggle = document.getElementById('themeToggle');
+    var saved = localStorage.getItem('usmc-theme');
+    if (saved !== 'light') {
+      document.documentElement.setAttribute('data-theme', 'dark');
+      toggle.textContent = '\u2600\uFE0F';
+    }
+    toggle.addEventListener('click', function(){
+      var isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+      if (isDark) {
+        document.documentElement.removeAttribute('data-theme');
+        localStorage.setItem('usmc-theme', 'light');
+        toggle.textContent = '\uD83C\uDF19';
+      } else {
+        document.documentElement.setAttribute('data-theme', 'dark');
+        localStorage.setItem('usmc-theme', 'dark');
+        toggle.textContent = '\u2600\uFE0F';
+      }
+    });
+  })();
+  (function(){
+    var navToggle = document.querySelector('.nav-toggle');
+    var navLinks = document.querySelector('.nav-links');
+    if (navToggle && navLinks) {
+      navToggle.addEventListener('click', function(){ navLinks.classList.toggle('open'); });
+    }
+  })();
+})();
+</script>
+<script data-goatcounter="https://usmcmin.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
+</body>
+</html>

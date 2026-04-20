@@ -162,6 +162,58 @@ def enrich_executive(c):
     return changed
 
 
+def enrich_fl_state(c):
+    """Florida state-level election timing.
+
+    - FL House: all 120 seats up every 2 years. Next: Nov 3, 2026.
+    - FL Senate: 4-year staggered terms. Even-numbered districts up in
+      midterm years (2022, 2026), odd-numbered up in presidential years
+      (2024, 2028). So for 2026: even districts are up.
+    - Governor + Cabinet (AG, CFO, Agriculture Commissioner, Lt Gov):
+      4-year terms on midterm cycle. Next: Nov 3, 2026. DeSantis is
+      term-limited; Cabinet seats are open races.
+    - FL Supreme Court justices: nonpartisan retention elections every 6
+      years; handled in enrich_judicial (default: not up next general).
+    """
+    if (c.get('state') or '').upper() != 'FL' or c.get('level') != 'state':
+        return False
+    profile = c.setdefault('profile', {})
+    jurisdiction = (c.get('jurisdiction') or '').lower()
+    office = (c.get('office') or '').lower()
+    district = c.get('district')
+    changed = False
+
+    new_date = None
+    seat_up = False
+
+    if jurisdiction == 'florida house of representatives':
+        new_date = '2026-11-03'
+        seat_up = True  # all 120 FL House seats up every 2 years
+    elif jurisdiction == 'florida state senate':
+        new_date = '2026-11-03'
+        # Even-numbered districts up in midterm cycle
+        if isinstance(district, int):
+            seat_up = (district % 2 == 0)
+        else:
+            seat_up = False
+    elif jurisdiction == 'state of florida':
+        # Statewide offices: Gov, Lt Gov, AG, CFO, Agriculture Commissioner
+        # all on 4-year midterm cycle. 2022 -> 2026 -> 2030.
+        new_date = '2026-11-03'
+        seat_up = True
+
+    if new_date and profile.get('next_election_date') != new_date:
+        profile['next_election_date'] = new_date
+        changed = True
+    if profile.get('next_election_type') != 'general':
+        profile['next_election_type'] = 'general'
+        changed = True
+    if profile.get('seat_up_next') != seat_up:
+        profile['seat_up_next'] = seat_up
+        changed = True
+    return changed
+
+
 def enrich_judicial(c):
     """SCOTUS justices have lifetime appointments — no election."""
     profile = c.setdefault('profile', {})
@@ -183,6 +235,7 @@ def main():
     federal_changed = 0
     executive_changed = 0
     judicial_changed = 0
+    fl_state_changed = 0
     for c in data['candidates']:
         level = c.get('level', '')
         if level == 'federal':
@@ -194,10 +247,14 @@ def main():
         elif level == 'judicial':
             if enrich_judicial(c):
                 judicial_changed += 1
+        elif level == 'state':
+            if enrich_fl_state(c):
+                fl_state_changed += 1
 
     print(f"Federal enriched: {federal_changed}")
     print(f"Executive enriched: {executive_changed}")
     print(f"Judicial enriched: {judicial_changed}")
+    print(f"FL state enriched: {fl_state_changed}")
 
     with open(SCORECARD_PATH, 'w') as f:
         json.dump(data, f, indent=2)

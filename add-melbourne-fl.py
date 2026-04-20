@@ -76,6 +76,37 @@ def make_candidate(name, office, jurisdiction, level, party, scores=None,
 
 
 NEW = [
+    # ---- Brevard County Supervisor of Elections ----
+    # Tim Bobanic was appointed by Gov. DeSantis in January 2024 after
+    # Lori Scott's departure; subsequently won the November 2024 election.
+    make_candidate(
+        'Tim Bobanic',
+        'Supervisor of Elections',
+        'Brevard County',
+        'local', 'R',
+        notes=(
+            'Brevard County Supervisor of Elections since January 2024 '
+            '(appointed by Gov. DeSantis to fill Lori Scott\'s vacancy), '
+            'elected November 2024 to a full term. Previously served 20+ '
+            'years in Brevard elections administration, including as Deputy '
+            'Supervisor. Focus on election integrity, voter-roll maintenance, '
+            'and secure ballot infrastructure. Republican.'
+        ),
+        sources=[
+            'https://www.votebrevard.gov/',
+            'https://ballotpedia.org/Tim_Bobanic',
+        ],
+        profile={
+            'religion': None, 'net_worth': None, 'birthplace': None,
+            'education': None,
+            'background': '20+ years in Brevard elections office. Appointed '
+                          'Supervisor January 2024, elected November 2024.',
+            'prev_election_opponent': None,
+            'next_election_year': 2028,
+            'next_election_contenders': [],
+        },
+    ),
+
     # ---- Brevard County Sheriff ----
     # Wayne Ivey is a prominent and well-documented FL sheriff.
     make_candidate(

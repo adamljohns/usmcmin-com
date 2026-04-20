@@ -1,0 +1,916 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pamela Beasley-Pittman — RESOLUTE Citizen Scorecard | U.S.M.C. Ministries</title>
+  <meta name="description" content="RESOLUTE Citizen Scorecard for Pamela Beasley-Pittman (Democrat). City Commissioner, District 3, City of Fort Lauderdale. Score: 2/70.">
+  <link rel="stylesheet" href="../../assets/css/main.css">
+  <link rel="icon" href="../../assets/img/favicon.png" type="image/png">
+  <style>
+    .prof-container { max-width: 900px; margin: 0 auto; padding: 20px; }
+    .prof-back { display: inline-block; color: var(--accent); text-decoration: none; font-size: 0.85rem; margin-bottom: 20px; }
+    .prof-back:hover { text-decoration: underline; }
+
+    /* Breadcrumb */
+    .prof-breadcrumb {
+      font-size: 0.78rem;
+      color: var(--gray);
+      margin-bottom: 14px;
+      line-height: 1.6;
+      word-break: break-word;
+    }
+    .prof-breadcrumb a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+    .prof-breadcrumb a:hover { text-decoration: underline; }
+    .prof-breadcrumb .crumb-sep { color: var(--gray); margin: 0 2px; opacity: 0.6; }
+    .prof-breadcrumb .crumb-current { color: var(--white); font-weight: 600; }
+
+    /* Jump-to dropdown */
+    .prof-jump {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 18px;
+      flex-wrap: wrap;
+    }
+    .prof-jump label {
+      font-size: 0.78rem;
+      color: var(--gray);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .prof-jump select {
+      flex: 1;
+      min-width: 220px;
+      padding: 8px 12px;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      color: var(--white);
+      font-size: 0.85rem;
+      cursor: pointer;
+    }
+    .prof-jump select:hover { border-color: var(--accent); }
+
+    /* Prev / Next nav bar */
+    .prof-nav-bar {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      align-items: stretch;
+      gap: 10px;
+      margin: 18px 0;
+    }
+    .prof-nav-btn {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 12px 14px;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      color: var(--white);
+      text-decoration: none;
+      font-size: 0.82rem;
+      line-height: 1.3;
+      min-height: 54px;
+      transition: border-color 0.15s, background 0.15s;
+    }
+    .prof-nav-btn:hover {
+      border-color: var(--accent);
+      background: rgba(212,175,55,0.06);
+    }
+    .prof-nav-btn[data-direction="next"] {
+      justify-content: flex-end;
+      text-align: right;
+      flex-direction: row-reverse;
+    }
+    .prof-nav-btn.prof-nav-disabled {
+      opacity: 0.35;
+      cursor: default;
+      pointer-events: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--gray);
+    }
+    .prof-nav-arrow {
+      font-weight: 700;
+      color: var(--accent);
+      flex-shrink: 0;
+    }
+    .prof-nav-text {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      overflow: hidden;
+    }
+    .prof-nav-name {
+      font-weight: 600;
+      color: var(--white);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .prof-nav-office {
+      font-size: 0.72rem;
+      color: var(--gray);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .prof-nav-position {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 10px 16px;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      font-size: 0.78rem;
+      color: var(--gray);
+      text-align: center;
+      white-space: nowrap;
+    }
+    @media (max-width: 640px) {
+      .prof-nav-bar {
+        grid-template-columns: 1fr 1fr;
+        grid-template-rows: auto auto;
+      }
+      .prof-nav-position {
+        grid-column: 1 / -1;
+        order: -1;
+      }
+    }
+
+    /* Photo / initials */
+    .prof-header-row {
+      display: flex;
+      gap: 20px;
+      align-items: flex-start;
+    }
+    .prof-header-row .prof-header-text { flex: 1; min-width: 0; }
+    .prof-photo {
+      width: 96px;
+      height: 96px;
+      border-radius: 50%;
+      flex-shrink: 0;
+      object-fit: cover;
+      border: 2px solid var(--border);
+    }
+    .prof-initials {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-main);
+      font-size: 2rem;
+      font-weight: 800;
+      letter-spacing: 1px;
+      user-select: none;
+    }
+    @media (max-width: 520px) {
+      .prof-header-row { flex-direction: column; align-items: center; text-align: center; }
+      .prof-photo { width: 80px; height: 80px; }
+      .prof-initials { font-size: 1.7rem; }
+    }
+
+    .prof-header {
+      padding: 32px 24px;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      margin-bottom: 24px;
+    }
+    .prof-jurisdiction {
+      font-size: 0.72rem;
+      color: var(--accent);
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 8px;
+    }
+    .prof-name {
+      font-size: clamp(1.6rem, 4vw, 2.4rem);
+      color: var(--white);
+      margin-bottom: 6px;
+      font-weight: 800;
+    }
+    .prof-office {
+      font-size: 1rem;
+      color: var(--gray);
+      margin-bottom: 12px;
+    }
+    .prof-party {
+      display: inline-block;
+      font-size: 0.78rem;
+      font-weight: 700;
+      padding: 4px 12px;
+      border-radius: 6px;
+    }
+    .party-r { background: rgba(220,38,38,0.15); color: #ef4444; border: 1px solid rgba(220,38,38,0.3); }
+    .party-d { background: rgba(37,99,235,0.15); color: #3b82f6; border: 1px solid rgba(37,99,235,0.3); }
+    .party-i { background: rgba(168,85,247,0.15); color: #a855f7; border: 1px solid rgba(168,85,247,0.3); }
+    .party-unknown { background: rgba(107,114,128,0.15); color: #9ca3af; border: 1px solid rgba(107,114,128,0.3); }
+
+    .prof-sources {
+      padding: 16px 24px;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      margin-top: 16px;
+    }
+    .prof-sources h2 {
+      color: var(--accent);
+      font-size: 1rem;
+      margin-bottom: 10px;
+      font-family: var(--font-main);
+    }
+    .prof-sources a {
+      color: var(--accent);
+      text-decoration: none;
+      font-size: 0.82rem;
+      display: block;
+      margin-bottom: 4px;
+      word-break: break-all;
+    }
+    .prof-sources a:hover { text-decoration: underline; }
+
+    .prof-total {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 20px 24px;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      margin-bottom: 24px;
+    }
+    .prof-total-score {
+      font-size: 2.4rem;
+      font-weight: 800;
+    }
+    .prof-total-max {
+      font-size: 1rem;
+      color: var(--gray);
+    }
+    .prof-total-bar {
+      flex: 1;
+      height: 10px;
+      background: var(--border);
+      border-radius: 5px;
+      overflow: hidden;
+    }
+    .prof-total-fill {
+      height: 100%;
+      border-radius: 5px;
+      transition: width 0.4s;
+    }
+    .prof-total-label {
+      font-size: 0.82rem;
+      color: var(--gray);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      font-weight: 600;
+    }
+
+    .prof-details {
+      padding: 20px 24px;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      margin-bottom: 24px;
+    }
+    .prof-details h2 {
+      color: var(--accent);
+      font-size: 1.1rem;
+      margin-bottom: 12px;
+      font-family: var(--font-main);
+    }
+    .prof-detail {
+      font-size: 0.88rem;
+      color: var(--gray);
+      margin-bottom: 8px;
+      line-height: 1.6;
+    }
+    .prof-detail strong { color: var(--white); }
+    .prof-notes {
+      font-size: 0.88rem;
+      color: var(--gray);
+      line-height: 1.7;
+      font-style: italic;
+      margin-top: 12px;
+      padding-top: 12px;
+      border-top: 1px solid var(--border);
+    }
+
+    .prof-category {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      margin-bottom: 16px;
+      overflow: hidden;
+    }
+    .prof-cat-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 14px 20px;
+      border-bottom: 1px solid var(--border);
+    }
+    .prof-cat-header h3 {
+      flex: 1;
+      color: var(--white);
+      font-size: 1rem;
+      font-family: var(--font-main);
+    }
+    .prof-cat-score {
+      font-size: 1.3rem;
+      font-weight: 700;
+    }
+    .prof-questions { padding: 0; }
+    .prof-q {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 20px;
+      border-bottom: 1px solid var(--border);
+      gap: 16px;
+    }
+    .prof-q:last-child { border-bottom: none; }
+    .prof-q-text {
+      flex: 1;
+      font-size: 0.85rem;
+      color: var(--gray);
+      line-height: 1.5;
+    }
+    .prof-q-answer {
+      font-size: 0.78rem;
+      white-space: nowrap;
+    }
+
+    footer {
+      text-align: center;
+      padding: 30px 20px;
+      color: var(--gray);
+      font-size: 0.82rem;
+      border-top: 1px solid var(--border);
+      margin-top: 40px;
+    }
+    footer a { color: var(--accent); text-decoration: none; }
+
+    @media (max-width: 600px) {
+      .prof-q { flex-direction: column; gap: 6px; }
+      .prof-total { flex-wrap: wrap; }
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a href="/" class="nav-brand" style="text-decoration:none">
+    <img src="../../assets/img/logo.png" alt="U.S.M.C. Ministries" style="object-fit:contain">
+    <div class="nav-brand-text">
+      <div class="name">U.S.M.C. Ministries</div>
+      <div class="tag">Warriors Equipped</div>
+    </div>
+  </a>
+  <ul class="nav-links">
+    <li><a href="../../mission.html">Mission</a></li>
+    <li><a href="../../shop.html">Shop</a></li>
+    <li><a href="../../books.html">Books</a></li>
+    <li><a href="../../coaching.html">Coaching</a></li>
+    <li><a href="../../fitness/fitness.html">Fitness</a></li>
+    <li><a href="../../finance/">Finance</a></li>
+    <li><a href="../../about.html">About</a></li>
+    <li><a href="https://usmcmin.org" target="_blank">Ministry Site</a></li>
+  </ul>
+  <a href="../../coaching.html" class="btn nav-cta">Book a Session</a>
+  <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">&#9789;</button>
+  <button class="nav-toggle" aria-label="Menu"><span></span><span></span><span></span></button>
+</nav>
+
+<div class="prof-container">
+  <nav class="prof-breadcrumb" aria-label="Breadcrumb"><a href="../../citizen.html">RESOLUTE Citizen</a> <span class="crumb-sep">›</span> <a href="../../citizen.html?state=FL">Florida</a> <span class="crumb-sep">›</span> <a href="../../citizen.html?state=FL">City of Fort Lauderdale</a> <span class="crumb-sep">›</span> <span class="crumb-current">Pamela Beasley-Pittman</span></nav>
+
+  <div class="prof-jump">
+    <label for="profJumpSelect">Jump to:</label>
+    <select id="profJumpSelect" data-state="FL" data-current-slug="pamela-beasley-pittman">
+      <option value="">Loading Florida officials…</option>
+    </select>
+  </div>
+
+  <div class="prof-nav-bar"><a class="prof-nav-btn" href="dean-trantalis.html" data-direction="prev"><span class="prof-nav-arrow">← Prev</span><span class="prof-nav-text"><span class="prof-nav-name">Dean Trantalis</span><span class="prof-nav-office">Mayor</span></span></a><div class="prof-nav-position">3 of 5 &middot; City of Fort Lauderdale</div><a class="prof-nav-btn" href="steven-glassman.html" data-direction="next"><span class="prof-nav-arrow">Next →</span><span class="prof-nav-text"><span class="prof-nav-name">Steven Glassman</span><span class="prof-nav-office">City Commissioner, District 2</span></span></a></div>
+
+  <div class="prof-header">
+    <div class="prof-header-row">
+      <div class="prof-photo prof-initials" style="background:#4c1d95;color:#a78bfa;" aria-hidden="true">PB</div>
+      <div class="prof-header-text">
+        <div class="prof-jurisdiction">City of Fort Lauderdale</div>
+        <h1 class="prof-name">Pamela Beasley-Pittman</h1>
+        <div class="prof-office">City Commissioner, District 3</div>
+        <span class="prof-party party-d">Democrat</span>
+        
+      </div>
+    </div>
+  </div>
+
+  <div class="prof-total">
+    <div>
+      <div class="prof-total-label">RESOLUTE Citizen Score</div>
+      <div>
+        <span class="prof-total-score" style="color:#f44336;">2</span>
+        <span class="prof-total-max">/ 70</span>
+      </div>
+    </div>
+    <div class="prof-total-bar">
+      <div class="prof-total-fill" style="width:3%;background:#f44336;"></div>
+    </div>
+  </div>
+
+  <div class="prof-details">
+    <h2>Official Profile</h2>
+    
+    <div class="prof-notes">Fort Lauderdale City Commissioner, District 3, first elected 2022. Community advocate. Progressive Democrat.</div>
+  </div>
+
+  <h2 style="color:var(--accent);font-family:var(--font-main);margin-bottom:16px;">Category Breakdown</h2>
+  
+    <div class="prof-category">
+      <div class="prof-cat-header">
+        <img src="../../assets/icons/shield-star.png" alt="" width="24" height="24">
+        <h3>America First</h3>
+        <span class="prof-cat-score" style="color:#f44336;">2/10</span>
+      </div>
+      <div class="prof-questions">
+        <div class="prof-q">
+          <div class="prof-q-text">Candidate only displays the American flag (no foreign flags) in public appearances and communications</div>
+          <div class="prof-q-answer"><span style="color:#f44336;font-weight:700;">FALSE (0)</span></div>
+        </div>
+        <div class="prof-q">
+          <div class="prof-q-text">Candidate promotes America exclusively and never promotes or defends foreign nations' interests over U.S. interests</div>
+          <div class="prof-q-answer"><span style="color:#f44336;font-weight:700;">FALSE (0)</span></div>
+        </div>
+        <div class="prof-q">
+          <div class="prof-q-text">Candidate is a U.S.-born citizen with no dual citizenship</div>
+          <div class="prof-q-answer"><span style="color:#4CAF50;font-weight:700;">TRUE (+2)</span></div>
+        </div>
+        <div class="prof-q">
+          <div class="prof-q-text">Candidate has never accepted donations from foreign governments, foreign-backed lobbies (e.g., AIPAC), or foreign-linked PACs</div>
+          <div class="prof-q-answer"><span style="color:#666;font-style:italic;">Not yet verified</span></div>
+        </div>
+        <div class="prof-q">
+          <div class="prof-q-text">Candidate supports verifiable paper ballots, opposes electronic voting machines, and advocates for election integrity measures including hand-counted audits and voter ID requirements</div>
+          <div class="prof-q-answer"><span style="color:#f44336;font-weight:700;">FALSE (0)</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="prof-category">
+      <div class="prof-cat-header">
+        <img src="../../assets/icons/shield-family.png" alt="" width="24" height="24">
+        <h3>Marriage</h3>
+        <span class="prof-cat-score" style="color:#666;">0/10</span>
+      </div>
+      <div class="prof-questions">
+        <div class="prof-q">
+          <div class="prof-q-text">Candidate affirms marriage is exclusively the lifelong union of one man and one woman as instituted by God in Scripture</div>
+          <div class="prof-q-answer"><span style="color:#f44336;font-weight:700;">FALSE (0)</span></div>
+        </div>
+        <div class="prof-q">
+          <div class="prof-q-text">Candidate opposes all forms of homosexual marriage, civil unions, and same-sex relationships as sinful</div>
+          <div class="prof-q-answer"><span style="color:#f44336;font-weight:700;">FALSE (0)</span></div>
+        </div>
+        <div class="prof-q">
+          <div class="prof-q-text">Candidate rejects transgender ideology and affirms biological sex (male/female) as immutable and God-given</div>
+          <div class="prof-q-answer"><span style="color:#f44336;font-weight:700;">FALSE (0)</span></div>
+        </div>
+        <div class="prof-q">
+          <div class="prof-q-text">Candidate supports laws that protect biblical marriage and prohibit promotion of homosexuality or gender confusion in schools/public life</div>
+          <div class="prof-q-answer"><span style="color:#f44336;font-weight:700;">FALSE (0)</span></div>
+        </div>
+        <div class="prof-q">
+          <div class="prof-q-text">Candidate views sexual relations as lawful only within biblical marriage and supports civil penalties against sexual immorality (adultery, fornication, sodomy)</div>
+          <div class="prof-q-answer"><span style="color:#f44336;font-weight:700;">FALSE (0)</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="prof-category">
+      <div class="prof-cat-header">
+        <img src="../../assets/icons/shield-chain-salvation-48.png" alt="" width="24" height="24">
+        <h3>Abortion</h3>
+        <span class="prof-cat-score" style="color:#666;">0/10</span>
+      </div>
+      <div class="prof-questions">
+        <div class="prof-q">
+          <div class="prof-q-text">Candidate affirms human life begins at conception; unborn child bears God's image and possesses full personhood/rights under biblical law</div>
+          <div class="prof-q-answer"><span style="color:#f44336;font-weight:700;">FALSE (0)</span></div>
+        </div>
+        <div class="prof-q">
+          <div class="prof-q-text">Candidate supports total abolition of abortion with no exceptions (rape, incest, health of mother)</div>
+          <div class="prof-q-answer"><span style="color:#f44336;font-weight:700;">FALSE (0)</span></div>
+        </div>
+        <div class="prof-q">
+          <div class="prof-q-text">Candidate views elective abortion as murder of the innocent and calls for biblical justice (civil penalties) against it</div>
+          <div class="prof-q-answer"><span style="color:#f44336;font-weight:700;">FALSE (0)</span></div>
+        </div>
+        <div class="prof-q">
+          <div class="prof-q-text">Candidate rejects any public funding, subsidies, or legal protections for abortion providers or procedures</div>
+          <div class="prof-q-answer"><span style="color:#f44336;font-weight:700;">FALSE (0)</span></div>
+        </div>
+        <div class="prof-q">
+          <div class="prof-q-text">Candidate advocates righteous state protection of unborn life as a core duty of government under Reformed covenant theology</div>
+          <div class="prof-q-answer"><span style="color:#f44336;font-weight:700;">FALSE (0)</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="prof-category">
+      <div class="prof-cat-header">
+        <img src="../../assets/icons/shield-chain-sword-48.png" alt="" width="24" height="24">
+        <h3>Self-Defense & 2A</h3>
+        <span class="prof-cat-score" style="color:#666;">0/10</span>
+      </div>
+      <div class="prof-questions">
+        <div class="prof-q">
+          <div class="prof-q-text">Candidate affirms the right to armed self-defense as a God-given natural right and biblical duty</div>
+          <div class="prof-q-answer"><span style="color:#f44336;font-weight:700;">FALSE (0)</span></div>
+        </div>
+        <div class="prof-q">
+          <div class="prof-q-text">Candidate strongly supports the Second Amendment as an individual right that shall not be infringed for law-abiding citizens</div>
+          <div class="prof-q-answer"><span style="color:#f44336;font-weight:700;">FALSE (0)</span></div>
+        </div>
+        <div class="prof-q">
+          <div class="prof-q-text">Candidate fully supports Castle Doctrine and Stand-Your-Ground laws, with no duty to retreat when lawfully defending life, family, home, or the innocent</div>
+          <div class="prof-q-answer"><span style="color:#f44336;font-weight:700;">FALSE (0)</span></div>
+        </div>
+        <div class="prof-q">
+          <div class="prof-q-text">Candidate opposes all forms of gun control legislation (registration, red-flag laws, licensing, bans, or confiscation) that restrict the right of law-abiding citizens to keep and bear arms</div>
+          <div class="prof-q-answer"><span style="color:#f44336;font-weight:700;">FALSE (0)</span></div>
+        </div>
+        <div class="prof-q">
+          <div class="prof-q-text">Candidate views a well-armed citizenry as essential for the preservation of liberty, protection of innocent life, and as a check against tyranny, consistent with Reformed covenant theology and America's Founding principles</div>
+          <div class="prof-q-answer"><span style="color:#f44336;font-weight:700;">FALSE (0)</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="prof-category">
+      <div class="prof-cat-header">
+        <img src="../../assets/icons/shield-map-48.png" alt="" width="24" height="24">
+        <h3>Immigration</h3>
+        <span class="prof-cat-score" style="color:#666;">0/10</span>
+      </div>
+      <div class="prof-questions">
+        <div class="prof-q">
+          <div class="prof-q-text">Candidate supports closing the border and halting all illegal immigration</div>
+          <div class="prof-q-answer"><span style="color:#f44336;font-weight:700;">FALSE (0)</span></div>
+        </div>
+        <div class="prof-q">
+          <div class="prof-q-text">Candidate supports the removal and deportation of all illegal immigrants</div>
+          <div class="prof-q-answer"><span style="color:#f44336;font-weight:700;">FALSE (0)</span></div>
+        </div>
+        <div class="prof-q">
+          <div class="prof-q-text">Candidate supports protecting Anglo-Saxon breeding stock and demographic continuity</div>
+          <div class="prof-q-answer"><span style="color:#f44336;font-weight:700;">FALSE (0)</span></div>
+        </div>
+        <div class="prof-q">
+          <div class="prof-q-text">Candidate supports preserving multi-generational Anglo-Saxon American heritage</div>
+          <div class="prof-q-answer"><span style="color:#f44336;font-weight:700;">FALSE (0)</span></div>
+        </div>
+        <div class="prof-q">
+          <div class="prof-q-text">Candidate supports immigration policies that protect the historic Anglo-Saxon Christian character of the nation</div>
+          <div class="prof-q-answer"><span style="color:#f44336;font-weight:700;">FALSE (0)</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="prof-category">
+      <div class="prof-cat-header">
+        <img src="../../assets/icons/shield-bible.png" alt="" width="24" height="24">
+        <h3>Education</h3>
+        <span class="prof-cat-score" style="color:#666;">0/10</span>
+      </div>
+      <div class="prof-questions">
+        <div class="prof-q">
+          <div class="prof-q-text">Candidate supports absolute parental authority over children's education including homeschool, private, and religious school choice</div>
+          <div class="prof-q-answer"><span style="color:#f44336;font-weight:700;">FALSE (0)</span></div>
+        </div>
+        <div class="prof-q">
+          <div class="prof-q-text">Candidate opposes sexually explicit or ideologically subversive materials in school libraries and curriculum</div>
+          <div class="prof-q-answer"><span style="color:#f44336;font-weight:700;">FALSE (0)</span></div>
+        </div>
+        <div class="prof-q">
+          <div class="prof-q-text">Candidate opposes Critical Race Theory, DEI mandates, and all forms of Marxist ideology in public schools</div>
+          <div class="prof-q-answer"><span style="color:#f44336;font-weight:700;">FALSE (0)</span></div>
+        </div>
+        <div class="prof-q">
+          <div class="prof-q-text">Candidate supports voluntary prayer, Bible study, and religious expression in public schools without penalty</div>
+          <div class="prof-q-answer"><span style="color:#f44336;font-weight:700;">FALSE (0)</span></div>
+        </div>
+        <div class="prof-q">
+          <div class="prof-q-text">Candidate opposes compulsory sex education and gender ideology instruction that contradicts parental values</div>
+          <div class="prof-q-answer"><span style="color:#f44336;font-weight:700;">FALSE (0)</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="prof-category">
+      <div class="prof-cat-header">
+        <img src="../../assets/icons/shield-cross.png" alt="" width="24" height="24">
+        <h3>PCH/CBG</h3>
+        <span class="prof-cat-score" style="color:#666;">0/10</span>
+      </div>
+      <div class="prof-questions">
+        <div class="prof-q">
+          <div class="prof-q-text">Candidate supports nation self-consciously acting as 'Christian nation' via laws/customs for earthly and heavenly good in Christ</div>
+          <div class="prof-q-answer"><span style="color:#f44336;font-weight:700;">FALSE (0)</span></div>
+        </div>
+        <div class="prof-q">
+          <div class="prof-q-text">Candidate advocates government promotion/favor of Christianity as true religion over neutrality</div>
+          <div class="prof-q-answer"><span style="color:#f44336;font-weight:700;">FALSE (0)</span></div>
+        </div>
+        <div class="prof-q">
+          <div class="prof-q-text">Candidate supports cultural/ethnic particularity and preference for historic Anglo-Saxon/Christian heritage</div>
+          <div class="prof-q-answer"><span style="color:#f44336;font-weight:700;">FALSE (0)</span></div>
+        </div>
+        <div class="prof-q">
+          <div class="prof-q-text">Candidate believes state should order public life toward Christian principles (e.g., suppress blasphemy)</div>
+          <div class="prof-q-answer"><span style="color:#f44336;font-weight:700;">FALSE (0)</span></div>
+        </div>
+        <div class="prof-q">
+          <div class="prof-q-text">Candidate rejects liberal pluralism; wants civil laws explicitly based on Christian moral order</div>
+          <div class="prof-q-answer"><span style="color:#f44336;font-weight:700;">FALSE (0)</span></div>
+        </div>
+      </div>
+    </div>
+
+  <div class="prof-sources"><h2>Sources &amp; Evidence</h2><a href="https://www.fortlauderdale.gov/government/commission" target="_blank" rel="noopener">www.fortlauderdale.gov/government/commission</a><a href="https://ballotpedia.org/Pamela_Beasley-Pittman" target="_blank" rel="noopener">Ballotpedia Profile</a></div>
+
+  <!-- Bottom prev/next -->
+  <div class="prof-nav-bar"><a class="prof-nav-btn" href="dean-trantalis.html" data-direction="prev"><span class="prof-nav-arrow">← Prev</span><span class="prof-nav-text"><span class="prof-nav-name">Dean Trantalis</span><span class="prof-nav-office">Mayor</span></span></a><div class="prof-nav-position">3 of 5 &middot; City of Fort Lauderdale</div><a class="prof-nav-btn" href="steven-glassman.html" data-direction="next"><span class="prof-nav-arrow">Next →</span><span class="prof-nav-text"><span class="prof-nav-name">Steven Glassman</span><span class="prof-nav-office">City Commissioner, District 2</span></span></a></div>
+
+  <!-- Feedback Form -->
+  <div class="prof-feedback" style="padding:20px 24px;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);margin-top:16px;">
+    <h2 style="color:var(--accent);font-size:1rem;margin-bottom:8px;">Have Information About This Official?</h2>
+    <p style="color:var(--gray);font-size:0.82rem;margin-bottom:14px;line-height:1.6;">Help us improve this scorecard. If you have evidence of this official's positions — voting records, social media posts, public statements, or corrections — submit it below and we'll review and update the profile.</p>
+    <form id="feedbackForm" style="display:flex;flex-direction:column;gap:10px;">
+      <input type="hidden" name="candidate_name" value="Pamela Beasley-Pittman">
+      <input type="hidden" name="candidate_state" value="FL">
+      <input type="hidden" name="candidate_office" value="City Commissioner, District 3">
+      <input type="text" name="submitter_name" placeholder="Your name" required style="padding:10px 14px;background:var(--bg-dark,#0A0A0A);border:1px solid var(--border);border-radius:8px;color:var(--white);font-size:0.9rem;">
+      <input type="email" name="submitter_email" placeholder="Your email" required style="padding:10px 14px;background:var(--bg-dark,#0A0A0A);border:1px solid var(--border);border-radius:8px;color:var(--white);font-size:0.9rem;">
+      <textarea name="feedback" rows="4" placeholder="What should we know? Include links to sources if possible..." required style="padding:10px 14px;background:var(--bg-dark,#0A0A0A);border:1px solid var(--border);border-radius:8px;color:var(--white);font-size:0.9rem;resize:vertical;"></textarea>
+      <button type="submit" style="background:linear-gradient(90deg,#c9a84c,#D4AF37);color:#000;font-weight:700;font-size:0.9rem;padding:11px 22px;border-radius:8px;border:none;cursor:pointer;align-self:flex-start;">Submit Feedback</button>
+    </form>
+    <div id="feedbackSuccess" style="display:none;padding:14px;background:rgba(76,175,80,.15);border:1px solid #4CAF50;border-radius:8px;color:#7edd80;margin-top:12px;font-size:0.88rem;">Thank you! We'll review your submission and update the profile if verified.</div>
+  </div>
+  <script>
+  document.getElementById('feedbackForm').addEventListener('submit',function(e){
+    e.preventDefault();
+    var fd=new FormData(this);
+    fd.append('_subject','RESOLUTE Citizen Feedback: Pamela Beasley-Pittman');
+    fd.append('_template','table');
+    fd.append('_captcha','false');
+    fetch('https://formsubmit.co/ajax/usmcministries2022@gmail.com',{method:'POST',body:fd})
+    .then(function(res){
+      if(!res.ok) throw new Error('Server error');
+      document.getElementById('feedbackForm').style.display='none';
+      document.getElementById('feedbackSuccess').style.display='block';
+    })
+    .catch(function(){
+      alert('Failed to submit. Please check your connection and try again.');
+    });
+  });
+  </script>
+</div>
+
+<footer>
+  <p><strong>RESOLUTE Citizen</strong> &mdash; a module of <a href="https://usmcmin.org">U.S.M.C. Ministries</a></p>
+  <p style="margin-top:6px;font-size:0.72rem;">Each True = +2 points &middot; Max 70 &middot; Primary sources only &middot; <a href="https://usmcmin.org/bible.html?ref=Proverbs+29:2">Proverbs 29:2</a></p>
+  <p style="margin-top:6px;font-size:0.7rem;"><span id="pageViews"></span></p>
+</footer>
+<script>
+(function(){
+  var p = window.location.pathname;
+  fetch('https://usmcmin.goatcounter.com/counter/' + encodeURIComponent(p) + '.json')
+    .then(function(r){ return r.json(); })
+    .then(function(d){
+      var el = document.getElementById('pageViews');
+      if (el && d && typeof d.count !== 'undefined') el.textContent = d.count + ' views';
+    })
+    .catch(function(){});
+})();
+</script>
+
+<!-- Keyboard shortcuts: left/right = prev/next. Reads current hrefs from the
+     DOM so that the sort-override pass below can update them and the keys
+     follow automatically. -->
+<script>
+(function(){
+  document.addEventListener('keydown', function(e){
+    var t = e.target;
+    if (t && (t.tagName === 'INPUT' || t.tagName === 'TEXTAREA' || t.isContentEditable)) return;
+    if (e.metaKey || e.ctrlKey || e.altKey) return;
+    if (e.key !== 'ArrowLeft' && e.key !== 'ArrowRight') return;
+    var dir = e.key === 'ArrowLeft' ? 'prev' : 'next';
+    var btn = document.querySelector('a.prof-nav-btn[data-direction="' + dir + '"]');
+    if (btn && btn.href) { window.location.href = btn.href; }
+  });
+})();
+</script>
+
+<!-- Jump-to dropdown + Prev/Next sort override.
+     The static prev/next baked in at generation time walks (level, jurisdiction,
+     score-desc). When the user has chosen a sort on the list page (?sort= or
+     localStorage rc-sort), this script re-fetches the state JSON, recomputes
+     the order across the entire state, and rewrites both nav-bars so prev/next
+     follows the order the user just saw. No sort active = static order wins. -->
+<script>
+(function(){
+  var sel = document.getElementById('profJumpSelect');
+  if (!sel) return;
+  var st = (sel.getAttribute('data-state') || 'VA').toLowerCase();
+  var currentSlug = sel.getAttribute('data-current-slug') || '';
+
+  // ---- Score helpers (mirror server-side, no categories needed) ----
+  // Per-state JSONs do not include the categories array, so we compute the
+  // total directly by walking the keys of candidate.scores.
+  var POINTS_PER_TRUE = 2;
+  function calcTotal(scores){
+    if (!scores) return 0;
+    var t = 0;
+    for (var k in scores) {
+      if (!Object.prototype.hasOwnProperty.call(scores, k)) continue;
+      var arr = scores[k] || [];
+      for (var i = 0; i < arr.length; i++) {
+        if (arr[i] === true) t += POINTS_PER_TRUE;
+      }
+    }
+    return t;
+  }
+
+  var LEVEL_RANK = { executive: 1, judicial: 2, federal: 3, state: 4, local: 5 };
+  var PARTY_RANK = { R: 1, D: 2, I: 3 };
+
+  function makeComparator(sortKey){
+    function totalOf(c){ return calcTotal(c.scores); }
+    function nameTie(a, b){ return (a.name||'').toLowerCase().localeCompare((b.name||'').toLowerCase()); }
+    switch (sortKey) {
+      case 'score-asc':
+        return function(a, b){ return (totalOf(a) - totalOf(b)) || nameTie(a, b); };
+      case 'name':
+        return nameTie;
+      case 'level-score':
+        return function(a, b){
+          return ((LEVEL_RANK[a.level]||6) - (LEVEL_RANK[b.level]||6))
+              || (totalOf(b) - totalOf(a))
+              || nameTie(a, b);
+        };
+      case 'jurisdiction-score':
+        return function(a, b){
+          return ((a.jurisdiction||'').toLowerCase().localeCompare((b.jurisdiction||'').toLowerCase()))
+              || (totalOf(b) - totalOf(a))
+              || nameTie(a, b);
+        };
+      case 'party-score':
+        return function(a, b){
+          return ((PARTY_RANK[a.party]||4) - (PARTY_RANK[b.party]||4))
+              || (totalOf(b) - totalOf(a))
+              || nameTie(a, b);
+        };
+      case 'score-desc':
+      default:
+        return function(a, b){ return (totalOf(b) - totalOf(a)) || nameTie(a, b); };
+    }
+  }
+
+  var SORT_LABELS = {
+    'score-desc': 'Score High → Low',
+    'score-asc': 'Score Low → High',
+    'name': 'Name A → Z',
+    'level-score': 'Level + Score',
+    'jurisdiction-score': 'Jurisdiction + Score',
+    'party-score': 'Party + Score'
+  };
+
+  function activeSort(){
+    var fromUrl = null;
+    try { fromUrl = new URL(window.location).searchParams.get('sort'); } catch(e) {}
+    var fromStorage = null;
+    try { fromStorage = localStorage.getItem('rc-sort'); } catch(e) {}
+    var v = fromUrl || fromStorage;
+    return SORT_LABELS[v] ? v : null; // null = no override, keep static order
+  }
+
+  function buildNavBtnHtml(neighbor, direction, arrow){
+    if (!neighbor) {
+      return '<span class="prof-nav-btn prof-nav-disabled">' + arrow + '</span>';
+    }
+    var name = (neighbor.name || '').replace(/[<>]/g, '');
+    var office = (neighbor.office || '').replace(/[<>]/g, '');
+    var href = (neighbor.slug || '') + '.html';
+    return '<a class="prof-nav-btn" href="' + href + '" data-direction="' + direction + '">'
+      + '<span class="prof-nav-arrow">' + arrow + '</span>'
+      + '<span class="prof-nav-text"><span class="prof-nav-name">' + name + '</span>'
+      + '<span class="prof-nav-office">' + office + '</span></span></a>';
+  }
+
+  function rerenderNav(prev, next, position, total, sortLabel){
+    var bars = document.querySelectorAll('.prof-nav-bar');
+    var prevHtml = buildNavBtnHtml(prev, 'prev', '← Prev');
+    var nextHtml = buildNavBtnHtml(next, 'next', 'Next →');
+    var posHtml = '<div class="prof-nav-position">' + position + ' of ' + total
+                + (sortLabel ? ' &middot; ' + sortLabel : '') + '</div>';
+    bars.forEach(function(bar){
+      bar.innerHTML = prevHtml + posHtml + nextHtml;
+    });
+  }
+
+  fetch('../../data/states/' + st + '.json')
+    .then(function(r){ return r.json(); })
+    .then(function(data){
+      var cands = (data && data.candidates) || [];
+
+      // ---- Jump-to dropdown (alphabetical within jurisdiction groups) ----
+      var groups = {};
+      cands.forEach(function(c){
+        var j = c.jurisdiction || 'Other';
+        if (!groups[j]) groups[j] = [];
+        groups[j].push(c);
+      });
+      var groupNames = Object.keys(groups).sort();
+      sel.innerHTML = '<option value="">Jump to another official…</option>';
+      groupNames.forEach(function(g){
+        var og = document.createElement('optgroup');
+        og.label = g + ' (' + groups[g].length + ')';
+        groups[g].sort(function(a, b){
+          return (a.name || '').localeCompare(b.name || '');
+        });
+        groups[g].forEach(function(c){
+          var opt = document.createElement('option');
+          opt.value = c.slug + '.html';
+          opt.textContent = c.name + (c.office ? ' — ' + c.office : '');
+          if (c.slug === currentSlug) {
+            opt.selected = true;
+            opt.textContent = '★ ' + opt.textContent + ' (current)';
+          }
+          og.appendChild(opt);
+        });
+        sel.appendChild(og);
+      });
+      sel.addEventListener('change', function(){
+        if (sel.value) window.location.href = sel.value;
+      });
+
+      // ---- Prev/Next sort override ----
+      // If no sort is active, leave the baked-in static order alone.
+      var sortKey = activeSort();
+      if (!sortKey) return;
+      var sorted = cands.slice().sort(makeComparator(sortKey));
+      var idx = -1;
+      for (var i = 0; i < sorted.length; i++) {
+        if (sorted[i].slug === currentSlug) { idx = i; break; }
+      }
+      if (idx === -1) return;
+      var prev = idx > 0 ? sorted[idx - 1] : null;
+      var next = idx < sorted.length - 1 ? sorted[idx + 1] : null;
+      rerenderNav(prev, next, idx + 1, sorted.length, SORT_LABELS[sortKey]);
+    })
+    .catch(function(){
+      sel.innerHTML = '<option value="">Could not load officials list</option>';
+    });
+})();
+</script>
+
+<script>
+(function() {
+  var navToggle = document.querySelector('.nav-toggle');
+  var navLinks = document.querySelector('.nav-links');
+  if (navToggle && navLinks) {
+    navToggle.addEventListener('click', function() { navLinks.classList.toggle('open'); });
+  }
+})();
+</script>
+<script>
+(function() {
+  var toggle = document.getElementById('themeToggle');
+  var saved = localStorage.getItem('usmc-theme');
+  if (saved !== 'light') {
+    document.documentElement.setAttribute('data-theme', 'dark');
+    toggle.textContent = '\u2600\uFE0F';
+  }
+  toggle.addEventListener('click', function() {
+    var isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+    if (isDark) {
+      document.documentElement.removeAttribute('data-theme');
+      localStorage.setItem('usmc-theme', 'light');
+      toggle.textContent = '\uD83C\uDF19';
+    } else {
+      document.documentElement.setAttribute('data-theme', 'dark');
+      localStorage.setItem('usmc-theme', 'dark');
+      toggle.textContent = '\u2600\uFE0F';
+    }
+  });
+})();
+</script>
+<script data-goatcounter="https://usmcmin.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
+<noscript><img src="https://usmcmin.goatcounter.com/count?p=/candidates/fl/pamela-beasley-pittman" alt=""></noscript>
+</body>
+</html>

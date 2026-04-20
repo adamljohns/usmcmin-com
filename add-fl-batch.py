@@ -471,7 +471,115 @@ HIALEAH = [
     ),
 ]
 
-ALL_NEW = FL_SUPREMES + TALLAHASSEE + ST_PETE + FORT_LAUDERDALE + HIALEAH
+FORT_LAUDERDALE_COUNCIL = [
+    # Fort Lauderdale is a 5-member commission (Mayor + 4 district commissioners).
+    # District commissioners as of 2024-2025 (elected 2024):
+    make_candidate(
+        'John Herbst',
+        'City Commissioner, District 1',
+        'City of Fort Lauderdale',
+        'local', 'R',
+        notes='Fort Lauderdale City Commissioner, District 1. Former Fort Lauderdale City '
+              'Auditor for 17 years. Fiscal conservative on a Democratic-leaning commission.',
+        sources=[
+            'https://www.fortlauderdale.gov/government/commission',
+            'https://ballotpedia.org/John_Herbst',
+        ],
+    ),
+    make_candidate(
+        'Steven Glassman',
+        'City Commissioner, District 2',
+        'City of Fort Lauderdale',
+        'local', 'D',
+        notes='Fort Lauderdale City Commissioner, District 2. Architect and historic preservation '
+              'advocate. Progressive Democrat aligned with Mayor Trantalis.',
+        sources=[
+            'https://www.fortlauderdale.gov/government/commission',
+            'https://ballotpedia.org/Steven_Glassman',
+        ],
+    ),
+    make_candidate(
+        'Pamela Beasley-Pittman',
+        'City Commissioner, District 3',
+        'City of Fort Lauderdale',
+        'local', 'D',
+        notes='Fort Lauderdale City Commissioner, District 3, first elected 2022. Community '
+              'advocate. Progressive Democrat.',
+        sources=[
+            'https://www.fortlauderdale.gov/government/commission',
+            'https://ballotpedia.org/Pamela_Beasley-Pittman',
+        ],
+    ),
+    make_candidate(
+        'Warren Sturman',
+        'City Commissioner, District 4',
+        'City of Fort Lauderdale',
+        'local', 'D',
+        notes='Fort Lauderdale City Commissioner, District 4, elected 2024. Physician. '
+              'Progressive Democrat.',
+        sources=[
+            'https://www.fortlauderdale.gov/government/commission',
+        ],
+    ),
+]
+
+# ---- Broward County Sheriff (directly elected, high-profile) ----
+BROWARD_SHERIFF = [
+    make_candidate(
+        'Gregory Tony',
+        'Sheriff',
+        'Broward County',
+        'local', 'D',
+        notes='Broward County Sheriff since 2019. Appointed by Gov. DeSantis in January 2019 '
+              'after Scott Israel was suspended over the Parkland shooting response. Subsequently '
+              'elected 2020 and re-elected 2024. First Black sheriff of Broward County. '
+              'Background as former Coral Springs police officer. Registered Democrat; has '
+              'clashed with progressive reform advocates over use-of-force policies.',
+        sources=[
+            'https://www.sheriff.org/About/Sheriff',
+            'https://ballotpedia.org/Gregory_Tony',
+        ],
+        profile={'religion': None, 'net_worth': None, 'birthplace': 'Philadelphia, Pennsylvania',
+                 'education': 'Florida Atlantic University (BA), University of South Florida (MA)',
+                 'background': 'Coral Springs police officer 2005-2016. BSO Sheriff since 2019.',
+                 'prev_election_opponent': None,
+                 'next_election_year': 2028, 'next_election_contenders': []},
+    ),
+]
+
+# ---- Miami-Dade County Sheriff (new office restored by FL 2018 amendment, first election 2024) ----
+MIAMI_DADE_SHERIFF = [
+    make_candidate(
+        'Rosie Cordero-Stutz',
+        'Sheriff',
+        'Miami-Dade County',
+        'local', 'R',
+        notes='First elected Miami-Dade County Sheriff since 1966 (sworn in January 2025). Won '
+              'November 2024 election against James Reyes. Cuban-American. 30+ year veteran of '
+              'Miami-Dade Police Department, rose to Assistant Director. Law-and-order '
+              'Republican. Strong on anti-human-trafficking, immigration enforcement coordination '
+              'with ICE, and cartel interdiction.',
+        sources=[
+            'https://www.miamidadepolice.gov/',
+            'https://ballotpedia.org/Rosanna_Cordero-Stutz',
+        ],
+        profile={'religion': 'Catholic', 'net_worth': None, 'birthplace': 'Miami, Florida',
+                 'education': 'Florida International University (BA)',
+                 'background': '30+ year Miami-Dade police career, rose to Assistant Director. '
+                               'Sworn in January 2025 as first elected MDC Sheriff.',
+                 'prev_election_opponent': 'James Reyes (D) in 2024',
+                 'next_election_year': 2028, 'next_election_contenders': []},
+    ),
+]
+
+# ---- FL Legislature leadership (already in scorecard as legislators;
+#      this marks them with explicit leadership designation and enrichment notes) ----
+# NOTE: Ben Albritton (Senate President) and Danny Perez (House Speaker) are
+# already in scorecard as state senator/rep. We'll enrich them via enrich-fl.py
+# rather than re-adding.
+
+ALL_NEW = (FL_SUPREMES + TALLAHASSEE + ST_PETE + FORT_LAUDERDALE
+           + HIALEAH + FORT_LAUDERDALE_COUNCIL + BROWARD_SHERIFF + MIAMI_DADE_SHERIFF)
 
 
 def main():

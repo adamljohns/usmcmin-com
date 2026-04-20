@@ -119,6 +119,86 @@ def color_for_slug(slug):
         h = (h * 31 + ord(ch)) & 0xFFFFFFFF
     return INITIALS_PALETTE[h % len(INITIALS_PALETTE)]
 
+def build_election_html(candidate, elections_data):
+    """Render election-timing block for a candidate's profile.
+
+    Reads candidate.profile.next_election_date (populated by enrich-elections.py)
+    and elections_data (loaded once from data/elections.json) to produce a
+    'Next Election' banner with a live countdown + registration deadline +
+    elections-admin contact for the candidate's state.
+
+    Returns '' if there's nothing useful to show.
+    """
+    profile = candidate.get('profile') or {}
+    next_date = profile.get('next_election_date')
+    next_type = profile.get('next_election_type') or 'general'
+    seat_up = profile.get('seat_up_next')
+    state = (candidate.get('state') or '').upper()
+
+    if not next_date:
+        return ''
+
+    # Pull state-level admin info if available
+    state_info = (elections_data or {}).get(state) or {}
+    admin = state_info.get('elections_admin') or {}
+    reg_deadline = state_info.get('registration_deadline_2026')
+    early_voting = state_info.get('early_voting_window_2026') or {}
+
+    banner_class = 'seat-up' if seat_up else 'seat-safe'
+    header = ('Seat up at next election' if seat_up
+              else 'Not up at next scheduled election')
+    # Human date (e.g., "November 3, 2026")
+    from datetime import date as _date
+    try:
+        y, m, d = [int(x) for x in next_date.split('-')]
+        dt = _date(y, m, d)
+        months = ['January','February','March','April','May','June',
+                  'July','August','September','October','November','December']
+        pretty_date = f'{months[m-1]} {d}, {y}'
+    except Exception:
+        pretty_date = next_date
+        dt = None
+
+    # Days until (computed live in JS so it's always current on page load)
+    countdown_script = (
+        f'<script>(function(){{var t=new Date("{next_date}T12:00:00Z")-new Date();'
+        f'var d=Math.max(0,Math.ceil(t/86400000));'
+        f'var el=document.getElementById("countdown-{candidate.get("id")}");'
+        f'if(el) el.textContent=d+" day"+(d===1?"":"s");}})();</script>'
+    )
+
+    html = f'<div class="prof-election prof-election-{banner_class}">'
+    html += '<div class="prof-election-main">'
+    html += f'<div class="prof-election-label">Next Election</div>'
+    html += f'<div class="prof-election-date">{pretty_date}</div>'
+    html += f'<div class="prof-election-type">{next_type.title()} &middot; {header}</div>'
+    html += f'<div class="prof-election-countdown"><span id="countdown-{candidate.get("id")}">—</span> <span class="cd-label">until</span></div>'
+    html += '</div>'
+
+    # State election admin info (not per-candidate — shared across the state)
+    admin_parts = []
+    if reg_deadline:
+        admin_parts.append(f'<div class="prof-election-side-item"><strong>Registration deadline:</strong> {reg_deadline}</div>')
+    if early_voting.get('start') and early_voting.get('end'):
+        ev_note = early_voting.get('note', '')
+        ev_note_html = f' <span style="opacity:0.7;">({ev_note})</span>' if ev_note else ''
+        admin_parts.append(f'<div class="prof-election-side-item"><strong>Early voting:</strong> {early_voting["start"]} &ndash; {early_voting["end"]}{ev_note_html}</div>')
+    if admin.get('phone'):
+        tel = 'tel:' + admin["phone"]
+        admin_parts.append(f'<div class="prof-election-side-item"><strong>Elections office:</strong> <a href="{tel}">{admin["phone"]}</a></div>')
+    if admin.get('voter_info_lookup'):
+        admin_parts.append(f'<div class="prof-election-side-item"><strong>Voter status:</strong> <a href="{admin["voter_info_lookup"]}" target="_blank" rel="noopener">Check registration</a></div>')
+    if admin.get('website'):
+        admin_parts.append(f'<div class="prof-election-side-item"><strong>State elections site:</strong> <a href="{admin["website"]}" target="_blank" rel="noopener">{admin.get("name","Official")}</a></div>')
+
+    if admin_parts:
+        html += '<div class="prof-election-side">' + ''.join(admin_parts) + '</div>'
+
+    html += '</div>'
+    html += countdown_script
+    return html
+
+
 def build_contact_html(candidate):
     """Render the 'Contact This Official' block.
 
@@ -331,6 +411,10 @@ def generate_profile(candidate, categories, meta, nav=None):
 
     # ---- Contact block (phone + contact form + email + twitter) ----
     contact_html = build_contact_html(c)
+
+    # ---- Election countdown + state admin info ----
+    # elections_data is passed via closure from main() (loaded once)
+    election_html = build_election_html(c, meta.get('_elections_data') or {})
 
     # ---- Photo / initials badge ----
     photo_path = c.get('photo') or ''
@@ -666,6 +750,84 @@ def generate_profile(candidate, categories, meta, nav=None):
     .party-i {{ background: rgba(168,85,247,0.15); color: #a855f7; border: 1px solid rgba(168,85,247,0.3); }}
     .party-unknown {{ background: rgba(107,114,128,0.15); color: #9ca3af; border: 1px solid rgba(107,114,128,0.3); }}
 
+    /* Election / countdown block */
+    .prof-election {{
+      display: grid;
+      grid-template-columns: minmax(220px, 1fr) 1.2fr;
+      gap: 18px;
+      padding: 18px 22px;
+      border-radius: var(--radius);
+      margin-bottom: 20px;
+      border: 1px solid var(--border);
+    }}
+    .prof-election-seat-up {{
+      background: linear-gradient(135deg, rgba(76,175,80,0.10) 0%, rgba(201,168,76,0.10) 100%);
+      border-left: 4px solid #c9a84c;
+    }}
+    .prof-election-seat-safe {{
+      background: var(--bg-card);
+      border-left: 4px solid var(--border);
+      opacity: 0.92;
+    }}
+    .prof-election-main {{ display: flex; flex-direction: column; gap: 4px; }}
+    .prof-election-label {{
+      font-size: 0.7rem;
+      color: #c9a84c;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      font-weight: 700;
+    }}
+    .prof-election-date {{
+      font-size: 1.35rem;
+      color: var(--white);
+      font-weight: 800;
+      font-family: var(--font-main);
+    }}
+    .prof-election-type {{
+      font-size: 0.82rem;
+      color: var(--gray);
+      margin-bottom: 4px;
+    }}
+    .prof-election-countdown {{
+      font-size: 1.1rem;
+      color: var(--white);
+      margin-top: 4px;
+    }}
+    .prof-election-countdown span:first-child {{
+      font-weight: 800;
+      color: #c9a84c;
+      font-size: 1.5rem;
+    }}
+    .prof-election-countdown .cd-label {{
+      color: var(--gray);
+      font-size: 0.85rem;
+    }}
+    .prof-election-side {{
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      font-size: 0.82rem;
+      color: var(--gray);
+      line-height: 1.5;
+      border-left: 1px dashed var(--border);
+      padding-left: 16px;
+    }}
+    .prof-election-side a {{ color: var(--accent); text-decoration: none; }}
+    .prof-election-side a:hover {{ text-decoration: underline; }}
+    .prof-election-side strong {{ color: var(--white); font-weight: 600; }}
+    @media (max-width: 640px) {{
+      .prof-election {{
+        grid-template-columns: 1fr;
+        gap: 10px;
+      }}
+      .prof-election-side {{
+        border-left: none;
+        padding-left: 0;
+        border-top: 1px dashed var(--border);
+        padding-top: 12px;
+      }}
+    }}
+
     /* Contact block */
     .prof-contact {{
       padding: 20px 24px;
@@ -967,6 +1129,8 @@ def generate_profile(candidate, categories, meta, nav=None):
 
   {contact_html}
 
+  {election_html}
+
   {f"""<div class="prof-details">
     <h2>Official Profile</h2>
     {profile_html}
@@ -1262,6 +1426,15 @@ def main():
 
     categories = data['categories']
     meta = data['meta']
+
+    # Load elections.json once and attach to meta so build_election_html can
+    # read it via closure through the meta arg passed to generate_profile.
+    elections_path = os.path.join(base_dir, 'data', 'elections.json')
+    if os.path.exists(elections_path):
+        with open(elections_path, 'r') as f:
+            meta = dict(meta)  # don't mutate the scorecard's own meta
+            meta['_elections_data'] = json.load(f)
+
     count = 0
     states_seen = set()
 

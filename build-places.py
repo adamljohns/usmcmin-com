@@ -425,20 +425,137 @@ TOP_CITIES = [
     ('Bradenton', 'FL', 'Manatee'),
 ]
 
-# All 67 Florida counties
-FL_COUNTIES = [
-    'Alachua', 'Baker', 'Bay', 'Bradford', 'Brevard', 'Broward', 'Calhoun',
-    'Charlotte', 'Citrus', 'Clay', 'Collier', 'Columbia', 'DeSoto', 'Dixie',
-    'Duval', 'Escambia', 'Flagler', 'Franklin', 'Gadsden', 'Gilchrist',
-    'Glades', 'Gulf', 'Hamilton', 'Hardee', 'Hendry', 'Hernando', 'Highlands',
-    'Hillsborough', 'Holmes', 'Indian River', 'Jackson', 'Jefferson',
-    'Lafayette', 'Lake', 'Lee', 'Leon', 'Levy', 'Liberty', 'Madison',
-    'Manatee', 'Marion', 'Martin', 'Miami-Dade', 'Monroe', 'Nassau',
-    'Okaloosa', 'Okeechobee', 'Orange', 'Osceola', 'Palm Beach', 'Pasco',
-    'Pinellas', 'Polk', 'Putnam', 'St. Johns', 'St. Lucie', 'Santa Rosa',
-    'Sarasota', 'Seminole', 'Sumter', 'Suwannee', 'Taylor', 'Union',
-    'Volusia', 'Wakulla', 'Walton', 'Washington',
-]
+# State counties for the states where we have the deepest candidate coverage.
+# Each list contains county names (without the "County" suffix, added at build).
+COUNTIES_BY_STATE = {
+    'FL': [
+        'Alachua', 'Baker', 'Bay', 'Bradford', 'Brevard', 'Broward', 'Calhoun',
+        'Charlotte', 'Citrus', 'Clay', 'Collier', 'Columbia', 'DeSoto', 'Dixie',
+        'Duval', 'Escambia', 'Flagler', 'Franklin', 'Gadsden', 'Gilchrist',
+        'Glades', 'Gulf', 'Hamilton', 'Hardee', 'Hendry', 'Hernando', 'Highlands',
+        'Hillsborough', 'Holmes', 'Indian River', 'Jackson', 'Jefferson',
+        'Lafayette', 'Lake', 'Lee', 'Leon', 'Levy', 'Liberty', 'Madison',
+        'Manatee', 'Marion', 'Martin', 'Miami-Dade', 'Monroe', 'Nassau',
+        'Okaloosa', 'Okeechobee', 'Orange', 'Osceola', 'Palm Beach', 'Pasco',
+        'Pinellas', 'Polk', 'Putnam', 'St. Johns', 'St. Lucie', 'Santa Rosa',
+        'Sarasota', 'Seminole', 'Sumter', 'Suwannee', 'Taylor', 'Union',
+        'Volusia', 'Wakulla', 'Walton', 'Washington',
+    ],
+    # Virginia: 95 counties + 38 independent cities. Independent cities act as
+    # counties in VA; we include the most populous cities that are also
+    # county-equivalents so they show up in the counties search.
+    'VA': [
+        'Accomack', 'Albemarle', 'Alleghany', 'Amelia', 'Amherst', 'Appomattox',
+        'Arlington', 'Augusta', 'Bath', 'Bedford', 'Bland', 'Botetourt',
+        'Brunswick', 'Buchanan', 'Buckingham', 'Campbell', 'Caroline', 'Carroll',
+        'Charles City', 'Charlotte', 'Chesterfield', 'Clarke', 'Craig',
+        'Culpeper', 'Cumberland', 'Dickenson', 'Dinwiddie', 'Essex', 'Fairfax',
+        'Fauquier', 'Floyd', 'Fluvanna', 'Franklin', 'Frederick', 'Giles',
+        'Gloucester', 'Goochland', 'Grayson', 'Greene', 'Greensville',
+        'Halifax', 'Hanover', 'Henrico', 'Henry', 'Highland', 'Isle of Wight',
+        'James City', 'King and Queen', 'King George', 'King William',
+        'Lancaster', 'Lee', 'Loudoun', 'Louisa', 'Lunenburg', 'Madison',
+        'Mathews', 'Mecklenburg', 'Middlesex', 'Montgomery', 'Nelson',
+        'New Kent', 'Northampton', 'Northumberland', 'Nottoway', 'Orange',
+        'Page', 'Patrick', 'Pittsylvania', 'Powhatan', 'Prince Edward',
+        'Prince George', 'Prince William', 'Pulaski', 'Rappahannock',
+        'Richmond', 'Roanoke', 'Rockbridge', 'Rockingham', 'Russell', 'Scott',
+        'Shenandoah', 'Smyth', 'Southampton', 'Spotsylvania', 'Stafford',
+        'Surry', 'Sussex', 'Tazewell', 'Warren', 'Washington', 'Westmoreland',
+        'Wise', 'Wythe', 'York',
+    ],
+    # Texas: 254 counties. Too many to list every one; include the most
+    # populous so Houston/Dallas/Austin/San Antonio/Fort Worth users resolve.
+    'TX': [
+        'Harris', 'Dallas', 'Tarrant', 'Bexar', 'Travis', 'Collin', 'Hidalgo',
+        'El Paso', 'Denton', 'Fort Bend', 'Montgomery', 'Williamson',
+        'Cameron', 'Nueces', 'Brazoria', 'Bell', 'Galveston', 'Lubbock',
+        'Webb', 'McLennan', 'Jefferson', 'Smith', 'Brazos', 'Ellis',
+        'Hays', 'Johnson', 'Kaufman', 'Midland', 'Parker', 'Potter',
+        'Randall', 'Taylor', 'Tom Green', 'Wichita', 'Comal', 'Guadalupe',
+        'Gregg', 'Grayson', 'Victoria', 'Wise',
+    ],
+    # California: 58 counties (all listed — it's a manageable set).
+    'CA': [
+        'Alameda', 'Alpine', 'Amador', 'Butte', 'Calaveras', 'Colusa',
+        'Contra Costa', 'Del Norte', 'El Dorado', 'Fresno', 'Glenn',
+        'Humboldt', 'Imperial', 'Inyo', 'Kern', 'Kings', 'Lake', 'Lassen',
+        'Los Angeles', 'Madera', 'Marin', 'Mariposa', 'Mendocino', 'Merced',
+        'Modoc', 'Mono', 'Monterey', 'Napa', 'Nevada', 'Orange', 'Placer',
+        'Plumas', 'Riverside', 'Sacramento', 'San Benito', 'San Bernardino',
+        'San Diego', 'San Francisco', 'San Joaquin', 'San Luis Obispo',
+        'San Mateo', 'Santa Barbara', 'Santa Clara', 'Santa Cruz', 'Shasta',
+        'Sierra', 'Siskiyou', 'Solano', 'Sonoma', 'Stanislaus', 'Sutter',
+        'Tehama', 'Trinity', 'Tulare', 'Tuolumne', 'Ventura', 'Yolo', 'Yuba',
+    ],
+    # New York: 62 counties (including NYC's 5 boroughs).
+    'NY': [
+        'Albany', 'Allegany', 'Bronx', 'Broome', 'Cattaraugus', 'Cayuga',
+        'Chautauqua', 'Chemung', 'Chenango', 'Clinton', 'Columbia',
+        'Cortland', 'Delaware', 'Dutchess', 'Erie', 'Essex', 'Franklin',
+        'Fulton', 'Genesee', 'Greene', 'Hamilton', 'Herkimer', 'Jefferson',
+        'Kings', 'Lewis', 'Livingston', 'Madison', 'Monroe', 'Montgomery',
+        'Nassau', 'New York', 'Niagara', 'Oneida', 'Onondaga', 'Ontario',
+        'Orange', 'Orleans', 'Oswego', 'Otsego', 'Putnam', 'Queens',
+        'Rensselaer', 'Richmond', 'Rockland', 'St. Lawrence', 'Saratoga',
+        'Schenectady', 'Schoharie', 'Schuyler', 'Seneca', 'Steuben',
+        'Suffolk', 'Sullivan', 'Tioga', 'Tompkins', 'Ulster', 'Warren',
+        'Washington', 'Wayne', 'Westchester', 'Wyoming', 'Yates',
+    ],
+    # Pennsylvania: 67 counties.
+    'PA': [
+        'Adams', 'Allegheny', 'Armstrong', 'Beaver', 'Bedford', 'Berks',
+        'Blair', 'Bradford', 'Bucks', 'Butler', 'Cambria', 'Cameron',
+        'Carbon', 'Centre', 'Chester', 'Clarion', 'Clearfield', 'Clinton',
+        'Columbia', 'Crawford', 'Cumberland', 'Dauphin', 'Delaware', 'Elk',
+        'Erie', 'Fayette', 'Forest', 'Franklin', 'Fulton', 'Greene',
+        'Huntingdon', 'Indiana', 'Jefferson', 'Juniata', 'Lackawanna',
+        'Lancaster', 'Lawrence', 'Lebanon', 'Lehigh', 'Luzerne', 'Lycoming',
+        'McKean', 'Mercer', 'Mifflin', 'Monroe', 'Montgomery', 'Montour',
+        'Northampton', 'Northumberland', 'Perry', 'Philadelphia', 'Pike',
+        'Potter', 'Schuylkill', 'Snyder', 'Somerset', 'Sullivan',
+        'Susquehanna', 'Tioga', 'Union', 'Venango', 'Warren', 'Washington',
+        'Wayne', 'Westmoreland', 'Wyoming', 'York',
+    ],
+    # Illinois: 102 counties.
+    'IL': [
+        'Adams', 'Alexander', 'Bond', 'Boone', 'Brown', 'Bureau', 'Calhoun',
+        'Carroll', 'Cass', 'Champaign', 'Christian', 'Clark', 'Clay',
+        'Clinton', 'Coles', 'Cook', 'Crawford', 'Cumberland', 'DeKalb',
+        'De Witt', 'Douglas', 'DuPage', 'Edgar', 'Edwards', 'Effingham',
+        'Fayette', 'Ford', 'Franklin', 'Fulton', 'Gallatin', 'Greene',
+        'Grundy', 'Hamilton', 'Hancock', 'Hardin', 'Henderson', 'Henry',
+        'Iroquois', 'Jackson', 'Jasper', 'Jefferson', 'Jersey', 'Jo Daviess',
+        'Johnson', 'Kane', 'Kankakee', 'Kendall', 'Knox', 'Lake', 'LaSalle',
+        'Lawrence', 'Lee', 'Livingston', 'Logan', 'Macon', 'Macoupin',
+        'Madison', 'Marion', 'Marshall', 'Mason', 'Massac', 'McDonough',
+        'McHenry', 'McLean', 'Menard', 'Mercer', 'Monroe', 'Montgomery',
+        'Morgan', 'Moultrie', 'Ogle', 'Peoria', 'Perry', 'Piatt', 'Pike',
+        'Pope', 'Pulaski', 'Putnam', 'Randolph', 'Richland', 'Rock Island',
+        'Saline', 'Sangamon', 'Schuyler', 'Scott', 'Shelby', 'St. Clair',
+        'Stark', 'Stephenson', 'Tazewell', 'Union', 'Vermilion', 'Wabash',
+        'Warren', 'Washington', 'Wayne', 'White', 'Whiteside', 'Will',
+        'Williamson', 'Winnebago', 'Woodford',
+    ],
+    # Ohio: 88 counties.
+    'OH': [
+        'Adams', 'Allen', 'Ashland', 'Ashtabula', 'Athens', 'Auglaize',
+        'Belmont', 'Brown', 'Butler', 'Carroll', 'Champaign', 'Clark',
+        'Clermont', 'Clinton', 'Columbiana', 'Coshocton', 'Crawford',
+        'Cuyahoga', 'Darke', 'Defiance', 'Delaware', 'Erie', 'Fairfield',
+        'Fayette', 'Franklin', 'Fulton', 'Gallia', 'Geauga', 'Greene',
+        'Guernsey', 'Hamilton', 'Hancock', 'Hardin', 'Harrison', 'Henry',
+        'Highland', 'Hocking', 'Holmes', 'Huron', 'Jackson', 'Jefferson',
+        'Knox', 'Lake', 'Lawrence', 'Licking', 'Logan', 'Lorain', 'Lucas',
+        'Madison', 'Mahoning', 'Marion', 'Medina', 'Meigs', 'Mercer',
+        'Miami', 'Monroe', 'Montgomery', 'Morgan', 'Morrow', 'Muskingum',
+        'Noble', 'Ottawa', 'Paulding', 'Perry', 'Pickaway', 'Pike',
+        'Portage', 'Preble', 'Putnam', 'Richland', 'Ross', 'Sandusky',
+        'Scioto', 'Seneca', 'Shelby', 'Stark', 'Summit', 'Trumbull',
+        'Tuscarawas', 'Union', 'Van Wert', 'Vinton', 'Warren', 'Washington',
+        'Wayne', 'Williams', 'Wood', 'Wyandot',
+    ],
+}
 
 
 def slugify(s):
@@ -461,22 +578,25 @@ def build():
             }),
         })
 
-    # Counties (FL only — our deepest state)
-    for county in FL_COUNTIES:
-        display = f'{county} County, Florida'
-        out['counties'].append({
-            'name': county,
-            'state': 'FL',
-            'display': display,
-            'aliases': list({
-                county.lower(),
-                county.lower() + ' county',
-                county.lower() + ', fl',
-                county.lower() + ', florida',
-                county.lower() + ' county fl',
-                county.lower() + ' county florida',
-            }),
-        })
+    # Counties — iterate every state in COUNTIES_BY_STATE. Alias set includes
+    # "county alone", "county + state code", "county + state name".
+    for state_code, county_list in COUNTIES_BY_STATE.items():
+        state_full = STATES[state_code]
+        for county in county_list:
+            display = f'{county} County, {state_full}'
+            out['counties'].append({
+                'name': county,
+                'state': state_code,
+                'display': display,
+                'aliases': list({
+                    county.lower(),
+                    county.lower() + ' county',
+                    county.lower() + ', ' + state_code.lower(),
+                    county.lower() + ', ' + state_full.lower(),
+                    county.lower() + ' county ' + state_code.lower(),
+                    county.lower() + ' county ' + state_full.lower(),
+                }),
+            })
 
     # State capitals (add aliases so 'Nashville' matches)
     city_entries = list(TOP_CITIES)
@@ -509,7 +629,8 @@ def build():
         json.dump(out, f, separators=(',', ':'))
     print(f'Wrote {OUT}')
     print(f'  States: {len(out["states"])}')
-    print(f'  Counties (FL only): {len(out["counties"])}')
+    print(f'  Counties: {len(out["counties"])} across {len(COUNTIES_BY_STATE)} states '
+          f'({", ".join(sorted(COUNTIES_BY_STATE.keys()))})')
     print(f'  Cities: {len(out["cities"])}')
     print(f'  Total bytes: {OUT.stat().st_size:,}')
 

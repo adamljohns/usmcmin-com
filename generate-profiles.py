@@ -119,6 +119,108 @@ def color_for_slug(slug):
         h = (h * 31 + ord(ch)) & 0xFFFFFFFF
     return INITIALS_PALETTE[h % len(INITIALS_PALETTE)]
 
+def build_contact_html(candidate):
+    """Render the 'Contact This Official' block.
+
+    Pulls from candidate.profile.phone / .email / .contact_form when set, then
+    falls back to sensible defaults:
+      - Federal officials: US Capitol switchboard (202-224-3121 Senate, 202-225-3121
+        House) with 'ask for Senator/Representative Name' note.
+      - All officials: a 'Send Message' link pointing at the first .gov source,
+        the candidate website, or the first source URL if nothing better.
+      - Twitter handle from profile.twitter if set.
+    """
+    import re
+    level = (candidate.get('level') or '').lower()
+    jurisdiction = candidate.get('jurisdiction') or ''
+    profile = candidate.get('profile') or {}
+    phone = profile.get('phone')
+    email = profile.get('email')
+    contact_form = profile.get('contact_form')
+    website = candidate.get('website') or ''
+    sources = candidate.get('sources') or []
+    twitter = profile.get('twitter') or ''
+
+    # Pick best "send a message" URL
+    if not contact_form:
+        # Prefer an official .gov source
+        for s in sources:
+            if '.gov' in s and 'ballotpedia' not in s.lower():
+                contact_form = s
+                break
+        if not contact_form and website:
+            contact_form = website
+        if not contact_form and sources:
+            contact_form = sources[0]
+
+    # Federal fallback phone (Capitol switchboard)
+    phone_note = ''
+    display_phone = phone
+    if not display_phone and level == 'federal':
+        if 'Senate' in jurisdiction:
+            display_phone = '(202) 224-3121'
+            phone_note = f'U.S. Capitol switchboard — ask for Senator {candidate["name"]}.'
+        elif 'House' in jurisdiction:
+            display_phone = '(202) 225-3121'
+            phone_note = f'U.S. Capitol switchboard — ask for Representative {candidate["name"]}.'
+
+    # If we have nothing to show, render nothing (keeps profiles lean)
+    if not display_phone and not contact_form and not email and not twitter:
+        return ''
+
+    parts = []
+    if display_phone:
+        tel = 'tel:+1' + re.sub(r'\D', '', display_phone)
+        parts.append(
+            f'<a class="prof-contact-btn" href="{tel}">'
+            f'<span class="prof-contact-icon" aria-hidden="true">&#128222;</span>'
+            f'<span class="prof-contact-text">'
+            f'<span class="prof-contact-label">Call</span>'
+            f'<span class="prof-contact-value">{display_phone}</span>'
+            f'</span></a>'
+        )
+    if contact_form:
+        # Truncate long URL to a readable label
+        label = 'Send Message'
+        parts.append(
+            f'<a class="prof-contact-btn" href="{contact_form}" target="_blank" rel="noopener">'
+            f'<span class="prof-contact-icon" aria-hidden="true">&#9993;&#65039;</span>'
+            f'<span class="prof-contact-text">'
+            f'<span class="prof-contact-label">{label}</span>'
+            f'<span class="prof-contact-value">Official Page</span>'
+            f'</span></a>'
+        )
+    if email:
+        parts.append(
+            f'<a class="prof-contact-btn" href="mailto:{email}">'
+            f'<span class="prof-contact-icon" aria-hidden="true">&#128231;</span>'
+            f'<span class="prof-contact-text">'
+            f'<span class="prof-contact-label">Email</span>'
+            f'<span class="prof-contact-value">{email}</span>'
+            f'</span></a>'
+        )
+    if twitter:
+        handle = twitter.lstrip('@')
+        parts.append(
+            f'<a class="prof-contact-btn" href="https://x.com/{handle}" target="_blank" rel="noopener">'
+            f'<span class="prof-contact-icon" aria-hidden="true">&#119987;</span>'
+            f'<span class="prof-contact-text">'
+            f'<span class="prof-contact-label">X / Twitter</span>'
+            f'<span class="prof-contact-value">@{handle}</span>'
+            f'</span></a>'
+        )
+
+    html = '<div class="prof-contact">'
+    html += '<h2>Contact This Official</h2>'
+    html += '<div class="prof-contact-grid">' + ''.join(parts) + '</div>'
+    if phone_note:
+        html += f'<p class="prof-contact-note">&#128161; {phone_note}</p>'
+    html += ('<p class="prof-contact-tagline">Reach out directly. Your voice matters. '
+             '<em>Proverbs 29:2 — When the righteous are in authority, the people rejoice.</em></p>')
+    html += '</div>'
+    return html
+
+
 def compute_nav_groups(candidates, categories):
     """
     Group candidates by (state, level, jurisdiction). Within each group sort by
@@ -225,6 +327,9 @@ def generate_profile(candidate, categories, meta, nav=None):
     if next_c:
         n_state = (next_c.get('state') or state_code).lower()
         next_href = f"{next_c.get('slug','')}.html" if n_state == state_code.lower() else f"../{n_state}/{next_c.get('slug','')}.html"
+
+    # ---- Contact block (phone + contact form + email + twitter) ----
+    contact_html = build_contact_html(c)
 
     # ---- Photo / initials badge ----
     photo_path = c.get('photo') or ''
@@ -560,6 +665,90 @@ def generate_profile(candidate, categories, meta, nav=None):
     .party-i {{ background: rgba(168,85,247,0.15); color: #a855f7; border: 1px solid rgba(168,85,247,0.3); }}
     .party-unknown {{ background: rgba(107,114,128,0.15); color: #9ca3af; border: 1px solid rgba(107,114,128,0.3); }}
 
+    /* Contact block */
+    .prof-contact {{
+      padding: 20px 24px;
+      background: linear-gradient(135deg, rgba(201,168,76,0.10) 0%, rgba(30,58,95,0.06) 100%);
+      border: 1px solid rgba(201,168,76,0.3);
+      border-radius: var(--radius);
+      margin-bottom: 24px;
+    }}
+    .prof-contact h2 {{
+      color: #c9a84c;
+      font-size: 1.05rem;
+      margin-bottom: 14px;
+      font-family: var(--font-main);
+      letter-spacing: 0.3px;
+    }}
+    .prof-contact-grid {{
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+      gap: 10px;
+    }}
+    .prof-contact-btn {{
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 11px 14px;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      color: var(--white);
+      text-decoration: none;
+      font-size: 0.85rem;
+      transition: border-color 0.15s, background 0.15s, transform 0.1s;
+    }}
+    .prof-contact-btn:hover {{
+      border-color: #c9a84c;
+      background: rgba(201,168,76,0.06);
+      transform: translateY(-1px);
+    }}
+    .prof-contact-icon {{
+      font-size: 1.25rem;
+      flex-shrink: 0;
+      filter: saturate(1.1);
+    }}
+    .prof-contact-text {{
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      min-width: 0;
+      flex: 1;
+    }}
+    .prof-contact-label {{
+      font-size: 0.7rem;
+      color: var(--gray);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      font-weight: 600;
+    }}
+    .prof-contact-value {{
+      font-size: 0.88rem;
+      color: var(--white);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }}
+    .prof-contact-note {{
+      font-size: 0.78rem;
+      color: var(--gray);
+      margin-top: 10px;
+      padding-top: 10px;
+      border-top: 1px dashed var(--border);
+      line-height: 1.5;
+    }}
+    .prof-contact-tagline {{
+      font-size: 0.72rem;
+      color: var(--gray);
+      margin-top: 8px;
+      font-style: italic;
+      line-height: 1.5;
+    }}
+    .prof-contact-tagline em {{
+      color: rgba(201,168,76,0.8);
+      font-style: italic;
+    }}
+
     .prof-sources {{
       padding: 16px 24px;
       background: var(--bg-card);
@@ -774,6 +963,8 @@ def generate_profile(candidate, categories, meta, nav=None):
       <div class="prof-total-fill" style="width:{bar_width}%;background:{total_color};"></div>
     </div>
   </div>
+
+  {contact_html}
 
   {f"""<div class="prof-details">
     <h2>Official Profile</h2>

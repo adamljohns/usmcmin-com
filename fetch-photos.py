@@ -58,6 +58,8 @@ WIKI_NAME_OVERRIDES = {
     'nick-begich-iii': 'Nick Begich III',
     'eleanor-holmes-norton': 'Eleanor Holmes Norton',
     'bobby-scott': 'Bobby Scott (politician)',
+    'esteban-bovo-jr': 'Esteban Bovo',
+    'carlos-g-muñiz': 'Carlos G. Muñiz',
 }
 
 

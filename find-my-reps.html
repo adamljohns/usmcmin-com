@@ -337,13 +337,13 @@
       <input
         type="text" id="fmrSearch"
         class="fmr-search"
-        placeholder="Type a city, county, or state (e.g., Melbourne, FL)"
+        placeholder="Type a city, county, state, or ZIP (e.g., Melbourne, FL or 32901)"
         autocomplete="off"
         autocapitalize="words"
         spellcheck="false">
       <div id="fmrSuggestions" class="fmr-suggestions" role="listbox"></div>
     </div>
-    <div class="fmr-search-note">No address required — broad civic map of your area.</div>
+    <div class="fmr-search-note">No address required — type your 5-digit ZIP to pin down your US House district, or a city/county name for a broader civic map.</div>
   </div>
 
   <div id="fmrIntro" class="fmr-intro">
@@ -427,9 +427,12 @@
   var resultsEl = document.getElementById('fmrResults');
   var introEl = document.getElementById('fmrIntro');
 
-  // ---- Load places.json on first focus (lazy) ----
+  // ---- Lazy-load places.json + zips.json on first focus ----
   var PLACES = null;
   var placesLoading = null;
+  var ZIPS = null;
+  var zipsLoading = null;
+
   function loadPlaces() {
     if (PLACES) return Promise.resolve(PLACES);
     if (placesLoading) return placesLoading;
@@ -437,7 +440,6 @@
       .then(function(r){ return r.json(); })
       .then(function(data){
         PLACES = data;
-        // Flatten into a single search array with type markers
         PLACES.all = [];
         (data.cities || []).forEach(function(p){
           PLACES.all.push({kind:'city', name:p.name, state:p.state, county:p.county, display:p.display, aliases:p.aliases});
@@ -453,11 +455,48 @@
     return placesLoading;
   }
 
+  function loadZips() {
+    if (ZIPS) return Promise.resolve(ZIPS);
+    if (zipsLoading) return zipsLoading;
+    zipsLoading = fetch('data/zips.json')
+      .then(function(r){ return r.json(); })
+      .then(function(data){ ZIPS = data; return ZIPS; })
+      .catch(function(){ ZIPS = {}; return ZIPS; });
+    return zipsLoading;
+  }
+
+  function zipLookup(q) {
+    // Return a synthetic place for a 5-digit ZIP input, or null.
+    if (!ZIPS) return null;
+    q = (q || '').trim();
+    if (!/^\d{5}$/.test(q)) return null;
+    var hit = ZIPS[q];
+    if (!hit) return null;
+    var stateName = STATE_NAMES[hit.state] || hit.state;
+    var cds = hit.cds || [];
+    var cdLabel = cds.length === 1
+      ? hit.state + '-' + cds[0]
+      : cds.map(function(c){ return hit.state + '-' + c; }).join(' / ');
+    return {
+      kind: 'zip',
+      name: 'ZIP ' + q,
+      state: hit.state,
+      cds: cds,
+      display: 'ZIP ' + q + ' — ' + stateName + ' (' + cdLabel + ')',
+      zip: q,
+    };
+  }
+
   // ---- Autocomplete ----
   function search(q) {
     if (!PLACES) return [];
     q = q.toLowerCase().trim();
     if (!q) return [];
+    // ZIP-first: if user typed 5 digits, put the ZIP match at the top
+    var zipMatch = zipLookup(q);
+    if (zipMatch) {
+      return [zipMatch];
+    }
     var exact = [], prefix = [], contains = [];
     PLACES.all.forEach(function(p){
       var matched = false;
@@ -491,7 +530,10 @@
       div.className = 'fmr-suggestion' + (i === highlighted ? ' highlighted' : '');
       div.setAttribute('role', 'option');
       div.setAttribute('data-index', i);
-      var typeLabel = p.kind === 'city' ? 'City' : p.kind === 'county' ? 'County' : 'State';
+      var typeLabel = p.kind === 'city' ? 'City'
+        : p.kind === 'county' ? 'County'
+        : p.kind === 'zip' ? 'ZIP'
+        : 'State';
       div.innerHTML = '<span class="fmr-suggestion-type">' + typeLabel + '</span><span>' + p.display + '</span>';
       div.addEventListener('click', function(){ selectPlace(p); });
       sugEl.appendChild(div);
@@ -501,9 +543,12 @@
 
   searchEl.addEventListener('focus', function(){
     loadPlaces();
+    loadZips();
   });
   searchEl.addEventListener('input', function(){
-    loadPlaces().then(function(){
+    // Load both in parallel; show suggestions when either is ready and input
+    // changed. (Autocomplete waits for places; ZIP path waits for zips.)
+    Promise.all([loadPlaces(), loadZips()]).then(function(){
       highlighted = 0;
       renderSuggestions(search(searchEl.value));
     });
@@ -607,10 +652,15 @@
       });
     }
 
-    // Highlight "your US House rep" if we can
-    var yourUsHouseDistrict = null;
-    if (state === 'FL' && county && FL_COUNTY_TO_US_HOUSE[county] != null) {
-      yourUsHouseDistrict = FL_COUNTY_TO_US_HOUSE[county];
+    // Highlight "your US House rep(s)"
+    // Preference order:
+    //   1. place.cds (ZIP input) — most precise, may be multiple for split ZIPs
+    //   2. FL county hint (for non-ZIP FL inputs where county is entirely in one CD)
+    var yourUsHouseDistricts = null;
+    if (place.kind === 'zip' && Array.isArray(place.cds) && place.cds.length) {
+      yourUsHouseDistricts = place.cds;
+    } else if (state === 'FL' && county && FL_COUNTY_TO_US_HOUSE[county] != null) {
+      yourUsHouseDistricts = [FL_COUNTY_TO_US_HOUSE[county]];
     }
 
     return {
@@ -621,7 +671,7 @@
       legislature: legislature,
       countyOfficials: countyOfficials,
       cityOfficials: cityOfficials,
-      yourUsHouseDistrict: yourUsHouseDistrict,
+      yourUsHouseDistricts: yourUsHouseDistricts,
     };
   }
 
@@ -712,9 +762,10 @@
         html += groupHtml('Federal', '&#127963;&#65039;', federalWithDistrict,
           'No federal officials found for this state.',
           function(c){
-            if (grouped.yourUsHouseDistrict != null &&
-                c.district === grouped.yourUsHouseDistrict &&
-                (c.jurisdiction||'').indexOf('House') !== -1) return true;
+            var yrs = grouped.yourUsHouseDistricts;
+            if (yrs && yrs.length &&
+                (c.jurisdiction||'').indexOf('House') !== -1 &&
+                yrs.indexOf(c.district) !== -1) return true;
             // Both senators always represent you
             return (c.jurisdiction||'').indexOf('Senate') !== -1;
           });

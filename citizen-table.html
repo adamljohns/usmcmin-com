@@ -216,7 +216,8 @@
 
 <script>
 let DATA = null;
-var ALL_CANDIDATES = [];
+// (ALL_CANDIDATES removed — the table view now fast-loads per-state JSON
+// instead of the full scorecard.)
 var POINTS_PER_TRUE = 2;
 var MAX_PER_TOPIC = 10;
 var MAX_TOTAL = 70;
@@ -241,10 +242,19 @@ function switchState(st) {
   var url = new URL(window.location);
   url.searchParams.set('state', st);
   window.history.pushState({}, '', url);
-  DATA.candidates = ALL_CANDIDATES.filter(function(c) { return c.state === st; });
-  buildStateDropdown(st);
-  buildJurisdictionDropdown();
-  renderTables();
+  var stateFile = 'data/states/' + st.toLowerCase() + '.json';
+  fetch(stateFile)
+    .then(function(r) {
+      if (!r.ok) throw new Error('State not found: ' + st);
+      return r.json();
+    })
+    .then(function(stateData) {
+      DATA.candidates = stateData.candidates || [];
+      buildStateDropdown(st);
+      buildJurisdictionDropdown();
+      renderTables();
+    })
+    .catch(function(err) { console.error('Switch state error:', err); });
 }
 
 function buildJurisdictionDropdown() {
@@ -264,11 +274,23 @@ function buildJurisdictionDropdown() {
   });
 }
 function buildStateDropdown(currentState) {
-  var states = [], seen = {};
-  ALL_CANDIDATES.forEach(function(c) { if (!seen[c.state]) { seen[c.state] = true; states.push(c.state); } });
+  if (!INDEX_DATA) return;
+  var states = Object.keys(INDEX_DATA.states).filter(function(s) { return s !== 'US'; });
   states.sort(function(a, b) { return (STATE_NAMES[a]||a).localeCompare(STATE_NAMES[b]||b); });
   var sel = document.getElementById('filterState');
   sel.innerHTML = '';
+  // Always include National at the top so users can reach President/Cabinet/SCOTUS
+  if (INDEX_DATA.states['US']) {
+    var usOpt = document.createElement('option');
+    usOpt.value = 'US';
+    usOpt.textContent = '★ President, Cabinet & Supreme Court';
+    if (currentState === 'US') usOpt.selected = true;
+    sel.appendChild(usOpt);
+    var sep = document.createElement('option');
+    sep.disabled = true;
+    sep.textContent = '─── States ───';
+    sel.appendChild(sep);
+  }
   states.forEach(function(st) {
     var opt = document.createElement('option');
     opt.value = st;
@@ -309,17 +331,40 @@ function initSortDropdown() {
   sel.value = pick;
 }
 
-fetch('data/scorecard.json')
-  .then(r => r.json())
-  .then(data => {
-    DATA = data;
-    ALL_CANDIDATES = data.candidates.slice();
+// ---- Fast-loader pattern (same as citizen.html) ----
+// Load the tiny index first (categories + meta + state directory), then
+// load ONLY the selected state's per-state JSON — which is 15–370 KB per
+// state instead of the 13 MB full scorecard. State switches re-fetch the
+// new state's JSON. Result: typical page load ~350 KB vs. the old 13 MB.
+var INDEX_DATA = null;
+
+fetch('data/index.json')
+  .then(function(r) {
+    if (!r.ok) throw new Error('Failed to load index');
+    return r.json();
+  })
+  .then(function(index) {
+    INDEX_DATA = index;
+    DATA.categories = index.categories;
+    DATA.meta = index.meta;
+
     var st = getStateParam();
-    DATA.candidates = ALL_CANDIDATES.filter(function(c) { return c.state === st; });
-    buildStateDropdown(st);
-    buildJurisdictionDropdown();
-    initSortDropdown();
-    renderTables();
+    var stateFile = 'data/states/' + st.toLowerCase() + '.json';
+    return fetch(stateFile)
+      .then(function(r) {
+        if (!r.ok) throw new Error('Failed to load state: ' + st);
+        return r.json();
+      })
+      .then(function(stateData) {
+        DATA.candidates = stateData.candidates || [];
+        buildStateDropdown(st);
+        buildJurisdictionDropdown();
+        initSortDropdown();
+        renderTables();
+      });
+  })
+  .catch(function(err) {
+    console.error('Data load error:', err);
   });
 
 function calcCatScore(answers) {

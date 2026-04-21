@@ -23,7 +23,17 @@ BASE = Path(__file__).parent
 OUT = BASE / 'data' / 'zips.json'
 CACHE = Path('/tmp/zccd.csv')
 SOURCE_URL = 'https://raw.githubusercontent.com/OpenSourceActivismTech/us-zipcodes-congress/master/zccd.csv'
-COVERED_STATES = {'FL', 'VA', 'TX', 'CA', 'NY', 'PA', 'IL', 'OH'}
+
+# All 50 states + DC. A visitor anywhere in the US can type their ZIP and
+# we'll at least resolve their US House district — even if we haven't
+# deeply enriched local/state officials for that state yet.
+COVERED_STATES = {
+    'AL', 'AK', 'AZ', 'AR', 'CA', 'CO', 'CT', 'DE', 'DC', 'FL', 'GA',
+    'HI', 'ID', 'IL', 'IN', 'IA', 'KS', 'KY', 'LA', 'ME', 'MD', 'MA',
+    'MI', 'MN', 'MS', 'MO', 'MT', 'NE', 'NV', 'NH', 'NJ', 'NM', 'NY',
+    'NC', 'ND', 'OH', 'OK', 'OR', 'PA', 'RI', 'SC', 'SD', 'TN', 'TX',
+    'UT', 'VT', 'VA', 'WA', 'WV', 'WI', 'WY',
+}
 
 
 def fetch():
@@ -60,6 +70,12 @@ def main():
                 cd_int = int(cd)
             except ValueError:
                 continue
+            # At-large states (AK, DE, ND, SD, VT, WY, DC) use cd=0 in the
+            # source CSV — unitedstates/congress-legislators and our scorecard
+            # use district=1 for at-large. Normalize to 1 so Find My Reps'
+            # district match works without special-casing in JS.
+            if cd_int == 0:
+                cd_int = 1
             if zcta not in by_zip:
                 by_zip[zcta] = {'state': st, 'cds': []}
             if cd_int not in by_zip[zcta]['cds']:

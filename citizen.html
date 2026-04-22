@@ -13,6 +13,16 @@
   <link rel="icon" href="assets/img/favicon.png" type="image/png">
   <style>
     .sc-container { max-width: 1200px; margin: 0 auto; padding: 20px; }
+    /* Visually-hidden utility for screen-reader-only text. */
+    .vh {
+      position: absolute !important;
+      width: 1px; height: 1px;
+      padding: 0; margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
+    }
 
     /* Hero */
     .sc-hero {
@@ -430,27 +440,36 @@
   </div>
 
   <!-- View Toggle -->
-  <div class="view-toggle">
-    <a href="citizen-table.html" id="linkTable">Table View</a>
+  <nav class="view-toggle" aria-label="RESOLUTE Citizen sub-pages">
+    <a href="citizen.html" class="active" aria-current="page">Cards</a>
+    <a href="citizen-table.html" id="linkTable">Table</a>
     <a href="citizen-issues.html" id="linkIssues">Issues</a>
     <a href="find-my-reps.html">Find My Reps</a>
-  </div>
+    <a href="stats.html">Stats</a>
+    <a href="changelog.html">Changelog</a>
+  </nav>
 
-  <!-- Filter Bar (simplified: 4 controls) -->
-  <div class="sc-filter">
-    <select id="filterState" onchange="switchState(this.value)" style="font-weight:600;color:#c9a84c;border-color:rgba(201,168,76,0.4);">
+  <!-- Filter Bar (simplified: 5 controls). Every control is labeled -->
+  <!-- for screen readers; live-region #filterAnnounce announces result -->
+  <!-- counts after any filter/search change. -->
+  <div class="sc-filter" role="search" aria-label="Scorecard card filters">
+    <label for="filterState" class="vh">State</label>
+    <select id="filterState" onchange="switchState(this.value)" aria-label="Filter by state" style="font-weight:600;color:#c9a84c;border-color:rgba(201,168,76,0.4);">
       <option value="VA">Virginia</option>
     </select>
-    <select id="filterView" onchange="renderCards()">
+    <label for="filterView" class="vh">View</label>
+    <select id="filterView" onchange="renderCards()" aria-label="Filter by view">
       <option value="all">All Officials</option>
     </select>
-    <select id="filterParty" onchange="renderCards()">
+    <label for="filterParty" class="vh">Party</label>
+    <select id="filterParty" onchange="renderCards()" aria-label="Filter by party">
       <option value="all">All Parties</option>
       <option value="R">Republican</option>
       <option value="D">Democrat</option>
       <option value="I">Independent</option>
     </select>
-    <select id="filterSort" onchange="onSortChange()">
+    <label for="filterSort" class="vh">Sort order</label>
+    <select id="filterSort" onchange="onSortChange()" aria-label="Sort cards">
       <option value="score-desc">Sort: Score High → Low</option>
       <option value="score-asc">Sort: Score Low → High</option>
       <option value="name">Sort: Name A → Z</option>
@@ -458,9 +477,10 @@
       <option value="jurisdiction-score">Sort: Jurisdiction + Score</option>
       <option value="party-score">Sort: Party + Score</option>
     </select>
-    <input type="text" id="searchInput" placeholder="Search name, office, or city..." oninput="renderCards()">
+    <label for="searchInput" class="vh">Search candidates</label>
+    <input type="search" id="searchInput" placeholder="Search name, office, or city..." aria-label="Search candidates by name, office, or city" oninput="renderCards()">
   </div>
-  <div class="sc-count">
+  <div class="sc-count" role="status" aria-live="polite" aria-atomic="true">
     Showing <span id="visibleCount">&mdash;</span> officials
     &middot; <span id="jurisdictionCount">0</span> jurisdictions
     &middot; Max <span>70</span> pts
@@ -468,21 +488,22 @@
   </div>
 
   <!-- Welcome Modal (first visit) -->
-  <div id="welcomeModal" style="display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.85);z-index:9999;display:none;align-items:center;justify-content:center;">
+  <div id="welcomeModal" role="dialog" aria-modal="true" aria-labelledby="welcomeModalTitle" aria-describedby="welcomeModalDesc" style="display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.85);z-index:9999;display:none;align-items:center;justify-content:center;">
     <div style="background:var(--bg-card,#141416);border:1px solid var(--border,#2A2D35);border-radius:16px;padding:40px;max-width:420px;width:90%;text-align:center;">
       <img src="assets/icons/shield-star.png" alt="" width="64" height="64" style="margin-bottom:16px;opacity:0.9;">
-      <h2 style="color:var(--white,#F0F0F0);font-size:1.4rem;margin-bottom:8px;">Welcome to <span style="color:#c9a84c;">RESOLUTE</span> Citizen</h2>
-      <p style="color:var(--gray,#9CA3AF);font-size:0.9rem;margin-bottom:24px;line-height:1.6;">Select your state to see your local officials, state legislators, and federal representatives scored on Christian values.</p>
-      <select id="modalState" style="width:100%;padding:12px;background:var(--bg-dark,#0A0A0A);border:1px solid var(--border,#2A2D35);color:var(--white,#F0F0F0);border-radius:8px;font-size:1rem;margin-bottom:16px;"></select>
-      <button onclick="selectLocation()" style="width:100%;padding:14px;background:linear-gradient(90deg,#c9a84c,#D4AF37);color:#000;font-weight:700;font-size:1rem;border:none;border-radius:8px;cursor:pointer;">Show My Officials</button>
+      <h2 id="welcomeModalTitle" style="color:var(--white,#F0F0F0);font-size:1.4rem;margin-bottom:8px;">Welcome to <span style="color:#c9a84c;">RESOLUTE</span> Citizen</h2>
+      <p id="welcomeModalDesc" style="color:var(--gray,#9CA3AF);font-size:0.9rem;margin-bottom:24px;line-height:1.6;">Select your state to see your local officials, state legislators, and federal representatives scored on Christian values.</p>
+      <label for="modalState" class="vh">State</label>
+      <select id="modalState" aria-label="Select your state" style="width:100%;padding:12px;background:var(--bg-dark,#0A0A0A);border:1px solid var(--border,#2A2D35);color:var(--white,#F0F0F0);border-radius:8px;font-size:1rem;margin-bottom:16px;"></select>
+      <button type="button" onclick="selectLocation()" style="width:100%;padding:14px;background:linear-gradient(90deg,#c9a84c,#D4AF37);color:#000;font-weight:700;font-size:1rem;border:none;border-radius:8px;cursor:pointer;">Show My Officials</button>
     </div>
   </div>
 
   <!-- Category Legend -->
-  <div class="sc-legend" id="categoryLegend"></div>
+  <div class="sc-legend" id="categoryLegend" aria-label="Scorecard category legend"></div>
 
   <!-- Card Grid -->
-  <div class="sc-grid" id="cardGrid"></div>
+  <div class="sc-grid" id="cardGrid" role="region" aria-label="Candidate scorecard cards"></div>
 
   <!-- Scripture -->
   <div class="sc-scripture">
@@ -921,36 +942,50 @@ function renderCards() {
   filtered.forEach(function(c) { jurs.add(c.jurisdiction); });
   document.getElementById('jurisdictionCount').textContent = jurs.size;
 
+  function esc(s) {
+    return String(s == null ? '' : s)
+      .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+  }
+
   var html = '';
-  filtered.forEach(function(c) {
+  filtered.forEach(function(c, idx) {
     var total = calcTotalScore(c.scores);
     var totalColor = getScoreColor(total.score, total.max);
     var barWidth = total.max > 0 ? Math.round((total.score / total.max) * 100) : 0;
+    var cardId = 'cand-' + c.slug + '-' + idx;
+    var profileUrl = 'candidates/' + (c.state || 'va').toLowerCase() + '/' + c.slug + '.html';
 
-    html += '<div class="sc-card">';
+    html += '<article class="sc-card" aria-labelledby="' + cardId + '">';
     html += '<div class="sc-card-header">';
-    html += '<div class="jurisdiction">' + c.jurisdiction + ' <span class="level-badge ' + getLevelClass(c.level) + '">' + (c.level || 'state') + '</span></div>';
-    html += '<h3>' + c.name + '<span class="party-badge ' + getPartyClass(c.party) + '">' + getPartyLabel(c.party) + '</span></h3>';
-    html += '<div class="office">' + c.office + '</div>';
+    html += '<div class="jurisdiction">' + esc(c.jurisdiction) + ' <span class="level-badge ' + getLevelClass(c.level) + '" aria-label="Government level: ' + esc(c.level || 'state') + '">' + esc(c.level || 'state') + '</span></div>';
+    html += '<h3 id="' + cardId + '">' + esc(c.name) + '<span class="party-badge ' + getPartyClass(c.party) + '" aria-label="Party: ' + esc(getPartyLabel(c.party)) + '">' + esc(getPartyLabel(c.party)) + '</span></h3>';
+    html += '<div class="office">' + esc(c.office) + '</div>';
     html += '</div>';
 
-    html += '<div class="sc-scores">';
+    html += '<div class="sc-scores" role="list" aria-label="Category subscores">';
     DATA.categories.forEach(function(cat) {
       var cs = calcCategoryScore(c.scores[cat.id]);
       var color = cs.answered > 0 ? getScoreColor(cs.score, cs.max) : '#666';
       var label = cat.label.length > 10 ? cat.label.substring(0, 9) + '.' : cat.label;
-      html += '<div class="sc-score-cell"><span class="cat-label">' + label + '</span><span class="cat-score" style="color:' + color + ';">' + (cs.answered > 0 ? cs.score : '—') + '</span><span class="cat-max">/' + MAX_PER_TOPIC + '</span></div>';
+      var cellAriaLabel = cs.answered > 0
+        ? cat.label + ': ' + cs.score + ' of ' + MAX_PER_TOPIC
+        : cat.label + ': not yet scored';
+      html += '<div class="sc-score-cell" role="listitem" aria-label="' + esc(cellAriaLabel) + '">' +
+        '<span class="cat-label" aria-hidden="true">' + esc(label) + '</span>' +
+        '<span class="cat-score" aria-hidden="true" style="color:' + color + ';">' + (cs.answered > 0 ? cs.score : '—') + '</span>' +
+        '<span class="cat-max" aria-hidden="true">/' + MAX_PER_TOPIC + '</span></div>';
     });
     html += '</div>';
 
-    html += '<div class="sc-total">';
-    html += '<span class="sc-total-label">Total</span>';
-    html += '<div class="sc-total-bar"><div class="sc-total-fill" style="width:' + barWidth + '%;background:' + totalColor + ';"></div></div>';
-    html += '<span class="sc-total-score" style="color:' + totalColor + ';">' + total.score + '<span style="font-size:0.7rem;color:var(--gray);">/' + MAX_TOTAL + '</span></span>';
+    html += '<div class="sc-total" aria-label="Total score: ' + total.score + ' of ' + MAX_TOTAL + '">';
+    html += '<span class="sc-total-label" aria-hidden="true">Total</span>';
+    html += '<div class="sc-total-bar" aria-hidden="true"><div class="sc-total-fill" style="width:' + barWidth + '%;background:' + totalColor + ';"></div></div>';
+    html += '<span class="sc-total-score" aria-hidden="true" style="color:' + totalColor + ';">' + total.score + '<span style="font-size:0.7rem;color:var(--gray);">/' + MAX_TOTAL + '</span></span>';
     html += '</div>';
 
-    html += '<div class="sc-card-footer"><a href="candidates/' + (c.state || 'va').toLowerCase() + '/' + c.slug + '.html">View Full Profile &rarr;</a></div>';
-    html += '</div>';
+    html += '<div class="sc-card-footer"><a href="' + profileUrl + '" aria-label="View full profile for ' + esc(c.name) + '">View Full Profile &rarr;</a></div>';
+    html += '</article>';
   });
 
   document.getElementById('cardGrid').innerHTML = html;

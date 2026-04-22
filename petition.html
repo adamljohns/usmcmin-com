@@ -1,0 +1,737 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Petition Your Reps — RESOLUTE Citizen | U.S.M.C. Ministries</title>
+  <meta name="description" content="Draft a one-click petition letter to your U.S. Senators, U.S. House Rep, and Governor based on your ZIP and the RESOLUTE Citizen category you care about. Primary-source templates with direct links to every rep's official contact form.">
+  <meta property="og:title" content="Petition Your Reps — RESOLUTE Citizen">
+  <meta property="og:description" content="Draft a one-click petition to your reps based on your ZIP and the issue you care about.">
+  <meta property="og:type" content="website">
+  <link rel="stylesheet" href="assets/css/main.css">
+  <link rel="icon" href="assets/img/favicon.png" type="image/png">
+  <style>
+    .pt-container { max-width: 980px; margin: 0 auto; padding: 20px 20px 60px; }
+    .pt-hero {
+      text-align: center;
+      padding: 40px 20px 30px;
+      border-bottom: 2px solid var(--border);
+      margin-bottom: 24px;
+    }
+    .pt-hero-badge {
+      display: inline-block;
+      font-size: 0.68rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 3px;
+      color: #c9a84c;
+      background: rgba(201,168,76,0.12);
+      border: 1px solid rgba(201,168,76,0.25);
+      padding: 6px 18px;
+      border-radius: 20px;
+      margin-bottom: 16px;
+    }
+    .pt-hero h1 { font-size: clamp(1.8rem,4vw,2.6rem); color: var(--white); margin-bottom: 10px; font-weight: 800; letter-spacing: -0.5px; }
+    .pt-hero p { color: var(--gray); font-size: 0.95rem; max-width: 720px; margin: 0 auto; line-height: 1.7; }
+
+    /* Visually-hidden utility. */
+    .vh { position: absolute !important; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
+
+    /* Step sections. */
+    .pt-step {
+      padding: 20px 22px;
+      margin-bottom: 16px;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+    }
+    .pt-step h2 {
+      display: flex; align-items: center; gap: 12px;
+      font-size: 1rem; color: var(--accent);
+      margin-bottom: 14px;
+      letter-spacing: 0.3px;
+    }
+    .pt-step h2 .step-num {
+      display: inline-flex; align-items: center; justify-content: center;
+      width: 26px; height: 26px; border-radius: 50%;
+      background: rgba(201,168,76,0.15);
+      border: 1px solid rgba(201,168,76,0.4);
+      font-size: 0.82rem; font-weight: 800;
+      color: #c9a84c;
+    }
+
+    .pt-row { display: flex; flex-wrap: wrap; gap: 10px; }
+    .pt-row > * { flex: 1 1 220px; }
+    .pt-row input, .pt-row select {
+      background: var(--bg-dark, #0A0A0A);
+      border: 1px solid var(--border);
+      color: var(--white);
+      padding: 11px 14px;
+      border-radius: 8px;
+      font-size: 0.92rem;
+    }
+    .pt-row input:focus, .pt-row select:focus { border-color: var(--accent); outline: none; }
+
+    .pt-hint {
+      color: var(--gray); font-size: 0.78rem;
+      margin-top: 8px; line-height: 1.55;
+    }
+    .pt-hint a { color: var(--accent); }
+    .pt-error {
+      color: #f87171;
+      background: rgba(248,113,113,0.1);
+      border: 1px solid rgba(248,113,113,0.25);
+      padding: 10px 14px; border-radius: 8px;
+      font-size: 0.85rem;
+      margin-top: 8px;
+    }
+
+    .pt-letter-wrap {
+      margin-top: 16px;
+      padding: 16px;
+      background: rgba(255,255,255,0.02);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+    }
+    .pt-letter {
+      width: 100%;
+      min-height: 300px;
+      background: transparent;
+      border: 0;
+      color: var(--white);
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: 0.92rem;
+      line-height: 1.7;
+      resize: vertical;
+      padding: 4px;
+    }
+    .pt-letter:focus { outline: 1px solid var(--accent); outline-offset: 2px; }
+
+    .pt-meta {
+      display: flex; justify-content: space-between; align-items: center;
+      gap: 12px; flex-wrap: wrap;
+      margin-top: 8px;
+      font-size: 0.74rem;
+      color: var(--gray);
+    }
+
+    .pt-rep-list { display: grid; grid-template-columns: 1fr; gap: 12px; margin-top: 8px; }
+    .pt-rep {
+      padding: 14px 16px;
+      background: var(--bg-dark, #0A0A0A);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      display: flex; align-items: center; gap: 14px;
+      flex-wrap: wrap;
+    }
+    .pt-rep-name {
+      flex: 1 1 180px;
+      min-width: 0;
+      line-height: 1.45;
+    }
+    .pt-rep-name .name { font-weight: 700; color: var(--white); font-size: 0.95rem; display: block; }
+    .pt-rep-name .office { color: var(--gray); font-size: 0.78rem; display: block; margin-top: 2px; }
+    .pt-rep-actions { display: flex; gap: 6px; flex-wrap: wrap; }
+    .pt-btn {
+      padding: 8px 14px;
+      border-radius: 6px;
+      font-size: 0.78rem;
+      font-weight: 700;
+      letter-spacing: 0.3px;
+      border: 1px solid var(--border);
+      background: transparent;
+      color: var(--white);
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      white-space: nowrap;
+    }
+    .pt-btn:hover { border-color: var(--accent); color: var(--accent); }
+    .pt-btn.primary {
+      background: linear-gradient(90deg, #c9a84c, #D4AF37);
+      color: #000;
+      border-color: transparent;
+    }
+    .pt-btn.primary:hover { color: #000; opacity: 0.92; }
+    .pt-btn[disabled] { opacity: 0.45; cursor: not-allowed; }
+
+    .pt-copied {
+      display: inline-block;
+      padding: 3px 10px;
+      font-size: 0.7rem;
+      border-radius: 10px;
+      background: rgba(76,175,80,0.18);
+      color: #7edd80;
+      margin-left: 4px;
+    }
+
+    .pt-status { font-size: 0.82rem; color: var(--gray); }
+
+    @media (max-width: 640px) {
+      .pt-rep { flex-direction: column; align-items: flex-start; }
+      .pt-rep-actions { width: 100%; }
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a href="/" class="nav-brand" style="text-decoration:none">
+    <img src="assets/img/logo.png" alt="U.S.M.C. Ministries" style="object-fit:contain">
+    <div class="nav-brand-text">
+      <div class="name">U.S.M.C. Ministries</div>
+      <div class="tag">Warriors Equipped</div>
+    </div>
+  </a>
+  <ul class="nav-links">
+    <li><a href="citizen.html">Scorecard</a></li>
+    <li><a href="find-my-reps.html">Find My Reps</a></li>
+    <li><a href="petition.html" class="active">Petition</a></li>
+    <li><a href="stats.html">Stats</a></li>
+    <li><a href="changelog.html">Changelog</a></li>
+    <li><a href="about.html">About</a></li>
+    <li><a href="https://usmcmin.org" target="_blank">Ministry Site</a></li>
+  </ul>
+  <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme" title="Switch light/dark mode">🌙</button>
+  <button class="nav-toggle" aria-label="Menu"><span></span><span></span><span></span></button>
+</nav>
+
+<nav class="view-toggle" aria-label="RESOLUTE Citizen sub-pages" style="display:flex;justify-content:center;gap:8px;margin:16px 0;flex-wrap:wrap;max-width:980px;margin-left:auto;margin-right:auto;padding:0 20px;">
+  <a href="citizen.html" style="color:var(--gray);text-decoration:none;font-size:0.82rem;padding:6px 18px;border-radius:20px;border:1px solid var(--border);">Cards</a>
+  <a href="citizen-table.html" style="color:var(--gray);text-decoration:none;font-size:0.82rem;padding:6px 18px;border-radius:20px;border:1px solid var(--border);">Table</a>
+  <a href="find-my-reps.html" style="color:var(--gray);text-decoration:none;font-size:0.82rem;padding:6px 18px;border-radius:20px;border:1px solid var(--border);">Find My Reps</a>
+  <a href="petition.html" aria-current="page" style="background:rgba(201,168,76,0.12);border:1px solid rgba(201,168,76,0.4);color:#c9a84c;text-decoration:none;font-size:0.82rem;padding:6px 18px;border-radius:20px;">Petition</a>
+  <a href="stats.html" style="color:var(--gray);text-decoration:none;font-size:0.82rem;padding:6px 18px;border-radius:20px;border:1px solid var(--border);">Stats</a>
+  <a href="changelog.html" style="color:var(--gray);text-decoration:none;font-size:0.82rem;padding:6px 18px;border-radius:20px;border:1px solid var(--border);">Changelog</a>
+</nav>
+
+<div class="pt-container">
+  <div class="pt-hero">
+    <span class="pt-hero-badge">RESOLUTE Citizen Tool</span>
+    <h1>Petition Your Representatives</h1>
+    <p>
+      Draft a one-click letter to your U.S. Senators, House member, and Governor
+      based on your ZIP and the issue you care about. Each template is grounded
+      in a RESOLUTE Citizen category and cites primary sources. You control every
+      word before you send.
+    </p>
+  </div>
+
+  <section class="pt-step" aria-labelledby="step1Label">
+    <h2 id="step1Label"><span class="step-num" aria-hidden="true">1</span>Where do you live?</h2>
+    <div class="pt-row">
+      <div>
+        <label for="ptZip" class="vh">ZIP code or 2-letter state</label>
+        <input type="text" id="ptZip" inputmode="numeric" maxlength="5"
+          placeholder="ZIP (e.g., 32901) or state code (e.g., FL)"
+          autocomplete="postal-code" aria-label="ZIP code or 2-letter state">
+      </div>
+      <div style="flex:0 1 auto;">
+        <button id="ptResolve" class="pt-btn primary" type="button">Find My Reps</button>
+      </div>
+    </div>
+    <p class="pt-hint">
+      ZIP lookups use <a href="https://github.com/adamljohns/usmcmin-com/blob/main/data/zips.json" target="_blank" rel="noopener">data/zips.json</a>
+      (Census 2020 ZCTA → congressional-district crosswalk) to pin your
+      U.S. House member. If your ZIP spans multiple districts we will show all
+      applicable House reps. State-legislative districts are not yet resolved
+      by ZIP — that crosswalk is the next upgrade.
+    </p>
+    <div id="ptResolveErr" class="pt-error" hidden></div>
+  </section>
+
+  <section class="pt-step" aria-labelledby="step2Label" id="step2Card" hidden>
+    <h2 id="step2Label"><span class="step-num" aria-hidden="true">2</span>What issue are you writing about?</h2>
+    <div class="pt-row">
+      <div>
+        <label for="ptCategory" class="vh">RESOLUTE Citizen category</label>
+        <select id="ptCategory" aria-label="Select a RESOLUTE Citizen category">
+          <option value="">Pick a category…</option>
+          <option value="life">Life — abortion, unborn-child protection</option>
+          <option value="marriage">Marriage — biblical marriage and family</option>
+          <option value="immigration">Immigration — border security, lawful entry</option>
+          <option value="self_defense">Self-Defense — Second Amendment, armed citizenry</option>
+          <option value="education">Education — parental authority, curriculum</option>
+          <option value="america_first">America First — election integrity, national sovereignty</option>
+          <option value="christian_heritage">Christian Heritage — Protestant Christian Heritage &amp; Conservative Biblical Governance</option>
+          <option value="custom">Custom — I will write my own letter</option>
+        </select>
+      </div>
+    </div>
+    <p class="pt-hint">
+      Category templates are drafted in plain, respectful language that a
+      rep's intake staff can read in under 60 seconds. You can edit every
+      word before you send.
+    </p>
+  </section>
+
+  <section class="pt-step" aria-labelledby="step3Label" id="step3Card" hidden>
+    <h2 id="step3Label"><span class="step-num" aria-hidden="true">3</span>Personalize &amp; review</h2>
+    <div class="pt-row">
+      <div>
+        <label for="ptName" class="vh">Your full name</label>
+        <input type="text" id="ptName" placeholder="Your full name" autocomplete="name" aria-label="Your full name">
+      </div>
+      <div>
+        <label for="ptCity" class="vh">Your city</label>
+        <input type="text" id="ptCity" placeholder="Your city (e.g., Melbourne, FL)" autocomplete="address-level2" aria-label="Your city">
+      </div>
+    </div>
+    <div class="pt-letter-wrap">
+      <label for="ptLetter" class="vh">Your letter</label>
+      <textarea id="ptLetter" class="pt-letter" aria-label="Your letter, editable" spellcheck="true"></textarea>
+      <div class="pt-meta">
+        <div id="ptMeta"></div>
+        <div>
+          Character count: <span id="ptCharCount">0</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="pt-step" aria-labelledby="step4Label" id="step4Card" hidden>
+    <h2 id="step4Label"><span class="step-num" aria-hidden="true">4</span>Send to your reps</h2>
+    <p class="pt-status" id="ptRepStatus"></p>
+    <div id="ptRepList" class="pt-rep-list" role="list"></div>
+    <p class="pt-hint" style="margin-top:14px;">
+      Letter tips: contact forms generally accept plain text. Keep it under 1
+      page. Always include your full name and city in the form fields so the
+      staff knows you are a constituent. Following up after 1–2 weeks with a
+      phone call gets more attention than a single email.
+    </p>
+    <p class="pt-hint">
+      <em>"When the righteous are in authority, the people rejoice; but when
+      the wicked beareth rule, the people mourn." — Proverbs 29:2</em>
+    </p>
+  </section>
+</div>
+
+<footer>
+  <p><strong>RESOLUTE Citizen</strong> — a module of <a href="https://usmcmin.org">U.S.M.C. Ministries</a></p>
+  <p style="margin-top:6px;font-size:0.72rem;">
+    <a href="citizen.html">Scorecard</a> &middot;
+    <a href="find-my-reps.html">Find My Reps</a> &middot;
+    <a href="stats.html">Stats</a> &middot;
+    <a href="changelog.html">Changelog</a>
+  </p>
+</footer>
+
+<script>
+(function(){
+  // --- Template library. Each is a short (under 180 words), primary-
+  //     source-citing letter drafted in plain, respectful language.
+  //     {{placeholders}} get filled from the personalize step.
+  var TEMPLATES = {
+    life: {
+      subject: 'Please defend unborn life in {{state}}',
+      body: 'Dear {{salutation}} {{rep_lastname}},\n\n' +
+        'My name is {{name}} and I am a constituent writing from {{city}}. I am ' +
+        'asking you to use every tool of your office to defend unborn life — ' +
+        'because Scripture teaches that every child bears the image of God ' +
+        '(Genesis 1:27) and because righteous government exists in part to ' +
+        'protect the innocent (Romans 13:4).\n\n' +
+        'Specifically I am asking you to:\n' +
+        '  (1) oppose any bill, budget line, or executive action that funds ' +
+        'elective abortion — directly or indirectly, domestically or abroad;\n' +
+        '  (2) support policies that protect the unborn child at the earliest ' +
+        'detection of a heartbeat; and\n' +
+        '  (3) fund alternatives-to-abortion programs that actually serve ' +
+        'expectant mothers and families.\n\n' +
+        'I am tracking this issue through the RESOLUTE Citizen scorecard at ' +
+        'usmcmin.com and will be paying attention to your votes.\n\n' +
+        'Respectfully,\n{{name}}\n{{city}}'
+    },
+    marriage: {
+      subject: 'Please defend biblical marriage and parental rights',
+      body: 'Dear {{salutation}} {{rep_lastname}},\n\n' +
+        'My name is {{name}} and I am a constituent writing from {{city}}. I am ' +
+        'asking you to defend biblical marriage — the lifelong union of one ' +
+        'man and one woman (Genesis 2:24, Matthew 19:4-6) — and to protect ' +
+        'parental authority over the moral and sexual education of children.\n\n' +
+        'Specifically I am asking you to:\n' +
+        '  (1) oppose instruction on sexual orientation and gender identity in ' +
+        'K-3 classrooms without explicit parental consent;\n' +
+        '  (2) oppose medical procedures or hormone interventions for minors ' +
+        'that contradict biological reality; and\n' +
+        '  (3) support laws that name biological sex as immutable and God-given.\n\n' +
+        'I am tracking this issue through the RESOLUTE Citizen scorecard at ' +
+        'usmcmin.com and will be paying attention to your votes.\n\n' +
+        'Respectfully,\n{{name}}\n{{city}}'
+    },
+    immigration: {
+      subject: 'Please restore a secure, lawful border',
+      body: 'Dear {{salutation}} {{rep_lastname}},\n\n' +
+        'My name is {{name}} and I am a constituent writing from {{city}}. I am ' +
+        'asking you to restore a secure and lawful border. A nation that ' +
+        'cannot control its own entry points cannot protect its citizens, its ' +
+        'industries, or its civic continuity.\n\n' +
+        'Specifically I am asking you to:\n' +
+        '  (1) oppose any legislation that funds sanctuary policies or ' +
+        'rewards unlawful entry;\n' +
+        '  (2) support universal E-Verify for employers over a reasonable ' +
+        'size threshold; and\n' +
+        '  (3) support the removal of individuals who are in the country ' +
+        'illegally, with priority for those convicted of additional crimes.\n\n' +
+        'I am tracking this issue through the RESOLUTE Citizen scorecard at ' +
+        'usmcmin.com and will be paying attention to your votes.\n\n' +
+        'Respectfully,\n{{name}}\n{{city}}'
+    },
+    self_defense: {
+      subject: 'Please defend the Second Amendment',
+      body: 'Dear {{salutation}} {{rep_lastname}},\n\n' +
+        'My name is {{name}} and I am a constituent writing from {{city}}. I am ' +
+        'asking you to defend the Second Amendment as an individual right ' +
+        '(D.C. v. Heller, 2008) and the biblical duty of every head-of-household ' +
+        'to protect his family (1 Timothy 5:8).\n\n' +
+        'Specifically I am asking you to:\n' +
+        '  (1) oppose any new federal or state registration, licensing, or ' +
+        'red-flag regime that infringes on law-abiding citizens;\n' +
+        '  (2) support Castle Doctrine and Stand-Your-Ground protections; and\n' +
+        '  (3) oppose any ban on commonly-owned semi-automatic rifles and ' +
+        'standard-capacity magazines.\n\n' +
+        'I am tracking this issue through the RESOLUTE Citizen scorecard at ' +
+        'usmcmin.com and will be paying attention to your votes.\n\n' +
+        'Respectfully,\n{{name}}\n{{city}}'
+    },
+    education: {
+      subject: 'Please defend parental authority in education',
+      body: 'Dear {{salutation}} {{rep_lastname}},\n\n' +
+        'My name is {{name}} and I am a constituent writing from {{city}}. I am ' +
+        'asking you to defend parental authority over children\'s education ' +
+        '(Ephesians 6:4, Deuteronomy 6:6-7) and to reject ideological ' +
+        'indoctrination in public schools.\n\n' +
+        'Specifically I am asking you to:\n' +
+        '  (1) support universal school choice / education savings accounts ' +
+        'so families are not trapped in failing schools;\n' +
+        '  (2) oppose Critical Race Theory, DEI mandates, and compulsory ' +
+        'gender-ideology instruction; and\n' +
+        '  (3) protect voluntary prayer, Bible study, and religious ' +
+        'expression in public schools.\n\n' +
+        'I am tracking this issue through the RESOLUTE Citizen scorecard at ' +
+        'usmcmin.com and will be paying attention to your votes.\n\n' +
+        'Respectfully,\n{{name}}\n{{city}}'
+    },
+    america_first: {
+      subject: 'Please defend our elections and national sovereignty',
+      body: 'Dear {{salutation}} {{rep_lastname}},\n\n' +
+        'My name is {{name}} and I am a constituent writing from {{city}}. I am ' +
+        'asking you to defend election integrity and America\'s national ' +
+        'sovereignty. A free people cannot consent to be governed if they ' +
+        'cannot trust the process that elects their representatives.\n\n' +
+        'Specifically I am asking you to:\n' +
+        '  (1) support universal paper-ballot + voter-ID requirements and ' +
+        'post-election hand-counted audits;\n' +
+        '  (2) refuse campaign contributions from foreign governments or ' +
+        'foreign-linked PACs; and\n' +
+        '  (3) oppose any treaty or international body that overrides the ' +
+        'constitutional authority of the American people.\n\n' +
+        'I am tracking this issue through the RESOLUTE Citizen scorecard at ' +
+        'usmcmin.com and will be paying attention to your votes.\n\n' +
+        'Respectfully,\n{{name}}\n{{city}}'
+    },
+    christian_heritage: {
+      subject: 'Please acknowledge Christ\'s lordship in your public service',
+      body: 'Dear {{salutation}} {{rep_lastname}},\n\n' +
+        'My name is {{name}} and I am a constituent writing from {{city}}. I am ' +
+        'asking you to conduct your public service in a way that is ' +
+        'self-consciously ordered toward the good of the people under God ' +
+        '(Romans 13:1-4, Proverbs 29:2) — not a "neutral" state that pretends ' +
+        'the Creator does not exist.\n\n' +
+        'Specifically I am asking you to:\n' +
+        '  (1) defend the historically orthodox, Protestant Christian moral ' +
+        'framework on which this country\'s laws and customs were built;\n' +
+        '  (2) oppose legislation that penalizes Christian belief, speech, or ' +
+        'worship; and\n' +
+        '  (3) name the source of your ethical convictions openly — your ' +
+        'constituents can handle the truth.\n\n' +
+        'I am tracking this issue through the RESOLUTE Citizen scorecard at ' +
+        'usmcmin.com and will be paying attention to your votes.\n\n' +
+        'Respectfully,\n{{name}}\n{{city}}'
+    },
+    custom: {
+      subject: 'A constituent message',
+      body: 'Dear {{salutation}} {{rep_lastname}},\n\n' +
+        'My name is {{name}} and I am a constituent writing from {{city}}.\n\n' +
+        '[Write your message here.]\n\n' +
+        'Respectfully,\n{{name}}\n{{city}}'
+    }
+  };
+
+  // --- State name lookup for cleaner placeholder substitution.
+  var STATE_NAMES = {
+    AL:'Alabama',AK:'Alaska',AZ:'Arizona',AR:'Arkansas',CA:'California',
+    CO:'Colorado',CT:'Connecticut',DE:'Delaware',DC:'District of Columbia',
+    FL:'Florida',GA:'Georgia',HI:'Hawaii',ID:'Idaho',IL:'Illinois',
+    IN:'Indiana',IA:'Iowa',KS:'Kansas',KY:'Kentucky',LA:'Louisiana',
+    ME:'Maine',MD:'Maryland',MA:'Massachusetts',MI:'Michigan',MN:'Minnesota',
+    MS:'Mississippi',MO:'Missouri',MT:'Montana',NE:'Nebraska',NV:'Nevada',
+    NH:'New Hampshire',NJ:'New Jersey',NM:'New Mexico',NY:'New York',
+    NC:'North Carolina',ND:'North Dakota',OH:'Ohio',OK:'Oklahoma',OR:'Oregon',
+    PA:'Pennsylvania',RI:'Rhode Island',SC:'South Carolina',SD:'South Dakota',
+    TN:'Tennessee',TX:'Texas',UT:'Utah',VT:'Vermont',VA:'Virginia',
+    WA:'Washington',WV:'West Virginia',WI:'Wisconsin',WY:'Wyoming'
+  };
+
+  // --- DOM references.
+  var zipEl = document.getElementById('ptZip');
+  var resolveEl = document.getElementById('ptResolve');
+  var resolveErr = document.getElementById('ptResolveErr');
+  var step2Card = document.getElementById('step2Card');
+  var step3Card = document.getElementById('step3Card');
+  var step4Card = document.getElementById('step4Card');
+  var categoryEl = document.getElementById('ptCategory');
+  var nameEl = document.getElementById('ptName');
+  var cityEl = document.getElementById('ptCity');
+  var letterEl = document.getElementById('ptLetter');
+  var charCountEl = document.getElementById('ptCharCount');
+  var metaEl = document.getElementById('ptMeta');
+  var repListEl = document.getElementById('ptRepList');
+  var repStatusEl = document.getElementById('ptRepStatus');
+
+  // --- Shared state derived from ZIP / state resolution.
+  var ctx = {
+    state: null,         // 'FL'
+    stateName: null,     // 'Florida'
+    zip: null,           // '32901' or null
+    houseDistricts: [],  // ['8'] or ['8','12']
+    reps: [],            // array of candidate objects filtered to the user's federal reps + governor
+  };
+
+  function esc(s) {
+    return String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+  }
+
+  function showError(el, msg) { el.textContent = msg; el.hidden = !msg; }
+
+  // --- Step 1: resolve ZIP or state code.
+  function resolveInput() {
+    showError(resolveErr, '');
+    var val = (zipEl.value || '').trim().toUpperCase();
+    if (!val) { showError(resolveErr, 'Enter a 5-digit ZIP or a 2-letter state code.'); return; }
+
+    // State-code fast path.
+    if (/^[A-Z]{2}$/.test(val) && STATE_NAMES[val]) {
+      ctx.state = val;
+      ctx.stateName = STATE_NAMES[val];
+      ctx.zip = null;
+      ctx.houseDistricts = [];
+      loadReps();
+      return;
+    }
+
+    // ZIP path.
+    if (!/^\d{5}$/.test(val)) {
+      showError(resolveErr, 'Enter either a 5-digit ZIP code or a 2-letter state code like FL, VA, TX.');
+      return;
+    }
+    resolveEl.disabled = true;
+    resolveEl.textContent = 'Looking up ZIP…';
+    fetch('data/zips.json', { cache: 'default' })
+      .then(function(r){ if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
+      .then(function(zips){
+        var entry = zips && zips[val];
+        if (!entry) {
+          showError(resolveErr, 'ZIP ' + val + ' is not yet in our lookup table. Try your 2-letter state code instead.');
+          return;
+        }
+        ctx.zip = val;
+        ctx.state = entry.state;
+        ctx.stateName = STATE_NAMES[entry.state] || entry.state;
+        var cds = entry.cds || entry.cd;
+        ctx.houseDistricts = Array.isArray(cds) ? cds.map(String) : [String(cds)];
+        loadReps();
+      })
+      .catch(function(err){
+        showError(resolveErr, 'Could not read the ZIP table: ' + err.message);
+      })
+      .finally(function(){
+        resolveEl.disabled = false;
+        resolveEl.textContent = 'Find My Reps';
+      });
+  }
+
+  // --- Load the state's candidate list and filter to the user's reps.
+  function loadReps() {
+    repStatusEl.textContent = 'Loading your reps in ' + ctx.stateName + '…';
+    fetch('data/states/' + ctx.state.toLowerCase() + '.json', { cache: 'default' })
+      .then(function(r){ if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
+      .then(function(stateDoc){
+        var candidates = (stateDoc && stateDoc.candidates) || [];
+        // Our reps = federal senators (both) + federal house rep for each
+        // resolved district + governor.
+        var senators = candidates.filter(function(c){
+          return c.level === 'federal' && /senator/i.test(c.office || '');
+        });
+        var houseReps = candidates.filter(function(c){
+          if (c.level !== 'federal') return false;
+          if (!/house|representative|u\.s\. rep/i.test(c.office || '')) return false;
+          if (!ctx.houseDistricts || !ctx.houseDistricts.length) return true; // state-only path: show every US rep
+          return ctx.houseDistricts.indexOf(String(c.district)) !== -1;
+        });
+        var governors = candidates.filter(function(c){
+          return /governor/i.test(c.office || '') && !/lieutenant|lt\./i.test(c.office || '');
+        });
+        ctx.reps = senators.concat(houseReps).concat(governors);
+
+        // Reveal steps 2–4 and prefill city from ZIP if possible.
+        step2Card.hidden = false;
+        step3Card.hidden = false;
+        step4Card.hidden = false;
+        if (!nameEl.value) nameEl.focus();
+        repStatusEl.textContent = 'Resolved ' + ctx.reps.length + ' federal + executive rep(s) for ' + ctx.stateName +
+          (ctx.zip ? ' / ZIP ' + ctx.zip : '') + '.';
+        renderReps();
+        // If a category is already picked, re-render the letter.
+        if (categoryEl.value) renderLetter();
+      })
+      .catch(function(err){
+        repStatusEl.textContent = 'Could not load candidates for ' + ctx.stateName + ' (' + err.message + ').';
+      });
+  }
+
+  // --- Render the letter textarea with placeholders filled.
+  function renderLetter() {
+    var cat = categoryEl.value;
+    var tmpl = TEMPLATES[cat];
+    if (!tmpl) { letterEl.value = ''; updateMeta(); return; }
+    var filled = tmpl.body
+      .replace(/{{salutation}}/g, 'Senator/Representative')
+      .replace(/{{rep_lastname}}/g, '[Rep Last Name]')
+      .replace(/{{name}}/g, nameEl.value.trim() || '[Your Name]')
+      .replace(/{{city}}/g, (cityEl.value.trim() || (ctx.stateName || '[Your City]')) )
+      .replace(/{{state}}/g, ctx.stateName || '[Your State]');
+    letterEl.value = filled;
+    metaEl.textContent = 'Subject: ' + tmpl.subject.replace('{{state}}', ctx.stateName || '[Your State]');
+    updateMeta();
+    renderReps();
+  }
+
+  function updateMeta() {
+    charCountEl.textContent = letterEl.value.length;
+  }
+
+  // --- Render the per-rep cards with Copy / Send / Call buttons.
+  function renderReps() {
+    if (!ctx.reps || !ctx.reps.length) {
+      repListEl.innerHTML = '<div class="pt-hint">No reps resolved yet. Enter your ZIP or state code above.</div>';
+      return;
+    }
+    var html = '';
+    ctx.reps.forEach(function(c, i){
+      var prof = c.profile || {};
+      var contact = prof.contact_form || c.website || '';
+      var phone = prof.phone || '';
+      var twitter = (prof.twitter || '').replace(/^@/, '');
+      var repSlug = c.slug || '';
+      var office = c.office || '';
+      var salutation = /senator/i.test(office) ? 'Senator' :
+                       /governor/i.test(office) ? 'Governor' :
+                       'Representative';
+      var lastName = (c.name || '').split(' ').pop();
+
+      var letterForRep = (letterEl.value || '')
+        .replace(/\[Rep Last Name\]/g, lastName)
+        .replace(/Senator\/Representative/g, salutation);
+
+      html += '<div class="pt-rep" role="listitem">' +
+        '<div class="pt-rep-name">' +
+          '<span class="name">' + esc(c.name) + '</span>' +
+          '<span class="office">' + esc(office) + (c.district ? ' — District ' + esc(c.district) : '') + '</span>' +
+        '</div>' +
+        '<div class="pt-rep-actions">' +
+          '<button type="button" class="pt-btn primary" data-copy-idx="' + i + '" aria-label="Copy letter for ' + esc(c.name) + '">📋 Copy Letter</button>' +
+          (contact ? '<a class="pt-btn" href="' + esc(contact) + '" target="_blank" rel="noopener" aria-label="Open contact form for ' + esc(c.name) + '">✉️ Send</a>' : '') +
+          (phone ? '<a class="pt-btn" href="tel:' + esc(phone.replace(/[^+\d]/g,'')) + '" aria-label="Call ' + esc(c.name) + '">📞 Call</a>' : '') +
+          (repSlug ? '<a class="pt-btn" href="candidates/' + esc((c.state || ctx.state || 'va').toLowerCase()) + '/' + esc(repSlug) + '.html" aria-label="View profile for ' + esc(c.name) + '">Profile</a>' : '') +
+        '</div>' +
+      '</div>';
+    });
+    repListEl.innerHTML = html;
+
+    // Wire Copy buttons to stash the rep-personalized letter on the clipboard.
+    repListEl.querySelectorAll('button[data-copy-idx]').forEach(function(btn){
+      btn.addEventListener('click', function(){
+        var i = Number(btn.dataset.copyIdx);
+        var c = ctx.reps[i];
+        var office = c.office || '';
+        var salutation = /senator/i.test(office) ? 'Senator' :
+                         /governor/i.test(office) ? 'Governor' :
+                         'Representative';
+        var lastName = (c.name || '').split(' ').pop();
+        var letter = (letterEl.value || '')
+          .replace(/\[Rep Last Name\]/g, lastName)
+          .replace(/Senator\/Representative/g, salutation);
+        if (!letter.trim()) { alert('Draft your letter first — step 3.'); return; }
+        var done = function(){
+          var prev = btn.innerHTML;
+          btn.innerHTML = '✓ Copied';
+          setTimeout(function(){ btn.innerHTML = prev; }, 2200);
+        };
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(letter).then(done).catch(function(){
+            // Fallback: hidden textarea + execCommand.
+            fallbackCopy(letter); done();
+          });
+        } else {
+          fallbackCopy(letter); done();
+        }
+      });
+    });
+  }
+
+  function fallbackCopy(text) {
+    var ta = document.createElement('textarea');
+    ta.value = text;
+    ta.style.position = 'fixed'; ta.style.left = '-9999px';
+    document.body.appendChild(ta);
+    ta.select();
+    try { document.execCommand('copy'); } catch (e) {}
+    document.body.removeChild(ta);
+  }
+
+  // --- Event wiring.
+  resolveEl.addEventListener('click', resolveInput);
+  zipEl.addEventListener('keydown', function(e){ if (e.key === 'Enter') { e.preventDefault(); resolveInput(); }});
+  categoryEl.addEventListener('change', renderLetter);
+  nameEl.addEventListener('input', renderLetter);
+  cityEl.addEventListener('input', renderLetter);
+  letterEl.addEventListener('input', function(){ updateMeta(); renderReps(); });
+
+  // --- Deep-link: support ?zip= and ?cat= on the URL.
+  (function(){
+    var params = new URLSearchParams(window.location.search);
+    var z = params.get('zip') || params.get('state');
+    var cat = params.get('cat');
+    if (z) {
+      zipEl.value = z;
+      resolveInput();
+    }
+    if (cat && TEMPLATES[cat]) {
+      categoryEl.value = cat;
+      // renderLetter runs after reps load
+    }
+  })();
+})();
+</script>
+<script>
+(function(){
+  var btn = document.getElementById('themeToggle');
+  if (!btn) return;
+  var saved = localStorage.getItem('theme');
+  if (saved === 'light') document.documentElement.setAttribute('data-theme','light');
+  btn.addEventListener('click', function(){
+    var cur = document.documentElement.getAttribute('data-theme') === 'light' ? 'dark' : 'light';
+    if (cur === 'light') document.documentElement.setAttribute('data-theme','light');
+    else document.documentElement.removeAttribute('data-theme');
+    localStorage.setItem('theme', cur);
+  });
+  var navToggle = document.querySelector('.nav-toggle');
+  var navLinks = document.querySelector('.nav-links');
+  if (navToggle && navLinks) navToggle.addEventListener('click', function(){ navLinks.classList.toggle('open'); });
+})();
+</script>
+
+</body>
+</html>

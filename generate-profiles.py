@@ -220,6 +220,9 @@ def build_contact_html(candidate):
     website = candidate.get('website') or ''
     sources = candidate.get('sources') or []
     twitter = profile.get('twitter') or ''
+    facebook = profile.get('facebook') or ''
+    youtube = profile.get('youtube') or ''
+    district_offices = profile.get('district_offices') or []
 
     # Pick best "send a message" URL
     if not contact_form:
@@ -245,7 +248,8 @@ def build_contact_html(candidate):
             phone_note = f'U.S. Capitol switchboard — ask for Representative {candidate["name"]}.'
 
     # If we have nothing to show, render nothing (keeps profiles lean)
-    if not display_phone and not contact_form and not email and not twitter:
+    if not (display_phone or contact_form or email or twitter or facebook
+            or youtube or district_offices):
         return ''
 
     parts = []
@@ -289,12 +293,66 @@ def build_contact_html(candidate):
             f'<span class="prof-contact-value">@{handle}</span>'
             f'</span></a>'
         )
+    if facebook:
+        parts.append(
+            f'<a class="prof-contact-btn" href="https://facebook.com/{facebook}" target="_blank" rel="noopener">'
+            f'<span class="prof-contact-icon" aria-hidden="true">&#128101;</span>'
+            f'<span class="prof-contact-text">'
+            f'<span class="prof-contact-label">Facebook</span>'
+            f'<span class="prof-contact-value">/{facebook}</span>'
+            f'</span></a>'
+        )
+    if youtube:
+        parts.append(
+            f'<a class="prof-contact-btn" href="https://www.youtube.com/channel/{youtube}" target="_blank" rel="noopener">'
+            f'<span class="prof-contact-icon" aria-hidden="true">&#127909;</span>'
+            f'<span class="prof-contact-text">'
+            f'<span class="prof-contact-label">YouTube</span>'
+            f'<span class="prof-contact-value">Channel</span>'
+            f'</span></a>'
+        )
+
+    # ---- District offices section (for federal officials) ----
+    district_html = ''
+    if district_offices:
+        office_items = []
+        for o in district_offices[:6]:  # cap at 6 to keep profile readable
+            city = o.get('city', '')
+            state_ab = o.get('state', '')
+            phone_raw = o.get('phone', '')
+            zip_code = o.get('zip', '')
+            addr = o.get('address', '')
+            parts_line = []
+            if city or state_ab:
+                parts_line.append(f'<strong>{city}{", " + state_ab if state_ab else ""}</strong>')
+            if phone_raw:
+                tel = 'tel:+1' + re.sub(r'\D', '', phone_raw)
+                parts_line.append(f'<a href="{tel}">{phone_raw}</a>')
+            if addr:
+                suffix = f' {zip_code}' if zip_code else ''
+                parts_line.append(f'{addr}{suffix}')
+            if parts_line:
+                office_items.append(
+                    '<div class="prof-district-office">' + ' &middot; '.join(parts_line) + '</div>'
+                )
+        if office_items:
+            plural = 's' if len(office_items) > 1 else ''
+            district_html = (
+                '<details class="prof-district-details">'
+                f'<summary>&#128205; Local district office{plural} '
+                f'({len(office_items)})</summary>'
+                '<div class="prof-district-list">'
+                + ''.join(office_items)
+                + '</div></details>'
+            )
 
     html = '<div class="prof-contact">'
     html += '<h2>Contact This Official</h2>'
     html += '<div class="prof-contact-grid">' + ''.join(parts) + '</div>'
     if phone_note:
         html += f'<p class="prof-contact-note">&#128161; {phone_note}</p>'
+    if district_html:
+        html += district_html
     html += ('<p class="prof-contact-tagline">Reach out directly. Your voice matters. '
              '<em>Proverbs 29:2 — When the righteous are in authority, the people rejoice.</em></p>')
     html += '</div>'
@@ -911,6 +969,46 @@ def generate_profile(candidate, categories, meta, nav=None):
       color: rgba(201,168,76,0.8);
       font-style: italic;
     }}
+
+    /* District offices (collapsible) */
+    .prof-district-details {{
+      margin-top: 12px;
+      padding-top: 10px;
+      border-top: 1px dashed var(--border);
+      font-size: 0.82rem;
+    }}
+    .prof-district-details summary {{
+      cursor: pointer;
+      color: #c9a84c;
+      font-weight: 600;
+      padding: 4px 0;
+      outline: none;
+      user-select: none;
+    }}
+    .prof-district-details summary:hover {{ text-decoration: underline; }}
+    .prof-district-details[open] summary {{ margin-bottom: 8px; }}
+    .prof-district-list {{
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      padding-left: 6px;
+      border-left: 2px solid rgba(201,168,76,0.25);
+      padding-top: 2px;
+    }}
+    .prof-district-office {{
+      color: var(--gray);
+      line-height: 1.55;
+      padding: 4px 8px;
+    }}
+    .prof-district-office strong {{
+      color: var(--white);
+      margin-right: 6px;
+    }}
+    .prof-district-office a {{
+      color: var(--accent);
+      text-decoration: none;
+    }}
+    .prof-district-office a:hover {{ text-decoration: underline; }}
 
     .prof-sources {{
       padding: 16px 24px;

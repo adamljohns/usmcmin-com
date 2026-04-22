@@ -9,6 +9,18 @@
   <link rel="icon" href="assets/img/favicon.png" type="image/png">
   <style>
     .sc-container { max-width: 1300px; margin: 0 auto; padding: 20px; }
+    /* Visually-hidden utility for screen-reader-only text. Keeps content
+       in the accessibility tree while hiding it from sighted users.
+       Matches the WebAIM-recommended rule set. */
+    .vh {
+      position: absolute !important;
+      width: 1px; height: 1px;
+      padding: 0; margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
+    }
 
     .sc-hero {
       text-align: center;
@@ -171,32 +183,39 @@
     <a href="citizen-issues.html">Issues</a>
   </div>
 
-  <div class="sc-filter">
-    <select id="filterState" onchange="switchState(this.value)" style="font-weight:600;color:#c9a84c;border-color:rgba(201,168,76,0.4);">
+  <div class="sc-filter" role="search" aria-label="Scorecard table filters">
+    <label for="filterState" class="vh">State</label>
+    <select id="filterState" onchange="switchState(this.value)" aria-label="Filter by state" style="font-weight:600;color:#c9a84c;border-color:rgba(201,168,76,0.4);">
       <option value="VA">Virginia</option>
     </select>
-    <input type="text" id="searchInput" placeholder="Search name, office, or city..." oninput="renderTables()">
-    <select id="filterJurisdiction" onchange="renderTables()">
+    <label for="searchInput" class="vh">Search candidates</label>
+    <input type="search" id="searchInput" placeholder="Search name, office, or city..." aria-label="Search candidates by name, office, or city" oninput="renderTables()">
+    <label for="filterJurisdiction" class="vh">Jurisdiction</label>
+    <select id="filterJurisdiction" onchange="renderTables()" aria-label="Filter by jurisdiction">
       <option value="all">All Jurisdictions</option>
     </select>
-    <select id="filterLevel" onchange="renderTables()">
+    <label for="filterLevel" class="vh">Government level</label>
+    <select id="filterLevel" onchange="renderTables()" aria-label="Filter by government level">
       <option value="all">All Levels</option>
       <option value="federal">Federal</option>
       <option value="state">State</option>
       <option value="local">Local</option>
     </select>
-    <select id="filterParty" onchange="renderTables()">
+    <label for="filterParty" class="vh">Party</label>
+    <select id="filterParty" onchange="renderTables()" aria-label="Filter by party">
       <option value="all">All Parties</option>
       <option value="R">Republican</option>
       <option value="D">Democrat</option>
       <option value="I">Independent</option>
     </select>
-    <select id="filterFocus" onchange="renderTables()">
+    <label for="filterFocus" class="vh">Focus ordering</label>
+    <select id="filterFocus" onchange="renderTables()" aria-label="Section order: which level appears first">
       <option value="local-first">Local First</option>
       <option value="federal-first">Federal First</option>
       <option value="state-first">State First</option>
     </select>
-    <select id="filterSort" onchange="onSortChange()">
+    <label for="filterSort" class="vh">Sort order</label>
+    <select id="filterSort" onchange="onSortChange()" aria-label="Sort candidates within each section">
       <option value="score-desc">Sort: Score High → Low</option>
       <option value="score-asc">Sort: Score Low → High</option>
       <option value="name">Sort: Name A → Z</option>
@@ -205,7 +224,8 @@
     </select>
   </div>
 
-  <div id="tablesContainer"></div>
+  <div id="filterAnnounce" role="status" aria-live="polite" aria-atomic="true" class="vh"></div>
+  <div id="tablesContainer" role="region" aria-label="Candidate scorecard table" aria-live="polite"></div>
 </div>
 
 <footer>
@@ -463,22 +483,33 @@ function renderTables() {
     });
   });
 
+  function esc(s) {
+    return String(s == null ? '' : s)
+      .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+  }
+
   var catHeaders = '';
   DATA.categories.forEach(function(cat) {
     var shortLabel = cat.label.length > 10 ? cat.label.substring(0, 9) + '.' : cat.label;
-    catHeaders += '<th><div class="cat-th"><img src="assets/icons/' + cat.icon + '" alt="" width="18" height="18"><span>' + shortLabel + '</span></div></th>';
+    catHeaders += '<th scope="col"><div class="cat-th"><img src="assets/icons/' + esc(cat.icon) + '" alt="" width="18" height="18"><span aria-label="' + esc(cat.label) + '">' + esc(shortLabel) + '</span></div></th>';
   });
 
   var html = '';
+  var totalRendered = 0;
 
   function renderGroup(jurisdiction) {
     if (!groups[jurisdiction] || !groups[jurisdiction].length) return;
     var candidates = groups[jurisdiction];
+    totalRendered += candidates.length;
 
-    html += '<div class="jurisdiction-section">';
-    html += '<h2 class="jurisdiction-header">' + jurisdiction + ' <span style="font-size:0.7rem;color:var(--gray);font-weight:400;">(' + candidates.length + ')</span></h2>';
-    html += '<table class="sc-table"><thead><tr>';
-    html += '<th>Candidate</th><th>Party</th><th>Total/' + MAX_TOTAL + '</th>';
+    var sectionId = 'jur-' + jurisdiction.toLowerCase().replace(/[^a-z0-9]+/g, '-');
+    html += '<section class="jurisdiction-section" aria-labelledby="' + sectionId + '">';
+    html += '<h2 class="jurisdiction-header" id="' + sectionId + '">' + esc(jurisdiction) + ' <span style="font-size:0.7rem;color:var(--gray);font-weight:400;">(' + candidates.length + ')</span></h2>';
+    html += '<table class="sc-table">';
+    html += '<caption class="vh">RESOLUTE Citizen scorecard for ' + esc(jurisdiction) + ': ' + candidates.length + ' candidate(s), sorted per current filter. Columns show party, total score out of ' + MAX_TOTAL + ', and per-category subscore out of ' + MAX_PER_TOPIC + '.</caption>';
+    html += '<thead><tr>';
+    html += '<th scope="col">Candidate</th><th scope="col">Party</th><th scope="col">Total/' + MAX_TOTAL + '</th>';
     html += catHeaders;
     html += '</tr></thead><tbody>';
 
@@ -487,25 +518,28 @@ function renderTables() {
       var tc = totalClass(total.score, total.answered);
 
       html += '<tr>';
-      html += '<td><a class="cand-link" href="candidates/' + (c.state || 'va').toLowerCase() + '/' + c.slug + '.html">' + c.name + '</a><br><span style="font-size:0.7rem;color:var(--gray);font-weight:400;">' + c.office + '</span></td>';
-      html += '<td>' + partyHtml(c.party) + '</td>';
-      html += '<td><span class="' + tc + '">' + total.score + '/' + MAX_TOTAL + '</span></td>';
+      html += '<th scope="row" class="cell-cand"><a class="cand-link" href="candidates/' + esc((c.state || 'va').toLowerCase()) + '/' + esc(c.slug) + '.html">' + esc(c.name) + '</a><br><span style="font-size:0.7rem;color:var(--gray);font-weight:400;">' + esc(c.office) + '</span></th>';
+      html += '<td aria-label="Party: ' + esc(c.party || 'Unknown') + '">' + partyHtml(c.party) + '</td>';
+      html += '<td aria-label="Total score ' + total.score + ' of ' + MAX_TOTAL + '"><span class="' + tc + '">' + total.score + '/' + MAX_TOTAL + '</span></td>';
 
       DATA.categories.forEach(function(cat) {
         var cs = calcCatScore(c.scores[cat.id]);
         var sc = scoreClass(cs.score, cs.answered);
         var cellClass = cs.score === MAX_PER_TOPIC ? ' class="perfect-cell"' : '';
+        var ariaLabel = cs.answered === 0
+          ? cat.label + ': not yet scored'
+          : cat.label + ': ' + cs.score + ' of ' + MAX_PER_TOPIC;
         if (cs.answered === 0) {
-          html += '<td' + cellClass + '><span class="s-null">&mdash;</span></td>';
+          html += '<td' + cellClass + ' aria-label="' + esc(ariaLabel) + '"><span class="s-null">&mdash;</span></td>';
         } else {
-          html += '<td' + cellClass + '><span class="' + sc + '">' + cs.score + '</span></td>';
+          html += '<td' + cellClass + ' aria-label="' + esc(ariaLabel) + '"><span class="' + sc + '">' + cs.score + '</span></td>';
         }
       });
 
       html += '</tr>';
     });
 
-    html += '</tbody></table></div>';
+    html += '</tbody></table></section>';
   }
 
   groupOrder.forEach(renderGroup);
@@ -517,6 +551,17 @@ function renderTables() {
   });
 
   document.getElementById('tablesContainer').innerHTML = html;
+
+  // Live-region announcement: tell screen-reader users how the filter
+  // resolved so they aren't left guessing after a select change.
+  var announceEl = document.getElementById('filterAnnounce');
+  if (announceEl) {
+    var stateName = (document.getElementById('filterState')
+      && document.getElementById('filterState').selectedOptions[0]
+      && document.getElementById('filterState').selectedOptions[0].textContent) || '';
+    announceEl.textContent = 'Showing ' + totalRendered +
+      ' candidate(s) for ' + stateName + ' with current filters.';
+  }
 }
 </script>
 <script>

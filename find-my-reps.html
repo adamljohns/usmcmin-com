@@ -12,6 +12,17 @@
   <link rel="icon" href="assets/img/favicon.png" type="image/png">
   <style>
     .fmr-container { max-width: 1100px; margin: 0 auto; padding: 20px; }
+    /* Visually-hidden utility: content in the accessibility tree, not
+       rendered visually. WebAIM-recommended rule set. */
+    .vh {
+      position: absolute !important;
+      width: 1px; height: 1px;
+      padding: 0; margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
+    }
 
     .fmr-hero {
       text-align: center;
@@ -333,15 +344,21 @@
     <h1>Find <span class="gold">My</span> Representatives</h1>
     <p class="subtitle">Type your city, county, or state. See every elected official who represents you — with scores, sources, and tap-to-call contact info.</p>
 
-    <div class="fmr-search-wrap">
+    <div class="fmr-search-wrap" role="search">
+      <label for="fmrSearch" class="vh">Find your representatives by city, county, state, or ZIP</label>
       <input
-        type="text" id="fmrSearch"
+        type="search" id="fmrSearch"
         class="fmr-search"
         placeholder="Type a city, county, state, or ZIP (e.g., Melbourne, FL or 32901)"
         autocomplete="off"
         autocapitalize="words"
-        spellcheck="false">
-      <div id="fmrSuggestions" class="fmr-suggestions" role="listbox"></div>
+        spellcheck="false"
+        role="combobox"
+        aria-autocomplete="list"
+        aria-controls="fmrSuggestions"
+        aria-expanded="false"
+        aria-activedescendant="">
+      <div id="fmrSuggestions" class="fmr-suggestions" role="listbox" aria-label="Matching places"></div>
     </div>
     <div class="fmr-search-note">No address required — type your 5-digit ZIP to pin down your US House district, or a city/county name for a broader civic map.</div>
   </div>
@@ -351,7 +368,8 @@
     <p style="margin-top:10px;">Don't see your city? Type your <strong>state name</strong> or <strong>county name</strong> — you'll still get all your federal and state reps.</p>
   </div>
 
-  <div id="fmrResults" class="fmr-results hidden"></div>
+  <div id="fmrAnnounce" role="status" aria-live="polite" aria-atomic="true" class="vh"></div>
+  <div id="fmrResults" class="fmr-results hidden" role="region" aria-label="Your representatives"></div>
 </div>
 
 <footer>
@@ -519,16 +537,31 @@
   }
 
   var highlighted = 0;
+  function syncActiveDescendant() {
+    var items = sugEl.querySelectorAll('.fmr-suggestion');
+    items.forEach(function(it, i){
+      var on = (i === highlighted);
+      it.classList.toggle('highlighted', on);
+      it.setAttribute('aria-selected', on ? 'true' : 'false');
+    });
+    var active = items[highlighted];
+    if (active) searchEl.setAttribute('aria-activedescendant', active.id);
+    else searchEl.setAttribute('aria-activedescendant', '');
+  }
   function renderSuggestions(list) {
     sugEl.innerHTML = '';
     if (list.length === 0) {
       sugEl.classList.remove('active');
+      searchEl.setAttribute('aria-expanded', 'false');
+      searchEl.setAttribute('aria-activedescendant', '');
       return;
     }
     list.forEach(function(p, i){
       var div = document.createElement('div');
+      div.id = 'fmrSug-' + i;
       div.className = 'fmr-suggestion' + (i === highlighted ? ' highlighted' : '');
       div.setAttribute('role', 'option');
+      div.setAttribute('aria-selected', i === highlighted ? 'true' : 'false');
       div.setAttribute('data-index', i);
       var typeLabel = p.kind === 'city' ? 'City'
         : p.kind === 'county' ? 'County'
@@ -539,6 +572,8 @@
       sugEl.appendChild(div);
     });
     sugEl.classList.add('active');
+    searchEl.setAttribute('aria-expanded', 'true');
+    syncActiveDescendant();
   }
 
   searchEl.addEventListener('focus', function(){
@@ -559,22 +594,34 @@
     if (e.key === 'ArrowDown') {
       e.preventDefault();
       highlighted = Math.min(highlighted + 1, items.length - 1);
-      items.forEach(function(it, i){ it.classList.toggle('highlighted', i === highlighted); });
+      syncActiveDescendant();
     } else if (e.key === 'ArrowUp') {
       e.preventDefault();
       highlighted = Math.max(highlighted - 1, 0);
-      items.forEach(function(it, i){ it.classList.toggle('highlighted', i === highlighted); });
+      syncActiveDescendant();
+    } else if (e.key === 'Home') {
+      e.preventDefault();
+      highlighted = 0;
+      syncActiveDescendant();
+    } else if (e.key === 'End') {
+      e.preventDefault();
+      highlighted = items.length - 1;
+      syncActiveDescendant();
     } else if (e.key === 'Enter') {
       e.preventDefault();
       var list = search(searchEl.value);
       if (list[highlighted]) selectPlace(list[highlighted]);
     } else if (e.key === 'Escape') {
       sugEl.classList.remove('active');
+      searchEl.setAttribute('aria-expanded', 'false');
+      searchEl.setAttribute('aria-activedescendant', '');
     }
   });
   document.addEventListener('click', function(e){
     if (!searchEl.contains(e.target) && !sugEl.contains(e.target)) {
       sugEl.classList.remove('active');
+      searchEl.setAttribute('aria-expanded', 'false');
+      searchEl.setAttribute('aria-activedescendant', '');
     }
   });
 
@@ -829,6 +876,14 @@
 
         resultsEl.innerHTML = html;
 
+        // Announce the result count to assistive tech.
+        var announceEl = document.getElementById('fmrAnnounce');
+        if (announceEl) {
+          var totalReps = (grouped.federal||[]).length + (grouped.statewide||[]).length +
+            (grouped.legislature||[]).length + (grouped.county||[]).length + (grouped.city||[]).length;
+          announceEl.textContent = 'Loaded ' + totalReps + ' representative(s) for ' + place.display + '.';
+        }
+
         // Update URL for shareability
         try {
           var url = new URL(window.location);
@@ -843,6 +898,8 @@
           '<p>We don\'t have data for that area yet.</p>' +
           '<p style="margin-top:10px;font-size:0.82rem;">' + err.message + '</p>' +
         '</div>';
+        var announceEl = document.getElementById('fmrAnnounce');
+        if (announceEl) announceEl.textContent = 'No representatives data for ' + place.display + ' yet.';
       });
   }
 

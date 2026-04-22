@@ -1,0 +1,461 @@
+{
+  "_meta": {
+    "version": "1.0.0",
+    "updated": "2026-04-21",
+    "description": "Domain-to-bias lookup. Seeded from the 80 most-cited domains in scorecard.json (which cover 96.3% of all source citations), plus a forward-looking list of mainstream media outlets we expect to cite during claim extraction. Bias ratings (where present) are drawn from the two best-known public bias-rating projects: AllSides and Ad Fontes Media. For state legislative sites, official .gov domains, and advocacy organizations not rated by either service, a `type` classification is provided so the UI can still render a truthful badge (e.g., 'Official Gov', 'Right think tank').",
+    "attribution": {
+      "allsides": {
+        "name": "AllSides Media Bias Ratings",
+        "url": "https://www.allsides.com/media-bias/ratings",
+        "methodology_url": "https://www.allsides.com/media-bias/media-bias-rating-methods",
+        "scale": ["Left", "Lean Left", "Center", "Lean Right", "Right"],
+        "note": "AllSides ratings are based on blind bias surveys, editorial reviews, independent reviews, third-party data, and community feedback. Ratings can shift over time."
+      },
+      "ad_fontes_media": {
+        "name": "Ad Fontes Media — Interactive Media Bias Chart",
+        "url": "https://adfontesmedia.com/interactive-media-bias-chart/",
+        "methodology_url": "https://adfontesmedia.com/how-ad-fontes-ranks-news-sources/",
+        "scale": "Bias: -42 (most Left) to +42 (most Right). Reliability: 0 (unreliable/propaganda) to 64 (original fact reporting).",
+        "note": "Ad Fontes rates individual articles and aggregates to source-level scores. Values here reflect the source-level aggregate at the time this file was last updated."
+      }
+    },
+    "types": {
+      "mainstream": "General-audience news outlet (print, TV, or digital).",
+      "local_news": "Local or regional news outlet with primarily local coverage.",
+      "think_tank": "Policy research organization; typically produces white papers and scorecards.",
+      "advocacy": "Organization that openly advocates a political/policy position; includes PACs, scorecards, and issue groups.",
+      "reference": "Non-partisan reference or civic-data project.",
+      "official_gov": "Official government domain (federal, state, municipal, court, or legislative).",
+      "legal": "Court opinion, bill text, or other primary legal document source.",
+      "social": "Social media platform. Bias is user-driven; flag as social so visitors know to weigh accordingly.",
+      "cdn": "Content-delivery or file-hosting service. Bias is inherited from whoever posted the file; display inherits from the document context if available.",
+      "encyclopedia": "Community-edited or curated encyclopedia."
+    },
+    "curation_notes": "Where a domain's bias was not clearly findable from a primary AllSides or Ad Fontes page, the `allsides`/`ad_fontes_*` fields are omitted rather than guessed. A `lean` field is used on advocacy/think-tank entries to communicate the organization's self-declared or plainly-evident political orientation; this is not a claim of the same rigor as an AllSides rating and is presented differently in the UI."
+  },
+  "domains": {
+    "ballotpedia.org": {
+      "display_name": "Ballotpedia",
+      "type": "reference",
+      "allsides": "Center",
+      "note": "Non-partisan civic-data encyclopedia run by the Lucy Burns Institute; AllSides-rated Center."
+    },
+    "justfacts.votesmart.org": {
+      "display_name": "Vote Smart — Just Facts",
+      "type": "reference",
+      "lean": "Center",
+      "note": "Project Vote Smart's biographical and voting-record database. Self-described non-partisan reference."
+    },
+    "votesmart.org": {
+      "display_name": "Vote Smart",
+      "type": "reference",
+      "lean": "Center"
+    },
+    "congress.gov": {
+      "display_name": "Congress.gov",
+      "type": "official_gov",
+      "note": "Official legislative information service of the U.S. Congress, run by the Library of Congress."
+    },
+    "senate.gov": {
+      "display_name": "U.S. Senate",
+      "type": "official_gov"
+    },
+    "house.gov": {
+      "display_name": "U.S. House",
+      "type": "official_gov"
+    },
+    "supremecourt.gov": {
+      "display_name": "U.S. Supreme Court",
+      "type": "official_gov"
+    },
+    "whitehouse.gov": {
+      "display_name": "The White House",
+      "type": "official_gov",
+      "note": "Official — content reflects the sitting administration's positions."
+    },
+    "clerk.house.gov": {
+      "display_name": "Clerk of the U.S. House — Roll Call Votes",
+      "type": "official_gov"
+    },
+
+    "heritageaction.com": {
+      "display_name": "Heritage Action Scorecard",
+      "type": "advocacy",
+      "lean": "Right",
+      "note": "Lobbying and scorecard arm of The Heritage Foundation; scores Members of Congress on conservative policy priorities."
+    },
+    "heritage.org": {
+      "display_name": "The Heritage Foundation",
+      "type": "think_tank",
+      "lean": "Right",
+      "allsides": "Right",
+      "note": "Conservative think tank; AllSides rates the organization's content as Right."
+    },
+    "reportcard.familyfoundation.org": {
+      "display_name": "The Family Foundation of Virginia — Report Card",
+      "type": "advocacy",
+      "lean": "Right",
+      "note": "Virginia-based Christian advocacy organization's legislative scorecard."
+    },
+    "txvaluesaction.org": {
+      "display_name": "Texas Values Action",
+      "type": "advocacy",
+      "lean": "Right",
+      "note": "501(c)(4) advocacy arm of Texas Values; scores Texas legislators on family-policy priorities."
+    },
+    "texasrighttolife.com": {
+      "display_name": "Texas Right to Life",
+      "type": "advocacy",
+      "lean": "Right",
+      "note": "Texas pro-life advocacy organization."
+    },
+    "tsrapac.com": {
+      "display_name": "Tennessee State Rifle Association PAC",
+      "type": "advocacy",
+      "lean": "Right",
+      "note": "Tennessee firearms-rights political action committee."
+    },
+    "vcdl.org": {
+      "display_name": "Virginia Citizens Defense League",
+      "type": "advocacy",
+      "lean": "Right",
+      "note": "Virginia firearms-rights advocacy organization."
+    },
+    "freedomindex.us": {
+      "display_name": "Freedom Index",
+      "type": "advocacy",
+      "lean": "Right",
+      "note": "Conservative legislative-scorecard project."
+    },
+    "index.idahofreedom.org": {
+      "display_name": "Idaho Freedom Index",
+      "type": "advocacy",
+      "lean": "Right",
+      "note": "Idaho Freedom Foundation's legislative scorecard."
+    },
+    "nrapvf.org": {
+      "display_name": "NRA Political Victory Fund",
+      "type": "advocacy",
+      "lean": "Right",
+      "note": "Political endorsement and scorecard arm of the National Rifle Association."
+    },
+    "plannedparenthoodaction.org": {
+      "display_name": "Planned Parenthood Action Fund",
+      "type": "advocacy",
+      "lean": "Left",
+      "note": "501(c)(4) advocacy arm of Planned Parenthood; scores legislators on reproductive-rights priorities."
+    },
+    "progressivevotersguide.com": {
+      "display_name": "Progressive Voters Guide",
+      "type": "advocacy",
+      "lean": "Left",
+      "note": "Progressive endorsement guide."
+    },
+    "aclu.org": {
+      "display_name": "American Civil Liberties Union",
+      "type": "advocacy",
+      "lean": "Left",
+      "allsides": "Left",
+      "note": "Civil-liberties advocacy organization; AllSides rates as Left."
+    },
+
+    "vpap.org": {
+      "display_name": "Virginia Public Access Project",
+      "type": "reference",
+      "lean": "Center",
+      "note": "Non-partisan Virginia campaign-finance and elections-data project."
+    },
+    "opensecrets.org": {
+      "display_name": "OpenSecrets (CRP)",
+      "type": "reference",
+      "lean": "Center",
+      "note": "Center for Responsive Politics — non-partisan campaign finance tracker."
+    },
+    "en.wikipedia.org": {
+      "display_name": "Wikipedia",
+      "type": "encyclopedia",
+      "note": "Community-edited encyclopedia; AllSides does not rate it, but third-party studies generally find a center-left tilt on political topics."
+    },
+
+    "legis.state.pa.us": {"display_name": "Pennsylvania General Assembly", "type": "official_gov"},
+    "legis.ga.gov": {"display_name": "Georgia General Assembly", "type": "official_gov"},
+    "nysenate.gov": {"display_name": "New York State Senate", "type": "official_gov"},
+    "leg.mn.gov": {"display_name": "Minnesota Legislature", "type": "official_gov"},
+    "malegislature.gov": {"display_name": "Massachusetts Legislature", "type": "official_gov"},
+    "senate.mo.gov": {"display_name": "Missouri Senate", "type": "official_gov"},
+    "mgaleg.maryland.gov": {"display_name": "Maryland General Assembly", "type": "official_gov"},
+    "cga.ct.gov": {"display_name": "Connecticut General Assembly", "type": "official_gov"},
+    "legislature.maine.gov": {"display_name": "Maine Legislature", "type": "official_gov"},
+    "capitol.texas.gov": {"display_name": "Texas Legislature", "type": "official_gov"},
+    "legislature.vermont.gov": {"display_name": "Vermont Legislature", "type": "official_gov"},
+    "ncleg.gov": {"display_name": "North Carolina General Assembly", "type": "official_gov"},
+    "ilga.gov": {"display_name": "Illinois General Assembly", "type": "official_gov"},
+    "legislature.ms.gov": {"display_name": "Mississippi Legislature", "type": "official_gov"},
+    "scstatehouse.gov": {"display_name": "South Carolina State House", "type": "official_gov"},
+    "kslegislature.org": {"display_name": "Kansas Legislature", "type": "official_gov"},
+    "myfloridahouse.gov": {"display_name": "Florida House of Representatives", "type": "official_gov"},
+    "flsenate.gov": {"display_name": "Florida Senate", "type": "official_gov"},
+    "leg.mt.gov": {"display_name": "Montana Legislature", "type": "official_gov"},
+    "iga.in.gov": {"display_name": "Indiana General Assembly", "type": "official_gov"},
+    "legis.iowa.gov": {"display_name": "Iowa Legislature", "type": "official_gov"},
+    "leg.wa.gov": {"display_name": "Washington State Legislature", "type": "official_gov"},
+    "oklegislature.gov": {"display_name": "Oklahoma Legislature", "type": "official_gov"},
+    "legislature.mi.gov": {"display_name": "Michigan Legislature", "type": "official_gov"},
+    "legis.la.gov": {"display_name": "Louisiana Legislature", "type": "official_gov"},
+    "legislature.state.al.us": {"display_name": "Alabama Legislature", "type": "official_gov"},
+    "virginiageneralassembly.gov": {"display_name": "Virginia General Assembly", "type": "official_gov"},
+    "ndlegis.gov": {"display_name": "North Dakota Legislative Branch", "type": "official_gov"},
+    "legislature.ky.gov": {"display_name": "Kentucky General Assembly", "type": "official_gov"},
+    "wvlegislature.gov": {"display_name": "West Virginia Legislature", "type": "official_gov"},
+    "legislature.ohio.gov": {"display_name": "Ohio General Assembly", "type": "official_gov"},
+    "arkleg.state.ar.us": {"display_name": "Arkansas General Assembly", "type": "official_gov"},
+    "lis.virginia.gov": {"display_name": "Virginia Legislative Information System", "type": "official_gov"},
+    "capitol.tn.gov": {"display_name": "Tennessee General Assembly", "type": "official_gov"},
+    "leginfo.legislature.ca.gov": {"display_name": "California Legislative Information", "type": "official_gov"},
+    "legislature.ca.gov": {"display_name": "California State Legislature", "type": "official_gov"},
+    "rilegislature.gov": {"display_name": "Rhode Island General Assembly", "type": "official_gov"},
+    "nmlegis.gov": {"display_name": "New Mexico Legislature", "type": "official_gov"},
+    "sdlegislature.gov": {"display_name": "South Dakota Legislature", "type": "official_gov"},
+    "legislature.idaho.gov": {"display_name": "Idaho Legislature", "type": "official_gov"},
+    "le.utah.gov": {"display_name": "Utah Legislature", "type": "official_gov"},
+    "leg.colorado.gov": {"display_name": "Colorado General Assembly", "type": "official_gov"},
+    "wyoleg.gov": {"display_name": "Wyoming Legislature", "type": "official_gov"},
+    "azleg.gov": {"display_name": "Arizona Legislature", "type": "official_gov"},
+    "oregonlegislature.gov": {"display_name": "Oregon Legislative Assembly", "type": "official_gov"},
+    "capitol.hawaii.gov": {"display_name": "Hawaii State Legislature", "type": "official_gov"},
+    "legis.delaware.gov": {"display_name": "Delaware General Assembly", "type": "official_gov"},
+    "akleg.gov": {"display_name": "Alaska Legislature", "type": "official_gov"},
+    "nebraskalegislature.gov": {"display_name": "Nebraska Legislature", "type": "official_gov"},
+    "njleg.state.nj.us": {"display_name": "New Jersey Legislature", "type": "official_gov"},
+    "legis.wisconsin.gov": {"display_name": "Wisconsin State Legislature", "type": "official_gov"},
+    "gencourt.state.nh.us": {"display_name": "New Hampshire General Court", "type": "official_gov"},
+    "leg.state.nv.us": {"display_name": "Nevada Legislature", "type": "official_gov"},
+    "dccouncil.gov": {"display_name": "Council of the District of Columbia", "type": "official_gov"},
+    "floridasupremecourt.org": {"display_name": "Florida Supreme Court", "type": "official_gov"},
+
+    "citycouncil.atlantaga.gov": {"display_name": "Atlanta City Council", "type": "official_gov"},
+    "rva.gov": {"display_name": "City of Richmond, VA", "type": "official_gov"},
+    "clerk.virginiabeach.gov": {"display_name": "Virginia Beach City Clerk", "type": "official_gov"},
+    "cityofchesapeake.net": {"display_name": "City of Chesapeake, VA", "type": "official_gov"},
+    "tampa.gov": {"display_name": "City of Tampa, FL", "type": "official_gov"},
+    "savannahga.gov": {"display_name": "City of Savannah, GA", "type": "official_gov"},
+    "stpete.org": {"display_name": "City of St. Petersburg, FL", "type": "official_gov"},
+    "norfolk.gov": {"display_name": "City of Norfolk, VA", "type": "official_gov"},
+    "charlottenc.gov": {"display_name": "City of Charlotte, NC", "type": "official_gov"},
+    "raleighnc.gov": {"display_name": "City of Raleigh, NC", "type": "official_gov"},
+    "hampton.gov": {"display_name": "City of Hampton, VA", "type": "official_gov"},
+    "nnva.gov": {"display_name": "City of Newport News, VA", "type": "official_gov"},
+    "suffolkva.us": {"display_name": "City of Suffolk, VA", "type": "official_gov"},
+    "portsmouthva.gov": {"display_name": "City of Portsmouth, VA", "type": "official_gov"},
+    "fredericksburgva.gov": {"display_name": "City of Fredericksburg, VA", "type": "official_gov"},
+    "sanmarcostx.gov": {"display_name": "City of San Marcos, TX", "type": "official_gov"},
+    "smcisd.net": {"display_name": "San Marcos Consolidated ISD", "type": "official_gov"},
+    "moore.house.gov": {"display_name": "U.S. Rep. Barry Moore (AL-01) — Official House Page", "type": "official_gov"},
+
+    "texastribune.org": {
+      "display_name": "The Texas Tribune",
+      "type": "local_news",
+      "allsides": "Center",
+      "note": "Non-partisan nonprofit newsroom; AllSides rates as Center."
+    },
+    "virginiamercury.com": {
+      "display_name": "Virginia Mercury",
+      "type": "local_news",
+      "lean": "Lean Left",
+      "note": "Nonprofit newsroom; part of States Newsroom network, which publishes a progressive editorial statement."
+    },
+    "fredericksburgfreepress.com": {"display_name": "Fredericksburg Free Press", "type": "local_news"},
+    "fxbgadvance.com": {"display_name": "FXBG Advance", "type": "local_news"},
+    "fredericksburg.com": {"display_name": "Fredericksburg.com (The Free Lance-Star)", "type": "local_news"},
+    "virginiaindependentnews.com": {"display_name": "Virginia Independent News", "type": "local_news"},
+    "communityimpact.com": {"display_name": "Community Impact", "type": "local_news"},
+
+    "irp.cdn-website.com": {
+      "display_name": "CDN-hosted file",
+      "type": "cdn",
+      "note": "Content-delivery host. The actual publisher depends on the specific file path; bias inherits from the sibling citation (commonly family-foundation scorecards in our dataset)."
+    },
+
+    "facebook.com": {"display_name": "Facebook", "type": "social"},
+    "x.com": {"display_name": "X / Twitter", "type": "social"},
+    "twitter.com": {"display_name": "X / Twitter", "type": "social"},
+    "youtube.com": {"display_name": "YouTube", "type": "social"},
+    "instagram.com": {"display_name": "Instagram", "type": "social"},
+
+    "nytimes.com": {
+      "display_name": "The New York Times",
+      "type": "mainstream",
+      "allsides": "Lean Left",
+      "ad_fontes_bias": -7,
+      "ad_fontes_reliability": 41
+    },
+    "washingtonpost.com": {
+      "display_name": "The Washington Post",
+      "type": "mainstream",
+      "allsides": "Lean Left",
+      "ad_fontes_bias": -7,
+      "ad_fontes_reliability": 40
+    },
+    "wsj.com": {
+      "display_name": "The Wall Street Journal",
+      "type": "mainstream",
+      "allsides": "Center",
+      "ad_fontes_bias": 3,
+      "ad_fontes_reliability": 44,
+      "note": "AllSides distinguishes news (Center) from opinion (Lean Right); this rating reflects news."
+    },
+    "foxnews.com": {
+      "display_name": "Fox News",
+      "type": "mainstream",
+      "allsides": "Right",
+      "ad_fontes_bias": 15,
+      "ad_fontes_reliability": 31
+    },
+    "cnn.com": {
+      "display_name": "CNN",
+      "type": "mainstream",
+      "allsides": "Lean Left",
+      "ad_fontes_bias": -8,
+      "ad_fontes_reliability": 38
+    },
+    "msnbc.com": {
+      "display_name": "MSNBC",
+      "type": "mainstream",
+      "allsides": "Left",
+      "ad_fontes_bias": -17,
+      "ad_fontes_reliability": 31
+    },
+    "reuters.com": {
+      "display_name": "Reuters",
+      "type": "mainstream",
+      "allsides": "Center",
+      "ad_fontes_bias": -2,
+      "ad_fontes_reliability": 47
+    },
+    "apnews.com": {
+      "display_name": "Associated Press",
+      "type": "mainstream",
+      "allsides": "Lean Left",
+      "ad_fontes_bias": -3,
+      "ad_fontes_reliability": 47
+    },
+    "npr.org": {
+      "display_name": "NPR",
+      "type": "mainstream",
+      "allsides": "Lean Left",
+      "ad_fontes_bias": -6,
+      "ad_fontes_reliability": 42
+    },
+    "bbc.com": {
+      "display_name": "BBC",
+      "type": "mainstream",
+      "allsides": "Center",
+      "ad_fontes_bias": -4,
+      "ad_fontes_reliability": 44
+    },
+    "politico.com": {
+      "display_name": "Politico",
+      "type": "mainstream",
+      "allsides": "Lean Left",
+      "ad_fontes_bias": -4,
+      "ad_fontes_reliability": 41
+    },
+    "thehill.com": {
+      "display_name": "The Hill",
+      "type": "mainstream",
+      "allsides": "Center",
+      "ad_fontes_bias": -2,
+      "ad_fontes_reliability": 40
+    },
+    "axios.com": {
+      "display_name": "Axios",
+      "type": "mainstream",
+      "allsides": "Center",
+      "ad_fontes_bias": -5,
+      "ad_fontes_reliability": 42
+    },
+    "usatoday.com": {
+      "display_name": "USA Today",
+      "type": "mainstream",
+      "allsides": "Lean Left",
+      "ad_fontes_bias": -5,
+      "ad_fontes_reliability": 41
+    },
+    "bloomberg.com": {
+      "display_name": "Bloomberg News",
+      "type": "mainstream",
+      "allsides": "Lean Left",
+      "ad_fontes_bias": -4,
+      "ad_fontes_reliability": 44
+    },
+    "economist.com": {
+      "display_name": "The Economist",
+      "type": "mainstream",
+      "allsides": "Lean Left",
+      "ad_fontes_bias": -5,
+      "ad_fontes_reliability": 45
+    },
+    "nypost.com": {
+      "display_name": "New York Post",
+      "type": "mainstream",
+      "allsides": "Lean Right",
+      "ad_fontes_bias": 11,
+      "ad_fontes_reliability": 34
+    },
+    "breitbart.com": {
+      "display_name": "Breitbart",
+      "type": "mainstream",
+      "allsides": "Right",
+      "ad_fontes_bias": 20,
+      "ad_fontes_reliability": 22
+    },
+    "dailywire.com": {
+      "display_name": "The Daily Wire",
+      "type": "mainstream",
+      "allsides": "Right",
+      "ad_fontes_bias": 17,
+      "ad_fontes_reliability": 28
+    },
+    "washingtonexaminer.com": {
+      "display_name": "Washington Examiner",
+      "type": "mainstream",
+      "allsides": "Lean Right",
+      "ad_fontes_bias": 9,
+      "ad_fontes_reliability": 36
+    },
+    "nationalreview.com": {
+      "display_name": "National Review",
+      "type": "mainstream",
+      "allsides": "Lean Right",
+      "ad_fontes_bias": 10,
+      "ad_fontes_reliability": 37
+    },
+    "theatlantic.com": {
+      "display_name": "The Atlantic",
+      "type": "mainstream",
+      "allsides": "Left",
+      "ad_fontes_bias": -12,
+      "ad_fontes_reliability": 40
+    },
+    "vox.com": {
+      "display_name": "Vox",
+      "type": "mainstream",
+      "allsides": "Left",
+      "ad_fontes_bias": -11,
+      "ad_fontes_reliability": 36
+    },
+    "newsweek.com": {
+      "display_name": "Newsweek",
+      "type": "mainstream",
+      "allsides": "Center",
+      "ad_fontes_bias": -3,
+      "ad_fontes_reliability": 35
+    },
+    "c-span.org": {
+      "display_name": "C-SPAN",
+      "type": "reference",
+      "allsides": "Center",
+      "note": "Public-affairs cable network; primary-source legislative footage."
+    }
+  }
+}

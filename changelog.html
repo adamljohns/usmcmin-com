@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Scorecard Changelog — RESOLUTE Citizen | U.S.M.C. Ministries</title>
+  <meta name="description" content="Every edit to the RESOLUTE Citizen scorecard is a public commit. This page queries the live GitHub commit history for data/scorecard.json so any visitor can audit what changed, when, and why.">
+  <meta property="og:title" content="Scorecard Changelog — RESOLUTE Citizen">
+  <meta property="og:description" content="Public audit trail for every change to the RESOLUTE Citizen scorecard.">
+  <meta property="og:type" content="website">
+  <link rel="stylesheet" href="assets/css/main.css">
+  <link rel="icon" href="assets/img/favicon.png" type="image/png">
+  <style>
+    :root {
+      --cl-panel: rgba(255,255,255,0.02);
+      --cl-border: var(--border, #2a2a2a);
+      --cl-accent: var(--accent, #e3b662);
+      --cl-muted: var(--gray, #888);
+      --cl-text: var(--white, #f5f5f5);
+    }
+    .cl-container {
+      max-width: 980px;
+      margin: 0 auto;
+      padding: 28px 20px 60px;
+    }
+    .cl-hero {
+      text-align: center;
+      padding: 40px 20px 30px;
+      border-bottom: 2px solid var(--cl-border);
+      margin-bottom: 20px;
+    }
+    .cl-hero-badge {
+      display: inline-block;
+      font-size: 0.68rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 3px;
+      color: #c9a84c;
+      background: rgba(201,168,76,0.12);
+      border: 1px solid rgba(201,168,76,0.25);
+      padding: 6px 18px;
+      border-radius: 20px;
+      margin-bottom: 16px;
+    }
+    .cl-hero h1 {
+      font-size: clamp(1.8rem, 4vw, 2.6rem);
+      color: var(--cl-text);
+      margin-bottom: 10px;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+    }
+    .cl-hero p {
+      color: var(--cl-muted);
+      font-size: 0.92rem;
+      max-width: 720px;
+      margin: 0 auto;
+      line-height: 1.7;
+    }
+    .cl-hero p a {
+      color: var(--cl-accent);
+      text-decoration: underline;
+    }
+    .cl-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+      padding: 12px 0;
+      border-bottom: 1px dashed var(--cl-border);
+      margin-bottom: 16px;
+      font-size: 0.82rem;
+      color: var(--cl-muted);
+    }
+    .cl-meta a { color: var(--cl-accent); }
+    .cl-refresh {
+      padding: 6px 14px;
+      background: transparent;
+      border: 1px solid var(--cl-accent);
+      color: var(--cl-accent);
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 0.78rem;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      font-weight: 700;
+    }
+    .cl-refresh:hover { background: rgba(227,182,98,0.1); }
+    #clList { list-style: none; padding: 0; margin: 0; }
+    .cl-item {
+      padding: 16px 0;
+      border-bottom: 1px solid var(--cl-border);
+      display: grid;
+      grid-template-columns: 140px 1fr auto;
+      gap: 18px;
+      align-items: start;
+    }
+    .cl-item:last-child { border-bottom: none; }
+    .cl-date {
+      color: var(--cl-muted);
+      font-size: 0.8rem;
+      line-height: 1.5;
+      font-variant-numeric: tabular-nums;
+    }
+    .cl-date-abs { color: var(--cl-text); font-weight: 600; }
+    .cl-body { min-width: 0; }
+    .cl-title {
+      color: var(--cl-text);
+      font-weight: 600;
+      font-size: 0.95rem;
+      line-height: 1.45;
+      margin: 0 0 6px 0;
+    }
+    .cl-title a {
+      color: inherit;
+      text-decoration: none;
+    }
+    .cl-title a:hover { color: var(--cl-accent); }
+    .cl-author {
+      color: var(--cl-muted);
+      font-size: 0.78rem;
+      margin-bottom: 6px;
+    }
+    .cl-stats {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 0.74rem;
+      color: var(--cl-muted);
+      margin-top: 4px;
+    }
+    .cl-stats .additions { color: #4ade80; }
+    .cl-stats .deletions { color: #f87171; }
+    .cl-stats .filesig { color: var(--cl-muted); }
+    .cl-sha {
+      font-family: "SF Mono", ui-monospace, monospace;
+      font-size: 0.72rem;
+      color: var(--cl-muted);
+      padding: 4px 10px;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid var(--cl-border);
+      border-radius: 4px;
+      text-decoration: none;
+    }
+    .cl-sha:hover { color: var(--cl-accent); border-color: var(--cl-accent); }
+    .cl-empty, .cl-error {
+      padding: 40px 20px;
+      text-align: center;
+      color: var(--cl-muted);
+      font-size: 0.9rem;
+      line-height: 1.7;
+    }
+    .cl-error {
+      color: #f87171;
+      border: 1px solid rgba(248,113,113,0.3);
+      border-radius: 8px;
+      background: rgba(248,113,113,0.05);
+    }
+    .cl-load-more {
+      display: block;
+      margin: 20px auto 0;
+      padding: 10px 24px;
+      background: transparent;
+      border: 1px solid var(--cl-border);
+      color: var(--cl-text);
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 0.82rem;
+    }
+    .cl-load-more:hover {
+      border-color: var(--cl-accent);
+      color: var(--cl-accent);
+    }
+    .cl-footnote {
+      margin-top: 28px;
+      padding-top: 16px;
+      border-top: 1px dashed var(--cl-border);
+      color: var(--cl-muted);
+      font-size: 0.78rem;
+      line-height: 1.6;
+    }
+    .cl-footnote a { color: var(--cl-accent); }
+    .cl-spinner {
+      display: inline-block;
+      width: 14px;
+      height: 14px;
+      border: 2px solid var(--cl-border);
+      border-top-color: var(--cl-accent);
+      border-radius: 50%;
+      animation: cl-spin 0.9s linear infinite;
+      vertical-align: middle;
+      margin-right: 6px;
+    }
+    @keyframes cl-spin { to { transform: rotate(360deg); } }
+    @media (max-width: 640px) {
+      .cl-item {
+        grid-template-columns: 1fr;
+        gap: 8px;
+      }
+      .cl-date { font-size: 0.74rem; }
+      .cl-sha { justify-self: start; }
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a href="/" class="nav-brand" style="text-decoration:none">
+    <img src="assets/img/logo.png" alt="U.S.M.C. Ministries" style="object-fit:contain">
+    <div class="nav-brand-text">
+      <div class="name">U.S.M.C. Ministries</div>
+      <div class="tag">Warriors Equipped</div>
+    </div>
+  </a>
+  <ul class="nav-links">
+    <li><a href="citizen.html">Scorecard</a></li>
+    <li><a href="find-my-reps.html">Find My Reps</a></li>
+    <li><a href="changelog.html" class="active">Changelog</a></li>
+    <li><a href="about.html">About</a></li>
+    <li><a href="https://usmcmin.org" target="_blank">Ministry Site</a></li>
+  </ul>
+  <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme" title="Switch light/dark mode">🌙</button>
+  <button class="nav-toggle" aria-label="Menu"><span></span><span></span><span></span></button>
+</nav>
+
+<div class="cl-container">
+  <div class="cl-hero">
+    <span class="cl-hero-badge">Audit Trail</span>
+    <h1>Scorecard Changelog</h1>
+    <p>
+      Every edit to the RESOLUTE Citizen scorecard is a public commit in
+      <a href="https://github.com/adamljohns/usmcmin-com" target="_blank" rel="noopener">our repository</a>.
+      This page queries the live GitHub history for
+      <code>data/scorecard.json</code> — what changed, when, by whom, and
+      with what stats. Click any commit hash to see the full diff.
+    </p>
+  </div>
+
+  <div class="cl-meta">
+    <div id="clStatus"><span class="cl-spinner"></span>Loading commits from GitHub API…</div>
+    <button id="clRefresh" class="cl-refresh" type="button">Refresh</button>
+  </div>
+
+  <ul id="clList" aria-live="polite"></ul>
+
+  <button id="clLoadMore" class="cl-load-more" type="button" hidden>Load older commits</button>
+
+  <div class="cl-footnote">
+    <p>
+      This page uses the unauthenticated
+      <a href="https://docs.github.com/en/rest/commits/commits" target="_blank" rel="noopener">GitHub Commits API</a>,
+      which is rate-limited to 60 requests per hour per IP. If the list
+      fails to load, GitHub may be throttling your IP — try again in a bit.
+      The canonical truth is the repository itself.
+    </p>
+    <p>
+      Did we get something wrong? Open an
+      <a href="https://github.com/adamljohns/usmcmin-com/issues" target="_blank" rel="noopener">issue</a>
+      or submit evidence on any individual profile's feedback form with
+      the claim id in the subject line. Proverbs 29:2.
+    </p>
+  </div>
+</div>
+
+<footer>
+  <p><strong>RESOLUTE Citizen</strong> — a module of <a href="https://usmcmin.org">U.S.M.C. Ministries</a></p>
+</footer>
+
+<script>
+(function(){
+  var REPO = 'adamljohns/usmcmin-com';
+  var PATH = 'data/scorecard.json';
+  var PER_PAGE = 30;
+
+  var statusEl = document.getElementById('clStatus');
+  var listEl = document.getElementById('clList');
+  var loadMoreEl = document.getElementById('clLoadMore');
+  var refreshEl = document.getElementById('clRefresh');
+  var currentPage = 1;
+
+  function fmtDate(iso) {
+    try {
+      var d = new Date(iso);
+      var now = new Date();
+      var diffMs = now - d;
+      var diffHr = diffMs / 3600000;
+      var diffDay = diffMs / 86400000;
+      var rel;
+      if (diffHr < 1) rel = Math.max(1, Math.floor(diffMs / 60000)) + ' min ago';
+      else if (diffHr < 24) rel = Math.floor(diffHr) + ' hr ago';
+      else if (diffDay < 30) rel = Math.floor(diffDay) + ' days ago';
+      else rel = Math.floor(diffDay / 30) + ' mo ago';
+      var abs = d.getFullYear() + '-' +
+        String(d.getMonth() + 1).padStart(2,'0') + '-' +
+        String(d.getDate()).padStart(2,'0');
+      return { abs: abs, rel: rel };
+    } catch (e) {
+      return { abs: iso, rel: '' };
+    }
+  }
+
+  function escapeHtml(s) {
+    return String(s || '')
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;');
+  }
+
+  function renderCommit(commit) {
+    var sha = commit.sha || '';
+    var shortSha = sha.substring(0, 7);
+    var msg = (commit.commit && commit.commit.message) || '(no message)';
+    var title = msg.split('\n')[0];
+    var author = (commit.commit && commit.commit.author && commit.commit.author.name) || 'unknown';
+    var when = (commit.commit && commit.commit.author && commit.commit.author.date) || '';
+    var date = fmtDate(when);
+    var htmlUrl = commit.html_url || ('https://github.com/' + REPO + '/commit/' + sha);
+
+    var li = document.createElement('li');
+    li.className = 'cl-item';
+
+    var dateCell = document.createElement('div');
+    dateCell.className = 'cl-date';
+    dateCell.innerHTML =
+      '<div class="cl-date-abs">' + escapeHtml(date.abs) + '</div>' +
+      '<div>' + escapeHtml(date.rel) + '</div>';
+    li.appendChild(dateCell);
+
+    var body = document.createElement('div');
+    body.className = 'cl-body';
+    var titleEl = document.createElement('h3');
+    titleEl.className = 'cl-title';
+    titleEl.innerHTML = '<a href="' + htmlUrl + '" target="_blank" rel="noopener">' +
+      escapeHtml(title) + '</a>';
+    body.appendChild(titleEl);
+    var authorEl = document.createElement('div');
+    authorEl.className = 'cl-author';
+    authorEl.textContent = 'by ' + author;
+    body.appendChild(authorEl);
+    // Stats require a secondary call (per-commit API). We load lazily
+    // to avoid burning the rate-limit budget.
+    var statsEl = document.createElement('div');
+    statsEl.className = 'cl-stats';
+    statsEl.innerHTML = '<span class="filesig">data/scorecard.json changed</span>';
+    statsEl.dataset.sha = sha;
+    body.appendChild(statsEl);
+    li.appendChild(body);
+
+    var shaEl = document.createElement('a');
+    shaEl.className = 'cl-sha';
+    shaEl.href = htmlUrl;
+    shaEl.target = '_blank';
+    shaEl.rel = 'noopener';
+    shaEl.textContent = shortSha;
+    li.appendChild(shaEl);
+
+    listEl.appendChild(li);
+  }
+
+  function fetchPage(page) {
+    statusEl.innerHTML = '<span class="cl-spinner"></span>Loading commits (page ' + page + ')…';
+    var url = 'https://api.github.com/repos/' + REPO +
+      '/commits?path=' + encodeURIComponent(PATH) +
+      '&per_page=' + PER_PAGE +
+      '&page=' + page;
+    return fetch(url, { headers: { 'Accept': 'application/vnd.github+json' } })
+      .then(function(r){
+        if (!r.ok) {
+          throw new Error('HTTP ' + r.status + ' — ' +
+            (r.status === 403 ? 'rate-limited by GitHub (try again shortly)'
+                              : 'request failed'));
+        }
+        return r.json();
+      });
+  }
+
+  function loadAndRender(page) {
+    fetchPage(page).then(function(commits){
+      if (!Array.isArray(commits)) {
+        throw new Error('Unexpected response shape');
+      }
+      commits.forEach(renderCommit);
+      if (commits.length < PER_PAGE) {
+        loadMoreEl.hidden = true;
+        statusEl.textContent = 'Showing ' + listEl.children.length +
+          ' commit(s) touching data/scorecard.json.';
+      } else {
+        loadMoreEl.hidden = false;
+        statusEl.textContent = 'Showing ' + listEl.children.length +
+          '+ commits. Load older to see more.';
+      }
+    }).catch(function(err){
+      statusEl.innerHTML = '<span style="color:#f87171;">Failed to load commits: ' +
+        escapeHtml(err.message) + '</span>';
+      if (!listEl.children.length) {
+        var li = document.createElement('li');
+        li.className = 'cl-error';
+        li.innerHTML = 'Could not reach GitHub just now. Try refreshing in a minute, or visit ' +
+          '<a href="https://github.com/' + REPO + '/commits/main/' + PATH + '" target="_blank" rel="noopener">' +
+          'the repository directly</a>.';
+        listEl.appendChild(li);
+      }
+    });
+  }
+
+  refreshEl.addEventListener('click', function(){
+    listEl.innerHTML = '';
+    currentPage = 1;
+    loadAndRender(1);
+  });
+  loadMoreEl.addEventListener('click', function(){
+    currentPage += 1;
+    loadAndRender(currentPage);
+  });
+
+  loadAndRender(1);
+})();
+</script>
+
+<script>
+// Theme toggle (shared pattern with rest of site).
+(function(){
+  var btn = document.getElementById('themeToggle');
+  if (!btn) return;
+  var saved = localStorage.getItem('theme');
+  if (saved === 'light') document.documentElement.setAttribute('data-theme','light');
+  btn.addEventListener('click', function(){
+    var cur = document.documentElement.getAttribute('data-theme') === 'light' ? 'dark' : 'light';
+    if (cur === 'light') document.documentElement.setAttribute('data-theme','light');
+    else document.documentElement.removeAttribute('data-theme');
+    localStorage.setItem('theme', cur);
+  });
+})();
+</script>
+
+</body>
+</html>

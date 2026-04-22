@@ -271,12 +271,16 @@
   var REPO = 'adamljohns/usmcmin-com';
   var PATH = 'data/scorecard.json';
   var PER_PAGE = 30;
+  // Local cache of per-commit stats keyed by sha. Persists across
+  // "Refresh" clicks so we don't refetch what we already have.
+  var STATS_CACHE = Object.create(null);
 
   var statusEl = document.getElementById('clStatus');
   var listEl = document.getElementById('clList');
   var loadMoreEl = document.getElementById('clLoadMore');
   var refreshEl = document.getElementById('clRefresh');
   var currentPage = 1;
+  var statsObserver = null;
 
   function fmtDate(iso) {
     try {
@@ -339,13 +343,16 @@
     authorEl.textContent = 'by ' + author;
     body.appendChild(authorEl);
     // Stats require a secondary call (per-commit API). We load lazily
-    // to avoid burning the rate-limit budget.
+    // via IntersectionObserver so rate-limit only gets spent on what
+    // the visitor actually scrolls into view.
     var statsEl = document.createElement('div');
-    statsEl.className = 'cl-stats';
+    statsEl.className = 'cl-stats cl-stats-pending';
     statsEl.innerHTML = '<span class="filesig">data/scorecard.json changed</span>';
     statsEl.dataset.sha = sha;
     body.appendChild(statsEl);
     li.appendChild(body);
+    if (statsObserver) statsObserver.observe(statsEl);
+    else renderStatsInto(statsEl);  // Graceful fallback for old browsers.
 
     var shaEl = document.createElement('a');
     shaEl.className = 'cl-sha';
@@ -356,6 +363,95 @@
     li.appendChild(shaEl);
 
     listEl.appendChild(li);
+  }
+
+  function fetchCommitStats(sha) {
+    if (STATS_CACHE[sha]) return Promise.resolve(STATS_CACHE[sha]);
+    var url = 'https://api.github.com/repos/' + REPO + '/commits/' + sha;
+    return fetch(url, { headers: { 'Accept': 'application/vnd.github+json' } })
+      .then(function(r){
+        if (!r.ok) throw new Error('HTTP ' + r.status);
+        return r.json();
+      })
+      .then(function(data){
+        // Find the stats for the one file we care about — data/scorecard.json
+        // — rather than the whole-commit roll-up (which includes the
+        // per-state JSON + profile HTML churn that would drown out the
+        // real delta).
+        var scorecardFile = (data.files || []).find(function(f){
+          return f.filename === PATH;
+        });
+        // The GitHub commit API caps `files` at 300 items. For commits
+        // that churn every profile HTML (7,800+ files), scorecard.json
+        // may not be in the returned slice. Mark those as truncated
+        // rather than showing a misleading whole-commit aggregate.
+        var totalFiles = (data.files || []).length;
+        var truncated = totalFiles >= 300 && !scorecardFile;
+        var info;
+        if (scorecardFile) {
+          info = {
+            additions: scorecardFile.additions || 0,
+            deletions: scorecardFile.deletions || 0,
+            files_changed: totalFiles,
+            truncated: false,
+          };
+        } else if (truncated) {
+          info = {
+            additions: null,
+            deletions: null,
+            files_changed: totalFiles,
+            truncated: true,
+          };
+        } else {
+          // scorecard.json genuinely wasn't touched (shouldn't happen
+          // given how we filter the commit list, but defensive).
+          info = {
+            additions: 0,
+            deletions: 0,
+            files_changed: totalFiles,
+            truncated: false,
+          };
+        }
+        STATS_CACHE[sha] = info;
+        return info;
+      });
+  }
+
+  function renderStatsInto(statsEl) {
+    var sha = statsEl.dataset.sha;
+    if (!sha) return;
+    statsEl.classList.remove('cl-stats-pending');
+    statsEl.classList.add('cl-stats-loading');
+    statsEl.innerHTML = '<span class="filesig">loading stats…</span>';
+    fetchCommitStats(sha).then(function(info){
+      statsEl.classList.remove('cl-stats-loading');
+      statsEl.classList.add('cl-stats-loaded');
+      if (info.truncated) {
+        statsEl.innerHTML =
+          '<span class="filesig">large commit (' + info.files_changed +
+          '+ files) · scorecard.json delta not returned by the GitHub ' +
+          'API within the 300-file window</span>';
+      } else {
+        statsEl.innerHTML =
+          '<span class="additions">+' + info.additions.toLocaleString() + '</span>' +
+          '<span class="deletions">−' + info.deletions.toLocaleString() + '</span>' +
+          '<span class="filesig">in data/scorecard.json · ' + info.files_changed + ' file' + (info.files_changed === 1 ? '' : 's') + ' changed total</span>';
+      }
+    }).catch(function(err){
+      statsEl.classList.remove('cl-stats-loading');
+      statsEl.classList.add('cl-stats-failed');
+      statsEl.innerHTML = '<span class="filesig">stats unavailable (' + escapeHtml(err.message) + ')</span>';
+    });
+  }
+
+  if ('IntersectionObserver' in window) {
+    statsObserver = new IntersectionObserver(function(entries){
+      entries.forEach(function(entry){
+        if (!entry.isIntersecting) return;
+        statsObserver.unobserve(entry.target);
+        renderStatsInto(entry.target);
+      });
+    }, { rootMargin: '200px 0px' });
   }
 
   function fetchPage(page) {

@@ -598,6 +598,7 @@
     .prof-questions { padding: 0; }
     .prof-q {
       display: flex;
+      flex-wrap: wrap;
       justify-content: space-between;
       align-items: center;
       padding: 10px 20px;
@@ -614,6 +615,117 @@
     .prof-q-answer {
       font-size: 0.78rem;
       white-space: nowrap;
+    }
+    .prof-q-claims {
+      flex-basis: 100%;
+      margin-top: 4px;
+      margin-left: 0;
+      font-size: 0.82rem;
+    }
+    .prof-q-claim-toggle {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      cursor: pointer;
+      list-style: none;
+      color: var(--accent, #e3b662);
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.3px;
+      padding: 2px 0;
+      outline: none;
+    }
+    .prof-q-claim-toggle::-webkit-details-marker { display: none; }
+    .prof-q-claim-toggle::before {
+      content: "▸";
+      font-size: 0.75rem;
+      transition: transform 0.15s;
+    }
+    .prof-q-claims[open] > .prof-q-claim-toggle::before {
+      transform: rotate(90deg);
+    }
+    .prof-q-claim-i {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 16px;
+      height: 16px;
+      border: 1px solid currentColor;
+      border-radius: 50%;
+      font-family: Georgia, serif;
+      font-style: italic;
+      font-size: 0.7rem;
+      font-weight: 700;
+    }
+    .prof-q-claim-toggle:focus-visible {
+      outline: 2px solid var(--accent, #e3b662);
+      outline-offset: 2px;
+      border-radius: 4px;
+    }
+    .prof-q-claim-list {
+      margin: 8px 0 4px 0;
+      padding: 0;
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .prof-q-claim {
+      padding: 10px 12px;
+      border-left: 3px solid var(--accent, #e3b662);
+      background: rgba(255,255,255,0.02);
+      border-radius: 0 6px 6px 0;
+    }
+    .prof-q-claim-text {
+      margin: 0 0 8px 0;
+      color: var(--white, #f5f5f5);
+      line-height: 1.55;
+    }
+    .prof-q-claim-src-list {
+      list-style: none;
+      padding: 0;
+      margin: 0 0 8px 0;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .prof-q-claim-src {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    .prof-q-claim-src a {
+      color: var(--accent, #e3b662);
+      text-decoration: none;
+      word-break: break-all;
+      font-size: 0.78rem;
+    }
+    .prof-q-claim-src a:hover { text-decoration: underline; }
+    .prof-q-claim-meta {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+      font-size: 0.7rem;
+      color: var(--text-muted, #94a3b8);
+    }
+    .prof-q-claim-badge {
+      padding: 2px 8px;
+      border-radius: 10px;
+      font-weight: 700;
+      letter-spacing: 0.3px;
+      text-transform: uppercase;
+      font-size: 0.64rem;
+    }
+    .prof-q-claim-badge.verified { background: #166534; color: #d1fae5; }
+    .prof-q-claim-badge.disputed { background: #78350f; color: #fed7aa; }
+    .prof-q-claim-dispute {
+      color: var(--text-muted, #94a3b8);
+      text-decoration: underline;
+    }
+    .prof-q-claim-dispute:hover {
+      color: var(--accent, #e3b662);
     }
 
     footer {
@@ -713,22 +825,27 @@
         <div class="prof-q">
           <div class="prof-q-text">Candidate only displays the American flag (no foreign flags) in public appearances and communications</div>
           <div class="prof-q-answer"><span style="color:#f44336;font-weight:700;">FALSE (0)</span></div>
+          
         </div>
         <div class="prof-q">
           <div class="prof-q-text">Candidate promotes America exclusively and never promotes or defends foreign nations' interests over U.S. interests</div>
           <div class="prof-q-answer"><span style="color:#f44336;font-weight:700;">FALSE (0)</span></div>
+          
         </div>
         <div class="prof-q">
           <div class="prof-q-text">Candidate is a U.S.-born citizen with no dual citizenship</div>
           <div class="prof-q-answer"><span style="color:#4CAF50;font-weight:700;">TRUE (+2)</span></div>
+          
         </div>
         <div class="prof-q">
           <div class="prof-q-text">Candidate has never accepted donations from foreign governments, foreign-backed lobbies (e.g., AIPAC), or foreign-linked PACs</div>
           <div class="prof-q-answer"><span style="color:#666;font-style:italic;">Not yet verified</span></div>
+          
         </div>
         <div class="prof-q">
           <div class="prof-q-text">Candidate supports verifiable paper ballots, opposes electronic voting machines, and advocates for election integrity measures including hand-counted audits and voter ID requirements</div>
           <div class="prof-q-answer"><span style="color:#f44336;font-weight:700;">FALSE (0)</span></div>
+          
         </div>
       </div>
     </div>
@@ -742,22 +859,27 @@
         <div class="prof-q">
           <div class="prof-q-text">Candidate affirms marriage is exclusively the lifelong union of one man and one woman as instituted by God in Scripture</div>
           <div class="prof-q-answer"><span style="color:#f44336;font-weight:700;">FALSE (0)</span></div>
+          
         </div>
         <div class="prof-q">
           <div class="prof-q-text">Candidate opposes all forms of homosexual marriage, civil unions, and same-sex relationships as sinful</div>
           <div class="prof-q-answer"><span style="color:#f44336;font-weight:700;">FALSE (0)</span></div>
+          
         </div>
         <div class="prof-q">
           <div class="prof-q-text">Candidate rejects transgender ideology and affirms biological sex (male/female) as immutable and God-given</div>
           <div class="prof-q-answer"><span style="color:#f44336;font-weight:700;">FALSE (0)</span></div>
+          
         </div>
         <div class="prof-q">
           <div class="prof-q-text">Candidate supports laws that protect biblical marriage and prohibit promotion of homosexuality or gender confusion in schools/public life</div>
           <div class="prof-q-answer"><span style="color:#f44336;font-weight:700;">FALSE (0)</span></div>
+          
         </div>
         <div class="prof-q">
           <div class="prof-q-text">Candidate views sexual relations as lawful only within biblical marriage and supports civil penalties against sexual immorality (adultery, fornication, sodomy)</div>
           <div class="prof-q-answer"><span style="color:#f44336;font-weight:700;">FALSE (0)</span></div>
+          
         </div>
       </div>
     </div>
@@ -771,22 +893,27 @@
         <div class="prof-q">
           <div class="prof-q-text">Candidate affirms human life begins at conception; unborn child bears God's image and possesses full personhood/rights under biblical law</div>
           <div class="prof-q-answer"><span style="color:#f44336;font-weight:700;">FALSE (0)</span></div>
+          
         </div>
         <div class="prof-q">
           <div class="prof-q-text">Candidate supports total abolition of abortion with no exceptions (rape, incest, health of mother)</div>
           <div class="prof-q-answer"><span style="color:#f44336;font-weight:700;">FALSE (0)</span></div>
+          
         </div>
         <div class="prof-q">
           <div class="prof-q-text">Candidate views elective abortion as murder of the innocent and calls for biblical justice (civil penalties) against it</div>
           <div class="prof-q-answer"><span style="color:#f44336;font-weight:700;">FALSE (0)</span></div>
+          
         </div>
         <div class="prof-q">
           <div class="prof-q-text">Candidate rejects any public funding, subsidies, or legal protections for abortion providers or procedures</div>
           <div class="prof-q-answer"><span style="color:#f44336;font-weight:700;">FALSE (0)</span></div>
+          
         </div>
         <div class="prof-q">
           <div class="prof-q-text">Candidate advocates righteous state protection of unborn life as a core duty of government under Reformed covenant theology</div>
           <div class="prof-q-answer"><span style="color:#f44336;font-weight:700;">FALSE (0)</span></div>
+          
         </div>
       </div>
     </div>
@@ -800,22 +927,27 @@
         <div class="prof-q">
           <div class="prof-q-text">Candidate affirms the right to armed self-defense as a God-given natural right and biblical duty</div>
           <div class="prof-q-answer"><span style="color:#f44336;font-weight:700;">FALSE (0)</span></div>
+          
         </div>
         <div class="prof-q">
           <div class="prof-q-text">Candidate strongly supports the Second Amendment as an individual right that shall not be infringed for law-abiding citizens</div>
           <div class="prof-q-answer"><span style="color:#f44336;font-weight:700;">FALSE (0)</span></div>
+          
         </div>
         <div class="prof-q">
           <div class="prof-q-text">Candidate fully supports Castle Doctrine and Stand-Your-Ground laws, with no duty to retreat when lawfully defending life, family, home, or the innocent</div>
           <div class="prof-q-answer"><span style="color:#f44336;font-weight:700;">FALSE (0)</span></div>
+          
         </div>
         <div class="prof-q">
           <div class="prof-q-text">Candidate opposes all forms of gun control legislation (registration, red-flag laws, licensing, bans, or confiscation) that restrict the right of law-abiding citizens to keep and bear arms</div>
           <div class="prof-q-answer"><span style="color:#f44336;font-weight:700;">FALSE (0)</span></div>
+          
         </div>
         <div class="prof-q">
           <div class="prof-q-text">Candidate views a well-armed citizenry as essential for the preservation of liberty, protection of innocent life, and as a check against tyranny, consistent with Reformed covenant theology and America's Founding principles</div>
           <div class="prof-q-answer"><span style="color:#f44336;font-weight:700;">FALSE (0)</span></div>
+          
         </div>
       </div>
     </div>
@@ -829,22 +961,27 @@
         <div class="prof-q">
           <div class="prof-q-text">Candidate supports closing the border and halting all illegal immigration</div>
           <div class="prof-q-answer"><span style="color:#f44336;font-weight:700;">FALSE (0)</span></div>
+          
         </div>
         <div class="prof-q">
           <div class="prof-q-text">Candidate supports the removal and deportation of all illegal immigrants</div>
           <div class="prof-q-answer"><span style="color:#f44336;font-weight:700;">FALSE (0)</span></div>
+          
         </div>
         <div class="prof-q">
           <div class="prof-q-text">Candidate supports protecting Anglo-Saxon breeding stock and demographic continuity</div>
           <div class="prof-q-answer"><span style="color:#f44336;font-weight:700;">FALSE (0)</span></div>
+          
         </div>
         <div class="prof-q">
           <div class="prof-q-text">Candidate supports preserving multi-generational Anglo-Saxon American heritage</div>
           <div class="prof-q-answer"><span style="color:#f44336;font-weight:700;">FALSE (0)</span></div>
+          
         </div>
         <div class="prof-q">
           <div class="prof-q-text">Candidate supports immigration policies that protect the historic Anglo-Saxon Christian character of the nation</div>
           <div class="prof-q-answer"><span style="color:#f44336;font-weight:700;">FALSE (0)</span></div>
+          
         </div>
       </div>
     </div>
@@ -858,22 +995,27 @@
         <div class="prof-q">
           <div class="prof-q-text">Candidate supports absolute parental authority over children's education including homeschool, private, and religious school choice</div>
           <div class="prof-q-answer"><span style="color:#f44336;font-weight:700;">FALSE (0)</span></div>
+          
         </div>
         <div class="prof-q">
           <div class="prof-q-text">Candidate opposes sexually explicit or ideologically subversive materials in school libraries and curriculum</div>
           <div class="prof-q-answer"><span style="color:#f44336;font-weight:700;">FALSE (0)</span></div>
+          
         </div>
         <div class="prof-q">
           <div class="prof-q-text">Candidate opposes Critical Race Theory, DEI mandates, and all forms of Marxist ideology in public schools</div>
           <div class="prof-q-answer"><span style="color:#f44336;font-weight:700;">FALSE (0)</span></div>
+          
         </div>
         <div class="prof-q">
           <div class="prof-q-text">Candidate supports voluntary prayer, Bible study, and religious expression in public schools without penalty</div>
           <div class="prof-q-answer"><span style="color:#f44336;font-weight:700;">FALSE (0)</span></div>
+          
         </div>
         <div class="prof-q">
           <div class="prof-q-text">Candidate opposes compulsory sex education and gender ideology instruction that contradicts parental values</div>
           <div class="prof-q-answer"><span style="color:#f44336;font-weight:700;">FALSE (0)</span></div>
+          
         </div>
       </div>
     </div>
@@ -887,22 +1029,27 @@
         <div class="prof-q">
           <div class="prof-q-text">Candidate supports nation self-consciously acting as 'Christian nation' via laws/customs for earthly and heavenly good in Christ</div>
           <div class="prof-q-answer"><span style="color:#f44336;font-weight:700;">FALSE (0)</span></div>
+          
         </div>
         <div class="prof-q">
           <div class="prof-q-text">Candidate advocates government promotion/favor of Christianity as true religion over neutrality</div>
           <div class="prof-q-answer"><span style="color:#f44336;font-weight:700;">FALSE (0)</span></div>
+          
         </div>
         <div class="prof-q">
           <div class="prof-q-text">Candidate supports cultural/ethnic particularity and preference for historic Anglo-Saxon/Christian heritage</div>
           <div class="prof-q-answer"><span style="color:#f44336;font-weight:700;">FALSE (0)</span></div>
+          
         </div>
         <div class="prof-q">
           <div class="prof-q-text">Candidate believes state should order public life toward Christian principles (e.g., suppress blasphemy)</div>
           <div class="prof-q-answer"><span style="color:#f44336;font-weight:700;">FALSE (0)</span></div>
+          
         </div>
         <div class="prof-q">
           <div class="prof-q-text">Candidate rejects liberal pluralism; wants civil laws explicitly based on Christian moral order</div>
           <div class="prof-q-answer"><span style="color:#f44336;font-weight:700;">FALSE (0)</span></div>
+          
         </div>
       </div>
     </div>
@@ -913,13 +1060,17 @@
   <div class="prof-nav-bar"><a class="prof-nav-btn" href="barbara-washington.html" data-direction="prev"><span class="prof-nav-arrow">← Prev</span><span class="prof-nav-text"><span class="prof-nav-name">Barbara Washington</span><span class="prof-nav-office">State Senator</span></span></a><div class="prof-nav-position">27 of 34 &middot; Missouri State Senate</div><a class="prof-nav-btn" href="doug-beck.html" data-direction="next"><span class="prof-nav-arrow">Next →</span><span class="prof-nav-text"><span class="prof-nav-name">Doug Beck</span><span class="prof-nav-office">State Senator</span></span></a></div>
 
   <!-- Feedback Form -->
-  <div class="prof-feedback" style="padding:20px 24px;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);margin-top:16px;">
+  <div id="feedback" class="prof-feedback" style="padding:20px 24px;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);margin-top:16px;scroll-margin-top:80px;">
     <h2 style="color:var(--accent);font-size:1rem;margin-bottom:8px;">Have Information About This Official?</h2>
     <p style="color:var(--gray);font-size:0.82rem;margin-bottom:14px;line-height:1.6;">Help us improve this scorecard. If you have evidence of this official's positions — voting records, social media posts, public statements, or corrections — submit it below and we'll review and update the profile.</p>
+    <div id="feedbackDisputeBanner" style="display:none;padding:10px 12px;margin-bottom:10px;background:rgba(227,182,98,0.12);border:1px solid rgba(227,182,98,0.4);border-radius:6px;color:#e3b662;font-size:0.82rem;line-height:1.5;">
+      You are disputing claim <code id="feedbackClaimId"></code>. Please describe the issue and link to the primary source that contradicts it.
+    </div>
     <form id="feedbackForm" style="display:flex;flex-direction:column;gap:10px;">
       <input type="hidden" name="candidate_name" value="Brian Williams">
       <input type="hidden" name="candidate_state" value="MO">
       <input type="hidden" name="candidate_office" value="State Senator">
+      <input type="hidden" name="dispute_claim_id" id="feedbackClaimIdHidden" value="">
       <input type="text" name="submitter_name" placeholder="Your name" required style="padding:10px 14px;background:var(--bg-dark,#0A0A0A);border:1px solid var(--border);border-radius:8px;color:var(--white);font-size:0.9rem;">
       <input type="email" name="submitter_email" placeholder="Your email" required style="padding:10px 14px;background:var(--bg-dark,#0A0A0A);border:1px solid var(--border);border-radius:8px;color:var(--white);font-size:0.9rem;">
       <textarea name="feedback" rows="4" placeholder="What should we know? Include links to sources if possible..." required style="padding:10px 14px;background:var(--bg-dark,#0A0A0A);border:1px solid var(--border);border-radius:8px;color:var(--white);font-size:0.9rem;resize:vertical;"></textarea>
@@ -928,10 +1079,42 @@
     <div id="feedbackSuccess" style="display:none;padding:14px;background:rgba(76,175,80,.15);border:1px solid #4CAF50;border-radius:8px;color:#7edd80;margin-top:12px;font-size:0.88rem;">Thank you! We'll review your submission and update the profile if verified.</div>
   </div>
   <script>
+  (function(){
+    // If the URL carries ?claim=... treat this visit as a claim-dispute.
+    // Pre-populate the textarea with the claim's text and expose the
+    // claim id as a hidden form field for the reviewer's triage.
+    var params = new URLSearchParams(window.location.search);
+    var claimId = params.get('claim');
+    if (claimId) {
+      var banner = document.getElementById('feedbackDisputeBanner');
+      var badge = document.getElementById('feedbackClaimId');
+      var hidden = document.getElementById('feedbackClaimIdHidden');
+      var textarea = document.querySelector('#feedbackForm textarea[name="feedback"]');
+      if (banner) banner.style.display = 'block';
+      if (badge) badge.textContent = claimId;
+      if (hidden) hidden.value = claimId;
+      // Try to lift the claim's text from the DOM so the user sees
+      // exactly what they're disputing inside the textarea.
+      var claimEl = document.getElementById(claimId);
+      var claimTextEl = claimEl && claimEl.querySelector('.prof-q-claim-text');
+      if (textarea) {
+        var prefill = 'Disputing claim ' + claimId + ':';
+        if (claimTextEl) prefill += '\n> ' + claimTextEl.textContent.trim();
+        prefill += '\n\nMy concern (please cite a primary source):\n';
+        textarea.value = prefill;
+        // Open the details element that contains this claim so the
+        // reader has immediate context above the form as they scroll.
+        var details = claimEl && claimEl.closest('details');
+        if (details) details.open = true;
+      }
+    }
+  })();
   document.getElementById('feedbackForm').addEventListener('submit',function(e){
     e.preventDefault();
     var fd=new FormData(this);
-    fd.append('_subject','RESOLUTE Citizen Feedback: Brian Williams');
+    var claimId = document.getElementById('feedbackClaimIdHidden').value;
+    var subjectPrefix = claimId ? 'RESOLUTE Citizen DISPUTE (' + claimId + '): ' : 'RESOLUTE Citizen Feedback: ';
+    fd.append('_subject', subjectPrefix + 'Brian Williams');
     fd.append('_template','table');
     fd.append('_captcha','false');
     fetch('https://formsubmit.co/ajax/usmcministries2022@gmail.com',{method:'POST',body:fd})

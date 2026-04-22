@@ -489,6 +489,61 @@ def generate_profile(candidate, categories, meta, nav=None):
             f'aria-hidden="true">{badge_text}</div>'
         )
 
+    # Index claims by (category, question_idx) so the per-question
+    # rows can render an "i" icon that reveals the specific evidence
+    # backing each score cell.
+    claims_by_cell = {}
+    for cl in (c.get('claims') or []):
+        key = (cl.get('category'), cl.get('question_idx'))
+        claims_by_cell.setdefault(key, []).append(cl)
+
+    def render_claim_sources(claim_sources):
+        parts = []
+        for url in claim_sources or []:
+            entry = sb.resolve(url)
+            tone = sb.badge_tone(entry)
+            name = entry.get('display_name') or url
+            parts.append(
+                f'<li class="prof-q-claim-src"><a href="{url}" target="_blank" rel="noopener">{name}</a>'
+                f'<span class="prof-bias-chip prof-bias-{tone}" title="{entry.get("note", name)}">{sb.badge_label(entry)}</span></li>'
+            )
+        return '<ul class="prof-q-claim-src-list">' + ''.join(parts) + '</ul>' if parts else ''
+
+    def render_claims_block(cat_id, q_idx):
+        items = claims_by_cell.get((cat_id, q_idx), [])
+        if not items:
+            return ''
+        rows = []
+        for cl in items:
+            cid = cl.get('id', '')
+            text = cl.get('text', '')
+            verified = cl.get('verified')
+            vdate = cl.get('verified_date') or ''
+            disputed = cl.get('disputed')
+            badge = ''
+            if disputed:
+                badge = '<span class="prof-q-claim-badge disputed">Disputed</span>'
+            elif verified:
+                badge = f'<span class="prof-q-claim-badge verified">Verified{" " + vdate if vdate else ""}</span>'
+            dispute_href = f'?claim={cid}#feedback'
+            rows.append(
+                '<li class="prof-q-claim" id="' + cid + '">'
+                f'<p class="prof-q-claim-text">{text}</p>'
+                + render_claim_sources(cl.get('sources') or [])
+                + '<div class="prof-q-claim-meta">' + badge
+                + f'<a class="prof-q-claim-dispute" href="{dispute_href}" '
+                'data-claim-dispute="1">Dispute this claim</a></div></li>'
+            )
+        n = len(items)
+        label = f'{n} claim' + ('' if n == 1 else 's')
+        return (
+            '<details class="prof-q-claims">'
+            f'<summary class="prof-q-claim-toggle" aria-label="Show evidence for this answer">'
+            f'<span class="prof-q-claim-i" aria-hidden="true">i</span> {label}</summary>'
+            '<ol class="prof-q-claim-list">' + ''.join(rows) + '</ol>'
+            '</details>'
+        )
+
     # Build category breakdown
     cat_html = ''
     for cat in categories:
@@ -506,10 +561,12 @@ def generate_profile(candidate, categories, meta, nav=None):
         answers = c['scores'].get(cat['id'], [None]*5)
         for i, q in enumerate(questions):
             a = answers[i] if i < len(answers) else None
+            claims_block = render_claims_block(cat['id'], i)
             cat_html += f'''
         <div class="prof-q">
           <div class="prof-q-text">{q}</div>
           <div class="prof-q-answer">{answer_display(a)}</div>
+          {claims_block}
         </div>'''
         cat_html += '''
       </div>
@@ -1253,6 +1310,7 @@ def generate_profile(candidate, categories, meta, nav=None):
     .prof-questions {{ padding: 0; }}
     .prof-q {{
       display: flex;
+      flex-wrap: wrap;
       justify-content: space-between;
       align-items: center;
       padding: 10px 20px;
@@ -1269,6 +1327,117 @@ def generate_profile(candidate, categories, meta, nav=None):
     .prof-q-answer {{
       font-size: 0.78rem;
       white-space: nowrap;
+    }}
+    .prof-q-claims {{
+      flex-basis: 100%;
+      margin-top: 4px;
+      margin-left: 0;
+      font-size: 0.82rem;
+    }}
+    .prof-q-claim-toggle {{
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      cursor: pointer;
+      list-style: none;
+      color: var(--accent, #e3b662);
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.3px;
+      padding: 2px 0;
+      outline: none;
+    }}
+    .prof-q-claim-toggle::-webkit-details-marker {{ display: none; }}
+    .prof-q-claim-toggle::before {{
+      content: "▸";
+      font-size: 0.75rem;
+      transition: transform 0.15s;
+    }}
+    .prof-q-claims[open] > .prof-q-claim-toggle::before {{
+      transform: rotate(90deg);
+    }}
+    .prof-q-claim-i {{
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 16px;
+      height: 16px;
+      border: 1px solid currentColor;
+      border-radius: 50%;
+      font-family: Georgia, serif;
+      font-style: italic;
+      font-size: 0.7rem;
+      font-weight: 700;
+    }}
+    .prof-q-claim-toggle:focus-visible {{
+      outline: 2px solid var(--accent, #e3b662);
+      outline-offset: 2px;
+      border-radius: 4px;
+    }}
+    .prof-q-claim-list {{
+      margin: 8px 0 4px 0;
+      padding: 0;
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }}
+    .prof-q-claim {{
+      padding: 10px 12px;
+      border-left: 3px solid var(--accent, #e3b662);
+      background: rgba(255,255,255,0.02);
+      border-radius: 0 6px 6px 0;
+    }}
+    .prof-q-claim-text {{
+      margin: 0 0 8px 0;
+      color: var(--white, #f5f5f5);
+      line-height: 1.55;
+    }}
+    .prof-q-claim-src-list {{
+      list-style: none;
+      padding: 0;
+      margin: 0 0 8px 0;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }}
+    .prof-q-claim-src {{
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }}
+    .prof-q-claim-src a {{
+      color: var(--accent, #e3b662);
+      text-decoration: none;
+      word-break: break-all;
+      font-size: 0.78rem;
+    }}
+    .prof-q-claim-src a:hover {{ text-decoration: underline; }}
+    .prof-q-claim-meta {{
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+      font-size: 0.7rem;
+      color: var(--text-muted, #94a3b8);
+    }}
+    .prof-q-claim-badge {{
+      padding: 2px 8px;
+      border-radius: 10px;
+      font-weight: 700;
+      letter-spacing: 0.3px;
+      text-transform: uppercase;
+      font-size: 0.64rem;
+    }}
+    .prof-q-claim-badge.verified {{ background: #166534; color: #d1fae5; }}
+    .prof-q-claim-badge.disputed {{ background: #78350f; color: #fed7aa; }}
+    .prof-q-claim-dispute {{
+      color: var(--text-muted, #94a3b8);
+      text-decoration: underline;
+    }}
+    .prof-q-claim-dispute:hover {{
+      color: var(--accent, #e3b662);
     }}
 
     footer {{
@@ -1369,13 +1538,17 @@ def generate_profile(candidate, categories, meta, nav=None):
   {prevnext_bar}
 
   <!-- Feedback Form -->
-  <div class="prof-feedback" style="padding:20px 24px;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);margin-top:16px;">
+  <div id="feedback" class="prof-feedback" style="padding:20px 24px;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);margin-top:16px;scroll-margin-top:80px;">
     <h2 style="color:var(--accent);font-size:1rem;margin-bottom:8px;">Have Information About This Official?</h2>
     <p style="color:var(--gray);font-size:0.82rem;margin-bottom:14px;line-height:1.6;">Help us improve this scorecard. If you have evidence of this official's positions — voting records, social media posts, public statements, or corrections — submit it below and we'll review and update the profile.</p>
+    <div id="feedbackDisputeBanner" style="display:none;padding:10px 12px;margin-bottom:10px;background:rgba(227,182,98,0.12);border:1px solid rgba(227,182,98,0.4);border-radius:6px;color:#e3b662;font-size:0.82rem;line-height:1.5;">
+      You are disputing claim <code id="feedbackClaimId"></code>. Please describe the issue and link to the primary source that contradicts it.
+    </div>
     <form id="feedbackForm" style="display:flex;flex-direction:column;gap:10px;">
       <input type="hidden" name="candidate_name" value="{c['name']}">
       <input type="hidden" name="candidate_state" value="{c.get('state', '')}">
       <input type="hidden" name="candidate_office" value="{c.get('office', '')}">
+      <input type="hidden" name="dispute_claim_id" id="feedbackClaimIdHidden" value="">
       <input type="text" name="submitter_name" placeholder="Your name" required style="padding:10px 14px;background:var(--bg-dark,#0A0A0A);border:1px solid var(--border);border-radius:8px;color:var(--white);font-size:0.9rem;">
       <input type="email" name="submitter_email" placeholder="Your email" required style="padding:10px 14px;background:var(--bg-dark,#0A0A0A);border:1px solid var(--border);border-radius:8px;color:var(--white);font-size:0.9rem;">
       <textarea name="feedback" rows="4" placeholder="What should we know? Include links to sources if possible..." required style="padding:10px 14px;background:var(--bg-dark,#0A0A0A);border:1px solid var(--border);border-radius:8px;color:var(--white);font-size:0.9rem;resize:vertical;"></textarea>
@@ -1384,10 +1557,42 @@ def generate_profile(candidate, categories, meta, nav=None):
     <div id="feedbackSuccess" style="display:none;padding:14px;background:rgba(76,175,80,.15);border:1px solid #4CAF50;border-radius:8px;color:#7edd80;margin-top:12px;font-size:0.88rem;">Thank you! We'll review your submission and update the profile if verified.</div>
   </div>
   <script>
+  (function(){{
+    // If the URL carries ?claim=... treat this visit as a claim-dispute.
+    // Pre-populate the textarea with the claim's text and expose the
+    // claim id as a hidden form field for the reviewer's triage.
+    var params = new URLSearchParams(window.location.search);
+    var claimId = params.get('claim');
+    if (claimId) {{
+      var banner = document.getElementById('feedbackDisputeBanner');
+      var badge = document.getElementById('feedbackClaimId');
+      var hidden = document.getElementById('feedbackClaimIdHidden');
+      var textarea = document.querySelector('#feedbackForm textarea[name="feedback"]');
+      if (banner) banner.style.display = 'block';
+      if (badge) badge.textContent = claimId;
+      if (hidden) hidden.value = claimId;
+      // Try to lift the claim's text from the DOM so the user sees
+      // exactly what they're disputing inside the textarea.
+      var claimEl = document.getElementById(claimId);
+      var claimTextEl = claimEl && claimEl.querySelector('.prof-q-claim-text');
+      if (textarea) {{
+        var prefill = 'Disputing claim ' + claimId + ':';
+        if (claimTextEl) prefill += '\\n> ' + claimTextEl.textContent.trim();
+        prefill += '\\n\\nMy concern (please cite a primary source):\\n';
+        textarea.value = prefill;
+        // Open the details element that contains this claim so the
+        // reader has immediate context above the form as they scroll.
+        var details = claimEl && claimEl.closest('details');
+        if (details) details.open = true;
+      }}
+    }}
+  }})();
   document.getElementById('feedbackForm').addEventListener('submit',function(e){{
     e.preventDefault();
     var fd=new FormData(this);
-    fd.append('_subject','RESOLUTE Citizen Feedback: {c["name"]}');
+    var claimId = document.getElementById('feedbackClaimIdHidden').value;
+    var subjectPrefix = claimId ? 'RESOLUTE Citizen DISPUTE (' + claimId + '): ' : 'RESOLUTE Citizen Feedback: ';
+    fd.append('_subject', subjectPrefix + '{c["name"]}');
     fd.append('_template','table');
     fd.append('_captcha','false');
     fetch('https://formsubmit.co/ajax/usmcministries2022@gmail.com',{{method:'POST',body:fd}})

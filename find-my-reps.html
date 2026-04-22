@@ -779,6 +779,38 @@
     '</section>';
   }
 
+  // Populate the state-legislative lookup-link slot with authoritative
+  // per-state and universal-fallback links. We cannot resolve SLDU/SLDL
+  // from ZIP yet, so we link to the official state tool instead.
+  var STATE_LEG_LOOKUP_CACHE = null;
+  function loadStateLegislativeLinks(stateCode, stateTitle) {
+    var slot = document.getElementById('fmrStateLegSlot');
+    if (!slot) return;
+    function render(lookup) {
+      var entry = (lookup.states || {})[stateCode];
+      if (!entry) { slot.style.display = 'none'; return; }
+      var fb = lookup._fallback || {};
+      var parts = ['<strong>Your ' + stateTitle + ' state-legislative reps</strong> &mdash; lookup by address:'];
+      if (entry.house && entry.senate && entry.house === entry.senate) {
+        parts.push(' <a href="' + entry.house + '" target="_blank" rel="noopener" style="color:var(--accent);">Find my state legislator (official)</a>');
+      } else {
+        if (entry.house) parts.push(' <a href="' + entry.house + '" target="_blank" rel="noopener" style="color:var(--accent);">State House (official)</a>');
+        if (entry.senate) parts.push(' &middot; <a href="' + entry.senate + '" target="_blank" rel="noopener" style="color:var(--accent);">State Senate (official)</a>');
+      }
+      if (fb.url) parts.push(' &middot; <a href="' + fb.url + '" target="_blank" rel="noopener" style="color:var(--accent);">OpenStates (universal)</a>');
+      var note = entry.note ? '<div style="color:var(--gray);font-size:0.74rem;margin-top:6px;">' + entry.note + '</div>' : '';
+      slot.innerHTML = parts.join('') +
+        '<div style="color:var(--gray);font-size:0.74rem;margin-top:6px;">ZIP &rarr; state-senate / state-house district isn\'t resolved by usmcmin.com yet; these tools resolve from full address.</div>' +
+        note;
+      slot.style.display = 'block';
+    }
+    if (STATE_LEG_LOOKUP_CACHE) { render(STATE_LEG_LOOKUP_CACHE); return; }
+    fetch('data/state_legislative_lookup.json', { cache: 'default' })
+      .then(function(r){ if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
+      .then(function(lookup){ STATE_LEG_LOOKUP_CACHE = lookup; render(lookup); })
+      .catch(function(){ slot.style.display = 'none'; });
+  }
+
   function renderResults(place) {
     introEl.style.display = 'none';
     resultsEl.classList.remove('hidden');
@@ -877,13 +909,25 @@
             null);
         }
 
-        // Footer CTA
-        html += '<div style="text-align:center;margin-top:20px;padding:16px;border-top:1px dashed var(--border);">' +
+        // State-legislative lookup-link slot. Populated asynchronously
+        // by loadStateLegislativeLinks below; rendered empty here so
+        // the DOM slot exists when the fetch resolves.
+        html += '<div id="fmrStateLegSlot" class="fmr-state-leg-slot" ' +
+                'style="margin-top:20px;padding:14px 16px;background:rgba(255,255,255,0.02);border:1px dashed var(--border);border-radius:8px;display:none;"></div>';
+
+        // Footer CTAs: Scorecard + Petition.
+        html += '<div style="text-align:center;margin-top:20px;padding:16px;border-top:1px dashed var(--border);display:flex;justify-content:center;gap:16px;flex-wrap:wrap;">' +
           '<a href="citizen.html?state=' + stateCode + '" style="color:var(--accent);font-size:0.9rem;">' +
             'View all ' + stateTitle + ' officials on the scorecard &rarr;' +
+          '</a>' +
+          '<a href="petition.html?state=' + stateCode + '" style="color:var(--accent);font-size:0.9rem;">' +
+            'Draft a petition to your ' + stateTitle + ' reps &rarr;' +
           '</a></div>';
 
         resultsEl.innerHTML = html;
+
+        // Load + render the state-legislative lookup links.
+        loadStateLegislativeLinks(stateCode, stateTitle);
 
         // Announce the result count to assistive tech.
         var announceEl = document.getElementById('fmrAnnounce');

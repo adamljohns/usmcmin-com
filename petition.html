@@ -295,6 +295,10 @@
     <h2 id="step4Label"><span class="step-num" aria-hidden="true">4</span>Send to your reps</h2>
     <p class="pt-status" id="ptRepStatus"></p>
     <div id="ptRepList" class="pt-rep-list" role="list"></div>
+
+    <div id="ptStateLegLinks" class="pt-hint" style="margin-top:14px;padding:12px 14px;background:rgba(255,255,255,0.02);border:1px dashed var(--border);border-radius:8px;display:none;">
+      <!-- Populated by loadStateLegislativeLinks() once the state is resolved. -->
+    </div>
     <p class="pt-hint" style="margin-top:14px;">
       Letter tips: contact forms generally accept plain text. Keep it under 1
       page. Always include your full name and city in the form fields so the
@@ -575,6 +579,10 @@
         });
         ctx.reps = senators.concat(houseReps).concat(governors);
 
+        // Fire off the state-legislative lookup-link fetch in parallel;
+        // the sidebar renders whenever it arrives.
+        loadStateLegislativeLinks();
+
         // Reveal steps 2–4 and prefill city from ZIP if possible.
         step2Card.hidden = false;
         step3Card.hidden = false;
@@ -679,6 +687,40 @@
         }
       });
     });
+  }
+
+  function loadStateLegislativeLinks() {
+    var slotEl = document.getElementById('ptStateLegLinks');
+    if (!ctx.state) return;
+    fetch('data/state_legislative_lookup.json', { cache: 'default' })
+      .then(function(r){ if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
+      .then(function(lookup){
+        var entry = (lookup.states || {})[ctx.state];
+        if (!entry) return;
+        var fallback = lookup._fallback || {};
+        var parts = [];
+        parts.push('<strong>State senator &amp; representative lookup for ' + esc(entry.name || ctx.state) + '</strong>');
+        if (entry.house && entry.senate && entry.house === entry.senate) {
+          parts.push('&nbsp;&nbsp;&middot;&nbsp;&nbsp;<a href="' + esc(entry.house) + '" target="_blank" rel="noopener">Find my state legislator (official)</a>');
+        } else {
+          if (entry.house) parts.push('&nbsp;&nbsp;&middot;&nbsp;&nbsp;<a href="' + esc(entry.house) + '" target="_blank" rel="noopener">State House (official)</a>');
+          if (entry.senate) parts.push('&nbsp;&nbsp;&middot;&nbsp;&nbsp;<a href="' + esc(entry.senate) + '" target="_blank" rel="noopener">State Senate (official)</a>');
+        }
+        if (fallback.url) {
+          parts.push('&nbsp;&nbsp;&middot;&nbsp;&nbsp;<a href="' + esc(fallback.url) + '" target="_blank" rel="noopener">OpenStates (universal fallback)</a>');
+        }
+        var note = entry.note ? '<div style="margin-top:6px;color:var(--gray);font-size:0.74rem;">' + esc(entry.note) + '</div>' : '';
+        slotEl.innerHTML = parts.join('') + note +
+          '<div style="margin-top:6px;color:var(--gray);font-size:0.74rem;">' +
+          'ZIP &rarr; state-legislative district isn\'t resolved by usmcmin.com yet; the official state tool and OpenStates both look up your district from your address. ' +
+          'Once resolved, paste the same letter into each rep\'s contact form.' +
+          '</div>';
+        slotEl.style.display = 'block';
+      })
+      .catch(function(){
+        // Silently skip — it's an enhancement, not a blocker.
+        slotEl.style.display = 'none';
+      });
   }
 
   function fallbackCopy(text) {

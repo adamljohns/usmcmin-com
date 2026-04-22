@@ -588,7 +588,42 @@ def generate_profile(candidate, categories, meta, nav=None):
 
     sources_html = ''
     if sources:
-        sources_html = '<div class="prof-sources"><h2>Sources &amp; Evidence</h2><div class="prof-source-list">'
+        # Source Diversity strip — aggregate bias counts across this
+        # candidate's sources. Shows the skeptical visitor at a glance
+        # whether the score was built against a balanced evidence base
+        # or against a monoculture of one tilt.
+        diversity = sb.diversity_counts(sources)
+        # Order left-to-right: bias spectrum, then civic sources.
+        bands = [
+            ('left',       'Left'),
+            ('lean_left',  'Lean Left'),
+            ('center',     'Center'),
+            ('lean_right', 'Lean Right'),
+            ('right',      'Right'),
+            ('official',   'Official'),
+            ('reference',  'Reference'),
+            ('social',     'Social'),
+            ('neutral',    'Other'),
+        ]
+        diversity_chips = []
+        for key, label in bands:
+            n = diversity.get(key, 0)
+            if n > 0:
+                css_tone = key.replace('_', '-')
+                diversity_chips.append(
+                    f'<span class="prof-div-chip prof-bias-{css_tone}">{n} {label}</span>'
+                )
+        diversity_strip_html = ''
+        if len(sources) >= 2 and diversity_chips:
+            diversity_strip_html = (
+                '<div class="prof-source-diversity" role="group" '
+                'aria-label="Source diversity breakdown for this profile">'
+                + ''.join(diversity_chips) +
+                '</div>'
+            )
+        sources_html = '<div class="prof-sources"><h2>Sources &amp; Evidence</h2>'
+        sources_html += diversity_strip_html
+        sources_html += '<div class="prof-source-list">'
         for src in sources:
             label = get_source_label(src)
             entry = sb.resolve(src)
@@ -1090,6 +1125,23 @@ def generate_profile(candidate, categories, meta, nav=None):
     .prof-bias-reference  {{ background: #475569; color: #fff; }}
     .prof-bias-social     {{ background: #334155; color: #cbd5e1; border-color: #475569; }}
     .prof-bias-neutral    {{ background: #1f2937; color: #cbd5e1; border-color: #374151; }}
+    .prof-source-diversity {{
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-bottom: 12px;
+      padding-bottom: 12px;
+      border-bottom: 1px dashed var(--border);
+    }}
+    .prof-div-chip {{
+      padding: 3px 10px;
+      border-radius: 12px;
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.4px;
+      text-transform: uppercase;
+      white-space: nowrap;
+    }}
     .prof-bias-attribution {{
       margin-top: 10px;
       padding-top: 10px;

@@ -9,6 +9,15 @@
   <link rel="icon" href="assets/img/favicon.png" type="image/png">
   <style>
     .sc-container { max-width: 1100px; margin: 0 auto; padding: 20px; }
+    .vh {
+      position: absolute !important;
+      width: 1px; height: 1px;
+      padding: 0; margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
+    }
 
     .sc-hero {
       text-align: center;
@@ -118,29 +127,35 @@
     <p class="subtitle">Issue Awareness — Know what's on the ballot before you vote. Every issue evaluated through the lens of RESOLUTE Citizen principles.</p>
   </div>
 
-  <div class="citizen-nav">
-    <a href="citizen.html">Candidates</a>
-    <a href="citizen-table.html">Table View</a>
-    <a href="citizen-issues.html" class="active">Issues</a>
-  </div>
+  <nav class="citizen-nav" aria-label="RESOLUTE Citizen sub-pages">
+    <a href="citizen.html">Cards</a>
+    <a href="citizen-table.html">Table</a>
+    <a href="citizen-issues.html" class="active" aria-current="page">Issues</a>
+    <a href="find-my-reps.html">Find My Reps</a>
+    <a href="stats.html">Stats</a>
+    <a href="changelog.html">Changelog</a>
+  </nav>
 
   <!-- Filters -->
-  <div class="issue-filter">
-    <select id="filterState" onchange="renderIssues()" style="font-weight:600;color:#c9a84c;border-color:rgba(201,168,76,0.4);">
+  <div class="issue-filter" role="search" aria-label="Issue filters">
+    <label for="filterState" class="vh">State</label>
+    <select id="filterState" onchange="renderIssues()" aria-label="Filter issues by state" style="font-weight:600;color:#c9a84c;border-color:rgba(201,168,76,0.4);">
       <option value="all">All States</option>
     </select>
-    <select id="filterUrgency" onchange="renderIssues()">
+    <label for="filterUrgency" class="vh">Urgency</label>
+    <select id="filterUrgency" onchange="renderIssues()" aria-label="Filter issues by urgency">
       <option value="all">All Issues</option>
       <option value="critical">Action Required</option>
       <option value="soon">Active / Legislative</option>
       <option value="info">Awareness</option>
     </select>
-    <input type="text" id="searchInput" placeholder="Search issues..." oninput="renderIssues()">
+    <label for="searchInput" class="vh">Search issues</label>
+    <input type="search" id="searchInput" placeholder="Search issues..." aria-label="Search issues by keyword" oninput="renderIssues()">
   </div>
-  <div class="issue-count">Showing <span id="visibleCount">—</span> of <span id="totalCount">—</span> issues</div>
+  <div class="issue-count" role="status" aria-live="polite" aria-atomic="true">Showing <span id="visibleCount">—</span> of <span id="totalCount">—</span> issues</div>
 
   <!-- Issue Cards -->
-  <div class="issue-grid" id="issueGrid"></div>
+  <div class="issue-grid" id="issueGrid" role="region" aria-label="Issue cards"></div>
 
   <div class="sc-scripture">
     <blockquote>"If my people, which are called by my name, shall humble themselves, and pray, and seek my face, and turn from their wicked ways; then will I hear from heaven, and will forgive their sin, and will heal their land."</blockquote>

@@ -1068,42 +1068,93 @@
     </div>
     <form id="feedbackForm" style="display:flex;flex-direction:column;gap:10px;">
       <input type="hidden" name="candidate_name" value="Michael Tagliavia">
+      <input type="hidden" name="candidate_slug" value="michael-tagliavia">
       <input type="hidden" name="candidate_state" value="VT">
       <input type="hidden" name="candidate_office" value="State Representative">
+      <input type="hidden" name="page_url" id="feedbackPageUrl" value="">
+      <input type="hidden" name="submitted_at" id="feedbackSubmittedAt" value="">
       <input type="hidden" name="dispute_claim_id" id="feedbackClaimIdHidden" value="">
+      <input type="hidden" name="dispute_claim_text" id="feedbackClaimTextHidden" value="">
+      <input type="hidden" name="dispute_claim_category" id="feedbackClaimCategoryHidden" value="">
+      <input type="hidden" name="form_opened_at" id="feedbackFormOpenedAt" value="">
+      <div id="feedbackReasonRow" style="display:none;flex-direction:column;gap:4px;">
+        <label for="feedbackReason" style="font-size:0.78rem;color:var(--gray);">Why are you disputing this claim?</label>
+        <select name="dispute_reason" id="feedbackReason" style="padding:10px 14px;background:var(--bg-dark,#0A0A0A);border:1px solid var(--border);border-radius:8px;color:var(--white);font-size:0.9rem;">
+          <option value="">Select a reason…</option>
+          <option value="factual_error">Factual error — the claim misrepresents what happened</option>
+          <option value="outdated">Outdated — the situation has changed materially</option>
+          <option value="missing_context">Missing context — technically true but misleading</option>
+          <option value="misattribution">Misattribution — wrong person, wrong vote, wrong bill</option>
+          <option value="source_broken">Source is broken or points at the wrong page</option>
+          <option value="other">Other (explain below)</option>
+        </select>
+      </div>
+      <!-- Honeypot: bots love empty fields named like they matter. Humans leave it empty. -->
+      <input type="text" name="website" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px;top:-9999px;opacity:0;height:0;width:0;" value="">
       <input type="text" name="submitter_name" placeholder="Your name" required style="padding:10px 14px;background:var(--bg-dark,#0A0A0A);border:1px solid var(--border);border-radius:8px;color:var(--white);font-size:0.9rem;">
       <input type="email" name="submitter_email" placeholder="Your email" required style="padding:10px 14px;background:var(--bg-dark,#0A0A0A);border:1px solid var(--border);border-radius:8px;color:var(--white);font-size:0.9rem;">
       <textarea name="feedback" rows="4" placeholder="What should we know? Include links to sources if possible..." required style="padding:10px 14px;background:var(--bg-dark,#0A0A0A);border:1px solid var(--border);border-radius:8px;color:var(--white);font-size:0.9rem;resize:vertical;"></textarea>
-      <button type="submit" style="background:linear-gradient(90deg,#c9a84c,#D4AF37);color:#000;font-weight:700;font-size:0.9rem;padding:11px 22px;border-radius:8px;border:none;cursor:pointer;align-self:flex-start;">Submit Feedback</button>
+      <button type="submit" id="feedbackSubmitBtn" style="background:linear-gradient(90deg,#c9a84c,#D4AF37);color:#000;font-weight:700;font-size:0.9rem;padding:11px 22px;border-radius:8px;border:none;cursor:pointer;align-self:flex-start;">Submit Feedback</button>
     </form>
     <div id="feedbackSuccess" style="display:none;padding:14px;background:rgba(76,175,80,.15);border:1px solid #4CAF50;border-radius:8px;color:#7edd80;margin-top:12px;font-size:0.88rem;">Thank you! We'll review your submission and update the profile if verified.</div>
   </div>
   <script>
   (function(){
+    // Record when the form was rendered so the submit handler can
+    // check the minimum human-interaction time (honeypot timing).
+    var openedAt = Date.now();
+    var openedAtField = document.getElementById('feedbackFormOpenedAt');
+    if (openedAtField) openedAtField.value = String(openedAt);
+    var pageUrlField = document.getElementById('feedbackPageUrl');
+    if (pageUrlField) pageUrlField.value = window.location.href;
+
     // If the URL carries ?claim=... treat this visit as a claim-dispute.
     // Pre-populate the textarea with the claim's text and expose the
-    // claim id as a hidden form field for the reviewer's triage.
+    // claim id + verbatim text + category as hidden fields for the
+    // reviewer's triage. Capturing the claim text at dispute time is
+    // important: the underlying claim can be edited later; the dispute
+    // record should remember what the disputer actually saw.
     var params = new URLSearchParams(window.location.search);
     var claimId = params.get('claim');
     if (claimId) {
       var banner = document.getElementById('feedbackDisputeBanner');
       var badge = document.getElementById('feedbackClaimId');
       var hidden = document.getElementById('feedbackClaimIdHidden');
+      var textHidden = document.getElementById('feedbackClaimTextHidden');
+      var catHidden = document.getElementById('feedbackClaimCategoryHidden');
+      var reasonRow = document.getElementById('feedbackReasonRow');
+      var submitBtn = document.getElementById('feedbackSubmitBtn');
+      var successBox = document.getElementById('feedbackSuccess');
       var textarea = document.querySelector('#feedbackForm textarea[name="feedback"]');
       if (banner) banner.style.display = 'block';
       if (badge) badge.textContent = claimId;
       if (hidden) hidden.value = claimId;
-      // Try to lift the claim's text from the DOM so the user sees
-      // exactly what they're disputing inside the textarea.
+      if (reasonRow) reasonRow.style.display = 'flex';
+      if (submitBtn) submitBtn.textContent = 'Submit Dispute';
+      if (successBox) successBox.textContent = 'Dispute received. We will review the claim and publish the outcome in the scorecard changelog. Thank you for strengthening the audit trail.';
       var claimEl = document.getElementById(claimId);
       var claimTextEl = claimEl && claimEl.querySelector('.prof-q-claim-text');
+      var claimText = (claimTextEl && claimTextEl.textContent.trim()) || '';
+      if (textHidden) textHidden.value = claimText;
+      // Derive category from the claim id if it follows the
+      // "<slug>-<category>-<idx>" pattern (per our schema convention).
+      if (catHidden) {
+        var parts = claimId.split('-');
+        // Best-effort: everything except the leading "<slug>" and
+        // trailing numeric index. Leaves intact categories like
+        // "self_defense" and "christian_heritage".
+        if (parts.length >= 3) {
+          var tail = parts[parts.length - 1];
+          if (/^\d+$/.test(tail)) {
+            catHidden.value = parts.slice(1, parts.length - 1).join('-');
+          }
+        }
+      }
       if (textarea) {
         var prefill = 'Disputing claim ' + claimId + ':';
-        if (claimTextEl) prefill += '\n> ' + claimTextEl.textContent.trim();
+        if (claimText) prefill += '\n> ' + claimText;
         prefill += '\n\nMy concern (please cite a primary source):\n';
         textarea.value = prefill;
-        // Open the details element that contains this claim so the
-        // reader has immediate context above the form as they scroll.
         var details = claimEl && claimEl.closest('details');
         if (details) details.open = true;
       }
@@ -1111,7 +1162,24 @@
   })();
   document.getElementById('feedbackForm').addEventListener('submit',function(e){
     e.preventDefault();
-    var fd=new FormData(this);
+    var fd = new FormData(this);
+    // Honeypot: bots fill every text field. Humans leave the off-screen
+    // "website" input empty. Abort silently on non-empty to avoid
+    // telling the bot it was caught.
+    if ((fd.get('website') || '').toString().trim() !== '') {
+      document.getElementById('feedbackForm').style.display='none';
+      document.getElementById('feedbackSuccess').style.display='block';
+      return;
+    }
+    // Timing check: reject submissions made <3 seconds after the form
+    // was rendered. Even skim-reading the context takes longer.
+    var openedAt = Number(document.getElementById('feedbackFormOpenedAt').value || '0');
+    if (openedAt && (Date.now() - openedAt) < 3000) {
+      alert('That felt fast — if you are human, please take a moment to review and resubmit.');
+      return;
+    }
+    document.getElementById('feedbackSubmittedAt').value = new Date().toISOString();
+    fd.set('submitted_at', document.getElementById('feedbackSubmittedAt').value);
     var claimId = document.getElementById('feedbackClaimIdHidden').value;
     var subjectPrefix = claimId ? 'RESOLUTE Citizen DISPUTE (' + claimId + '): ' : 'RESOLUTE Citizen Feedback: ';
     fd.append('_subject', subjectPrefix + 'Michael Tagliavia');

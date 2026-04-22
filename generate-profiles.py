@@ -3,6 +3,8 @@
 import json
 import os
 
+import source_bias as sb
+
 POINTS_PER_TRUE = 2
 MAX_PER_TOPIC = 10
 MAX_TOTAL = 70
@@ -586,10 +588,34 @@ def generate_profile(candidate, categories, meta, nav=None):
 
     sources_html = ''
     if sources:
-        sources_html = '<div class="prof-sources"><h2>Sources &amp; Evidence</h2>'
+        sources_html = '<div class="prof-sources"><h2>Sources &amp; Evidence</h2><div class="prof-source-list">'
         for src in sources:
             label = get_source_label(src)
-            sources_html += f'<a href="{src}" target="_blank" rel="noopener">{label}</a>'
+            entry = sb.resolve(src)
+            chip_label = sb.badge_label(entry)
+            chip_tone = sb.badge_tone(entry)
+            # Display name from bias entry is preferred when the SOURCE_LABELS
+            # table didn't have a custom label for this URL.
+            display_name = entry.get('display_name')
+            if display_name and label and label.startswith(('ballotpedia', 'https', 'http')):
+                label = display_name
+            chip_title = entry.get('note') or entry.get('display_name') or chip_label
+            sources_html += (
+                '<div class="prof-source-row">'
+                f'<a href="{src}" target="_blank" rel="noopener">{label}</a>'
+                f'<span class="prof-bias-chip prof-bias-{chip_tone}" '
+                f'title="{chip_title}">{chip_label}</span>'
+                '</div>'
+            )
+        sources_html += '</div>'
+        sources_html += (
+            '<p class="prof-bias-attribution">Bias ratings sourced from '
+            '<a href="https://www.allsides.com/media-bias/ratings" target="_blank" rel="noopener">AllSides</a> '
+            'and <a href="https://adfontesmedia.com/interactive-media-bias-chart/" target="_blank" rel="noopener">Ad Fontes Media</a>. '
+            'Classifications for government, reference, and advocacy domains are maintained by U.S.M.C. Ministries; '
+            'see <a href="https://github.com/adamljohns/usmcmin-com/blob/main/data/source_bias.json" target="_blank" rel="noopener">source_bias.json</a>.'
+            '</p>'
+        )
         sources_html += '</div>'
 
     return f'''<!DOCTYPE html>
@@ -1023,15 +1049,62 @@ def generate_profile(candidate, categories, meta, nav=None):
       margin-bottom: 10px;
       font-family: var(--font-main);
     }}
+    .prof-source-list {{
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }}
+    .prof-source-row {{
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }}
     .prof-sources a {{
       color: var(--accent);
       text-decoration: none;
       font-size: 0.82rem;
-      display: block;
-      margin-bottom: 4px;
       word-break: break-all;
+      flex: 1 1 auto;
+      min-width: 0;
     }}
     .prof-sources a:hover {{ text-decoration: underline; }}
+    .prof-bias-chip {{
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: 10px;
+      font-size: 0.64rem;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      font-weight: 700;
+      white-space: nowrap;
+      flex: 0 0 auto;
+      border: 1px solid transparent;
+    }}
+    .prof-bias-left       {{ background: #1d4ed8; color: #fff; }}
+    .prof-bias-lean-left  {{ background: #60a5fa; color: #0b1220; }}
+    .prof-bias-center     {{ background: #9ca3af; color: #0b1220; }}
+    .prof-bias-lean-right {{ background: #f87171; color: #2b0a0a; }}
+    .prof-bias-right      {{ background: #b91c1c; color: #fff; }}
+    .prof-bias-official   {{ background: #0e7490; color: #fff; }}
+    .prof-bias-reference  {{ background: #475569; color: #fff; }}
+    .prof-bias-social     {{ background: #334155; color: #cbd5e1; border-color: #475569; }}
+    .prof-bias-neutral    {{ background: #1f2937; color: #cbd5e1; border-color: #374151; }}
+    .prof-bias-attribution {{
+      margin-top: 10px;
+      padding-top: 10px;
+      border-top: 1px solid var(--border);
+      font-size: 0.7rem;
+      color: var(--text-muted, #94a3b8);
+      line-height: 1.5;
+    }}
+    .prof-bias-attribution a {{
+      color: var(--text-muted, #94a3b8);
+      text-decoration: underline;
+      display: inline;
+      font-size: inherit;
+      word-break: normal;
+    }}
 
     .prof-total {{
       display: flex;

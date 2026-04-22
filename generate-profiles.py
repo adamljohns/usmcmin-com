@@ -410,6 +410,15 @@ def generate_profile(candidate, categories, meta, nav=None):
     bar_width = round((total['score'] / MAX_TOTAL) * 100) if MAX_TOTAL > 0 else 0
     profile = c.get('profile', {}) or {}
 
+    # Data-freshness: latest verified_date across this candidate's claims
+    # (if any are verified), else fall back to scorecard-level last_updated.
+    # Renders under the candidate's name so a visitor instantly knows how
+    # recent this score is.
+    claim_dates = [cl.get('verified_date') for cl in (c.get('claims') or [])
+                   if cl.get('verified') and cl.get('verified_date')]
+    freshness_date = max(claim_dates) if claim_dates else (meta or {}).get('last_updated', '')
+    freshness_source = 'claim' if claim_dates else 'scorecard'
+
     state_code = (c.get('state') or 'VA').upper()
     state_name = STATE_NAMES_FULL.get(state_code, state_code)
     nav = nav or {}
@@ -545,16 +554,49 @@ def generate_profile(candidate, categories, meta, nav=None):
         )
 
     # Build category breakdown
+    # Map scorecard category id to a petition-template slug. Only the
+    # seven RESOLUTE categories; the "custom" template handles anything
+    # outside this set. Keeps the deep-link explicit rather than implicit.
+    PETITION_CAT_MAP = {
+        'life': 'life', 'marriage': 'marriage', 'immigration': 'immigration',
+        'self_defense': 'self_defense', 'education': 'education',
+        'america_first': 'america_first', 'christian_heritage': 'christian_heritage',
+    }
+
     cat_html = ''
     for cat in categories:
         cs = calc_cat_score(c['scores'].get(cat['id'], []))
         color = score_color(cs['score'], MAX_PER_TOPIC) if cs['answered'] > 0 else '#666'
+        pet_cat = PETITION_CAT_MAP.get(cat['id'])
+        pet_state = (c.get('state') or '').upper() if c.get('state') else ''
+        petition_btn = ''
+        if pet_cat and pet_state and pet_state not in ('US',):
+            petition_btn = (
+                f'<a class="prof-cat-petition" '
+                f'href="../../petition.html?state={pet_state}&cat={pet_cat}" '
+                f'aria-label="Draft a petition to your {pet_state} reps about {cat["label"]}" '
+                f'title="Draft a petition to your {pet_state} reps about {cat["label"]}">'
+                '&#9993;&#xFE0F; Petition your reps'
+                '</a>'
+            )
+        elif pet_cat:
+            # US-level candidates (e.g., POTUS, SCOTUS) — still offer petition
+            # without a specific state; petition.html will require state input.
+            petition_btn = (
+                f'<a class="prof-cat-petition" '
+                f'href="../../petition.html?cat={pet_cat}" '
+                f'aria-label="Draft a petition to your reps about {cat["label"]}" '
+                f'title="Draft a petition to your reps about {cat["label"]}">'
+                '&#9993;&#xFE0F; Petition your reps'
+                '</a>'
+            )
         cat_html += f'''
     <div class="prof-category">
       <div class="prof-cat-header">
         <img src="../../assets/icons/{cat['icon']}" alt="" width="24" height="24">
         <h3>{cat['label']}</h3>
         <span class="prof-cat-score" style="color:{color};">{cs['score']}/{MAX_PER_TOPIC}</span>
+        {petition_btn}
       </div>
       <div class="prof-questions">'''
         questions = cat.get('questions', [])
@@ -1245,6 +1287,16 @@ def generate_profile(candidate, categories, meta, nav=None):
       border-radius: 5px;
       transition: width 0.4s;
     }}
+    .prof-freshness {{
+      margin-top: 6px;
+      font-size: 0.72rem;
+      color: var(--text-muted, #94a3b8);
+      letter-spacing: 0.2px;
+    }}
+    .prof-freshness time {{
+      color: var(--accent, #e3b662);
+      font-weight: 600;
+    }}
     .prof-total-label {{
       font-size: 0.82rem;
       color: var(--gray);
@@ -1296,6 +1348,7 @@ def generate_profile(candidate, categories, meta, nav=None):
       gap: 10px;
       padding: 14px 20px;
       border-bottom: 1px solid var(--border);
+      flex-wrap: wrap;
     }}
     .prof-cat-header h3 {{
       flex: 1;
@@ -1306,6 +1359,31 @@ def generate_profile(candidate, categories, meta, nav=None):
     .prof-cat-score {{
       font-size: 1.3rem;
       font-weight: 700;
+    }}
+    .prof-cat-petition {{
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 4px 10px;
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.3px;
+      text-transform: uppercase;
+      text-decoration: none;
+      color: var(--accent, #e3b662);
+      border: 1px solid rgba(227, 182, 98, 0.35);
+      border-radius: 12px;
+      transition: all 0.15s;
+      white-space: nowrap;
+    }}
+    .prof-cat-petition:hover {{
+      background: rgba(227, 182, 98, 0.12);
+      border-color: var(--accent, #e3b662);
+      text-decoration: none;
+    }}
+    .prof-cat-petition:focus-visible {{
+      outline: 2px solid var(--accent, #e3b662);
+      outline-offset: 2px;
     }}
     .prof-questions {{ padding: 0; }}
     .prof-q {{
@@ -1513,6 +1591,7 @@ def generate_profile(candidate, categories, meta, nav=None):
         <span class="prof-total-score" style="color:{total_color};">{total['score']}</span>
         <span class="prof-total-max">/ {MAX_TOTAL}</span>
       </div>
+      {f'<div class="prof-freshness" title="Data freshness source: {freshness_source}">Last verified: <time datetime="{freshness_date}">{freshness_date}</time>{" · from claim evidence" if freshness_source == "claim" else " · scorecard-level timestamp"}</div>' if freshness_date else ''}
     </div>
     <div class="prof-total-bar">
       <div class="prof-total-fill" style="width:{bar_width}%;background:{total_color};"></div>

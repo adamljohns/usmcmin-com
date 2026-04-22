@@ -140,11 +140,21 @@ def compute():
                 claims_by_category[cl.get('category') or 'unknown'] += 1
                 claims_by_kind[cl.get('kind') or 'statement'] += 1
 
-    # Source diversity aggregate.
+    # Source diversity aggregate. Track two different classification
+    # metrics so the UI can report both:
+    #   * bias_citation_coverage_pct — citations whose domain has an
+    #     exact or parent match in source_bias.json. Misses rule-
+    #     based *.gov fallbacks.
+    #   * tone_classification_pct — citations that get a meaningful
+    #     chip at all (including *.gov/*.house.gov rule fallbacks
+    #     which render as "Official"). This is the number that
+    #     matches what a visitor actually sees on a profile page.
     tone_counts = collections.Counter()
     all_sources_total = 0
     unique_sources = set()
     unique_domains = collections.Counter()
+    rule_classified_citations = 0
+    unclassified_citations = 0
     for c in candidates:
         for u in c.get('sources') or []:
             all_sources_total += 1
@@ -153,6 +163,11 @@ def compute():
             unique_domains[host] += 1
             entry = sb.resolve(u)
             tone_counts[sb.badge_tone(entry)] += 1
+            match = entry.get('_match', 'none')
+            if match.startswith('rule:'):
+                rule_classified_citations += 1
+            elif match == 'none':
+                unclassified_citations += 1
 
     # Bias coverage.
     bias_domains = set(bias.get('domains', {}).keys())
@@ -227,6 +242,9 @@ def compute():
             'bias_entries': len(bias_domains),
             'bias_citation_coverage_pct': round(100.0 * sum(n for d, n in unique_domains.items() if d in bias_domains) / max(1, all_sources_total), 1),
             'bias_domain_coverage_pct': round(100.0 * cited_domains_covered / max(1, len(unique_domains)), 1),
+            'tone_classification_pct': round(100.0 * (all_sources_total - unclassified_citations) / max(1, all_sources_total), 1),
+            'rule_classified_citations': rule_classified_citations,
+            'unclassified_citations': unclassified_citations,
         },
         'photos': {
             'files_on_disk': photos_on_disk,

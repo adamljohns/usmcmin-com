@@ -245,7 +245,9 @@
         (t.candidates_with_claims||0) + ' candidate(s) with claims · ' + (t.total_claims||0) + ' total',
         (t.candidates_with_claims||0) / Math.max(1, t.candidates) * 100);
       html += card('Source citations', fmt(t.all_sources_total), fmt(t.unique_source_urls) + ' unique URLs · ' + fmt(t.unique_cited_domains) + ' unique domains');
-      html += card('Bias-rating coverage', (t.bias_citation_coverage_pct||0) + '%', fmt(t.bias_entries) + ' domains in source_bias.json cover most citations', t.bias_citation_coverage_pct);
+      html += card('Chip coverage', (t.tone_classification_pct||0) + '%',
+        fmt(t.bias_entries) + ' domains in source_bias.json · ' + fmt(t.rule_classified_citations) + ' extra via *.gov rules · ' + fmt(t.unclassified_citations) + ' still unclassified',
+        t.tone_classification_pct);
       html += card('Photo coverage', (p.coverage_pct||0) + '%', fmt(p.candidates_with_actual_file) + ' portraits on disk', p.coverage_pct);
       html += card('Notes populated', (n.notes_pct||0) + '%', fmt(n.with_notes) + ' candidates with voting-record notes', n.notes_pct);
       html += '</div>';

@@ -9,6 +9,42 @@
   <link rel="icon" href="assets/img/favicon.png" type="image/png">
   <style>
     .sc-container { max-width: 1300px; margin: 0 auto; padding: 20px; }
+    .sc-field { display: flex; flex-direction: column; gap: 3px; min-width: 0; }
+    .sc-field-grow { flex: 1 1 200px; }
+    .sc-field .sc-label {
+      font-size: 0.66rem;
+      font-weight: 700;
+      letter-spacing: 0.9px;
+      text-transform: uppercase;
+      color: var(--gray);
+      padding-left: 4px;
+    }
+    .sc-summary {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: baseline;
+      gap: 10px;
+      padding: 12px 16px;
+      margin: 10px 0 16px;
+      background: rgba(201,168,76,0.06);
+      border: 1px solid rgba(201,168,76,0.2);
+      border-radius: 8px;
+      font-size: 0.85rem;
+      color: var(--gray);
+    }
+    .sc-summary-label {
+      font-weight: 700;
+      color: var(--accent);
+      font-size: 0.72rem;
+      letter-spacing: 0.8px;
+      text-transform: uppercase;
+    }
+    .sc-summary-count {
+      font-size: 1.1rem;
+      font-weight: 800;
+      color: var(--white);
+      font-variant-numeric: tabular-nums;
+    }
     /* Visually-hidden utility for screen-reader-only text. Keeps content
        in the accessibility tree while hiding it from sighted users.
        Matches the WebAIM-recommended rule set. */
@@ -67,7 +103,7 @@
     .view-toggle a.active { background: var(--accent-dim); border-color: var(--accent); color: var(--accent); }
 
     /* Filter */
-    .sc-filter { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; justify-content: center; padding: 14px 0; border-bottom: 1px solid var(--border); margin-bottom: 20px; }
+    .sc-filter { display: flex; flex-wrap: wrap; gap: 10px; align-items: flex-end; justify-content: center; padding: 14px 0; border-bottom: 1px solid var(--border); margin-bottom: 20px; }
     .sc-filter select, .sc-filter input { background: var(--bg-card); border: 1px solid var(--border); color: var(--white); padding: 7px 10px; border-radius: 6px; font-size: 0.82rem; outline: none; }
     .sc-filter select:focus, .sc-filter input:focus { border-color: var(--accent); }
 
@@ -187,47 +223,65 @@
   </nav>
 
   <div class="sc-filter" role="search" aria-label="Scorecard table filters">
-    <label for="filterState" class="vh">State</label>
-    <select id="filterState" onchange="switchState(this.value)" aria-label="Filter by state" style="font-weight:600;color:#c9a84c;border-color:rgba(201,168,76,0.4);">
-      <option value="VA">Virginia</option>
-    </select>
-    <label for="searchInput" class="vh">Search candidates</label>
-    <input type="search" id="searchInput" placeholder="Search name, office, or city..." aria-label="Search candidates by name, office, or city" oninput="renderTables()">
-    <label for="filterJurisdiction" class="vh">Jurisdiction</label>
-    <select id="filterJurisdiction" onchange="renderTables()" aria-label="Filter by jurisdiction">
-      <option value="all">All Jurisdictions</option>
-    </select>
-    <label for="filterLevel" class="vh">Government level</label>
-    <select id="filterLevel" onchange="renderTables()" aria-label="Filter by government level">
-      <option value="all">All Levels</option>
-      <option value="federal">Federal</option>
-      <option value="state">State</option>
-      <option value="local">Local</option>
-    </select>
-    <label for="filterParty" class="vh">Party</label>
-    <select id="filterParty" onchange="renderTables()" aria-label="Filter by party">
-      <option value="all">All Parties</option>
-      <option value="R">Republican</option>
-      <option value="D">Democrat</option>
-      <option value="I">Independent</option>
-    </select>
-    <label for="filterFocus" class="vh">Focus ordering</label>
-    <select id="filterFocus" onchange="renderTables()" aria-label="Section order: which level appears first">
-      <option value="local-first">Local First</option>
-      <option value="federal-first">Federal First</option>
-      <option value="state-first">State First</option>
-    </select>
-    <label for="filterSort" class="vh">Sort order</label>
-    <select id="filterSort" onchange="onSortChange()" aria-label="Sort candidates within each section">
-      <option value="score-desc">Sort: Score High → Low</option>
-      <option value="score-asc">Sort: Score Low → High</option>
-      <option value="name">Sort: Name A → Z</option>
-      <option value="party-score">Sort: Party + Score</option>
-      <option value="district">Sort: By District</option>
-    </select>
+    <div class="sc-field">
+      <label for="filterState" class="sc-label">State</label>
+      <select id="filterState" onchange="switchState(this.value)" aria-label="Filter by state" style="font-weight:600;color:#c9a84c;border-color:rgba(201,168,76,0.4);">
+        <option value="VA">Virginia</option>
+      </select>
+    </div>
+    <div class="sc-field sc-field-grow">
+      <label for="searchInput" class="sc-label">Search</label>
+      <input type="search" id="searchInput" placeholder="Name, office, or city…" aria-label="Search candidates by name, office, or city" oninput="renderTables()">
+    </div>
+    <div class="sc-field">
+      <label for="filterJurisdiction" class="sc-label">Jurisdiction</label>
+      <select id="filterJurisdiction" onchange="renderTables()" aria-label="Filter by jurisdiction">
+        <option value="all">All Jurisdictions</option>
+      </select>
+    </div>
+    <div class="sc-field">
+      <label for="filterLevel" class="sc-label">Level</label>
+      <select id="filterLevel" onchange="renderTables()" aria-label="Filter by government level">
+        <option value="all">All Levels</option>
+        <option value="federal">Federal</option>
+        <option value="state">State</option>
+        <option value="local">Local</option>
+      </select>
+    </div>
+    <div class="sc-field">
+      <label for="filterParty" class="sc-label">Party</label>
+      <select id="filterParty" onchange="renderTables()" aria-label="Filter by party">
+        <option value="all">All Parties</option>
+        <option value="R">Republican</option>
+        <option value="D">Democrat</option>
+        <option value="I">Independent</option>
+      </select>
+    </div>
+    <div class="sc-field">
+      <label for="filterFocus" class="sc-label">Section order</label>
+      <select id="filterFocus" onchange="renderTables()" aria-label="Section order: which level appears first">
+        <option value="local-first">Local First</option>
+        <option value="federal-first">Federal First</option>
+        <option value="state-first">State First</option>
+      </select>
+    </div>
+    <div class="sc-field">
+      <label for="filterSort" class="sc-label">Sort</label>
+      <select id="filterSort" onchange="onSortChange()" aria-label="Sort candidates within each section">
+        <option value="score-desc">Score High → Low</option>
+        <option value="score-asc">Score Low → High</option>
+        <option value="name">Name A → Z</option>
+        <option value="party-score">Party + Score</option>
+        <option value="district">By District</option>
+      </select>
+    </div>
   </div>
 
-  <div id="filterAnnounce" role="status" aria-live="polite" aria-atomic="true" class="vh"></div>
+  <div id="filterAnnounce" role="status" aria-live="polite" aria-atomic="true" class="sc-summary">
+    <span class="sc-summary-label">Showing</span>
+    <span id="summaryCount" class="sc-summary-count">—</span>
+    <span id="summaryDetail"></span>
+  </div>
   <div id="tablesContainer" role="region" aria-label="Candidate scorecard table" aria-live="polite"></div>
 </div>
 
@@ -555,15 +609,29 @@ function renderTables() {
 
   document.getElementById('tablesContainer').innerHTML = html;
 
-  // Live-region announcement: tell screen-reader users how the filter
-  // resolved so they aren't left guessing after a select change.
-  var announceEl = document.getElementById('filterAnnounce');
-  if (announceEl) {
-    var stateName = (document.getElementById('filterState')
-      && document.getElementById('filterState').selectedOptions[0]
-      && document.getElementById('filterState').selectedOptions[0].textContent) || '';
-    announceEl.textContent = 'Showing ' + totalRendered +
-      ' candidate(s) for ' + stateName + ' with current filters.';
+  // Populate the "Showing" summary chip row. It's the live-region too,
+  // so screen-reader users get announced on every filter change.
+  var countEl = document.getElementById('summaryCount');
+  var detailEl = document.getElementById('summaryDetail');
+  function selText(id) {
+    var s = document.getElementById(id);
+    return (s && s.selectedOptions && s.selectedOptions[0] && s.selectedOptions[0].textContent) || (s && s.value) || '';
+  }
+  var stateName = selText('filterState');
+  var levelLabel = selText('filterLevel');
+  var partyLabel = selText('filterParty');
+  var jurLabel = selText('filterJurisdiction');
+  var focusLabel = selText('filterFocus');
+  var sortLabel = selText('filterSort');
+  if (countEl) countEl.textContent = totalRendered.toLocaleString() + ' candidates';
+  if (detailEl) {
+    var parts = [stateName];
+    if (jurLabel && jurLabel !== 'All Jurisdictions') parts.push(jurLabel);
+    if (levelLabel && levelLabel !== 'All Levels') parts.push(levelLabel);
+    if (partyLabel && partyLabel !== 'All Parties') parts.push(partyLabel);
+    parts.push(focusLabel + ' · sorted by ' + sortLabel.toLowerCase());
+    detailEl.innerHTML = '<span style="color:var(--gray);">·</span> ' +
+      parts.map(function(p){ return '<span style="color:var(--white);">' + p + '</span>'; }).join(' <span style="color:var(--gray);">·</span> ');
   }
 }
 </script>

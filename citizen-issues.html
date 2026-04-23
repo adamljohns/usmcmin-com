@@ -9,6 +9,31 @@
   <link rel="icon" href="assets/img/favicon.png" type="image/png">
   <style>
     .sc-container { max-width: 1100px; margin: 0 auto; padding: 20px; }
+    .sc-field { display: flex; flex-direction: column; gap: 3px; min-width: 0; }
+    .sc-field-grow { flex: 1 1 200px; }
+    .sc-field .sc-label {
+      font-size: 0.66rem;
+      font-weight: 700;
+      letter-spacing: 0.9px;
+      text-transform: uppercase;
+      color: var(--gray);
+      padding-left: 4px;
+    }
+    .sc-summary {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: baseline;
+      gap: 10px;
+      padding: 12px 16px;
+      margin: 10px 0 16px;
+      background: rgba(201,168,76,0.06);
+      border: 1px solid rgba(201,168,76,0.2);
+      border-radius: 8px;
+      font-size: 0.85rem;
+      color: var(--gray);
+    }
+    .sc-summary-label { font-weight: 700; color: var(--accent); font-size: 0.72rem; letter-spacing: 0.8px; text-transform: uppercase; }
+    .sc-summary-count { font-size: 1.1rem; font-weight: 800; color: var(--white); font-variant-numeric: tabular-nums; }
     .vh {
       position: absolute !important;
       width: 1px; height: 1px;
@@ -45,7 +70,7 @@
     .citizen-nav a.active { background: var(--accent-dim); border-color: var(--accent); color: var(--accent); }
 
     .issue-filter {
-      display: flex; flex-wrap: wrap; gap: 10px; align-items: center;
+      display: flex; flex-wrap: wrap; gap: 10px; align-items: flex-end;
       justify-content: center; padding: 14px 0; border-bottom: 1px solid var(--border); margin-bottom: 20px;
     }
     .issue-filter select, .issue-filter input {
@@ -138,21 +163,34 @@
 
   <!-- Filters -->
   <div class="issue-filter" role="search" aria-label="Issue filters">
-    <label for="filterState" class="vh">State</label>
-    <select id="filterState" onchange="renderIssues()" aria-label="Filter issues by state" style="font-weight:600;color:#c9a84c;border-color:rgba(201,168,76,0.4);">
-      <option value="all">All States</option>
-    </select>
-    <label for="filterUrgency" class="vh">Urgency</label>
-    <select id="filterUrgency" onchange="renderIssues()" aria-label="Filter issues by urgency">
-      <option value="all">All Issues</option>
-      <option value="critical">Action Required</option>
-      <option value="soon">Active / Legislative</option>
-      <option value="info">Awareness</option>
-    </select>
-    <label for="searchInput" class="vh">Search issues</label>
-    <input type="search" id="searchInput" placeholder="Search issues..." aria-label="Search issues by keyword" oninput="renderIssues()">
+    <div class="sc-field">
+      <label for="filterState" class="sc-label">State</label>
+      <select id="filterState" onchange="renderIssues()" aria-label="Filter issues by state" style="font-weight:600;color:#c9a84c;border-color:rgba(201,168,76,0.4);">
+        <option value="all">All States</option>
+      </select>
+    </div>
+    <div class="sc-field">
+      <label for="filterUrgency" class="sc-label">Urgency</label>
+      <select id="filterUrgency" onchange="renderIssues()" aria-label="Filter issues by urgency">
+        <option value="all">All Issues</option>
+        <option value="critical">Action Required</option>
+        <option value="soon">Active / Legislative</option>
+        <option value="info">Awareness</option>
+      </select>
+    </div>
+    <div class="sc-field sc-field-grow">
+      <label for="searchInput" class="sc-label">Search</label>
+      <input type="search" id="searchInput" placeholder="Keyword or phrase…" aria-label="Search issues by keyword" oninput="renderIssues()">
+    </div>
   </div>
-  <div class="issue-count" role="status" aria-live="polite" aria-atomic="true">Showing <span id="visibleCount">—</span> of <span id="totalCount">—</span> issues</div>
+  <div class="sc-summary" role="status" aria-live="polite" aria-atomic="true">
+    <span class="sc-summary-label">Showing</span>
+    <span id="summaryCount" class="sc-summary-count">—</span>
+    <span id="summaryDetail"></span>
+    <span class="vh">
+      <span id="visibleCount">—</span> of <span id="totalCount">—</span> issues
+    </span>
+  </div>
 
   <!-- Issue Cards -->
   <div class="issue-grid" id="issueGrid" role="region" aria-label="Issue cards"></div>
@@ -255,6 +293,23 @@ function renderIssues() {
 
   document.getElementById('issueGrid').innerHTML = html;
   document.getElementById('visibleCount').textContent = filtered.length;
+
+  // Populate the summary chip row.
+  var countEl = document.getElementById('summaryCount');
+  var detailEl = document.getElementById('summaryDetail');
+  function selText(id) {
+    var s = document.getElementById(id);
+    return (s && s.selectedOptions && s.selectedOptions[0] && s.selectedOptions[0].textContent) || '';
+  }
+  var stateLabel = selText('filterState');
+  var urgencyLabel = selText('filterUrgency');
+  if (countEl) countEl.textContent = filtered.length.toLocaleString() + ' of ' + ISSUES.length + ' issues';
+  if (detailEl) {
+    var parts = [stateLabel];
+    if (urgencyLabel && urgencyLabel !== 'All Issues') parts.push(urgencyLabel);
+    detailEl.innerHTML = '<span style="color:var(--gray);">·</span> ' +
+      parts.map(function(p){ return '<span style="color:var(--white);">' + p + '</span>'; }).join(' <span style="color:var(--gray);">·</span> ');
+  }
 }
 </script>
 <script>

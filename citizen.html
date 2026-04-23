@@ -13,6 +13,55 @@
   <link rel="icon" href="assets/img/favicon.png" type="image/png">
   <style>
     .sc-container { max-width: 1200px; margin: 0 auto; padding: 20px; }
+    /* Filter field: label stacked above control. */
+    .sc-field {
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+      min-width: 0;
+    }
+    .sc-field-grow { flex: 1 1 200px; }
+    .sc-field .sc-label {
+      font-size: 0.66rem;
+      font-weight: 700;
+      letter-spacing: 0.9px;
+      text-transform: uppercase;
+      color: var(--gray);
+      padding-left: 4px;
+    }
+    .sc-summary {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: baseline;
+      gap: 10px;
+      padding: 12px 16px;
+      margin: 10px 0 16px;
+      background: rgba(201,168,76,0.06);
+      border: 1px solid rgba(201,168,76,0.2);
+      border-radius: 8px;
+      font-size: 0.85rem;
+      color: var(--gray);
+    }
+    .sc-summary-label {
+      font-weight: 700;
+      color: var(--accent);
+      font-size: 0.72rem;
+      letter-spacing: 0.8px;
+      text-transform: uppercase;
+    }
+    .sc-summary-count {
+      font-size: 1.1rem;
+      font-weight: 800;
+      color: var(--white);
+      font-variant-numeric: tabular-nums;
+    }
+    .sc-summary-change {
+      margin-left: auto;
+      color: var(--accent);
+      font-size: 0.78rem;
+      text-decoration: underline;
+    }
+    .sc-summary-change:hover { color: #c9a84c; }
     /* Visually-hidden utility for screen-reader-only text. */
     .vh {
       position: absolute !important;
@@ -129,7 +178,7 @@
       display: flex;
       flex-wrap: wrap;
       gap: 10px;
-      align-items: center;
+      align-items: flex-end;
       justify-content: center;
       border-bottom: 1px solid var(--border);
       margin-bottom: 20px;
@@ -449,42 +498,52 @@
     <a href="changelog.html">Changelog</a>
   </nav>
 
-  <!-- Filter Bar (simplified: 5 controls). Every control is labeled -->
-  <!-- for screen readers; live-region #filterAnnounce announces result -->
-  <!-- counts after any filter/search change. -->
+  <!-- Filter Bar (simplified: 5 controls). Visible labels pair each -->
+  <!-- control with its meaning so sighted users see the filter hierarchy -->
+  <!-- at a glance; the live-region #filterAnnounce announces counts. -->
   <div class="sc-filter" role="search" aria-label="Scorecard card filters">
-    <label for="filterState" class="vh">State</label>
-    <select id="filterState" onchange="switchState(this.value)" aria-label="Filter by state" style="font-weight:600;color:#c9a84c;border-color:rgba(201,168,76,0.4);">
-      <option value="VA">Virginia</option>
-    </select>
-    <label for="filterView" class="vh">View</label>
-    <select id="filterView" onchange="renderCards()" aria-label="Filter by view">
-      <option value="all">All Officials</option>
-    </select>
-    <label for="filterParty" class="vh">Party</label>
-    <select id="filterParty" onchange="renderCards()" aria-label="Filter by party">
-      <option value="all">All Parties</option>
-      <option value="R">Republican</option>
-      <option value="D">Democrat</option>
-      <option value="I">Independent</option>
-    </select>
-    <label for="filterSort" class="vh">Sort order</label>
-    <select id="filterSort" onchange="onSortChange()" aria-label="Sort cards">
-      <option value="score-desc">Sort: Score High → Low</option>
-      <option value="score-asc">Sort: Score Low → High</option>
-      <option value="name">Sort: Name A → Z</option>
-      <option value="level-score">Sort: Level + Score</option>
-      <option value="jurisdiction-score">Sort: Jurisdiction + Score</option>
-      <option value="party-score">Sort: Party + Score</option>
-    </select>
-    <label for="searchInput" class="vh">Search candidates</label>
-    <input type="search" id="searchInput" placeholder="Search name, office, or city..." aria-label="Search candidates by name, office, or city" oninput="renderCards()">
+    <div class="sc-field">
+      <label for="filterState" class="sc-label">State</label>
+      <select id="filterState" onchange="switchState(this.value)" aria-label="Filter by state" style="font-weight:600;color:#c9a84c;border-color:rgba(201,168,76,0.4);">
+        <option value="VA">Virginia</option>
+      </select>
+    </div>
+    <div class="sc-field">
+      <label for="filterView" class="sc-label">View</label>
+      <select id="filterView" onchange="renderCards()" aria-label="Filter by view">
+        <option value="all">All Officials</option>
+      </select>
+    </div>
+    <div class="sc-field">
+      <label for="filterParty" class="sc-label">Party</label>
+      <select id="filterParty" onchange="renderCards()" aria-label="Filter by party">
+        <option value="all">All Parties</option>
+        <option value="R">Republican</option>
+        <option value="D">Democrat</option>
+        <option value="I">Independent</option>
+      </select>
+    </div>
+    <div class="sc-field">
+      <label for="filterSort" class="sc-label">Sort</label>
+      <select id="filterSort" onchange="onSortChange()" aria-label="Sort cards">
+        <option value="score-desc">Score High → Low</option>
+        <option value="score-asc">Score Low → High</option>
+        <option value="name">Name A → Z</option>
+        <option value="level-score">Level + Score</option>
+        <option value="jurisdiction-score">Jurisdiction + Score</option>
+        <option value="party-score">Party + Score</option>
+      </select>
+    </div>
+    <div class="sc-field sc-field-grow">
+      <label for="searchInput" class="sc-label">Search</label>
+      <input type="search" id="searchInput" placeholder="Name, office, or city…" aria-label="Search candidates by name, office, or city" oninput="renderCards()">
+    </div>
   </div>
-  <div class="sc-count" role="status" aria-live="polite" aria-atomic="true">
-    Showing <span id="visibleCount">&mdash;</span> officials
-    &middot; <span id="jurisdictionCount">0</span> jurisdictions
-    &middot; Max <span>70</span> pts
-    &middot; <a href="javascript:void(0)" onclick="clearLocation()" style="color:#c9a84c;font-size:0.78rem;">Change State</a>
+  <div class="sc-summary" id="sc-summary" role="status" aria-live="polite" aria-atomic="true">
+    <span class="sc-summary-label">Showing</span>
+    <span id="summaryCount" class="sc-summary-count">—</span>
+    <span id="summaryDetail"></span>
+    <a href="javascript:void(0)" onclick="clearLocation()" class="sc-summary-change">Change state</a>
   </div>
 
   <!-- Welcome Modal (first visit) -->
@@ -936,11 +995,31 @@ function renderCards() {
   var sortKey = (document.getElementById('filterSort') || {}).value || 'score-desc';
   filtered.sort(makeComparator(sortKey));
 
-  // Update counts
-  document.getElementById('visibleCount').textContent = filtered.length;
+  // Update counts + summary readout.
   var jurs = new Set();
   filtered.forEach(function(c) { jurs.add(c.jurisdiction); });
-  document.getElementById('jurisdictionCount').textContent = jurs.size;
+  var stateSel = document.getElementById('filterState');
+  var stateName = (stateSel && stateSel.selectedOptions && stateSel.selectedOptions[0] && stateSel.selectedOptions[0].textContent) || stateSel.value || '—';
+  var viewSel = document.getElementById('filterView');
+  var viewLabel = (viewSel && viewSel.selectedOptions && viewSel.selectedOptions[0] && viewSel.selectedOptions[0].textContent) || 'All Officials';
+  var partySel = document.getElementById('filterParty');
+  var partyLabel = (partySel && partySel.selectedOptions && partySel.selectedOptions[0] && partySel.selectedOptions[0].textContent) || 'All Parties';
+  var sortSel = document.getElementById('filterSort');
+  var sortLabel = (sortSel && sortSel.selectedOptions && sortSel.selectedOptions[0] && sortSel.selectedOptions[0].textContent) || 'Score High → Low';
+  document.getElementById('summaryCount').textContent = filtered.length.toLocaleString() + ' officials';
+  var parts = [
+    stateName,
+    viewLabel,
+  ];
+  if (party !== 'all') parts.push(partyLabel);
+  parts.push('sorted by ' + sortLabel.toLowerCase());
+  parts.push(jurs.size.toLocaleString() + ' jurisdictions');
+  document.getElementById('summaryDetail').innerHTML = '<span style="color:var(--gray);">·</span> ' + parts.map(function(p){ return '<span style="color:var(--white);">' + p + '</span>'; }).join(' <span style="color:var(--gray);">·</span> ');
+  // Back-compat: populate the legacy #visibleCount too for any other code path.
+  var legacy = document.getElementById('visibleCount');
+  if (legacy) legacy.textContent = filtered.length;
+  var legacyJur = document.getElementById('jurisdictionCount');
+  if (legacyJur) legacyJur.textContent = jurs.size;
 
   function esc(s) {
     return String(s == null ? '' : s)

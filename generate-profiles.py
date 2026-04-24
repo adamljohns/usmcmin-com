@@ -426,12 +426,31 @@ def generate_profile(candidate, categories, meta, nav=None):
     # conflate them with the evidence-reviewed records on the same page.
     confidence = profile.get('confidence') or 'evidence'
     scoring_rationale = profile.get('scoring_rationale') or ''
+    # Also detect records that weren't party-default-seeded but have no
+    # scored answers at all (all-null across every category + no claims).
+    # These should render a neutral "Awaiting review" banner so a visitor
+    # isn't left staring at a profile of dashes without context.
+    _scores_dict = c.get('scores') or {}
+    _all_null = all(
+        all(x is None for x in (_scores_dict.get(cat) or [None]))
+        for cat in _scores_dict
+    ) if _scores_dict else True
+    _has_claims = bool(c.get('claims'))
     if confidence == 'party_default':
         confidence_chip_html = (
             '<div class="prof-confidence-banner" role="note" aria-label="Scoring confidence">'
             '<span class="prof-confidence-chip prof-conf-party-default">Party-default scoring</span>'
             '<span class="prof-confidence-text">Scored by party heuristic, not yet individually reviewed. '
             '<a href="#scoring-rationale">See rationale ↓</a></span>'
+            '</div>'
+        )
+    elif _all_null and not _has_claims:
+        confidence_chip_html = (
+            '<div class="prof-confidence-banner prof-conf-awaiting" role="note" aria-label="Scoring confidence">'
+            '<span class="prof-confidence-chip prof-conf-awaiting-chip">Awaiting review</span>'
+            '<span class="prof-confidence-text">This profile is scaffolding — the candidate is in our roster '
+            'but no scoring pass has been run yet. If you have evidence of this officials positions, the '
+            '<a href="#feedback">feedback form</a> below is the fastest way to seed a first review.</span>'
             '</div>'
         )
     else:
@@ -1484,6 +1503,13 @@ def generate_profile(candidate, categories, meta, nav=None):
       white-space: nowrap;
     }}
     .prof-conf-party-default {{ background: #b45309; color: #fff; }}
+    .prof-conf-awaiting {{
+      background: rgba(71, 85, 105, 0.1);
+      border-color: rgba(71, 85, 105, 0.4);
+    }}
+    .prof-conf-awaiting-chip {{ background: #475569; color: #fff; }}
+    .prof-conf-awaiting .prof-confidence-text {{ color: #94a3b8; }}
+    .prof-conf-awaiting .prof-confidence-text a {{ color: #cbd5e1; }}
     .prof-confidence-text {{
       font-size: 0.82rem;
       color: var(--text-muted, #d97706);

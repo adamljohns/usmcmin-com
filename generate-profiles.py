@@ -419,6 +419,24 @@ def generate_profile(candidate, categories, meta, nav=None):
     freshness_date = max(claim_dates) if claim_dates else (meta or {}).get('last_updated', '')
     freshness_source = 'claim' if claim_dates else 'scorecard'
 
+    # Scoring-confidence chip. profile.confidence == 'party_default' marks
+    # records that were seeded from party-line heuristics rather than
+    # individual evidence review (see seed-state-assemblies.py). These
+    # records should render a visible warning chip so visitors don't
+    # conflate them with the evidence-reviewed records on the same page.
+    confidence = profile.get('confidence') or 'evidence'
+    scoring_rationale = profile.get('scoring_rationale') or ''
+    if confidence == 'party_default':
+        confidence_chip_html = (
+            '<div class="prof-confidence-banner" role="note" aria-label="Scoring confidence">'
+            '<span class="prof-confidence-chip prof-conf-party-default">Party-default scoring</span>'
+            '<span class="prof-confidence-text">Scored by party heuristic, not yet individually reviewed. '
+            '<a href="#scoring-rationale">See rationale ↓</a></span>'
+            '</div>'
+        )
+    else:
+        confidence_chip_html = ''
+
     state_code = (c.get('state') or 'VA').upper()
     state_name = STATE_NAMES_FULL.get(state_code, state_code)
     nav = nav or {}
@@ -1293,6 +1311,65 @@ def generate_profile(candidate, categories, meta, nav=None):
       color: var(--text-muted, #94a3b8);
       letter-spacing: 0.2px;
     }}
+    .prof-confidence-banner {{
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 12px;
+      padding: 10px 14px;
+      background: rgba(217, 119, 6, 0.08);
+      border: 1px solid rgba(217, 119, 6, 0.35);
+      border-radius: 8px;
+    }}
+    .prof-confidence-chip {{
+      padding: 3px 10px;
+      border-radius: 12px;
+      font-size: 0.68rem;
+      font-weight: 800;
+      letter-spacing: 0.6px;
+      text-transform: uppercase;
+      white-space: nowrap;
+    }}
+    .prof-conf-party-default {{ background: #b45309; color: #fff; }}
+    .prof-confidence-text {{
+      font-size: 0.82rem;
+      color: var(--text-muted, #d97706);
+      line-height: 1.5;
+    }}
+    .prof-confidence-text a {{
+      color: #fcd34d;
+      text-decoration: underline;
+      font-weight: 600;
+    }}
+    .prof-rationale {{
+      margin-top: 18px;
+      padding: 18px 22px;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-left: 4px solid #b45309;
+      border-radius: var(--radius);
+      scroll-margin-top: 80px;
+    }}
+    .prof-rationale h2 {{
+      font-size: 1rem;
+      color: #fcd34d;
+      margin-bottom: 8px;
+      font-family: var(--font-main);
+      letter-spacing: 0.3px;
+    }}
+    .prof-rationale p {{
+      font-size: 0.86rem;
+      color: var(--white);
+      line-height: 1.65;
+      margin-bottom: 10px;
+    }}
+    .prof-rationale p:last-child {{ margin-bottom: 0; }}
+    .prof-rationale-footnote {{
+      color: var(--text-muted, #94a3b8) !important;
+      font-size: 0.78rem !important;
+    }}
+    .prof-rationale-footnote a {{ color: var(--accent); }}
     .prof-freshness time {{
       color: var(--accent, #e3b662);
       font-weight: 600;
@@ -1582,6 +1659,7 @@ def generate_profile(candidate, categories, meta, nav=None):
         {f'<a href="{website}" target="_blank" rel="noopener" style="margin-left:12px;color:var(--accent);font-size:0.85rem;">Campaign Website &rarr;</a>' if website else ''}
       </div>
     </div>
+    {confidence_chip_html}
   </div>
 
   <div class="prof-total">
@@ -1612,6 +1690,12 @@ def generate_profile(candidate, categories, meta, nav=None):
   {cat_html}
 
   {sources_html}
+
+  {f"""<div id="scoring-rationale" class="prof-rationale" role="note">
+    <h2>Scoring rationale</h2>
+    <p>{scoring_rationale}</p>
+    <p class="prof-rationale-footnote">This record was seeded from the {c.get('jurisdiction','')} roster using the RESOLUTE Citizen party-default heuristic, documented in <a href="https://github.com/adamljohns/usmcmin-com/blob/main/seed-state-assemblies.py" target="_blank" rel="noopener">seed-state-assemblies.py</a>. Individual voting-record review is pending; when specific claims are promoted via the apply-claims.py pipeline, this confidence label will update and the per-claim evidence will surface in the category breakdown above. If you have evidence that a specific answer above is wrong, please file a dispute using the form below.</p>
+  </div>""" if confidence == 'party_default' else ''}
 
   <!-- Bottom prev/next -->
   {prevnext_bar}

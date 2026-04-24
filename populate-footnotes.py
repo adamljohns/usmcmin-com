@@ -102,6 +102,41 @@ LEGACY_DOMAIN_MAP = {
                                         ('life',          list(range(5)))],
 }
 
+# State legislative / congressional primary-source domains. Citing these
+# is evidence for ANY scored category (they carry the candidate's
+# official voting record). Attached as reference-tier in the backfill.
+STATE_LEGISLATURE_HOSTS = {
+    'congress.gov', 'clerk.house.gov', 'senate.gov', 'house.gov',
+    'legis.state.pa.us', 'legis.ga.gov', 'nysenate.gov', 'leg.mn.gov',
+    'malegislature.gov', 'senate.mo.gov', 'mgaleg.maryland.gov',
+    'cga.ct.gov', 'legislature.maine.gov', 'capitol.texas.gov',
+    'legislature.vermont.gov', 'ncleg.gov', 'ilga.gov',
+    'legislature.ms.gov', 'scstatehouse.gov', 'kslegislature.org',
+    'myfloridahouse.gov', 'flsenate.gov', 'leg.mt.gov', 'iga.in.gov',
+    'legis.iowa.gov', 'leg.wa.gov', 'oklegislature.gov',
+    'legislature.mi.gov', 'legis.la.gov', 'legislature.state.al.us',
+    'virginiageneralassembly.gov', 'ndlegis.gov', 'legislature.ky.gov',
+    'wvlegislature.gov', 'legislature.ohio.gov', 'arkleg.state.ar.us',
+    'lis.virginia.gov', 'capitol.tn.gov', 'leginfo.legislature.ca.gov',
+    'legislature.ca.gov', 'rilegislature.gov', 'nmlegis.gov',
+    'sdlegislature.gov', 'legislature.idaho.gov', 'le.utah.gov',
+    'leg.colorado.gov', 'wyoleg.gov', 'azleg.gov',
+    'oregonlegislature.gov', 'capitol.hawaii.gov', 'legis.delaware.gov',
+    'akleg.gov', 'nebraskalegislature.gov', 'njleg.state.nj.us',
+    'legis.wisconsin.gov', 'gencourt.state.nh.us', 'leg.state.nv.us',
+    'dccouncil.gov', 'senate.texas.gov',
+}
+_STATE_LEG_CATEGORIES = list(LEGACY_DOMAIN_MAP['ballotpedia.org'])  # proxy
+# Actually every category is valid for a state legislature URL:
+_ALL_CATEGORIES = [('america_first', list(range(5))),
+                   ('life',          list(range(5))),
+                   ('immigration',   list(range(5))),
+                   ('marriage',      list(range(5))),
+                   ('self_defense',  list(range(5))),
+                   ('education',     list(range(5)))]
+for _h in STATE_LEGISLATURE_HOSTS:
+    LEGACY_DOMAIN_MAP[_h] = list(_ALL_CATEGORIES)
+
 
 def host_of(url: str) -> str:
     try:
@@ -248,6 +283,8 @@ def pass_backfill_legacy(sc, force=False):
         if host in PROGRESSIVE_HOSTS or parent in PROGRESSIVE_HOSTS:
             return 'progressive'
         if host in REFERENCE_HOSTS or parent in REFERENCE_HOSTS:
+            return 'reference'
+        if host in STATE_LEGISLATURE_HOSTS or parent in STATE_LEGISLATURE_HOSTS:
             return 'reference'
         return None
 

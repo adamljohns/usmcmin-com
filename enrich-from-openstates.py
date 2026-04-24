@@ -58,6 +58,15 @@ ASSETS_PHOTOS = REPO / 'assets' / 'photos'
 OS_ROOT = Path('/tmp/os_people/people-main/data')
 
 STATES = ['nv', 'nj', 'wi', 'nh']
+# All 50 for --legacy passes that enrich photos/phones on existing
+# non-party-default records. Falls back to this when the caller does
+# NOT pass --state.
+STATES_LEGACY = [
+    'al','ak','az','ar','ca','co','ct','de','fl','ga','hi','id','il','in',
+    'ia','ks','ky','la','me','md','ma','mi','mn','ms','mo','mt','ne','nv',
+    'nh','nj','nm','ny','nc','nd','oh','ok','or','pa','ri','sc','sd','tn',
+    'tx','ut','vt','va','wa','wv','wi','wy',
+]
 
 
 def normalize_district(d):
@@ -214,19 +223,39 @@ def enrich(state_code: str, candidates: list, args) -> dict:
     state_code_up = state_code.upper()
     state_code_lo = state_code.lower()
 
-    # Build an index of party_default seeded candidates by (state, district)
+    legacy_mode = getattr(args, 'legacy', False)
+
+    # Build an index of candidates by (state, district). Default mode
+    # restricts to lower-chamber party_default seeded records (original
+    # Ship 25 behavior). Legacy mode relaxes the filter so we match
+    # ANY scorecard candidate that's missing photo/phone/contact info.
     idx = {}
     for c in candidates:
         if c.get('state') != state_code_up:
             continue
-        if (c.get('profile') or {}).get('confidence') != 'party_default':
-            continue
-        district = normalize_district(c.get('district'))
-        # Only lower-chamber seeded records (office contains Assembly or
-        # Representative per seed-state-assemblies.py STATE_CONFIG.office_label)
+        prof = c.get('profile') or {}
         off_label = (c.get('office') or '').lower()
-        if not any(k in off_label for k in ('assembly', 'representative')):
-            continue
+        if legacy_mode:
+            # Skip already-fully-enriched records: if they already have
+            # a photo on disk AND a phone, don't waste cycles.
+            has_photo = bool(c.get('photo'))
+            has_phone = bool(prof.get('phone'))
+            has_os = bool(prof.get('openstates_id'))
+            if has_photo and has_phone and has_os:
+                continue
+            # Match any state-legislative record (senators + reps).
+            if not any(k in off_label for k in ('state senator', 'state delegate',
+                                               'state representative', 'state assembly',
+                                               'state house', 'assembly member',
+                                               'general assembly', 'delegate', 'assemblyman',
+                                               'assemblywoman')):
+                continue
+        else:
+            if prof.get('confidence') != 'party_default':
+                continue
+            if not any(k in off_label for k in ('assembly', 'representative')):
+                continue
+        district = normalize_district(c.get('district'))
         idx.setdefault((state_code_up, district), []).append(c)
 
     stats = {
@@ -340,9 +369,12 @@ def enrich(state_code: str, candidates: list, args) -> dict:
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument('--state', choices=['NV', 'NJ', 'WI', 'NH'])
+    ap.add_argument('--state', help='State code (NV/NJ/WI/NH or any 2-letter state code in --legacy mode)')
     ap.add_argument('--dry-run', action='store_true')
     ap.add_argument('--skip-photos', action='store_true')
+    ap.add_argument('--legacy', action='store_true',
+                    help='Operate on any state-legislative candidate '
+                         'missing photo/phone, not only party_default seeded records.')
     args = ap.parse_args()
 
     if not OS_ROOT.exists():
@@ -352,7 +384,12 @@ def main():
     with open(SCORECARD, 'r', encoding='utf-8') as f:
         sc = json.load(f)
 
-    targets = [args.state] if args.state else ['NV', 'NJ', 'WI', 'NH']
+    if args.state:
+        targets = [args.state]
+    elif args.legacy:
+        targets = [s.upper() for s in STATES_LEGACY]
+    else:
+        targets = ['NV', 'NJ', 'WI', 'NH']
     all_stats = []
     for st in targets:
         s = enrich(st.lower(), sc['candidates'], args)

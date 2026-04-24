@@ -283,6 +283,27 @@
       });
       html += '</div></section>';
 
+      // Scoring-confidence distribution — honest breakdown of which
+      // records are evidence-reviewed vs party-default scaffolding.
+      var sConf = s.scoring_confidence || {};
+      var confTotal = (sConf.evidence_reviewed||0) + (sConf.legacy_reviewed||0) + (sConf.party_default||0) + (sConf.unreviewed||0);
+      if (confTotal > 0) {
+        html += '<section class="st-section"><h2>Scoring confidence</h2>' +
+          '<p class="lead">Every record in the scorecard carries one of four confidence tiers. ' +
+          'Evidence-reviewed records have at least one verified claim cited on their profile. ' +
+          'Legacy-reviewed records pre-date the confidence-tagging system (imported before the ' +
+          'claims schema shipped). Party-default records were seeded from state-chamber rosters ' +
+          'with their initial scores inferred from party caucus positions; every such profile ' +
+          'renders an amber "Party-default scoring" banner with an explicit rationale. Unreviewed ' +
+          'records are all-null placeholders awaiting a first pass.</p>' +
+          '<div class="st-grid">';
+        html += card('Evidence-reviewed', fmt(sConf.evidence_reviewed||0), pct(sConf.evidence_reviewed||0, confTotal) + ' of all records · at least one verified claim', 100*(sConf.evidence_reviewed||0)/confTotal);
+        html += card('Legacy-reviewed', fmt(sConf.legacy_reviewed||0), pct(sConf.legacy_reviewed||0, confTotal) + ' of all records · scored before the claims schema', 100*(sConf.legacy_reviewed||0)/confTotal);
+        html += card('Party-default', fmt(sConf.party_default||0), pct(sConf.party_default||0, confTotal) + ' of all records · seeded with party-line heuristic', 100*(sConf.party_default||0)/confTotal);
+        html += card('Unreviewed', fmt(sConf.unreviewed||0), pct(sConf.unreviewed||0, confTotal) + ' of all records · all-null placeholders', 100*(sConf.unreviewed||0)/confTotal);
+        html += '</div></section>';
+      }
+
       // Claims by category.
       if (cc && Object.keys(cc).length) {
         html += '<section class="st-section"><h2>Published claims by category</h2>' +

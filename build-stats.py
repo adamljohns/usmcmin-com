@@ -140,6 +140,37 @@ def compute():
                 claims_by_category[cl.get('category') or 'unknown'] += 1
                 claims_by_kind[cl.get('kind') or 'statement'] += 1
 
+    # Scoring-confidence distribution. The three tiers are:
+    #   evidence_reviewed — the candidate has at least one verified claim,
+    #                       OR profile.confidence is explicitly not
+    #                       "party_default" (e.g., unset means the record
+    #                       predates the confidence-tagging era).
+    #   party_default     — profile.confidence == "party_default" and the
+    #                       record has no verified claims yet. These
+    #                       render the amber banner in the profile UI.
+    #   unreviewed        — no claims, no explicit confidence, and the
+    #                       entire scores matrix is all-null (i.e., a
+    #                       true placeholder awaiting data).
+    confidence_counts = collections.Counter()
+    for c in candidates:
+        cls = c.get('claims') or []
+        conf = (c.get('profile') or {}).get('confidence') or ''
+        has_verified = any(cl.get('verified') for cl in cls)
+        # Detect all-null scores
+        scores = c.get('scores') or {}
+        all_null = all(
+            all(x is None for x in (scores.get(cat) or [None]))
+            for cat in scores
+        ) if scores else True
+        if has_verified:
+            confidence_counts['evidence_reviewed'] += 1
+        elif conf == 'party_default':
+            confidence_counts['party_default'] += 1
+        elif all_null:
+            confidence_counts['unreviewed'] += 1
+        else:
+            confidence_counts['legacy_reviewed'] += 1
+
     # Source diversity aggregate. Track two different classification
     # metrics so the UI can report both:
     #   * bias_citation_coverage_pct — citations whose domain has an
@@ -272,6 +303,7 @@ def compute():
         'source_diversity': dict(tone_counts),
         'claims_by_category': dict(claims_by_category),
         'claims_by_kind': dict(claims_by_kind),
+        'scoring_confidence': dict(confidence_counts),
         'per_state': per_state,
         'proposed_claims': proposed_summary,
         'data_files': data_files,

@@ -569,17 +569,24 @@ def generate_profile(candidate, categories, meta, nav=None):
 
     def render_fn_markers_for(cat_id, q_idx, answer_value):
         """Return the <sup>...</sup> HTML to append next to an answer cell.
+
         Uses the candidate's explicit footnotes if present; otherwise
-        falls back to the synthetic party-default marker."""
-        if answer_value is None:
-            return ''
+        falls back to the synthetic party-default marker. For null
+        answers (—) we DO still render footnotes when they exist,
+        because those footnotes typically point at primary-source
+        lookup tools (e.g., TrackAIPAC, OpenSecrets) where a visitor
+        can verify the question for themselves — which is precisely
+        what an "unknown" score calls for."""
         ids = (answer_footnotes_map.get(cat_id) or [])
         ids = ids[q_idx] if q_idx < len(ids) else []
         if not ids and (profile.get('confidence') == 'party_default'):
-            # Synthetic party-default footnote, rendered once per page
-            # in the References section via ensure_party_default_fn.
             ensure_party_default_fn_id()
             ids = ['_pd']
+        # Filter out synthetic _pd marker when the answer IS null — a
+        # party-default null doesn't meaningfully point at the
+        # rationale card.
+        if answer_value is None:
+            ids = [fn_id for fn_id in ids if fn_id != '_pd']
         if not ids:
             return ''
         links = []
@@ -596,8 +603,12 @@ def generate_profile(candidate, categories, meta, nav=None):
                              f'aria-label="See footnote {num}">{num}</a>')
         if not links:
             return ''
+        # Slightly different styling for null-answer markers: the
+        # prof-fn-sup-lookup class signals "this is a lookup hint, not
+        # a citation for a known answer." CSS gives it a muted color.
+        cls = 'prof-fn-sup prof-fn-sup-lookup' if answer_value is None else 'prof-fn-sup'
         return (
-            '<sup class="prof-fn-sup" aria-label="References for this answer">'
+            f'<sup class="{cls}" aria-label="References for this answer">'
             '[' + ','.join(links) + ']</sup>'
         )
 
@@ -1565,6 +1576,19 @@ def generate_profile(candidate, categories, meta, nav=None):
       text-decoration: underline;
     }}
     .prof-fn-sup .prof-fn-link + .prof-fn-link::before {{ content: ""; }}
+    .prof-fn-sup-lookup .prof-fn-link {{
+      color: var(--text-muted, #94a3b8);
+      opacity: 0.85;
+    }}
+    .prof-fn-sup-lookup::before {{
+      content: "look up: ";
+      font-size: 0.6rem;
+      text-transform: uppercase;
+      letter-spacing: 0.4px;
+      color: var(--text-muted, #94a3b8);
+      margin-right: 3px;
+      font-weight: 600;
+    }}
     .prof-references {{
       margin-top: 18px;
       padding: 18px 22px;

@@ -1,0 +1,1547 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pete Morency — RESOLUTE Citizen Scorecard | U.S.M.C. Ministries</title>
+  <meta name="description" content="RESOLUTE Citizen Scorecard for Pete Morency (Republican). State Representative, New Hampshire House of Representatives. Score: 36/70.">
+  <link rel="stylesheet" href="../../assets/css/main.css">
+  <link rel="icon" href="../../assets/img/favicon.png" type="image/png">
+  <style>
+    .prof-container { max-width: 900px; margin: 0 auto; padding: 20px; }
+    .prof-back { display: inline-block; color: var(--accent); text-decoration: none; font-size: 0.85rem; margin-bottom: 20px; }
+    .prof-back:hover { text-decoration: underline; }
+
+    /* Breadcrumb */
+    .prof-breadcrumb {
+      font-size: 0.78rem;
+      color: var(--gray);
+      margin-bottom: 14px;
+      line-height: 1.6;
+      word-break: break-word;
+    }
+    .prof-breadcrumb a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+    .prof-breadcrumb a:hover { text-decoration: underline; }
+    .prof-breadcrumb .crumb-sep { color: var(--gray); margin: 0 2px; opacity: 0.6; }
+    .prof-breadcrumb .crumb-current { color: var(--white); font-weight: 600; }
+
+    /* Jump-to dropdown */
+    .prof-jump {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 18px;
+      flex-wrap: wrap;
+    }
+    .prof-jump label {
+      font-size: 0.78rem;
+      color: var(--gray);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .prof-jump select {
+      flex: 1;
+      min-width: 220px;
+      padding: 8px 12px;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      color: var(--white);
+      font-size: 0.85rem;
+      cursor: pointer;
+    }
+    .prof-jump select:hover { border-color: var(--accent); }
+
+    /* Prev / Next nav bar */
+    .prof-nav-bar {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      align-items: stretch;
+      gap: 10px;
+      margin: 18px 0;
+    }
+    .prof-nav-btn {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 12px 14px;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      color: var(--white);
+      text-decoration: none;
+      font-size: 0.82rem;
+      line-height: 1.3;
+      min-height: 54px;
+      transition: border-color 0.15s, background 0.15s;
+    }
+    .prof-nav-btn:hover {
+      border-color: var(--accent);
+      background: rgba(212,175,55,0.06);
+    }
+    .prof-nav-btn[data-direction="next"] {
+      justify-content: flex-end;
+      text-align: right;
+      flex-direction: row-reverse;
+    }
+    .prof-nav-btn.prof-nav-disabled {
+      opacity: 0.35;
+      cursor: default;
+      pointer-events: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--gray);
+    }
+    .prof-nav-arrow {
+      font-weight: 700;
+      color: var(--accent);
+      flex-shrink: 0;
+    }
+    .prof-nav-text {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      overflow: hidden;
+    }
+    .prof-nav-name {
+      font-weight: 600;
+      color: var(--white);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .prof-nav-office {
+      font-size: 0.72rem;
+      color: var(--gray);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .prof-nav-position {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 10px 16px;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      font-size: 0.78rem;
+      color: var(--gray);
+      text-align: center;
+      white-space: nowrap;
+    }
+    @media (max-width: 640px) {
+      .prof-nav-bar {
+        grid-template-columns: 1fr 1fr;
+        grid-template-rows: auto auto;
+      }
+      .prof-nav-position {
+        grid-column: 1 / -1;
+        order: -1;
+      }
+    }
+
+    /* Photo / initials */
+    .prof-header-row {
+      display: flex;
+      gap: 20px;
+      align-items: flex-start;
+    }
+    .prof-header-row .prof-header-text { flex: 1; min-width: 0; }
+    .prof-photo {
+      width: 96px;
+      height: 96px;
+      border-radius: 50%;
+      flex-shrink: 0;
+      object-fit: cover;
+      border: 2px solid var(--border);
+    }
+    .prof-initials {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-main);
+      font-size: 2rem;
+      font-weight: 800;
+      letter-spacing: 1px;
+      user-select: none;
+    }
+    @media (max-width: 520px) {
+      .prof-header-row { flex-direction: column; align-items: center; text-align: center; }
+      .prof-photo { width: 80px; height: 80px; }
+      .prof-initials { font-size: 1.7rem; }
+    }
+
+    .prof-header {
+      padding: 32px 24px;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      margin-bottom: 24px;
+    }
+    .prof-jurisdiction {
+      font-size: 0.72rem;
+      color: var(--accent);
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 8px;
+    }
+    .prof-name {
+      font-size: clamp(1.6rem, 4vw, 2.4rem);
+      color: var(--white);
+      margin-bottom: 6px;
+      font-weight: 800;
+    }
+    .prof-office {
+      font-size: 1rem;
+      color: var(--gray);
+      margin-bottom: 12px;
+    }
+    .prof-party {
+      display: inline-block;
+      font-size: 0.78rem;
+      font-weight: 700;
+      padding: 4px 12px;
+      border-radius: 6px;
+    }
+    .party-r { background: rgba(220,38,38,0.15); color: #ef4444; border: 1px solid rgba(220,38,38,0.3); }
+    .party-d { background: rgba(37,99,235,0.15); color: #3b82f6; border: 1px solid rgba(37,99,235,0.3); }
+    .party-i { background: rgba(168,85,247,0.15); color: #a855f7; border: 1px solid rgba(168,85,247,0.3); }
+    .party-unknown { background: rgba(107,114,128,0.15); color: #9ca3af; border: 1px solid rgba(107,114,128,0.3); }
+
+    /* Election / countdown block */
+    .prof-election {
+      display: grid;
+      grid-template-columns: minmax(220px, 1fr) 1.2fr;
+      gap: 18px;
+      padding: 18px 22px;
+      border-radius: var(--radius);
+      margin-bottom: 20px;
+      border: 1px solid var(--border);
+    }
+    .prof-election-seat-up {
+      background: linear-gradient(135deg, rgba(76,175,80,0.10) 0%, rgba(201,168,76,0.10) 100%);
+      border-left: 4px solid #c9a84c;
+    }
+    .prof-election-seat-safe {
+      background: var(--bg-card);
+      border-left: 4px solid var(--border);
+      opacity: 0.92;
+    }
+    .prof-election-main { display: flex; flex-direction: column; gap: 4px; }
+    .prof-election-label {
+      font-size: 0.7rem;
+      color: #c9a84c;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      font-weight: 700;
+    }
+    .prof-election-date {
+      font-size: 1.35rem;
+      color: var(--white);
+      font-weight: 800;
+      font-family: var(--font-main);
+    }
+    .prof-election-type {
+      font-size: 0.82rem;
+      color: var(--gray);
+      margin-bottom: 4px;
+    }
+    .prof-election-countdown {
+      font-size: 1.1rem;
+      color: var(--white);
+      margin-top: 4px;
+    }
+    .prof-election-countdown span:first-child {
+      font-weight: 800;
+      color: #c9a84c;
+      font-size: 1.5rem;
+    }
+    .prof-election-countdown .cd-label {
+      color: var(--gray);
+      font-size: 0.85rem;
+    }
+    .prof-election-side {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      font-size: 0.82rem;
+      color: var(--gray);
+      line-height: 1.5;
+      border-left: 1px dashed var(--border);
+      padding-left: 16px;
+    }
+    .prof-election-side a { color: var(--accent); text-decoration: none; }
+    .prof-election-side a:hover { text-decoration: underline; }
+    .prof-election-side strong { color: var(--white); font-weight: 600; }
+    @media (max-width: 640px) {
+      .prof-election {
+        grid-template-columns: 1fr;
+        gap: 10px;
+      }
+      .prof-election-side {
+        border-left: none;
+        padding-left: 0;
+        border-top: 1px dashed var(--border);
+        padding-top: 12px;
+      }
+    }
+
+    /* Contact block */
+    .prof-contact {
+      padding: 20px 24px;
+      background: linear-gradient(135deg, rgba(201,168,76,0.10) 0%, rgba(30,58,95,0.06) 100%);
+      border: 1px solid rgba(201,168,76,0.3);
+      border-radius: var(--radius);
+      margin-bottom: 24px;
+    }
+    .prof-contact h2 {
+      color: #c9a84c;
+      font-size: 1.05rem;
+      margin-bottom: 14px;
+      font-family: var(--font-main);
+      letter-spacing: 0.3px;
+    }
+    .prof-contact-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+      gap: 10px;
+    }
+    .prof-contact-btn {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 11px 14px;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      color: var(--white);
+      text-decoration: none;
+      font-size: 0.85rem;
+      transition: border-color 0.15s, background 0.15s, transform 0.1s;
+    }
+    .prof-contact-btn:hover {
+      border-color: #c9a84c;
+      background: rgba(201,168,76,0.06);
+      transform: translateY(-1px);
+    }
+    .prof-contact-icon {
+      font-size: 1.25rem;
+      flex-shrink: 0;
+      filter: saturate(1.1);
+    }
+    .prof-contact-text {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      min-width: 0;
+      flex: 1;
+    }
+    .prof-contact-label {
+      font-size: 0.7rem;
+      color: var(--gray);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      font-weight: 600;
+    }
+    .prof-contact-value {
+      font-size: 0.88rem;
+      color: var(--white);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .prof-contact-note {
+      font-size: 0.78rem;
+      color: var(--gray);
+      margin-top: 10px;
+      padding-top: 10px;
+      border-top: 1px dashed var(--border);
+      line-height: 1.5;
+    }
+    .prof-contact-tagline {
+      font-size: 0.72rem;
+      color: var(--gray);
+      margin-top: 8px;
+      font-style: italic;
+      line-height: 1.5;
+    }
+    .prof-contact-tagline em {
+      color: rgba(201,168,76,0.8);
+      font-style: italic;
+    }
+
+    /* District offices (collapsible) */
+    .prof-district-details {
+      margin-top: 12px;
+      padding-top: 10px;
+      border-top: 1px dashed var(--border);
+      font-size: 0.82rem;
+    }
+    .prof-district-details summary {
+      cursor: pointer;
+      color: #c9a84c;
+      font-weight: 600;
+      padding: 4px 0;
+      outline: none;
+      user-select: none;
+    }
+    .prof-district-details summary:hover { text-decoration: underline; }
+    .prof-district-details[open] summary { margin-bottom: 8px; }
+    .prof-district-list {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      padding-left: 6px;
+      border-left: 2px solid rgba(201,168,76,0.25);
+      padding-top: 2px;
+    }
+    .prof-district-office {
+      color: var(--gray);
+      line-height: 1.55;
+      padding: 4px 8px;
+    }
+    .prof-district-office strong {
+      color: var(--white);
+      margin-right: 6px;
+    }
+    .prof-district-office a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+    .prof-district-office a:hover { text-decoration: underline; }
+
+    .prof-sources {
+      padding: 16px 24px;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      margin-top: 16px;
+    }
+    .prof-sources h2 {
+      color: var(--accent);
+      font-size: 1rem;
+      margin-bottom: 10px;
+      font-family: var(--font-main);
+    }
+    .prof-source-list {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .prof-source-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    .prof-sources a {
+      color: var(--accent);
+      text-decoration: none;
+      font-size: 0.82rem;
+      word-break: break-all;
+      flex: 1 1 auto;
+      min-width: 0;
+    }
+    .prof-sources a:hover { text-decoration: underline; }
+    .prof-bias-chip {
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: 10px;
+      font-size: 0.64rem;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      font-weight: 700;
+      white-space: nowrap;
+      flex: 0 0 auto;
+      border: 1px solid transparent;
+    }
+    .prof-bias-left       { background: #1d4ed8; color: #fff; }
+    .prof-bias-lean-left  { background: #60a5fa; color: #0b1220; }
+    .prof-bias-center     { background: #9ca3af; color: #0b1220; }
+    .prof-bias-lean-right { background: #f87171; color: #2b0a0a; }
+    .prof-bias-right      { background: #b91c1c; color: #fff; }
+    .prof-bias-official   { background: #0e7490; color: #fff; }
+    .prof-bias-reference  { background: #475569; color: #fff; }
+    .prof-bias-social     { background: #334155; color: #cbd5e1; border-color: #475569; }
+    .prof-bias-neutral    { background: #1f2937; color: #cbd5e1; border-color: #374151; }
+    .prof-source-diversity {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-bottom: 12px;
+      padding-bottom: 12px;
+      border-bottom: 1px dashed var(--border);
+    }
+    .prof-div-chip {
+      padding: 3px 10px;
+      border-radius: 12px;
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.4px;
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+    .prof-bias-attribution {
+      margin-top: 10px;
+      padding-top: 10px;
+      border-top: 1px solid var(--border);
+      font-size: 0.7rem;
+      color: var(--text-muted, #94a3b8);
+      line-height: 1.5;
+    }
+    .prof-bias-attribution a {
+      color: var(--text-muted, #94a3b8);
+      text-decoration: underline;
+      display: inline;
+      font-size: inherit;
+      word-break: normal;
+    }
+
+    .prof-total {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 20px 24px;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      margin-bottom: 24px;
+    }
+    .prof-total-score {
+      font-size: 2.4rem;
+      font-weight: 800;
+    }
+    .prof-total-max {
+      font-size: 1rem;
+      color: var(--gray);
+    }
+    .prof-total-bar {
+      flex: 1;
+      height: 10px;
+      background: var(--border);
+      border-radius: 5px;
+      overflow: hidden;
+    }
+    .prof-total-fill {
+      height: 100%;
+      border-radius: 5px;
+      transition: width 0.4s;
+    }
+    .prof-freshness {
+      margin-top: 6px;
+      font-size: 0.72rem;
+      color: var(--text-muted, #94a3b8);
+      letter-spacing: 0.2px;
+    }
+    .prof-confidence-banner {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 12px;
+      padding: 10px 14px;
+      background: rgba(217, 119, 6, 0.08);
+      border: 1px solid rgba(217, 119, 6, 0.35);
+      border-radius: 8px;
+    }
+    .prof-confidence-chip {
+      padding: 3px 10px;
+      border-radius: 12px;
+      font-size: 0.68rem;
+      font-weight: 800;
+      letter-spacing: 0.6px;
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+    .prof-conf-party-default { background: #b45309; color: #fff; }
+    .prof-confidence-text {
+      font-size: 0.82rem;
+      color: var(--text-muted, #d97706);
+      line-height: 1.5;
+    }
+    .prof-confidence-text a {
+      color: #fcd34d;
+      text-decoration: underline;
+      font-weight: 600;
+    }
+    .prof-rationale {
+      margin-top: 18px;
+      padding: 18px 22px;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-left: 4px solid #b45309;
+      border-radius: var(--radius);
+      scroll-margin-top: 80px;
+    }
+    .prof-rationale h2 {
+      font-size: 1rem;
+      color: #fcd34d;
+      margin-bottom: 8px;
+      font-family: var(--font-main);
+      letter-spacing: 0.3px;
+    }
+    .prof-rationale p {
+      font-size: 0.86rem;
+      color: var(--white);
+      line-height: 1.65;
+      margin-bottom: 10px;
+    }
+    .prof-rationale p:last-child { margin-bottom: 0; }
+    .prof-rationale-footnote {
+      color: var(--text-muted, #94a3b8) !important;
+      font-size: 0.78rem !important;
+    }
+    .prof-rationale-footnote a { color: var(--accent); }
+    .prof-freshness time {
+      color: var(--accent, #e3b662);
+      font-weight: 600;
+    }
+    .prof-total-label {
+      font-size: 0.82rem;
+      color: var(--gray);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      font-weight: 600;
+    }
+
+    .prof-details {
+      padding: 20px 24px;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      margin-bottom: 24px;
+    }
+    .prof-details h2 {
+      color: var(--accent);
+      font-size: 1.1rem;
+      margin-bottom: 12px;
+      font-family: var(--font-main);
+    }
+    .prof-detail {
+      font-size: 0.88rem;
+      color: var(--gray);
+      margin-bottom: 8px;
+      line-height: 1.6;
+    }
+    .prof-detail strong { color: var(--white); }
+    .prof-notes {
+      font-size: 0.88rem;
+      color: var(--gray);
+      line-height: 1.7;
+      font-style: italic;
+      margin-top: 12px;
+      padding-top: 12px;
+      border-top: 1px solid var(--border);
+    }
+
+    .prof-category {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      margin-bottom: 16px;
+      overflow: hidden;
+    }
+    .prof-cat-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 14px 20px;
+      border-bottom: 1px solid var(--border);
+      flex-wrap: wrap;
+    }
+    .prof-cat-header h3 {
+      flex: 1;
+      color: var(--white);
+      font-size: 1rem;
+      font-family: var(--font-main);
+    }
+    .prof-cat-score {
+      font-size: 1.3rem;
+      font-weight: 700;
+    }
+    .prof-cat-petition {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 4px 10px;
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.3px;
+      text-transform: uppercase;
+      text-decoration: none;
+      color: var(--accent, #e3b662);
+      border: 1px solid rgba(227, 182, 98, 0.35);
+      border-radius: 12px;
+      transition: all 0.15s;
+      white-space: nowrap;
+    }
+    .prof-cat-petition:hover {
+      background: rgba(227, 182, 98, 0.12);
+      border-color: var(--accent, #e3b662);
+      text-decoration: none;
+    }
+    .prof-cat-petition:focus-visible {
+      outline: 2px solid var(--accent, #e3b662);
+      outline-offset: 2px;
+    }
+    .prof-questions { padding: 0; }
+    .prof-q {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 20px;
+      border-bottom: 1px solid var(--border);
+      gap: 16px;
+    }
+    .prof-q:last-child { border-bottom: none; }
+    .prof-q-text {
+      flex: 1;
+      font-size: 0.85rem;
+      color: var(--gray);
+      line-height: 1.5;
+    }
+    .prof-q-answer {
+      font-size: 0.78rem;
+      white-space: nowrap;
+    }
+    .prof-q-claims {
+      flex-basis: 100%;
+      margin-top: 4px;
+      margin-left: 0;
+      font-size: 0.82rem;
+    }
+    .prof-q-claim-toggle {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      cursor: pointer;
+      list-style: none;
+      color: var(--accent, #e3b662);
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.3px;
+      padding: 2px 0;
+      outline: none;
+    }
+    .prof-q-claim-toggle::-webkit-details-marker { display: none; }
+    .prof-q-claim-toggle::before {
+      content: "▸";
+      font-size: 0.75rem;
+      transition: transform 0.15s;
+    }
+    .prof-q-claims[open] > .prof-q-claim-toggle::before {
+      transform: rotate(90deg);
+    }
+    .prof-q-claim-i {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 16px;
+      height: 16px;
+      border: 1px solid currentColor;
+      border-radius: 50%;
+      font-family: Georgia, serif;
+      font-style: italic;
+      font-size: 0.7rem;
+      font-weight: 700;
+    }
+    .prof-q-claim-toggle:focus-visible {
+      outline: 2px solid var(--accent, #e3b662);
+      outline-offset: 2px;
+      border-radius: 4px;
+    }
+    .prof-q-claim-list {
+      margin: 8px 0 4px 0;
+      padding: 0;
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .prof-q-claim {
+      padding: 10px 12px;
+      border-left: 3px solid var(--accent, #e3b662);
+      background: rgba(255,255,255,0.02);
+      border-radius: 0 6px 6px 0;
+    }
+    .prof-q-claim-text {
+      margin: 0 0 8px 0;
+      color: var(--white, #f5f5f5);
+      line-height: 1.55;
+    }
+    .prof-q-claim-src-list {
+      list-style: none;
+      padding: 0;
+      margin: 0 0 8px 0;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .prof-q-claim-src {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    .prof-q-claim-src a {
+      color: var(--accent, #e3b662);
+      text-decoration: none;
+      word-break: break-all;
+      font-size: 0.78rem;
+    }
+    .prof-q-claim-src a:hover { text-decoration: underline; }
+    .prof-q-claim-meta {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+      font-size: 0.7rem;
+      color: var(--text-muted, #94a3b8);
+    }
+    .prof-q-claim-badge {
+      padding: 2px 8px;
+      border-radius: 10px;
+      font-weight: 700;
+      letter-spacing: 0.3px;
+      text-transform: uppercase;
+      font-size: 0.64rem;
+    }
+    .prof-q-claim-badge.verified { background: #166534; color: #d1fae5; }
+    .prof-q-claim-badge.disputed { background: #78350f; color: #fed7aa; }
+    .prof-q-claim-dispute {
+      color: var(--text-muted, #94a3b8);
+      text-decoration: underline;
+    }
+    .prof-q-claim-dispute:hover {
+      color: var(--accent, #e3b662);
+    }
+
+    footer {
+      text-align: center;
+      padding: 30px 20px;
+      color: var(--gray);
+      font-size: 0.82rem;
+      border-top: 1px solid var(--border);
+      margin-top: 40px;
+    }
+    footer a { color: var(--accent); text-decoration: none; }
+
+    @media (max-width: 600px) {
+      .prof-q { flex-direction: column; gap: 6px; }
+      .prof-total { flex-wrap: wrap; }
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a href="/" class="nav-brand" style="text-decoration:none">
+    <img src="../../assets/img/logo.png" alt="U.S.M.C. Ministries" style="object-fit:contain">
+    <div class="nav-brand-text">
+      <div class="name">U.S.M.C. Ministries</div>
+      <div class="tag">Warriors Equipped</div>
+    </div>
+  </a>
+  <ul class="nav-links">
+    <li><a href="../../mission.html">Mission</a></li>
+    <li><a href="../../shop.html">Shop</a></li>
+    <li><a href="../../books.html">Books</a></li>
+    <li><a href="../../coaching.html">Coaching</a></li>
+    <li><a href="../../fitness/fitness.html">Fitness</a></li>
+    <li><a href="../../finance/">Finance</a></li>
+    <li><a href="../../about.html">About</a></li>
+    <li><a href="https://usmcmin.org" target="_blank">Ministry Site</a></li>
+  </ul>
+  <a href="../../coaching.html" class="btn nav-cta">Book a Session</a>
+  <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">&#9789;</button>
+  <button class="nav-toggle" aria-label="Menu"><span></span><span></span><span></span></button>
+</nav>
+
+<div class="prof-container">
+  <nav class="prof-breadcrumb" aria-label="Breadcrumb"><a href="../../citizen.html">RESOLUTE Citizen</a> <span class="crumb-sep">›</span> <a href="../../find-my-reps.html">Find My Reps</a> <span class="crumb-sep">›</span> <a href="../../citizen.html?state=NH">New Hampshire</a> <span class="crumb-sep">›</span> <a href="../../citizen.html?state=NH">New Hampshire House of Representatives</a> <span class="crumb-sep">›</span> <span class="crumb-current">Pete Morency</span></nav>
+
+  <div class="prof-jump">
+    <label for="profJumpSelect">Jump to:</label>
+    <select id="profJumpSelect" data-state="NH" data-current-slug="pete-morency-nh-coös-05">
+      <option value="">Loading New Hampshire officials…</option>
+    </select>
+  </div>
+
+  <div class="prof-nav-bar"><a class="prof-nav-btn" href="paul-tudor-nh-rockingham-01.html" data-direction="prev"><span class="prof-nav-arrow">← Prev</span><span class="prof-nav-text"><span class="prof-nav-name">Paul Tudor</span><span class="prof-nav-office">State Representative</span></span></a><div class="prof-nav-position">153 of 392 &middot; New Hampshire House of Representatives</div><a class="prof-nav-btn" href="peter-mehegan-nh-merrimack-12.html" data-direction="next"><span class="prof-nav-arrow">Next →</span><span class="prof-nav-text"><span class="prof-nav-name">Peter Mehegan</span><span class="prof-nav-office">State Representative</span></span></a></div>
+
+  <div class="prof-header">
+    <div class="prof-header-row">
+      <img class="prof-photo" src="../../assets/photos/nh/pete-morency-nh-coös-05.jpg" alt="Pete Morency" loading="lazy">
+      <div class="prof-header-text">
+        <div class="prof-jurisdiction">New Hampshire House of Representatives</div>
+        <h1 class="prof-name">Pete Morency</h1>
+        <div class="prof-office">State Representative</div>
+        <span class="prof-party party-r">Republican</span>
+        <a href="https://gc.nh.gov/house/members/member.aspx?pid=8401" target="_blank" rel="noopener" style="margin-left:12px;color:var(--accent);font-size:0.85rem;">Campaign Website &rarr;</a>
+      </div>
+    </div>
+    <div class="prof-confidence-banner" role="note" aria-label="Scoring confidence"><span class="prof-confidence-chip prof-conf-party-default">Party-default scoring</span><span class="prof-confidence-text">Scored by party heuristic, not yet individually reviewed. <a href="#scoring-rationale">See rationale ↓</a></span></div>
+  </div>
+
+  <div class="prof-total">
+    <div>
+      <div class="prof-total-label">RESOLUTE Citizen Score</div>
+      <div>
+        <span class="prof-total-score" style="color:#FFC107;">36</span>
+        <span class="prof-total-max">/ 70</span>
+      </div>
+      <div class="prof-freshness" title="Data freshness source: scorecard">Last verified: <time datetime="2026-04-23">2026-04-23</time> · scorecard-level timestamp</div>
+    </div>
+    <div class="prof-total-bar">
+      <div class="prof-total-fill" style="width:51%;background:#FFC107;"></div>
+    </div>
+  </div>
+
+  <div class="prof-contact"><h2>Contact This Official</h2><div class="prof-contact-grid"><a class="prof-contact-btn" href="tel:+16032713661"><span class="prof-contact-icon" aria-hidden="true">&#128222;</span><span class="prof-contact-text"><span class="prof-contact-label">Call</span><span class="prof-contact-value">603-271-3661</span></span></a><a class="prof-contact-btn" href="https://gc.nh.gov/house/members/member.aspx?pid=8401" target="_blank" rel="noopener"><span class="prof-contact-icon" aria-hidden="true">&#9993;&#65039;</span><span class="prof-contact-text"><span class="prof-contact-label">Send Message</span><span class="prof-contact-value">Official Page</span></span></a><a class="prof-contact-btn" href="mailto:peter.morency@gc.nh.gov"><span class="prof-contact-icon" aria-hidden="true">&#128231;</span><span class="prof-contact-text"><span class="prof-contact-label">Email</span><span class="prof-contact-value">peter.morency@gc.nh.gov</span></span></a></div><p class="prof-contact-tagline">Reach out directly. Your voice matters. <em>Proverbs 29:2 — When the righteous are in authority, the people rejoice.</em></p></div>
+
+  
+
+  <div class="prof-details">
+    <h2>Official Profile</h2>
+    
+    <div class="prof-notes">Seeded 2026-04-23 from the New Hampshire House of Representatives roster. Initial scoring follows the documented party-default heuristic (see profile.scoring_rationale). No individual voting-record enrichment has been performed yet; this record is a scaffolding entry awaiting claim-extraction review. District: Coös 05. Party: R.</div>
+  </div>
+
+  <h2 style="color:var(--accent);font-family:var(--font-main);margin-bottom:16px;">Category Breakdown</h2>
+  
+    <div class="prof-category">
+      <div class="prof-cat-header">
+        <img src="../../assets/icons/shield-star.png" alt="" width="24" height="24">
+        <h3>America First</h3>
+        <span class="prof-cat-score" style="color:#FFC107;">6/10</span>
+        <a class="prof-cat-petition" href="../../petition.html?state=NH&cat=america_first" aria-label="Draft a petition to your NH reps about America First" title="Draft a petition to your NH reps about America First">&#9993;&#xFE0F; Petition your reps</a>
+      </div>
+      <div class="prof-questions">
+        <div class="prof-q">
+          <div class="prof-q-text">Candidate only displays the American flag (no foreign flags) in public appearances and communications</div>
+          <div class="prof-q-answer"><span style="color:#4CAF50;font-weight:700;">TRUE (+2)</span></div>
+          
+        </div>
+        <div class="prof-q">
+          <div class="prof-q-text">Candidate promotes America exclusively and never promotes or defends foreign nations' interests over U.S. interests</div>
+          <div class="prof-q-answer"><span style="color:#4CAF50;font-weight:700;">TRUE (+2)</span></div>
+          
+        </div>
+        <div class="prof-q">
+          <div class="prof-q-text">Candidate is a U.S.-born citizen with no dual citizenship</div>
+          <div class="prof-q-answer"><span style="color:#666;font-style:italic;">Not yet verified</span></div>
+          
+        </div>
+        <div class="prof-q">
+          <div class="prof-q-text">Candidate has never accepted donations from foreign governments, foreign-backed lobbies (e.g., AIPAC), or foreign-linked PACs</div>
+          <div class="prof-q-answer"><span style="color:#666;font-style:italic;">Not yet verified</span></div>
+          
+        </div>
+        <div class="prof-q">
+          <div class="prof-q-text">Candidate supports verifiable paper ballots, opposes electronic voting machines, and advocates for election integrity measures including hand-counted audits and voter ID requirements</div>
+          <div class="prof-q-answer"><span style="color:#4CAF50;font-weight:700;">TRUE (+2)</span></div>
+          
+        </div>
+      </div>
+    </div>
+    <div class="prof-category">
+      <div class="prof-cat-header">
+        <img src="../../assets/icons/shield-family.png" alt="" width="24" height="24">
+        <h3>Marriage</h3>
+        <span class="prof-cat-score" style="color:#FFC107;">6/10</span>
+        <a class="prof-cat-petition" href="../../petition.html?state=NH&cat=marriage" aria-label="Draft a petition to your NH reps about Marriage" title="Draft a petition to your NH reps about Marriage">&#9993;&#xFE0F; Petition your reps</a>
+      </div>
+      <div class="prof-questions">
+        <div class="prof-q">
+          <div class="prof-q-text">Candidate affirms marriage is exclusively the lifelong union of one man and one woman as instituted by God in Scripture</div>
+          <div class="prof-q-answer"><span style="color:#4CAF50;font-weight:700;">TRUE (+2)</span></div>
+          
+        </div>
+        <div class="prof-q">
+          <div class="prof-q-text">Candidate opposes all forms of homosexual marriage, civil unions, and same-sex relationships as sinful</div>
+          <div class="prof-q-answer"><span style="color:#666;font-style:italic;">Not yet verified</span></div>
+          
+        </div>
+        <div class="prof-q">
+          <div class="prof-q-text">Candidate rejects transgender ideology and affirms biological sex (male/female) as immutable and God-given</div>
+          <div class="prof-q-answer"><span style="color:#4CAF50;font-weight:700;">TRUE (+2)</span></div>
+          
+        </div>
+        <div class="prof-q">
+          <div class="prof-q-text">Candidate supports laws that protect biblical marriage and prohibit promotion of homosexuality or gender confusion in schools/public life</div>
+          <div class="prof-q-answer"><span style="color:#4CAF50;font-weight:700;">TRUE (+2)</span></div>
+          
+        </div>
+        <div class="prof-q">
+          <div class="prof-q-text">Candidate views sexual relations as lawful only within biblical marriage and supports civil penalties against sexual immorality (adultery, fornication, sodomy)</div>
+          <div class="prof-q-answer"><span style="color:#666;font-style:italic;">Not yet verified</span></div>
+          
+        </div>
+      </div>
+    </div>
+    <div class="prof-category">
+      <div class="prof-cat-header">
+        <img src="../../assets/icons/shield-chain-salvation-48.png" alt="" width="24" height="24">
+        <h3>Abortion</h3>
+        <span class="prof-cat-score" style="color:#FFC107;">6/10</span>
+        <a class="prof-cat-petition" href="../../petition.html?state=NH&cat=life" aria-label="Draft a petition to your NH reps about Abortion" title="Draft a petition to your NH reps about Abortion">&#9993;&#xFE0F; Petition your reps</a>
+      </div>
+      <div class="prof-questions">
+        <div class="prof-q">
+          <div class="prof-q-text">Candidate affirms human life begins at conception; unborn child bears God's image and possesses full personhood/rights under biblical law</div>
+          <div class="prof-q-answer"><span style="color:#4CAF50;font-weight:700;">TRUE (+2)</span></div>
+          
+        </div>
+        <div class="prof-q">
+          <div class="prof-q-text">Candidate supports total abolition of abortion with no exceptions (rape, incest, health of mother)</div>
+          <div class="prof-q-answer"><span style="color:#4CAF50;font-weight:700;">TRUE (+2)</span></div>
+          
+        </div>
+        <div class="prof-q">
+          <div class="prof-q-text">Candidate views elective abortion as murder of the innocent and calls for biblical justice (civil penalties) against it</div>
+          <div class="prof-q-answer"><span style="color:#666;font-style:italic;">Not yet verified</span></div>
+          
+        </div>
+        <div class="prof-q">
+          <div class="prof-q-text">Candidate rejects any public funding, subsidies, or legal protections for abortion providers or procedures</div>
+          <div class="prof-q-answer"><span style="color:#4CAF50;font-weight:700;">TRUE (+2)</span></div>
+          
+        </div>
+        <div class="prof-q">
+          <div class="prof-q-text">Candidate advocates righteous state protection of unborn life as a core duty of government under Reformed covenant theology</div>
+          <div class="prof-q-answer"><span style="color:#666;font-style:italic;">Not yet verified</span></div>
+          
+        </div>
+      </div>
+    </div>
+    <div class="prof-category">
+      <div class="prof-cat-header">
+        <img src="../../assets/icons/shield-chain-sword-48.png" alt="" width="24" height="24">
+        <h3>Self-Defense & 2A</h3>
+        <span class="prof-cat-score" style="color:#4CAF50;">8/10</span>
+        <a class="prof-cat-petition" href="../../petition.html?state=NH&cat=self_defense" aria-label="Draft a petition to your NH reps about Self-Defense & 2A" title="Draft a petition to your NH reps about Self-Defense & 2A">&#9993;&#xFE0F; Petition your reps</a>
+      </div>
+      <div class="prof-questions">
+        <div class="prof-q">
+          <div class="prof-q-text">Candidate affirms the right to armed self-defense as a God-given natural right and biblical duty</div>
+          <div class="prof-q-answer"><span style="color:#4CAF50;font-weight:700;">TRUE (+2)</span></div>
+          
+        </div>
+        <div class="prof-q">
+          <div class="prof-q-text">Candidate strongly supports the Second Amendment as an individual right that shall not be infringed for law-abiding citizens</div>
+          <div class="prof-q-answer"><span style="color:#4CAF50;font-weight:700;">TRUE (+2)</span></div>
+          
+        </div>
+        <div class="prof-q">
+          <div class="prof-q-text">Candidate fully supports Castle Doctrine and Stand-Your-Ground laws, with no duty to retreat when lawfully defending life, family, home, or the innocent</div>
+          <div class="prof-q-answer"><span style="color:#4CAF50;font-weight:700;">TRUE (+2)</span></div>
+          
+        </div>
+        <div class="prof-q">
+          <div class="prof-q-text">Candidate opposes all forms of gun control legislation (registration, red-flag laws, licensing, bans, or confiscation) that restrict the right of law-abiding citizens to keep and bear arms</div>
+          <div class="prof-q-answer"><span style="color:#666;font-style:italic;">Not yet verified</span></div>
+          
+        </div>
+        <div class="prof-q">
+          <div class="prof-q-text">Candidate views a well-armed citizenry as essential for the preservation of liberty, protection of innocent life, and as a check against tyranny, consistent with Reformed covenant theology and America's Founding principles</div>
+          <div class="prof-q-answer"><span style="color:#4CAF50;font-weight:700;">TRUE (+2)</span></div>
+          
+        </div>
+      </div>
+    </div>
+    <div class="prof-category">
+      <div class="prof-cat-header">
+        <img src="../../assets/icons/shield-map-48.png" alt="" width="24" height="24">
+        <h3>Immigration</h3>
+        <span class="prof-cat-score" style="color:#f44336;">4/10</span>
+        <a class="prof-cat-petition" href="../../petition.html?state=NH&cat=immigration" aria-label="Draft a petition to your NH reps about Immigration" title="Draft a petition to your NH reps about Immigration">&#9993;&#xFE0F; Petition your reps</a>
+      </div>
+      <div class="prof-questions">
+        <div class="prof-q">
+          <div class="prof-q-text">Candidate supports closing the border and halting all illegal immigration</div>
+          <div class="prof-q-answer"><span style="color:#4CAF50;font-weight:700;">TRUE (+2)</span></div>
+          
+        </div>
+        <div class="prof-q">
+          <div class="prof-q-text">Candidate supports the removal and deportation of all illegal immigrants</div>
+          <div class="prof-q-answer"><span style="color:#4CAF50;font-weight:700;">TRUE (+2)</span></div>
+          
+        </div>
+        <div class="prof-q">
+          <div class="prof-q-text">Candidate supports protecting Anglo-Saxon breeding stock and demographic continuity</div>
+          <div class="prof-q-answer"><span style="color:#666;font-style:italic;">Not yet verified</span></div>
+          
+        </div>
+        <div class="prof-q">
+          <div class="prof-q-text">Candidate supports preserving multi-generational Anglo-Saxon American heritage</div>
+          <div class="prof-q-answer"><span style="color:#666;font-style:italic;">Not yet verified</span></div>
+          
+        </div>
+        <div class="prof-q">
+          <div class="prof-q-text">Candidate supports immigration policies that protect the historic Anglo-Saxon Christian character of the nation</div>
+          <div class="prof-q-answer"><span style="color:#666;font-style:italic;">Not yet verified</span></div>
+          
+        </div>
+      </div>
+    </div>
+    <div class="prof-category">
+      <div class="prof-cat-header">
+        <img src="../../assets/icons/shield-bible.png" alt="" width="24" height="24">
+        <h3>Education</h3>
+        <span class="prof-cat-score" style="color:#FFC107;">6/10</span>
+        <a class="prof-cat-petition" href="../../petition.html?state=NH&cat=education" aria-label="Draft a petition to your NH reps about Education" title="Draft a petition to your NH reps about Education">&#9993;&#xFE0F; Petition your reps</a>
+      </div>
+      <div class="prof-questions">
+        <div class="prof-q">
+          <div class="prof-q-text">Candidate supports absolute parental authority over children's education including homeschool, private, and religious school choice</div>
+          <div class="prof-q-answer"><span style="color:#4CAF50;font-weight:700;">TRUE (+2)</span></div>
+          
+        </div>
+        <div class="prof-q">
+          <div class="prof-q-text">Candidate opposes sexually explicit or ideologically subversive materials in school libraries and curriculum</div>
+          <div class="prof-q-answer"><span style="color:#4CAF50;font-weight:700;">TRUE (+2)</span></div>
+          
+        </div>
+        <div class="prof-q">
+          <div class="prof-q-text">Candidate opposes Critical Race Theory, DEI mandates, and all forms of Marxist ideology in public schools</div>
+          <div class="prof-q-answer"><span style="color:#4CAF50;font-weight:700;">TRUE (+2)</span></div>
+          
+        </div>
+        <div class="prof-q">
+          <div class="prof-q-text">Candidate supports voluntary prayer, Bible study, and religious expression in public schools without penalty</div>
+          <div class="prof-q-answer"><span style="color:#666;font-style:italic;">Not yet verified</span></div>
+          
+        </div>
+        <div class="prof-q">
+          <div class="prof-q-text">Candidate opposes compulsory sex education and gender ideology instruction that contradicts parental values</div>
+          <div class="prof-q-answer"><span style="color:#666;font-style:italic;">Not yet verified</span></div>
+          
+        </div>
+      </div>
+    </div>
+    <div class="prof-category">
+      <div class="prof-cat-header">
+        <img src="../../assets/icons/shield-cross.png" alt="" width="24" height="24">
+        <h3>PCH/CBG</h3>
+        <span class="prof-cat-score" style="color:#666;">0/10</span>
+        <a class="prof-cat-petition" href="../../petition.html?state=NH&cat=christian_heritage" aria-label="Draft a petition to your NH reps about PCH/CBG" title="Draft a petition to your NH reps about PCH/CBG">&#9993;&#xFE0F; Petition your reps</a>
+      </div>
+      <div class="prof-questions">
+        <div class="prof-q">
+          <div class="prof-q-text">Candidate supports nation self-consciously acting as 'Christian nation' via laws/customs for earthly and heavenly good in Christ</div>
+          <div class="prof-q-answer"><span style="color:#666;font-style:italic;">Not yet verified</span></div>
+          
+        </div>
+        <div class="prof-q">
+          <div class="prof-q-text">Candidate advocates government promotion/favor of Christianity as true religion over neutrality</div>
+          <div class="prof-q-answer"><span style="color:#666;font-style:italic;">Not yet verified</span></div>
+          
+        </div>
+        <div class="prof-q">
+          <div class="prof-q-text">Candidate supports cultural/ethnic particularity and preference for historic Anglo-Saxon/Christian heritage</div>
+          <div class="prof-q-answer"><span style="color:#666;font-style:italic;">Not yet verified</span></div>
+          
+        </div>
+        <div class="prof-q">
+          <div class="prof-q-text">Candidate believes state should order public life toward Christian principles (e.g., suppress blasphemy)</div>
+          <div class="prof-q-answer"><span style="color:#666;font-style:italic;">Not yet verified</span></div>
+          
+        </div>
+        <div class="prof-q">
+          <div class="prof-q-text">Candidate rejects liberal pluralism; wants civil laws explicitly based on Christian moral order</div>
+          <div class="prof-q-answer"><span style="color:#666;font-style:italic;">Not yet verified</span></div>
+          
+        </div>
+      </div>
+    </div>
+
+  <div class="prof-sources"><h2>Sources &amp; Evidence</h2><div class="prof-source-diversity" role="group" aria-label="Source diversity breakdown for this profile"><span class="prof-div-chip prof-bias-center">2 Center</span><span class="prof-div-chip prof-bias-official">3 Official</span><span class="prof-div-chip prof-bias-reference">3 Reference</span><span class="prof-div-chip prof-bias-neutral">2 Other</span></div><div class="prof-source-list"><div class="prof-source-row"><a href="https://openstates.org/nh/legislators/" target="_blank" rel="noopener">openstates.org/nh/legislators/</a><span class="prof-bias-chip prof-bias-reference" title="Non-partisan civic-tech project run by Plural (formerly the Sunlight Foundation). Aggregates U.S. state-legislative data across all 50 states.">Reference</span></div><div class="prof-source-row"><a href="https://ballotpedia.org/New_Hampshire_House_of_Representatives" target="_blank" rel="noopener">Ballotpedia Profile</a><span class="prof-bias-chip prof-bias-center" title="Non-partisan civic-data encyclopedia run by the Lucy Burns Institute; AllSides-rated Center.">Center</span></div><div class="prof-source-row"><a href="https://en.wikipedia.org/wiki/New_Hampshire_House_of_Representatives" target="_blank" rel="noopener">en.wikipedia.org/wiki/New_Hampshire_House_of_Represe...</a><span class="prof-bias-chip prof-bias-neutral" title="Community-edited encyclopedia; AllSides does not rate it, but third-party studies generally find a center-left tilt on political topics.">Encyclopedia</span></div><div class="prof-source-row"><a href="https://gencourt.state.nh.us/house/members/" target="_blank" rel="noopener">gencourt.state.nh.us/house/members/</a><span class="prof-bias-chip prof-bias-official" title="New Hampshire General Court">Official</span></div><div class="prof-source-row"><a href="https://ballotpedia.org/Peter_Morency" target="_blank" rel="noopener">Ballotpedia Profile</a><span class="prof-bias-chip prof-bias-center" title="Non-partisan civic-data encyclopedia run by the Lucy Burns Institute; AllSides-rated Center.">Center</span></div><div class="prof-source-row"><a href="https://en.wikipedia.org/wiki/Pete_Morency" target="_blank" rel="noopener">en.wikipedia.org/wiki/Pete_Morency</a><span class="prof-bias-chip prof-bias-neutral" title="Community-edited encyclopedia; AllSides does not rate it, but third-party studies generally find a center-left tilt on political topics.">Encyclopedia</span></div><div class="prof-source-row"><a href="https://gc.nh.gov/house/members/member.aspx?pid=8401" target="_blank" rel="noopener">gc.nh.gov/house/members/member.aspx?pid=8401</a><span class="prof-bias-chip prof-bias-official" title="Official Government Source">Official</span></div><div class="prof-source-row"><a href="https://gencourt.state.nh.us/house/members/member.aspx?pid=8401" target="_blank" rel="noopener">gencourt.state.nh.us/house/members/member.aspx?pid=8401</a><span class="prof-bias-chip prof-bias-official" title="New Hampshire General Court">Official</span></div><div class="prof-source-row"><a href="https://justfacts.votesmart.org/candidate/biography/218888/peter-morency" target="_blank" rel="noopener">Vote Smart — Voting Record</a><span class="prof-bias-chip prof-bias-reference" title="Project Vote Smart's biographical and voting-record database. Self-described non-partisan reference.">Reference</span></div><div class="prof-source-row"><a href="https://openstates.org/person/622ea33c-23b7-4074-9ed6-75d2086677e8/" target="_blank" rel="noopener">openstates.org/person/622ea33c-23b7-4074-9ed6-75d208...</a><span class="prof-bias-chip prof-bias-reference" title="Non-partisan civic-tech project run by Plural (formerly the Sunlight Foundation). Aggregates U.S. state-legislative data across all 50 states.">Reference</span></div></div><p class="prof-bias-attribution">Bias ratings sourced from <a href="https://www.allsides.com/media-bias/ratings" target="_blank" rel="noopener">AllSides</a> and <a href="https://adfontesmedia.com/interactive-media-bias-chart/" target="_blank" rel="noopener">Ad Fontes Media</a>. Classifications for government, reference, and advocacy domains are maintained by U.S.M.C. Ministries; see <a href="https://github.com/adamljohns/usmcmin-com/blob/main/data/source_bias.json" target="_blank" rel="noopener">source_bias.json</a>.</p></div>
+
+  <div id="scoring-rationale" class="prof-rationale" role="note">
+    <h2>Scoring rationale</h2>
+    <p>Party-default scoring applied for (R). Republicans in state legislatures vote overwhelmingly with their caucus on America-first, life, immigration, self-defense, and parental-rights-in-education categories; True marks on those categories reflect the modal R vote in recent sessions. Marriage question-4 (civil penalties for sexual immorality) is not a universal R position and left null pending specific evidence. Christian-heritage (PCH/CBG) items left null because the confessional Christian-nationalism framing is not a standard party-line item.</p>
+    <p class="prof-rationale-footnote">This record was seeded from the New Hampshire House of Representatives roster using the RESOLUTE Citizen party-default heuristic, documented in <a href="https://github.com/adamljohns/usmcmin-com/blob/main/seed-state-assemblies.py" target="_blank" rel="noopener">seed-state-assemblies.py</a>. Individual voting-record review is pending; when specific claims are promoted via the apply-claims.py pipeline, this confidence label will update and the per-claim evidence will surface in the category breakdown above. If you have evidence that a specific answer above is wrong, please file a dispute using the form below.</p>
+  </div>
+
+  <!-- Bottom prev/next -->
+  <div class="prof-nav-bar"><a class="prof-nav-btn" href="paul-tudor-nh-rockingham-01.html" data-direction="prev"><span class="prof-nav-arrow">← Prev</span><span class="prof-nav-text"><span class="prof-nav-name">Paul Tudor</span><span class="prof-nav-office">State Representative</span></span></a><div class="prof-nav-position">153 of 392 &middot; New Hampshire House of Representatives</div><a class="prof-nav-btn" href="peter-mehegan-nh-merrimack-12.html" data-direction="next"><span class="prof-nav-arrow">Next →</span><span class="prof-nav-text"><span class="prof-nav-name">Peter Mehegan</span><span class="prof-nav-office">State Representative</span></span></a></div>
+
+  <!-- Feedback Form -->
+  <div id="feedback" class="prof-feedback" style="padding:20px 24px;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);margin-top:16px;scroll-margin-top:80px;">
+    <h2 style="color:var(--accent);font-size:1rem;margin-bottom:8px;">Have Information About This Official?</h2>
+    <p style="color:var(--gray);font-size:0.82rem;margin-bottom:14px;line-height:1.6;">Help us improve this scorecard. If you have evidence of this official's positions — voting records, social media posts, public statements, or corrections — submit it below and we'll review and update the profile.</p>
+    <div id="feedbackDisputeBanner" style="display:none;padding:10px 12px;margin-bottom:10px;background:rgba(227,182,98,0.12);border:1px solid rgba(227,182,98,0.4);border-radius:6px;color:#e3b662;font-size:0.82rem;line-height:1.5;">
+      You are disputing claim <code id="feedbackClaimId"></code>. Please describe the issue and link to the primary source that contradicts it.
+    </div>
+    <form id="feedbackForm" style="display:flex;flex-direction:column;gap:10px;">
+      <input type="hidden" name="candidate_name" value="Pete Morency">
+      <input type="hidden" name="candidate_slug" value="pete-morency-nh-coös-05">
+      <input type="hidden" name="candidate_state" value="NH">
+      <input type="hidden" name="candidate_office" value="State Representative">
+      <input type="hidden" name="page_url" id="feedbackPageUrl" value="">
+      <input type="hidden" name="submitted_at" id="feedbackSubmittedAt" value="">
+      <input type="hidden" name="dispute_claim_id" id="feedbackClaimIdHidden" value="">
+      <input type="hidden" name="dispute_claim_text" id="feedbackClaimTextHidden" value="">
+      <input type="hidden" name="dispute_claim_category" id="feedbackClaimCategoryHidden" value="">
+      <input type="hidden" name="form_opened_at" id="feedbackFormOpenedAt" value="">
+      <div id="feedbackReasonRow" style="display:none;flex-direction:column;gap:4px;">
+        <label for="feedbackReason" style="font-size:0.78rem;color:var(--gray);">Why are you disputing this claim?</label>
+        <select name="dispute_reason" id="feedbackReason" style="padding:10px 14px;background:var(--bg-dark,#0A0A0A);border:1px solid var(--border);border-radius:8px;color:var(--white);font-size:0.9rem;">
+          <option value="">Select a reason…</option>
+          <option value="factual_error">Factual error — the claim misrepresents what happened</option>
+          <option value="outdated">Outdated — the situation has changed materially</option>
+          <option value="missing_context">Missing context — technically true but misleading</option>
+          <option value="misattribution">Misattribution — wrong person, wrong vote, wrong bill</option>
+          <option value="source_broken">Source is broken or points at the wrong page</option>
+          <option value="other">Other (explain below)</option>
+        </select>
+      </div>
+      <!-- Honeypot: bots love empty fields named like they matter. Humans leave it empty. -->
+      <input type="text" name="website" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px;top:-9999px;opacity:0;height:0;width:0;" value="">
+      <input type="text" name="submitter_name" placeholder="Your name" required style="padding:10px 14px;background:var(--bg-dark,#0A0A0A);border:1px solid var(--border);border-radius:8px;color:var(--white);font-size:0.9rem;">
+      <input type="email" name="submitter_email" placeholder="Your email" required style="padding:10px 14px;background:var(--bg-dark,#0A0A0A);border:1px solid var(--border);border-radius:8px;color:var(--white);font-size:0.9rem;">
+      <textarea name="feedback" rows="4" placeholder="What should we know? Include links to sources if possible..." required style="padding:10px 14px;background:var(--bg-dark,#0A0A0A);border:1px solid var(--border);border-radius:8px;color:var(--white);font-size:0.9rem;resize:vertical;"></textarea>
+      <button type="submit" id="feedbackSubmitBtn" style="background:linear-gradient(90deg,#c9a84c,#D4AF37);color:#000;font-weight:700;font-size:0.9rem;padding:11px 22px;border-radius:8px;border:none;cursor:pointer;align-self:flex-start;">Submit Feedback</button>
+    </form>
+    <div id="feedbackSuccess" style="display:none;padding:14px;background:rgba(76,175,80,.15);border:1px solid #4CAF50;border-radius:8px;color:#7edd80;margin-top:12px;font-size:0.88rem;">Thank you! We'll review your submission and update the profile if verified.</div>
+  </div>
+  <script>
+  (function(){
+    // Record when the form was rendered so the submit handler can
+    // check the minimum human-interaction time (honeypot timing).
+    var openedAt = Date.now();
+    var openedAtField = document.getElementById('feedbackFormOpenedAt');
+    if (openedAtField) openedAtField.value = String(openedAt);
+    var pageUrlField = document.getElementById('feedbackPageUrl');
+    if (pageUrlField) pageUrlField.value = window.location.href;
+
+    // If the URL carries ?claim=... treat this visit as a claim-dispute.
+    // Pre-populate the textarea with the claim's text and expose the
+    // claim id + verbatim text + category as hidden fields for the
+    // reviewer's triage. Capturing the claim text at dispute time is
+    // important: the underlying claim can be edited later; the dispute
+    // record should remember what the disputer actually saw.
+    var params = new URLSearchParams(window.location.search);
+    var claimId = params.get('claim');
+    if (claimId) {
+      var banner = document.getElementById('feedbackDisputeBanner');
+      var badge = document.getElementById('feedbackClaimId');
+      var hidden = document.getElementById('feedbackClaimIdHidden');
+      var textHidden = document.getElementById('feedbackClaimTextHidden');
+      var catHidden = document.getElementById('feedbackClaimCategoryHidden');
+      var reasonRow = document.getElementById('feedbackReasonRow');
+      var submitBtn = document.getElementById('feedbackSubmitBtn');
+      var successBox = document.getElementById('feedbackSuccess');
+      var textarea = document.querySelector('#feedbackForm textarea[name="feedback"]');
+      if (banner) banner.style.display = 'block';
+      if (badge) badge.textContent = claimId;
+      if (hidden) hidden.value = claimId;
+      if (reasonRow) reasonRow.style.display = 'flex';
+      if (submitBtn) submitBtn.textContent = 'Submit Dispute';
+      if (successBox) successBox.textContent = 'Dispute received. We will review the claim and publish the outcome in the scorecard changelog. Thank you for strengthening the audit trail.';
+      var claimEl = document.getElementById(claimId);
+      var claimTextEl = claimEl && claimEl.querySelector('.prof-q-claim-text');
+      var claimText = (claimTextEl && claimTextEl.textContent.trim()) || '';
+      if (textHidden) textHidden.value = claimText;
+      // Derive category from the claim id if it follows the
+      // "<slug>-<category>-<idx>" pattern (per our schema convention).
+      if (catHidden) {
+        var parts = claimId.split('-');
+        // Best-effort: everything except the leading "<slug>" and
+        // trailing numeric index. Leaves intact categories like
+        // "self_defense" and "christian_heritage".
+        if (parts.length >= 3) {
+          var tail = parts[parts.length - 1];
+          if (/^\d+$/.test(tail)) {
+            catHidden.value = parts.slice(1, parts.length - 1).join('-');
+          }
+        }
+      }
+      if (textarea) {
+        var prefill = 'Disputing claim ' + claimId + ':';
+        if (claimText) prefill += '\n> ' + claimText;
+        prefill += '\n\nMy concern (please cite a primary source):\n';
+        textarea.value = prefill;
+        var details = claimEl && claimEl.closest('details');
+        if (details) details.open = true;
+      }
+    }
+  })();
+  document.getElementById('feedbackForm').addEventListener('submit',function(e){
+    e.preventDefault();
+    var fd = new FormData(this);
+    // Honeypot: bots fill every text field. Humans leave the off-screen
+    // "website" input empty. Abort silently on non-empty to avoid
+    // telling the bot it was caught.
+    if ((fd.get('website') || '').toString().trim() !== '') {
+      document.getElementById('feedbackForm').style.display='none';
+      document.getElementById('feedbackSuccess').style.display='block';
+      return;
+    }
+    // Timing check: reject submissions made <3 seconds after the form
+    // was rendered. Even skim-reading the context takes longer.
+    var openedAt = Number(document.getElementById('feedbackFormOpenedAt').value || '0');
+    if (openedAt && (Date.now() - openedAt) < 3000) {
+      alert('That felt fast — if you are human, please take a moment to review and resubmit.');
+      return;
+    }
+    document.getElementById('feedbackSubmittedAt').value = new Date().toISOString();
+    fd.set('submitted_at', document.getElementById('feedbackSubmittedAt').value);
+    var claimId = document.getElementById('feedbackClaimIdHidden').value;
+    var subjectPrefix = claimId ? 'RESOLUTE Citizen DISPUTE (' + claimId + '): ' : 'RESOLUTE Citizen Feedback: ';
+    fd.append('_subject', subjectPrefix + 'Pete Morency');
+    fd.append('_template','table');
+    fd.append('_captcha','false');
+    fetch('https://formsubmit.co/ajax/usmcministries2022@gmail.com',{method:'POST',body:fd})
+    .then(function(res){
+      if(!res.ok) throw new Error('Server error');
+      document.getElementById('feedbackForm').style.display='none';
+      document.getElementById('feedbackSuccess').style.display='block';
+    })
+    .catch(function(){
+      alert('Failed to submit. Please check your connection and try again.');
+    });
+  });
+  </script>
+</div>
+
+<footer>
+  <p><strong>RESOLUTE Citizen</strong> &mdash; a module of <a href="https://usmcmin.org">U.S.M.C. Ministries</a></p>
+  <p style="margin-top:6px;font-size:0.72rem;">Each True = +2 points &middot; Max 70 &middot; Primary sources only &middot; <a href="https://usmcmin.org/bible.html?ref=Proverbs+29:2">Proverbs 29:2</a></p>
+  <p style="margin-top:6px;font-size:0.7rem;"><span id="pageViews"></span></p>
+</footer>
+<script>
+(function(){
+  var p = window.location.pathname;
+  fetch('https://usmcmin.goatcounter.com/counter/' + encodeURIComponent(p) + '.json')
+    .then(function(r){ return r.json(); })
+    .then(function(d){
+      var el = document.getElementById('pageViews');
+      if (el && d && typeof d.count !== 'undefined') el.textContent = d.count + ' views';
+    })
+    .catch(function(){});
+})();
+</script>
+
+<!-- Keyboard shortcuts: left/right = prev/next. Reads current hrefs from the
+     DOM so that the sort-override pass below can update them and the keys
+     follow automatically. -->
+<script>
+(function(){
+  document.addEventListener('keydown', function(e){
+    var t = e.target;
+    if (t && (t.tagName === 'INPUT' || t.tagName === 'TEXTAREA' || t.isContentEditable)) return;
+    if (e.metaKey || e.ctrlKey || e.altKey) return;
+    if (e.key !== 'ArrowLeft' && e.key !== 'ArrowRight') return;
+    var dir = e.key === 'ArrowLeft' ? 'prev' : 'next';
+    var btn = document.querySelector('a.prof-nav-btn[data-direction="' + dir + '"]');
+    if (btn && btn.href) { window.location.href = btn.href; }
+  });
+})();
+</script>
+
+<!-- Jump-to dropdown + Prev/Next sort override.
+     The static prev/next baked in at generation time walks (level, jurisdiction,
+     score-desc). When the user has chosen a sort on the list page (?sort= or
+     localStorage rc-sort), this script re-fetches the state JSON, recomputes
+     the order across the entire state, and rewrites both nav-bars so prev/next
+     follows the order the user just saw. No sort active = static order wins. -->
+<script>
+(function(){
+  var sel = document.getElementById('profJumpSelect');
+  if (!sel) return;
+  var st = (sel.getAttribute('data-state') || 'VA').toLowerCase();
+  var currentSlug = sel.getAttribute('data-current-slug') || '';
+
+  // ---- Score helpers (mirror server-side, no categories needed) ----
+  // Per-state JSONs do not include the categories array, so we compute the
+  // total directly by walking the keys of candidate.scores.
+  var POINTS_PER_TRUE = 2;
+  function calcTotal(scores){
+    if (!scores) return 0;
+    var t = 0;
+    for (var k in scores) {
+      if (!Object.prototype.hasOwnProperty.call(scores, k)) continue;
+      var arr = scores[k] || [];
+      for (var i = 0; i < arr.length; i++) {
+        if (arr[i] === true) t += POINTS_PER_TRUE;
+      }
+    }
+    return t;
+  }
+
+  var LEVEL_RANK = { executive: 1, judicial: 2, federal: 3, state: 4, local: 5 };
+  var PARTY_RANK = { R: 1, D: 2, I: 3 };
+
+  function makeComparator(sortKey){
+    function totalOf(c){ return calcTotal(c.scores); }
+    function nameTie(a, b){ return (a.name||'').toLowerCase().localeCompare((b.name||'').toLowerCase()); }
+    switch (sortKey) {
+      case 'score-asc':
+        return function(a, b){ return (totalOf(a) - totalOf(b)) || nameTie(a, b); };
+      case 'name':
+        return nameTie;
+      case 'level-score':
+        return function(a, b){
+          return ((LEVEL_RANK[a.level]||6) - (LEVEL_RANK[b.level]||6))
+              || (totalOf(b) - totalOf(a))
+              || nameTie(a, b);
+        };
+      case 'jurisdiction-score':
+        return function(a, b){
+          return ((a.jurisdiction||'').toLowerCase().localeCompare((b.jurisdiction||'').toLowerCase()))
+              || (totalOf(b) - totalOf(a))
+              || nameTie(a, b);
+        };
+      case 'party-score':
+        return function(a, b){
+          return ((PARTY_RANK[a.party]||4) - (PARTY_RANK[b.party]||4))
+              || (totalOf(b) - totalOf(a))
+              || nameTie(a, b);
+        };
+      case 'score-desc':
+      default:
+        return function(a, b){ return (totalOf(b) - totalOf(a)) || nameTie(a, b); };
+    }
+  }
+
+  var SORT_LABELS = {
+    'score-desc': 'Score High → Low',
+    'score-asc': 'Score Low → High',
+    'name': 'Name A → Z',
+    'level-score': 'Level + Score',
+    'jurisdiction-score': 'Jurisdiction + Score',
+    'party-score': 'Party + Score'
+  };
+
+  function activeSort(){
+    var fromUrl = null;
+    try { fromUrl = new URL(window.location).searchParams.get('sort'); } catch(e) {}
+    var fromStorage = null;
+    try { fromStorage = localStorage.getItem('rc-sort'); } catch(e) {}
+    var v = fromUrl || fromStorage;
+    return SORT_LABELS[v] ? v : null; // null = no override, keep static order
+  }
+
+  function buildNavBtnHtml(neighbor, direction, arrow){
+    if (!neighbor) {
+      return '<span class="prof-nav-btn prof-nav-disabled">' + arrow + '</span>';
+    }
+    var name = (neighbor.name || '').replace(/[<>]/g, '');
+    var office = (neighbor.office || '').replace(/[<>]/g, '');
+    var href = (neighbor.slug || '') + '.html';
+    return '<a class="prof-nav-btn" href="' + href + '" data-direction="' + direction + '">'
+      + '<span class="prof-nav-arrow">' + arrow + '</span>'
+      + '<span class="prof-nav-text"><span class="prof-nav-name">' + name + '</span>'
+      + '<span class="prof-nav-office">' + office + '</span></span></a>';
+  }
+
+  function rerenderNav(prev, next, position, total, sortLabel){
+    var bars = document.querySelectorAll('.prof-nav-bar');
+    var prevHtml = buildNavBtnHtml(prev, 'prev', '← Prev');
+    var nextHtml = buildNavBtnHtml(next, 'next', 'Next →');
+    var posHtml = '<div class="prof-nav-position">' + position + ' of ' + total
+                + (sortLabel ? ' &middot; ' + sortLabel : '') + '</div>';
+    bars.forEach(function(bar){
+      bar.innerHTML = prevHtml + posHtml + nextHtml;
+    });
+  }
+
+  fetch('../../data/states/' + st + '.json')
+    .then(function(r){ return r.json(); })
+    .then(function(data){
+      var cands = (data && data.candidates) || [];
+
+      // ---- Jump-to dropdown (alphabetical within jurisdiction groups) ----
+      var groups = {};
+      cands.forEach(function(c){
+        var j = c.jurisdiction || 'Other';
+        if (!groups[j]) groups[j] = [];
+        groups[j].push(c);
+      });
+      var groupNames = Object.keys(groups).sort();
+      sel.innerHTML = '<option value="">Jump to another official…</option>';
+      groupNames.forEach(function(g){
+        var og = document.createElement('optgroup');
+        og.label = g + ' (' + groups[g].length + ')';
+        groups[g].sort(function(a, b){
+          return (a.name || '').localeCompare(b.name || '');
+        });
+        groups[g].forEach(function(c){
+          var opt = document.createElement('option');
+          opt.value = c.slug + '.html';
+          opt.textContent = c.name + (c.office ? ' — ' + c.office : '');
+          if (c.slug === currentSlug) {
+            opt.selected = true;
+            opt.textContent = '★ ' + opt.textContent + ' (current)';
+          }
+          og.appendChild(opt);
+        });
+        sel.appendChild(og);
+      });
+      sel.addEventListener('change', function(){
+        if (sel.value) window.location.href = sel.value;
+      });
+
+      // ---- Prev/Next sort override ----
+      // If no sort is active, leave the baked-in static order alone.
+      var sortKey = activeSort();
+      if (!sortKey) return;
+      var sorted = cands.slice().sort(makeComparator(sortKey));
+      var idx = -1;
+      for (var i = 0; i < sorted.length; i++) {
+        if (sorted[i].slug === currentSlug) { idx = i; break; }
+      }
+      if (idx === -1) return;
+      var prev = idx > 0 ? sorted[idx - 1] : null;
+      var next = idx < sorted.length - 1 ? sorted[idx + 1] : null;
+      rerenderNav(prev, next, idx + 1, sorted.length, SORT_LABELS[sortKey]);
+    })
+    .catch(function(){
+      sel.innerHTML = '<option value="">Could not load officials list</option>';
+    });
+})();
+</script>
+
+<script>
+(function() {
+  var navToggle = document.querySelector('.nav-toggle');
+  var navLinks = document.querySelector('.nav-links');
+  if (navToggle && navLinks) {
+    navToggle.addEventListener('click', function() { navLinks.classList.toggle('open'); });
+  }
+})();
+</script>
+<script>
+(function() {
+  var toggle = document.getElementById('themeToggle');
+  var saved = localStorage.getItem('usmc-theme');
+  if (saved !== 'light') {
+    document.documentElement.setAttribute('data-theme', 'dark');
+    toggle.textContent = '\u2600\uFE0F';
+  }
+  toggle.addEventListener('click', function() {
+    var isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+    if (isDark) {
+      document.documentElement.removeAttribute('data-theme');
+      localStorage.setItem('usmc-theme', 'light');
+      toggle.textContent = '\uD83C\uDF19';
+    } else {
+      document.documentElement.setAttribute('data-theme', 'dark');
+      localStorage.setItem('usmc-theme', 'dark');
+      toggle.textContent = '\u2600\uFE0F';
+    }
+  });
+})();
+</script>
+<script data-goatcounter="https://usmcmin.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
+<noscript><img src="https://usmcmin.goatcounter.com/count?p=/candidates/nh/pete-morency-nh-coös-05" alt=""></noscript>
+</body>
+</html>

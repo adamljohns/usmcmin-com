@@ -236,8 +236,22 @@
         mdEl.textContent = (s._meta.scorecard_md5 || '—').substring(0, 10);
       }
 
+      // Surface the canonical scorecard version so a visitor can pin
+      // the page they're viewing to a specific release. build-stats.py
+      // embeds scorecard_version in _meta; we render it at the top of
+      // the headline grid.
+      var ver = (s._meta && s._meta.scorecard_version) ? s._meta.scorecard_version : null;
+
       var html = '';
 
+      // Version chip above headline grid
+      if (ver) {
+        html += '<div class="st-version" style="margin-bottom:14px;padding:10px 14px;background:rgba(201,168,76,0.08);border:1px solid rgba(201,168,76,0.3);border-radius:6px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;">' +
+          '<span style="font-size:0.78rem;color:var(--gray);letter-spacing:0.5px;text-transform:uppercase;">Scorecard release</span>' +
+          '<span style="font-size:1rem;font-weight:800;color:#c9a84c;font-family:\'SF Mono\',ui-monospace,monospace;">v' + esc(ver) + '</span>' +
+          '<a href="https://github.com/adamljohns/usmcmin-com/tags" target="_blank" rel="noopener" style="font-size:0.78rem;color:var(--accent);">release history &rarr;</a>' +
+          '</div>';
+      }
       // Headline grid.
       html += '<div class="st-grid">';
       html += card('Candidates', fmt(t.candidates), esc(t.states_covered + ' states · ' + t.distinct_offices + ' distinct offices'));

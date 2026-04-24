@@ -258,6 +258,7 @@ def compute():
             'generated': datetime.now(timezone.utc).isoformat(),
             'script': 'build-stats.py',
             'scorecard_md5': hashlib.md5(json.dumps(sc, sort_keys=True).encode('utf-8')).hexdigest(),
+            'scorecard_version': (sc.get('meta') or {}).get('version'),
         },
         'totals': {
             'candidates': n_cands,

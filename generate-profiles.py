@@ -524,6 +524,157 @@ def generate_profile(candidate, categories, meta, nav=None):
         key = (cl.get('category'), cl.get('question_idx'))
         claims_by_cell.setdefault(key, []).append(cl)
 
+    # ---- Footnotes per answer cell (v3.4.0) ----------------------------
+    # candidate.footnotes is {fn_id: {url, archive_url, title, publisher,
+    # accessed, excerpt}}. candidate.answer_footnotes maps (category,
+    # question_idx) -> list[fn_id]. The profile template reads both and
+    # renders:
+    #   * a small superscript [n] next to each answered question cell
+    #   * a References section at the bottom of the profile listing every
+    #     footnote used anywhere on the page, with the archive.org URL
+    #     when we have one.
+    # For records flagged profile.confidence == 'party_default' that lack
+    # explicit footnotes, we synthesize a single [P] marker per answered
+    # cell that links to the in-page scoring-rationale anchor.
+    footnotes_dict = c.get('footnotes') or {}
+    answer_footnotes_map = c.get('answer_footnotes') or {}
+    # fn_id -> assigned display number (1-based, in first-appearance order)
+    fn_display_num = {}
+    fn_display_order = []
+
+    def ensure_fn_number(fn_id):
+        if fn_id not in fn_display_num:
+            fn_display_num[fn_id] = len(fn_display_order) + 1
+            fn_display_order.append(fn_id)
+        return fn_display_num[fn_id]
+
+    def render_fn_markers_for(cat_id, q_idx, answer_value):
+        """Return the <sup>...</sup> HTML to append next to an answer cell.
+        Uses the candidate's explicit footnotes if present; otherwise
+        falls back to the synthetic party-default marker."""
+        if answer_value is None:
+            return ''
+        ids = (answer_footnotes_map.get(cat_id) or [])
+        ids = ids[q_idx] if q_idx < len(ids) else []
+        if not ids and (profile.get('confidence') == 'party_default'):
+            # Synthetic party-default footnote, rendered once per page
+            # in the References section via ensure_party_default_fn.
+            ensure_party_default_fn_id()
+            ids = ['_pd']
+        if not ids:
+            return ''
+        links = []
+        for fn_id in ids:
+            if fn_id == '_pd':
+                num = ensure_fn_number('_pd')
+                links.append(f'<a class="prof-fn-link" href="#scoring-rationale" '
+                             f'aria-label="See scoring rationale (footnote {num})">{num}</a>')
+            else:
+                if fn_id not in footnotes_dict:
+                    continue
+                num = ensure_fn_number(fn_id)
+                links.append(f'<a class="prof-fn-link" href="#fn-{fn_id}" '
+                             f'aria-label="See footnote {num}">{num}</a>')
+        if not links:
+            return ''
+        return (
+            '<sup class="prof-fn-sup" aria-label="References for this answer">'
+            '[' + ','.join(links) + ']</sup>'
+        )
+
+    _pd_seeded = [False]
+
+    def ensure_party_default_fn_id():
+        # Ensures the synthetic party-default footnote exists in the
+        # References section when we render at least one [P]-style marker.
+        if _pd_seeded[0]:
+            return
+        footnotes_dict.setdefault('_pd', {
+            'url': '#scoring-rationale',
+            'title': 'Party-default scoring heuristic — see rationale card below',
+            'publisher': 'U.S.M.C. Ministries · RESOLUTE Citizen',
+            'accessed': freshness_date or '',
+            'excerpt': 'This answer was scored via the party-default heuristic. '
+                       'See the "Scoring rationale" card below for the full methodology. '
+                       'Individual voting-record review is pending.',
+            'archive_url': None,
+            'synthetic': True,
+        })
+        _pd_seeded[0] = True
+
+    def render_references_section():
+        if not fn_display_order:
+            return ''
+        items = []
+        for fn_id in fn_display_order:
+            entry = footnotes_dict.get(fn_id) or {}
+            num = fn_display_num[fn_id]
+            url = entry.get('url') or ''
+            archive_url = entry.get('archive_url')
+            title = entry.get('title') or url
+            publisher = entry.get('publisher') or ''
+            accessed = entry.get('accessed') or ''
+            excerpt = entry.get('excerpt') or ''
+            is_synthetic = bool(entry.get('synthetic'))
+            bias_chip_html = ''
+            if url and not is_synthetic and url.startswith('http'):
+                entry_bias = sb.resolve(url)
+                tone = sb.badge_tone(entry_bias)
+                bias_chip_html = (
+                    f'<span class="prof-bias-chip prof-bias-{tone}" '
+                    f'title="{entry_bias.get("note") or entry_bias.get("display_name") or url}">'
+                    f'{sb.badge_label(entry_bias)}</span>'
+                )
+            lines = []
+            # Primary link
+            if url.startswith('#'):
+                lines.append(f'<a class="prof-fn-title" href="{url}">{title}</a>')
+            elif url:
+                lines.append(f'<a class="prof-fn-title" href="{url}" target="_blank" rel="noopener">{title}</a>')
+            else:
+                lines.append(f'<span class="prof-fn-title">{title}</span>')
+            # Publisher + accessed
+            meta_bits = []
+            if publisher:
+                meta_bits.append(publisher)
+            if accessed:
+                meta_bits.append(f'accessed {accessed}')
+            meta_line = ' · '.join(meta_bits)
+            # Archive link
+            archive_html = ''
+            if archive_url:
+                archive_html = (
+                    f' · <a class="prof-fn-archive" href="{archive_url}" '
+                    f'target="_blank" rel="noopener">Wayback archive</a>'
+                )
+            elif url.startswith('http'):
+                # Render a "Fetch archived copy" link that jumps to the
+                # Wayback Machine's on-demand capture URL for that source.
+                wm = 'https://web.archive.org/web/2/' + url
+                archive_html = (
+                    f' · <a class="prof-fn-archive" href="{wm}" '
+                    f'target="_blank" rel="noopener">Fetch Wayback archive</a>'
+                )
+            items.append(
+                f'<li class="prof-fn-item" id="fn-{fn_id}">'
+                f'<span class="prof-fn-num">[{num}]</span>'
+                f'<div class="prof-fn-body">'
+                f'{lines[0]} {bias_chip_html}'
+                f'<div class="prof-fn-meta">{meta_line}{archive_html}</div>'
+                + (f'<blockquote class="prof-fn-excerpt">{excerpt}</blockquote>' if excerpt else '')
+                + '</div></li>'
+            )
+        return (
+            '<section id="references" class="prof-references" aria-label="References">'
+            '<h2>References &amp; footnotes</h2>'
+            '<p class="prof-references-lead">Every answer above with a <sup>[n]</sup> marker '
+            'corresponds to one of the footnotes below. Wayback-archive links preserve the page '
+            "as it read at our access date so a reader can verify the citation even if the "
+            'original URL changes or disappears.</p>'
+            '<ol class="prof-fn-list">' + ''.join(items) + '</ol>'
+            '</section>'
+        )
+
     def render_claim_sources(claim_sources):
         parts = []
         for url in claim_sources or []:
@@ -622,10 +773,11 @@ def generate_profile(candidate, categories, meta, nav=None):
         for i, q in enumerate(questions):
             a = answers[i] if i < len(answers) else None
             claims_block = render_claims_block(cat['id'], i)
+            fn_markers = render_fn_markers_for(cat['id'], i, a)
             cat_html += f'''
         <div class="prof-q">
           <div class="prof-q-text">{q}</div>
-          <div class="prof-q-answer">{answer_display(a)}</div>
+          <div class="prof-q-answer">{answer_display(a)}{fn_markers}</div>
           {claims_block}
         </div>'''
         cat_html += '''
@@ -1370,6 +1522,114 @@ def generate_profile(candidate, categories, meta, nav=None):
       font-size: 0.78rem !important;
     }}
     .prof-rationale-footnote a {{ color: var(--accent); }}
+
+    /* Per-answer footnote markers + References section (v3.4.0) */
+    .prof-fn-sup {{
+      font-size: 0.66rem;
+      font-weight: 700;
+      margin-left: 4px;
+      letter-spacing: 0.3px;
+    }}
+    .prof-fn-sup .prof-fn-link {{
+      color: var(--accent, #e3b662);
+      text-decoration: none;
+      padding: 0 2px;
+    }}
+    .prof-fn-sup .prof-fn-link:hover {{
+      text-decoration: underline;
+    }}
+    .prof-fn-sup .prof-fn-link + .prof-fn-link::before {{ content: ""; }}
+    .prof-references {{
+      margin-top: 18px;
+      padding: 18px 22px;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+    }}
+    .prof-references h2 {{
+      color: var(--accent);
+      font-size: 1rem;
+      margin-bottom: 8px;
+      font-family: var(--font-main);
+      letter-spacing: 0.3px;
+    }}
+    .prof-references-lead {{
+      color: var(--gray);
+      font-size: 0.82rem;
+      line-height: 1.6;
+      margin-bottom: 14px;
+    }}
+    .prof-fn-list {{
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }}
+    .prof-fn-item {{
+      display: flex;
+      gap: 10px;
+      align-items: flex-start;
+      padding: 10px 12px;
+      border-left: 3px solid var(--accent, #e3b662);
+      background: rgba(255,255,255,0.02);
+      border-radius: 0 6px 6px 0;
+      scroll-margin-top: 80px;
+    }}
+    .prof-fn-item:target {{
+      background: rgba(227,182,98,0.1);
+      border-left-color: #fcd34d;
+    }}
+    .prof-fn-num {{
+      font-family: "SF Mono", ui-monospace, monospace;
+      color: var(--accent, #e3b662);
+      font-weight: 700;
+      font-size: 0.82rem;
+      flex: 0 0 auto;
+      padding-top: 2px;
+    }}
+    .prof-fn-body {{
+      flex: 1 1 auto;
+      min-width: 0;
+    }}
+    .prof-fn-title {{
+      color: var(--white, #f5f5f5);
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 0.88rem;
+      line-height: 1.5;
+      word-break: break-word;
+    }}
+    .prof-fn-title:hover {{
+      text-decoration: underline;
+      color: var(--accent, #e3b662);
+    }}
+    .prof-fn-meta {{
+      margin-top: 4px;
+      font-size: 0.75rem;
+      color: var(--text-muted, #94a3b8);
+      line-height: 1.5;
+    }}
+    .prof-fn-meta a {{
+      color: var(--text-muted, #94a3b8);
+      text-decoration: underline;
+    }}
+    .prof-fn-archive {{
+      color: #9ca3af;
+    }}
+    .prof-fn-archive:hover {{
+      color: var(--accent, #e3b662);
+    }}
+    .prof-fn-excerpt {{
+      margin-top: 6px;
+      padding: 6px 10px;
+      border-left: 2px solid var(--border);
+      color: var(--gray);
+      font-size: 0.82rem;
+      font-style: italic;
+      line-height: 1.55;
+    }}
     .prof-freshness time {{
       color: var(--accent, #e3b662);
       font-weight: 600;
@@ -1690,6 +1950,8 @@ def generate_profile(candidate, categories, meta, nav=None):
   {cat_html}
 
   {sources_html}
+
+  {render_references_section()}
 
   {f"""<div id="scoring-rationale" class="prof-rationale" role="note">
     <h2>Scoring rationale</h2>

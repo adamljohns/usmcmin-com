@@ -598,6 +598,114 @@
       font-size: 0.78rem !important;
     }
     .prof-rationale-footnote a { color: var(--accent); }
+
+    /* Per-answer footnote markers + References section (v3.4.0) */
+    .prof-fn-sup {
+      font-size: 0.66rem;
+      font-weight: 700;
+      margin-left: 4px;
+      letter-spacing: 0.3px;
+    }
+    .prof-fn-sup .prof-fn-link {
+      color: var(--accent, #e3b662);
+      text-decoration: none;
+      padding: 0 2px;
+    }
+    .prof-fn-sup .prof-fn-link:hover {
+      text-decoration: underline;
+    }
+    .prof-fn-sup .prof-fn-link + .prof-fn-link::before { content: ""; }
+    .prof-references {
+      margin-top: 18px;
+      padding: 18px 22px;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+    }
+    .prof-references h2 {
+      color: var(--accent);
+      font-size: 1rem;
+      margin-bottom: 8px;
+      font-family: var(--font-main);
+      letter-spacing: 0.3px;
+    }
+    .prof-references-lead {
+      color: var(--gray);
+      font-size: 0.82rem;
+      line-height: 1.6;
+      margin-bottom: 14px;
+    }
+    .prof-fn-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .prof-fn-item {
+      display: flex;
+      gap: 10px;
+      align-items: flex-start;
+      padding: 10px 12px;
+      border-left: 3px solid var(--accent, #e3b662);
+      background: rgba(255,255,255,0.02);
+      border-radius: 0 6px 6px 0;
+      scroll-margin-top: 80px;
+    }
+    .prof-fn-item:target {
+      background: rgba(227,182,98,0.1);
+      border-left-color: #fcd34d;
+    }
+    .prof-fn-num {
+      font-family: "SF Mono", ui-monospace, monospace;
+      color: var(--accent, #e3b662);
+      font-weight: 700;
+      font-size: 0.82rem;
+      flex: 0 0 auto;
+      padding-top: 2px;
+    }
+    .prof-fn-body {
+      flex: 1 1 auto;
+      min-width: 0;
+    }
+    .prof-fn-title {
+      color: var(--white, #f5f5f5);
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 0.88rem;
+      line-height: 1.5;
+      word-break: break-word;
+    }
+    .prof-fn-title:hover {
+      text-decoration: underline;
+      color: var(--accent, #e3b662);
+    }
+    .prof-fn-meta {
+      margin-top: 4px;
+      font-size: 0.75rem;
+      color: var(--text-muted, #94a3b8);
+      line-height: 1.5;
+    }
+    .prof-fn-meta a {
+      color: var(--text-muted, #94a3b8);
+      text-decoration: underline;
+    }
+    .prof-fn-archive {
+      color: #9ca3af;
+    }
+    .prof-fn-archive:hover {
+      color: var(--accent, #e3b662);
+    }
+    .prof-fn-excerpt {
+      margin-top: 6px;
+      padding: 6px 10px;
+      border-left: 2px solid var(--border);
+      color: var(--gray);
+      font-size: 0.82rem;
+      font-style: italic;
+      line-height: 1.55;
+    }
     .prof-freshness time {
       color: var(--accent, #e3b662);
       font-weight: 600;
@@ -926,12 +1034,12 @@
       <div class="prof-questions">
         <div class="prof-q">
           <div class="prof-q-text">Candidate only displays the American flag (no foreign flags) in public appearances and communications</div>
-          <div class="prof-q-answer"><span style="color:#4CAF50;font-weight:700;">TRUE (+2)</span></div>
+          <div class="prof-q-answer"><span style="color:#4CAF50;font-weight:700;">TRUE (+2)</span><sup class="prof-fn-sup" aria-label="References for this answer">[<a class="prof-fn-link" href="#scoring-rationale" aria-label="See scoring rationale (footnote 1)">1</a>]</sup></div>
           
         </div>
         <div class="prof-q">
           <div class="prof-q-text">Candidate promotes America exclusively and never promotes or defends foreign nations' interests over U.S. interests</div>
-          <div class="prof-q-answer"><span style="color:#4CAF50;font-weight:700;">TRUE (+2)</span></div>
+          <div class="prof-q-answer"><span style="color:#4CAF50;font-weight:700;">TRUE (+2)</span><sup class="prof-fn-sup" aria-label="References for this answer">[<a class="prof-fn-link" href="#scoring-rationale" aria-label="See scoring rationale (footnote 1)">1</a>]</sup></div>
           
         </div>
         <div class="prof-q">
@@ -946,7 +1054,7 @@
         </div>
         <div class="prof-q">
           <div class="prof-q-text">Candidate supports verifiable paper ballots, opposes electronic voting machines, and advocates for election integrity measures including hand-counted audits and voter ID requirements</div>
-          <div class="prof-q-answer"><span style="color:#4CAF50;font-weight:700;">TRUE (+2)</span></div>
+          <div class="prof-q-answer"><span style="color:#4CAF50;font-weight:700;">TRUE (+2)</span><sup class="prof-fn-sup" aria-label="References for this answer">[<a class="prof-fn-link" href="#scoring-rationale" aria-label="See scoring rationale (footnote 1)">1</a>]</sup></div>
           
         </div>
       </div>
@@ -961,7 +1069,7 @@
       <div class="prof-questions">
         <div class="prof-q">
           <div class="prof-q-text">Candidate affirms marriage is exclusively the lifelong union of one man and one woman as instituted by God in Scripture</div>
-          <div class="prof-q-answer"><span style="color:#4CAF50;font-weight:700;">TRUE (+2)</span></div>
+          <div class="prof-q-answer"><span style="color:#4CAF50;font-weight:700;">TRUE (+2)</span><sup class="prof-fn-sup" aria-label="References for this answer">[<a class="prof-fn-link" href="#scoring-rationale" aria-label="See scoring rationale (footnote 1)">1</a>]</sup></div>
           
         </div>
         <div class="prof-q">
@@ -971,12 +1079,12 @@
         </div>
         <div class="prof-q">
           <div class="prof-q-text">Candidate rejects transgender ideology and affirms biological sex (male/female) as immutable and God-given</div>
-          <div class="prof-q-answer"><span style="color:#4CAF50;font-weight:700;">TRUE (+2)</span></div>
+          <div class="prof-q-answer"><span style="color:#4CAF50;font-weight:700;">TRUE (+2)</span><sup class="prof-fn-sup" aria-label="References for this answer">[<a class="prof-fn-link" href="#scoring-rationale" aria-label="See scoring rationale (footnote 1)">1</a>]</sup></div>
           
         </div>
         <div class="prof-q">
           <div class="prof-q-text">Candidate supports laws that protect biblical marriage and prohibit promotion of homosexuality or gender confusion in schools/public life</div>
-          <div class="prof-q-answer"><span style="color:#4CAF50;font-weight:700;">TRUE (+2)</span></div>
+          <div class="prof-q-answer"><span style="color:#4CAF50;font-weight:700;">TRUE (+2)</span><sup class="prof-fn-sup" aria-label="References for this answer">[<a class="prof-fn-link" href="#scoring-rationale" aria-label="See scoring rationale (footnote 1)">1</a>]</sup></div>
           
         </div>
         <div class="prof-q">
@@ -996,12 +1104,12 @@
       <div class="prof-questions">
         <div class="prof-q">
           <div class="prof-q-text">Candidate affirms human life begins at conception; unborn child bears God's image and possesses full personhood/rights under biblical law</div>
-          <div class="prof-q-answer"><span style="color:#4CAF50;font-weight:700;">TRUE (+2)</span></div>
+          <div class="prof-q-answer"><span style="color:#4CAF50;font-weight:700;">TRUE (+2)</span><sup class="prof-fn-sup" aria-label="References for this answer">[<a class="prof-fn-link" href="#scoring-rationale" aria-label="See scoring rationale (footnote 1)">1</a>]</sup></div>
           
         </div>
         <div class="prof-q">
           <div class="prof-q-text">Candidate supports total abolition of abortion with no exceptions (rape, incest, health of mother)</div>
-          <div class="prof-q-answer"><span style="color:#4CAF50;font-weight:700;">TRUE (+2)</span></div>
+          <div class="prof-q-answer"><span style="color:#4CAF50;font-weight:700;">TRUE (+2)</span><sup class="prof-fn-sup" aria-label="References for this answer">[<a class="prof-fn-link" href="#scoring-rationale" aria-label="See scoring rationale (footnote 1)">1</a>]</sup></div>
           
         </div>
         <div class="prof-q">
@@ -1011,7 +1119,7 @@
         </div>
         <div class="prof-q">
           <div class="prof-q-text">Candidate rejects any public funding, subsidies, or legal protections for abortion providers or procedures</div>
-          <div class="prof-q-answer"><span style="color:#4CAF50;font-weight:700;">TRUE (+2)</span></div>
+          <div class="prof-q-answer"><span style="color:#4CAF50;font-weight:700;">TRUE (+2)</span><sup class="prof-fn-sup" aria-label="References for this answer">[<a class="prof-fn-link" href="#scoring-rationale" aria-label="See scoring rationale (footnote 1)">1</a>]</sup></div>
           
         </div>
         <div class="prof-q">
@@ -1031,17 +1139,17 @@
       <div class="prof-questions">
         <div class="prof-q">
           <div class="prof-q-text">Candidate affirms the right to armed self-defense as a God-given natural right and biblical duty</div>
-          <div class="prof-q-answer"><span style="color:#4CAF50;font-weight:700;">TRUE (+2)</span></div>
+          <div class="prof-q-answer"><span style="color:#4CAF50;font-weight:700;">TRUE (+2)</span><sup class="prof-fn-sup" aria-label="References for this answer">[<a class="prof-fn-link" href="#scoring-rationale" aria-label="See scoring rationale (footnote 1)">1</a>]</sup></div>
           
         </div>
         <div class="prof-q">
           <div class="prof-q-text">Candidate strongly supports the Second Amendment as an individual right that shall not be infringed for law-abiding citizens</div>
-          <div class="prof-q-answer"><span style="color:#4CAF50;font-weight:700;">TRUE (+2)</span></div>
+          <div class="prof-q-answer"><span style="color:#4CAF50;font-weight:700;">TRUE (+2)</span><sup class="prof-fn-sup" aria-label="References for this answer">[<a class="prof-fn-link" href="#scoring-rationale" aria-label="See scoring rationale (footnote 1)">1</a>]</sup></div>
           
         </div>
         <div class="prof-q">
           <div class="prof-q-text">Candidate fully supports Castle Doctrine and Stand-Your-Ground laws, with no duty to retreat when lawfully defending life, family, home, or the innocent</div>
-          <div class="prof-q-answer"><span style="color:#4CAF50;font-weight:700;">TRUE (+2)</span></div>
+          <div class="prof-q-answer"><span style="color:#4CAF50;font-weight:700;">TRUE (+2)</span><sup class="prof-fn-sup" aria-label="References for this answer">[<a class="prof-fn-link" href="#scoring-rationale" aria-label="See scoring rationale (footnote 1)">1</a>]</sup></div>
           
         </div>
         <div class="prof-q">
@@ -1051,7 +1159,7 @@
         </div>
         <div class="prof-q">
           <div class="prof-q-text">Candidate views a well-armed citizenry as essential for the preservation of liberty, protection of innocent life, and as a check against tyranny, consistent with Reformed covenant theology and America's Founding principles</div>
-          <div class="prof-q-answer"><span style="color:#4CAF50;font-weight:700;">TRUE (+2)</span></div>
+          <div class="prof-q-answer"><span style="color:#4CAF50;font-weight:700;">TRUE (+2)</span><sup class="prof-fn-sup" aria-label="References for this answer">[<a class="prof-fn-link" href="#scoring-rationale" aria-label="See scoring rationale (footnote 1)">1</a>]</sup></div>
           
         </div>
       </div>
@@ -1066,12 +1174,12 @@
       <div class="prof-questions">
         <div class="prof-q">
           <div class="prof-q-text">Candidate supports closing the border and halting all illegal immigration</div>
-          <div class="prof-q-answer"><span style="color:#4CAF50;font-weight:700;">TRUE (+2)</span></div>
+          <div class="prof-q-answer"><span style="color:#4CAF50;font-weight:700;">TRUE (+2)</span><sup class="prof-fn-sup" aria-label="References for this answer">[<a class="prof-fn-link" href="#scoring-rationale" aria-label="See scoring rationale (footnote 1)">1</a>]</sup></div>
           
         </div>
         <div class="prof-q">
           <div class="prof-q-text">Candidate supports the removal and deportation of all illegal immigrants</div>
-          <div class="prof-q-answer"><span style="color:#4CAF50;font-weight:700;">TRUE (+2)</span></div>
+          <div class="prof-q-answer"><span style="color:#4CAF50;font-weight:700;">TRUE (+2)</span><sup class="prof-fn-sup" aria-label="References for this answer">[<a class="prof-fn-link" href="#scoring-rationale" aria-label="See scoring rationale (footnote 1)">1</a>]</sup></div>
           
         </div>
         <div class="prof-q">
@@ -1101,17 +1209,17 @@
       <div class="prof-questions">
         <div class="prof-q">
           <div class="prof-q-text">Candidate supports absolute parental authority over children's education including homeschool, private, and religious school choice</div>
-          <div class="prof-q-answer"><span style="color:#4CAF50;font-weight:700;">TRUE (+2)</span></div>
+          <div class="prof-q-answer"><span style="color:#4CAF50;font-weight:700;">TRUE (+2)</span><sup class="prof-fn-sup" aria-label="References for this answer">[<a class="prof-fn-link" href="#scoring-rationale" aria-label="See scoring rationale (footnote 1)">1</a>]</sup></div>
           
         </div>
         <div class="prof-q">
           <div class="prof-q-text">Candidate opposes sexually explicit or ideologically subversive materials in school libraries and curriculum</div>
-          <div class="prof-q-answer"><span style="color:#4CAF50;font-weight:700;">TRUE (+2)</span></div>
+          <div class="prof-q-answer"><span style="color:#4CAF50;font-weight:700;">TRUE (+2)</span><sup class="prof-fn-sup" aria-label="References for this answer">[<a class="prof-fn-link" href="#scoring-rationale" aria-label="See scoring rationale (footnote 1)">1</a>]</sup></div>
           
         </div>
         <div class="prof-q">
           <div class="prof-q-text">Candidate opposes Critical Race Theory, DEI mandates, and all forms of Marxist ideology in public schools</div>
-          <div class="prof-q-answer"><span style="color:#4CAF50;font-weight:700;">TRUE (+2)</span></div>
+          <div class="prof-q-answer"><span style="color:#4CAF50;font-weight:700;">TRUE (+2)</span><sup class="prof-fn-sup" aria-label="References for this answer">[<a class="prof-fn-link" href="#scoring-rationale" aria-label="See scoring rationale (footnote 1)">1</a>]</sup></div>
           
         </div>
         <div class="prof-q">
@@ -1163,6 +1271,8 @@
     </div>
 
   <div class="prof-sources"><h2>Sources &amp; Evidence</h2><div class="prof-source-diversity" role="group" aria-label="Source diversity breakdown for this profile"><span class="prof-div-chip prof-bias-center">2 Center</span><span class="prof-div-chip prof-bias-official">7 Official</span><span class="prof-div-chip prof-bias-reference">3 Reference</span><span class="prof-div-chip prof-bias-neutral">2 Other</span></div><div class="prof-source-list"><div class="prof-source-row"><a href="https://openstates.org/nh/legislators/" target="_blank" rel="noopener">openstates.org/nh/legislators/</a><span class="prof-bias-chip prof-bias-reference" title="Non-partisan civic-tech project run by Plural (formerly the Sunlight Foundation). Aggregates U.S. state-legislative data across all 50 states.">Reference</span></div><div class="prof-source-row"><a href="https://ballotpedia.org/New_Hampshire_House_of_Representatives" target="_blank" rel="noopener">Ballotpedia Profile</a><span class="prof-bias-chip prof-bias-center" title="Non-partisan civic-data encyclopedia run by the Lucy Burns Institute; AllSides-rated Center.">Center</span></div><div class="prof-source-row"><a href="https://en.wikipedia.org/wiki/New_Hampshire_House_of_Representatives" target="_blank" rel="noopener">en.wikipedia.org/wiki/New_Hampshire_House_of_Represe...</a><span class="prof-bias-chip prof-bias-neutral" title="Community-edited encyclopedia; AllSides does not rate it, but third-party studies generally find a center-left tilt on political topics.">Encyclopedia</span></div><div class="prof-source-row"><a href="https://gencourt.state.nh.us/house/members/" target="_blank" rel="noopener">gencourt.state.nh.us/house/members/</a><span class="prof-bias-chip prof-bias-official" title="New Hampshire General Court">Official</span></div><div class="prof-source-row"><a href="https://ballotpedia.org/Ken_Weyler" target="_blank" rel="noopener">Ballotpedia Profile</a><span class="prof-bias-chip prof-bias-center" title="Non-partisan civic-data encyclopedia run by the Lucy Burns Institute; AllSides-rated Center.">Center</span></div><div class="prof-source-row"><a href="https://en.wikipedia.org/wiki/Kenneth_Weyler" target="_blank" rel="noopener">en.wikipedia.org/wiki/Kenneth_Weyler</a><span class="prof-bias-chip prof-bias-neutral" title="Community-edited encyclopedia; AllSides does not rate it, but third-party studies generally find a center-left tilt on political topics.">Encyclopedia</span></div><div class="prof-source-row"><a href="https://gc.nh.gov/house/members/member.aspx?member=374470" target="_blank" rel="noopener">gc.nh.gov/house/members/member.aspx?member=374470</a><span class="prof-bias-chip prof-bias-official" title="Official Government Source">Official</span></div><div class="prof-source-row"><a href="https://gencourt.state.nh.us/downloads/Members.txt" target="_blank" rel="noopener">gencourt.state.nh.us/downloads/Members.txt</a><span class="prof-bias-chip prof-bias-official" title="New Hampshire General Court">Official</span></div><div class="prof-source-row"><a href="https://gencourt.state.nh.us/downloads/members.txt" target="_blank" rel="noopener">gencourt.state.nh.us/downloads/members.txt</a><span class="prof-bias-chip prof-bias-official" title="New Hampshire General Court">Official</span></div><div class="prof-source-row"><a href="https://justfacts.votesmart.org/candidate/biography/8607/kenneth-weyler" target="_blank" rel="noopener">Vote Smart — Voting Record</a><span class="prof-bias-chip prof-bias-reference" title="Project Vote Smart's biographical and voting-record database. Self-described non-partisan reference.">Reference</span></div><div class="prof-source-row"><a href="https://www.gencourt.state.nh.us/downloads/Members.txt" target="_blank" rel="noopener">www.gencourt.state.nh.us/downloads/Members.txt</a><span class="prof-bias-chip prof-bias-official" title="New Hampshire General Court">Official</span></div><div class="prof-source-row"><a href="https://www.gencourt.state.nh.us/house/members/member.aspx?member=374470" target="_blank" rel="noopener">www.gencourt.state.nh.us/house/members/member.aspx?m...</a><span class="prof-bias-chip prof-bias-official" title="New Hampshire General Court">Official</span></div><div class="prof-source-row"><a href="https://www.gencourt.state.nh.us/house/members/member.aspx?pid=422" target="_blank" rel="noopener">www.gencourt.state.nh.us/house/members/member.aspx?p...</a><span class="prof-bias-chip prof-bias-official" title="New Hampshire General Court">Official</span></div><div class="prof-source-row"><a href="https://openstates.org/person/e2f9dd7e-b221-4cf0-b7de-5daa70658669/" target="_blank" rel="noopener">openstates.org/person/e2f9dd7e-b221-4cf0-b7de-5daa70...</a><span class="prof-bias-chip prof-bias-reference" title="Non-partisan civic-tech project run by Plural (formerly the Sunlight Foundation). Aggregates U.S. state-legislative data across all 50 states.">Reference</span></div></div><p class="prof-bias-attribution">Bias ratings sourced from <a href="https://www.allsides.com/media-bias/ratings" target="_blank" rel="noopener">AllSides</a> and <a href="https://adfontesmedia.com/interactive-media-bias-chart/" target="_blank" rel="noopener">Ad Fontes Media</a>. Classifications for government, reference, and advocacy domains are maintained by U.S.M.C. Ministries; see <a href="https://github.com/adamljohns/usmcmin-com/blob/main/data/source_bias.json" target="_blank" rel="noopener">source_bias.json</a>.</p></div>
+
+  <section id="references" class="prof-references" aria-label="References"><h2>References &amp; footnotes</h2><p class="prof-references-lead">Every answer above with a <sup>[n]</sup> marker corresponds to one of the footnotes below. Wayback-archive links preserve the page as it read at our access date so a reader can verify the citation even if the original URL changes or disappears.</p><ol class="prof-fn-list"><li class="prof-fn-item" id="fn-_pd"><span class="prof-fn-num">[1]</span><div class="prof-fn-body"><a class="prof-fn-title" href="#scoring-rationale">Party-default scoring heuristic — see rationale card below</a> <div class="prof-fn-meta">U.S.M.C. Ministries · RESOLUTE Citizen · accessed 2026-04-24</div><blockquote class="prof-fn-excerpt">This answer was scored via the party-default heuristic. See the "Scoring rationale" card below for the full methodology. Individual voting-record review is pending.</blockquote></div></li></ol></section>
 
   <div id="scoring-rationale" class="prof-rationale" role="note">
     <h2>Scoring rationale</h2>

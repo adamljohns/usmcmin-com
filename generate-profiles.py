@@ -461,7 +461,7 @@ def generate_profile(candidate, categories, meta, nav=None):
     # /state.html?st=<code> for the simpler state-outline + roster.
     map_link_html = ''
     _state_code_up = (c.get('state') or '').upper()
-    DETAILED_MAP_STATES = ('VA', 'FL', 'TX')
+    DETAILED_MAP_STATES = ('VA','FL','TX','NY','CA','PA','IL','OH','GA','MI','NC','NJ','AZ')
     if _state_code_up in DETAILED_MAP_STATES:
         _state_full = STATE_NAMES_FULL.get(_state_code_up, _state_code_up)
         map_link_html = (

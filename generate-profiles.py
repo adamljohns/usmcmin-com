@@ -456,6 +456,19 @@ def generate_profile(candidate, categories, meta, nav=None):
     else:
         confidence_chip_html = ''
 
+    # Map link: VA candidates get a small "View on map" chip pointing at
+    # /map.html?slug=<their-slug>. Other states will follow once we have
+    # geojson for them. Hides cleanly when state != VA.
+    map_link_html = ''
+    if (c.get('state') or '').upper() == 'VA':
+        map_link_html = (
+            '<a class="prof-map-link" '
+            f'href="../../map.html?slug={c.get("slug","")}" '
+            'aria-label="View this district / county on the Virginia map">'
+            '🗺️ View on Virginia map'
+            '</a>'
+        )
+
     # Candidacy banner: when profile.candidacy is set, surface "Running for X"
     # with a deep-link to the side-by-side comparison view for that race.
     candidacy_banner_html = ''
@@ -1585,6 +1598,27 @@ def generate_profile(candidate, categories, meta, nav=None):
       text-decoration: underline;
       font-weight: 600;
     }}
+
+    .prof-map-link {{
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      margin-top: 10px;
+      padding: 6px 12px;
+      font-size: 0.78rem;
+      font-weight: 700;
+      letter-spacing: 0.4px;
+      color: #5eead4;
+      background: rgba(94, 234, 212, 0.08);
+      border: 1px solid rgba(94, 234, 212, 0.35);
+      border-radius: 16px;
+      text-decoration: none;
+    }}
+    .prof-map-link:hover {{
+      background: rgba(94, 234, 212, 0.18);
+      color: #99f6e4;
+      text-decoration: none;
+    }}
     .prof-confidence-text {{
       font-size: 0.82rem;
       color: var(--text-muted, #d97706);
@@ -2035,6 +2069,7 @@ def generate_profile(candidate, categories, meta, nav=None):
     </div>
     {confidence_chip_html}
     {candidacy_banner_html}
+    {map_link_html}
   </div>
 
   <div class="prof-total">

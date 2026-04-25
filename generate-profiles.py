@@ -456,16 +456,28 @@ def generate_profile(candidate, categories, meta, nav=None):
     else:
         confidence_chip_html = ''
 
-    # Map link: VA candidates get a small "View on map" chip pointing at
-    # /map.html?slug=<their-slug>. Other states will follow once we have
-    # geojson for them. Hides cleanly when state != VA.
+    # Map link: every state with a per-state outline geojson gets a chip.
+    # VA additionally has a detailed /map.html with counties and CDs;
+    # other states route to the simpler /state.html?st=<code> home page
+    # which shows the state shape + a candidate roster summary.
     map_link_html = ''
-    if (c.get('state') or '').upper() == 'VA':
+    _state_code_up = (c.get('state') or '').upper()
+    if _state_code_up == 'VA':
         map_link_html = (
             '<a class="prof-map-link" '
             f'href="../../map.html?slug={c.get("slug","")}" '
             'aria-label="View this district / county on the Virginia map">'
             '🗺️ View on Virginia map'
+            '</a>'
+        )
+    elif _state_code_up and _state_code_up not in ('US',):
+        # Two-letter state code → state home page with the shape + roster.
+        _state_full = STATE_NAMES_FULL.get(_state_code_up, _state_code_up)
+        map_link_html = (
+            '<a class="prof-map-link" '
+            f'href="../../state.html?st={_state_code_up}" '
+            f'aria-label="Open {_state_full} home page with state shape">'
+            f'🗺️ {_state_full} home'
             '</a>'
         )
 

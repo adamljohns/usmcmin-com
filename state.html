@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title id="pageTitle">State Home — RESOLUTE Citizen | U.S.M.C. Ministries</title>
+  <meta name="description" id="pageDesc" content="Per-state RESOLUTE Citizen home: state outline + the candidates we cover. Pick a state from the URL: /state.html?st=VA">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
+  <link rel="stylesheet" href="assets/css/main.css">
+  <link rel="icon" href="assets/img/favicon.png" type="image/png">
+  <style>
+    .sh-container { max-width: 1300px; margin: 0 auto; padding: 22px 16px 60px; }
+
+    .sh-hero {
+      text-align: center;
+      padding: 36px 20px 24px;
+      border-bottom: 2px solid var(--border);
+      margin-bottom: 22px;
+    }
+    .sh-hero-badge {
+      display: inline-block;
+      font-size: 0.66rem; font-weight: 700;
+      letter-spacing: 3px; text-transform: uppercase; color: #c9a84c;
+      background: rgba(201,168,76,0.12); border: 1px solid rgba(201,168,76,0.25);
+      padding: 6px 18px; border-radius: 20px; margin-bottom: 14px;
+    }
+    .sh-hero h1 {
+      font-size: clamp(1.8rem, 4vw, 2.6rem);
+      color: var(--white);
+      margin-bottom: 10px;
+      font-weight: 800;
+    }
+    .sh-hero h1 .gold { color: #c9a84c; }
+    .sh-hero p { color: var(--gray); font-size: 0.9rem; max-width: 700px; margin: 0 auto; line-height: 1.7; }
+
+    .sh-picker {
+      display: flex; flex-wrap: wrap; gap: 10px;
+      align-items: center; justify-content: center;
+      padding: 12px 0; margin-bottom: 18px;
+      border-bottom: 1px solid var(--border);
+    }
+    .sh-picker label {
+      font-size: 0.7rem; letter-spacing: 0.5px; text-transform: uppercase;
+      color: var(--gray); font-weight: 700;
+    }
+    .sh-picker select {
+      background: var(--bg-card); border: 1px solid var(--border); color: var(--white);
+      padding: 7px 12px; border-radius: 6px; font-size: 0.86rem; min-width: 200px;
+    }
+
+    .sh-grid {
+      display: grid;
+      grid-template-columns: minmax(320px, 1fr) 1fr;
+      gap: 22px;
+    }
+    @media (max-width: 760px) {
+      .sh-grid { grid-template-columns: 1fr; }
+    }
+    .sh-map {
+      width: 100%;
+      height: 380px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background: #0b1220;
+    }
+    .sh-map.has-detail { cursor: pointer; }
+
+    .sh-stats {
+      display: flex; flex-direction: column; gap: 10px;
+    }
+    .sh-stat {
+      display: flex; justify-content: space-between; align-items: baseline;
+      gap: 12px;
+      padding: 10px 14px;
+      background: var(--bg-card); border: 1px solid var(--border); border-radius: 6px;
+    }
+    .sh-stat-label { color: var(--gray); font-size: 0.78rem; letter-spacing: 0.5px; text-transform: uppercase; font-weight: 700; }
+    .sh-stat-value {
+      color: var(--white); font-weight: 800; font-size: 1.05rem;
+      font-variant-numeric: tabular-nums;
+    }
+    .sh-stat-value a { color: var(--accent); text-decoration: none; }
+
+    .sh-section {
+      margin-top: 28px;
+    }
+    .sh-section h2 {
+      color: var(--accent);
+      font-size: 1rem; letter-spacing: 0.4px; margin-bottom: 12px;
+    }
+    .sh-section .lead {
+      font-size: 0.86rem; color: var(--gray); line-height: 1.6;
+      margin-bottom: 14px;
+    }
+    .sh-cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 10px;
+    }
+    .sh-card {
+      padding: 12px 14px;
+      background: var(--bg-card); border: 1px solid var(--border); border-radius: 6px;
+      text-decoration: none; color: var(--white);
+      display: block;
+    }
+    .sh-card:hover { border-color: var(--accent); }
+    .sh-card .name { font-weight: 700; font-size: 0.92rem; }
+    .sh-card .office { color: var(--gray); font-size: 0.78rem; margin-top: 3px; }
+    .sh-card .badge {
+      display: inline-block;
+      padding: 2px 8px; border-radius: 10px;
+      font-size: 0.62rem; font-weight: 800;
+      letter-spacing: 0.4px; text-transform: uppercase;
+      margin-top: 6px; margin-right: 4px;
+    }
+    .sh-badge-r { background: #b91c1c; color: #fff; }
+    .sh-badge-d { background: #1d4ed8; color: #fff; }
+    .sh-badge-i { background: #475569; color: #fff; }
+
+    .sh-map-promo {
+      margin-top: 14px;
+      padding: 14px 18px;
+      background: rgba(94, 234, 212, 0.06);
+      border: 1px solid rgba(94, 234, 212, 0.3);
+      border-radius: 8px;
+      font-size: 0.86rem;
+      color: var(--white); line-height: 1.6;
+    }
+    .sh-map-promo a { color: #5eead4; font-weight: 700; }
+    .sh-empty { color: var(--gray); font-style: italic; padding: 12px; }
+    .sh-error {
+      padding: 18px;
+      border: 1px solid rgba(248,113,113,0.3);
+      background: rgba(248,113,113,0.05);
+      color: #fecaca; border-radius: 8px; line-height: 1.6;
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a href="/" class="nav-brand" style="text-decoration:none">
+    <img src="assets/img/logo.png" alt="U.S.M.C. Ministries" style="object-fit:contain">
+    <div class="nav-brand-text">
+      <div class="name">U.S.M.C. Ministries</div>
+      <div class="tag">Warriors Equipped</div>
+    </div>
+  </a>
+  <ul class="nav-links">
+    <li><a href="citizen.html">Scorecard</a></li>
+    <li><a href="find-my-reps.html">Find My Reps</a></li>
+    <li><a href="state.html" class="active">By State</a></li>
+    <li><a href="map.html">Maps</a></li>
+    <li><a href="compare.html">Compare</a></li>
+    <li><a href="petition.html">Petition</a></li>
+    <li><a href="stats.html">Stats</a></li>
+    <li><a href="changelog.html">Changelog</a></li>
+  </ul>
+  <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">🌙</button>
+  <button class="nav-toggle" aria-label="Menu"><span></span><span></span><span></span></button>
+</nav>
+
+<div class="sh-container">
+  <div class="sh-hero">
+    <span class="sh-hero-badge">State Home</span>
+    <h1 id="hHeading">Pick a <span class="gold">state</span></h1>
+    <p id="hIntro">RESOLUTE Citizen home page for any state. Quick stats, the state outline, and shortcuts to the candidates we cover.</p>
+  </div>
+
+  <div class="sh-picker">
+    <label for="stateSel">State</label>
+    <select id="stateSel" aria-label="Choose a state"></select>
+  </div>
+
+  <div id="shBody" aria-live="polite"></div>
+</div>
+
+<footer>
+  <p><strong>RESOLUTE Citizen — State Home</strong> · a tool of <a href="https://usmcmin.org">U.S.M.C. Ministries</a></p>
+</footer>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+<script>
+(function(){
+  var STATES = {
+    AL:'Alabama',AK:'Alaska',AZ:'Arizona',AR:'Arkansas',CA:'California',
+    CO:'Colorado',CT:'Connecticut',DE:'Delaware',DC:'District of Columbia',
+    FL:'Florida',GA:'Georgia',HI:'Hawaii',ID:'Idaho',IL:'Illinois',
+    IN:'Indiana',IA:'Iowa',KS:'Kansas',KY:'Kentucky',LA:'Louisiana',
+    ME:'Maine',MD:'Maryland',MA:'Massachusetts',MI:'Michigan',MN:'Minnesota',
+    MS:'Mississippi',MO:'Missouri',MT:'Montana',NE:'Nebraska',NV:'Nevada',
+    NH:'New Hampshire',NJ:'New Jersey',NM:'New Mexico',NY:'New York',
+    NC:'North Carolina',ND:'North Dakota',OH:'Ohio',OK:'Oklahoma',OR:'Oregon',
+    PA:'Pennsylvania',RI:'Rhode Island',SC:'South Carolina',SD:'South Dakota',
+    TN:'Tennessee',TX:'Texas',UT:'Utah',VT:'Vermont',VA:'Virginia',
+    WA:'Washington',WV:'West Virginia',WI:'Wisconsin',WY:'Wyoming'
+  };
+
+  // Detail-view targets — states with their own /map.html page treatment.
+  var DETAIL_AVAILABLE = ['VA'];
+
+  var sel = document.getElementById('stateSel');
+  var bodyEl = document.getElementById('shBody');
+  var map = null;
+  var stateLayer = null;
+
+  function esc(s){ return String(s == null ? '' : s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+  function partyClass(p){ p = (p||'').toUpperCase(); return p === 'R' ? 'r' : p === 'D' ? 'd' : 'i'; }
+
+  function ensureSelect() {
+    sel.innerHTML = '';
+    var d = document.createElement('option');
+    d.value = ''; d.textContent = '— pick a state —';
+    sel.appendChild(d);
+    Object.keys(STATES).sort().forEach(function(k){
+      var o = document.createElement('option'); o.value = k;
+      o.textContent = STATES[k];
+      sel.appendChild(o);
+    });
+  }
+
+  function renderState(code) {
+    if (!code) { bodyEl.innerHTML = '<div class="sh-empty">No state selected.</div>'; return; }
+    var name = STATES[code] || code;
+    document.getElementById('hHeading').innerHTML = '<span class="gold">' + esc(name) + '</span>';
+    document.getElementById('hIntro').textContent = 'RESOLUTE Citizen home page for ' + name + '.';
+    document.getElementById('pageTitle').textContent = name + ' — RESOLUTE Citizen | U.S.M.C. Ministries';
+    document.getElementById('pageDesc').setAttribute('content', 'RESOLUTE Citizen — ' + name + ' home page: state outline, candidate counts, and shortcuts to every official we cover.');
+
+    bodyEl.innerHTML =
+      '<div class="sh-grid">' +
+        '<div id="sh-map" class="sh-map' + (DETAIL_AVAILABLE.indexOf(code) !== -1 ? ' has-detail' : '') + '"></div>' +
+        '<div class="sh-stats" id="sh-stats">Loading…</div>' +
+      '</div>' +
+      '<div class="sh-map-promo" id="sh-map-promo" hidden></div>' +
+      '<div class="sh-section" id="sh-federal-section" hidden>' +
+        '<h2>Federal officials</h2>' +
+        '<p class="lead">U.S. Senators and U.S. House members representing ' + esc(name) + ' on the RESOLUTE Citizen scorecard.</p>' +
+        '<div class="sh-cards" id="sh-federal"></div>' +
+      '</div>' +
+      '<div class="sh-section" id="sh-statewide-section" hidden>' +
+        '<h2>Statewide officials</h2>' +
+        '<p class="lead">Governor, Lieutenant Governor, Attorney General, and other statewide elected positions.</p>' +
+        '<div class="sh-cards" id="sh-statewide"></div>' +
+      '</div>' +
+      '<div class="sh-section" id="sh-running-section" hidden>' +
+        '<h2>Currently running</h2>' +
+        '<p class="lead">Candidates with an active <code>candidacy</code> tag for an upcoming office in this state.</p>' +
+        '<div class="sh-cards" id="sh-running"></div>' +
+      '</div>';
+
+    // Build map
+    if (map) { map.remove(); map = null; }
+    map = L.map('sh-map', {
+      zoomControl: true,
+      attributionControl: true,
+      scrollWheelZoom: false,
+      preferCanvas: true,
+    });
+    L.tileLayer('https://cartodb-basemaps-{s}.global.ssl.fastly.net/dark_nolabels/{z}/{x}/{y}.png', {
+      attribution: '© OSM © CARTO',
+      subdomains: 'abcd',
+      maxZoom: 18,
+    }).addTo(map);
+
+    fetch('data/maps/states/' + code.toLowerCase() + '.geojson')
+      .then(function(r){ if (!r.ok) throw new Error('No state outline available'); return r.json(); })
+      .then(function(geo){
+        stateLayer = L.geoJSON(geo, {
+          style: { color: '#c9a84c', weight: 2, fillColor: '#c9a84c', fillOpacity: 0.18, opacity: 0.85 }
+        }).addTo(map);
+        try { map.fitBounds(stateLayer.getBounds(), { padding: [16,16] }); } catch(e){}
+        if (DETAIL_AVAILABLE.indexOf(code) !== -1) {
+          stateLayer.eachLayer(function(layer){ layer.on('click', function(){ window.location.href = 'map.html?st='+code; }); });
+          var p = document.getElementById('sh-map-promo');
+          p.hidden = false;
+          p.innerHTML = '🗺️ ' + esc(name) + ' has a detailed map with counties, US House districts, and per-rep highlights. <a href="map.html?st=' + code + '">Open the detailed map &rarr;</a>';
+        }
+      })
+      .catch(function(err){
+        document.getElementById('sh-map').innerHTML = '<div class="sh-error">No state outline available for ' + esc(name) + ': ' + esc(err.message) + '</div>';
+      });
+
+    // Build stats from per-state JSON
+    fetch('data/states/' + code.toLowerCase() + '.json')
+      .then(function(r){
+        if (!r.ok) throw new Error('No per-state file');
+        return r.json();
+      })
+      .then(function(stateData){
+        renderStats(code, name, stateData);
+      })
+      .catch(function(err){
+        document.getElementById('sh-stats').innerHTML = '<div class="sh-error">No candidate data for ' + esc(name) + ' yet.</div>';
+      });
+  }
+
+  function renderStats(code, name, stateData) {
+    var cands = stateData.candidates || [];
+    var federal = cands.filter(function(c){ return c.level === 'federal'; });
+    var statewide = cands.filter(function(c){ return c.level === 'state' && /governor|attorney general|secretary of state|treasurer|comptroller|lieutenant|commissioner|superintendent/i.test(c.office || ''); });
+    var legislature = cands.filter(function(c){ return c.level === 'state' && /senat|rep|delegate|assembly|house/i.test(c.office || '') && !/governor|attorney|treasurer/i.test(c.office || ''); });
+    var local = cands.filter(function(c){ return c.level === 'local'; });
+    var running = cands.filter(function(c){ return ((c.profile||{}).candidacy||{}).race_id; });
+
+    var statsHtml = [
+      ['Total candidates', cands.length.toLocaleString()],
+      ['Federal officials', federal.length],
+      ['Statewide officials', statewide.length],
+      ['State legislature', legislature.length],
+      ['Local officials', local.length],
+      ['Currently running', running.length || '—'],
+    ].map(function(row){
+      return '<div class="sh-stat"><span class="sh-stat-label">' + esc(row[0]) + '</span><span class="sh-stat-value">' + row[1] + '</span></div>';
+    }).join('');
+    statsHtml += '<a class="sh-stat" href="citizen.html?state=' + code + '" style="text-decoration:none;cursor:pointer;">' +
+      '<span class="sh-stat-label">Open scorecard</span>' +
+      '<span class="sh-stat-value" style="color:var(--accent);">All ' + esc(name) + ' &rarr;</span></a>';
+    document.getElementById('sh-stats').innerHTML = statsHtml;
+
+    // Federal cards
+    if (federal.length) {
+      var fhtml = federal.slice().sort(function(a,b){ return (a.name||'').localeCompare(b.name||''); }).map(renderCard).join('');
+      document.getElementById('sh-federal').innerHTML = fhtml;
+      document.getElementById('sh-federal-section').hidden = false;
+    }
+    // Statewide cards
+    if (statewide.length) {
+      document.getElementById('sh-statewide').innerHTML = statewide.slice().sort(function(a,b){ return (a.office||'').localeCompare(b.office||''); }).map(renderCard).join('');
+      document.getElementById('sh-statewide-section').hidden = false;
+    }
+    // Currently running cards
+    if (running.length) {
+      document.getElementById('sh-running').innerHTML = running.map(renderCard).join('');
+      document.getElementById('sh-running-section').hidden = false;
+    }
+  }
+
+  function renderCard(c) {
+    var party = (c.party || '').toUpperCase();
+    var partyLabel = party === 'R' ? 'Republican' : party === 'D' ? 'Democrat' : party === 'I' ? 'Independent' : (party || '');
+    var slug = c.slug || '';
+    var href = 'candidates/' + ((c.state||'va').toLowerCase()) + '/' + slug + '.html';
+    return '<a class="sh-card" href="' + href + '">' +
+      '<div class="name">' + esc(c.name || '') + '</div>' +
+      '<div class="office">' + esc(c.office || '') + (c.district ? ' — Dist ' + c.district : '') + '</div>' +
+      (party ? '<span class="badge sh-badge-' + partyClass(party) + '">' + esc(partyLabel) + '</span>' : '') +
+      '</a>';
+  }
+
+  ensureSelect();
+  var initial = (new URLSearchParams(window.location.search).get('st') || '').toUpperCase();
+  if (initial && STATES[initial]) {
+    sel.value = initial;
+    renderState(initial);
+  } else {
+    bodyEl.innerHTML = '<div class="sh-empty">Pick a state from the dropdown above.</div>';
+  }
+  sel.addEventListener('change', function(){
+    var v = sel.value;
+    if (!v) return;
+    try {
+      var url = new URL(window.location);
+      url.searchParams.set('st', v);
+      window.history.replaceState({}, '', url);
+    } catch(e){}
+    renderState(v);
+  });
+})();
+</script>
+<script>
+(function(){
+  var btn = document.getElementById('themeToggle');
+  if (!btn) return;
+  var saved = localStorage.getItem('theme');
+  if (saved === 'light') document.documentElement.setAttribute('data-theme','light');
+  btn.addEventListener('click', function(){
+    var cur = document.documentElement.getAttribute('data-theme') === 'light' ? 'dark' : 'light';
+    if (cur === 'light') document.documentElement.setAttribute('data-theme','light');
+    else document.documentElement.removeAttribute('data-theme');
+    localStorage.setItem('theme', cur);
+  });
+  var navToggle = document.querySelector('.nav-toggle');
+  var navLinks = document.querySelector('.nav-links');
+  if (navToggle && navLinks) navToggle.addEventListener('click', function(){ navLinks.classList.toggle('open'); });
+})();
+</script>
+
+</body>
+</html>

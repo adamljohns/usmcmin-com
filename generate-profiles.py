@@ -78,6 +78,7 @@ STATE_NAMES_FULL = {
     'SD': 'South Dakota', 'TN': 'Tennessee', 'TX': 'Texas', 'UT': 'Utah',
     'VT': 'Vermont', 'VA': 'Virginia', 'WA': 'Washington', 'WV': 'West Virginia',
     'WI': 'Wisconsin', 'WY': 'Wyoming', 'DC': 'District of Columbia', 'US': 'National',
+    'PR': 'Puerto Rico',
 }
 
 LEVEL_RANK = {'executive': 1, 'judicial': 2, 'federal': 3, 'state': 4, 'local': 5}

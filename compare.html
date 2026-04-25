@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Compare Candidates — RESOLUTE Citizen | U.S.M.C. Ministries</title>
+  <meta name="description" content="Side-by-side comparison of declared candidates in the same race. Pick a race or pass two candidate slugs in the URL. Every score links back to the candidate's full RESOLUTE Citizen profile, with citations.">
+  <link rel="stylesheet" href="assets/css/main.css">
+  <link rel="icon" href="assets/img/favicon.png" type="image/png">
+  <style>
+    .cmp-container { max-width: 1300px; margin: 0 auto; padding: 22px 16px 60px; }
+    .cmp-hero {
+      text-align: center;
+      padding: 36px 20px 28px;
+      border-bottom: 2px solid var(--border);
+      margin-bottom: 22px;
+    }
+    .cmp-hero-badge {
+      display: inline-block;
+      font-size: 0.66rem;
+      font-weight: 700;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: #c9a84c;
+      background: rgba(201,168,76,0.12);
+      border: 1px solid rgba(201,168,76,0.25);
+      padding: 6px 18px;
+      border-radius: 20px;
+      margin-bottom: 14px;
+    }
+    .cmp-hero h1 {
+      font-size: clamp(1.7rem, 4vw, 2.4rem);
+      color: var(--white);
+      margin-bottom: 10px;
+      font-weight: 800;
+    }
+    .cmp-hero h1 .gold { color: #c9a84c; }
+    .cmp-hero p {
+      color: var(--gray);
+      font-size: 0.92rem;
+      max-width: 700px;
+      margin: 0 auto;
+      line-height: 1.7;
+    }
+
+    .cmp-picker {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+      justify-content: center;
+      padding: 14px 0;
+      margin-bottom: 18px;
+      border-bottom: 1px solid var(--border);
+    }
+    .cmp-picker label {
+      font-size: 0.74rem;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      color: var(--gray);
+      font-weight: 700;
+    }
+    .cmp-picker select {
+      padding: 7px 12px;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      color: var(--white);
+      border-radius: 6px;
+      font-size: 0.88rem;
+      min-width: 240px;
+    }
+
+    .cmp-meta {
+      text-align: center;
+      color: var(--gray);
+      font-size: 0.85rem;
+      margin-bottom: 16px;
+      line-height: 1.7;
+    }
+    .cmp-meta strong { color: var(--white); }
+
+    .cmp-grid-wrap { overflow-x: auto; }
+    .cmp-grid {
+      display: grid;
+      grid-template-columns: 220px repeat(auto-fit, minmax(180px, 1fr));
+      gap: 8px;
+      min-width: 600px;
+    }
+    .cmp-cell, .cmp-head {
+      padding: 10px 12px;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      font-size: 0.84rem;
+      line-height: 1.5;
+    }
+    .cmp-head {
+      font-weight: 800;
+      color: var(--accent);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      font-size: 0.74rem;
+    }
+    .cmp-row-label {
+      font-weight: 600;
+      color: var(--white);
+      align-self: stretch;
+      font-size: 0.82rem;
+    }
+    .cmp-row-label .q-num {
+      color: var(--accent);
+      font-family: "SF Mono", ui-monospace, monospace;
+      font-size: 0.72rem;
+      margin-right: 6px;
+    }
+
+    /* Candidate header card */
+    .cmp-cand-header {
+      padding: 14px;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      align-items: stretch;
+      justify-content: flex-start;
+    }
+    .cmp-cand-header .photo {
+      width: 64px; height: 64px;
+      border-radius: 50%;
+      object-fit: cover;
+      align-self: center;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid var(--border);
+    }
+    .cmp-cand-header .name {
+      font-size: 0.98rem;
+      font-weight: 800;
+      color: var(--white);
+      text-align: center;
+    }
+    .cmp-cand-header .name a {
+      color: inherit;
+      text-decoration: none;
+    }
+    .cmp-cand-header .name a:hover {
+      color: var(--accent);
+      text-decoration: underline;
+    }
+    .cmp-cand-header .party {
+      text-align: center;
+      font-size: 0.68rem;
+      letter-spacing: 0.6px;
+      text-transform: uppercase;
+      font-weight: 800;
+      padding: 2px 6px;
+      border-radius: 10px;
+      align-self: center;
+    }
+    .cmp-cand-header .party.r { background: #b91c1c; color: #fff; }
+    .cmp-cand-header .party.d { background: #1d4ed8; color: #fff; }
+    .cmp-cand-header .party.i { background: #475569; color: #fff; }
+    .cmp-cand-header .total {
+      text-align: center;
+      font-size: 0.78rem;
+      color: var(--gray);
+    }
+    .cmp-cand-header .total .num {
+      color: var(--white);
+      font-weight: 800;
+      font-size: 1.1rem;
+    }
+    .cmp-cand-header .label {
+      font-size: 0.72rem;
+      color: var(--gray);
+      text-align: center;
+      line-height: 1.45;
+    }
+    .cmp-cand-header .badges {
+      display: flex; flex-wrap: wrap; justify-content: center; gap: 4px;
+      margin-top: 4px;
+    }
+    .cmp-cand-header .badge {
+      font-size: 0.64rem;
+      padding: 2px 7px;
+      border-radius: 8px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.4px;
+    }
+    .cmp-cand-header .badge-incumbent { background: #166534; color: #d1fae5; }
+    .cmp-cand-header .badge-challenger { background: #475569; color: #cbd5e1; }
+    .cmp-cand-header .badge-awaiting { background: #b45309; color: #fff; }
+
+    .cmp-cell.cat-row {
+      background: rgba(201,168,76,0.08);
+      border-left: 3px solid var(--accent);
+      font-weight: 700;
+      color: #c9a84c;
+      grid-column: 1 / -1;
+      letter-spacing: 0.4px;
+      text-transform: uppercase;
+      font-size: 0.78rem;
+      padding: 10px 14px;
+    }
+
+    .ans-true   { color: #4ade80; font-weight: 800; }
+    .ans-false  { color: #f87171; font-weight: 800; }
+    .ans-null   { color: var(--gray); }
+    .cmp-cell.same { background: rgba(255,255,255,0.025); }
+    .cmp-cell.differ { background: rgba(76,175,80,0.05); border-color: rgba(76,175,80,0.25); }
+
+    .cmp-error {
+      padding: 18px 22px;
+      border: 1px solid #f87171;
+      background: rgba(248,113,113,0.08);
+      color: #fecaca;
+      border-radius: 8px;
+      margin: 16px 0;
+      font-size: 0.92rem;
+      line-height: 1.6;
+    }
+    .cmp-empty {
+      padding: 24px;
+      text-align: center;
+      color: var(--gray);
+      font-size: 0.9rem;
+      line-height: 1.7;
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a href="/" class="nav-brand" style="text-decoration:none">
+    <img src="assets/img/logo.png" alt="U.S.M.C. Ministries" style="object-fit:contain">
+    <div class="nav-brand-text">
+      <div class="name">U.S.M.C. Ministries</div>
+      <div class="tag">Warriors Equipped</div>
+    </div>
+  </a>
+  <ul class="nav-links">
+    <li><a href="citizen.html">Scorecard</a></li>
+    <li><a href="find-my-reps.html">Find My Reps</a></li>
+    <li><a href="petition.html">Petition</a></li>
+    <li><a href="compare.html" class="active">Compare</a></li>
+    <li><a href="stats.html">Stats</a></li>
+    <li><a href="changelog.html">Changelog</a></li>
+    <li><a href="https://usmcmin.org" target="_blank">Ministry Site</a></li>
+  </ul>
+  <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">🌙</button>
+  <button class="nav-toggle" aria-label="Menu"><span></span><span></span><span></span></button>
+</nav>
+
+<div class="cmp-container">
+  <div class="cmp-hero">
+    <span class="cmp-hero-badge">Side-by-Side Compare</span>
+    <h1>Compare <span class="gold">Candidates</span> in the Same Race</h1>
+    <p>
+      Pick a race or follow a deep-link from a candidate profile. Every
+      RESOLUTE Citizen category and question lines up across columns so
+      you can read across to see exactly where two candidates agree and
+      disagree. Click any candidate's name to open their full profile
+      with footnotes + Wayback citations.
+    </p>
+  </div>
+
+  <div class="cmp-picker">
+    <label for="raceSel">Race</label>
+    <select id="raceSel" aria-label="Select a race">
+      <option value="">Loading…</option>
+    </select>
+  </div>
+
+  <div class="cmp-meta" id="cmpMeta"></div>
+  <div id="cmpBody" aria-live="polite"></div>
+</div>
+
+<footer>
+  <p><strong>RESOLUTE Citizen — Compare</strong> · a tool of <a href="https://usmcmin.org">U.S.M.C. Ministries</a></p>
+</footer>
+
+<script>
+(function(){
+  var raceSel = document.getElementById('raceSel');
+  var bodyEl = document.getElementById('cmpBody');
+  var metaEl = document.getElementById('cmpMeta');
+
+  var STATE = { races: null, scorecard: null };
+
+  function esc(s){ return String(s == null ? '' : s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+  function fmtAns(v){
+    if (v === true) return '<span class="ans-true" aria-label="Yes">✓</span>';
+    if (v === false) return '<span class="ans-false" aria-label="No">✗</span>';
+    return '<span class="ans-null" aria-label="No evidence yet">—</span>';
+  }
+  function partyClass(p){
+    p = (p||'').toUpperCase();
+    if (p === 'R') return 'r';
+    if (p === 'D') return 'd';
+    return 'i';
+  }
+  function partyLabel(p){
+    p = (p||'').toUpperCase();
+    if (p === 'R') return 'Republican';
+    if (p === 'D') return 'Democrat';
+    if (p === 'I') return 'Independent';
+    return p || 'Unknown';
+  }
+
+  function calcTotal(scores){
+    if (!scores) return {score: 0, max: 70, answered: 0};
+    var total = 0; var answered = 0; var max = 70;
+    Object.keys(scores).forEach(function(cat){
+      (scores[cat]||[]).forEach(function(v){
+        if (v === true) total += 2;
+        if (v !== null && v !== undefined) answered += 1;
+      });
+    });
+    return {score: total, max: max, answered: answered};
+  }
+
+  function findCandidate(slug){
+    var sc = STATE.scorecard;
+    if (!sc) return null;
+    return sc.candidates.find(function(c){ return c.slug === slug; }) || null;
+  }
+
+  function renderCandidate(slug){
+    var c = findCandidate(slug);
+    if (!c) {
+      return '<div class="cmp-cand-header"><div class="name">' + esc(slug) + '</div><div class="label">Not found in scorecard</div></div>';
+    }
+    var t = calcTotal(c.scores);
+    var photo = c.photo
+      ? '<img class="photo" src="' + esc(c.photo) + '" alt="' + esc(c.name) + '">'
+      : '<div class="photo" aria-hidden="true"></div>';
+    var prof = c.profile || {};
+    var cand = prof.candidacy || {};
+    var conf = prof.confidence || '';
+    var hasClaims = (c.claims || []).length > 0;
+    var allNull = !hasClaims && t.answered === 0;
+    var badges = [];
+    if (cand.is_incumbent) badges.push('<span class="badge badge-incumbent">Incumbent</span>');
+    else if (cand.race_id) badges.push('<span class="badge badge-challenger">Challenger</span>');
+    if (allNull) badges.push('<span class="badge badge-awaiting">Awaiting review</span>');
+    return '<div class="cmp-cand-header">' +
+      photo +
+      '<div class="name"><a href="candidates/' + esc((c.state||"va").toLowerCase()) + '/' + esc(slug) + '.html">' + esc(c.name) + '</a></div>' +
+      '<div class="party ' + partyClass(c.party) + '">' + esc(partyLabel(c.party)) + '</div>' +
+      '<div class="total"><span class="num">' + t.score + '</span> / ' + t.max + '<div class="label">' + t.answered + ' of 35 questions answered</div></div>' +
+      (badges.length ? '<div class="badges">' + badges.join('') + '</div>' : '') +
+      '</div>';
+  }
+
+  function renderRace(raceId){
+    bodyEl.innerHTML = '';
+    metaEl.textContent = '';
+    if (!STATE.races || !STATE.scorecard) {
+      bodyEl.innerHTML = '<div class="cmp-empty">Loading data…</div>';
+      return;
+    }
+    var race = (STATE.races.races||{})[raceId];
+    if (!race) {
+      bodyEl.innerHTML = '<div class="cmp-error">Race "' + esc(raceId) + '" not found in data/races.json.</div>';
+      return;
+    }
+    var slugs = [];
+    var byParty = race.candidates_by_party || {};
+    Object.keys(byParty).forEach(function(p){ slugs = slugs.concat(byParty[p]||[]); });
+    if (!slugs.length) {
+      bodyEl.innerHTML = '<div class="cmp-empty">No candidates listed for this race yet.</div>';
+      return;
+    }
+    var metaParts = [];
+    metaParts.push('<strong>' + esc(race.office) + '</strong>');
+    if (race.primary_date) metaParts.push('Primary: ' + esc(race.primary_date));
+    if (race.general_date) metaParts.push('General: ' + esc(race.general_date));
+    if (race.incumbent_note) metaParts.push(esc(race.incumbent_note));
+    metaEl.innerHTML = metaParts.join('  ·  ');
+
+    var sc = STATE.scorecard;
+    var cats = sc.categories || [];
+
+    // Build a 2-D grid: row = (category | question), columns = candidates.
+    var html = '<div class="cmp-grid-wrap"><div class="cmp-grid" style="grid-template-columns: 220px repeat(' + slugs.length + ', minmax(180px, 1fr));">';
+    // Header row
+    html += '<div class="cmp-head">RESOLUTE Citizen</div>';
+    slugs.forEach(function(slug){
+      html += renderCandidate(slug);
+    });
+    // Per-category rows
+    cats.forEach(function(cat){
+      // Category header row
+      html += '<div class="cmp-cell cat-row">' + esc(cat.label) + '</div>';
+      // Per-question rows
+      var questions = cat.questions || [];
+      for (var i = 0; i < questions.length; i++) {
+        html += '<div class="cmp-cell cmp-row-label"><span class="q-num">Q' + (i+1) + '</span>' + esc(questions[i]) + '</div>';
+        // Collect each candidate's answer for this question to detect divergence
+        var answers = slugs.map(function(slug){
+          var c = findCandidate(slug);
+          if (!c) return null;
+          var arr = (c.scores||{})[cat.id] || [];
+          return i < arr.length ? arr[i] : null;
+        });
+        var same = answers.every(function(a){ return a === answers[0]; });
+        slugs.forEach(function(slug, idx){
+          var c = findCandidate(slug);
+          if (!c) {
+            html += '<div class="cmp-cell ans-null">—</div>';
+            return;
+          }
+          var arr = (c.scores||{})[cat.id] || [];
+          var v = i < arr.length ? arr[i] : null;
+          var cls = same ? 'cmp-cell same' : 'cmp-cell differ';
+          html += '<div class="' + cls + '">' + fmtAns(v) + '</div>';
+        });
+      }
+    });
+    html += '</div></div>';
+
+    // Sources block
+    if (race.sources && race.sources.length) {
+      html += '<p style="margin-top:14px;color:var(--gray);font-size:0.78rem;line-height:1.7;">' +
+        'Race sources: ' +
+        race.sources.map(function(u){ return '<a href="' + esc(u) + '" target="_blank" rel="noopener" style="color:var(--accent);">' + esc(u.replace(/^https?:\/\//,'')) + '</a>'; }).join('  ·  ') +
+        '</p>';
+    }
+
+    bodyEl.innerHTML = html;
+  }
+
+  // Boot
+  Promise.all([
+    fetch('data/races.json').then(function(r){ return r.json(); }),
+    fetch('data/scorecard.json').then(function(r){ return r.json(); }),
+  ]).then(function(arr){
+    STATE.races = arr[0];
+    STATE.scorecard = arr[1];
+    var raceMap = STATE.races.races || {};
+    raceSel.innerHTML = '';
+    var defaultOpt = document.createElement('option');
+    defaultOpt.value = '';
+    defaultOpt.textContent = 'Pick a race…';
+    raceSel.appendChild(defaultOpt);
+    Object.keys(raceMap).forEach(function(k){
+      var r = raceMap[k];
+      var opt = document.createElement('option');
+      opt.value = k;
+      opt.textContent = r.office + ' (' + (r.general_date||'').slice(0,4) + ')';
+      raceSel.appendChild(opt);
+    });
+    // URL deep-link
+    var params = new URLSearchParams(window.location.search);
+    var initial = params.get('race') || Object.keys(raceMap)[0] || '';
+    if (initial) {
+      raceSel.value = initial;
+      renderRace(initial);
+    } else {
+      bodyEl.innerHTML = '<div class="cmp-empty">No races listed yet. Add one to <code>data/races.json</code>.</div>';
+    }
+    raceSel.addEventListener('change', function(){
+      var v = raceSel.value;
+      if (!v) { bodyEl.innerHTML=''; metaEl.innerHTML=''; return; }
+      try {
+        var url = new URL(window.location);
+        url.searchParams.set('race', v);
+        window.history.replaceState({}, '', url);
+      } catch(e){}
+      renderRace(v);
+    });
+  }).catch(function(err){
+    bodyEl.innerHTML = '<div class="cmp-error">Failed to load data: ' + esc(err.message) + '</div>';
+  });
+})();
+</script>
+<script>
+(function(){
+  var btn = document.getElementById('themeToggle');
+  if (!btn) return;
+  var saved = localStorage.getItem('theme');
+  if (saved === 'light') document.documentElement.setAttribute('data-theme','light');
+  btn.addEventListener('click', function(){
+    var cur = document.documentElement.getAttribute('data-theme') === 'light' ? 'dark' : 'light';
+    if (cur === 'light') document.documentElement.setAttribute('data-theme','light');
+    else document.documentElement.removeAttribute('data-theme');
+    localStorage.setItem('theme', cur);
+  });
+  var navToggle = document.querySelector('.nav-toggle');
+  var navLinks = document.querySelector('.nav-links');
+  if (navToggle && navLinks) navToggle.addEventListener('click', function(){ navLinks.classList.toggle('open'); });
+})();
+</script>
+
+</body>
+</html>

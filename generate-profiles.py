@@ -456,6 +456,34 @@ def generate_profile(candidate, categories, meta, nav=None):
     else:
         confidence_chip_html = ''
 
+    # Candidacy banner: when profile.candidacy is set, surface "Running for X"
+    # with a deep-link to the side-by-side comparison view for that race.
+    candidacy_banner_html = ''
+    cand = profile.get('candidacy') or {}
+    if cand.get('race_id'):
+        is_inc = bool(cand.get('is_incumbent'))
+        chip_label = 'Incumbent' if is_inc else 'Challenger'
+        chip_class = 'prof-cand-incumbent' if is_inc else 'prof-cand-challenger'
+        primary = cand.get('primary_date') or ''
+        general = cand.get('general_date') or ''
+        dates = []
+        if primary: dates.append(f'Primary {primary}')
+        if general: dates.append(f'General {general}')
+        date_str = ' · '.join(dates)
+        decl = cand.get('declared_date') or ''
+        decl_str = f', declared {decl}' if decl else ''
+        candidacy_banner_html = (
+            '<div class="prof-candidacy-banner" role="note" aria-label="Candidacy status">'
+            f'<span class="prof-candidacy-chip {chip_class}">{chip_label}</span>'
+            '<div class="prof-candidacy-text">'
+            f'Currently running for <strong>{cand.get("office","")}</strong>'
+            f'{decl_str}. {date_str}.'
+            f' <a href="../../compare.html?race={cand.get("race_id")}">'
+            f'Compare against other candidates &rarr;</a>'
+            '</div>'
+            '</div>'
+        )
+
     state_code = (c.get('state') or 'VA').upper()
     state_name = STATE_NAMES_FULL.get(state_code, state_code)
     nav = nav or {}
@@ -1521,6 +1549,42 @@ def generate_profile(candidate, categories, meta, nav=None):
     .prof-conf-awaiting-chip {{ background: #475569; color: #fff; }}
     .prof-conf-awaiting .prof-confidence-text {{ color: #94a3b8; }}
     .prof-conf-awaiting .prof-confidence-text a {{ color: #cbd5e1; }}
+
+    /* Candidacy banner — "Running for X / Compare ->" */
+    .prof-candidacy-banner {{
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-top: 10px;
+      padding: 12px 16px;
+      background: rgba(56, 189, 248, 0.08);
+      border: 1px solid rgba(56, 189, 248, 0.35);
+      border-radius: 8px;
+    }}
+    .prof-candidacy-chip {{
+      padding: 3px 10px;
+      border-radius: 12px;
+      font-size: 0.68rem;
+      font-weight: 800;
+      letter-spacing: 0.6px;
+      text-transform: uppercase;
+      white-space: nowrap;
+    }}
+    .prof-cand-incumbent {{ background: #166534; color: #d1fae5; }}
+    .prof-cand-challenger {{ background: #0369a1; color: #fff; }}
+    .prof-candidacy-text {{
+      flex: 1;
+      font-size: 0.86rem;
+      color: var(--white);
+      line-height: 1.55;
+      min-width: 220px;
+    }}
+    .prof-candidacy-text a {{
+      color: #38bdf8;
+      text-decoration: underline;
+      font-weight: 600;
+    }}
     .prof-confidence-text {{
       font-size: 0.82rem;
       color: var(--text-muted, #d97706);
@@ -1970,6 +2034,7 @@ def generate_profile(candidate, categories, meta, nav=None):
       </div>
     </div>
     {confidence_chip_html}
+    {candidacy_banner_html}
   </div>
 
   <div class="prof-total">

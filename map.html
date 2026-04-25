@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Maps — RESOLUTE Citizen | U.S.M.C. Ministries</title>
-  <meta name="description" content="Interactive maps of Virginia: state outline, all counties + independent cities, U.S. House districts, with overlay highlighting for any candidate's coverage area. Hover any feature to see its name; click to filter the candidate list to officials representing that area.">
+  <title id="pageTitle">Maps — RESOLUTE Citizen | U.S.M.C. Ministries</title>
+  <meta name="description" content="Interactive RESOLUTE Citizen maps for Virginia, Florida, and Texas: state outline, all counties + independent cities, U.S. House districts, city points, with overlay highlighting for any candidate's coverage area.">
   <meta property="og:title" content="RESOLUTE Citizen — Maps">
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
   <link rel="stylesheet" href="assets/css/main.css">
@@ -45,7 +45,7 @@
 
     #mp-map {
       width: 100%;
-      height: 540px;
+      height: 600px;
       border-radius: 8px;
       border: 1px solid var(--border);
       background: #0b1220;
@@ -66,6 +66,7 @@
     .sw-state    { background: rgba(201,168,76,0.18); border-color: #c9a84c; }
     .sw-county   { background: rgba(94, 234, 212, 0.10); border-color: #5eead4; }
     .sw-cd       { background: rgba(168, 85, 247, 0.18); border-color: #a855f7; }
+    .sw-city     { background: rgba(56, 189, 248, 0.6); border-color: #38bdf8; border-radius: 50%; }
     .sw-highlight{ background: rgba(34, 197, 94, 0.45); border-color: #22c55e; }
 
     .leaflet-popup-content {
@@ -105,6 +106,7 @@
     }
     .mp-info strong { color: var(--white); }
     .mp-info code { color: #c9a84c; font-family: "SF Mono", ui-monospace, monospace; }
+    .mp-info a { color: var(--accent); }
   </style>
 </head>
 <body>
@@ -120,12 +122,12 @@
   <ul class="nav-links">
     <li><a href="citizen.html">Scorecard</a></li>
     <li><a href="find-my-reps.html">Find My Reps</a></li>
+    <li><a href="state.html">By State</a></li>
     <li><a href="map.html" class="active">Maps</a></li>
     <li><a href="compare.html">Compare</a></li>
     <li><a href="petition.html">Petition</a></li>
     <li><a href="stats.html">Stats</a></li>
     <li><a href="changelog.html">Changelog</a></li>
-    <li><a href="https://usmcmin.org" target="_blank">Ministry Site</a></li>
   </ul>
   <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">🌙</button>
   <button class="nav-toggle" aria-label="Menu"><span></span><span></span><span></span></button>
@@ -134,13 +136,12 @@
 <div class="mp-container">
   <div class="mp-hero">
     <span class="mp-hero-badge">Maps</span>
-    <h1>Virginia <span class="gold">at a glance</span></h1>
-    <p>
-      Interactive map of Virginia's state outline, all 95 counties + 38 independent
-      cities, and the 11 U.S. House districts. Hover any feature for its name; click
-      to see who represents it on the RESOLUTE Citizen scorecard. Pass
-      <code>?slug=&lt;candidate&gt;</code> to land on a profile-deep-linked view that
-      pre-highlights that candidate's district.
+    <h1 id="mpHeading"><span id="mpStateName">Pick a state</span><span class="gold"> at a glance</span></h1>
+    <p id="mpIntro">
+      Detailed interactive map: state outline, all counties + independent cities,
+      U.S. House districts, and major city centroids. Hover any feature for its name;
+      click a city dot or district to zoom + open a popup of officials we cover.
+      Pass <code>?slug=&lt;candidate&gt;</code> to land on a profile-deep-linked view.
     </p>
   </div>
 
@@ -148,6 +149,8 @@
     <label for="mpState">State</label>
     <select id="mpState" aria-label="Choose state">
       <option value="VA">Virginia</option>
+      <option value="FL">Florida</option>
+      <option value="TX">Texas</option>
     </select>
 
     <label class="mp-toggle on" id="mpTogCounties">
@@ -156,39 +159,39 @@
     <label class="mp-toggle on" id="mpTogCDs">
       <input type="checkbox" id="mpChkCDs" checked> U.S. House Districts
     </label>
+    <label class="mp-toggle on" id="mpTogCityDots">
+      <input type="checkbox" id="mpChkCityDots" checked> City dots
+    </label>
 
     <label for="mpFocus">Highlight</label>
     <select id="mpFocus" aria-label="Highlight a feature">
-      <option value="">— pick a county / CD —</option>
+      <option value="">— pick a county / CD / city —</option>
     </select>
   </div>
 
-  <div id="mp-map" role="region" aria-label="Virginia map"></div>
+  <div id="mp-map" role="region" aria-label="State map"></div>
 
   <div class="mp-legend">
     <span><span class="swatch sw-state"></span>State outline</span>
     <span><span class="swatch sw-county"></span>County / independent city</span>
     <span><span class="swatch sw-cd"></span>U.S. House district</span>
+    <span><span class="swatch sw-city"></span>Major city</span>
     <span><span class="swatch sw-highlight"></span>Highlighted feature</span>
   </div>
 
   <div class="mp-info" id="mpInfo">
     <strong>What you see, and what's next.</strong>
     <p style="margin-top:6px;">
-      Source data: state outline from <code>glynnbird/usstatesgeojson</code>
-      (CC0); county polygons (134 features = 95 counties + 38 independent
-      cities + Falls Church + Manassas + Manassas Park, sourced from a
-      US Census 2010 5m TIGER simplification); congressional district
-      polygons sourced from the same Census 2010 atlas. State legislative
-      district shapes will land in a future build (the Census ZCTA →
-      SLDU/SLDL crosswalk Adam asked about in Ship 18).
-    </p>
-    <p style="margin-top:6px;">
-      Heads-up: VA's redistricting amendment passed at the polls on
-      April 21, 2026 (51.59% Yes). A judge enjoined certification on
-      April 22 and the Attorney General is appealing. If the new map
-      is ultimately certified, this page will get a 2026-era CD layer
-      added alongside the 2010 layer for comparison.
+      Source data: state outlines from a CC0 release of the Census 2010 5m TIGER
+      simplification. County polygons cover all counties + independent cities.
+      Congressional district polygons reflect 2010-era boundaries (the most
+      reliably-fetchable static set). City centroids are pulled from a
+      US-cities-with-coordinates dataset, filtered to the cities we have in
+      <code>data/places.json</code>. State-legislative district shapes are not
+      yet shipped — that's the next ingestion. Want a state I haven't built yet?
+      Adding a new state needs three geojson files in <a href="https://github.com/adamljohns/usmcmin-com/tree/main/data/maps" target="_blank" rel="noopener"><code>data/maps</code></a>:
+      <code>&lt;st&gt;-counties.geojson</code>, <code>&lt;st&gt;-cds-2010.geojson</code>,
+      and <code>&lt;st&gt;-cities.geojson</code>.
     </p>
   </div>
 </div>
@@ -200,7 +203,13 @@
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
 <script>
 (function(){
-  var STATE = { state: 'VA', layers: {} };
+  var STATES = {
+    VA: 'Virginia',
+    FL: 'Florida',
+    TX: 'Texas',
+  };
+
+  var STATE = { state: 'VA', layers: {}, stateData: null };
   var map = null;
 
   function esc(s){ return String(s == null ? '' : s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
@@ -210,40 +219,50 @@
   function styleCD()    { return { color: '#a855f7', weight: 1.4, fillColor: '#a855f7', fillOpacity: 0.05, opacity: 0.7, dashArray: '4,4' }; }
   function styleHighlight() { return { color: '#22c55e', weight: 3, fillColor: '#22c55e', fillOpacity: 0.32, opacity: 0.95, dashArray: null }; }
 
-  function buildMap() {
+  function buildMap(initialState) {
+    if (map) {
+      map.remove(); map = null;
+      STATE.layers = {};
+    }
+    STATE.state = initialState;
     map = L.map('mp-map', {
       attributionControl: true,
-      scrollWheelZoom: false,
+      scrollWheelZoom: true,
       preferCanvas: true,
-    }).setView([37.6, -78.7], 7);
+    }).setView([37.6, -78.7], 6);
 
-    // Dark base tiles via CARTO. Free, no API key needed.
     L.tileLayer('https://cartodb-basemaps-{s}.global.ssl.fastly.net/dark_all/{z}/{x}/{y}.png', {
       attribution: '© OpenStreetMap contributors © CARTO',
       subdomains: 'abcd',
       maxZoom: 18,
     }).addTo(map);
 
-    var raceFromUrl = new URLSearchParams(window.location.search).get('slug') || '';
+    var slugFromUrl = new URLSearchParams(window.location.search).get('slug') || '';
+    var st = initialState.toLowerCase();
     Promise.all([
-      fetch('data/maps/va-state.geojson').then(function(r){ return r.json(); }),
-      fetch('data/maps/va-counties.geojson').then(function(r){ return r.json(); }),
-      fetch('data/maps/va-cds-2010.geojson').then(function(r){ return r.json(); }),
-      fetch('data/states/va.json').then(function(r){ return r.json(); }).catch(function(){ return null; }),
+      fetch('data/maps/states/' + st + '.geojson').then(function(r){ return r.json(); }),
+      fetch('data/maps/' + st + '-counties.geojson').then(function(r){ return r.json(); }),
+      fetch('data/maps/' + st + '-cds-2010.geojson').then(function(r){ return r.json(); }),
+      fetch('data/maps/' + st + '-cities.geojson').then(function(r){ return r.json(); }).catch(function(){ return {features:[]}; }),
+      fetch('data/states/' + st + '.json').then(function(r){ return r.json(); }).catch(function(){ return null; }),
     ]).then(function(arr){
-      var stateGeo = arr[0], countiesGeo = arr[1], cdsGeo = arr[2], stateData = arr[3];
+      var stateGeo = arr[0], countiesGeo = arr[1], cdsGeo = arr[2], citiesGeo = arr[3], stateData = arr[4];
+      STATE.stateData = stateData;
 
-      // State outline
+      // State outline (single-feature collection, with PR/territories noise filtered for VA above)
       STATE.layers.state = L.geoJSON(stateGeo, { style: styleState }).addTo(map);
 
-      // Counties: capture each layer with property NAME
+      // Counties
       STATE.layers.counties = L.geoJSON(countiesGeo, {
         style: styleCounty,
         onEachFeature: function(feat, layer){
           var name = (feat.properties && (feat.properties.NAME || feat.properties.name)) || '';
           layer.bindTooltip(name, {sticky: true, className: 'mp-tip'});
           layer.bindPopup(buildCountyPopup(name, stateData));
-          layer.on('click', function(){ focusFeature('county:'+name); });
+          layer.on('click', function(){
+            try { map.fitBounds(layer.getBounds(), { padding: [40,40] }); } catch(e){}
+            focusFeature('county:'+name);
+          });
         }
       }).addTo(map);
 
@@ -252,46 +271,72 @@
         style: styleCD,
         onEachFeature: function(feat, layer){
           var num = (feat.properties && (feat.properties.NAME || feat.properties.CD || '')).toString().replace(/^0+/, '');
-          layer.bindTooltip('VA-' + num + ' (2010 boundary)', {sticky: true, className: 'mp-tip'});
+          layer.bindTooltip(STATE.state + '-' + num + ' (2010 boundary)', {sticky: true, className: 'mp-tip'});
           layer.bindPopup(buildCDPopup(num, stateData));
-          layer.on('click', function(){ focusFeature('cd:'+num); });
+          layer.on('click', function(){
+            try { map.fitBounds(layer.getBounds(), { padding: [40,40] }); } catch(e){}
+            focusFeature('cd:'+num);
+          });
         }
       }).addTo(map);
 
-      // Fit map to state bounds
+      // City dots — circle markers + click-to-zoom + popup
+      STATE.layers.cityDots = L.layerGroup();
+      (citiesGeo.features || []).forEach(function(feat){
+        var coords = (feat.geometry && feat.geometry.coordinates) || null;
+        if (!coords) return;
+        var name = (feat.properties && feat.properties.name) || '';
+        var marker = L.circleMarker([coords[1], coords[0]], {
+          radius: 5,
+          color: '#0ea5e9',
+          weight: 1.5,
+          fillColor: '#38bdf8',
+          fillOpacity: 0.85,
+        });
+        marker.bindTooltip(name + ' (city)', {sticky: true, className: 'mp-tip'});
+        marker.bindPopup(buildCityPopup(name, feat.properties && feat.properties.county, stateData));
+        marker.on('click', function(){
+          // Zoom to the city — closer than county / CD zooms.
+          map.flyTo([coords[1], coords[0]], 10, { duration: 0.7 });
+        });
+        STATE.layers.cityDots.addLayer(marker);
+      });
+      STATE.layers.cityDots.addTo(map);
+
       try { map.fitBounds(STATE.layers.state.getBounds(), {padding:[20,20]}); } catch(e) {}
 
-      // Populate the focus picker
-      buildFocusPicker(countiesGeo, cdsGeo);
+      buildFocusPicker(countiesGeo, cdsGeo, citiesGeo);
 
-      // Layer toggles
-      document.getElementById('mpChkCounties').addEventListener('change', function(e){
-        if (e.target.checked) STATE.layers.counties.addTo(map);
-        else map.removeLayer(STATE.layers.counties);
-        document.getElementById('mpTogCounties').classList.toggle('on', e.target.checked);
-      });
-      document.getElementById('mpChkCDs').addEventListener('change', function(e){
-        if (e.target.checked) STATE.layers.cds.addTo(map);
-        else map.removeLayer(STATE.layers.cds);
-        document.getElementById('mpTogCDs').classList.toggle('on', e.target.checked);
-      });
+      // Apply current toggle state (in case user toggled before re-render)
+      syncToggle('mpChkCounties', STATE.layers.counties);
+      syncToggle('mpChkCDs', STATE.layers.cds);
+      syncToggle('mpChkCityDots', STATE.layers.cityDots);
 
       // Deep-link from candidate profile
-      if (raceFromUrl && stateData) {
-        var cand = (stateData.candidates || []).find(function(c){ return c.slug === raceFromUrl; });
+      if (slugFromUrl && stateData) {
+        var cand = (stateData.candidates || []).find(function(c){ return c.slug === slugFromUrl; });
         if (cand) {
           if (cand.district) focusFeature('cd:'+cand.district);
           else if (cand.jurisdiction) {
-            // Try to match jurisdiction to a county
             var m = (cand.jurisdiction || '').match(/County of ([A-Za-z ]+)|([A-Za-z ]+) County|City of ([A-Za-z ]+)/);
-            if (m) { var name = (m[1]||m[2]||m[3]||'').trim(); if (name) focusFeature('county:'+name); }
+            if (m) {
+              var name = (m[1]||m[2]||m[3]||'').trim();
+              if (name) focusFeature('county:'+name);
+            }
           }
         }
       }
     }).catch(function(err){
       document.getElementById('mp-map').innerHTML =
-        '<div class="mp-error">Failed to load Virginia map data: ' + esc(err.message) + '</div>';
+        '<div class="mp-error">Failed to load ' + esc(STATES[STATE.state] || STATE.state) + ' map data: ' + esc(err.message) + '</div>';
     });
+  }
+
+  function syncToggle(checkboxId, layer) {
+    var checked = document.getElementById(checkboxId).checked;
+    if (!layer) return;
+    if (checked && !map.hasLayer(layer)) layer.addTo(map);
+    else if (!checked && map.hasLayer(layer)) map.removeLayer(layer);
   }
 
   function buildCountyPopup(name, stateData) {
@@ -306,12 +351,12 @@
     if (inHere.length) {
       html += '<div style="font-size:0.78rem;color:#475569;">Officials in our roster:</div><ul>';
       inHere.slice(0, 8).forEach(function(c){
-        html += '<li><a href="candidates/va/' + esc(c.slug) + '.html">' + esc(c.name) + '</a> — ' + esc(c.office || '') + '</li>';
+        html += '<li><a href="candidates/' + esc((c.state||'va').toLowerCase()) + '/' + esc(c.slug) + '.html">' + esc(c.name) + '</a> — ' + esc(c.office || '') + '</li>';
       });
       if (inHere.length > 8) html += '<li>+ ' + (inHere.length - 8) + ' more…</li>';
       html += '</ul>';
     } else {
-      html += '<div style="font-size:0.8rem;color:#475569;">No officials specifically tagged to this jurisdiction in our scorecard yet. Most VA county-level officials are not yet enriched.</div>';
+      html += '<div style="font-size:0.8rem;color:#475569;">No officials specifically tagged to this jurisdiction in our scorecard yet.</div>';
     }
     return html;
   }
@@ -321,10 +366,10 @@
     if (stateData && Array.isArray(stateData.candidates)) {
       rep = stateData.candidates.find(function(c){ return c.level === 'federal' && String(c.district) === String(num); });
     }
-    var html = '<h4>U.S. House — Virginia District ' + esc(num) + '</h4>';
+    var html = '<h4>U.S. House — ' + esc(STATE.state) + ' District ' + esc(num) + '</h4>';
     if (rep) {
       html += '<div style="font-size:0.85rem;">' +
-        '<a href="candidates/va/' + esc(rep.slug) + '.html"><strong>' + esc(rep.name) + '</strong></a>' +
+        '<a href="candidates/' + esc(STATE.state.toLowerCase()) + '/' + esc(rep.slug) + '.html"><strong>' + esc(rep.name) + '</strong></a>' +
         ' (' + esc(rep.party || '') + ')' +
         '</div>';
     } else {
@@ -334,19 +379,48 @@
     return html;
   }
 
-  function buildFocusPicker(countiesGeo, cdsGeo) {
+  function buildCityPopup(name, county, stateData) {
+    var inHere = [];
+    if (stateData && Array.isArray(stateData.candidates)) {
+      stateData.candidates.forEach(function(c){
+        var j = (c.jurisdiction || '').toLowerCase();
+        if (j.indexOf(('city of ' + name).toLowerCase()) !== -1
+            || j.indexOf(name.toLowerCase()) !== -1) inHere.push(c);
+      });
+    }
+    var html = '<h4>' + esc(name) + (county ? '  <span style="color:#64748b;font-weight:400;">(' + esc(county) + ' County)</span>' : '') + '</h4>';
+    if (inHere.length) {
+      html += '<div style="font-size:0.78rem;color:#475569;">Officials in our roster:</div><ul>';
+      inHere.slice(0, 10).forEach(function(c){
+        html += '<li><a href="candidates/' + esc((c.state||STATE.state).toLowerCase()) + '/' + esc(c.slug) + '.html">' + esc(c.name) + '</a> — ' + esc(c.office || '') + '</li>';
+      });
+      if (inHere.length > 10) html += '<li>+ ' + (inHere.length - 10) + ' more…</li>';
+      html += '</ul>';
+    } else {
+      html += '<div style="font-size:0.8rem;color:#475569;">No officials specifically pinned to this city in our scorecard yet.</div>';
+    }
+    return html;
+  }
+
+  function buildFocusPicker(countiesGeo, cdsGeo, citiesGeo) {
     var sel = document.getElementById('mpFocus');
     var counties = (countiesGeo.features || []).map(function(f){ return (f.properties && (f.properties.NAME || f.properties.name)) || ''; }).filter(Boolean).sort();
     var cds = (cdsGeo.features || []).map(function(f){
       var n = ((f.properties && (f.properties.NAME || f.properties.CD)) || '').toString().replace(/^0+/, '');
       return n;
     }).filter(Boolean).sort(function(a,b){ return Number(a) - Number(b); });
-    var html = '<option value="">— pick a county / CD —</option>';
+    var cities = (citiesGeo.features || []).map(function(f){ return (f.properties && f.properties.name) || ''; }).filter(Boolean).sort();
+    var html = '<option value="">— pick a county / CD / city —</option>';
     html += '<optgroup label="U.S. House districts">';
-    cds.forEach(function(n){ html += '<option value="cd:' + n + '">VA-' + n + '</option>'; });
+    cds.forEach(function(n){ html += '<option value="cd:' + n + '">' + STATE.state + '-' + n + '</option>'; });
     html += '</optgroup>';
-    html += '<optgroup label="Counties &amp; Cities">';
-    counties.forEach(function(n){ html += '<option value="county:' + n + '">' + esc(n) + '</option>'; });
+    if (cities.length) {
+      html += '<optgroup label="Cities (zoomable)">';
+      cities.forEach(function(n){ html += '<option value="city:' + esc(n) + '">' + esc(n) + '</option>'; });
+      html += '</optgroup>';
+    }
+    html += '<optgroup label="Counties &amp; Independent cities">';
+    counties.forEach(function(n){ html += '<option value="county:' + esc(n) + '">' + esc(n) + '</option>'; });
     html += '</optgroup>';
     sel.innerHTML = html;
     sel.addEventListener('change', function(){
@@ -354,17 +428,35 @@
     });
   }
 
-  // Holds the current highlighted layer so we can revert it.
+  // Tracks the currently highlighted vector layer so we can revert it.
   var HIGHLIGHTED = null;
   function focusFeature(spec) {
     var parts = spec.split(':');
     var kind = parts[0], key = parts.slice(1).join(':');
+
     if (HIGHLIGHTED) {
       try {
         if (HIGHLIGHTED._origStyle) HIGHLIGHTED.setStyle(HIGHLIGHTED._origStyle);
       } catch(e){}
       HIGHLIGHTED = null;
     }
+
+    if (kind === 'city') {
+      // City focus = fly-to + open the dot's popup.
+      var matched = null;
+      STATE.layers.cityDots.eachLayer(function(layer){
+        var feat = layer.feature || (layer.options && layer.options) || {};
+        var name = (layer._tooltip && layer._tooltip._content || '').replace(/ \(city\)$/, '');
+        if (name.toLowerCase() === key.toLowerCase()) matched = layer;
+      });
+      if (matched) {
+        var ll = matched.getLatLng();
+        map.flyTo([ll.lat, ll.lng], 11, { duration: 0.8 });
+        matched.openPopup();
+      }
+      return;
+    }
+
     var sourceLayer = kind === 'cd' ? STATE.layers.cds : STATE.layers.counties;
     if (!sourceLayer) return;
     sourceLayer.eachLayer(function(layer){
@@ -388,10 +480,65 @@
     });
   }
 
+  // Boot
+  function init() {
+    var qs = new URLSearchParams(window.location.search);
+    var st = (qs.get('st') || '').toUpperCase();
+    if (!STATES[st]) {
+      // Detect from ?slug=
+      var slug = qs.get('slug') || '';
+      if (slug && /^[a-z]/.test(slug)) {
+        // Heuristic: scorecard JSONs are per-state, we'd need to load them
+        // to discover. For deep-links from VA candidate profiles we used
+        // /map.html?slug=... and assumed VA. Keep that default.
+        st = 'VA';
+      } else {
+        st = 'VA';
+      }
+    }
+    document.getElementById('mpState').value = st;
+    document.getElementById('mpStateName').textContent = STATES[st] || st;
+    document.title = (STATES[st] || st) + ' — RESOLUTE Citizen Maps';
+    buildMap(st);
+  }
+
+  document.getElementById('mpState').addEventListener('change', function(e){
+    var st = e.target.value;
+    if (!STATES[st]) return;
+    try {
+      var url = new URL(window.location);
+      url.searchParams.set('st', st);
+      window.history.replaceState({}, '', url);
+    } catch(e){}
+    document.getElementById('mpStateName').textContent = STATES[st];
+    document.title = STATES[st] + ' — RESOLUTE Citizen Maps';
+    buildMap(st);
+  });
+
+  // Layer toggles — wire once at init since the map rebuilds on state switch.
+  document.getElementById('mpChkCounties').addEventListener('change', function(e){
+    if (!STATE.layers.counties) return;
+    if (e.target.checked) STATE.layers.counties.addTo(map);
+    else map.removeLayer(STATE.layers.counties);
+    document.getElementById('mpTogCounties').classList.toggle('on', e.target.checked);
+  });
+  document.getElementById('mpChkCDs').addEventListener('change', function(e){
+    if (!STATE.layers.cds) return;
+    if (e.target.checked) STATE.layers.cds.addTo(map);
+    else map.removeLayer(STATE.layers.cds);
+    document.getElementById('mpTogCDs').classList.toggle('on', e.target.checked);
+  });
+  document.getElementById('mpChkCityDots').addEventListener('change', function(e){
+    if (!STATE.layers.cityDots) return;
+    if (e.target.checked) STATE.layers.cityDots.addTo(map);
+    else map.removeLayer(STATE.layers.cityDots);
+    document.getElementById('mpTogCityDots').classList.toggle('on', e.target.checked);
+  });
+
   if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', buildMap);
+    document.addEventListener('DOMContentLoaded', init);
   } else {
-    buildMap();
+    init();
   }
 })();
 </script>

@@ -197,7 +197,7 @@
   };
 
   // Detail-view targets — states with their own /map.html page treatment.
-  var DETAIL_AVAILABLE = ['VA'];
+  var DETAIL_AVAILABLE = ['VA', 'FL', 'TX'];
 
   var sel = document.getElementById('stateSel');
   var bodyEl = document.getElementById('shBody');
@@ -274,7 +274,7 @@
           stateLayer.eachLayer(function(layer){ layer.on('click', function(){ window.location.href = 'map.html?st='+code; }); });
           var p = document.getElementById('sh-map-promo');
           p.hidden = false;
-          p.innerHTML = '🗺️ ' + esc(name) + ' has a detailed map with counties, US House districts, and per-rep highlights. <a href="map.html?st=' + code + '">Open the detailed map &rarr;</a>';
+          p.innerHTML = '🗺️ ' + esc(name) + ' has a detailed map with counties, U.S. House districts, city dots, and per-rep highlights. <a href="map.html?st=' + code + '">Open the detailed map &rarr;</a>';
         }
       })
       .catch(function(err){

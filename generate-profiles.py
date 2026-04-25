@@ -456,22 +456,22 @@ def generate_profile(candidate, categories, meta, nav=None):
     else:
         confidence_chip_html = ''
 
-    # Map link: every state with a per-state outline geojson gets a chip.
-    # VA additionally has a detailed /map.html with counties and CDs;
-    # other states route to the simpler /state.html?st=<code> home page
-    # which shows the state shape + a candidate roster summary.
+    # Map link: states with detailed maps (counties + CDs + city dots)
+    # route to /map.html?st=XX&slug=<slug>; everywhere else routes to
+    # /state.html?st=<code> for the simpler state-outline + roster.
     map_link_html = ''
     _state_code_up = (c.get('state') or '').upper()
-    if _state_code_up == 'VA':
+    DETAILED_MAP_STATES = ('VA', 'FL', 'TX')
+    if _state_code_up in DETAILED_MAP_STATES:
+        _state_full = STATE_NAMES_FULL.get(_state_code_up, _state_code_up)
         map_link_html = (
             '<a class="prof-map-link" '
-            f'href="../../map.html?slug={c.get("slug","")}" '
-            'aria-label="View this district / county on the Virginia map">'
-            '🗺️ View on Virginia map'
+            f'href="../../map.html?st={_state_code_up}&slug={c.get("slug","")}" '
+            f'aria-label="View this district / city on the {_state_full} map">'
+            f'🗺️ View on {_state_full} map'
             '</a>'
         )
     elif _state_code_up and _state_code_up not in ('US',):
-        # Two-letter state code → state home page with the shape + roster.
         _state_full = STATE_NAMES_FULL.get(_state_code_up, _state_code_up)
         map_link_html = (
             '<a class="prof-map-link" '

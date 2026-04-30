@@ -499,6 +499,17 @@
     <a href="find-my-reps.html" style="display:inline-block;background:linear-gradient(90deg,#c9a84c,#D4AF37);color:#000;padding:9px 20px;border-radius:8px;font-weight:700;font-size:0.88rem;text-decoration:none;">Open Find My Reps &rarr;</a>
   </div>
 
+  <!-- Sister-site cross-link: Church Directory (RESOLUTE Citizen's faith counterpart). -->
+  <!-- Updated dynamically by updateChurchCallout() when state=VA to surface FXBG + VA links. -->
+  <div id="churchCallout" style="max-width:720px;margin:14px auto 0;padding:16px 20px;background:linear-gradient(135deg,rgba(76,175,80,0.10) 0%,rgba(201,168,76,0.06) 100%);border:1px solid rgba(76,175,80,0.30);border-radius:12px;text-align:center;">
+    <div style="font-size:0.74rem;color:#7edd80;text-transform:uppercase;letter-spacing:1.5px;font-weight:700;margin-bottom:4px;">&#9961;&#65039; Faith Foundation</div>
+    <div style="font-size:1.05rem;color:var(--white);font-weight:700;margin-bottom:4px;">Looking for a <span style="color:#7edd80;">Sound Church</span>?</div>
+    <p style="font-size:0.85rem;color:var(--gray);margin-bottom:10px;line-height:1.5;">Before voting for righteous magistrates, plant your family in a church that preaches God's Word. Same 4-tier rubric, applied theologically.</p>
+    <div id="churchCalloutLinks" style="display:flex;flex-wrap:wrap;gap:8px;justify-content:center;">
+      <a href="https://usmcmin.org/churches.html" target="_blank" rel="noopener" style="display:inline-block;background:rgba(76,175,80,0.15);color:#7edd80;padding:8px 16px;border-radius:8px;font-weight:600;font-size:0.85rem;text-decoration:none;border:1px solid rgba(76,175,80,0.4);">Nationwide Directory &rarr;</a>
+    </div>
+  </div>
+
   <!-- View Toggle -->
   <nav class="view-toggle" aria-label="RESOLUTE Citizen sub-pages">
     <a href="citizen.html" class="active" aria-current="page">Cards</a>
@@ -676,6 +687,7 @@ function switchState(st) {
       DATA.candidates = stateData.candidates || [];
       buildStateDropdown(st);
       buildViewDropdown();
+      updateChurchCallout(st);
       renderCards();
       // Update nav links
       var suffix = '?state=' + st;
@@ -687,6 +699,30 @@ function switchState(st) {
     .catch(function(err) {
       console.error('Switch state error:', err);
     });
+}
+
+// Surface state-matched church-directory links. VA users get Fredericksburg
+// (where the founder ministers + the directory has its deepest enrichment)
+// alongside the statewide and nationwide indexes.
+function updateChurchCallout(st) {
+  var el = document.getElementById('churchCalloutLinks');
+  if (!el) return;
+  var btn = function(href, label, primary) {
+    var bg = primary ? 'rgba(76,175,80,0.22)' : 'rgba(76,175,80,0.10)';
+    var border = primary ? 'rgba(76,175,80,0.55)' : 'rgba(76,175,80,0.35)';
+    return '<a href="' + href + '" target="_blank" rel="noopener" '
+      + 'style="display:inline-block;background:' + bg + ';color:#7edd80;'
+      + 'padding:8px 16px;border-radius:8px;font-weight:600;font-size:0.85rem;'
+      + 'text-decoration:none;border:1px solid ' + border + ';">' + label + '</a>';
+  };
+  if (st === 'VA') {
+    el.innerHTML =
+      btn('https://usmcmin.org/churches-fxbg.html', 'Fredericksburg &rarr;', true) +
+      btn('https://usmcmin.org/churches-virginia.html', 'Virginia &rarr;', false) +
+      btn('https://usmcmin.org/churches.html', 'Nationwide &rarr;', false);
+  } else {
+    el.innerHTML = btn('https://usmcmin.org/churches.html', 'Nationwide Directory &rarr;', true);
+  }
 }
 
 function showLocationModal() {
@@ -787,6 +823,7 @@ fetch('data/index.json')
         buildLegend();
         buildMethodology();
         initSortDropdown();
+        updateChurchCallout(st);
         renderCards();
         if (showModal) showLocationModal();
       });

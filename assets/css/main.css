@@ -12,8 +12,8 @@
   --silver-light: #C5CBD3;
   --navy: #1E3A5F;
   --white: #1A1A1A;
-  --gray: #6B7280;
-  --gray-light: #4B5563;
+  --gray: #4B5563;
+  --gray-light: #374151;
   --border: #D1D5DB;
   --red: #C0392B;
   --nav-bg: rgba(255,255,255,0.96);
@@ -472,9 +472,26 @@ footer {
   font-size: 0.8rem; color: var(--gray);
 }
 .footer-bottom .verse { font-style: italic; max-width: 400px; }
-.social-links { display: flex; gap: 1rem; }
-.social-links a { color: var(--gray); font-size: 1.1rem; transition: color var(--transition); }
-.social-links a:hover { color: var(--gold); }
+.social-links { display: flex; gap: 0.75rem; align-items: center; }
+.social-links a {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 36px; height: 36px;
+  color: var(--gray);
+  border: 1px solid var(--border); border-radius: 50%;
+  transition: color var(--transition), border-color var(--transition), background var(--transition);
+}
+.social-links a:hover { color: var(--gold); border-color: var(--gold); }
+.social-links svg { width: 18px; height: 18px; fill: currentColor; }
+
+/* ── SKIP TO CONTENT (a11y) ── */
+.skip-link {
+  position: absolute; left: -10000px; top: auto; width: 1px; height: 1px; overflow: hidden;
+  background: var(--gold); color: #000; padding: 0.75rem 1.25rem; border-radius: 6px;
+  font-weight: 700; font-size: 0.9rem; text-decoration: none; z-index: 10000;
+}
+.skip-link:focus {
+  position: fixed; left: 1rem; top: 1rem; width: auto; height: auto; overflow: visible;
+}
 
 /* ── PAGE HERO (inner pages) ── */
 .page-hero {

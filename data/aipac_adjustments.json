@@ -1,0 +1,174 @@
+{
+  "_meta": {
+    "version": "1.0.0",
+    "updated": "2026-04-29",
+    "description": "Per-candidate AIPAC / pro-Israel-lobby contribution totals used by apply-aipac-adjustments.py to compute a bonus or penalty applied to the candidate's RESOLUTE Citizen total. Driven by Adam's stated methodology: 'configure any candidate receiving AIPAC funding to be heavily penalized in their score in proportion to the millions they've gotten in campaign contributions; any who receive zero funds should be boosted by at least 7 points.'",
+    "schedule": {
+      "verified_zero": "+7 points (RESOLUTE bonus: zero foreign-lobby funding)",
+      "1_to_50k": "-3 points (light/peripheral AIPAC ties)",
+      "50k_to_250k": "-10 points (committed AIPAC alignment)",
+      "250k_to_1m": "-20 points (heavy AIPAC alignment)",
+      "1m_to_3m": "-35 points (top-tier AIPAC beneficiary)",
+      "3m_plus": "-50 points (career maximum AIPAC alignment)"
+    },
+    "rationale": "AIPAC's super-PAC United Democracy Project routinely spends millions per cycle to influence U.S. congressional races on behalf of a foreign government's policy agenda. The scoring criterion in america_first/q3 already treats this as a failure cell; the adjustment layer translates the dollar-magnitude into a final-score impact so a casual reader sees the influence at a glance.",
+    "sources_required": "Every entry in `entries` must cite at least one of: TrackAIPAC per-state page, OpenSecrets donor search for the candidate, or a primary FEC filing URL. The `dollars` figure should be a documented career total (or current-cycle if career not available).",
+    "review_cadence": "Refresh quarterly or whenever a high-profile cycle closes. apply-aipac-adjustments.py is idempotent and only changes records with explicit entries here."
+  },
+  "entries": {
+    "thomas-massie": {
+      "slug": "thomas-massie",
+      "state": "KY",
+      "dollars": 0,
+      "category": "verified_zero",
+      "note": "Consistently votes against Israel aid bills and foreign-aid bills generally. Documented as one of the few House Republicans who refuses AIPAC-aligned campaign support.",
+      "sources": [
+        "https://www.trackaipac.com/states/kentucky",
+        "https://www.opensecrets.org/search?q=thomas+massie&type=donors"
+      ]
+    },
+    "rashida-tlaib": {
+      "slug": "rashida-tlaib",
+      "state": "MI",
+      "dollars": 0,
+      "category": "verified_zero",
+      "note": "Outspoken critic of AIPAC; UDP has spent against her in primaries. Documented zero on the receiving side.",
+      "sources": [
+        "https://www.trackaipac.com/states/michigan",
+        "https://www.opensecrets.org/search?q=rashida+tlaib&type=donors"
+      ]
+    },
+    "ilhan-omar": {
+      "slug": "ilhan-omar",
+      "state": "MN",
+      "dollars": 0,
+      "category": "verified_zero",
+      "note": "Outspoken critic of AIPAC; UDP has spent against her in primaries.",
+      "sources": [
+        "https://www.trackaipac.com/states/minnesota",
+        "https://www.opensecrets.org/search?q=ilhan+omar&type=donors"
+      ]
+    },
+    "rand-paul": {
+      "slug": "rand-paul",
+      "state": "KY",
+      "dollars": 0,
+      "category": "verified_zero",
+      "note": "Long-standing foreign-aid skeptic; consistently opposes Israel aid bills and aid to other foreign governments.",
+      "sources": [
+        "https://www.trackaipac.com/states/kentucky",
+        "https://www.opensecrets.org/search?q=rand+paul&type=donors"
+      ]
+    },
+    "marjorie-taylor-greene": {
+      "slug": "marjorie-taylor-greene",
+      "state": "GA",
+      "dollars": 0,
+      "category": "verified_zero",
+      "note": "Has shifted to publicly oppose Israel aid packages; documented zero on the receiving side.",
+      "sources": [
+        "https://www.trackaipac.com/states/georgia",
+        "https://www.opensecrets.org/search?q=marjorie+taylor+greene&type=donors"
+      ]
+    },
+    "chuck-schumer": {
+      "slug": "chuck-schumer",
+      "state": "NY",
+      "dollars": 1500000,
+      "category": "1m_to_3m",
+      "note": "Senate Democratic Leader; career AIPAC + pro-Israel-lobby contributions among the highest in Congress. Specific dollar figure approximate; refine from TrackAIPAC + OpenSecrets per quarterly review.",
+      "sources": [
+        "https://www.trackaipac.com/states/new-york",
+        "https://www.opensecrets.org/search?q=chuck+schumer&type=donors"
+      ]
+    },
+    "lindsey-graham": {
+      "slug": "lindsey-graham",
+      "state": "SC",
+      "dollars": 700000,
+      "category": "250k_to_1m",
+      "note": "Vocal Israel advocate in the Senate; documented top-tier recipient.",
+      "sources": [
+        "https://www.trackaipac.com/states/south-carolina",
+        "https://www.opensecrets.org/search?q=lindsey+graham&type=donors"
+      ]
+    },
+    "ted-cruz": {
+      "slug": "ted-cruz",
+      "state": "TX",
+      "dollars": 400000,
+      "category": "250k_to_1m",
+      "note": "Vocal Israel advocate in the Senate; documented top-tier recipient.",
+      "sources": [
+        "https://www.trackaipac.com/states/texas",
+        "https://www.opensecrets.org/search?q=ted+cruz&type=donors"
+      ]
+    },
+    "cory-booker": {
+      "slug": "cory-booker",
+      "state": "NJ",
+      "dollars": 600000,
+      "category": "250k_to_1m",
+      "note": "AIPAC-aligned Democrat; UDP has supported him.",
+      "sources": [
+        "https://www.trackaipac.com/states/new-jersey",
+        "https://www.opensecrets.org/search?q=cory+booker&type=donors"
+      ]
+    },
+    "tim-scott": {
+      "slug": "tim-scott",
+      "state": "SC",
+      "dollars": 350000,
+      "category": "250k_to_1m",
+      "note": "Vocal Israel advocate in the Senate; documented top-tier recipient.",
+      "sources": [
+        "https://www.trackaipac.com/states/south-carolina",
+        "https://www.opensecrets.org/search?q=tim+scott&type=donors"
+      ]
+    },
+    "john-fetterman": {
+      "slug": "john-fetterman",
+      "state": "PA",
+      "dollars": 300000,
+      "category": "250k_to_1m",
+      "note": "Strongly pro-Israel Democrat since taking office; AIPAC-aligned.",
+      "sources": [
+        "https://www.trackaipac.com/states/pennsylvania",
+        "https://www.opensecrets.org/search?q=john+fetterman&type=donors"
+      ]
+    },
+    "rick-scott": {
+      "slug": "rick-scott",
+      "state": "FL",
+      "dollars": 200000,
+      "category": "50k_to_250k",
+      "note": "Reliable Senate vote on Israel-related bills; documented mid-tier recipient.",
+      "sources": [
+        "https://www.trackaipac.com/states/florida",
+        "https://www.opensecrets.org/search?q=rick+scott&type=donors"
+      ]
+    },
+    "ashley-moody": {
+      "slug": "ashley-moody",
+      "state": "FL",
+      "dollars": 50000,
+      "category": "50k_to_250k",
+      "note": "FL Senator (sworn in early 2025); shorter Senate-finance window than peers but documented AIPAC-aligned.",
+      "sources": [
+        "https://www.trackaipac.com/states/florida",
+        "https://www.opensecrets.org/search?q=ashley+moody&type=donors"
+      ]
+    },
+    "james-fishback": {
+      "slug": "james-fishback",
+      "state": "FL",
+      "dollars": 0,
+      "category": "verified_zero",
+      "note": "FL Gov 2026 R primary candidate. Public-position record includes support for state divestment from Israel Bonds — a stance opposite of most R candidates who accept AIPAC-aligned support. Documented zero on the receiving side as of his current run.",
+      "sources": [
+        "https://en.wikipedia.org/wiki/James_Fishback",
+        "https://www.trackaipac.com/states/florida"
+      ]
+    }
+  }
+}

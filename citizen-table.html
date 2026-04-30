@@ -146,6 +146,19 @@
     .s0 { color: #666; }
     .s-null { color: #444; font-size: 0.75rem; }
 
+    .card-adj {
+      display: inline-block;
+      font-size: 0.62rem;
+      font-weight: 800;
+      padding: 1px 5px;
+      border-radius: 6px;
+      margin: 0 4px;
+      letter-spacing: 0.4px;
+      vertical-align: middle;
+    }
+    .card-adj-plus  { background: rgba(74,222,128,0.18);  color: #4ade80; }
+    .card-adj-minus { background: rgba(248,113,113,0.20); color: #f87171; }
+
     /* Total score */
     .total-high { color: #4CAF50; font-weight: 700; font-size: 1rem; }
     .total-mid { color: #FFC107; font-weight: 700; font-size: 1rem; }
@@ -454,13 +467,16 @@ function calcCatScore(answers) {
   return { score: s * POINTS_PER_TRUE, raw: s, answered: a };
 }
 
-function calcTotal(scores) {
+function calcTotal(scores, profile) {
   var t = 0, a = 0;
   DATA.categories.forEach(function(cat) {
     var cs = calcCatScore(scores[cat.id]);
     t += cs.score; a += cs.answered;
   });
-  return { score: t, answered: a };
+  var adj = (profile && profile.score_adjustments) || {};
+  var adjTotal = 0;
+  Object.keys(adj).forEach(function(k){ adjTotal += (adj[k] && adj[k].delta) || 0; });
+  return { base: t, score: t + adjTotal, adjustment: adjTotal, answered: a };
 }
 
 function scoreClass(score, answered) {
@@ -532,12 +548,12 @@ function renderTables() {
   Object.keys(groups).forEach(function(j) {
     groups[j].sort(function(a, b) {
       var nameTie = a.name.localeCompare(b.name);
-      if (sort === 'score-desc') return (calcTotal(b.scores).score - calcTotal(a.scores).score) || nameTie;
-      if (sort === 'score-asc')  return (calcTotal(a.scores).score - calcTotal(b.scores).score) || nameTie;
+      if (sort === 'score-desc') return (calcTotal(b.scores, b.profile).score - calcTotal(a.scores, a.profile).score) || nameTie;
+      if (sort === 'score-asc')  return (calcTotal(a.scores, a.profile).score - calcTotal(b.scores, b.profile).score) || nameTie;
       if (sort === 'district')   return ((a.district || 0) - (b.district || 0)) || nameTie;
       if (sort === 'party-score') {
         var pa = PARTY_RANK[a.party] || 4, pb = PARTY_RANK[b.party] || 4;
-        return (pa - pb) || (calcTotal(b.scores).score - calcTotal(a.scores).score) || nameTie;
+        return (pa - pb) || (calcTotal(b.scores, b.profile).score - calcTotal(a.scores, a.profile).score) || nameTie;
       }
       return nameTie; // 'name'
     });
@@ -574,13 +590,15 @@ function renderTables() {
     html += '</tr></thead><tbody>';
 
     candidates.forEach(function(c) {
-      var total = calcTotal(c.scores);
+      var total = calcTotal(c.scores, c.profile);
       var tc = totalClass(total.score, total.answered);
+      var adjBadge = total.adjustment ?
+        ' <span class="card-adj ' + (total.adjustment>0?'card-adj-plus':'card-adj-minus') + '" title="Includes ' + (total.adjustment>0?'+':'') + total.adjustment + ' foreign-influence adjustment (base ' + total.base + ')">' + (total.adjustment>0?'+':'') + total.adjustment + '</span>' : '';
 
       html += '<tr>';
       html += '<th scope="row" class="cell-cand"><a class="cand-link" href="candidates/' + esc((c.state || 'va').toLowerCase()) + '/' + esc(c.slug) + '.html">' + esc(c.name) + '</a><br><span style="font-size:0.7rem;color:var(--gray);font-weight:400;">' + esc(c.office) + '</span></th>';
       html += '<td aria-label="Party: ' + esc(c.party || 'Unknown') + '">' + partyHtml(c.party) + '</td>';
-      html += '<td aria-label="Total score ' + total.score + ' of ' + MAX_TOTAL + '"><span class="' + tc + '">' + total.score + '/' + MAX_TOTAL + '</span></td>';
+      html += '<td aria-label="Total score ' + total.score + ' of ' + MAX_TOTAL + (total.adjustment ? ', includes ' + (total.adjustment>0?'+':'') + total.adjustment + ' adjustment' : '') + '"><span class="' + tc + '">' + total.score + adjBadge + '/' + MAX_TOTAL + '</span></td>';
 
       DATA.categories.forEach(function(cat) {
         var cs = calcCatScore(c.scores[cat.id]);

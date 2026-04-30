@@ -407,9 +407,90 @@ def compute_nav_groups(candidates, categories):
 def generate_profile(candidate, categories, meta, nav=None):
     c = candidate
     total = calc_total(c['scores'], categories)
-    total_color = score_color(total['score'], MAX_TOTAL)
-    bar_width = round((total['score'] / MAX_TOTAL) * 100) if MAX_TOTAL > 0 else 0
     profile = c.get('profile', {}) or {}
+
+    # Foreign-influence + dark-money adjustments. Sums delta across every
+    # keyed source under profile.score_adjustments (aipac, soros, etc.)
+    # and applies it to the base 70-point category-sum total. Schedule
+    # is documented in scorecard.json.meta.aipac_adjustment etc.
+    SOURCE_LABELS_ADJ = {
+        'aipac': 'AIPAC / pro-Israel-lobby contributions',
+        'soros': 'Open Society / Soros donor network',
+        'foreign': 'Other foreign-linked PACs',
+    }
+    SOURCE_DESCRIPTORS_ADJ = {
+        'aipac': 'AIPAC operates a super-PAC (United Democracy Project) that spends millions per cycle on US races on behalf of a foreign government\'s policy agenda. RESOLUTE Citizen treats documented contributions as a failure on america_first/q3.',
+        'soros': 'The Open Society Foundations and the Democracy PAC vehicles tied to George Soros / Alex Soros direct hundreds of millions toward progressive prosecutors, judges, and ballot measures. RESOLUTE Citizen treats documented contributions as foreign-linked dark-money funding hostile to the historically orthodox Christian moral order.',
+        'foreign': 'Generic foreign-linked PAC contributions outside the AIPAC + Soros networks.',
+    }
+
+    def render_adjustments_block(lines, base, adjusted):
+        if not lines:
+            return ''
+        rows = []
+        for key, delta, dollars, bracket, note, sources in lines:
+            label = SOURCE_LABELS_ADJ.get(key, key.upper())
+            descr = SOURCE_DESCRIPTORS_ADJ.get(key, '')
+            sign = '+' if delta > 0 else ''
+            adj_class = 'prof-adj-plus' if delta > 0 else 'prof-adj-minus'
+            dollar_str = ('$0 (verified zero)' if (dollars is None or dollars == 0)
+                          else f'${int(dollars):,} documented')
+            src_html = ''
+            if sources:
+                src_links = ' · '.join(
+                    f'<a href="{u}" target="_blank" rel="noopener">{u.replace("https://","").replace("http://","")[:60]}</a>'
+                    for u in sources[:3])
+                src_html = f'<div class="prof-adj-sources">Sources: {src_links}</div>'
+            rows.append(
+                f'<li class="prof-adj-row {adj_class}">'
+                f'<div class="prof-adj-row-head">'
+                f'<span class="prof-adj-key">{label}</span>'
+                f'<span class="prof-adj-delta">{sign}{delta}</span>'
+                f'</div>'
+                f'<div class="prof-adj-meta">{dollar_str}'
+                + (f' · bracket <code>{bracket}</code>' if bracket else '')
+                + '</div>'
+                + (f'<div class="prof-adj-note">{note}</div>' if note else '')
+                + (f'<div class="prof-adj-descriptor">{descr}</div>' if descr else '')
+                + src_html
+                + '</li>'
+            )
+        return (
+            '<div class="prof-adjustments" role="note" aria-label="Score adjustments">'
+            '<h3>Score adjustments</h3>'
+            '<p class="prof-adj-lead">RESOLUTE Citizen applies score adjustments for documented '
+            'foreign-influence campaign funding. Verified zero on a tracked source earns a bonus; '
+            'documented contributions earn a penalty in proportion to dollar magnitude. The '
+            'methodology is published in '
+            '<a href="https://github.com/adamljohns/usmcmin-com/blob/main/data/aipac_adjustments.json" target="_blank" rel="noopener"><code>data/aipac_adjustments.json</code></a> '
+            'and equivalent files for each tracked donor network.</p>'
+            f'<div class="prof-adj-summary">Base score <strong>{base}/{MAX_TOTAL}</strong> '
+            f'<span class="prof-adj-arrow">→</span> '
+            f'Adjusted <strong>{adjusted}/{MAX_TOTAL}</strong></div>'
+            '<ul class="prof-adj-list">' + ''.join(rows) + '</ul>'
+            '</div>'
+        )
+
+    adjustments = (profile.get('score_adjustments') or {})
+    adj_total = 0
+    adj_lines = []  # list of (key, delta, dollars, bracket, note, sources)
+    for key, info in adjustments.items():
+        d = int(info.get('delta') or 0)
+        adj_total += d
+        adj_lines.append((
+            key,
+            d,
+            info.get('dollars'),
+            info.get('bracket'),
+            info.get('note', ''),
+            list(info.get('sources') or []),
+        ))
+    adjusted_score = total['score'] + adj_total
+    total['adjusted_score'] = adjusted_score
+    total['adjustment'] = adj_total
+
+    total_color = score_color(adjusted_score, MAX_TOTAL)
+    bar_width = round((max(0, min(MAX_TOTAL, adjusted_score)) / MAX_TOTAL) * 100) if MAX_TOTAL > 0 else 0
 
     # Data-freshness: latest verified_date across this candidate's claims
     # (if any are verified), else fall back to scorecard-level last_updated.
@@ -1844,6 +1925,99 @@ def generate_profile(candidate, categories, meta, nav=None):
       color: var(--accent, #e3b662);
       font-weight: 600;
     }}
+
+    /* Score adjustment summary in the total card */
+    .prof-total-detail {{
+      font-size: 0.78rem;
+      color: var(--gray);
+      margin-top: 4px;
+      letter-spacing: 0.2px;
+    }}
+    .prof-total-adj {{
+      display: inline-block;
+      padding: 1px 7px;
+      border-radius: 8px;
+      font-weight: 800;
+      letter-spacing: 0.4px;
+      margin: 0 2px;
+    }}
+    .prof-total-adj-plus {{ background: rgba(74,222,128,0.15); color: #4ade80; }}
+    .prof-total-adj-minus {{ background: rgba(248,113,113,0.18); color: #f87171; }}
+
+    /* Standalone "Score adjustments" card */
+    .prof-adjustments {{
+      margin-top: 16px;
+      padding: 16px 20px;
+      background: rgba(255,255,255,0.02);
+      border: 1px solid var(--border);
+      border-left: 4px solid var(--accent, #e3b662);
+      border-radius: 6px;
+    }}
+    .prof-adjustments h3 {{
+      color: var(--accent, #e3b662);
+      font-size: 0.95rem;
+      margin-bottom: 8px;
+      letter-spacing: 0.4px;
+    }}
+    .prof-adj-lead {{
+      color: var(--gray);
+      font-size: 0.82rem;
+      line-height: 1.6;
+      margin-bottom: 10px;
+    }}
+    .prof-adj-lead a {{ color: var(--accent, #e3b662); }}
+    .prof-adj-summary {{
+      font-size: 0.92rem;
+      color: var(--white);
+      padding: 8px 12px;
+      background: rgba(201,168,76,0.06);
+      border-radius: 6px;
+      margin-bottom: 12px;
+    }}
+    .prof-adj-summary strong {{ color: var(--accent, #e3b662); }}
+    .prof-adj-arrow {{
+      display: inline-block; margin: 0 6px;
+      color: var(--gray);
+    }}
+    .prof-adj-list {{ list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 10px; }}
+    .prof-adj-row {{
+      padding: 12px 14px;
+      background: rgba(255,255,255,0.025);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+    }}
+    .prof-adj-plus {{ border-left: 3px solid #4ade80; }}
+    .prof-adj-minus {{ border-left: 3px solid #f87171; }}
+    .prof-adj-row-head {{
+      display: flex; justify-content: space-between; align-items: baseline;
+      gap: 12px; flex-wrap: wrap;
+    }}
+    .prof-adj-key {{
+      color: var(--white); font-weight: 700; font-size: 0.92rem;
+    }}
+    .prof-adj-delta {{
+      font-family: "SF Mono", ui-monospace, monospace;
+      font-size: 1rem; font-weight: 800;
+      padding: 1px 10px; border-radius: 8px;
+    }}
+    .prof-adj-plus .prof-adj-delta {{ background: rgba(74,222,128,0.18); color: #4ade80; }}
+    .prof-adj-minus .prof-adj-delta {{ background: rgba(248,113,113,0.20); color: #f87171; }}
+    .prof-adj-meta {{
+      color: var(--gray); font-size: 0.78rem; margin-top: 4px;
+    }}
+    .prof-adj-meta code {{
+      color: var(--accent); font-family: "SF Mono", ui-monospace, monospace;
+    }}
+    .prof-adj-note {{
+      color: var(--white); font-size: 0.82rem; margin-top: 6px; line-height: 1.55;
+    }}
+    .prof-adj-descriptor {{
+      color: var(--gray); font-size: 0.74rem; margin-top: 4px; line-height: 1.55; font-style: italic;
+    }}
+    .prof-adj-sources {{
+      margin-top: 6px; font-size: 0.72rem; color: var(--gray);
+    }}
+    .prof-adj-sources a {{ color: var(--accent, #e3b662); }}
     .prof-total-label {{
       font-size: 0.82rem;
       color: var(--gray);
@@ -2138,15 +2312,22 @@ def generate_profile(candidate, categories, meta, nav=None):
     <div>
       <div class="prof-total-label">RESOLUTE Citizen Score</div>
       <div>
-        <span class="prof-total-score" style="color:{total_color};">{total['score']}</span>
+        <span class="prof-total-score" style="color:{total_color};">{adjusted_score}</span>
         <span class="prof-total-max">/ {MAX_TOTAL}</span>
       </div>
+      {f'''<div class="prof-total-detail">Base {total['score']}/{MAX_TOTAL}
+        <span class="prof-total-adj prof-total-adj-{('plus' if adj_total > 0 else 'minus')}">
+          {('+' if adj_total > 0 else '')}{adj_total}
+        </span>
+        adjustment</div>''' if adj_total != 0 else ''}
       {f'<div class="prof-freshness" title="Data freshness source: {freshness_source}">Last verified: <time datetime="{freshness_date}">{freshness_date}</time>{" · from claim evidence" if freshness_source == "claim" else " · scorecard-level timestamp"}</div>' if freshness_date else ''}
     </div>
     <div class="prof-total-bar">
       <div class="prof-total-fill" style="width:{bar_width}%;background:{total_color};"></div>
     </div>
   </div>
+
+  {render_adjustments_block(adj_lines, total['score'], adjusted_score) if adj_lines else ''}
 
   {contact_html}
 

@@ -38,7 +38,7 @@ def generate_issue_page(issue):
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>{issue['title']} — RESOLUTE Citizen | U.S.M.C. Ministries</title>
   <meta name="description" content="{issue.get('summary', '')}">
-  <link rel="stylesheet" href="../assets/css/main.css">
+  <link rel="stylesheet" href="../assets/css/main.min.css">
   <link rel="icon" href="../assets/img/favicon.png" type="image/png">
   <style>
     .issue-container {{ max-width: 900px; margin: 0 auto; padding: 20px; }}

@@ -2,8 +2,13 @@
 """Generate individual candidate profile pages from scorecard.json"""
 import json
 import os
+import re
 
 import source_bias as sb
+
+# Resolve once at import — used to check for sibling .webp photos at
+# generation time (so we only emit <picture> when a WebP actually exists).
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
 POINTS_PER_TRUE = 2
 MAX_PER_TOPIC = 10
@@ -660,7 +665,22 @@ def generate_profile(candidate, categories, meta, nav=None):
     # ---- Photo / initials badge ----
     photo_path = c.get('photo') or ''
     if photo_path:
-        photo_html = f'<img class="prof-photo" src="../../{photo_path}" alt="{c["name"]}" loading="lazy">'
+        # If a sibling .webp exists (built by build-webp.py), emit a
+        # <picture> element so WebP-supporting browsers (>96% of users)
+        # download the smaller WebP. JPEG remains the fallback for the
+        # rare browser that can't handle WebP.
+        webp_rel = re.sub(r'\.jpg$', '.webp', photo_path, flags=re.IGNORECASE)
+        has_webp = (webp_rel != photo_path and
+                    os.path.exists(os.path.join(BASE_DIR, webp_rel)))
+        if has_webp:
+            photo_html = (
+                f'<picture>'
+                f'<source type="image/webp" srcset="../../{webp_rel}">'
+                f'<img class="prof-photo" src="../../{photo_path}" alt="{c["name"]}" loading="lazy">'
+                f'</picture>'
+            )
+        else:
+            photo_html = f'<img class="prof-photo" src="../../{photo_path}" alt="{c["name"]}" loading="lazy">'
     else:
         badge_bg, badge_fg = color_for_slug(c.get('slug', ''))
         badge_text = initials(c['name'])
@@ -1143,9 +1163,9 @@ def generate_profile(candidate, categories, meta, nav=None):
   <!-- JSON-LD Person schema for search engines -->
   <script type="application/ld+json">{json_ld}</script>
 
-  <link rel="stylesheet" href="../../assets/css/main.css">
+  <link rel="stylesheet" href="../../assets/css/main.min.css">
   <link rel="icon" href="../../assets/img/favicon.png" type="image/png">
-  <link rel="stylesheet" href="../../assets/css/profile.css">
+  <link rel="stylesheet" href="../../assets/css/profile.min.css">
 </head>
 <body>
 
@@ -1391,7 +1411,7 @@ def generate_profile(candidate, categories, meta, nav=None):
   <p style="margin-top:6px;font-size:0.72rem;">Each True = +2 points &middot; Max {MAX_TOTAL} &middot; Primary sources only &middot; <a href="https://usmcmin.org/bible.html?ref=Proverbs+29:2">Proverbs 29:2</a></p>
   <p style="margin-top:6px;font-size:0.7rem;"><span id="pageViews"></span></p>
 </footer>
-<script src="../../assets/js/profile.js" defer></script>
+<script src="../../assets/js/profile.min.js" defer></script>
 <script data-goatcounter="https://usmcmin.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
 <noscript><img src="https://usmcmin.goatcounter.com/count?p=/candidates/{c.get('state','').lower()}/{c.get('slug','')}" alt=""></noscript>
 </body>

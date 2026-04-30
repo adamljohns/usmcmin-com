@@ -115,6 +115,8 @@ python3 -m http.server 8888    # then open http://localhost:8888/citizen.html
 |--------|---------|
 | `optimize-photos.py` | Resample + recompress oversized photos. Handles both JPEG and PNG-saved-as-JPG. Default: photos >100 KB → 400 px max width, quality 75. **Run after every new photo fetch.** |
 | `audit-photos.py` | Verifies every photo is a valid JPEG/PNG + every scorecard reference points to a real file. Auto-deletes bad downloads. |
+| `build-webp.py` | Converts every assets/photos/{state}/{slug}.jpg to a sibling .webp via ImageMagick. Profile template emits `<picture>` with both — modern browsers (>96%) get the smaller WebP, older ones fall back to JPEG. Skips already-converted files. **Run after `optimize-photos.py`.** |
+| `build-minify.py` | Minifies `assets/css/profile.css` → `profile.min.css`, `assets/css/main.css` → `main.min.css`, `assets/js/profile.js` → `profile.min.js`. CSS: ~20% reduction. JS: ~26% reduction. **Run after editing the source CSS or JS.** |
 
 ### 📝 Claims / scoring infrastructure
 
@@ -173,6 +175,25 @@ the profile template (~30 KB CSS + ~8 KB JS × 8,500 profiles = ~330 MB
 duplication). Extracted on 2026-04-29. Edit them directly going forward.
 The profile template (`generate-profiles.py`) just emits a `<link>` and
 `<script src>` to them.
+
+**The minified `.min.css` and `.min.js` siblings are what visitors
+actually load.** Run `python3 build-minify.py` after editing the source
+CSS or JS. The HTML pages (and the profile template) all reference the
+`.min` versions; the unminified versions stay in the repo for
+diffability.
+
+**Service worker**: `/sw.js` is registered from citizen.html,
+citizen-table.html, citizen-issues.html, and find-my-reps.html. It
+pre-caches the shell + critical CSS/JS/JSON on install, then runs
+network-first for HTML and cache-first for static assets. Bump
+`SW_VERSION` in `sw.js` when shipping a major shell change so existing
+visitors pick up the new shell on their next nav.
+
+**WebP photos**: Every `.jpg` in `assets/photos/` has a sibling
+`.webp` (built by `build-webp.py`). The profile template emits
+`<picture>` with both, so WebP-capable browsers get a 58% smaller
+download and older browsers transparently fall back to JPEG. Run
+`build-webp.py` after fetching new photos.
 
 ---
 

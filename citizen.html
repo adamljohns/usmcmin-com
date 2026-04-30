@@ -20,7 +20,7 @@
   <meta name="twitter:description" content="7-category Christian voter scorecard for 7,800+ elected officials. Photos, scores, sources, contact info.">
   <meta name="twitter:image" content="https://usmcmin.com/assets/og/og-citizen.jpg">
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="stylesheet" href="assets/css/main.css">
+  <link rel="stylesheet" href="assets/css/main.min.css">
   <link rel="icon" href="assets/img/favicon.png" type="image/png">
   <style>
     .sc-container { max-width: 1200px; margin: 0 auto; padding: 20px; }
@@ -1111,5 +1111,14 @@ function renderCards() {
 
 <script data-goatcounter="https://usmcmin.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
 <script src="assets/js/main.js" defer></script>
+<script>
+// Register the service worker for offline support + cache-first repeat visits.
+// Registered late so it doesn't compete with first-page rendering.
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', function () {
+    navigator.serviceWorker.register('/sw.js').catch(function () {});
+  });
+}
+</script>
 </body>
 </html>

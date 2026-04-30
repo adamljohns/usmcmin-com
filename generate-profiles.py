@@ -589,6 +589,33 @@ def generate_profile(candidate, categories, meta, nav=None):
             f'aria-hidden="true">{badge_text}</div>'
         )
 
+    # ---- JSON-LD Person schema for search engines / AI crawlers ----
+    # Built in Python rather than the template so the conditional
+    # `sameAs` field is clean. json.dumps quotes correctly + escapes.
+    import json as _json
+    _ld = {
+        '@context': 'https://schema.org',
+        '@type': 'Person',
+        'name': c['name'],
+        'jobTitle': c.get('office', ''),
+        'affiliation': {'@type': 'Organization', 'name': c.get('jurisdiction', '')},
+        'url': f"https://usmcmin.com/candidates/{state_code.lower()}/{c.get('slug','')}.html",
+    }
+    if photo_path:
+        _ld['image'] = f"https://usmcmin.com/{photo_path}"
+    _same_as = []
+    if c.get('website'):
+        _same_as.append(c['website'])
+    _twitter = (c.get('profile') or {}).get('twitter')
+    if _twitter:
+        _same_as.append(f"https://x.com/{str(_twitter).lstrip('@')}")
+    _facebook = (c.get('profile') or {}).get('facebook')
+    if _facebook:
+        _same_as.append(f"https://facebook.com/{_facebook}")
+    if _same_as:
+        _ld['sameAs'] = _same_as
+    json_ld = _json.dumps(_ld, separators=(',', ':'))
+
     # Index claims by (category, question_idx) so the per-question
     # rows can render an "i" icon that reveals the specific evidence
     # backing each score cell.
@@ -1013,6 +1040,28 @@ def generate_profile(candidate, categories, meta, nav=None):
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>{c['name']} — RESOLUTE Citizen Scorecard | U.S.M.C. Ministries</title>
   <meta name="description" content="RESOLUTE Citizen Scorecard for {c['name']} ({party_label(c['party'])}). {c['office']}, {c['jurisdiction']}. Score: {total['score']}/{MAX_TOTAL}.">
+
+  <!-- Canonical URL for SEO + social previews -->
+  <link rel="canonical" href="https://usmcmin.com/candidates/{state_code.lower()}/{c.get('slug','')}.html">
+
+  <!-- Open Graph (Facebook, LinkedIn, iMessage previews) -->
+  <meta property="og:site_name" content="RESOLUTE Citizen Scorecard">
+  <meta property="og:type" content="profile">
+  <meta property="og:title" content="{c['name']} — {total['score']}/{MAX_TOTAL} on the RESOLUTE Citizen Scorecard">
+  <meta property="og:description" content="{party_label(c['party'])} · {c['office']}, {c['jurisdiction']}. Scored on Christian voter principles across 7 categories. Click to see voting record + sources.">
+  <meta property="og:url" content="https://usmcmin.com/candidates/{state_code.lower()}/{c.get('slug','')}.html">
+  <meta property="og:image" content="{('https://usmcmin.com/' + photo_path) if photo_path else 'https://usmcmin.com/assets/og/og-citizen.jpg'}">
+  <meta property="og:image:alt" content="{c['name']}">
+
+  <!-- Twitter / X Card -->
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="{c['name']} — {total['score']}/{MAX_TOTAL}">
+  <meta name="twitter:description" content="{party_label(c['party'])} · {c['office']}. RESOLUTE Citizen Scorecard.">
+  <meta name="twitter:image" content="{('https://usmcmin.com/' + photo_path) if photo_path else 'https://usmcmin.com/assets/og/og-citizen.jpg'}">
+
+  <!-- JSON-LD Person schema for search engines -->
+  <script type="application/ld+json">{json_ld}</script>
+
   <link rel="stylesheet" href="../../assets/css/main.css">
   <link rel="icon" href="../../assets/img/favicon.png" type="image/png">
   <style>

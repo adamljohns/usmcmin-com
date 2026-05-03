@@ -608,6 +608,40 @@
   </div>
 </div>
 
+<!-- Submit a Tip / Score Update -->
+<div style="max-width:680px;margin:36px auto 28px;padding:26px 22px;background:rgba(201,168,76,0.04);border:1px solid rgba(201,168,76,0.2);border-radius:10px;">
+  <div style="text-align:center;margin-bottom:18px;">
+    <div style="font-size:0.74rem;color:#c9a84c;text-transform:uppercase;letter-spacing:1.5px;font-weight:700;margin-bottom:6px;">&#128276; Submit a Tip</div>
+    <h3 style="font-size:1.25rem;color:var(--white);font-weight:800;margin-bottom:8px;">Spotted a Score That Needs Updating?</h3>
+    <p style="font-size:0.92rem;color:var(--gray);max-width:520px;margin:0 auto;line-height:1.6;">Voting record changed, public statement made, primary source you can cite &mdash; send it our way. We review every tip and update the scorecard with citations.</p>
+  </div>
+  <form id="citizenTipForm" onsubmit="return submitCitizenTip(event);" style="display:flex;flex-direction:column;gap:10px;">
+    <input type="text" name="official" placeholder="Official's name (or office) *" required style="background:rgba(255,255,255,0.06);border:1px solid var(--border);color:#fff;padding:10px 14px;border-radius:6px;font-size:0.92rem;outline:none;">
+    <input type="text" name="state" placeholder="State / district (e.g., VA-7, NC State Senate)" style="background:rgba(255,255,255,0.06);border:1px solid var(--border);color:#fff;padding:10px 14px;border-radius:6px;font-size:0.92rem;outline:none;">
+    <textarea name="update" placeholder="What changed? Include source / link if possible. *" required rows="4" style="background:rgba(255,255,255,0.06);border:1px solid var(--border);color:#fff;padding:10px 14px;border-radius:6px;font-size:0.92rem;outline:none;font-family:inherit;resize:vertical;"></textarea>
+    <input type="email" name="email" placeholder="Your email (optional &mdash; only if you want a reply)" style="background:rgba(255,255,255,0.06);border:1px solid var(--border);color:#fff;padding:10px 14px;border-radius:6px;font-size:0.92rem;outline:none;">
+    <button type="submit" style="background:linear-gradient(90deg,#c9a84c,#D4AF37);color:#000;border:none;padding:11px 22px;border-radius:8px;font-weight:700;font-size:0.9rem;cursor:pointer;align-self:center;margin-top:4px;">Submit Tip &rarr;</button>
+  </form>
+  <div id="citizenTipThanks" style="display:none;margin-top:14px;padding:14px;background:rgba(201,168,76,0.08);border:1px solid rgba(201,168,76,0.3);border-radius:6px;text-align:center;color:#c9a84c;font-weight:600;">Thanks &mdash; tip received. We&rsquo;ll review and update with citation.</div>
+</div>
+<script>
+function submitCitizenTip(ev){
+  ev.preventDefault();
+  var form = document.getElementById('citizenTipForm');
+  var fd = new FormData(form);
+  var payload = { _subject: 'RESOLUTE Citizen — Tip / Score Update', _template: 'table', _captcha: 'false' };
+  fd.forEach(function(v,k){ payload[k] = v; });
+  fetch('https://formsubmit.co/ajax/usmcministries2022@gmail.com', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+    body: JSON.stringify(payload)
+  }).catch(function(){});
+  form.style.display = 'none';
+  document.getElementById('citizenTipThanks').style.display = 'block';
+  return false;
+}
+</script>
+
 <footer>
   <p><strong>RESOLUTE Citizen</strong> &mdash; a module of <a href="https://usmcmin.org">U.S.M.C. Ministries</a></p>
   <p style="margin-top:6px;font-size:0.75rem;color:var(--gray);">Powered by MOOPbot Pro &mdash; <a href="https://usmcmin.org/bible.html?ref=Proverbs+27:17">Proverbs 27:17</a></p>

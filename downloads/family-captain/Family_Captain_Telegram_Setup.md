@@ -209,6 +209,88 @@ The bootcamp curriculum itself doesn't change. The platform under it does.
 1. Send Adam (you) a test message from a second account to verify the channel + comments flow works end-to-end.
 2. Pre-schedule Week 1's content (heartbeat + 3 tasks).
 3. Invite **2-3 trusted brothers** as a private pilot before opening the link wider.
-4. Update `usmcmin.com/family-captain.html` (when deployed): replace `MN_INVITE_URL` with the Telegram channel link `https://t.me/FamilyCaptainBootCamp` (or whatever handle you secured).
+4. Confirm `usmcmin.com/ai-boot-camp.html` is live and the "Join the Telegram channel" button routes to your invite link (`https://t.me/+ddnHqJEqkKk3ZmVh`).
 
-That's the build. Captain on the bridge.
+---
+
+## Bot Setup — MoopBotPro (Adam's Openclaw agent in the channel)
+
+If you've added a bot like **MoopBotPro** to the channel + linked discussion group, it can serve as a 24/7 study partner for captains: answer questions, recall the curriculum, surface scripture, gently nudge accountability. Three settings decide whether it actually *works* — and one mindset decides whether it should.
+
+### Three settings (do these on day one)
+
+**1. Turn off Privacy Mode** (so the bot can see all group messages, not just commands).
+
+By default, Telegram bots in groups only see (a) commands starting with `/`, (b) @mentions, and (c) replies to their own messages. For natural-language Q&A — "MoopBotPro, what was Task W2.T3 again?" — the bot needs to see everything. Turn this off:
+
+- DM `@BotFather` in Telegram
+- `/mybots` → select **MoopBotPro** → **Bot Settings** → **Group Privacy** → **Turn off**
+- BotFather will confirm: *"Privacy mode is disabled."*
+
+**2. Add MoopBotPro as a group Administrator** (so it can post replies cleanly and read history).
+
+- In the linked Discussion Group → tap group name → **Administrators** → **Add Administrator**
+- Search "MoopBotPro" → add
+- **Grant:** Send Messages, Pin Messages (optional), Delete Messages (optional)
+- **Don't grant:** Add New Admins, Change Group Info, Ban Users — those decisions belong to a human captain
+
+**3. Set the bot's command list** (so the in-app `/` menu surfaces what captains can do).
+
+In `@BotFather`: `/mybots` → MoopBotPro → **Edit Bot** → **Edit Commands** — paste:
+
+```
+start - Get oriented in the bootcamp
+task - Open the current week's task PDF
+drill - Today's optional 90-second Captain's Drill
+scripture - Today's Scripture anchor
+ask - Ask MoopBotPro a question
+help - How to use this bot
+```
+
+The commands appear in the menu; behavior is wired in your Openclaw backend.
+
+### Pinned "intro the bot" post (paste in the discussion group)
+
+```
+🛡️ MEET MoopBotPro
+
+He's not Adam. He's an AI adjutant on the bridge —
+trained on the bootcamp materials, the scriptures we
+use, and the captain's voice.
+
+WAYS TO TALK TO HIM
+• Just type a question in the channel. He listens.
+• Tap his name to DM him privately.
+• Try: /task, /drill, /scripture, /ask, /help
+
+WHAT HE IS / ISN'T
+• He IS: a 24/7 study partner, prompt scratch pad,
+  task-explainer, accountability nudge.
+• He ISN'T: a substitute for the Spirit, the Word,
+  your wife, or your brothers in this channel.
+
+If MoopBotPro says something off — flag it in the
+chat. He's an aide on the bridge, not the captain.
+
+— Adam "MOOP" Johns
+```
+
+### What NOT to do
+
+- **Don't auto-post task PDFs from the bot in the first cohort.** Drop them yourself the first time so you see the room react. Automate from cohort #2.
+- **Don't grant the bot moderation powers** (Add New Admins, Ban Users). A misfired bot decision is hard to undo and erodes trust fast.
+- **Don't connect the bot's brain to a model that can browse arbitrary URLs from the channel.** Captains share private things — charters, family-policy screenshots, screenshots of texts. Keep the bot's reach scoped to your own corpus.
+
+### The tiered-autonomy reminder (now with a bot in the room)
+
+The bootcamp's whole framework — informational / contextual / sensitive — applies to MoopBotPro the same way it applies to Claude in Cowork:
+
+- **Informational** (let the bot answer): "What's Task W3.T2?" / "Show me Proverbs 3:5–6 in context." / "Summarize today's drill."
+- **Contextual** (bot drafts, captain decides): "Help me draft a one-line ship comment for W1.T1." / "What's a Scripture anchor for the week I'm having?"
+- **Sensitive** (bot stays out): Marriage conflict. Discipline questions. Anything moving money. Prayer. Discipline. Discernment. The bot is a study partner, not a counselor.
+
+Captains who treat the bot like a counselor will get bad outcomes. Captains who treat it like the smartest brother in the channel — one who's always around, always remembers the materials, and never gets tired — will get good ones. Make sure the cohort knows the difference.
+
+---
+
+That's the build. Captain on the bridge. Bot on watch.

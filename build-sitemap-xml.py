@@ -53,6 +53,11 @@ HIGH_PRIORITY = {
     "direct-booking.html": (0.8, "monthly"),
     "father.html": (0.8, "monthly"),
     "husband.html": (0.8, "monthly"),
+        # AI Boot Camp — main URL is /ai-boot-camp.html.
+    # Bump priority to 0.8 when actively recruiting.
+    "ai-boot-camp.html": (0.6, "monthly"),
+    "ai-boot-camp-tools.html": (0.5, "monthly"),
+    "ai-boot-camp-heartbeat.html": (0.5, "monthly"),
     "citizen.html": (0.8, "weekly"),
     "citizen-table.html": (0.8, "weekly"),
     "citizen-issues.html": (0.7, "weekly"),

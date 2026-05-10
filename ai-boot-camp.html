@@ -69,9 +69,17 @@
   .weeks { display:grid; grid-template-columns:repeat(5,1fr); gap:12px; }
   .week-card { background:var(--bg-card); border:1px solid var(--border); border-radius:var(--radius);
     padding:18px 16px; display:flex; flex-direction:column; gap:8px; min-height:170px;
-    transition:border-color var(--transition); }
-  .week-card:hover { border-color:var(--gold); }
-  .week-card .num { font-size:0.7rem; letter-spacing:3px; color:var(--gold); font-weight:700; }
+    transition:all var(--transition); position:relative; overflow:hidden; }
+  .week-card::before { content:""; position:absolute; top:0; left:0; right:0; height:3px;
+    background:var(--week-color, var(--gold)); }
+  .week-card:hover { border-color:var(--week-color, var(--gold)); transform:translateY(-2px); }
+  .week-card[data-week="1"] { --week-color: #B85042; }
+  .week-card[data-week="2"] { --week-color: #E89B47; }
+  .week-card[data-week="3"] { --week-color: #6BA368; }
+  .week-card[data-week="4"] { --week-color: #4A7BA6; }
+  .week-card[data-week="5"] { --week-color: #8B5FBF; }
+  .week-card .num { font-size:0.7rem; letter-spacing:3px; color:var(--week-color, var(--gold)); font-weight:700; }
+  .week-card .week-icon { font-size:1.4rem; line-height:1; margin:2px 0; }
   .week-card h3 { color:var(--white); font-size:1.08rem; }
   .week-card .tag { font-size:0.85rem; color:var(--gray-light); font-style:italic; line-height:1.45; }
   .week-card .scrip { font-size:0.78rem; color:var(--gray); margin-top:auto; padding-top:10px; border-top:1px solid var(--border); }
@@ -306,8 +314,9 @@
 const TG_INVITE = "https://t.me/+ddnHqJEqkKk3ZmVh";
 const TASK_PDF_DIR = "downloads/family-captain/Family_Captain_Task_PDFs/";
 const DOWNLOAD_URLS = {
+  voyage:       "ai-boot-camp-voyage.html",
   tools:        "ai-boot-camp-tools.html",
-  heartbeat:    "ai-boot-camp-heartbeat.html",
+  sovereign:    "ai-boot-camp-sovereign.html",
   telegram:     "downloads/family-captain/Family_Captain_Telegram_Setup.md",
   master:       "downloads/family-captain/Family_Captain_Bootcamp_MASTER.docx",
   workbook:     "downloads/family-captain/Family_Captain_Bootcamp_WORKBOOK.docx",
@@ -318,27 +327,27 @@ const DOWNLOAD_URLS = {
 };
 
 const WEEKS = [
-  { n:1, title:"Foundations", tag:"Why a man uses AI matters more than which model he picks.", scrip:"Proverbs 3:5–6",
+  { n:1, icon:"⚓", title:"Foundations", tag:"Why a man uses AI matters more than which model he picks.", scrip:"Proverbs 3:5–6",
     tasks:[
       { t:"Write Your AI Charter",         pdf:"W1_T1_Write_Your_AI_Charter.pdf" },
       { t:"Stewardship vs. Dependence",    pdf:"W1_T2_Draw_the_Line_-_Stewardship_vs._Dependence.pdf" },
       { t:"Build Your Tool Stack",         pdf:"W1_T3_Build_Your_One-Page_Tool_Stack.pdf" } ]},
-  { n:2, title:"Personal OS", tag:"The captain has a daily rhythm. AI runs alongside it, not over it.", scrip:"Psalm 90:12",
+  { n:2, icon:"🌅", title:"Personal OS", tag:"The captain has a daily rhythm. AI runs alongside it, not over it.", scrip:"Psalm 90:12",
     tasks:[
       { t:"5-Minute Morning Anchor",       pdf:"W2_T1_Build_a_5-Minute_Morning_Anchor.pdf" },
       { t:"Whisper Voice Capture",         pdf:"W2_T2_Capture_with_Voice_-_Whisper_Workflow.pdf" },
       { t:"Tag Your Tasks (Tiered Autonomy)", pdf:"W2_T3_Tag_Your_Tasks_-_Tiered_Autonomy_in_Practice.pdf" } ]},
-  { n:3, title:"At Home", tag:"Tools serve the home. They never compete with it.", scrip:"Joshua 24:15",
+  { n:3, icon:"🏡", title:"At Home", tag:"Tools serve the home. They never compete with it.", scrip:"Joshua 24:15",
     tasks:[
       { t:"Prep One Hard Conversation",    pdf:"W3_T1_Prep_One_Hard_Conversation_(Dont_Hide_Behind_AI).pdf" },
       { t:"Build a Family Rhythm Asset",   pdf:"W3_T2_Build_a_Family_Rhythm_Asset.pdf" },
       { t:"Write Your Family AI Policy",   pdf:"W3_T3_Write_Your_Family_AI_Policy_(Together).pdf" } ]},
-  { n:4, title:"Business / Ministry", tag:"Cowork mode is where leverage lives. Use it carefully.", scrip:"Colossians 3:23",
+  { n:4, icon:"🔨", title:"Business / Ministry", tag:"Cowork mode is where leverage lives. Use it carefully.", scrip:"Colossians 3:23",
     tasks:[
       { t:"Buy Back 5 Hours",              pdf:"W4_T1_Buy_Back_5_Hours_This_Month.pdf" },
       { t:"Build a Ministry Workflow",     pdf:"W4_T2_Build_One_Ministry_Workflow.pdf" },
       { t:"Save 3 Best Prompts as Skills", pdf:"W4_T3_Save_Your_3_Best_Prompts_as_Skills.pdf" } ]},
-  { n:5, title:"Mastery & Multiplication", tag:"Build durable systems. Train the next captain.", scrip:"2 Timothy 2:2",
+  { n:5, icon:"👑", title:"Mastery & Multiplication", tag:"Build durable systems. Train the next captain.", scrip:"2 Timothy 2:2",
     tasks:[
       { t:"Cost & Trap Audit",             pdf:"W5_T1_Run_a_Cost_&_Trap_Audit.pdf" },
       { t:"Teach One Person",              pdf:"W5_T2_Teach_One_Person,_This_Week.pdf" },
@@ -346,7 +355,9 @@ const WEEKS = [
 ];
 
 const DOWNLOADS = [
+  { key:"voyage",    icon:"🧭", title:"The Captain's Voyage", body:"Gamified track of your 5-week journey. Tap any task to open its PDF, mark it shipped, earn badges, and unlock the commissioning ceremony when all 15 land. Replaces print-and-fill with a digital captain's log.", cta:"Start your voyage →", target:"_self" },
   { key:"tools",     icon:"⚓", title:"AI Tools Landscape", body:"49 AI tools across 8 categories — 37 utility tools + 12 agentic-frontier tools. Each card shows AI/Agentic Level, Model Context Protocol (MCP) support, and Best For Captain. Plus a Use Case → Winner table and 3 Captain's Stacks ($0 / $40-60 / $150-200). Most captains need 2-4, not 49. Refreshed every 6 months.", cta:"Open compass →", target:"_self" },
+  { key:"sovereign", icon:"🏛", title:"The Sovereign Stack (local AI)", body:"For the captain who's invested in $6k+ hardware. 30 local AI tools across 7 categories with hardware tier guide. No subscriptions, no data leaving your machine. Most captains don't need this — but if you've crossed that line, here's the toolkit.", cta:"Open sovereign stack →", target:"_self" },
   // Heartbeat preview deliberately removed from public download grid 2026-05-10 —
   // letting recruits read ahead would kill cohort momentum (each post should
   // drop fresh in Telegram). URL still alive at /ai-boot-camp-heartbeat.html
@@ -364,8 +375,9 @@ function pdfUrl(filename) {
 }
 function renderWeeks() {
   document.getElementById("weeks-grid").innerHTML = WEEKS.map(w => `
-    <div class="week-card">
+    <div class="week-card" data-week="${w.n}">
       <div class="num">WEEK ${w.n}</div>
+      <div class="week-icon">${w.icon}</div>
       <h3>${w.title}</h3>
       <div class="tag">${w.tag}</div>
       <div class="scrip">${w.scrip}</div>

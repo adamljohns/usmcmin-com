@@ -38,6 +38,8 @@ EXCLUDE = {
     "bow-arrow/maintenance.html",
     # Login page itself — no SEO value
     "bow-arrow/login.html",
+    # Cohort feed preview — gives away upcoming Telegram posts; keep unindexed
+    "ai-boot-camp-heartbeat.html",
 }
 
 # Priority overrides for high-value pages
@@ -57,7 +59,8 @@ HIGH_PRIORITY = {
     # Bump priority to 0.8 when actively recruiting.
     "ai-boot-camp.html": (0.6, "monthly"),
     "ai-boot-camp-tools.html": (0.5, "monthly"),
-    "ai-boot-camp-heartbeat.html": (0.5, "monthly"),
+    # ai-boot-camp-heartbeat.html intentionally excluded from sitemap —
+    # noindex,nofollow on the page itself; URL stays alive for direct links.
     "citizen.html": (0.8, "weekly"),
     "citizen-table.html": (0.8, "weekly"),
     "citizen-issues.html": (0.7, "weekly"),

@@ -421,12 +421,14 @@ def generate_profile(candidate, categories, meta, nav=None):
     SOURCE_LABELS_ADJ = {
         'aipac': 'AIPAC / pro-Israel-lobby contributions',
         'soros': 'Open Society / Soros donor network',
+        'china': 'CCP-linked / United Front-affiliated donors',
         'foreign': 'Other foreign-linked PACs',
     }
     SOURCE_DESCRIPTORS_ADJ = {
         'aipac': 'AIPAC operates a super-PAC (United Democracy Project) that spends millions per cycle on US races on behalf of a foreign government\'s policy agenda. RESOLUTE Citizen treats documented contributions as a failure on america_first/q3.',
         'soros': 'The Open Society Foundations and the Democracy PAC vehicles tied to George Soros / Alex Soros direct hundreds of millions toward progressive prosecutors, judges, and ballot measures. RESOLUTE Citizen treats documented contributions as foreign-linked dark-money funding hostile to the historically orthodox Christian moral order.',
-        'foreign': 'Generic foreign-linked PAC contributions outside the AIPAC + Soros networks.',
+        'china': 'The CCP operates an explicit United Front Work Department to direct overseas members and proxies — including business executives such as Wanxiang Group\'s Pin Ni (named CCP member 15 times in Chinese state media) — to cultivate political relationships in the United States. Federal law prohibits CCP members from donating to U.S. campaigns, and most CCP-member donors hold green cards rather than citizenship. RESOLUTE Citizen treats any documented contribution from a CCP-member or United Front-affiliated donor as a failure on america_first/q3.',
+        'foreign': 'Generic foreign-linked PAC contributions outside the AIPAC + Soros + China networks.',
     }
 
     def render_adjustments_block(lines, base, adjusted):

@@ -80,7 +80,10 @@
   .week-card[data-week="5"] { --week-color: #8B5FBF; }
   .week-card .num { font-size:0.7rem; letter-spacing:3px; color:var(--week-color, var(--gold)); font-weight:700; }
   .week-card .week-icon { font-size:1.4rem; line-height:1; margin:2px 0; }
-  .week-card h3 { color:var(--white); font-size:1.08rem; }
+  /* Default = charcoal so light-theme cards (which have a light --bg-card)
+     stay legible. Dark theme override below restores light text on dark cards. */
+  .week-card h3 { color:#1A1A1A; font-size:1.08rem; }
+  [data-theme="dark"] .week-card h3 { color:#F0F0F0; }
   .week-card .tag { font-size:0.85rem; color:var(--gray-light); font-style:italic; line-height:1.45; }
   .week-card .scrip { font-size:0.78rem; color:var(--gray); margin-top:auto; padding-top:10px; border-top:1px solid var(--border); }
 
@@ -90,7 +93,8 @@
     padding:14px; transition:all var(--transition); display:block; text-decoration:none; color:inherit; }
   .task-tile:hover { border-color:var(--gold); transform:translateY(-1px); text-decoration:none; }
   .task-tile .wt { font-size:0.7rem; color:var(--gold); font-weight:700; letter-spacing:2px; }
-  .task-tile .ttl { font-size:0.85rem; color:var(--white); font-weight:600; margin-top:4px; line-height:1.4; }
+  .task-tile .ttl { font-size:0.85rem; color:#1A1A1A; font-weight:600; margin-top:4px; line-height:1.4; }
+  [data-theme="dark"] .task-tile .ttl { color:#F0F0F0; }
   .task-tile .preview-link { font-size:0.7rem; color:var(--gold); margin-top:8px; font-weight:700; letter-spacing:1px; }
 
   .info-card { background:var(--bg-card); border:1px solid var(--border); border-radius:var(--radius); padding:22px; }
@@ -447,6 +451,77 @@
   .drill-cell:hover .drill-label { color: #CE8E31 !important; }
   .drill-cell.shipped { background: rgba(206,142,49,0.18) !important; border-color: #CE8E31 !important; }
   .drill-cell.shipped .drill-label::after { color: #CE8E31 !important; }
+
+  /* ─────────────────────────────────────────────────────────────────
+     v5 CONTRAST SWEEP (2026-05-12, MOOP found more white-on-light):
+     Every card-class on light bg explicitly gets dark text. Hero
+     and FC-header keep white (dark bg). CTAs stay bronze-on-white.
+     ───────────────────────────────────────────────────────────── */
+
+  /* PILLAR cards (Mission section: Home / Business / Ministry) */
+  .pillar { color: #334155 !important; }
+  .pillar h3, .pillar h4 { color: #1E293B !important; }
+  .pillar p { color: #334155 !important; }
+  .pillar .pillar-kicker, .pillar .num { color: #CE8E31 !important; }
+
+  /* STEP cards (How It Works 1-4) */
+  .step { color: #334155 !important; }
+  .step h3, .step .step-title, .step h4 { color: #1E293B !important; }
+  .step p, .step .step-body { color: #334155 !important; }
+  .step .step-num, .step .num, .step .step-kicker { color: #CE8E31 !important; }
+
+  /* INFO-CARD ("What 'shipped' means", "What captains see during the cohort") */
+  .info-card { color: #334155 !important; background: #F4F5F7 !important; }
+  .info-card h2, .info-card h3, .info-card h4 { color: #1E293B !important; }
+  .info-card p, .info-card li { color: #334155 !important; }
+
+  /* CTA-BAND (final "Captain — your wheel is waiting." CTA section at bottom) */
+  .cta-band {
+    background: #1E293B !important;  /* dark slate — matches hero, makes white text legible */
+    color: #FFFFFF !important;
+    padding: 40px 24px !important;
+  }
+  .cta-band h2 { color: #FFFFFF !important; }
+  .cta-band p { color: #FFFFFF !important; }
+  .cta-band a, .cta-band a.btn {
+    background: #CE8E31 !important;
+    color: #FFFFFF !important;
+  }
+
+  /* SECTION TITLES outside the dark hero — default to navy.
+     Section titles INSIDE module-hero keep white (overridden earlier). */
+  .section-title { color: #1E293B !important; }
+  .module-hero .section-title { color: #FFFFFF !important; }
+
+  /* TASK TILES (W1.T1 etc) — defensive: source already sets .ttl to #1A1A1A,
+     but the outer .task-tile may inherit white. Force everything dark. */
+  .task-tile { color: #1A1A1A !important; }
+  .task-tile .wt { color: #CE8E31 !important; }
+  .task-tile .ttl { color: #1E293B !important; }
+  .task-tile .preview-link { color: #CE8E31 !important; }
+
+  /* WEEK-ICON (👑 emoji etc) — has color affecting emoji rendering on some browsers.
+     Force to a dark color so the emoji silhouette is at least visible. */
+  .week-card .week-icon, .week-port .week-icon { color: #1E293B !important; }
+
+  /* Subtitle / lede paragraphs that appeared white on white */
+  .section-sub, .module-container > p.subtitle, .module-container > .lede {
+    color: #334155 !important;
+  }
+
+  /* Body of the FC pages — default text dark (was inheriting white) */
+  body, body p, body li, body td, body span,
+  div.module-container, div.module-container > p {
+    color: #334155;
+  }
+  /* Restore white inside hero/footer/fc-header which have dark bg */
+  .module-hero, .module-hero *, footer, footer *,
+  .fc-header, .fc-header *, .cta-band, .cta-band * {
+    color: inherit;
+  }
+  .module-hero h1, .module-hero p, .module-hero .module-badge {
+    color: #FFFFFF !important;
+  }
 </style>
 
 </head>

@@ -61,7 +61,8 @@
   .week-port .week-num { font-size:0.65rem; letter-spacing:3px; color:var(--week-color); font-weight:800;
     text-transform:uppercase; }
   .week-port .week-icon { font-size:1.6rem; line-height:1; }
-  .week-port h3 { font-family:var(--font-main); color:var(--white); font-size:1.05rem; margin:0; line-height:1.25; }
+  .week-port h3 { font-family:var(--font-main); color:#1A1A1A; font-size:1.05rem; margin:0; line-height:1.25; }
+  [data-theme="dark"] .week-port h3 { color:#F0F0F0; }
   .week-port .week-tag { font-size:0.78rem; color:var(--gray-light); font-style:italic; line-height:1.4; }
   .week-port .scrip { font-size:0.7rem; color:var(--gray); padding-top:8px; border-top:1px solid var(--border); }
 
@@ -96,7 +97,8 @@
     padding:14px 10px; text-align:center; opacity:0.45; transition:all 0.3s; }
   .badge.earned { opacity:1; box-shadow:0 0 0 1px var(--gold); }
   .badge .badge-icon { font-size:2rem; line-height:1; }
-  .badge .badge-name { font-size:0.75rem; font-weight:700; color:var(--white); margin-top:6px; }
+  .badge .badge-name { font-size:0.75rem; font-weight:700; color:#1A1A1A; margin-top:6px; }
+  [data-theme="dark"] .badge .badge-name { color:#F0F0F0; }
   .badge .badge-desc { font-size:0.68rem; color:var(--gray); line-height:1.3; margin-top:3px; }
 
   /* Commission ceremony */
@@ -108,7 +110,8 @@
   .commission-card .seal { font-size:3rem; margin-bottom:8px; opacity:0.4; }
   .commission-card.unlocked .seal { opacity:1; animation: pulse 2s ease-in-out infinite; }
   @keyframes pulse { 0%, 100% { transform:scale(1); } 50% { transform:scale(1.05); } }
-  .commission-card h2 { font-family:var(--font-main); color:var(--white); font-size:1.5rem; margin:0 0 6px; }
+  .commission-card h2 { font-family:var(--font-main); color:#1A1A1A; font-size:1.5rem; margin:0 0 6px; }
+  [data-theme="dark"] .commission-card h2 { color:#F0F0F0; }
   .commission-card p { color:var(--gray-light); font-size:0.92rem; max-width:560px; margin:0 auto 14px; line-height:1.6; }
   .commission-card .tg-link { display:inline-block; padding:10px 18px; border-radius:99px;
     background:var(--gold); color:var(--bg-dark); font-weight:700; font-size:0.85rem;
@@ -447,6 +450,77 @@
   .drill-cell:hover .drill-label { color: #CE8E31 !important; }
   .drill-cell.shipped { background: rgba(206,142,49,0.18) !important; border-color: #CE8E31 !important; }
   .drill-cell.shipped .drill-label::after { color: #CE8E31 !important; }
+
+  /* ─────────────────────────────────────────────────────────────────
+     v5 CONTRAST SWEEP (2026-05-12, MOOP found more white-on-light):
+     Every card-class on light bg explicitly gets dark text. Hero
+     and FC-header keep white (dark bg). CTAs stay bronze-on-white.
+     ───────────────────────────────────────────────────────────── */
+
+  /* PILLAR cards (Mission section: Home / Business / Ministry) */
+  .pillar { color: #334155 !important; }
+  .pillar h3, .pillar h4 { color: #1E293B !important; }
+  .pillar p { color: #334155 !important; }
+  .pillar .pillar-kicker, .pillar .num { color: #CE8E31 !important; }
+
+  /* STEP cards (How It Works 1-4) */
+  .step { color: #334155 !important; }
+  .step h3, .step .step-title, .step h4 { color: #1E293B !important; }
+  .step p, .step .step-body { color: #334155 !important; }
+  .step .step-num, .step .num, .step .step-kicker { color: #CE8E31 !important; }
+
+  /* INFO-CARD ("What 'shipped' means", "What captains see during the cohort") */
+  .info-card { color: #334155 !important; background: #F4F5F7 !important; }
+  .info-card h2, .info-card h3, .info-card h4 { color: #1E293B !important; }
+  .info-card p, .info-card li { color: #334155 !important; }
+
+  /* CTA-BAND (final "Captain — your wheel is waiting." CTA section at bottom) */
+  .cta-band {
+    background: #1E293B !important;  /* dark slate — matches hero, makes white text legible */
+    color: #FFFFFF !important;
+    padding: 40px 24px !important;
+  }
+  .cta-band h2 { color: #FFFFFF !important; }
+  .cta-band p { color: #FFFFFF !important; }
+  .cta-band a, .cta-band a.btn {
+    background: #CE8E31 !important;
+    color: #FFFFFF !important;
+  }
+
+  /* SECTION TITLES outside the dark hero — default to navy.
+     Section titles INSIDE module-hero keep white (overridden earlier). */
+  .section-title { color: #1E293B !important; }
+  .module-hero .section-title { color: #FFFFFF !important; }
+
+  /* TASK TILES (W1.T1 etc) — defensive: source already sets .ttl to #1A1A1A,
+     but the outer .task-tile may inherit white. Force everything dark. */
+  .task-tile { color: #1A1A1A !important; }
+  .task-tile .wt { color: #CE8E31 !important; }
+  .task-tile .ttl { color: #1E293B !important; }
+  .task-tile .preview-link { color: #CE8E31 !important; }
+
+  /* WEEK-ICON (👑 emoji etc) — has color affecting emoji rendering on some browsers.
+     Force to a dark color so the emoji silhouette is at least visible. */
+  .week-card .week-icon, .week-port .week-icon { color: #1E293B !important; }
+
+  /* Subtitle / lede paragraphs that appeared white on white */
+  .section-sub, .module-container > p.subtitle, .module-container > .lede {
+    color: #334155 !important;
+  }
+
+  /* Body of the FC pages — default text dark (was inheriting white) */
+  body, body p, body li, body td, body span,
+  div.module-container, div.module-container > p {
+    color: #334155;
+  }
+  /* Restore white inside hero/footer/fc-header which have dark bg */
+  .module-hero, .module-hero *, footer, footer *,
+  .fc-header, .fc-header *, .cta-band, .cta-band * {
+    color: inherit;
+  }
+  .module-hero h1, .module-hero p, .module-hero .module-badge {
+    color: #FFFFFF !important;
+  }
 </style>
 
 </head>

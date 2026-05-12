@@ -469,6 +469,77 @@
   .drill-cell:hover .drill-label { color: #CE8E31 !important; }
   .drill-cell.shipped { background: rgba(206,142,49,0.18) !important; border-color: #CE8E31 !important; }
   .drill-cell.shipped .drill-label::after { color: #CE8E31 !important; }
+
+  /* ─────────────────────────────────────────────────────────────────
+     v5 CONTRAST SWEEP (2026-05-12, MOOP found more white-on-light):
+     Every card-class on light bg explicitly gets dark text. Hero
+     and FC-header keep white (dark bg). CTAs stay bronze-on-white.
+     ───────────────────────────────────────────────────────────── */
+
+  /* PILLAR cards (Mission section: Home / Business / Ministry) */
+  .pillar { color: #334155 !important; }
+  .pillar h3, .pillar h4 { color: #1E293B !important; }
+  .pillar p { color: #334155 !important; }
+  .pillar .pillar-kicker, .pillar .num { color: #CE8E31 !important; }
+
+  /* STEP cards (How It Works 1-4) */
+  .step { color: #334155 !important; }
+  .step h3, .step .step-title, .step h4 { color: #1E293B !important; }
+  .step p, .step .step-body { color: #334155 !important; }
+  .step .step-num, .step .num, .step .step-kicker { color: #CE8E31 !important; }
+
+  /* INFO-CARD ("What 'shipped' means", "What captains see during the cohort") */
+  .info-card { color: #334155 !important; background: #F4F5F7 !important; }
+  .info-card h2, .info-card h3, .info-card h4 { color: #1E293B !important; }
+  .info-card p, .info-card li { color: #334155 !important; }
+
+  /* CTA-BAND (final "Captain — your wheel is waiting." CTA section at bottom) */
+  .cta-band {
+    background: #1E293B !important;  /* dark slate — matches hero, makes white text legible */
+    color: #FFFFFF !important;
+    padding: 40px 24px !important;
+  }
+  .cta-band h2 { color: #FFFFFF !important; }
+  .cta-band p { color: #FFFFFF !important; }
+  .cta-band a, .cta-band a.btn {
+    background: #CE8E31 !important;
+    color: #FFFFFF !important;
+  }
+
+  /* SECTION TITLES outside the dark hero — default to navy.
+     Section titles INSIDE module-hero keep white (overridden earlier). */
+  .section-title { color: #1E293B !important; }
+  .module-hero .section-title { color: #FFFFFF !important; }
+
+  /* TASK TILES (W1.T1 etc) — defensive: source already sets .ttl to #1A1A1A,
+     but the outer .task-tile may inherit white. Force everything dark. */
+  .task-tile { color: #1A1A1A !important; }
+  .task-tile .wt { color: #CE8E31 !important; }
+  .task-tile .ttl { color: #1E293B !important; }
+  .task-tile .preview-link { color: #CE8E31 !important; }
+
+  /* WEEK-ICON (👑 emoji etc) — has color affecting emoji rendering on some browsers.
+     Force to a dark color so the emoji silhouette is at least visible. */
+  .week-card .week-icon, .week-port .week-icon { color: #1E293B !important; }
+
+  /* Subtitle / lede paragraphs that appeared white on white */
+  .section-sub, .module-container > p.subtitle, .module-container > .lede {
+    color: #334155 !important;
+  }
+
+  /* Body of the FC pages — default text dark (was inheriting white) */
+  body, body p, body li, body td, body span,
+  div.module-container, div.module-container > p {
+    color: #334155;
+  }
+  /* Restore white inside hero/footer/fc-header which have dark bg */
+  .module-hero, .module-hero *, footer, footer *,
+  .fc-header, .fc-header *, .cta-band, .cta-band * {
+    color: inherit;
+  }
+  .module-hero h1, .module-hero p, .module-hero .module-badge {
+    color: #FFFFFF !important;
+  }
 </style>
 
 </head>

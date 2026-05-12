@@ -424,10 +424,22 @@
     color: #FFFFFF !important;
   }
 
-  /* SECTION TITLES outside the dark hero — default to navy.
-     Section titles INSIDE module-hero keep white (overridden earlier). */
+  /* SECTION TITLES — navy by default (light body); white in dark theme.
+     Module-hero always white (dark hero bg). */
   .section-title { color: #1E293B !important; }
+  [data-theme="dark"] .section-title { color: #FFFFFF !important; }
   .module-hero .section-title { color: #FFFFFF !important; }
+
+  /* Pillar / step icon chips — bronze on light cards, both themes */
+  .pillar-icon, .step-icon {
+    background: #CE8E31 !important;
+    color: #FFFFFF !important;
+    border-radius: 0 !important;  /* sharp corners — TFC signature */
+  }
+  .pillar-icon svg, .step-icon svg {
+    stroke: #FFFFFF !important;
+    fill: none !important;
+  }
 
   /* TASK TILES (W1.T1 etc) — defensive: source already sets .ttl to #1A1A1A,
      but the outer .task-tile may inherit white. Force everything dark. */

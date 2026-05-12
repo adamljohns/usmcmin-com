@@ -63,6 +63,9 @@
 
   .pillars { display:grid; grid-template-columns:repeat(3,1fr); gap:16px; }
   .pillar { background:var(--bg-card); border:1px solid var(--border); border-radius:var(--radius); padding:22px; }
+  .pillar-icon, .step-icon { width:36px; height:36px; display:inline-flex; align-items:center; justify-content:center;
+    background:var(--gold); color:#FFFFFF; border-radius:8px; margin-bottom:10px; }
+  .pillar-icon svg, .step-icon svg { width:22px; height:22px; }
   .pillar h3 { color:var(--white); font-size:1.15rem; margin-bottom:6px; }
   .pillar p { color:var(--gray-light); font-size:0.9rem; }
 
@@ -488,10 +491,22 @@
     color: #FFFFFF !important;
   }
 
-  /* SECTION TITLES outside the dark hero — default to navy.
-     Section titles INSIDE module-hero keep white (overridden earlier). */
+  /* SECTION TITLES — navy by default (light body); white in dark theme.
+     Module-hero always white (dark hero bg). */
   .section-title { color: #1E293B !important; }
+  [data-theme="dark"] .section-title { color: #FFFFFF !important; }
   .module-hero .section-title { color: #FFFFFF !important; }
+
+  /* Pillar / step icon chips — bronze on light cards, both themes */
+  .pillar-icon, .step-icon {
+    background: #CE8E31 !important;
+    color: #FFFFFF !important;
+    border-radius: 0 !important;  /* sharp corners — TFC signature */
+  }
+  .pillar-icon svg, .step-icon svg {
+    stroke: #FFFFFF !important;
+    fill: none !important;
+  }
 
   /* TASK TILES (W1.T1 etc) — defensive: source already sets .ttl to #1A1A1A,
      but the outer .task-tile may inherit white. Force everything dark. */
@@ -588,9 +603,18 @@
   <h2 class="section-title">Christ at the center. The captain in command.</h2>
   <p class="section-sub">This isn't a chatbot bootcamp. It's leadership formation. We teach men how to use AI without losing themselves to it. Every week opens and closes in Scripture. AI drafts. The captain decides.</p>
   <div class="pillars">
-    <div class="pillar"><h3>At Home</h3><p>Husband, father, brother. Tools serve the home; they never compete with it.</p></div>
-    <div class="pillar"><h3>In Business</h3><p>Solo founder, steward of time. Leverage as a tithe of time, not a brag.</p></div>
-    <div class="pillar"><h3>In Ministry</h3><p>Captain, servant, multiplier. Train the next captain (2 Tim 2:2).</p></div>
+    <div class="pillar">
+      <div class="pillar-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12l9-9 9 9"/><path d="M5 10v10h14V10"/><path d="M10 20v-6h4v6"/></svg></div>
+      <h3>At Home</h3><p>Husband, father, brother. Tools serve the home; they never compete with it.</p>
+    </div>
+    <div class="pillar">
+      <div class="pillar-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="7" width="18" height="13" rx="2"/><path d="M8 7V5a2 2 0 012-2h4a2 2 0 012 2v2"/><path d="M3 13h18"/></svg></div>
+      <h3>In Business</h3><p>Solo founder, steward of time. Leverage as a tithe of time, not a brag.</p>
+    </div>
+    <div class="pillar">
+      <div class="pillar-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v18"/><path d="M6 9h12"/></svg></div>
+      <h3>In Ministry</h3><p>Captain, servant, multiplier. Train the next captain (2 Tim 2:2).</p>
+    </div>
   </div>
   <div class="scripture">"Trust in the Lord with all your heart, and lean not on your own understanding (or your tools)." — <a href="https://usmcmin.org/bible.html" target="_blank" rel="noopener" style="color:var(--gold)">Proverbs 3:5–6 ↗</a></div>
 </div>
@@ -601,10 +625,22 @@
   <h2 class="section-title">From your phone. No second app to install.</h2>
   <p class="section-sub">Most men already have Telegram. If you don't, it's a free 60-second install. The whole bootcamp runs in a private channel — no Mighty Networks, no Discord, no Slack, no tier-3 SaaS to learn.</p>
   <div class="steps">
-    <div class="step"><div class="num">STEP 1</div><h3>Join the channel</h3><p>One tap. <a href="https://t.me/+ddnHqJEqkKk3ZmVh" target="_blank" rel="noopener" style="color:var(--gold)">t.me invite link</a>. Private, free, no email gate.</p></div>
-    <div class="step"><div class="num">STEP 2</div><h3>Read the pinned index</h3><p>The bootcamp map is the pinned message. Materials and W1.T1 are pinned right behind it.</p></div>
-    <div class="step"><div class="num">STEP 3</div><h3>Ship a task</h3><p>20-30 minutes. Open the PDF, do the action, react ✓ on the post when shipped.</p></div>
-    <div class="step"><div class="num">STEP 4</div><h3>Drop a one-liner</h3><p>Tap Comments — Telegram auto-routes you to the linked discussion group. Iron sharpens iron.</p></div>
+    <div class="step">
+      <div class="step-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M22 2L11 13"/><path d="M22 2L15 22l-4-9L2 9l20-7z"/></svg></div>
+      <div class="num">STEP 1</div><h3>Join the channel</h3><p>One tap. <a href="https://t.me/+ddnHqJEqkKk3ZmVh" target="_blank" rel="noopener" style="color:var(--gold)">t.me invite link</a>. Private, free, no email gate.</p>
+    </div>
+    <div class="step">
+      <div class="step-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 17v5"/><circle cx="12" cy="9" r="3"/><path d="M9 12l-3 3h12l-3-3"/><path d="M8 6h8"/></svg></div>
+      <div class="num">STEP 2</div><h3>Read the pinned index</h3><p>The bootcamp map is the pinned message. Materials and W1.T1 are pinned right behind it.</p>
+    </div>
+    <div class="step">
+      <div class="step-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M8 12l3 3 5-6"/></svg></div>
+      <div class="num">STEP 3</div><h3>Ship a task</h3><p>20-30 minutes. Open the PDF, do the action, react ✓ on the post when shipped.</p>
+    </div>
+    <div class="step">
+      <div class="step-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.38 8.38 0 01-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.38 8.38 0 013.8-.9h.5a8.48 8.48 0 018 8v.5z"/></svg></div>
+      <div class="num">STEP 4</div><h3>Drop a one-liner</h3><p>Tap Comments — Telegram auto-routes you to the linked discussion group. Iron sharpens iron.</p>
+    </div>
   </div>
 </div>
 

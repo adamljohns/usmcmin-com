@@ -191,6 +191,121 @@
   footer a { color: #CE8E31 !important; }
   /* Scripture/quote color align */
   .scripture, .scrip a { color: #CE8E31 !important; }
+
+  /* ─────────────────────────────────────────────────────────────────
+     v2 CONTRAST FIX (2026-05-12 per MOOP feedback):
+     Card content was white-on-light-grey (unreadable). All card
+     headings now navy; card body text now slate-700; bumped font
+     sizes across the board.
+     ───────────────────────────────────────────────────────────── */
+
+  /* Card headings — NAVY (was white-via-var on light card bg) */
+  .dl-card h3,
+  .week-card h3,
+  .week-port h3,
+  .tool-card h2, .tool-card h2 a,
+  .local-tool-card h2, .local-tool-card h2 a,
+  .stack-card h3,
+  .redline-card .rl-name,
+  .post-card h2, .anchor-card h2, .bonus-card h2,
+  .pillar h3, .pillar h4,
+  .usecase h2, .stacks h2, .redlines h2 {
+    color: #1E293B !important;
+  }
+  /* Card body text — slate */
+  .dl-card p,
+  .week-card .tag, .week-port .week-tag,
+  .tool-card p, .tool-card .body,
+  .local-tool-card p, .local-tool-card .body,
+  .stack-card ul, .stack-card ul li,
+  .redline-card .rl-body,
+  .post-card p, .anchor-card p, .bonus-card p,
+  .pillar p {
+    color: #334155 !important;
+  }
+  .stack-card ul li b { color: #1E293B !important; }
+
+  /* Badge labels (.tool-cat, .post-kind, kicker) — bronze on light cards */
+  .tool-cat, .post-kind, .post-meta-pill,
+  .week-card .num, .week-port .week-num,
+  .dl-card .icon-label, .section-kicker,
+  .stack-name {
+    color: #CE8E31 !important;
+    background: rgba(206,142,49,0.10) !important;
+    border-color: rgba(206,142,49,0.35) !important;
+  }
+  /* Voyage badges — light grey on light grey before; now darker */
+  .badge {
+    background: rgba(206,142,49,0.10) !important;
+    border: 1px solid rgba(206,142,49,0.35) !important;
+  }
+  .badge .badge-name { color: #1E293B !important; font-weight: 700 !important; }
+  .badge .badge-desc { color: #334155 !important; }
+  .badge.locked { opacity: 0.55; }
+  .badge.locked .badge-name { color: #6B7280 !important; }
+
+  /* Captain's Call callout — already navy left rule via inline, ensure copy is legible */
+  .captains-call, .tool-card .captain-call, .tool-card blockquote {
+    color: #1E293B !important;
+  }
+
+  /* MCP / Agentic chip readability on light cards */
+  .meta-chip, .mcp-chip, .agentic-chip {
+    color: #1E293B !important;
+  }
+  .meta-chip .meta-label, .mcp-label, .agentic-label {
+    color: #6B7280 !important;
+  }
+
+  /* Heartbeat post body — light card bg, so use slate copy */
+  .post-card, .anchor-card, .bonus-card {
+    background: #F4F5F7 !important;
+  }
+  .post-card .author-name, .post-card .author-handle { color: #1E293B !important; }
+  .post-card .post-body, .post-card .post-body p { color: #334155 !important; }
+  .post-card .comment-magnet { background: #FFF8EE !important; border-left: 3px solid #CE8E31 !important; }
+  .post-card .comment-magnet .cm-label { color: #CE8E31 !important; }
+  .post-card .comment-magnet .cm-text { color: #1E293B !important; font-weight: 600 !important; }
+
+  /* ─── FONT SIZE BUMP (15–25%) ─── */
+  .module-hero h1   { font-size: clamp(2.6rem, 6vw, 4.4rem) !important; }
+  .module-hero p, .module-hero .tagline { font-size: 1.18rem !important; }
+  .section-title    { font-size: 2.2rem !important; }
+  .section-kicker   { font-size: 0.85rem !important; letter-spacing: 3px; }
+  .section-sub      { font-size: 1.05rem !important; }
+  .dl-card h3       { font-size: 1.25rem !important; line-height: 1.2; }
+  .dl-card p        { font-size: 1.0rem !important;  line-height: 1.55; }
+  .week-card h3, .week-port h3 { font-size: 1.18rem !important; }
+  .week-card .tag, .week-port .week-tag { font-size: 0.96rem !important; }
+  .tool-card h2, .local-tool-card h2 { font-size: 1.4rem !important; }
+  .tool-card p, .local-tool-card p   { font-size: 1.0rem !important; }
+  .stack-card h3    { font-size: 1.08rem !important; }
+  .stack-card ul    { font-size: 0.96rem !important; line-height: 1.7; }
+  .stack-name       { font-size: 0.78rem !important; }
+  .stack-cost       { font-size: 1.7rem !important; }
+  .redline-card .rl-name { font-size: 0.82rem !important; letter-spacing: 2px; }
+  .redline-card .rl-body { font-size: 1.0rem !important; }
+  .usecase-table th, .usecase-table td { font-size: 0.96rem !important; }
+  .post-card h2     { font-size: 1.55rem !important; }
+  .post-card .post-body p { font-size: 1.05rem !important; line-height: 1.65; }
+  .post-card .comment-magnet .cm-text { font-size: 1.05rem !important; }
+  .badge .badge-name { font-size: 0.96rem !important; }
+  .badge .badge-desc { font-size: 0.84rem !important; }
+  .scrip a, .scripture { font-size: 0.92rem !important; }
+
+  /* Replace single-letter chip icons with bronze SVG-nautical iconography */
+  .dl-card .icon,
+  .post-card .icon-letter,
+  .author-letter, .author-avatar {
+    /* keep size but recolor — actual SVGs are swapped in HTML post-process */
+    background: #CE8E31 !important;
+    color: #FFFFFF !important;
+  }
+  .dl-card .icon svg, .post-card .icon svg, .author-avatar svg {
+    width: 28px; height: 28px;
+    stroke: #FFFFFF; fill: none;
+    stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round;
+  }
 </style>
 
 </head>
@@ -671,9 +786,9 @@
     </div>
     <div class="post-body"><p>Captains —</p>
 <p>A letter, not a post.</p>
-<p>I wrote my first AI charter on a napkin in 2024. It was bad. I rewrote it three weeks later. It was less bad. I&#x27;m still rewriting it.</p>
+<p>Every captain I&#x27;ve watched go through something like this writes his first AI charter on the back of something — a napkin, the inside cover of a notebook, an unsent email draft. It&#x27;s bad the first time. It&#x27;s less bad the third time. The good ones are still rewriting them a year later.</p>
 <p>Don&#x27;t wait for the good version. Write the bad one. Sign it anyway. Captain&#x27;s signatures aren&#x27;t reserved for finished men. They&#x27;re for moving men.</p>
-<p>I&#x27;m proud of every one of you who&#x27;s in this bootcamp. I&#x27;m prouder of the ones who&#x27;ll be in the <em>next</em> one because you taught them.</p>
+<p>I&#x27;m proud of every one of you who&#x27;s in this bootcamp. I&#x27;ll be prouder of the ones who&#x27;ll be in the <em>next</em> one because you taught them.</p>
 <p>Imperfect actions. Captain&#x27;s actions. Same thing.</p>
 <p>— Adam (&quot;MOOP&quot;)</p></div>
     <div class="post-question">No question this time. Just say &quot;received&quot; if it landed.</div>
@@ -683,7 +798,7 @@
       <span class="post-type">Bonus Drop</span>
       <span class="chip-code">Bonus</span>
     </header>
-    <h2 class="post-title">The Day AI Lied to Me</h2>
+    <h2 class="post-title">The Day AI Will Lie to You</h2>
     <div class="post-byline">
       <span class="avatar">AJ</span>
       <span class="byline-text">
@@ -692,12 +807,12 @@
       </span>
     </div>
     <div class="post-body"><p>Captains —</p>
-<p>Quick warning story.</p>
-<p>Last year I asked Claude for a verse to support a point I was making. It gave me a verse with the right vibe. Wrong reference. Wrong words. <em>I almost preached it.</em></p>
-<p>The Spirit caught me before I did. The Word didn&#x27;t trip me up; the model did.</p>
+<p>Quick warning, not a story.</p>
+<p>It&#x27;s going to happen. You&#x27;ll ask Claude or ChatGPT for a verse to support a point you&#x27;re making, and it&#x27;ll hand you one with the right vibe — wrong reference, wrong words. Confident as anything. Pastors have almost preached them. Bible study leaders have almost printed them. The model doesn&#x27;t know it&#x27;s wrong, because the model doesn&#x27;t know anything — it just predicts the next plausible-sounding token.</p>
+<p>The Word doesn&#x27;t trip captains up. The model does.</p>
 <p>This is why we do trap tests in Week 5. This is why we say <em>trust but verify.</em> This is why &quot;AI never replaces the Spirit, the Word, or your wife&#x27;s voice&quot; is the hard rule.</p>
 <p>You&#x27;ll hit this one yourself. When you do, log it. Tell us. We protect each other from confident-wrong tools.</p></div>
-    <div class="post-question">Drop a one-line &quot;AI got me&quot; story below. We learn from each other&#x27;s near-misses.</div>
+    <div class="post-question">Drop a one-line &quot;AI got me&quot; story below — yours or one you&#x27;ve heard. We learn from each other&#x27;s near-misses.</div>
   </article>
   <article class="post" data-type="bonus" data-week="0">
     <header class="post-head">

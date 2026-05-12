@@ -513,6 +513,17 @@
     <a href="find-my-reps.html" style="display:inline-block;background:linear-gradient(90deg,#c9a84c,#D4AF37);color:#000;padding:9px 20px;border-radius:8px;font-weight:700;font-size:0.88rem;text-decoration:none;">Open Find My Reps &rarr;</a>
   </div>
 
+  <!-- Sister-site cross-link: Church Directory (RESOLUTE Citizen's faith counterpart). -->
+  <!-- Updated dynamically by updateChurchCallout() when state=VA to surface FXBG + VA links. -->
+  <div id="churchCallout" style="max-width:720px;margin:14px auto 0;padding:16px 20px;background:linear-gradient(135deg,rgba(76,175,80,0.10) 0%,rgba(201,168,76,0.06) 100%);border:1px solid rgba(76,175,80,0.30);border-radius:12px;text-align:center;">
+    <div style="font-size:0.74rem;color:#7edd80;text-transform:uppercase;letter-spacing:1.5px;font-weight:700;margin-bottom:4px;">&#9961;&#65039; Faith Foundation</div>
+    <div style="font-size:1.05rem;color:var(--white);font-weight:700;margin-bottom:4px;">Looking for a <span style="color:#7edd80;">Sound Church</span>?</div>
+    <p style="font-size:0.85rem;color:var(--gray);margin-bottom:10px;line-height:1.5;">Before voting for righteous magistrates, plant your family in a church that preaches God's Word. Same 4-tier rubric, applied theologically.</p>
+    <div id="churchCalloutLinks" style="display:flex;flex-wrap:wrap;gap:8px;justify-content:center;">
+      <a href="https://usmcmin.org/churches.html" target="_blank" rel="noopener" style="display:inline-block;background:rgba(76,175,80,0.15);color:#7edd80;padding:8px 16px;border-radius:8px;font-weight:600;font-size:0.85rem;text-decoration:none;border:1px solid rgba(76,175,80,0.4);">Nationwide Directory &rarr;</a>
+    </div>
+  </div>
+
   <!-- View Toggle -->
   <nav class="view-toggle" aria-label="RESOLUTE Citizen sub-pages">
     <a href="citizen.html" class="active" aria-current="page">Cards</a>
@@ -597,7 +608,53 @@
 
   <!-- Methodology -->
   <div class="sc-methodology" id="methodologyPanel"></div>
+
+  <!-- Sponsor a Directory: paid offering for cities/states wanting deeper coverage. -->
+  <div style="max-width:760px;margin:32px auto 0;padding:24px 22px;background:linear-gradient(135deg,rgba(201,168,76,0.10) 0%,rgba(30,58,95,0.06) 100%);border:1px solid rgba(201,168,76,0.4);border-radius:12px;text-align:center;">
+    <div style="font-size:0.74rem;color:#c9a84c;text-transform:uppercase;letter-spacing:1.5px;font-weight:700;margin-bottom:6px;">&#128176; Sponsor a Directory</div>
+    <h3 style="font-size:1.25rem;color:var(--white);font-weight:800;margin-bottom:8px;">Want Deeper Coverage for <span style="color:#c9a84c;">Your City or State</span>?</h3>
+    <p style="font-size:0.92rem;color:var(--gray);margin-bottom:14px;line-height:1.6;max-width:560px;margin-left:auto;margin-right:auto;">RESOLUTE Citizen launched in Virginia &mdash; especially <strong style="color:var(--white);">Fredericksburg</strong>, where the directory has its deepest enrichment. Sponsor a directory build for your county, city, or state and get the same 7-category audit applied to your local school board, sheriff, city council, and state legislators.</p>
+    <div style="display:flex;flex-wrap:wrap;gap:10px;justify-content:center;align-items:center;">
+      <a href="mailto:info@usmcmin.com?subject=Sponsor%20RESOLUTE%20Citizen%20Directory&amp;body=I'd%20like%20to%20sponsor%20a%20RESOLUTE%20Citizen%20directory%20build%20for%3A%0A%0ACity%2FCounty%2FState%3A%20%0AApprox%20number%20of%20officials%20to%20cover%3A%20%0ATimeline%3A%20%0A%0AContact%20info%3A%0AName%3A%20%0AEmail%3A%20%0APhone%3A%20" style="display:inline-block;background:linear-gradient(90deg,#c9a84c,#D4AF37);color:#000;padding:11px 22px;border-radius:8px;font-weight:700;font-size:0.9rem;text-decoration:none;">Inquire About Sponsorship &rarr;</a>
+      <a href="consulting.html" style="display:inline-block;color:var(--gray);padding:11px 16px;font-weight:600;font-size:0.85rem;text-decoration:none;border-bottom:1px dotted var(--gray);">See all consulting services</a>
+    </div>
+    <p style="font-size:0.72rem;color:var(--gray);margin-top:14px;font-style:italic;">All proceeds support U.S.M.C. Ministries.</p>
+  </div>
 </div>
+
+<!-- Submit a Tip / Score Update -->
+<div style="max-width:680px;margin:36px auto 28px;padding:26px 22px;background:rgba(201,168,76,0.04);border:1px solid rgba(201,168,76,0.2);border-radius:10px;">
+  <div style="text-align:center;margin-bottom:18px;">
+    <div style="font-size:0.74rem;color:#c9a84c;text-transform:uppercase;letter-spacing:1.5px;font-weight:700;margin-bottom:6px;">&#128276; Submit a Tip</div>
+    <h3 style="font-size:1.25rem;color:var(--white);font-weight:800;margin-bottom:8px;">Spotted a Score That Needs Updating?</h3>
+    <p style="font-size:0.92rem;color:var(--gray);max-width:520px;margin:0 auto;line-height:1.6;">Voting record changed, public statement made, primary source you can cite &mdash; send it our way. We review every tip and update the scorecard with citations.</p>
+  </div>
+  <form id="citizenTipForm" onsubmit="return submitCitizenTip(event);" style="display:flex;flex-direction:column;gap:10px;">
+    <input type="text" name="official" placeholder="Official's name (or office) *" required style="background:rgba(255,255,255,0.06);border:1px solid var(--border);color:#fff;padding:10px 14px;border-radius:6px;font-size:0.92rem;outline:none;">
+    <input type="text" name="state" placeholder="State / district (e.g., VA-7, NC State Senate)" style="background:rgba(255,255,255,0.06);border:1px solid var(--border);color:#fff;padding:10px 14px;border-radius:6px;font-size:0.92rem;outline:none;">
+    <textarea name="update" placeholder="What changed? Include source / link if possible. *" required rows="4" style="background:rgba(255,255,255,0.06);border:1px solid var(--border);color:#fff;padding:10px 14px;border-radius:6px;font-size:0.92rem;outline:none;font-family:inherit;resize:vertical;"></textarea>
+    <input type="email" name="email" placeholder="Your email (optional &mdash; only if you want a reply)" style="background:rgba(255,255,255,0.06);border:1px solid var(--border);color:#fff;padding:10px 14px;border-radius:6px;font-size:0.92rem;outline:none;">
+    <button type="submit" style="background:linear-gradient(90deg,#c9a84c,#D4AF37);color:#000;border:none;padding:11px 22px;border-radius:8px;font-weight:700;font-size:0.9rem;cursor:pointer;align-self:center;margin-top:4px;">Submit Tip &rarr;</button>
+  </form>
+  <div id="citizenTipThanks" style="display:none;margin-top:14px;padding:14px;background:rgba(201,168,76,0.08);border:1px solid rgba(201,168,76,0.3);border-radius:6px;text-align:center;color:#c9a84c;font-weight:600;">Thanks &mdash; tip received. We&rsquo;ll review and update with citation.</div>
+</div>
+<script>
+function submitCitizenTip(ev){
+  ev.preventDefault();
+  var form = document.getElementById('citizenTipForm');
+  var fd = new FormData(form);
+  var payload = { _subject: 'RESOLUTE Citizen — Tip / Score Update', _template: 'table', _captcha: 'false' };
+  fd.forEach(function(v,k){ payload[k] = v; });
+  fetch('https://formsubmit.co/ajax/usmcministries2022@gmail.com', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+    body: JSON.stringify(payload)
+  }).catch(function(){});
+  form.style.display = 'none';
+  document.getElementById('citizenTipThanks').style.display = 'block';
+  return false;
+}
+</script>
 
 <footer>
   <p><strong>RESOLUTE Citizen</strong> &mdash; a module of <a href="https://usmcmin.org">U.S.M.C. Ministries</a></p>
@@ -690,6 +747,7 @@ function switchState(st) {
       DATA.candidates = stateData.candidates || [];
       buildStateDropdown(st);
       buildViewDropdown();
+      updateChurchCallout(st);
       renderCards();
       // Update nav links
       var suffix = '?state=' + st;
@@ -701,6 +759,30 @@ function switchState(st) {
     .catch(function(err) {
       console.error('Switch state error:', err);
     });
+}
+
+// Surface state-matched church-directory links. VA users get Fredericksburg
+// (where the founder ministers + the directory has its deepest enrichment)
+// alongside the statewide and nationwide indexes.
+function updateChurchCallout(st) {
+  var el = document.getElementById('churchCalloutLinks');
+  if (!el) return;
+  var btn = function(href, label, primary) {
+    var bg = primary ? 'rgba(76,175,80,0.22)' : 'rgba(76,175,80,0.10)';
+    var border = primary ? 'rgba(76,175,80,0.55)' : 'rgba(76,175,80,0.35)';
+    return '<a href="' + href + '" target="_blank" rel="noopener" '
+      + 'style="display:inline-block;background:' + bg + ';color:#7edd80;'
+      + 'padding:8px 16px;border-radius:8px;font-weight:600;font-size:0.85rem;'
+      + 'text-decoration:none;border:1px solid ' + border + ';">' + label + '</a>';
+  };
+  if (st === 'VA') {
+    el.innerHTML =
+      btn('https://usmcmin.org/churches-fxbg.html', 'Fredericksburg &rarr;', true) +
+      btn('https://usmcmin.org/churches-virginia.html', 'Virginia &rarr;', false) +
+      btn('https://usmcmin.org/churches.html', 'Nationwide &rarr;', false);
+  } else {
+    el.innerHTML = btn('https://usmcmin.org/churches.html', 'Nationwide Directory &rarr;', true);
+  }
 }
 
 function showLocationModal() {
@@ -801,6 +883,7 @@ fetch('data/index.json')
         buildLegend();
         buildMethodology();
         initSortDropdown();
+        updateChurchCallout(st);
         renderCards();
         if (showModal) showLocationModal();
       });

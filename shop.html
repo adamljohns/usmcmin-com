@@ -152,11 +152,29 @@
       <p style="margin-bottom:1.5rem;max-width:480px;margin-left:auto;margin-right:auto">
         We're finalizing designs and setting up print-on-demand fulfillment. Drop your email and you'll get first access — plus a launch discount.
       </p>
-      <form data-newsletter data-source="shop-launch-notify" style="display:flex;gap:0.75rem;justify-content:center;flex-wrap:wrap;max-width:440px;margin:0 auto">
+      <form id="shopNotifyForm" style="display:flex;gap:0.75rem;justify-content:center;flex-wrap:wrap;max-width:440px;margin:0 auto" onsubmit="return submitShopNotify(event);">
         <input type="email" name="email" placeholder="Your email address" required style="flex:1;min-width:220px;background:rgba(255,255,255,0.06);border:1px solid var(--border);color:#fff;padding:0.8rem 1.2rem;border-radius:8px;font-size:0.95rem;outline:none">
         <button type="submit" class="btn btn-primary">Notify Me</button>
       </form>
+      <div id="shopNotifyThanks" style="display:none; margin-top: 16px; color: var(--accent); font-weight: 600;">Thanks &mdash; you&rsquo;ll hear from us when the shop launches.</div>
       <p class="email-status" role="status" aria-live="polite" style="min-height:1.4em;margin-top:0.75rem;font-size:0.9rem;color:var(--gray-light)"></p>
+      <script>
+      function submitShopNotify(ev){
+        ev.preventDefault();
+        var form = document.getElementById('shopNotifyForm');
+        var fd = new FormData(form);
+        var payload = { _subject: 'USMC Ministries Shop — Notify Me Signup', _template: 'table', _captcha: 'false' };
+        fd.forEach(function(v,k){ payload[k] = v; });
+        fetch('https://formsubmit.co/ajax/usmcministries2022@gmail.com', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+          body: JSON.stringify(payload)
+        }).catch(function(){});
+        form.style.display = 'none';
+        document.getElementById('shopNotifyThanks').style.display = 'block';
+        return false;
+      }
+      </script>
     </div>
 
   </div>

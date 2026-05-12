@@ -1,0 +1,1038 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Heartbeat Posts — Family Captain Boot Camp · USMC Ministries</title>
+  <meta name="description" content="Cohort feed preview — 24 posts that drop in our Telegram channel.">
+  <meta name="robots" content="noindex,nofollow">
+  <link rel="stylesheet" href="assets/css/main.css">
+  <link rel="icon" href="assets/img/favicon.png" type="image/png">
+<style>
+  .module-hero { padding:90px 20px 40px; border-bottom:1px solid var(--border);
+    background: linear-gradient(180deg, rgba(30,58,95,0.10) 0%, transparent 100%); }
+  [data-theme="dark"] .module-hero { background: linear-gradient(180deg, rgba(30,58,95,0.28) 0%, transparent 100%); }
+  .module-hero-inner { max-width:760px; margin:0 auto; }
+  .module-badge { display:inline-block; font-size:0.68rem; font-weight:700; text-transform:uppercase;
+    letter-spacing:3px; color:var(--gold); background:var(--gold-dim); border:1px solid var(--border);
+    padding:6px 18px; border-radius:20px; margin-bottom:14px; }
+  .module-hero h1 { font-family:var(--font-main); font-size:clamp(2rem,5vw,3rem);
+    color:var(--white); margin-bottom:8px; font-weight:800; letter-spacing:-0.01em; }
+  .module-hero h1 .gold { color:var(--gold); }
+  .module-hero .subtitle { color:var(--gray-light); font-size:0.98rem; max-width:680px; line-height:1.7; }
+  .module-hero .meta { display:flex; flex-wrap:wrap; gap:18px; margin-top:14px; color:var(--gray); font-size:0.85rem; }
+  .module-hero .meta b { color:var(--white); }
+  .back-link { color:var(--gray); font-size:0.82rem; text-decoration:none; }
+  .back-link:hover { color:var(--gold); text-decoration:underline; }
+
+  .filters { position:sticky; top:70px; background:var(--bg-dark); border-bottom:1px solid var(--border);
+    padding:12px 16px; z-index:9; overflow-x:auto; white-space:nowrap; }
+  .filters-inner { max-width:760px; margin:0 auto; display:flex; gap:8px; }
+  .chip { display:inline-flex; align-items:center; padding:7px 14px; border-radius:99px;
+    border:1px solid var(--border); background:var(--bg-card); color:var(--gray-light);
+    font-size:0.82rem; font-weight:600; cursor:pointer; transition:all 0.15s; white-space:nowrap; font-family:inherit; }
+  .chip:hover { border-color:var(--gold); color:var(--gold); }
+  .chip.active { background:var(--gold); color:var(--bg-dark); border-color:var(--gold); }
+  .chip .count { margin-left:6px; font-size:0.7rem; opacity:0.7; }
+
+  .feed { max-width:760px; margin:0 auto; padding:24px 16px 80px; }
+  .feed-empty { padding:40px 0; text-align:center; color:var(--gray); font-size:0.88rem; display:none; }
+
+  .post { background:var(--bg-card); border:1px solid var(--border); border-radius:var(--radius);
+    padding:22px 22px 18px; margin-bottom:16px; transition:border-color 0.15s; }
+  .post:hover { border-color:var(--gold); }
+  .post-head { display:flex; flex-wrap:wrap; align-items:center; gap:8px; margin-bottom:10px; }
+  .post-type { display:inline-block; padding:3px 10px; border-radius:99px;
+    font-size:0.62rem; font-weight:800; letter-spacing:2px; text-transform:uppercase;
+    background:var(--bg-card-2); color:var(--gold); }
+  .chip-week, .chip-code { display:inline-block; padding:2px 8px; border-radius:99px;
+    font-size:0.7rem; font-weight:600; color:var(--gray); border:1px solid var(--border); }
+  .chip-code { font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace; font-size:0.66rem; }
+  .post-title { font-family:var(--font-main); font-size:1.35rem; font-weight:700; color:var(--white);
+    margin:6px 0 12px; letter-spacing:-0.01em; line-height:1.25; }
+  .post-byline { display:flex; align-items:center; gap:10px; margin:0 0 16px;
+    padding-bottom:14px; border-bottom:1px solid var(--border); }
+  .avatar { width:34px; height:34px; border-radius:50%; background:var(--navy); color:var(--ice, var(--silver-light));
+    display:flex; align-items:center; justify-content:center; font-size:0.75rem; font-weight:800;
+    letter-spacing:0.5px; flex-shrink:0; }
+  [data-theme="dark"] .avatar { background:var(--bg-card-2); color:var(--gold); }
+  .byline-text { display:flex; flex-direction:column; line-height:1.3; }
+  .byline-name { font-size:0.86rem; font-weight:700; color:var(--white); }
+  .byline-meta { font-size:0.74rem; color:var(--gray); }
+  .post-body p { margin:0 0 12px; color:var(--gray-light); font-size:0.96rem; line-height:1.65; }
+  .post-body p:last-child { margin-bottom:0; }
+  .post-body em { color:var(--gray-light); font-style:italic; }
+  .post-body strong { color:var(--white); }
+  .post-body ul { margin:8px 0 12px 24px; padding:0; color:var(--gray-light); }
+  .post-body li { margin:4px 0; font-size:0.96rem; }
+  .post-question { margin-top:16px; padding:14px 16px; background:var(--gold-dim);
+    border-left:3px solid var(--gold); border-radius:6px;
+    color:var(--white); font-weight:600; font-size:0.94rem; line-height:1.5; }
+  .post-question::before { content:"COMMENT MAGNET ";
+    font-size:0.6rem; letter-spacing:2.5px; color:var(--gold); font-weight:800; display:block; margin-bottom:4px; }
+
+  @media (max-width:640px){
+    .module-hero { padding:80px 18px 30px; }
+    .post { padding:18px 18px 16px; }
+    .post-title { font-size:1.1rem; }
+  }
+</style>
+
+<!-- ── FAMILY CAPTAIN TRACK — TFC VISUAL IDENTITY (Phase B 2026-05-11) ── -->
+<meta name="robots" content="noindex, nofollow">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Staatliches&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+<style id="fc-theme-override">
+  /* Color tokens — TFC palette via CSS custom property overrides */
+  :root, html, body, html[data-theme="light"], html[data-theme="dark"] {
+    --gold:           #CE8E31 !important;  /* TFC bronze (was USMC gold) */
+    --gold-dim:       rgba(206, 142, 49, 0.12) !important;
+    --navy:           #1E293B !important;  /* TFC slate (was USMC navy) */
+    --bg-card:        #F4F5F7 !important;  /* TFC warm gray */
+    --border:         #D1D5DB !important;
+    --gray:           #6B7280 !important;
+    --gray-light:     #9CA3AF !important;
+    --white:          #FFFFFF !important;
+    --bg:             #FFFFFF !important;
+    --text:           #334155 !important;  /* TFC slate-700 body text */
+    --radius:         0 !important;        /* Sharp corners — TFC signature */
+    --font-main:      'Staatliches', sans-serif !important;
+    --font-body:      'Roboto', sans-serif !important;
+  }
+  body, p, li, td, th, .body, input, textarea, select, button {
+    font-family: 'Roboto', sans-serif !important;
+  }
+  h1, h2, h3, .display, .module-hero h1, .module-hero h2,
+  .section-title, .week-card h3, .tool-card h2, .stack-name {
+    font-family: 'Staatliches', sans-serif !important;
+    font-weight: 500 !important;
+    letter-spacing: 0.5px;
+  }
+  /* Sharp corners on every interactive element */
+  button, .btn, a.btn, .nav-cta, .module-cta a, .week-card,
+  .tool-card, .stack-card, .dl-card, .pillar, .redline-card {
+    border-radius: 0 !important;
+  }
+  /* Bronze CTAs */
+  .btn, a.btn, .nav-cta, .module-cta a.btn, button.cta,
+  .module-hero .btn, a.btn-primary {
+    background: #CE8E31 !important;
+    color: #FFFFFF !important;
+    border: 0 !important;
+    text-transform: uppercase !important;
+    font-weight: 500 !important;
+    padding: 16px 28px !important;
+    letter-spacing: 0.04em;
+  }
+  .btn:hover, a.btn:hover, .nav-cta:hover { background: #B57628 !important; }
+  /* Dark slate hero */
+  .module-hero {
+    background: #1E293B !important;
+    color: #FFFFFF !important;
+  }
+  .module-hero h1, .module-hero p, .module-hero .module-badge,
+  .module-hero h1 .gold, .module-hero h1 .accent {
+    color: #FFFFFF !important;
+  }
+  .module-hero .module-badge {
+    background: rgba(206, 142, 49, 0.2) !important;
+    color: #CE8E31 !important;
+    border: 1px solid #CE8E31 !important;
+  }
+  /* Hide the USMC site-wide nav on FC track */
+  body > nav,
+  nav.site-nav,
+  header.site-header { display: none !important; }
+  /* FC mini-header (injected below; styles here) */
+  .fc-header {
+    background: #1E293B;
+    padding: 16px 32px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid #2B4A72;
+  }
+  .fc-header .fc-wordmark {
+    font-family: 'Staatliches', sans-serif;
+    color: #FFFFFF;
+    font-size: 26px;
+    text-decoration: none;
+    letter-spacing: 1px;
+  }
+  .fc-header .fc-wordmark .accent { color: #CE8E31; margin-left: 6px; }
+  .fc-header nav.fc-nav {
+    display: flex;
+    gap: 24px;
+    align-items: center;
+  }
+  .fc-header nav.fc-nav a {
+    font-family: 'Roboto', sans-serif;
+    color: #FFFFFF;
+    font-size: 13px;
+    text-decoration: none;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    font-weight: 500;
+  }
+  .fc-header nav.fc-nav a:hover { color: #CE8E31; }
+  .fc-header nav.fc-nav a.active { color: #CE8E31; border-bottom: 2px solid #CE8E31; padding-bottom: 4px; }
+  @media (max-width: 720px) {
+    .fc-header { padding: 12px 16px; flex-wrap: wrap; gap: 12px; }
+    .fc-header nav.fc-nav { gap: 14px; flex-wrap: wrap; }
+    .fc-header nav.fc-nav a { font-size: 12px; }
+  }
+  /* Footer color rebrand */
+  footer, .site-footer {
+    background: #1E293B !important;
+    color: #9CA3AF !important;
+  }
+  footer h4, footer h3 { color: #FFFFFF !important; }
+  footer a { color: #CE8E31 !important; }
+  /* Scripture/quote color align */
+  .scripture, .scrip a { color: #CE8E31 !important; }
+
+  /* ─────────────────────────────────────────────────────────────────
+     v2 CONTRAST FIX (2026-05-12 per MOOP feedback):
+     Card content was white-on-light-grey (unreadable). All card
+     headings now navy; card body text now slate-700; bumped font
+     sizes across the board.
+     ───────────────────────────────────────────────────────────── */
+
+  /* Card headings — NAVY (was white-via-var on light card bg) */
+  .dl-card h3,
+  .week-card h3,
+  .week-port h3,
+  .tool-card h2, .tool-card h2 a,
+  .local-tool-card h2, .local-tool-card h2 a,
+  .stack-card h3,
+  .redline-card .rl-name,
+  .post-card h2, .anchor-card h2, .bonus-card h2,
+  .pillar h3, .pillar h4,
+  .usecase h2, .stacks h2, .redlines h2 {
+    color: #1E293B !important;
+  }
+  /* Card body text — slate */
+  .dl-card p,
+  .week-card .tag, .week-port .week-tag,
+  .tool-card p, .tool-card .body,
+  .local-tool-card p, .local-tool-card .body,
+  .stack-card ul, .stack-card ul li,
+  .redline-card .rl-body,
+  .post-card p, .anchor-card p, .bonus-card p,
+  .pillar p {
+    color: #334155 !important;
+  }
+  .stack-card ul li b { color: #1E293B !important; }
+
+  /* Badge labels (.tool-cat, .post-kind, kicker) — bronze on light cards */
+  .tool-cat, .post-kind, .post-meta-pill,
+  .week-card .num, .week-port .week-num,
+  .dl-card .icon-label, .section-kicker,
+  .stack-name {
+    color: #CE8E31 !important;
+    background: rgba(206,142,49,0.10) !important;
+    border-color: rgba(206,142,49,0.35) !important;
+  }
+  /* Voyage badges — light grey on light grey before; now darker */
+  .badge {
+    background: rgba(206,142,49,0.10) !important;
+    border: 1px solid rgba(206,142,49,0.35) !important;
+  }
+  .badge .badge-name { color: #1E293B !important; font-weight: 700 !important; }
+  .badge .badge-desc { color: #334155 !important; }
+  .badge.locked { opacity: 0.55; }
+  .badge.locked .badge-name { color: #6B7280 !important; }
+
+  /* Captain's Call callout — already navy left rule via inline, ensure copy is legible */
+  .captains-call, .tool-card .captain-call, .tool-card blockquote {
+    color: #1E293B !important;
+  }
+
+  /* MCP / Agentic chip readability on light cards */
+  .meta-chip, .mcp-chip, .agentic-chip {
+    color: #1E293B !important;
+  }
+  .meta-chip .meta-label, .mcp-label, .agentic-label {
+    color: #6B7280 !important;
+  }
+
+  /* Heartbeat post body — light card bg, so use slate copy */
+  .post-card, .anchor-card, .bonus-card {
+    background: #F4F5F7 !important;
+  }
+  .post-card .author-name, .post-card .author-handle { color: #1E293B !important; }
+  .post-card .post-body, .post-card .post-body p { color: #334155 !important; }
+  .post-card .comment-magnet { background: #FFF8EE !important; border-left: 3px solid #CE8E31 !important; }
+  .post-card .comment-magnet .cm-label { color: #CE8E31 !important; }
+  .post-card .comment-magnet .cm-text { color: #1E293B !important; font-weight: 600 !important; }
+
+  /* ─── FONT SIZE BUMP (15–25%) ─── */
+  .module-hero h1   { font-size: clamp(2.6rem, 6vw, 4.4rem) !important; }
+  .module-hero p, .module-hero .tagline { font-size: 1.18rem !important; }
+  .section-title    { font-size: 2.2rem !important; }
+  .section-kicker   { font-size: 0.85rem !important; letter-spacing: 3px; }
+  .section-sub      { font-size: 1.05rem !important; }
+  .dl-card h3       { font-size: 1.25rem !important; line-height: 1.2; }
+  .dl-card p        { font-size: 1.0rem !important;  line-height: 1.55; }
+  .week-card h3, .week-port h3 { font-size: 1.18rem !important; }
+  .week-card .tag, .week-port .week-tag { font-size: 0.96rem !important; }
+  .tool-card h2, .local-tool-card h2 { font-size: 1.4rem !important; }
+  .tool-card p, .local-tool-card p   { font-size: 1.0rem !important; }
+  .stack-card h3    { font-size: 1.08rem !important; }
+  .stack-card ul    { font-size: 0.96rem !important; line-height: 1.7; }
+  .stack-name       { font-size: 0.78rem !important; }
+  .stack-cost       { font-size: 1.7rem !important; }
+  .redline-card .rl-name { font-size: 0.82rem !important; letter-spacing: 2px; }
+  .redline-card .rl-body { font-size: 1.0rem !important; }
+  .usecase-table th, .usecase-table td { font-size: 0.96rem !important; }
+  .post-card h2     { font-size: 1.55rem !important; }
+  .post-card .post-body p { font-size: 1.05rem !important; line-height: 1.65; }
+  .post-card .comment-magnet .cm-text { font-size: 1.05rem !important; }
+  .badge .badge-name { font-size: 0.96rem !important; }
+  .badge .badge-desc { font-size: 0.84rem !important; }
+  .scrip a, .scripture { font-size: 0.92rem !important; }
+
+  /* Replace single-letter chip icons with bronze SVG-nautical iconography */
+  .dl-card .icon,
+  .post-card .icon-letter,
+  .author-letter, .author-avatar {
+    /* keep size but recolor — actual SVGs are swapped in HTML post-process */
+    background: #CE8E31 !important;
+    color: #FFFFFF !important;
+  }
+  .dl-card .icon svg, .post-card .icon svg, .author-avatar svg {
+    width: 28px; height: 28px;
+    stroke: #FFFFFF; fill: none;
+    stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round;
+  }
+
+  /* ─────────────────────────────────────────────────────────────────
+     v4 FIXES (2026-05-12, second-round MOOP feedback):
+       (1) Voyage progress banner — white-on-light unreadable
+       (2) Tool / Local-tool meta-chips — light grey on light grey
+       (3) Drill cells — bare numbers, also light-on-light
+     ───────────────────────────────────────────────────────────── */
+
+  /* (1) Progress banner on the Voyage page — light card bg, need navy text */
+  .progress-banner {
+    background: #F4F5F7 !important;
+    border: 1px solid #D1D5DB !important;
+    color: #1E293B !important;
+  }
+  .progress-banner .stat-line {
+    color: #1E293B !important;
+    font-weight: 600 !important;
+  }
+  .progress-banner .stat-line .pct {
+    color: #CE8E31 !important;
+    font-weight: 800 !important;
+  }
+  .progress-banner .progress-bar {
+    background: rgba(30,41,59,0.10) !important;
+  }
+  .progress-banner .progress-bar #barFill {
+    background: #CE8E31 !important;
+  }
+  .voyage-btn,
+  button.voyage-btn,
+  #resetBtn {
+    background: #FFFFFF !important;
+    color: #1E293B !important;
+    border: 1px solid #1E293B !important;
+    font-weight: 600 !important;
+  }
+  .voyage-btn:hover, #resetBtn:hover {
+    background: #1E293B !important;
+    color: #FFFFFF !important;
+    border-color: #1E293B !important;
+  }
+
+  /* (2) Tool / Local-tool meta-chips — boost legibility */
+  .tool-card .meta-chip,
+  .local-tool-card .meta-chip {
+    background: rgba(206,142,49,0.12) !important;
+    border: 1px solid rgba(206,142,49,0.40) !important;
+    color: #1E293B !important;
+  }
+  .tool-card .meta-chip .meta-label,
+  .local-tool-card .meta-chip .meta-label,
+  .meta-chip .meta-label {
+    color: #2B4A72 !important;          /* TFC secondary navy/blue (permitted) */
+    opacity: 1 !important;
+    font-weight: 700 !important;
+  }
+  .tool-card .meta-chip > *,
+  .local-tool-card .meta-chip > * {
+    color: #1E293B !important;
+  }
+  /* MCP chip variants — keep state coloring readable */
+  .mcp-native { background: rgba(206,142,49,0.20) !important; color: #1E293B !important; }
+  .mcp-yes    { background: rgba(206,142,49,0.12) !important; color: #1E293B !important; }
+  .mcp-plugin { background: rgba(43,74,114,0.12)  !important; color: #1E293B !important; }
+  .mcp-no, .mcp-na { background: rgba(107,114,128,0.12) !important; color: #1E293B !important; }
+  /* Agentic chip variants — bronze gradient by level */
+  .agentic-highest, .agentic-very-high { background: #CE8E31 !important; color: #FFFFFF !important; }
+  .agentic-high   { background: rgba(206,142,49,0.65) !important; color: #FFFFFF !important; }
+  .agentic-medium { background: rgba(206,142,49,0.35) !important; color: #1E293B !important; }
+  .agentic-low    { background: rgba(206,142,49,0.20) !important; color: #1E293B !important; }
+  .agentic-n-a    { background: rgba(107,114,128,0.18) !important; color: #1E293B !important; }
+
+  /* (3) Drill cells (Voyage) — bare numbers replaced with labels in site_pages.py;
+        here we just make sure the label color is high-contrast on dark bg */
+  .drill-cell { background: #2B3447 !important; border-color: #3F4A5E !important; }
+  .drill-cell .drill-num { color: #CE8E31 !important; }
+  .drill-cell .drill-label { color: #FFFFFF !important; }
+  .drill-cell:hover { border-color: #CE8E31 !important; }
+  .drill-cell:hover .drill-label { color: #CE8E31 !important; }
+  .drill-cell.shipped { background: rgba(206,142,49,0.18) !important; border-color: #CE8E31 !important; }
+  .drill-cell.shipped .drill-label::after { color: #CE8E31 !important; }
+</style>
+
+</head>
+<body data-track="family-captain">
+
+<!-- FC mini-header (Phase B 2026-05-11) -->
+<header class="fc-header">
+  <a href="family-captain.html" class="fc-wordmark">FAMILY <span class="accent">CAPTAIN</span></a>
+  <nav class="fc-nav">
+      <a href="family-captain.html">Bootcamp</a>
+      <a href="family-captain-tools.html">Compass</a>
+      <a href="family-captain-voyage.html">Voyage</a>
+      <a href="family-captain-sovereign.html">Sovereign</a>
+      <a href="family-captain-heartbeat.html" class="active">Heartbeat</a>
+  </nav>
+</header>
+
+
+<!-- ── NAV ── -->
+<nav>
+  <a href="/" class="nav-brand" style="text-decoration:none">
+    <img src="assets/img/logo.png" alt="U.S.M.C. Ministries" style="object-fit:contain">
+    <div class="nav-brand-text">
+      <div class="name">U.S.M.C. Ministries</div>
+      <div class="tag">Warriors Equipped</div>
+    </div>
+  </a>
+  <ul class="nav-links">
+    <li><a href="mission.html">Mission</a></li>
+    <li><a href="shop.html">Shop</a></li>
+    <li><a href="books.html">Books</a></li>
+    <li><a href="coaching.html">Coaching</a></li>
+    <li><a href="fitness/fitness.html">Fitness</a></li>
+    <li><a href="finance/">Finance</a></li>
+    <li><a href="about.html">About</a></li>
+    <li><a href="https://usmcmin.org" target="_blank">Ministry Site</a></li>
+  </ul>
+  <a href="coaching.html" class="btn nav-cta">Book a Session</a>
+  <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme" title="Switch light/dark mode">&#9789;</button>
+  <button class="nav-toggle" aria-label="Menu"><span></span><span></span><span></span></button>
+</nav>
+
+
+<!-- HERO -->
+<div class="module-hero">
+  <div class="module-hero-inner">
+    <a href="family-captain.html" class="back-link">← Family Captain Boot Camp</a>
+    <span class="module-badge" style="margin-top:14px">USMC Ministries · Cohort Feed Preview</span>
+    <h1><span class="gold">Heartbeat</span> Posts</h1>
+    <p class="subtitle">The 24 cohort posts that run alongside the bootcamp in our Telegram channel. Brotherly captain-to-captain voice. Each post ends with a comment-magnet question. This is what the cohort feed actually looks and sounds like.</p>
+    <div class="meta">
+      <span><b>5</b> Monday Kickoffs</span>
+      <span><b>5</b> Captain&rsquo;s Calls</span>
+      <span><b>5</b> Friday Close-Outs</span>
+      <span><b>5</b> Scripture Anchors</span>
+      <span><b>4</b> Bonus Drops</span>
+    </div>
+  </div>
+</div>
+
+<!-- FILTERS -->
+<nav class="filters" aria-label="Filter posts by type">
+  <div class="filters-inner">
+    <button class="chip active" data-filter="all">All <span class="count">24</span></button>
+    <button class="chip" data-filter="kickoff">Mon Kickoff <span class="count">5</span></button>
+    <button class="chip" data-filter="call">Captain's Call <span class="count">5</span></button>
+    <button class="chip" data-filter="closeout">Fri Close-Out <span class="count">5</span></button>
+    <button class="chip" data-filter="scripture">Scripture <span class="count">5</span></button>
+    <button class="chip" data-filter="bonus">Bonus <span class="count">4</span></button>
+  </div>
+</nav>
+
+<main class="feed" id="feed">
+  <article class="post" data-type="kickoff" data-week="1">
+    <header class="post-head">
+      <span class="post-type">Monday Kickoff</span>
+      <span class="chip-week">Week 1</span><span class="chip-code">W1.M</span>
+    </header>
+    <h2 class="post-title">Boots on the Bridge</h2>
+    <div class="post-byline">
+      <span class="avatar">AJ</span>
+      <span class="byline-text">
+        <span class="byline-name">Adam &ldquo;MOOP&rdquo; Johns</span>
+        <span class="byline-meta">Cohort Captain · Mon · Week 1</span>
+      </span>
+    </div>
+    <div class="post-body"><p>Captains —</p>
+<p>Week 1. We&#x27;re not building a chatbot. We&#x27;re building a man.</p>
+<p>The bootcamp post is up. Three tasks this week. Two questions before you start: <em>Why do I want to use AI?</em> And: <em>What am I afraid it&#x27;ll do to me if I do?</em></p>
+<p>Both are honest. Both belong in your charter.</p>
+<p>Take 25 minutes today on Task 1. Write 5 lines. Save it where you&#x27;ll see it. Post one line in the comments — iron sharpens iron.</p>
+<p>If you&#x27;re not sure what to write, that&#x27;s the lesson. Captains who can&#x27;t define the mission don&#x27;t get the wheel.</p></div>
+    <div class="post-question">What&#x27;s one line of your AI charter? Drop it below.</div>
+  </article>
+  <article class="post" data-type="kickoff" data-week="2">
+    <header class="post-head">
+      <span class="post-type">Monday Kickoff</span>
+      <span class="chip-week">Week 2</span><span class="chip-code">W2.M</span>
+    </header>
+    <h2 class="post-title">The Captain Has a Rhythm</h2>
+    <div class="post-byline">
+      <span class="avatar">AJ</span>
+      <span class="byline-text">
+        <span class="byline-name">Adam &ldquo;MOOP&rdquo; Johns</span>
+        <span class="byline-meta">Cohort Captain · Mon · Week 2</span>
+      </span>
+    </div>
+    <div class="post-body"><p>Brothers —</p>
+<p>You can&#x27;t lead a home or a business off vibes. You need a rhythm. AI fits inside the rhythm. It doesn&#x27;t make the rhythm.</p>
+<p>This week is your personal OS. Three tasks: a 5-minute morning anchor, voice capture with Whisper, and the most important framework in the whole bootcamp — tiered autonomy.</p>
+<p>Read that last one twice. <em>Informational. Contextual. Sensitive.</em> Most men get this wrong by lumping everything into one bucket: &quot;let AI do it.&quot; The captain on the bridge classifies every task before he delegates anything.</p>
+<p>Spend 25 minutes today on the morning anchor. Tomorrow, run it. By Friday, adjust it.</p></div>
+    <div class="post-question">What&#x27;s the one task you&#x27;ve been letting AI handle that&#x27;s actually sensitive? No shame — just name it.</div>
+  </article>
+  <article class="post" data-type="kickoff" data-week="3">
+    <header class="post-head">
+      <span class="post-type">Monday Kickoff</span>
+      <span class="chip-week">Week 3</span><span class="chip-code">W3.M</span>
+    </header>
+    <h2 class="post-title">Tools Serve the Home</h2>
+    <div class="post-byline">
+      <span class="avatar">AJ</span>
+      <span class="byline-text">
+        <span class="byline-name">Adam &ldquo;MOOP&rdquo; Johns</span>
+        <span class="byline-meta">Cohort Captain · Mon · Week 3</span>
+      </span>
+    </div>
+    <div class="post-body"><p>Captains —</p>
+<p>Week 3. The home week. Hardest week.</p>
+<p>This is where some of you will hesitate. You&#x27;ve been letting AI into too much of your home, or you&#x27;ve been keeping it out of the parts where it would actually help — your wife&#x27;s grocery list, your kid&#x27;s reading plan, the conversation you keep avoiding.</p>
+<p>Three tasks: prep one hard conversation (don&#x27;t hide behind it), build one family rhythm asset, and write your Family AI Policy <em>with your wife</em>. That last one is Joshua 24:15 in 2026 form.</p>
+<p>Don&#x27;t skip the policy because it feels too small. It&#x27;s small. It&#x27;s also a covenant.</p></div>
+    <div class="post-question">Question for the week: what&#x27;s one rule you and your wife agree should be in your Family AI Policy?</div>
+  </article>
+  <article class="post" data-type="kickoff" data-week="4">
+    <header class="post-head">
+      <span class="post-type">Monday Kickoff</span>
+      <span class="chip-week">Week 4</span><span class="chip-code">W4.M</span>
+    </header>
+    <h2 class="post-title">Where Leverage Lives</h2>
+    <div class="post-byline">
+      <span class="avatar">AJ</span>
+      <span class="byline-text">
+        <span class="byline-name">Adam &ldquo;MOOP&rdquo; Johns</span>
+        <span class="byline-meta">Cohort Captain · Mon · Week 4</span>
+      </span>
+    </div>
+    <div class="post-body"><p>Captains —</p>
+<p>Week 4. Cowork mode.</p>
+<p>Leverage is real, and it&#x27;s a stewardship problem. Five hours bought back is five hours owed somewhere — to your wife, your kids, your local body. Don&#x27;t pocket them.</p>
+<p>Three tasks: buy back 5 hours, build a ministry workflow, save your 3 best prompts as skills.</p>
+<p>Hard reminder all week: <strong>drafting vs. execution.</strong> AI drafts. The captain decides. Anything that touches money, access, or another person&#x27;s wellbeing stays sensitive. We don&#x27;t autosend. We don&#x27;t autopilot.</p>
+<p>If you cut your customer-email time from 2 hours to 30 minutes, the question isn&#x27;t &quot;can I scale up?&quot; The question is <em>who&#x27;s going to call me a faithful steward of those 90 minutes?</em></p></div>
+    <div class="post-question">Where will your bought-back hours go this month? Be specific.</div>
+  </article>
+  <article class="post" data-type="kickoff" data-week="5">
+    <header class="post-head">
+      <span class="post-type">Monday Kickoff</span>
+      <span class="chip-week">Week 5</span><span class="chip-code">W5.M</span>
+    </header>
+    <h2 class="post-title">The Captain Sent</h2>
+    <div class="post-byline">
+      <span class="avatar">AJ</span>
+      <span class="byline-text">
+        <span class="byline-name">Adam &ldquo;MOOP&rdquo; Johns</span>
+        <span class="byline-meta">Cohort Captain · Mon · Week 5</span>
+      </span>
+    </div>
+    <div class="post-body"><p>Brothers —</p>
+<p>Last week. Three tasks: cost &amp; trap audit, teach one person, write your Captain&#x27;s Charter.</p>
+<p>This is the multiplication week. The 2 Timothy 2:2 week.</p>
+<p>Most men finish bootcamps and tell no one. They keep the gold and bury it. Don&#x27;t. The chain breaks in your generation if you don&#x27;t pass it.</p>
+<p>Pick someone this week. Wife. Older kid. Brother. Pastor. Mentee. Teach them ONE thing — not all of it. The smallest faithful thing. Then watch them do it once.</p>
+<p>By Friday: charter signed. Screenshot posted. Captain commissioned.</p></div>
+    <div class="post-question">Who are you teaching this week? Drop the first name in the comments — accountability.</div>
+  </article>
+  <article class="post" data-type="call" data-week="1">
+    <header class="post-head">
+      <span class="post-type">Captain's Call</span>
+      <span class="chip-week">Week 1</span><span class="chip-code">W1.W</span>
+    </header>
+    <h2 class="post-title">Mid-Week Charter Check</h2>
+    <div class="post-byline">
+      <span class="avatar">AJ</span>
+      <span class="byline-text">
+        <span class="byline-name">Adam &ldquo;MOOP&rdquo; Johns</span>
+        <span class="byline-meta">Cohort Captain · Wed · Week 1</span>
+      </span>
+    </div>
+    <div class="post-body"><p>Halfway through Week 1.</p>
+<p>Two questions:<br>1. Have you written your AI charter yet, or are you still waiting for the perfect 5 lines?<br>2. Have you shared one of those lines in the comments?</p>
+<p>If the answer to either is no, that&#x27;s not failure — that&#x27;s data. The captain who can&#x27;t write the charter isn&#x27;t ready to use the tool.</p>
+<p>Imperfect actions today beat perfect actions never. Five lines. Bad ones. Now.</p></div>
+    <div class="post-question">What&#x27;s getting in the way? Drop it below — we&#x27;ll problem-solve together.</div>
+  </article>
+  <article class="post" data-type="call" data-week="2">
+    <header class="post-head">
+      <span class="post-type">Captain's Call</span>
+      <span class="chip-week">Week 2</span><span class="chip-code">W2.W</span>
+    </header>
+    <h2 class="post-title">Tag Your Sensitive Tasks</h2>
+    <div class="post-byline">
+      <span class="avatar">AJ</span>
+      <span class="byline-text">
+        <span class="byline-name">Adam &ldquo;MOOP&rdquo; Johns</span>
+        <span class="byline-meta">Cohort Captain · Wed · Week 2</span>
+      </span>
+    </div>
+    <div class="post-body"><p>Mid-week, Week 2. Captain&#x27;s call.</p>
+<p>If you&#x27;ve only done the morning anchor, you&#x27;ve done the easy one. Whisper is harder because it requires you to listen to yourself. Tiered autonomy is hardest because it requires you to be honest about what you&#x27;ve already over-delegated.</p>
+<p>Take 15 minutes today. List 5 of your recurring tasks. Tag each: informational / contextual / sensitive. Don&#x27;t grade yourself on the answer. Grade yourself on the honesty.</p>
+<p>You&#x27;ll find at least one task you&#x27;ve been letting AI execute that should have stayed sensitive. That&#x27;s the lesson.</p></div>
+    <div class="post-question">Which task surprised you most when you tagged it? Reply with the tag and one sentence of why.</div>
+  </article>
+  <article class="post" data-type="call" data-week="3">
+    <header class="post-head">
+      <span class="post-type">Captain's Call</span>
+      <span class="chip-week">Week 3</span><span class="chip-code">W3.W</span>
+    </header>
+    <h2 class="post-title">Have the Conversation</h2>
+    <div class="post-byline">
+      <span class="avatar">AJ</span>
+      <span class="byline-text">
+        <span class="byline-name">Adam &ldquo;MOOP&rdquo; Johns</span>
+        <span class="byline-meta">Cohort Captain · Wed · Week 3</span>
+      </span>
+    </div>
+    <div class="post-body"><p>Halfway through home week.</p>
+<p>You know which conversation. The one you&#x27;ve been prepping with AI all week — the one you keep &quot;polishing&quot; because polish feels like progress.</p>
+<p>Today is the day. Phone face-down. Wife or kid in the room. AI not in the room.</p>
+<p>Three sentences. Drafted by you. Spoken by you. Followed by silence so she or he can answer.</p>
+<p>Captains pray, prepare, and then <em>show up</em>. The captain who only prepares isn&#x27;t a captain. He&#x27;s an admin.</p></div>
+    <div class="post-question">After you&#x27;ve had it (not before), drop one word in the comments: how it went. One word. Just one.</div>
+  </article>
+  <article class="post" data-type="call" data-week="4">
+    <header class="post-head">
+      <span class="post-type">Captain's Call</span>
+      <span class="chip-week">Week 4</span><span class="chip-code">W4.W</span>
+    </header>
+    <h2 class="post-title">Strip the Fingerprint</h2>
+    <div class="post-byline">
+      <span class="avatar">AJ</span>
+      <span class="byline-text">
+        <span class="byline-name">Adam &ldquo;MOOP&rdquo; Johns</span>
+        <span class="byline-meta">Cohort Captain · Wed · Week 4</span>
+      </span>
+    </div>
+    <div class="post-body"><p>Mid-week, Week 4.</p>
+<p>Read the email you drafted with Claude this week. Out loud.</p>
+<p>Did you say &quot;delve&quot;? &quot;Elevate&quot;? &quot;In today&#x27;s fast-paced world&quot;? Em-dashes everywhere?</p>
+<p>Strip them. Sound like you.</p>
+<p>The leverage isn&#x27;t worth it if your community can hear the AI seam. Leverage is buying back time. Imitation is buying out your voice.</p>
+<p>Edit one piece of AI-drafted content today. Send it. Then save the edited version as your new prompt.</p></div>
+    <div class="post-question">What&#x27;s an AI fingerprint phrase you keep catching yourself using? Drop it — let&#x27;s compile a strip-list.</div>
+  </article>
+  <article class="post" data-type="call" data-week="5">
+    <header class="post-head">
+      <span class="post-type">Captain's Call</span>
+      <span class="chip-week">Week 5</span><span class="chip-code">W5.W</span>
+    </header>
+    <h2 class="post-title">Multiplication Resistance</h2>
+    <div class="post-byline">
+      <span class="avatar">AJ</span>
+      <span class="byline-text">
+        <span class="byline-name">Adam &ldquo;MOOP&rdquo; Johns</span>
+        <span class="byline-meta">Cohort Captain · Wed · Week 5</span>
+      </span>
+    </div>
+    <div class="post-body"><p>Mid-week, Week 5.</p>
+<p>Some of you have already taught someone. Most haven&#x27;t.</p>
+<p>Why not? Be honest with yourself.<br>- Too busy?<br>- Not sure I know enough?<br>- Don&#x27;t want to look weird?</p>
+<p>All real. None of them are reasons. They&#x27;re resistance.</p>
+<p>Pick a name today. Send a text. &quot;Hey — I&#x27;ve been doing a 5-week thing on AI and faith. Can I show you 1 thing for 10 minutes this week?&quot;</p>
+<p>That&#x27;s the whole task. Send the text.</p></div>
+    <div class="post-question">Who are you texting? First name. Today.</div>
+  </article>
+  <article class="post" data-type="closeout" data-week="1">
+    <header class="post-head">
+      <span class="post-type">Friday Close-Out</span>
+      <span class="chip-week">Week 1</span><span class="chip-code">W1.F</span>
+    </header>
+    <h2 class="post-title">What Shipped, What Slipped</h2>
+    <div class="post-byline">
+      <span class="avatar">AJ</span>
+      <span class="byline-text">
+        <span class="byline-name">Adam &ldquo;MOOP&rdquo; Johns</span>
+        <span class="byline-meta">Cohort Captain · Fri · Week 1</span>
+      </span>
+    </div>
+    <div class="post-body"><p>Captains —</p>
+<p>Week 1 close-out. Tell us:<br>1. What shipped this week? (Charter? Tool stack? Anything?)<br>2. What slipped?<br>3. One thing you noticed about yourself?</p>
+<p>No grading. No competition. Captain&#x27;s logs are just honest field reports.</p>
+<p>If you finished all three tasks, post in the comments. We celebrate that. If you finished one, post that — we celebrate that too. Imperfect actions stack.</p>
+<p>Sabbath posture this weekend: drill off, posts off, family on. We pick it back up Monday morning.</p></div>
+    <div class="post-question">Reply with your &quot;shipped / slipped / noticed&quot; — one line each.</div>
+  </article>
+  <article class="post" data-type="closeout" data-week="2">
+    <header class="post-head">
+      <span class="post-type">Friday Close-Out</span>
+      <span class="chip-week">Week 2</span><span class="chip-code">W2.F</span>
+    </header>
+    <h2 class="post-title">Rhythm Check</h2>
+    <div class="post-byline">
+      <span class="avatar">AJ</span>
+      <span class="byline-text">
+        <span class="byline-name">Adam &ldquo;MOOP&rdquo; Johns</span>
+        <span class="byline-meta">Cohort Captain · Fri · Week 2</span>
+      </span>
+    </div>
+    <div class="post-body"><p>Week 2 done.</p>
+<p>Quick captain&#x27;s log:<br>- Morning anchor — running it daily, sometimes, not yet?<br>- Whisper — used it once? More?<br>- Tiered autonomy tags — wrote them? Acted on them?</p>
+<p>The rhythm matters more than the polish. A rough morning anchor used 5 days in a row beats a perfect one used twice.</p>
+<p>Look at your calendar for next week. Block one 15-minute &quot;captain&#x27;s bridge time&quot; slot. Daily, if you can. That&#x27;s where the rhythm gets reinforced.</p>
+<p>Sabbath this weekend. We don&#x27;t outperform our rest.</p></div>
+    <div class="post-question">What&#x27;s the one piece of the rhythm that actually stuck this week?</div>
+  </article>
+  <article class="post" data-type="closeout" data-week="3">
+    <header class="post-head">
+      <span class="post-type">Friday Close-Out</span>
+      <span class="chip-week">Week 3</span><span class="chip-code">W3.F</span>
+    </header>
+    <h2 class="post-title">Policy Posted?</h2>
+    <div class="post-byline">
+      <span class="avatar">AJ</span>
+      <span class="byline-text">
+        <span class="byline-name">Adam &ldquo;MOOP&rdquo; Johns</span>
+        <span class="byline-meta">Cohort Captain · Fri · Week 3</span>
+      </span>
+    </div>
+    <div class="post-body"><p>Week 3 close-out.</p>
+<p>Honest question: did you write the Family AI Policy <em>with your wife</em>?</p>
+<p>If yes — celebrate. Drop a &quot;policy posted&quot; in the comments. Maybe a screenshot if she&#x27;s cool with it.</p>
+<p>If not — what got in the way? Was it time, tension, or pride? All three are addressable, none of them disappear by skipping the conversation.</p>
+<p>Reschedule the 15 minutes. Put it on her calendar, not yours. Tell her you want to do it together because her voice matters in your house — and AI is in your house now whether you write a policy or not.</p></div>
+    <div class="post-question">Did you and your wife sign a policy this week? One word: yes / not yet / working on it.</div>
+  </article>
+  <article class="post" data-type="closeout" data-week="4">
+    <header class="post-head">
+      <span class="post-type">Friday Close-Out</span>
+      <span class="chip-week">Week 4</span><span class="chip-code">W4.F</span>
+    </header>
+    <h2 class="post-title">Hour Audit</h2>
+    <div class="post-byline">
+      <span class="avatar">AJ</span>
+      <span class="byline-text">
+        <span class="byline-name">Adam &ldquo;MOOP&rdquo; Johns</span>
+        <span class="byline-meta">Cohort Captain · Fri · Week 4</span>
+      </span>
+    </div>
+    <div class="post-body"><p>Week 4 close-out. Captain&#x27;s log:</p>
+<p>Did you build a real Cowork workflow this week?<br>Did you save your 3 best prompts?<br>And the big question: <strong>how many hours did you actually buy back?</strong></p>
+<p>Be honest. The number isn&#x27;t 5 for everyone. Sometimes it&#x27;s 1. Sometimes it&#x27;s negative because you spent more time configuring than the workflow was worth. That&#x27;s normal. That&#x27;s data.</p>
+<p>Next week is the last. Build one capstone system this weekend — even a sketch. Bring it Monday.</p></div>
+    <div class="post-question">Hours bought back this week: ___ . What did you do with them?</div>
+  </article>
+  <article class="post" data-type="closeout" data-week="5">
+    <header class="post-head">
+      <span class="post-type">Friday Close-Out</span>
+      <span class="chip-week">Week 5</span><span class="chip-code">W5.F</span>
+    </header>
+    <h2 class="post-title">Captain Sent</h2>
+    <div class="post-byline">
+      <span class="avatar">AJ</span>
+      <span class="byline-text">
+        <span class="byline-name">Adam &ldquo;MOOP&rdquo; Johns</span>
+        <span class="byline-meta">Cohort Captain · Fri · Week 5</span>
+      </span>
+    </div>
+    <div class="post-body"><p>Brothers —</p>
+<p>Week 5 close-out. Final captain&#x27;s log.</p>
+<p>Three things to post in the comments:<br>1. The screenshot of your signed Captain&#x27;s Charter.<br>2. The first name of the person you taught.<br>3. One sentence: what changed in you over 5 weeks.</p>
+<p>Phase 1 ends here. Phase 2 (Bridge Officer Program) is on hold until enough of you have run real systems for 90 days. The continuation rhythm starts at Day 45.</p>
+<p>You started this bootcamp as a man with AI. You finish as a captain with a charter, a system, and a person you trained. That&#x27;s the whole assignment.</p></div>
+    <div class="post-question">Sign your charter. Post the screenshot. Name the person you taught. We commission you.</div>
+  </article>
+  <article class="post" data-type="scripture" data-week="1">
+    <header class="post-head">
+      <span class="post-type">Scripture Anchor</span>
+      <span class="chip-week">Week 1</span><span class="chip-code">Anchor 1</span>
+    </header>
+    <h2 class="post-title">Proverbs 3:5–6</h2>
+    <div class="post-byline">
+      <span class="avatar">AJ</span>
+      <span class="byline-text">
+        <span class="byline-name">Adam &ldquo;MOOP&rdquo; Johns</span>
+        <span class="byline-meta">Cohort Captain · Pinned at Week 1 open</span>
+      </span>
+    </div>
+    <div class="post-body"><p>&quot;Trust in the Lord with all your heart, and lean not on your own understanding.&quot;</p>
+<p>This is the operating system for the whole bootcamp. AI runs in user space. The Lord runs in kernel space. We don&#x27;t confuse them.</p>
+<p>Every prompt you write this week, every output you read — bring them under this verse before you act on them.</p></div>
+    <div class="post-question">What part of &quot;lean not on your own understanding&quot; is hardest for you when AI gives you a confident answer?</div>
+  </article>
+  <article class="post" data-type="scripture" data-week="2">
+    <header class="post-head">
+      <span class="post-type">Scripture Anchor</span>
+      <span class="chip-week">Week 2</span><span class="chip-code">Anchor 2</span>
+    </header>
+    <h2 class="post-title">Psalm 90:12</h2>
+    <div class="post-byline">
+      <span class="avatar">AJ</span>
+      <span class="byline-text">
+        <span class="byline-name">Adam &ldquo;MOOP&rdquo; Johns</span>
+        <span class="byline-meta">Cohort Captain · Pinned at Week 2 open</span>
+      </span>
+    </div>
+    <div class="post-body"><p>&quot;So teach us to number our days, that we may apply our hearts unto wisdom.&quot;</p>
+<p>Numbering your days is what tiered autonomy is for. Some hours are informational — they belong to information. Some are contextual — they belong to drafts. Some are sensitive — they belong to your wife, your kids, your knees.</p>
+<p>Don&#x27;t let AI blur the categories. The Lord didn&#x27;t give you those hours so you could outsource them. He gave them so you could <em>number</em> them.</p></div>
+    <div class="post-question">Which hour of your day are you most tempted to outsource that you shouldn&#x27;t?</div>
+  </article>
+  <article class="post" data-type="scripture" data-week="3">
+    <header class="post-head">
+      <span class="post-type">Scripture Anchor</span>
+      <span class="chip-week">Week 3</span><span class="chip-code">Anchor 3</span>
+    </header>
+    <h2 class="post-title">Joshua 24:15</h2>
+    <div class="post-byline">
+      <span class="avatar">AJ</span>
+      <span class="byline-text">
+        <span class="byline-name">Adam &ldquo;MOOP&rdquo; Johns</span>
+        <span class="byline-meta">Cohort Captain · Pinned at Week 3 open</span>
+      </span>
+    </div>
+    <div class="post-body"><p>&quot;As for me and my house, we will serve the Lord.&quot;</p>
+<p>In 2026, the house has Wi-Fi. The house has speakers that listen. The house has AI in pockets you can&#x27;t always see. <em>And as for that house</em>, the captain still says: we will serve the Lord.</p>
+<p>Your Family AI Policy is this verse with edges. It&#x27;s a covenant, even if it&#x27;s small. Sign it with her. Post it on the fridge.</p></div>
+    <div class="post-question">What&#x27;s the one rule in your home that makes Joshua 24:15 visible?</div>
+  </article>
+  <article class="post" data-type="scripture" data-week="4">
+    <header class="post-head">
+      <span class="post-type">Scripture Anchor</span>
+      <span class="chip-week">Week 4</span><span class="chip-code">Anchor 4</span>
+    </header>
+    <h2 class="post-title">Colossians 3:23</h2>
+    <div class="post-byline">
+      <span class="avatar">AJ</span>
+      <span class="byline-text">
+        <span class="byline-name">Adam &ldquo;MOOP&rdquo; Johns</span>
+        <span class="byline-meta">Cohort Captain · Pinned at Week 4 open</span>
+      </span>
+    </div>
+    <div class="post-body"><p>&quot;Whatever you do, work as for the Lord, and not for men.&quot;</p>
+<p>Buying back hours is good. Buying back hours so you can be <em>more</em> faithful is the point.</p>
+<p>Don&#x27;t let leverage become a brag. Let it become a tithe of time — back to your wife, your kids, your church, your neighbor.</p></div>
+    <div class="post-question">Where will your leverage land this month? Name one place.</div>
+  </article>
+  <article class="post" data-type="scripture" data-week="5">
+    <header class="post-head">
+      <span class="post-type">Scripture Anchor</span>
+      <span class="chip-week">Week 5</span><span class="chip-code">Anchor 5</span>
+    </header>
+    <h2 class="post-title">2 Timothy 2:2</h2>
+    <div class="post-byline">
+      <span class="avatar">AJ</span>
+      <span class="byline-text">
+        <span class="byline-name">Adam &ldquo;MOOP&rdquo; Johns</span>
+        <span class="byline-meta">Cohort Captain · Pinned at Week 5 open</span>
+      </span>
+    </div>
+    <div class="post-body"><p>&quot;And the things you have heard from me … entrust to faithful men who will be able to teach others.&quot;</p>
+<p>This is the chain. The bootcamp ends here because Paul ended Timothy here.</p>
+<p>You&#x27;re not done when you finish your charter. You&#x27;re done when someone you taught teaches someone else. That&#x27;s the multiplication test.</p></div>
+    <div class="post-question">Who are you praying for to be the next captain after you?</div>
+  </article>
+  <article class="post" data-type="bonus" data-week="0">
+    <header class="post-head">
+      <span class="post-type">Bonus Drop</span>
+      <span class="chip-code">Bonus</span>
+    </header>
+    <h2 class="post-title">Captain to Captain (Letter)</h2>
+    <div class="post-byline">
+      <span class="avatar">AJ</span>
+      <span class="byline-text">
+        <span class="byline-name">Adam &ldquo;MOOP&rdquo; Johns</span>
+        <span class="byline-meta">Cohort Captain · Bonus drop</span>
+      </span>
+    </div>
+    <div class="post-body"><p>Captains —</p>
+<p>A letter, not a post.</p>
+<p>Every captain I&#x27;ve watched go through something like this writes his first AI charter on the back of something — a napkin, the inside cover of a notebook, an unsent email draft. It&#x27;s bad the first time. It&#x27;s less bad the third time. The good ones are still rewriting them a year later.</p>
+<p>Don&#x27;t wait for the good version. Write the bad one. Sign it anyway. Captain&#x27;s signatures aren&#x27;t reserved for finished men. They&#x27;re for moving men.</p>
+<p>I&#x27;m proud of every one of you who&#x27;s in this bootcamp. I&#x27;ll be prouder of the ones who&#x27;ll be in the <em>next</em> one because you taught them.</p>
+<p>Imperfect actions. Captain&#x27;s actions. Same thing.</p>
+<p>— Adam (&quot;MOOP&quot;)</p></div>
+    <div class="post-question">No question this time. Just say &quot;received&quot; if it landed.</div>
+  </article>
+  <article class="post" data-type="bonus" data-week="0">
+    <header class="post-head">
+      <span class="post-type">Bonus Drop</span>
+      <span class="chip-code">Bonus</span>
+    </header>
+    <h2 class="post-title">The Day AI Will Lie to You</h2>
+    <div class="post-byline">
+      <span class="avatar">AJ</span>
+      <span class="byline-text">
+        <span class="byline-name">Adam &ldquo;MOOP&rdquo; Johns</span>
+        <span class="byline-meta">Cohort Captain · Bonus drop</span>
+      </span>
+    </div>
+    <div class="post-body"><p>Captains —</p>
+<p>Quick warning, not a story.</p>
+<p>It&#x27;s going to happen. You&#x27;ll ask Claude or ChatGPT for a verse to support a point you&#x27;re making, and it&#x27;ll hand you one with the right vibe — wrong reference, wrong words. Confident as anything. Pastors have almost preached them. Bible study leaders have almost printed them. The model doesn&#x27;t know it&#x27;s wrong, because the model doesn&#x27;t know anything — it just predicts the next plausible-sounding token.</p>
+<p>The Word doesn&#x27;t trip captains up. The model does.</p>
+<p>This is why we do trap tests in Week 5. This is why we say <em>trust but verify.</em> This is why &quot;AI never replaces the Spirit, the Word, or your wife&#x27;s voice&quot; is the hard rule.</p>
+<p>You&#x27;ll hit this one yourself. When you do, log it. Tell us. We protect each other from confident-wrong tools.</p></div>
+    <div class="post-question">Drop a one-line &quot;AI got me&quot; story below — yours or one you&#x27;ve heard. We learn from each other&#x27;s near-misses.</div>
+  </article>
+  <article class="post" data-type="bonus" data-week="0">
+    <header class="post-head">
+      <span class="post-type">Bonus Drop</span>
+      <span class="chip-code">Bonus</span>
+    </header>
+    <h2 class="post-title">Celebration Drop</h2>
+    <div class="post-byline">
+      <span class="avatar">AJ</span>
+      <span class="byline-text">
+        <span class="byline-name">Adam &ldquo;MOOP&rdquo; Johns</span>
+        <span class="byline-meta">Cohort Captain · Bonus drop</span>
+      </span>
+    </div>
+    <div class="post-body"><p>Captains — pause.</p>
+<p>Look at this thread. Look at the comments stacking up. Look at the policies posted, the prompts shared, the hours bought back.</p>
+<p>This isn&#x27;t just a curriculum. This is a <em>cohort</em>. You&#x27;re showing up for each other.</p>
+<p>I want to call out three captains by name (do this in your real post: tag 3 brothers who shipped real work this week — kids&#x27; reading plan, signed family policy, cancelled subscription).</p>
+<p>Iron is sharpening iron. The Lord is honoring honest captains who take imperfect actions.</p></div>
+    <div class="post-question">Tag a brother in the cohort who&#x27;s been faithful this week. Say one sentence why.</div>
+  </article>
+  <article class="post" data-type="bonus" data-week="0">
+    <header class="post-head">
+      <span class="post-type">Bonus Drop</span>
+      <span class="chip-code">Bonus</span>
+    </header>
+    <h2 class="post-title">Multiplication Challenge</h2>
+    <div class="post-byline">
+      <span class="avatar">AJ</span>
+      <span class="byline-text">
+        <span class="byline-name">Adam &ldquo;MOOP&rdquo; Johns</span>
+        <span class="byline-meta">Cohort Captain · Bonus drop</span>
+      </span>
+    </div>
+    <div class="post-body"><p>Captains —</p>
+<p>Final bonus drop.</p>
+<p>Some of you finished Phase 1 strong. Same charter. Same systems. Now what?</p>
+<p>Here&#x27;s the challenge: by Day 90, host <strong>one</strong> 30-minute &quot;captain&#x27;s call&quot; with 2–3 men outside this cohort. Walk them through one task you ran in Phase 1.</p>
+<p>Not a bootcamp. Not a full curriculum. One task. One conversation. 30 minutes.</p>
+<p>If 10 of you do this, that&#x27;s 30 new men touched by Phase 1 multiplication. That&#x27;s the math of 2 Timothy 2:2.</p>
+<p>Reply when you&#x27;ve scheduled the call. We&#x27;ll celebrate it.</p></div>
+    <div class="post-question">Who&#x27;s in for the Day-90 multiplication challenge?</div>
+  </article>
+  <div class="feed-empty" id="feedEmpty">No posts in this filter.</div>
+</main>
+
+<!-- ── FOOTER ── -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-top">
+      <div class="footer-brand">
+        <div class="name">U.S.M.C. Ministries</div>
+        <div class="tag">Warriors Equipped. Kingdom Advancing.</div>
+        <p>Helping men become better husbands, fathers, and citizens as they follow Jesus. Based in Fredericksburg, VA.</p>
+      </div>
+      <div class="footer-col">
+        <h4>Resources</h4>
+        <ul>
+          <li><a href="shop.html">Ministry Shop</a></li>
+          <li><a href="books.html">Books &amp; Devos</a></li>
+          <li><a href="https://usmcmin.org" target="_blank">Bible Reading Plan</a></li>
+          <li><a href="coaching.html#membership">Warriors Circle</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Family Captain</h4>
+        <ul>
+          <li><a href="husband.html">Husband (HAPPY)</a></li>
+          <li><a href="father.html">Father</a></li>
+          <li><a href="family-captain.html">AI Boot Camp</a></li>
+          <li><a href="family-captain-tools.html">AI Tools Landscape</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Coaching</h4>
+        <ul>
+          <li><a href="https://cal.com/usmc-ministries-2022/uniting" target="_blank">Brotherhood Session</a></li>
+          <li><a href="https://cal.com/usmc-ministries-2022/counseling" target="_blank">Pastoral Counsel</a></li>
+          <li><a href="https://cal.com/usmc-ministries-2022/mentoring" target="_blank">Discipleship</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Ministry</h4>
+        <ul>
+          <li><a href="about.html">About Adam</a></li>
+          <li><a href="https://usmcmin.org" target="_blank">usmcmin.org</a></li>
+          <li><a href="mailto:usmcministries2022@gmail.com">Contact</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <div style="color:var(--gray);font-size:0.85rem;margin-bottom:0.5rem">Looking for ministry resources &amp; Bible study? Visit <a href="https://usmcmin.org" target="_blank" style="color:var(--gold)">usmcmin.org</a></div>
+      <div style="color:var(--gray);font-size:0.8rem">© 2026 U.S.M.C. Ministries. All rights reserved. &nbsp;|&nbsp; <a href="sitemap.html">Sitemap</a></div>
+    </div>
+  </div>
+</footer>
+
+
+
+<script>
+(function(){
+  const chips = document.querySelectorAll('.chip');
+  const posts = document.querySelectorAll('.post');
+  const empty = document.getElementById('feedEmpty');
+  chips.forEach(chip => chip.addEventListener('click', () => {
+    chips.forEach(c => c.classList.remove('active'));
+    chip.classList.add('active');
+    const filter = chip.dataset.filter;
+    let visible = 0;
+    posts.forEach(p => {
+      const show = filter === 'all' || p.dataset.type === filter;
+      p.style.display = show ? '' : 'none';
+      if (show) visible++;
+    });
+    empty.style.display = visible === 0 ? 'block' : 'none';
+    window.scrollTo({top: 200, behavior: 'instant'});
+  }));
+})();
+</script>
+
+<!-- Nav + Theme + Analytics -->
+<script>
+(function() {
+  var navToggle = document.querySelector('.nav-toggle');
+  var navLinks = document.querySelector('.nav-links');
+  if (navToggle && navLinks) navToggle.addEventListener('click', function() { navLinks.classList.toggle('open'); });
+})();
+(function() {
+  const toggle = document.getElementById('themeToggle');
+  const saved = localStorage.getItem('usmc-theme');
+  if (saved !== 'light') { document.documentElement.setAttribute('data-theme', 'dark'); toggle.textContent = '☀️'; }
+  toggle.addEventListener('click', function() {
+    const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+    if (isDark) { document.documentElement.removeAttribute('data-theme'); localStorage.setItem('usmc-theme', 'light'); toggle.textContent = '☽'; }
+    else { document.documentElement.setAttribute('data-theme', 'dark'); localStorage.setItem('usmc-theme', 'dark'); toggle.textContent = '☀️'; }
+  });
+})();
+</script>
+<script data-goatcounter="https://usmcmin.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
+
+</body>
+</html>

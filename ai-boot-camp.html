@@ -374,14 +374,17 @@ function pdfUrl(filename) {
   return TASK_PDF_DIR + filename.replace(/[&,]/g, encodeURIComponent);
 }
 function renderWeeks() {
+  // NOTE: outer wrapper is <div> not <a> — HTML disallows nested anchors and the
+  // browser auto-closes the outer <a> when it sees the inner scripture <a>, which
+  // produced phantom empty trailing cards (the bug Ron caught in the screenshot).
   document.getElementById("weeks-grid").innerHTML = WEEKS.map(w => `
-    <a class="week-card" data-week="${w.n}" href="ai-boot-camp-voyage.html#week${w.n}" style="text-decoration:none; color:inherit;" title="Open Week ${w.n} in the Captain's Voyage">
+    <div class="week-card" data-week="${w.n}" role="link" tabindex="0" aria-label="Open Week ${w.n} in the Captain's Voyage" title="Open Week ${w.n} in the Captain's Voyage" onclick="if(!event.target.closest('a')) location.href='ai-boot-camp-voyage.html#week${w.n}';" onkeydown="if((event.key==='Enter'||event.key===' ')&&!event.target.closest('a')){event.preventDefault();location.href='ai-boot-camp-voyage.html#week${w.n}';}" style="cursor:pointer;">
       <div class="num">WEEK ${w.n}</div>
       <div class="week-icon">${w.icon}</div>
       <h3>${w.title}</h3>
       <div class="tag">${w.tag}</div>
-      <div class="scrip"><a href="https://usmcmin.org/bible.html" target="_blank" rel="noopener" onclick="event.stopPropagation()" style="color:var(--gray); text-decoration:underline; text-decoration-color:var(--week-color);">${w.scrip} ↗</a></div>
-    </a>`).join("");
+      <div class="scrip"><a href="https://usmcmin.org/bible.html" target="_blank" rel="noopener" style="color:var(--gray); text-decoration:underline; text-decoration-color:var(--week-color);">${w.scrip} ↗</a></div>
+    </div>`).join("");
 }
 function renderTasks() {
   let html = "";

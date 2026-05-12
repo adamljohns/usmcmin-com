@@ -138,7 +138,7 @@
   @media (max-width:600px) { .weeks { grid-template-columns:1fr; } }
 </style>
 
-<!-- v3.1 deploy-kick @ 2026-05-12 12:45 — FAMILY CAPTAIN TRACK — TFC VISUAL IDENTITY (Phase B 2026-05-11) ── -->
+<!-- ── FAMILY CAPTAIN TRACK — TFC VISUAL IDENTITY (Phase B 2026-05-11) ── -->
 <meta name="robots" content="noindex, nofollow">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -366,6 +366,87 @@
     stroke: #FFFFFF; fill: none;
     stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round;
   }
+
+  /* ─────────────────────────────────────────────────────────────────
+     v4 FIXES (2026-05-12, second-round MOOP feedback):
+       (1) Voyage progress banner — white-on-light unreadable
+       (2) Tool / Local-tool meta-chips — light grey on light grey
+       (3) Drill cells — bare numbers, also light-on-light
+     ───────────────────────────────────────────────────────────── */
+
+  /* (1) Progress banner on the Voyage page — light card bg, need navy text */
+  .progress-banner {
+    background: #F4F5F7 !important;
+    border: 1px solid #D1D5DB !important;
+    color: #1E293B !important;
+  }
+  .progress-banner .stat-line {
+    color: #1E293B !important;
+    font-weight: 600 !important;
+  }
+  .progress-banner .stat-line .pct {
+    color: #CE8E31 !important;
+    font-weight: 800 !important;
+  }
+  .progress-banner .progress-bar {
+    background: rgba(30,41,59,0.10) !important;
+  }
+  .progress-banner .progress-bar #barFill {
+    background: #CE8E31 !important;
+  }
+  .voyage-btn,
+  button.voyage-btn,
+  #resetBtn {
+    background: #FFFFFF !important;
+    color: #1E293B !important;
+    border: 1px solid #1E293B !important;
+    font-weight: 600 !important;
+  }
+  .voyage-btn:hover, #resetBtn:hover {
+    background: #1E293B !important;
+    color: #FFFFFF !important;
+    border-color: #1E293B !important;
+  }
+
+  /* (2) Tool / Local-tool meta-chips — boost legibility */
+  .tool-card .meta-chip,
+  .local-tool-card .meta-chip {
+    background: rgba(206,142,49,0.12) !important;
+    border: 1px solid rgba(206,142,49,0.40) !important;
+    color: #1E293B !important;
+  }
+  .tool-card .meta-chip .meta-label,
+  .local-tool-card .meta-chip .meta-label,
+  .meta-chip .meta-label {
+    color: #2B4A72 !important;          /* TFC secondary navy/blue (permitted) */
+    opacity: 1 !important;
+    font-weight: 700 !important;
+  }
+  .tool-card .meta-chip > *,
+  .local-tool-card .meta-chip > * {
+    color: #1E293B !important;
+  }
+  /* MCP chip variants — keep state coloring readable */
+  .mcp-native { background: rgba(206,142,49,0.20) !important; color: #1E293B !important; }
+  .mcp-yes    { background: rgba(206,142,49,0.12) !important; color: #1E293B !important; }
+  .mcp-plugin { background: rgba(43,74,114,0.12)  !important; color: #1E293B !important; }
+  .mcp-no, .mcp-na { background: rgba(107,114,128,0.12) !important; color: #1E293B !important; }
+  /* Agentic chip variants — bronze gradient by level */
+  .agentic-highest, .agentic-very-high { background: #CE8E31 !important; color: #FFFFFF !important; }
+  .agentic-high   { background: rgba(206,142,49,0.65) !important; color: #FFFFFF !important; }
+  .agentic-medium { background: rgba(206,142,49,0.35) !important; color: #1E293B !important; }
+  .agentic-low    { background: rgba(206,142,49,0.20) !important; color: #1E293B !important; }
+  .agentic-n-a    { background: rgba(107,114,128,0.18) !important; color: #1E293B !important; }
+
+  /* (3) Drill cells (Voyage) — bare numbers replaced with labels in site_pages.py;
+        here we just make sure the label color is high-contrast on dark bg */
+  .drill-cell { background: #2B3447 !important; border-color: #3F4A5E !important; }
+  .drill-cell .drill-num { color: #CE8E31 !important; }
+  .drill-cell .drill-label { color: #FFFFFF !important; }
+  .drill-cell:hover { border-color: #CE8E31 !important; }
+  .drill-cell:hover .drill-label { color: #CE8E31 !important; }
+  .drill-cell.shipped { background: rgba(206,142,49,0.18) !important; border-color: #CE8E31 !important; }
+  .drill-cell.shipped .drill-label::after { color: #CE8E31 !important; }
 </style>
 
 </head>

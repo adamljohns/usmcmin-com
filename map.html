@@ -190,19 +190,31 @@
   </div>
 
   <div class="mp-info" id="mpInfo">
-    <strong>What you see, and what's next.</strong>
-    <p style="margin-top:6px;">
-      Source data: state outlines from a CC0 release of the Census 2010 5m TIGER
-      simplification. County polygons cover all counties + independent cities.
-      Congressional district polygons reflect 2010-era boundaries (the most
-      reliably-fetchable static set). City centroids are pulled from a
-      US-cities-with-coordinates dataset, filtered to the cities we have in
-      <code>data/places.json</code>. State-legislative district shapes are not
-      yet shipped — that's the next ingestion. Want a state I haven't built yet?
-      Adding a new state needs three geojson files in <a href="https://github.com/adamljohns/usmcmin-com/tree/main/data/maps" target="_blank" rel="noopener"><code>data/maps</code></a>:
-      <code>&lt;st&gt;-counties.geojson</code>, <code>&lt;st&gt;-cds-2010.geojson</code>,
-      and <code>&lt;st&gt;-cities.geojson</code>.
-    </p>
+    <div style="display:flex;flex-wrap:wrap;gap:24px;justify-content:space-between;align-items:flex-start;">
+      <div style="flex:1 1 320px;">
+        <strong>Currently mapped:</strong>
+        <p style="margin-top:6px;font-size:0.82rem;">
+          Arizona &middot; California &middot; Florida &middot; Georgia &middot;
+          Illinois &middot; Michigan &middot; New Jersey &middot; New York &middot;
+          North Carolina &middot; Ohio &middot; Pennsylvania &middot; Texas &middot;
+          Virginia
+          <span style="color:var(--gray-light);"> (13 states &middot; more on the way)</span>
+        </p>
+        <p style="margin-top:8px;font-size:0.82rem;">
+          Don't see your state? <a href="mailto:info@usmcmin.com?subject=Map%20request%3A%20%5Bstate%5D">Request it</a>
+          &mdash; or <a href="citizen.html">jump to the scorecard</a> while you wait.
+        </p>
+      </div>
+      <div style="flex:0 1 320px;font-size:0.74rem;color:var(--gray-light);line-height:1.6;">
+        <strong style="color:var(--gray);">Sources:</strong>
+        Census 2010 TIGER (state, county &amp; CD outlines, public domain) &middot;
+        <a href="https://openstreetmap.org" target="_blank" rel="noopener">OpenStreetMap</a> &middot;
+        <a href="https://carto.com/attributions" target="_blank" rel="noopener">CARTO</a> basemap.
+        Congressional district boundaries reflect the 2010 atlas; post-2020
+        redistricting will follow as states finalize. State-legislative districts
+        not yet shown.
+      </div>
+    </div>
   </div>
 </div>
 
@@ -350,6 +362,29 @@
     else if (!checked && map.hasLayer(layer)) map.removeLayer(layer);
   }
 
+  // Cross-link helper: point users at the matching cut of the .org church directory.
+  // The .org has full pages for VA, DC, and FXBG; everything else falls back to the master.
+  function churchesLink(area, kind) {
+    var st = STATE.state;
+    var fxbgRe = /fredericksburg|spotsylvania|stafford/i;
+    var dcRe   = /district of columbia|washington/i;
+    if (st === 'VA' && fxbgRe.test(area)) {
+      return '<a href="https://usmcmin.org/churches-fxbg.html" target="_blank" rel="noopener" style="color:#1d4ed8;">&#9962; Sound churches in the Fredericksburg area &rarr;</a>';
+    }
+    if (st === 'VA') {
+      return '<a href="https://usmcmin.org/churches-virginia.html" target="_blank" rel="noopener" style="color:#1d4ed8;">&#9962; Sound churches in Virginia &rarr;</a>';
+    }
+    if (dcRe.test(area)) {
+      return '<a href="https://usmcmin.org/churches-dc.html" target="_blank" rel="noopener" style="color:#1d4ed8;">&#9962; Sound churches in the DC metro &rarr;</a>';
+    }
+    return '<a href="https://usmcmin.org/churches.html" target="_blank" rel="noopener" style="color:#1d4ed8;">&#9962; Find sound churches in our directory &rarr;</a>';
+  }
+
+  function popupChurchesFooter(area, kind) {
+    return '<div style="font-size:0.78rem;border-top:1px solid #cbd5e1;margin-top:8px;padding-top:6px;">' +
+      churchesLink(area, kind) + '</div>';
+  }
+
   function buildCountyPopup(name, stateData) {
     var inHere = [];
     if (stateData && Array.isArray(stateData.candidates)) {
@@ -369,6 +404,7 @@
     } else {
       html += '<div style="font-size:0.8rem;color:#475569;">No officials specifically tagged to this jurisdiction in our scorecard yet.</div>';
     }
+    html += popupChurchesFooter(name, 'county');
     return html;
   }
 
@@ -387,6 +423,8 @@
       html += '<div style="font-size:0.8rem;color:#475569;">No representative pinned to this district in our scorecard.</div>';
     }
     html += '<div style="font-size:0.72rem;color:#64748b;margin-top:6px;">Boundary: 2010 Census atlas. Post-2020 boundaries pending.</div>';
+    // CD popup uses the state name as area context (no per-CD church cut on .org).
+    html += popupChurchesFooter(STATES[STATE.state] || STATE.state, 'cd');
     return html;
   }
 
@@ -410,6 +448,7 @@
     } else {
       html += '<div style="font-size:0.8rem;color:#475569;">No officials specifically pinned to this city in our scorecard yet.</div>';
     }
+    html += popupChurchesFooter(name, 'city');
     return html;
   }
 

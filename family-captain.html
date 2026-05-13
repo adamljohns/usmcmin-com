@@ -276,9 +276,11 @@
   .redline-card .rl-name,
   .post-card h2, .anchor-card h2, .bonus-card h2,
   .pillar h3, .pillar h4,
-  .usecase h2, .stacks h2, .redlines h2 {
+  .usecase h2, .stacks h2, .redlines h2,
+  .commission-card h2 {           /* v7 fix — was pale-on-cream */
     color: #1E293B !important;
   }
+  .commission-card p { color: #334155 !important; }
   /* Card body text — slate */
   .dl-card p,
   .week-card .tag, .week-port .week-tag,
@@ -548,7 +550,7 @@
   <nav class="fc-nav">
       <a href="family-captain.html" class="active">Bootcamp</a>
       <a href="family-captain-tools.html">Compass</a>
-      <a href="family-captain-voyage.html">Voyage</a>
+      <a href="family-captain-voyage.html">Crossing</a>
       <a href="family-captain-sovereign.html">Sovereign</a>
       <a href="family-captain-heartbeat.html">Heartbeat</a>
   </nav>
@@ -750,9 +752,9 @@
 const TG_INVITE = "https://t.me/+ddnHqJEqkKk3ZmVh";
 const TASK_PDF_DIR = "downloads/family-captain/Family_Captain_Task_PDFs/";
 const DOWNLOAD_URLS = {
-  voyage:       "ai-boot-camp-voyage.html",
-  tools:        "ai-boot-camp-tools.html",
-  sovereign:    "ai-boot-camp-sovereign.html",
+  voyage:       "family-captain-voyage.html",
+  tools:        "family-captain-tools.html",
+  sovereign:    "family-captain-sovereign.html",
   telegram:     "downloads/family-captain/Family_Captain_Telegram_Setup.md",
   master:       "downloads/family-captain/Family_Captain_Bootcamp_MASTER.docx",
   workbook:     "downloads/family-captain/Family_Captain_Bootcamp_WORKBOOK.docx",
@@ -791,7 +793,7 @@ const WEEKS = [
 ];
 
 const DOWNLOADS = [
-  { key:"voyage",    icon:"🧭", title:"The Captain's Voyage", body:"Gamified track of your 5-week journey. Tap any task to open its PDF, mark it shipped, earn badges, and unlock the commissioning ceremony when all 15 land. Replaces print-and-fill with a digital captain's log.", cta:"Start your voyage →", target:"_self" },
+  { key:"voyage",    icon:"🧭", title:"The Captain's Crossing", body:"Gamified track of your 5-week journey. Tap any task to open its PDF, mark it shipped, earn badges, and unlock the commissioning ceremony when all 15 land. Replaces print-and-fill with a digital captain's log.", cta:"Start your crossing →", target:"_self" },
   { key:"tools",     icon:"⚓", title:"AI Tools Landscape", body:"49 AI tools across 8 categories — 37 utility tools + 12 agentic-frontier tools. Each card shows AI/Agentic Level, Model Context Protocol (MCP) support, and Best For Captain. Plus a Use Case → Winner table and 3 Captain's Stacks ($0 / $40-60 / $150-200). Most captains need 2-4, not 49. Refreshed every 6 months.", cta:"Open compass →", target:"_self" },
   { key:"sovereign", icon:"🏛", title:"The Sovereign Stack (local AI)", body:"For the captain who's invested in $6k+ hardware. 30 local AI tools across 7 categories with hardware tier guide. No subscriptions, no data leaving your machine. Most captains don't need this — but if you've crossed that line, here's the toolkit.", cta:"Open sovereign stack →", target:"_self" },
   // Heartbeat preview deliberately removed from public download grid 2026-05-10 —
@@ -814,7 +816,7 @@ function renderWeeks() {
   // browser auto-closes the outer <a> when it sees the inner scripture <a>, which
   // produced phantom empty trailing cards (the bug Ron caught in the screenshot).
   document.getElementById("weeks-grid").innerHTML = WEEKS.map(w => `
-    <div class="week-card" data-week="${w.n}" role="link" tabindex="0" aria-label="Open Week ${w.n} in the Captain's Voyage" title="Open Week ${w.n} in the Captain's Voyage" onclick="if(!event.target.closest('a')) location.href='family-captain-voyage.html#week${w.n}';" onkeydown="if((event.key==='Enter'||event.key===' ')&&!event.target.closest('a')){event.preventDefault();location.href='family-captain-voyage.html#week${w.n}';}" style="cursor:pointer;">
+    <div class="week-card" data-week="${w.n}" role="link" tabindex="0" aria-label="Open Week ${w.n} in the Captain's Crossing" title="Open Week ${w.n} in the Captain's Crossing" onclick="if(!event.target.closest('a')) location.href='family-captain-voyage.html#week${w.n}';" onkeydown="if((event.key==='Enter'||event.key===' ')&&!event.target.closest('a')){event.preventDefault();location.href='family-captain-voyage.html#week${w.n}';}" style="cursor:pointer;">
       <div class="num">WEEK ${w.n}</div>
       <div class="week-icon">${w.icon}</div>
       <h3>${w.title}</h3>

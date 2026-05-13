@@ -3,27 +3,15 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="canonical" href="https://usmcmin.com/pricing.html">
   <title>Session Pricing — U.S.M.C. Ministries</title>
   <meta name="robots" content="noindex, nofollow">
   <meta property="og:title" content="Session Pricing — U.S.M.C. Ministries">
   <meta property="og:image" content="https://usmcmin.com/assets/og/og-brain.jpg">
   <meta property="og:url" content="https://usmcmin.com/pricing.html">
-  <link rel="stylesheet" href="assets/css/main.css">
+  <link rel="stylesheet" href="assets/css/main.min.css">
   <link rel="icon" href="assets/img/favicon.png" type="image/png">
   <style>
-    /* Password gate */
-    .gate-overlay { position:fixed; inset:0; z-index:999; background:var(--bg,#000); display:flex; align-items:center; justify-content:center; flex-direction:column; gap:20px; }
-    .gate-overlay.hidden { display:none; }
-    .gate-overlay h2 { font-size:1.8rem; color:var(--gold); }
-    .gate-overlay p { color:var(--gray); }
-    .gate-overlay input { padding:14px 20px; font-size:1.1rem; background:var(--bg-card,#111); border:1px solid var(--border); border-radius:8px; color:var(--white,#e8e8e8); font-family:'Inter',sans-serif; text-align:center; width:260px; }
-    .gate-overlay input:focus { outline:none; border-color:var(--gold); }
-    .gate-overlay button { padding:12px 32px; background:var(--gold); color:#000; border:none; border-radius:8px; font-weight:700; font-size:1rem; cursor:pointer; font-family:'Inter',sans-serif; }
-    .gate-overlay button:hover { opacity:0.85; }
-    .gate-error { color:var(--red,#CC0000); font-size:0.9rem; min-height:1.2em; }
-
-    .pricing-content.locked { filter:blur(10px); pointer-events:none; user-select:none; }
-
     /* Pricing hero */
     .pricing-hero { text-align:center; padding:50px 20px 40px; border-bottom:1px solid var(--border); }
     .pricing-hero h1 { font-size:clamp(1.8rem,4vw,2.8rem); margin-bottom:10px; }
@@ -54,14 +42,7 @@
 </head>
 <body>
 
-<!-- Password Gate -->
-<div class="gate-overlay" id="gate">
-  <h2>🔒 Authorized Access</h2>
-  <p>Enter the access code to view pricing.</p>
-  <input type="password" id="gate-input" placeholder="Access Code" autofocus onkeydown="if(event.key==='Enter')checkGate()">
-  <button onclick="checkGate()">Enter</button>
-  <p class="gate-error" id="gate-error"></p>
-</div>
+<a href="#main" class="skip-link">Skip to content</a>
 
 <nav>
   <a href="/" class="nav-brand" style="text-decoration:none">
@@ -83,7 +64,7 @@
   <button class="nav-toggle" aria-label="Menu"><span></span><span></span><span></span></button>
 </nav>
 
-<div class="pricing-content locked" id="pricing-content">
+<main id="main" class="pricing-content">
   <div class="pricing-hero">
     <h1>Session <span>Pricing</span></h1>
     <p class="subtitle">Transparent pricing for consulting, mentoring & coaching sessions</p>
@@ -237,40 +218,17 @@
       <div style="color:var(--gray);font-size:0.85rem;margin-bottom:0.5rem">Looking for ministry resources &amp; Bible study? Visit <a href="https://usmcmin.org" target="_blank" style="color:var(--gold)">usmcmin.org</a></div>
       <div style="color:var(--gray);font-size:0.8rem">© 2026 U.S.M.C. Ministries. All rights reserved. &nbsp;|&nbsp; <a href="sitemap.html">Sitemap</a></div>
       <div class="social-links">
-        <a href="https://usmcmin.org/connect.html" title="Connect">𝑓</a>
-        <a href="https://usmcmin.org/connect.html" title="Connect">◉</a>
-        <a href="https://usmcmin.org/connect.html" title="Connect">▶</a>
-        <a href="https://usmcmin.org/connect.html" title="LinkedIn">in</a>
+        <a href="https://usmcmin.org/connect.html" aria-label="Connect with U.S.M.C. Ministries on social" title="Connect — Facebook, YouTube, Instagram, LinkedIn">
+          <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M20 2H4a2 2 0 0 0-2 2v18l4-4h14a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2zm-3 11H7v-2h10v2zm0-4H7V7h10v2z"/></svg>
+          <span style="position:absolute;left:-9999px">Connect</span>
+        </a>
       </div>
     </div>
   </div>
 </footer>
 
-<script>
-function checkGate() {
-  var input = document.getElementById('gate-input');
-  var gate = document.getElementById('gate');
-  var content = document.getElementById('pricing-content');
-  var error = document.getElementById('gate-error');
-  if (input.value.toLowerCase() === 'steward') {
-    gate.classList.add('hidden');
-    content.classList.remove('locked');
-    sessionStorage.setItem('pricing-auth', '1');
-  } else {
-    error.textContent = 'Incorrect code. Try again.';
-    input.value = '';
-    input.focus();
-  }
-}
-if (sessionStorage.getItem('pricing-auth') === '1') {
-  document.getElementById('gate').classList.add('hidden');
-  document.getElementById('pricing-content').classList.remove('locked');
-}
-</script>
-<script>
-(function(){var t=document.querySelector('.nav-toggle'),n=document.querySelector('.nav-links');if(t&&n)t.addEventListener('click',function(){n.classList.toggle('open');});})();
-(function(){var t=document.getElementById('themeToggle');if(!t)return;var s=localStorage.getItem('usmc-theme');if(s !== 'light'){document.documentElement.setAttribute('data-theme','dark');t.textContent='☀️';}t.addEventListener('click',function(){var d=document.documentElement.getAttribute('data-theme')==='dark';if(d){document.documentElement.removeAttribute('data-theme');localStorage.setItem('usmc-theme','light');t.textContent='🌙';}else{document.documentElement.setAttribute('data-theme','dark');localStorage.setItem('usmc-theme','dark');t.textContent='☀️';}});})();
-</script>
+
+<script src="assets/js/main.js" defer></script>
 <script data-goatcounter="https://usmcmin.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
 </body>
 </html>

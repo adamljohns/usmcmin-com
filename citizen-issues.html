@@ -3,9 +3,10 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="canonical" href="https://usmcmin.com/citizen-issues.html">
   <title>RESOLUTE Citizen — Issue Awareness | U.S.M.C. Ministries</title>
   <meta name="description" content="RESOLUTE Citizen issue awareness. Know what's on the ballot before you vote. Redistricting, referendums, elections, and more — evaluated through RESOLUTE Citizen principles.">
-  <link rel="stylesheet" href="assets/css/main.css">
+  <link rel="stylesheet" href="assets/css/main.min.css">
   <link rel="icon" href="assets/img/favicon.png" type="image/png">
   <style>
     .sc-container { max-width: 1100px; margin: 0 auto; padding: 20px; }
@@ -120,6 +121,8 @@
   </style>
 </head>
 <body>
+
+<a href="#main" class="skip-link">Skip to content</a>
 
 <nav>
   <a href="/" class="nav-brand" style="text-decoration:none">
@@ -312,37 +315,17 @@ function renderIssues() {
   }
 }
 </script>
-<script>
-(function() {
-  var navToggle = document.querySelector('.nav-toggle');
-  var navLinks = document.querySelector('.nav-links');
-  if (navToggle && navLinks) {
-    navToggle.addEventListener('click', function() { navLinks.classList.toggle('open'); });
-  }
-})();
-</script>
-<script>
-(function() {
-  var toggle = document.getElementById('themeToggle');
-  var saved = localStorage.getItem('usmc-theme');
-  if (saved !== 'light') {
-    document.documentElement.setAttribute('data-theme', 'dark');
-    toggle.textContent = '☀️';
-  }
-  toggle.addEventListener('click', function() {
-    var isDark = document.documentElement.getAttribute('data-theme') === 'dark';
-    if (isDark) {
-      document.documentElement.removeAttribute('data-theme');
-      localStorage.setItem('usmc-theme', 'light');
-      toggle.textContent = '🌙';
-    } else {
-      document.documentElement.setAttribute('data-theme', 'dark');
-      localStorage.setItem('usmc-theme', 'dark');
-      toggle.textContent = '☀️';
-    }
-  });
-})();
-</script>
+
+
 <script data-goatcounter="https://usmcmin.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
+<script src="assets/js/main.js" defer></script>
+<script>
+// Service worker registration — offline shell + cache-first repeat visits.
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', function () {
+    navigator.serviceWorker.register('/sw.js').catch(function () {});
+  });
+}
+</script>
 </body>
 </html>

@@ -63,6 +63,13 @@ def is_valid_jpeg(path):
         return f.read(2) == b'\xff\xd8'
 
 
+def is_png(path):
+    if not path.exists() or path.stat().st_size < 8:
+        return False
+    with open(path, 'rb') as f:
+        return f.read(4) == b'\x89PNG'
+
+
 def main():
     args = parse_args()
 
@@ -94,17 +101,23 @@ def main():
 
     for i, src in enumerate(candidates):
         before_bytes = src.stat().st_size
+        # Some files have a .jpg extension but are actually PNG (downloaded
+        # from Wikimedia which served them with Content-Type: image/png).
+        # sips treats those as PNG and won't auto-convert. We force JPEG
+        # output by also setting `format jpeg`.
+        is_png_input = is_png(src)
         # Run sips: in-place via temp file then rename for atomicity
         tmp = src.with_suffix('.tmp.jpg')
+        sips_args = [
+            'sips',
+            '--resampleWidth', str(args['max_width']),
+            '--setProperty', 'format', 'jpeg',
+            '--setProperty', 'formatOptions', str(args['quality']),
+            str(src),
+            '--out', str(tmp),
+        ]
         try:
-            r = subprocess.run(
-                ['sips',
-                 '--resampleWidth', str(args['max_width']),
-                 '--setProperty', 'formatOptions', str(args['quality']),
-                 str(src),
-                 '--out', str(tmp)],
-                capture_output=True, timeout=30,
-            )
+            r = subprocess.run(sips_args, capture_output=True, timeout=30)
         except subprocess.TimeoutExpired:
             failed += 1
             print(f'  TIMEOUT: {src}')
@@ -113,6 +126,9 @@ def main():
 
         if r.returncode != 0 or not tmp.exists() or not is_valid_jpeg(tmp):
             failed += 1
+            if failed <= 3:
+                stderr = r.stderr.decode()[:200] if hasattr(r, 'stderr') else ''
+                print(f'  FAIL: {src} ({"PNG-input" if is_png_input else "?"}) {stderr}')
             tmp.unlink(missing_ok=True)
             continue
 

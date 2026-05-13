@@ -20,7 +20,7 @@
   <meta name="twitter:description" content="7-category Christian voter scorecard for 7,800+ elected officials. Photos, scores, sources, contact info.">
   <meta name="twitter:image" content="https://usmcmin.com/assets/og/og-citizen.jpg">
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="stylesheet" href="assets/css/main.css">
+  <link rel="stylesheet" href="assets/css/main.min.css">
   <link rel="icon" href="assets/img/favicon.png" type="image/png">
   <style>
     .sc-container { max-width: 1200px; margin: 0 auto; padding: 20px; }
@@ -348,6 +348,18 @@
       letter-spacing: 1px;
     }
     .sc-total-score { font-size: 1.3rem; font-weight: 700; }
+    .card-adj {
+      display: inline-block;
+      font-size: 0.62rem;
+      font-weight: 800;
+      padding: 1px 5px;
+      border-radius: 6px;
+      margin: 0 4px;
+      letter-spacing: 0.4px;
+      vertical-align: middle;
+    }
+    .card-adj-plus  { background: rgba(74,222,128,0.18);  color: #4ade80; }
+    .card-adj-minus { background: rgba(248,113,113,0.20); color: #f87171; }
     .sc-total-bar {
       flex: 1;
       height: 6px;
@@ -455,6 +467,8 @@
   </style>
 </head>
 <body>
+
+<a href="#main" class="skip-link">Skip to content</a>
 
 <!-- NAV -->
 <nav>
@@ -907,14 +921,24 @@ function calcCategoryScore(answers) {
   return { score: raw * POINTS_PER_TRUE, raw: raw, max: MAX_PER_TOPIC, answered: answered };
 }
 
-function calcTotalScore(scores) {
+function calcTotalScore(scores, profile) {
   var total = 0, maxAnswered = 0;
   DATA.categories.forEach(function(cat) {
     var cs = calcCategoryScore(scores[cat.id]);
     total += cs.score;
     maxAnswered += cs.answered;
   });
-  return { score: total, max: MAX_TOTAL, answered: maxAnswered };
+  // Sum any score_adjustments (aipac, soros, etc.) into a single delta.
+  var adj = (profile && profile.score_adjustments) || {};
+  var adjTotal = 0;
+  Object.keys(adj).forEach(function(k){ adjTotal += (adj[k] && adj[k].delta) || 0; });
+  return {
+    base: total,
+    score: total + adjTotal,    // adjusted score is the headline number
+    adjustment: adjTotal,
+    max: MAX_TOTAL,
+    answered: maxAnswered,
+  };
 }
 
 function getScoreColor(score, max) {
@@ -991,7 +1015,7 @@ function fuzzyMatch(haystack, needle) {
 var LEVEL_RANK = { executive: 1, judicial: 2, federal: 3, state: 4, local: 5 };
 var PARTY_RANK = { R: 1, D: 2, I: 3 }; // Republican first, then Democrat, Independent, Unknown
 function makeComparator(sortKey) {
-  function totalOf(c) { return calcTotalScore(c.scores).score; }
+  function totalOf(c) { return calcTotalScore(c.scores, c.profile).score; }
   function nameOf(c) { return (c.name || '').toLowerCase(); }
   function nameTiebreak(a, b) { return nameOf(a).localeCompare(nameOf(b)); }
   function levelRank(c) { return LEVEL_RANK[c.level] || 6; }
@@ -1123,9 +1147,10 @@ function renderCards() {
 
   var html = '';
   filtered.forEach(function(c, idx) {
-    var total = calcTotalScore(c.scores);
+    var total = calcTotalScore(c.scores, c.profile);
     var totalColor = getScoreColor(total.score, total.max);
-    var barWidth = total.max > 0 ? Math.round((total.score / total.max) * 100) : 0;
+    var barWidth = total.max > 0 ? Math.round((Math.max(0, Math.min(total.max, total.score)) / total.max) * 100) : 0;
+    var adjBadge = total.adjustment ? ' <span class="card-adj ' + (total.adjustment>0?'card-adj-plus':'card-adj-minus') + '" title="Includes ' + (total.adjustment>0?'+':'') + total.adjustment + ' foreign-influence adjustment (base ' + total.base + ')">' + (total.adjustment>0?'+':'') + total.adjustment + '</span>' : '';
     var cardId = 'cand-' + c.slug + '-' + idx;
     var profileUrl = 'candidates/' + (c.state || 'va').toLowerCase() + '/' + c.slug + '.html';
 
@@ -1151,10 +1176,10 @@ function renderCards() {
     });
     html += '</div>';
 
-    html += '<div class="sc-total" aria-label="Total score: ' + total.score + ' of ' + MAX_TOTAL + '">';
+    html += '<div class="sc-total" aria-label="Total score: ' + total.score + ' of ' + MAX_TOTAL + (total.adjustment?', includes ' + (total.adjustment>0?'+':'') + total.adjustment + ' foreign-influence adjustment':'') + '">';
     html += '<span class="sc-total-label" aria-hidden="true">Total</span>';
     html += '<div class="sc-total-bar" aria-hidden="true"><div class="sc-total-fill" style="width:' + barWidth + '%;background:' + totalColor + ';"></div></div>';
-    html += '<span class="sc-total-score" aria-hidden="true" style="color:' + totalColor + ';">' + total.score + '<span style="font-size:0.7rem;color:var(--gray);">/' + MAX_TOTAL + '</span></span>';
+    html += '<span class="sc-total-score" aria-hidden="true" style="color:' + totalColor + ';">' + total.score + adjBadge + '<span style="font-size:0.7rem;color:var(--gray);">/' + MAX_TOTAL + '</span></span>';
     html += '</div>';
 
     html += '<div class="sc-card-footer"><a href="' + profileUrl + '" aria-label="View full profile for ' + esc(c.name) + '">View Full Profile &rarr;</a></div>';
@@ -1165,37 +1190,18 @@ function renderCards() {
   document.getElementById('visibleCount').textContent = filtered.length;
 }
 </script>
-<script>
-(function() {
-  var navToggle = document.querySelector('.nav-toggle');
-  var navLinks = document.querySelector('.nav-links');
-  if (navToggle && navLinks) {
-    navToggle.addEventListener('click', function() { navLinks.classList.toggle('open'); });
-  }
-})();
-</script>
-<script>
-(function() {
-  var toggle = document.getElementById('themeToggle');
-  var saved = localStorage.getItem('usmc-theme');
-  if (saved !== 'light') {
-    document.documentElement.setAttribute('data-theme', 'dark');
-    toggle.textContent = '☀️';
-  }
-  toggle.addEventListener('click', function() {
-    var isDark = document.documentElement.getAttribute('data-theme') === 'dark';
-    if (isDark) {
-      document.documentElement.removeAttribute('data-theme');
-      localStorage.setItem('usmc-theme', 'light');
-      toggle.textContent = '🌙';
-    } else {
-      document.documentElement.setAttribute('data-theme', 'dark');
-      localStorage.setItem('usmc-theme', 'dark');
-      toggle.textContent = '☀️';
-    }
-  });
-})();
-</script>
+
+
 <script data-goatcounter="https://usmcmin.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
+<script src="assets/js/main.js" defer></script>
+<script>
+// Register the service worker for offline support + cache-first repeat visits.
+// Registered late so it doesn't compete with first-page rendering.
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', function () {
+    navigator.serviceWorker.register('/sw.js').catch(function () {});
+  });
+}
+</script>
 </body>
 </html>

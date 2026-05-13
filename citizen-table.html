@@ -308,7 +308,11 @@
 </footer>
 
 <script>
-let DATA = null;
+// Initialize as an empty object so the index-fetch handler can assign
+// categories/meta without a null-deref. (Earlier `let DATA = null` caused
+// the table view to silently fail on first paint — table renders blank
+// with a "SHOWING —" header and no rows.)
+let DATA = { meta: null, categories: [], candidates: [] };
 // (ALL_CANDIDATES removed — the table view now fast-loads per-state JSON
 // instead of the full scorecard.)
 var POINTS_PER_TRUE = 2;

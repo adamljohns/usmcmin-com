@@ -6,7 +6,7 @@
   <title>USMC Ministries AI Mission — U.S.M.C. Ministries</title>
   <meta name="description" content="A 5-week, Christ-centered AI mission for husbands, fathers, and leaders. Claude and Cowork primary. 15 tasks. Cohort runs in a private Telegram channel.">
   <meta property="og:title" content="USMC Ministries AI Mission — U.S.M.C. Ministries">
-  <meta property="og:description" content="5 weeks. 15 tasks. One watchman. Disciplined, Christ-centered AI use for life at home, in business, and in ministry.">
+  <meta property="og:description" content="5 weeks. One plan. Disciplined, Christ-centered AI use for husbands, fathers, and leaders at home, in business, and in ministry.">
   <meta property="og:url" content="https://usmcmin.com/ai-boot-camp.html">
   <meta property="og:type" content="website">
   <meta property="og:image" content="https://usmcmin.com/assets/og/og-brain.jpg">
@@ -69,7 +69,9 @@
   .pillar h3 { color:var(--white); font-size:1.15rem; margin-bottom:6px; }
   .pillar p { color:var(--gray-light); font-size:0.9rem; }
 
-  .weeks { display:grid; grid-template-columns:repeat(5,1fr); gap:12px; }
+  /* Week cards: track-aware grid (injected per-build via TRACK_GRID_CSS).
+     FC (7 weeks): 4 cards top + 3 cards bottom for visual symmetry.
+     USMC (5 weeks): single 5-column row. */
   .week-card { background:var(--bg-card); border:1px solid var(--border); border-radius:var(--radius);
     padding:18px 16px; display:flex; flex-direction:column; gap:8px; min-height:170px;
     transition:all var(--transition); position:relative; overflow:hidden; }
@@ -143,8 +145,12 @@
   .step h3 { color:var(--white); font-size:1rem; margin:6px 0; }
   .step p { color:var(--gray-light); font-size:0.85rem; }
 
-  @media (max-width:900px) { .pillars { grid-template-columns:1fr; } .weeks { grid-template-columns:1fr 1fr; } }
-  @media (max-width:600px) { .weeks { grid-template-columns:1fr; } }
+  @media (max-width:900px) { .pillars { grid-template-columns:1fr; } .weeks { grid-template-columns:1fr 1fr !important; } .weeks .week-card { grid-column: auto !important; } }
+  @media (max-width:600px) { .weeks { grid-template-columns:1fr !important; } .weeks .week-card { grid-column: auto !important; } }
+</style>
+<style>
+  /* USMC 5-week layout — single row of 5 */
+  .weeks { display:grid; grid-template-columns:repeat(5, 1fr); gap:12px; }
 </style>
 </head>
 <body>
@@ -178,7 +184,7 @@
 <div class="module-hero">
   <span class="module-badge">Mission · USMC Ministries</span>
   <h1><span class="gold">USMC Ministries</span> <span class="accent">AI Mission</span></h1>
-  <p class="tagline">5 weeks. 15 tasks. Each Watchman with Christ at the center.</p>
+  <p class="tagline">5 weeks. One plan. Each Watchman with Christ at the center.</p>
   <p class="subtitle">Disciplined, Christ-centered AI use for husbands, fathers, and leaders. Claude and Cowork primary. AI on the bridge as a trusted aide — not the autopilot. Built for men leading at home, in business, and in ministry.</p>
   <div class="meta">
     <span><b>Format:</b> 3 tasks/week × 5 weeks</span>

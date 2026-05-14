@@ -41,11 +41,11 @@
   .progress-bar > div { background:linear-gradient(90deg, var(--gold) 0%, var(--silver-light) 100%);
     height:100%; width:0%; transition:width 0.5s ease; }
 
-  /* Voyage chart */
+  /* Voyage chart — track-aware grid (rules injected per-build above the body). */
   .voyage-chart { max-width:1100px; margin:32px auto 0; padding:0 16px;
-    display:grid; grid-template-columns:repeat(5, 1fr); gap:14px; }
-  @media (max-width:900px){ .voyage-chart { grid-template-columns:1fr 1fr; } }
-  @media (max-width:600px){ .voyage-chart { grid-template-columns:1fr; } }
+    display:grid; gap:14px; }
+  @media (max-width:900px){ .voyage-chart { grid-template-columns:1fr 1fr !important; } .voyage-chart .week-port { grid-column: auto !important; } }
+  @media (max-width:600px){ .voyage-chart { grid-template-columns:1fr !important; } .voyage-chart .week-port { grid-column: auto !important; } }
 
   .week-port { background:var(--bg-card); border:1px solid var(--border); border-radius:var(--radius);
     padding:18px 16px; display:flex; flex-direction:column; gap:12px;
@@ -141,6 +141,12 @@
   .drill-cell.shipped .drill-label::after { content:" ✓"; color:var(--gold); }
 
   @media (max-width:640px){ .module-hero { padding:80px 18px 24px; } }
+</style>
+<style>
+  /* FC 7-week voyage chart — 4 top + 3 bottom */
+  .voyage-chart { grid-template-columns: repeat(12, 1fr); }
+  .voyage-chart .week-port:nth-child(-n+4) { grid-column: span 3; }
+  .voyage-chart .week-port:nth-child(n+5)  { grid-column: span 4; }
 </style>
 
 <!-- ── FAMILY CAPTAIN TRACK — TFC VISUAL IDENTITY (Phase B 2026-05-11) ── -->

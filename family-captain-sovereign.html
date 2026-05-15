@@ -513,6 +513,178 @@
   .module-hero h1, .module-hero p, .module-hero .module-badge {
     color: #FFFFFF !important;
   }
+
+  /* ─────────────────────────────────────────────────────────────────
+     v6 CONTRAST SWEEP (2026-05-14, MOOP "scan every page" pass):
+     Goal: no light text on light bg, no dark text on dark bg.
+
+     Root cause #1: TFC bronze #CE8E31 (luminance 0.28) used as TEXT
+     color on warm-gray cards #F4F5F7 → 2.55:1 (fails WCAG AA 4.5:1).
+     Fix: dark bronze #8B5A1F for text on light surfaces (5.3:1).
+     Keep #CE8E31 for BUTTON FILLS (white text on bronze, fine for AA-large).
+
+     Root cause #2: TFC `--text: #334155 !important` forces slate-700
+     in dark theme too → 1.91:1 (dark text on dark bg).
+     Fix: scope the text override per theme; dark theme uses slate-300.
+
+     Root cause #3: site-wide nav `.site-nav a` inherits --gray-light
+     (#9CA3AF) on white → 2.54:1. Fix: force #4B5563 on light theme nav.
+
+     Root cause #4: FC mini-header nav defensive override — make
+     background + text colors !important so no parent rule wins.
+     ───────────────────────────────────────────────────────────── */
+
+  /* (1) Bronze text on light surfaces — darken */
+  .week-card .num,
+  .week-port .week-num,
+  .task-tile .wt,
+  .task-tile .preview-link,
+  .dl-card .icon-label,
+  .post-meta-pill,
+  .post-kind,
+  .tool-cat,
+  .stack-name,
+  .section-kicker,
+  .pillar .pillar-kicker, .pillar .num,
+  .step .step-num, .step .num, .step .step-kicker,
+  .drill-cell .drill-num,
+  .progress-banner .stat-line .pct,
+  .badge .badge-name {
+    color: #8B5A1F !important;             /* dark bronze, 5.3:1 on warm-gray, 8.4:1 on white */
+  }
+  /* In dark theme these accents sit on dark surfaces — restore the bright bronze */
+  [data-theme="dark"] .week-card .num,
+  [data-theme="dark"] .week-port .week-num,
+  [data-theme="dark"] .task-tile .wt,
+  [data-theme="dark"] .task-tile .preview-link,
+  [data-theme="dark"] .dl-card .icon-label,
+  [data-theme="dark"] .post-meta-pill,
+  [data-theme="dark"] .post-kind,
+  [data-theme="dark"] .tool-cat,
+  [data-theme="dark"] .stack-name,
+  [data-theme="dark"] .section-kicker,
+  [data-theme="dark"] .pillar .pillar-kicker,
+  [data-theme="dark"] .step .step-num,
+  [data-theme="dark"] .drill-cell .drill-num,
+  [data-theme="dark"] .progress-banner .stat-line .pct,
+  [data-theme="dark"] .badge .badge-name {
+    color: #CE8E31 !important;             /* bright bronze, 6.5:1 on near-black */
+  }
+
+  /* Scripture refs / inline bronze links on light surfaces */
+  [data-theme="light"] .scripture,
+  [data-theme="light"] .scrip a,
+  [data-theme="light"] a[style*="color:var(--gold)"],
+  [data-theme="light"] a[style*="color: var(--gold)"] {
+    color: #8B5A1F !important;
+  }
+  [data-theme="dark"] .scripture,
+  [data-theme="dark"] .scrip a,
+  [data-theme="dark"] a[style*="color:var(--gold)"],
+  [data-theme="dark"] a[style*="color: var(--gold)"] {
+    color: #CE8E31 !important;
+  }
+
+  /* (2) Body text — theme-aware. Light theme = slate-700, Dark theme = slate-300 */
+  [data-theme="light"] body,
+  [data-theme="light"] body p,
+  [data-theme="light"] body li,
+  [data-theme="light"] .section-sub,
+  [data-theme="light"] .module-container > p.subtitle,
+  [data-theme="light"] .module-container > .lede {
+    color: #334155 !important;             /* slate-700 — readable on white (12.6:1) */
+  }
+  [data-theme="dark"] body,
+  [data-theme="dark"] body p,
+  [data-theme="dark"] body li,
+  [data-theme="dark"] .section-sub,
+  [data-theme="dark"] .module-container > p.subtitle,
+  [data-theme="dark"] .module-container > .lede {
+    color: #CBD5E1 !important;             /* slate-300 — readable on near-black (11.6:1) */
+  }
+  /* Card body always sits on warm-gray card bg (we force that in both themes), so always slate-700 */
+  .pillar p, .step p,
+  .dl-card p,
+  .week-card .tag, .week-port .week-tag,
+  .tool-card p, .tool-card .body,
+  .local-tool-card p, .local-tool-card .body,
+  .stack-card ul, .stack-card ul li,
+  .redline-card .rl-body,
+  .post-card p, .anchor-card p, .bonus-card p,
+  .info-card p, .info-card li,
+  .commission-card p {
+    color: #334155 !important;
+  }
+
+  /* (3) Site-wide nav (Mission, Shop, Books, etc.) — force readable on white */
+  body > nav a,
+  nav.site-nav a,
+  header.site-header a,
+  body > header a {
+    color: #1E293B !important;             /* slate-900, 16:1 on white */
+  }
+  body > nav a:hover,
+  nav.site-nav a:hover,
+  header.site-header a:hover {
+    color: #CE8E31 !important;
+  }
+  /* In dark theme, restore light text */
+  [data-theme="dark"] body > nav a,
+  [data-theme="dark"] nav.site-nav a,
+  [data-theme="dark"] header.site-header a,
+  [data-theme="dark"] body > header a {
+    color: #E5E7EB !important;             /* gray-200, high contrast on dark */
+  }
+
+  /* (4) FC mini-header — defensive bg + text colors, no inheritance can defeat */
+  .fc-header {
+    background: #1E293B !important;
+  }
+  .fc-header .fc-wordmark {
+    color: #FFFFFF !important;
+  }
+  .fc-header .fc-wordmark .accent {
+    color: #CE8E31 !important;             /* on slate, ratio 6.5:1 ✓ */
+  }
+  .fc-header nav.fc-nav a {
+    color: #FFFFFF !important;             /* on slate, ratio 14:1 ✓ */
+  }
+  .fc-header nav.fc-nav a:hover,
+  .fc-header nav.fc-nav a.active {
+    color: #CE8E31 !important;
+  }
+
+  /* Tagline/subtitle on hero — explicitly white (hero bg is slate) */
+  .module-hero .tagline,
+  .module-hero .subtitle,
+  .module-hero p {
+    color: #FFFFFF !important;
+  }
+  /* …but the muted hero meta row should be lighter slate not pure white */
+  .module-hero .meta, .module-hero .meta span {
+    color: #CBD5E1 !important;
+  }
+
+  /* "Note" subtle lines under section content (was --gray-light = #9CA3AF) */
+  .note, p.note, .module-container .note {
+    color: #475569 !important;             /* slate-600, 7.7:1 on white */
+  }
+  [data-theme="dark"] .note, [data-theme="dark"] p.note {
+    color: #94A3B8 !important;             /* slate-400, 7:1 on near-black */
+  }
+
+  /* Footer text rebrand — was #9CA3AF on slate (#1E293B), 4.5:1 borderline.
+     Bump to slate-200 for comfortable reading. */
+  footer, .site-footer { color: #CBD5E1 !important; }
+  footer a, .site-footer a { color: #CE8E31 !important; }
+  footer h3, footer h4 { color: #FFFFFF !important; }
+
+  /* Captain's Note / callout small text — was bronze on warm-gray */
+  .captains-call .label,
+  .tool-card .captain-call .label,
+  .callout-label {
+    color: #8B5A1F !important;
+  }
 </style>
 
 </head>

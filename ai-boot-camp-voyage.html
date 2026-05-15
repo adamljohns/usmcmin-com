@@ -41,11 +41,11 @@
   .progress-bar > div { background:linear-gradient(90deg, var(--gold) 0%, var(--silver-light) 100%);
     height:100%; width:0%; transition:width 0.5s ease; }
 
-  /* Voyage chart */
+  /* Voyage chart — track-aware grid (rules injected per-build above the body). */
   .voyage-chart { max-width:1100px; margin:32px auto 0; padding:0 16px;
-    display:grid; grid-template-columns:repeat(5, 1fr); gap:14px; }
-  @media (max-width:900px){ .voyage-chart { grid-template-columns:1fr 1fr; } }
-  @media (max-width:600px){ .voyage-chart { grid-template-columns:1fr; } }
+    display:grid; gap:14px; }
+  @media (max-width:900px){ .voyage-chart { grid-template-columns:1fr 1fr !important; } .voyage-chart .week-port { grid-column: auto !important; } }
+  @media (max-width:600px){ .voyage-chart { grid-template-columns:1fr !important; } .voyage-chart .week-port { grid-column: auto !important; } }
 
   .week-port { background:var(--bg-card); border:1px solid var(--border); border-radius:var(--radius);
     padding:18px 16px; display:flex; flex-direction:column; gap:12px;
@@ -57,6 +57,8 @@
   .week-port[data-week="3"] { --week-color: #6BA368; }
   .week-port[data-week="4"] { --week-color: #4A7BA6; }
   .week-port[data-week="5"] { --week-color: #8B5FBF; }
+  .week-port[data-week="6"] { --week-color: #D4A574; }  /* TFC: Finances — warm bronze */
+  .week-port[data-week="7"] { --week-color: #557C99; }  /* TFC: Sabbath — calm slate */
   .week-port.complete { box-shadow:0 0 0 2px var(--week-color); }
   .week-port .week-num { font-size:0.65rem; letter-spacing:3px; color:var(--week-color); font-weight:800;
     text-transform:uppercase; }
@@ -139,6 +141,10 @@
   .drill-cell.shipped .drill-label::after { content:" ✓"; color:var(--gold); }
 
   @media (max-width:640px){ .module-hero { padding:80px 18px 24px; } }
+</style>
+<style>
+  /* USMC 5-week voyage chart — single row of 5 */
+  .voyage-chart { grid-template-columns: repeat(5, 1fr); }
 </style>
 </head>
 <body>
@@ -400,7 +406,6 @@
     <div class="seal">⚜️</div>
     <h2>Watchman&rsquo;s Commissioning</h2>
     <p>Unlocks when all 15 tasks ship. Sign your Watchman&rsquo;s Charter, post the screenshot in the channel, and walk one brother through one thing you learned. <i>"And the things you have heard from me, entrust to faithful men."</i> &mdash; 2 Timothy 2:2</p>
-    <a class="tg-link" href="https://t.me/+ddnHqJEqkKk3ZmVh" target="_blank" rel="noopener">Open the Telegram channel</a>
   </div>
 </section>
 
@@ -462,6 +467,7 @@
   const STORAGE_KEY = "usmc_voyage_progress_v1";
   const DRILL_KEY = "usmc_voyage_drills_v1";
   const TOTAL = 15;
+  const TASKS_PER_WEEK = 3;
 
   function loadState(){ try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || {}; } catch(e){ return {}; } }
   function saveState(s){ localStorage.setItem(STORAGE_KEY, JSON.stringify(s)); }
@@ -482,10 +488,12 @@
 
     document.getElementById('barFill').style.width = pct + '%';
     let line = `${done} of ${TOTAL} tasks shipped — ${pct}%`;
+    const lo = Math.ceil(TOTAL * 0.34);
+    const mid = Math.ceil(TOTAL * 0.67);
     if (done === 0) line = `${done} of ${TOTAL} tasks shipped · <span class="pct">${pct}%</span> · watchman on the bridge.`;
-    else if (done < 5) line = `${done} of ${TOTAL} tasks shipped · <span class="pct">${pct}%</span> · imperfect actions stacking.`;
-    else if (done < 10) line = `${done} of ${TOTAL} tasks shipped · <span class="pct">${pct}%</span> · steady steaming.`;
-    else if (done < 15) line = `${done} of ${TOTAL} tasks shipped · <span class="pct">${pct}%</span> · watchman's charter in sight.`;
+    else if (done < lo) line = `${done} of ${TOTAL} tasks shipped · <span class="pct">${pct}%</span> · imperfect actions stacking.`;
+    else if (done < mid) line = `${done} of ${TOTAL} tasks shipped · <span class="pct">${pct}%</span> · steady steaming.`;
+    else if (done < TOTAL) line = `${done} of ${TOTAL} tasks shipped · <span class="pct">${pct}%</span> · watchman's charter in sight.`;
     else line = `<b>${done} of ${TOTAL} tasks shipped · <span class="pct">${pct}%</span> · watchman commissioned.</b>`;
     document.getElementById('statLine').innerHTML = line;
 

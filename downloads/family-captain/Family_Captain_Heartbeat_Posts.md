@@ -1,394 +1,276 @@
-# Family Captain AI Boot Camp — Heartbeat Posts
+# The Family Captain AI Boot Camp — Heartbeat Posts (7-Week, Armada Order)
 
-24 posts. Drop into the USMC Ministries Mighty Networks feed alongside the bootcamp. **Format:** 80–200 words. One hook line, one captain's frame, one comment-magnet question. Every post ends with an invitation to engage. Voice is brotherly captain-to-captain.
+**Cohort drop schedule:** Mon = Kickoff · Wed = Mid-week Call · Fri = Close-out + Scripture Sit
+**Theme order:** Vision → Body → Spiritual → Husbanding → Fathering → Finance → Sabbath
+**Channel:** [t.me/+ddnHqJEqkKk3ZmVh](https://t.me/+ddnHqJEqkKk3ZmVh) (FC private cohort)
+**Bible engine:** Every scripture ref hyperlinks to [usmcmin.org/bible.html](https://usmcmin.org/bible.html)
 
-**Cadence:**
-- Monday Kickoff (5)
-- Wednesday Captain's Call (5)
-- Friday Close-out (5)
-- Scripture Anchor — pinned at week's open (5)
-- Bonus Drops (4) — fire whenever the cohort needs them
-
----
-
-## Monday Kickoffs
-
-### W1.M — Boots on the Bridge
-Captains —
-
-Week 1. We're not building a chatbot. We're building a man.
-
-The bootcamp post is up. Three tasks this week. Two questions before you start: *Why do I want to use AI?* And: *What am I afraid it'll do to me if I do?*
-
-Both are honest. Both belong in your charter.
-
-Take 25 minutes today on Task 1. Write 5 lines. Save it where you'll see it. Post one line in the comments — iron sharpens iron.
-
-If you're not sure what to write, that's the lesson. Captains who can't define the mission don't get the wheel.
-
-**What's one line of your AI charter? Drop it below.**
+> 21 posts (7 weeks × 3 drops). Drop times are suggestions — adjust to your cohort's rhythm.
+> Each post stands alone; pin Week 1 Mon as the first move.
 
 ---
 
-### W2.M — The Captain Has a Rhythm
-Brothers —
+## Week 1 · Vision — Write the vision plain.
 
-You can't lead a home or a business off vibes. You need a rhythm. AI fits inside the rhythm. It doesn't make the rhythm.
+### Week 1 · Monday — Kickoff
+> **Welcome, captain.**
+>
+> Seven weeks. Twenty-one tasks. One plan — yours.
+>
+> Week 1 is **Vision**. Before you touch any tool, you say where you're going. A man without a written vision is steered by the most recent email.
+>
+> 📜 *"Write the vision; make it plain on tablets, so that he may run who reads it."* — [Habakkuk 2:2](https://usmcmin.org/bible.html)
+>
+> **This week's tasks:**
+> · T1 — Draft Your AI Charter (5 lines)
+> · T2 — Write Your 5-Year Captain's Vision
+> · T3 — Build Your Tool Stack (2–4 from the Compass)
+>
+> Open the index. Open W1.T1. Ship it today. React ✓ when you do.
 
-This week is your personal OS. Three tasks: a 5-minute morning anchor, voice capture with Whisper, and the most important framework in the whole bootcamp — tiered autonomy.
+### Week 1 · Wednesday — Mid-week Call
+> Captains — Wednesday check.
+>
+> If you've shipped T1, drop one line of your charter in the comments. Not the whole thing. Just one line.
+>
+> If you haven't shipped yet — open W1.T1 right now. The charter is five lines. It's the rep, not the workout.
+>
+> The man who writes the charter is the man who keeps the helm. The man who skips it has already handed it to the model.
 
-Read that last one twice. *Informational. Contextual. Sensitive.* Most men get this wrong by lumping everything into one bucket: "let AI do it." The captain on the bridge classifies every task before he delegates anything.
-
-Spend 25 minutes today on the morning anchor. Tomorrow, run it. By Friday, adjust it.
-
-**What's the one task you've been letting AI handle that's actually sensitive? No shame — just name it.**
-
----
-
-### W3.M — Tools Serve the Home
-Captains —
-
-Week 3. The home week. Hardest week.
-
-This is where some of you will hesitate. You've been letting AI into too much of your home, or you've been keeping it out of the parts where it would actually help — your wife's grocery list, your kid's reading plan, the conversation you keep avoiding.
-
-Three tasks: prep one hard conversation (don't hide behind it), build one family rhythm asset, and write your Family AI Policy *with your wife*. That last one is Joshua 24:15 in 2026 form.
-
-Don't skip the policy because it feels too small. It's small. It's also a covenant.
-
-**Question for the week: what's one rule you and your wife agree should be in your Family AI Policy?**
-
----
-
-### W4.M — Where Leverage Lives
-Captains —
-
-Week 4. Cowork mode.
-
-Leverage is real, and it's a stewardship problem. Five hours bought back is five hours owed somewhere — to your wife, your kids, your local body. Don't pocket them.
-
-Three tasks: buy back 5 hours, build a ministry workflow, save your 3 best prompts as skills.
-
-Hard reminder all week: **drafting vs. execution.** AI drafts. The captain decides. Anything that touches money, access, or another person's wellbeing stays sensitive. We don't autosend. We don't autopilot.
-
-If you cut your customer-email time from 2 hours to 30 minutes, the question isn't "can I scale up?" The question is *who's going to call me a faithful steward of those 90 minutes?*
-
-**Where will your bought-back hours go this month? Be specific.**
+### Week 1 · Friday — Close-out + Scripture Sit
+> **Friday sit.**
+>
+> 📜 Read [Habakkuk 2:2](https://usmcmin.org/bible.html) aloud. Once before dinner. Once before bed.
+>
+> Then ask yourself: did this week's vision get *plain*, or did it stay *busy*?
+>
+> Weekend ahead — your wife and kids don't need your plan. They need you present.
+>
+> Sabbath drill: off. Rest is part of the rep.
 
 ---
 
-### W5.M — The Captain Sent
-Brothers —
+## Week 2 · Body — Steward the temple.
 
-Last week. Three tasks: cost & trap audit, teach one person, write your Captain's Charter.
+### Week 2 · Monday — Kickoff
+> **Week 2: Body.**
+>
+> Vision named the destination. Body is the boat that carries you there.
+>
+> 📜 *"Your body is a temple of the Holy Spirit. Glorify God in your body."* — [1 Corinthians 6:19–20](https://usmcmin.org/bible.html)
+>
+> **This week's tasks:**
+> · T1 — Weekly Movement Practice (3× strength + 2× walking, calendared)
+> · T2 — Captain's Meal Plan (protein-forward, one week)
+> · T3 — 5-Night Sleep Audit (data, then ONE variable fix)
+>
+> If you can't carry your wife's groceries up two flights at 50, the family will know. Show up imperfectly. Start lower than you think.
 
-This is the multiplication week. The 2 Timothy 2:2 week.
+### Week 2 · Wednesday — Mid-week Call
+> Wednesday body-check.
+>
+> Did the movement land on the calendar — or in the "next week" folder?
+>
+> One captain who showed up Monday is more honest than three who planned perfectly and didn't move.
+>
+> Drop a one-liner: what did you actually do for your body this week? (Walk counts. Push-ups before coffee counts. Skipped a third drink counts.)
 
-Most men finish bootcamps and tell no one. They keep the gold and bury it. Don't. The chain breaks in your generation if you don't pass it.
-
-Pick someone this week. Wife. Older kid. Brother. Pastor. Mentee. Teach them ONE thing — not all of it. The smallest faithful thing. Then watch them do it once.
-
-By Friday: charter signed. Screenshot posted. Captain commissioned.
-
-**Who are you teaching this week? Drop the first name in the comments — accountability.**
-
----
-
-## Wednesday Captain's Calls
-
-### W1.W — Mid-Week Charter Check
-Halfway through Week 1.
-
-Two questions:
-1. Have you written your AI charter yet, or are you still waiting for the perfect 5 lines?
-2. Have you shared one of those lines in the comments?
-
-If the answer to either is no, that's not failure — that's data. The captain who can't write the charter isn't ready to use the tool.
-
-Imperfect actions today beat perfect actions never. Five lines. Bad ones. Now.
-
-**What's getting in the way? Drop it below — we'll problem-solve together.**
-
----
-
-### W2.W — Tag Your Sensitive Tasks
-Mid-week, Week 2. Captain's call.
-
-If you've only done the morning anchor, you've done the easy one. Whisper is harder because it requires you to listen to yourself. Tiered autonomy is hardest because it requires you to be honest about what you've already over-delegated.
-
-Take 15 minutes today. List 5 of your recurring tasks. Tag each: informational / contextual / sensitive. Don't grade yourself on the answer. Grade yourself on the honesty.
-
-You'll find at least one task you've been letting AI execute that should have stayed sensitive. That's the lesson.
-
-**Which task surprised you most when you tagged it? Reply with the tag and one sentence of why.**
+### Week 2 · Friday — Close-out + Scripture Sit
+> **Friday sit.**
+>
+> 📜 Read [1 Corinthians 6:19–20](https://usmcmin.org/bible.html) aloud.
+>
+> Then ask: what does temple stewardship look like Monday morning — not at the gym, but at the kitchen counter, the bedside lamp, the cup of coffee?
+>
+> Sabbath drill: off. The temple needs rest more than it needs another set.
 
 ---
 
-### W3.W — Have the Conversation
-Halfway through home week.
+## Week 3 · Spiritual — Walk with God.
 
-You know which conversation. The one you've been prepping with AI all week — the one you keep "polishing" because polish feels like progress.
+### Week 3 · Monday — Kickoff
+> **Week 3: Spiritual.**
+>
+> Body has the strength. Spiritual has the steering. A captain who outsources prayer becomes the manager of his soul.
+>
+> 📜 *"This Book of the Law shall not depart from your mouth, but you shall meditate on it day and night."* — [Joshua 1:8](https://usmcmin.org/bible.html)
+>
+> **This week's tasks (note: you lead, AI assists):**
+> · T1 — 10-Min Scripture Study, You Lead
+> · T2 — Family Devotion Generator (Friday-night devo)
+> · T3 — Sermon Notes → Captain's Actions (5 actions from a sermon you sat under)
+>
+> AI is a research partner. The Spirit is the teacher. Don't confuse them.
 
-Today is the day. Phone face-down. Wife or kid in the room. AI not in the room.
+### Week 3 · Wednesday — Mid-week Call
+> Wednesday — Spirit check.
+>
+> If you've done T1: drop the *passage* you studied (not your conclusions). Iron sharpens iron when we see what each other is sitting in.
+>
+> If you haven't: pick five verses. Read them aloud twice. No screens. Then open Claude for context only.
+>
+> The captain who can't read Scripture without a study guide is still in basic training.
 
-Three sentences. Drafted by you. Spoken by you. Followed by silence so she or he can answer.
-
-Captains pray, prepare, and then *show up*. The captain who only prepares isn't a captain. He's an admin.
-
-**After you've had it (not before), drop one word in the comments: how it went. One word. Just one.**
-
----
-
-### W4.W — Strip the Fingerprint
-Mid-week, Week 4.
-
-Read the email you drafted with Claude this week. Out loud.
-
-Did you say "delve"? "Elevate"? "In today's fast-paced world"? Em-dashes everywhere?
-
-Strip them. Sound like you.
-
-The leverage isn't worth it if your community can hear the AI seam. Leverage is buying back time. Imitation is buying out your voice.
-
-Edit one piece of AI-drafted content today. Send it. Then save the edited version as your new prompt.
-
-**What's an AI fingerprint phrase you keep catching yourself using? Drop it — let's compile a strip-list.**
-
----
-
-### W5.W — Multiplication Resistance
-Mid-week, Week 5.
-
-Some of you have already taught someone. Most haven't.
-
-Why not? Be honest with yourself.
-- Too busy?
-- Not sure I know enough?
-- Don't want to look weird?
-
-All real. None of them are reasons. They're resistance.
-
-Pick a name today. Send a text. "Hey — I've been doing a 5-week thing on AI and faith. Can I show you 1 thing for 10 minutes this week?"
-
-That's the whole task. Send the text.
-
-**Who are you texting? First name. Today.**
+### Week 3 · Friday — Close-out + Scripture Sit
+> **Friday sit.**
+>
+> 📜 Read [Joshua 1:8](https://usmcmin.org/bible.html) aloud.
+>
+> Then ask: when did you last meditate on Scripture *day and night* — not on a podcast about Scripture, on Scripture itself?
+>
+> Sabbath drill: off. The Word doesn't need a productivity stack.
 
 ---
 
-## Friday Close-Outs
+## Week 4 · Husbanding — Lead with love.
 
-### W1.F — What Shipped, What Slipped
-Captains —
+### Week 4 · Monday — Kickoff
+> **Week 4: Husbanding.**
+>
+> Vision, strength, and a steady walk converge here — in the woman who shares your roof.
+>
+> 📜 *"Husbands, love your wives, as Christ loved the church and gave himself up for her."* — [Ephesians 5:25–28](https://usmcmin.org/bible.html)
+>
+> **This week's tasks:**
+> · T1 — The 5-Minute Wife Audit (mirror, not script)
+> · T2 — Prep One Hard Conversation (AI preps; you show up)
+> · T3 — Letter to Your Wife (one page, hand-delivered)
+>
+> She doesn't need the polished speech. She needs you — sober, present, with the phone face-down.
 
-Week 1 close-out. Tell us:
-1. What shipped this week? (Charter? Tool stack? Anything?)
-2. What slipped?
-3. One thing you noticed about yourself?
+### Week 4 · Wednesday — Mid-week Call
+> Wednesday — wife check.
+>
+> Don't post specifics. Don't post what she said. Just drop one word: **harder than I thought** or **softer than I thought** or **stuck** — and that's enough for a brother to pray for you.
+>
+> The conversation you're avoiding is the conversation she's already had with herself this week. AI helps you prepare. AI does not replace your presence.
 
-No grading. No competition. Captain's logs are just honest field reports.
-
-If you finished all three tasks, post in the comments. We celebrate that. If you finished one, post that — we celebrate that too. Imperfect actions stack.
-
-Sabbath posture this weekend: drill off, posts off, family on. We pick it back up Monday morning.
-
-**Reply with your "shipped / slipped / noticed" — one line each.**
-
----
-
-### W2.F — Rhythm Check
-Week 2 done.
-
-Quick captain's log:
-- Morning anchor — running it daily, sometimes, not yet?
-- Whisper — used it once? More?
-- Tiered autonomy tags — wrote them? Acted on them?
-
-The rhythm matters more than the polish. A rough morning anchor used 5 days in a row beats a perfect one used twice.
-
-Look at your calendar for next week. Block one 15-minute "captain's bridge time" slot. Daily, if you can. That's where the rhythm gets reinforced.
-
-Sabbath this weekend. We don't outperform our rest.
-
-**What's the one piece of the rhythm that actually stuck this week?**
+### Week 4 · Friday — Close-out + Scripture Sit
+> **Friday sit.**
+>
+> 📜 Read [Ephesians 5:25–28](https://usmcmin.org/bible.html) aloud.
+>
+> Then ask: did I love her *as Christ loved the church* — sacrificially, sanctifyingly — or did I just stay out of fights?
+>
+> Sabbath drill: off. Phone down at dinner. Just sit with her.
 
 ---
 
-### W3.F — Policy Posted?
-Week 3 close-out.
+## Week 5 · Fathering — Train up your children.
 
-Honest question: did you write the Family AI Policy *with your wife*?
+### Week 5 · Monday — Kickoff
+> **Week 5: Fathering.**
+>
+> AI cannot disciple your children. It can help you ask better questions, plan better rhythms, draft better blessings — but the dinner-table look, the bedtime prayer, the watching of them work — that's the captain's seat.
+>
+> 📜 *"You shall teach them diligently to your children, and shall talk of them when you sit in your house."* — [Deuteronomy 6:6–7](https://usmcmin.org/bible.html)
+>
+> **This week's tasks:**
+> · T1 — 3 Questions for the Dinner Table (ask one tonight)
+> · T2 — Build a Family Rhythm Asset (on the fridge by Friday)
+> · T3 — Write Your Family AI Policy (with the kids)
+>
+> A father who only asks about grades and chores is the manager of his home, not the dad of his children.
 
-If yes — celebrate. Drop a "policy posted" in the comments. Maybe a screenshot if she's cool with it.
+### Week 5 · Wednesday — Mid-week Call
+> Wednesday — dinner-table check.
+>
+> Which question did you ask? Which kid? What did they say? (No names, just the answer that surprised you.)
+>
+> If you skipped — tonight is the rep. Three questions. Pick one. Use it.
+>
+> The kid who knows his dad asked Claude for a better question for *him specifically* is a kid who knows his dad is paying attention.
 
-If not — what got in the way? Was it time, tension, or pride? All three are addressable, none of them disappear by skipping the conversation.
-
-Reschedule the 15 minutes. Put it on her calendar, not yours. Tell her you want to do it together because her voice matters in your house — and AI is in your house now whether you write a policy or not.
-
-**Did you and your wife sign a policy this week? One word: yes / not yet / working on it.**
-
----
-
-### W4.F — Hour Audit
-Week 4 close-out. Captain's log:
-
-Did you build a real Cowork workflow this week?
-Did you save your 3 best prompts?
-And the big question: **how many hours did you actually buy back?**
-
-Be honest. The number isn't 5 for everyone. Sometimes it's 1. Sometimes it's negative because you spent more time configuring than the workflow was worth. That's normal. That's data.
-
-Next week is the last. Build one capstone system this weekend — even a sketch. Bring it Monday.
-
-**Hours bought back this week: ___ . What did you do with them?**
-
----
-
-### W5.F — Captain Sent
-Brothers —
-
-Week 5 close-out. Final captain's log.
-
-Three things to post in the comments:
-1. The screenshot of your signed Captain's Charter.
-2. The first name of the person you taught.
-3. One sentence: what changed in you over 5 weeks.
-
-Phase 1 ends here. Phase 2 (Bridge Officer Program) is on hold until enough of you have run real systems for 90 days. The continuation rhythm starts at Day 45.
-
-You started this bootcamp as a man with AI. You finish as a captain with a charter, a system, and a person you trained. That's the whole assignment.
-
-**Sign your charter. Post the screenshot. Name the person you taught. We commission you.**
+### Week 5 · Friday — Close-out + Scripture Sit
+> **Friday sit.**
+>
+> 📜 Read [Deuteronomy 6:6–7](https://usmcmin.org/bible.html) aloud.
+>
+> Then ask: am I teaching them *diligently* — woven into the day — or only at scheduled "spiritual time"?
+>
+> Sabbath drill: off. Saturday is for the kids to see you rest.
 
 ---
 
-## Scripture Anchors
+## Week 6 · Finance — Captain of the storehouse.
 
-### Anchor 1 — Proverbs 3:5–6
-"Trust in the Lord with all your heart, and lean not on your own understanding."
+### Week 6 · Monday — Kickoff
+> **Week 6: Finance.**
+>
+> Money tells the truth about a man's priorities before his mouth does.
+>
+> 📜 *"Bring the full tithe into the storehouse… and thereby put me to the test, says the LORD."* — [Malachi 3:10](https://usmcmin.org/bible.html)
+>
+> **This week's tasks:**
+> · T1 — Tithe-First Budget (giving is line 1)
+> · T2 — Subscription Audit (keep / kill / downgrade)
+> · T3 — Legacy Plan Starter (will, beneficiaries, letter to family)
+>
+> Never paste account numbers into AI. Totals only. The lawyer makes the will real.
 
-This is the operating system for the whole bootcamp. AI runs in user space. The Lord runs in kernel space. We don't confuse them.
+### Week 6 · Wednesday — Mid-week Call
+> Wednesday — money check.
+>
+> Did giving come *first* last month, or did it come *last*? Voice-memo the answer to yourself before you justify.
+>
+> Drop one screenshot in the channel: a subscription you canceled today. That's the smallest visible rep. Three captains canceling one each = $30/month back to the kingdom.
 
-Every prompt you write this week, every output you read — bring them under this verse before you act on them.
-
-**What part of "lean not on your own understanding" is hardest for you when AI gives you a confident answer?**
-
----
-
-### Anchor 2 — Psalm 90:12
-"So teach us to number our days, that we may apply our hearts unto wisdom."
-
-Numbering your days is what tiered autonomy is for. Some hours are informational — they belong to information. Some are contextual — they belong to drafts. Some are sensitive — they belong to your wife, your kids, your knees.
-
-Don't let AI blur the categories. The Lord didn't give you those hours so you could outsource them. He gave them so you could *number* them.
-
-**Which hour of your day are you most tempted to outsource that you shouldn't?**
-
----
-
-### Anchor 3 — Joshua 24:15
-"As for me and my house, we will serve the Lord."
-
-In 2026, the house has Wi-Fi. The house has speakers that listen. The house has AI in pockets you can't always see. *And as for that house*, the captain still says: we will serve the Lord.
-
-Your Family AI Policy is this verse with edges. It's a covenant, even if it's small. Sign it with her. Post it on the fridge.
-
-**What's the one rule in your home that makes Joshua 24:15 visible?**
-
----
-
-### Anchor 4 — Colossians 3:23
-"Whatever you do, work as for the Lord, and not for men."
-
-Buying back hours is good. Buying back hours so you can be *more* faithful is the point.
-
-Don't let leverage become a brag. Let it become a tithe of time — back to your wife, your kids, your church, your neighbor.
-
-**Where will your leverage land this month? Name one place.**
+### Week 6 · Friday — Close-out + Scripture Sit
+> **Friday sit.**
+>
+> 📜 Read [Malachi 3:10](https://usmcmin.org/bible.html) aloud.
+>
+> Then ask: am I tithing on what I made — or on what was left over after I bought what I wanted?
+>
+> Sabbath drill: off. The storehouse doesn't need another spreadsheet tonight.
 
 ---
 
-### Anchor 5 — 2 Timothy 2:2
-"And the things you have heard from me … entrust to faithful men who will be able to teach others."
+## Week 7 · Sabbath — The captain rests.
 
-This is the chain. The bootcamp ends here because Paul ended Timothy here.
+### Week 7 · Monday — Kickoff
+> **Week 7: Sabbath.**
+>
+> The captain who can't stop will not lead long. Sabbath isn't earned by a productive week — it's commanded so the captain doesn't become his own god.
+>
+> 📜 *"Remember the Sabbath day, to keep it holy."* — [Exodus 20:8](https://usmcmin.org/bible.html)
+>
+> **This week's tasks:**
+> · T1 — Plan Your Sabbath (24-hour disconnect protocol, on paper)
+> · T2 — Saturday Captain's Audit (review week, set ONE anchor for next)
+> · T3 — Teach One Person One Thing (the multiplication test)
+>
+> The bootcamp doesn't end when you finish Week 7. It ends when the next captain starts.
 
-You're not done when you finish your charter. You're done when someone you taught teaches someone else. That's the multiplication test.
+### Week 7 · Wednesday — Mid-week Call
+> Wednesday — Sabbath check.
+>
+> Have you picked the 24 hours? Have you told your wife? Have you decided where the phone sleeps?
+>
+> The plan that isn't on paper is the plan that won't survive Friday afternoon.
+>
+> Drop one word: **planned** or **planning** — that's all anyone needs to know to pray for you.
 
-**Who are you praying for to be the next captain after you?**
-
----
-
-## Bonus Drops (4)
-
-### Bonus — Captain to Captain (Letter)
-Captains —
-
-A letter, not a post.
-
-I wrote my first AI charter on a napkin in 2024. It was bad. I rewrote it three weeks later. It was less bad. I'm still rewriting it.
-
-Don't wait for the good version. Write the bad one. Sign it anyway. Captain's signatures aren't reserved for finished men. They're for moving men.
-
-I'm proud of every one of you who's in this bootcamp. I'm prouder of the ones who'll be in the *next* one because you taught them.
-
-Imperfect actions. Captain's actions. Same thing.
-
-— Adam ("MOOP")
-
-**No question this time. Just say "received" if it landed.**
-
----
-
-### Bonus — The Day AI Lied to Me
-Captains —
-
-Quick warning story.
-
-Last year I asked Claude for a verse to support a point I was making. It gave me a verse with the right vibe. Wrong reference. Wrong words. *I almost preached it.*
-
-The Spirit caught me before I did. The Word didn't trip me up; the model did.
-
-This is why we do trap tests in Week 5. This is why we say *trust but verify.* This is why "AI never replaces the Spirit, the Word, or your wife's voice" is the hard rule.
-
-You'll hit this one yourself. When you do, log it. Tell us. We protect each other from confident-wrong tools.
-
-**Drop a one-line "AI got me" story below. We learn from each other's near-misses.**
+### Week 7 · Friday — Close-out + Commission
+> **Friday — Commission.**
+>
+> 📜 *"And what you have heard from me… entrust to faithful men, who will be able to teach others also."* — [2 Timothy 2:2](https://usmcmin.org/bible.html)
+>
+> Sign your Captain's Charter. Post the screenshot in the channel.
+>
+> Pick ONE brother. Pick ONE thing you learned. Walk him through it before next Friday. Watch him do it once. Don't take the keyboard.
+>
+> Send him to family-captain.html. He starts where you started.
+>
+> The commission is yours. The captain is sent. Sabbath drill: off. Forever this side of glory, the captain rests — then teaches.
 
 ---
 
-### Bonus — Celebration Drop
-Captains — pause.
+## Cohort host notes
 
-Look at this thread. Look at the comments stacking up. Look at the policies posted, the prompts shared, the hours bought back.
-
-This isn't just a curriculum. This is a *cohort*. You're showing up for each other.
-
-I want to call out three captains by name (do this in your real post: tag 3 brothers who shipped real work this week — kids' reading plan, signed family policy, cancelled subscription).
-
-Iron is sharpening iron. The Lord is honoring honest captains who take imperfect actions.
-
-**Tag a brother in the cohort who's been faithful this week. Say one sentence why.**
-
----
-
-### Bonus — Multiplication Challenge
-Captains —
-
-Final bonus drop.
-
-Some of you finished Phase 1 strong. Same charter. Same systems. Now what?
-
-Here's the challenge: by Day 90, host **one** 30-minute "captain's call" with 2–3 men outside this cohort. Walk them through one task you ran in Phase 1.
-
-Not a bootcamp. Not a full curriculum. One task. One conversation. 30 minutes.
-
-If 10 of you do this, that's 30 new men touched by Phase 1 multiplication. That's the math of 2 Timothy 2:2.
-
-Reply when you've scheduled the call. We'll celebrate it.
-
-**Who's in for the Day-90 multiplication challenge?**
-
----
-
-*End of heartbeat post series. 24 posts. Edit, schedule, ship.*
+- **Format:** Plain text + emoji + scripture links. Telegram renders MD lightly; bold + italic + blockquote work.
+- **Pin strategy:** Pin Week 1 Mon as the bootcamp index. When Week 2 Mon drops, unpin Week 1 and pin Week 2.
+- **Sabbath rule:** No drops Sunday. The channel rests too.
+- **One brother away:** If a captain goes quiet for 7+ days, a DM from another captain (not the host) is the move. Iron sharpens iron, not the host's reminders.
+- **Scripture links:** All scripture refs point to `usmcmin.org/bible.html`. The bible engine takes the search query in the URL fragment.
+- **Adaptation:** If your cohort prefers Tue/Thu cadence, shift the Mon/Wed drops; keep Fri close-out + Scripture Sit anchored to Friday.

@@ -654,13 +654,45 @@
   .fc-header nav.fc-nav a.active { color: #CE8E31 !important; }
 
   /* (5) CTA buttons — white-on-bronze 3.18:1 fails normal-text AA.
-     Bump to 16pt bold to qualify as Large Text (AA 3:1 threshold). */
+     Bump to 18.5px bold to clear the 18.66px AA-Large threshold. */
   .btn, a.btn, .nav-cta, a.nav-cta,
   .module-cta a.btn, button.cta,
   .module-hero .btn, a.btn-primary {
-    font-size: 16px !important;
+    font-size: 19px !important;
     font-weight: 700 !important;
     line-height: 1.2 !important;
+  }
+
+  /* (5b) Download-grid CTAs ("Chart your course →" / "Open guide →") —
+     these are non-button anchors inside .dl-card. Were bright bronze
+     on warm-gray (2.55:1). Use dark bronze for legibility. */
+  .dl-card a,
+  .dl-card .cta,
+  .info-card a:not(.btn),
+  .stack-card a:not(.btn) {
+    color: #8B5A1F !important;
+    font-weight: 600 !important;
+  }
+  [data-theme="dark"] .dl-card a,
+  [data-theme="dark"] .dl-card .cta {
+    color: #CE8E31 !important;
+  }
+
+  /* (5c) Inline "email Adam" / mailto links inside CTA bands — bronze bg,
+     so text must be white not dark-bronze (which was bronze-on-bronze 2.11). */
+  .cta-band a:not(.btn),
+  .cta-band .cta-secondary a {
+    color: #FFFFFF !important;
+    text-decoration: underline !important;
+  }
+
+  /* (5d) Footer links — were dark bronze (#8B5A1F) on slate (2.49:1).
+     Use bright bronze (#CE8E31) on slate (6.5:1). */
+  footer a, .site-footer a {
+    color: #CE8E31 !important;
+  }
+  footer a:hover, .site-footer a:hover {
+    color: #FFFFFF !important;
   }
 
   /* (6) Small/muted text on warm-gray cards — was 4.43:1 (just below 4.5).

@@ -425,9 +425,9 @@ def generate_profile(candidate, categories, meta, nav=None):
         'foreign': 'Other foreign-linked PACs',
     }
     SOURCE_DESCRIPTORS_ADJ = {
-        'aipac': 'AIPAC operates a super-PAC (United Democracy Project) that spends millions per cycle on US races on behalf of a foreign government\'s policy agenda. RESOLUTE Citizen treats documented contributions as a failure on america_first/q3.',
-        'soros': 'The Open Society Foundations and the Democracy PAC vehicles tied to George Soros / Alex Soros direct hundreds of millions toward progressive prosecutors, judges, and ballot measures. RESOLUTE Citizen treats documented contributions as foreign-linked dark-money funding hostile to the historically orthodox Christian moral order.',
-        'china': 'The CCP operates an explicit United Front Work Department to direct overseas members and proxies — including business executives such as Wanxiang Group\'s Pin Ni (named CCP member 15 times in Chinese state media) — to cultivate political relationships in the United States. Federal law prohibits CCP members from donating to U.S. campaigns, and most CCP-member donors hold green cards rather than citizenship. RESOLUTE Citizen treats any documented contribution from a CCP-member or United Front-affiliated donor as a failure on america_first/q3.',
+        'aipac': 'AIPAC operates a super-PAC (United Democracy Project) that spent over $100M during the 2024 cycle on independent expenditures targeting U.S. candidates who criticize Israeli government policy. The U.S. has no formal mutual-defense treaty with Israel. RESOLUTE Citizen treats documented AIPAC contributions as a failure on america_first/q4 (the foreign-lobby question) AND applies a dollar-bracket adjustment to the total score.',
+        'soros': 'The Open Society Foundations and Democracy PAC vehicles tied to George Soros / Alex Soros direct hundreds of millions toward progressive prosecutors, judges, and ballot measures. Soros-funded DAs systematically decline to prosecute attacks on pro-life pregnancy centers and refuse to enforce state abortion restrictions. RESOLUTE Citizen treats documented Soros-network funding as a failure on life/q4 (legal protections for abortion providers) AND applies a dollar-bracket adjustment to the total score.',
+        'china': 'The CCP operates an explicit United Front Work Department to direct overseas members and proxies — including business executives such as Wanxiang Group\'s Pin Ni (named CCP member 15 times in Chinese state media) — to cultivate political relationships in the United States. Federal law (52 U.S.C. § 30121) prohibits foreign nationals including CCP members from donating to U.S. campaigns. RESOLUTE Citizen treats documented contributions from CCP-member or United Front-affiliated donors as a failure on america_first/q4 (the foreign-lobby question) AND applies a dollar-bracket adjustment to the total score.',
         'foreign': 'Generic foreign-linked PAC contributions outside the AIPAC + Soros + China networks.',
     }
 
@@ -465,12 +465,23 @@ def generate_profile(candidate, categories, meta, nav=None):
         return (
             '<div class="prof-adjustments" role="note" aria-label="Score adjustments">'
             '<h3>Score adjustments</h3>'
-            '<p class="prof-adj-lead">RESOLUTE Citizen applies score adjustments for documented '
-            'foreign-influence campaign funding. Verified zero on a tracked source earns a bonus; '
-            'documented contributions earn a penalty in proportion to dollar magnitude. The '
-            'methodology is published in '
-            '<a href="https://github.com/adamljohns/usmcmin-com/blob/main/data/aipac_adjustments.json" target="_blank" rel="noopener"><code>data/aipac_adjustments.json</code></a> '
-            'and equivalent files for each tracked donor network.</p>'
+            '<div class="prof-adj-explainer">'
+            '<p class="prof-adj-lead"><strong>Foreign-lobby money compromises America First.</strong> '
+            'The U.S. has no formal mutual-defense treaty with Israel; AIPAC operates a super-PAC '
+            '(United Democracy Project) that spent over $100M during the 2024 cycle on independent '
+            'expenditures against U.S. candidates who criticize Israeli government policy. A candidate '
+            'who has accepted that money has, in their own revealed preference, accepted a foreign-policy '
+            'filter on their congressional vote. The same logic covers China-linked donations, where '
+            'federal law also prohibits CCP members from contributing.</p>'
+            '<p class="prof-adj-lead">For every candidate with a documented donor record, two things '
+            'happen: <strong>(1) the specific category question is marked False</strong> '
+            '(<code>america_first[q4]</code> for AIPAC + China; <code>life[q4]</code> for Soros-funded '
+            'prosecutors), so the per-category subscore drops by 2 points; <strong>(2) an additional '
+            'dollar-bracket adjustment is applied to the total</strong>, making the penalty proportional '
+            'to the magnitude of the funding. Both impacts are visible on this page.</p>'
+            '<p class="prof-adj-lead"><a href="/methodology-foreign-influence.html">Full methodology, '
+            'bracket schedules, and primary sources &rarr;</a></p>'
+            '</div>'
             f'<div class="prof-adj-summary">Base score <strong>{base}/{MAX_TOTAL}</strong> '
             f'<span class="prof-adj-arrow">→</span> '
             f'Adjusted <strong>{adjusted}/{MAX_TOTAL}</strong></div>'

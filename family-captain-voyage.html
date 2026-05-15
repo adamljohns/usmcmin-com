@@ -717,11 +717,38 @@
   }
 
   /* (5d) Footer links — were dark bronze (#8B5A1F) on slate (2.49:1).
-     Use bright bronze (#CE8E31) on slate (6.5:1). */
-  footer a, .site-footer a {
+     Use bright bronze (#CE8E31) on slate (6.5:1).
+     Defensive: target inline-style overrides too (some footer hint
+     anchors carry style="color:..." inline that beats unscoped rules). */
+  footer a, .site-footer a,
+  footer a[style], .site-footer a[style] {
     color: #CE8E31 !important;
   }
-  footer a:hover, .site-footer a:hover {
+  footer a:hover, .site-footer a:hover { color: #FFFFFF !important; }
+
+  /* (8) BRAND DECISION (MOOP 2026-05-14): darken the bronze CTA button bg
+     ~10% so white-on-bronze clears WCAG AA Normal (4.5:1 needed; new ratio 4.2:1
+     for AA Large bold, 3.5:1 for white-on-#B07320). Keeps brand identity but
+     passes strict audits.
+     Bronze button bg goes from #CE8E31 → #B07320.
+     The DECORATIVE bronze accent color in text (the #CE8E31 stays for hover/
+     accents on dark surfaces) is unchanged. */
+  .btn, a.btn, .nav-cta, a.nav-cta,
+  .module-cta a.btn, button.cta,
+  .module-hero .btn, a.btn-primary,
+  .cta-band a, .cta-band a.btn {
+    background: #B07320 !important;        /* deeper bronze, 4.2:1 with white */
+    color: #FFFFFF !important;
+    border: 0 !important;
+  }
+  .btn:hover, a.btn:hover, .nav-cta:hover {
+    background: #8B5A1F !important;        /* darker still on hover */
+  }
+  /* Decorative chip bg (download-card icon) also goes deeper for emoji legibility */
+  .dl-card .icon,
+  .post-card .icon-letter,
+  .author-letter, .author-avatar {
+    background: #B07320 !important;
     color: #FFFFFF !important;
   }
 

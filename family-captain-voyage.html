@@ -1289,6 +1289,31 @@
     });
   });
 
+  // Make the whole week-port clickable → open the per-week page.
+  // FC track only — USMC public track has no per-week pages, so don't attach.
+  // (Task circles and scripture links inside still open their own targets via event delegation.)
+  if (document.body.dataset.track === 'family-captain') {
+    document.querySelectorAll('.week-port').forEach(port => {
+      port.style.cursor = 'pointer';
+      port.addEventListener('click', (e) => {
+        // Don't intercept clicks on inner interactive elements
+        if (e.target.closest('.task-circle, .scrip a, .scrip, .task-toggle')) return;
+        const n = port.dataset.week;
+        location.href = `family-captain-week-${n}.html`;
+      });
+      // Keyboard: Enter opens the week page when the port has focus
+      port.setAttribute('tabindex', '0');
+      port.setAttribute('role', 'link');
+      port.setAttribute('aria-label', 'Open Week ' + port.dataset.week + ' page');
+      port.addEventListener('keydown', (e) => {
+        if ((e.key === 'Enter' || e.key === ' ') && !e.target.closest('.task-circle, .scrip a, .task-toggle')) {
+          e.preventDefault();
+          location.href = `family-captain-week-${port.dataset.week}.html`;
+        }
+      });
+    });
+  }
+
   // Drills
   document.querySelectorAll('.drill-cell').forEach(cell => {
     cell.addEventListener('click', () => {

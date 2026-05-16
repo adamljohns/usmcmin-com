@@ -30,9 +30,16 @@
         }
         h1,h2,h3 { font-family: 'Playfair Display', serif; }
 
+        /* Page-local hero: override main.css's full-viewport flex hero with a
+           compact, stacked, centered banner. Without this, main.css's
+           `.hero { display: flex; align-items: center; justify-content: center }`
+           lays out the h1, c5isr label, tagline, subtitle, and badges in a
+           horizontal row instead of stacking. */
         .hero {
+            display: block;
+            min-height: 0;
             text-align: center;
-            padding: 50px 20px 30px;
+            padding: 110px 20px 40px; /* top padding clears the 70px fixed nav + breathing room */
             background: linear-gradient(180deg, rgba(212,175,55,0.08) 0%, rgba(39,174,96,0.06) 100%);
             border-bottom: 1px solid var(--border);
         }
@@ -158,7 +165,9 @@
         .slider-labels { display: flex; justify-content: space-between; color: var(--gray); font-size: 0.75rem; margin-top: 4px; }
 
         .btn-row { display: flex; gap: 10px; margin-top: 20px; }
-        .btn {
+        /* Scoped to .btn-row so this doesn't clobber the global nav-cta button.
+           A previous unscoped .btn { flex: 1 } made BOOK A SESSION fill the nav. */
+        .btn-row .btn {
             flex: 1;
             padding: 14px;
             border-radius: 10px;
@@ -172,6 +181,8 @@
             align-items: center;
             justify-content: center;
             gap: 8px;
+            text-transform: none;
+            letter-spacing: 0;
         }
         .btn-next { background: linear-gradient(90deg, var(--gold), var(--green)); color: #000; }
         .btn-next:hover { opacity: 0.9; }
@@ -666,6 +677,7 @@
             <div class="completion-header">
                 <h2><img src="https://usmcmin.org/assets/icons/shield-finance.png" class="site-icon" alt="finance" width="20" height="20"> Your Stewardship Journey Begins</h2>
                 <p>Your intake is submitted. Adam will reach out within 24 hours.</p>
+                <p id="intakeIdNote" style="color:var(--gold);font-size:0.82rem;letter-spacing:0.06em;margin-top:6px;"></p>
             </div>
 
             <div class="scripture-card">
@@ -810,6 +822,15 @@
         ).join('');
     }
 
+    // INTAKE_BACKEND_URL — POST endpoint for the C5iSR intake. Switch this to
+    // the public-reachable URL once the subscribe-server is exposed (Cloudflare
+    // Tunnel, fly.io, ngrok, etc.). Until then, the form falls back to
+    // FormSubmit (email relay) for public visitors and to localhost for Adam
+    // testing from his Mac.
+    var INTAKE_BACKEND_URL = 'https://intake.usmcmin.com/intake';   // ← flip when tunnel is live
+    var INTAKE_BACKEND_DEV = 'http://127.0.0.1:3847/intake';
+    var FORMSUBMIT_FALLBACK = 'https://formsubmit.co/ajax/adam.l.johns@gmail.com';
+
     function submitForm() {
         const allData = { ...formData, formType: 'financial-intake-c5isr' };
         ['firstName','lastName','age','email','phone','cryptoHoldings','cryptoPortfolio',
@@ -824,20 +845,41 @@
         allData.financialBarriers = getChecked('financialBarriers');
         allData.submittedAt = new Date().toISOString();
 
+        // Local snapshot — kept regardless of what backend accepts the submission.
         localStorage.setItem('financial_intake_' + (getVal('firstName') || 'anon').toLowerCase(), JSON.stringify(allData));
 
-        // Submit to FormSubmit (emails data to adam.l.johns@gmail.com + logs it)
+        // PRIMARY: post to the subscribe-server /intake endpoint (stores in
+        // SQLite, fires a Telegram alert to Adam, returns a numeric intakeId).
+        // When tunneled publicly this is the canonical pipeline.
+        var primaryUrl = (location.hostname === '127.0.0.1' || location.hostname === 'localhost')
+            ? INTAKE_BACKEND_DEV : INTAKE_BACKEND_URL;
+        fetch(primaryUrl, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+            body: JSON.stringify(allData)
+        }).then(function(r){ return r.ok ? r.json() : null; })
+          .then(function(d){
+            if (d && d.intakeId) {
+                var note = document.getElementById('intakeIdNote');
+                if (note) note.textContent = 'Reference #' + d.intakeId;
+            }
+          })
+          .catch(function(){ /* swallow — FormSubmit fallback below covers public traffic */ });
+
+        // FALLBACK: FormSubmit relays the form fields to Adam's Gmail. This is
+        // the safety net for public visitors before the tunnel/cname is live,
+        // and a redundant trail for every submission afterwards.
         const submitPayload = {
             _subject: 'USMC Ministries — Financial Intake: ' + (allData.firstName || '') + ' ' + (allData.lastName || ''),
             _template: 'table',
             _captcha: 'false',
             ...allData
         };
-        fetch('https://formsubmit.co/ajax/adam.l.johns@gmail.com', {
+        fetch(FORMSUBMIT_FALLBACK, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
             body: JSON.stringify(submitPayload)
-        }).catch(() => {});
+        }).catch(function(){ /* best-effort */ });
 
         document.getElementById('sec-' + currentSec).classList.remove('active');
         document.getElementById('sec-done').classList.add('active');

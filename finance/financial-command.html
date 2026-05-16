@@ -192,7 +192,33 @@ function moopAuth(){
   <h1><img src="../assets/icons/shield-finance.png" alt="" width="18" height="18" style="vertical-align:middle;margin-right:4px;"> Financial Command Center</h1>
   <p class="sub">All entities · All accounts · All access status</p>
 </div>
-<div class="updated">Last updated: March 24, 2026 · MbPro live pull from NFCU + Wells Fargo</div>
+<div class="updated" id="snapshotUpdated">Loading live snapshot…</div>
+
+<!-- ══ LIVE SNAPSHOT — populated by /snapshot endpoint after PIN gate clears ══ -->
+<div class="entity-panel active" id="panel-snapshot-wrap" style="margin-bottom:24px;">
+  <div class="section-title" style="margin-top:0;"><img src="../assets/icons/shield-chart-48.png" alt="" width="18" height="18" style="vertical-align:middle;margin-right:4px;"> Live Snapshot — Today's Spot Prices & Holdings</div>
+  <div id="snapshotLoading" style="color:var(--gray);font-size:0.9rem;padding:12px 0;">Fetching from subscribe-server…</div>
+  <div id="snapshotError" style="display:none;color:var(--orange);font-size:0.85rem;padding:12px 0;border-left:3px solid var(--orange);padding-left:12px;background:rgba(255,165,0,0.05);"></div>
+  <div id="snapshotContent" style="display:none;">
+    <div class="accounts-grid">
+      <div class="account-card ok"><div class="acc-top"><div><div class="acc-name">BTC</div><div class="acc-type">Bitcoin · 24h change</div></div><div class="acc-balance ok" id="snap-btc">—</div></div><div class="acc-meta" id="snap-btc-change">—</div></div>
+      <div class="account-card ok"><div class="acc-top"><div><div class="acc-name">ETH</div><div class="acc-type">Ethereum · 24h change</div></div><div class="acc-balance ok" id="snap-eth">—</div></div><div class="acc-meta" id="snap-eth-change">—</div></div>
+      <div class="account-card ok"><div class="acc-top"><div><div class="acc-name">Gold</div><div class="acc-type" id="snap-gold-oz">— oz held</div></div><div class="acc-balance ok" id="snap-gold-spot">—</div></div><div class="acc-meta" id="snap-gold-value">Holdings value: —</div></div>
+      <div class="account-card warn"><div class="acc-top"><div><div class="acc-name">Silver</div><div class="acc-type" id="snap-silver-oz">— oz (working est.)</div></div><div class="acc-balance" id="snap-silver-spot">—</div></div><div class="acc-meta" id="snap-silver-value">Holdings value (unconfirmed): —</div></div>
+    </div>
+    <div class="section-title" style="margin-top:18px;"><img src="../assets/icons/shield-finance.png" alt="" width="18" height="18" style="vertical-align:middle;margin-right:4px;"> Cash Position (SimpleFIN aggregate)</div>
+    <div class="accounts-grid">
+      <div class="account-card ok"><div class="acc-top"><div><div class="acc-name">Assets</div><div class="acc-type">All cash + savings</div></div><div class="acc-balance ok" id="snap-assets">—</div></div></div>
+      <div class="account-card alert"><div class="acc-top"><div><div class="acc-name">Debts</div><div class="acc-type">CC + loans</div></div><div class="acc-balance debt" id="snap-debts">—</div></div></div>
+      <div class="account-card"><div class="acc-top"><div><div class="acc-name">Net Cash</div><div class="acc-type">SimpleFIN net (no metals/crypto/RE)</div></div><div class="acc-balance" id="snap-net">—</div></div><div class="acc-meta" id="snap-net-meta">—</div></div>
+      <div class="account-card ok"><div class="acc-top"><div><div class="acc-name">Airbnb</div><div class="acc-type">Projected payout</div></div><div class="acc-balance ok" id="snap-airbnb">—</div></div><div class="acc-meta" id="snap-airbnb-meta">—</div></div>
+    </div>
+    <p style="color:var(--gray);font-size:0.75rem;margin-top:14px;line-height:1.5;">
+      Snapshot served by usmcmin-subscribe-server <code>/snapshot</code> endpoint behind steward password. All per-account numbers, routing numbers, and transaction details are stripped server-side before transit. Refreshed every 30 minutes by <code>~/Scripts/publish-finance-snapshot.py</code> via launchd.
+    </p>
+  </div>
+</div>
+<!-- ══ END LIVE SNAPSHOT ══ -->
 
 <div class="tab-bar">
   <button class="tab active" onclick="showEntity('overview')"><img src="../assets/icons/shield-chart-48.png" alt="" width="18" height="18" style="vertical-align:middle;margin-right:4px;"> Overview</button>
@@ -209,9 +235,9 @@ function moopAuth(){
 <div class="entity-panel active" id="panel-overview">
   <div class="section-title"><img src="../assets/icons/shield-chain-fire-48.png" alt="" width="18" height="18" style="vertical-align:middle;margin-right:4px;"> Action Required</div>
   <div class="alert-box"><div class="alert-title">🔴 Citibank — ✅ CONFIRMED OUT</div>Multiple failed login attempts. Password reset needed at citi.com. Balance: ~$17,064 (largest debt). Use "Forgot Password" flow.</div>
-  <div class="alert-box"><div class="alert-title">🔴 Citibank — Password unknown</div>Notes say: UN: adamljohns78 / PW: ILoveJesus247! — but this failed. May have changed.</div>
-  <div class="warn-box"><div class="warn-title">🟡 SoFi — Password stale</div>1Password has wrong password. Notes: UN: C5iSR97LLC@Gmail.com / PW: Maria&Shiloh2021. Update 1Password and verify login.</div>
-  <div class="warn-box"><div class="warn-title">🟡 USAA — Password stale</div>Notes: UN: adamljohns78 or adamljohns78* / PW: JesusLovesMe247! (personal) · Gideon&Boaz2017 (USAA card)</div>
+  <div class="alert-box"><div class="alert-title">🔴 Citibank — Password unknown</div>Notes say: UN: adamljohns78 / PW: [redacted] — but this failed. May have changed.</div>
+  <div class="warn-box"><div class="warn-title">🟡 SoFi — Password stale</div>1Password has wrong password. Notes: UN: C5iSR97LLC@Gmail.com / PW: [redacted]. Update 1Password and verify login.</div>
+  <div class="warn-box"><div class="warn-title">🟡 USAA — Password stale</div>Notes: UN: adamljohns78 or adamljohns78* / PW: [redacted] (personal) · [redacted] (USAA card)</div>
   <div class="warn-box"><div class="warn-title">🟡 WF Active Cash Visa — $156.00 balance</div>Check due date and pay to avoid interest.</div>
   <div class="warn-box"><div class="warn-title">🟡 Wells Fargo Tax Deals expiring</div>H&R Block $6 cash back (4/15/26) · TurboTax $20 cash back (4/18/26) — activate before doing taxes!</div>
 
@@ -237,18 +263,18 @@ function moopAuth(){
   <div class="section-title">Banking Accounts</div>
   <table class="cred-table">
     <tr><th>Institution</th><th>Account Type</th><th>Username</th><th>Password</th><th>Status</th><th>Notes</th></tr>
-    <tr><td>Navy Federal CU</td><td>Checking 9708 + Savings + CC</td><td>3117157</td><td>Jesus777</td><td><span class="badge badge-ok">✅ LIVE</span></td><td>Primary account. $1,528 checking · $251 savings</td></tr>
-    <tr><td>Wells Fargo</td><td>Checking + Active Cash Visa</td><td>Adamljohns78</td><td>Maria&Shiloh2021</td><td><span class="badge badge-ok">✅ LIVE</span></td><td>$400 checking · $156 CC</td></tr>
-    <tr><td>Citibank</td><td>Mastercard CC + Bank</td><td>adamljohns78</td><td>ILoveJesus247!</td><td><span class="badge badge-locked">🔒 ✅ CONFIRMED</span></td><td>$25,400 CC balance · ILoveJesus247! · Chase creds confirmed</td></tr>
-    <tr><td>SoFi</td><td>Bank (loan closed)</td><td>C5iSR97LLC@Gmail.com</td><td>Maria&Shiloh2021</td><td><span class="badge badge-stale">⚠️ STALE</span></td><td>Did a loan, closed out. May add CC</td></tr>
-    <tr><td>USAA</td><td>Banking + Card</td><td>JohnsAL777</td><td>JesusLovesMe247!</td><td><span class="badge badge-stale">⚠️ STALE</span></td><td>1Password flagged stale. USAA card: Gideon&Boaz2017</td></tr>
+    <tr><td>Navy Federal CU</td><td>Checking 9708 + Savings + CC</td><td>[redacted]</td><td>[redacted]</td><td><span class="badge badge-ok">✅ LIVE</span></td><td>Primary account. $1,528 checking · $251 savings</td></tr>
+    <tr><td>Wells Fargo</td><td>Checking + Active Cash Visa</td><td>Adamljohns78</td><td>[redacted]</td><td><span class="badge badge-ok">✅ LIVE</span></td><td>[balances redacted]</td></tr>
+    <tr><td>Citibank</td><td>Mastercard CC + Bank</td><td>adamljohns78</td><td>[redacted]</td><td><span class="badge badge-locked">🔒 ✅ CONFIRMED</span></td><td>[balance redacted] · [redacted] · Chase creds confirmed</td></tr>
+    <tr><td>SoFi</td><td>Bank (loan closed)</td><td>C5iSR97LLC@Gmail.com</td><td>[redacted]</td><td><span class="badge badge-stale">⚠️ STALE</span></td><td>Did a loan, closed out. May add CC</td></tr>
+    <tr><td>USAA</td><td>Banking + Card</td><td>JohnsAL777</td><td>[redacted]</td><td><span class="badge badge-stale">⚠️ STALE</span></td><td>1Password flagged stale. USAA card: [redacted]</td></tr>
     <tr><td>Chase Personal</td><td>Checking + Savings + Freedom CC</td><td>adamljohns78</td><td>See notes</td><td><span class="badge badge-unknown">❓ UNTESTED</span></td><td>Chase Freedom Unlimited CC</td></tr>
-    <tr><td>Langley FCU</td><td>Credit Union</td><td>AdamLJohns78</td><td>JesusLovesMe247!</td><td><span class="badge badge-unknown">❓ UNTESTED</span></td><td>Notes confirmed</td></tr>
-    <tr><td>Discover</td><td>Bank + Credit Card</td><td>adamljohns78*</td><td>JesusLovesMe247!</td><td><span class="badge badge-unknown">❓ UNTESTED</span></td><td>May add card for Maria</td></tr>
+    <tr><td>Langley FCU</td><td>Credit Union</td><td>AdamLJohns78</td><td>[redacted]</td><td><span class="badge badge-unknown">❓ UNTESTED</span></td><td>Notes confirmed</td></tr>
+    <tr><td>Discover</td><td>Bank + Credit Card</td><td>adamljohns78*</td><td>[redacted]</td><td><span class="badge badge-unknown">❓ UNTESTED</span></td><td>May add card for Maria</td></tr>
     <tr><td>Capital One</td><td>Bank + Card</td><td>TBD</td><td>TBD</td><td><span class="badge badge-unknown">❓ MISSING</span></td><td>UN/PW not in notes</td></tr>
-    <tr><td>T-Mobile Money</td><td>Bank</td><td>adamljohns@icloud.com</td><td>Maria&Shiloh2021</td><td><span class="badge badge-unknown">❓ UNTESTED</span></td><td>CDC Samsung phone login</td></tr>
-    <tr><td>Ford Visa (FNB Omaha)</td><td>Credit Card</td><td>adamljohns78</td><td>Maria&Shiloh2021</td><td><span class="badge badge-unknown">❓ UNTESTED</span></td><td></td></tr>
-    <tr><td>PNC Personal</td><td>Bank</td><td>TBD</td><td>TBD</td><td><span class="badge badge-unknown">❓ MISSING</span></td><td>Routing: 054000030 · Acct: 5400422117/2125/2133</td></tr>
+    <tr><td>T-Mobile Money</td><td>Bank</td><td>adamljohns@icloud.com</td><td>[redacted]</td><td><span class="badge badge-unknown">❓ UNTESTED</span></td><td>CDC Samsung phone login</td></tr>
+    <tr><td>Ford Visa (FNB Omaha)</td><td>Credit Card</td><td>adamljohns78</td><td>[redacted]</td><td><span class="badge badge-unknown">❓ UNTESTED</span></td><td></td></tr>
+    <tr><td>PNC Personal</td><td>Bank</td><td>TBD</td><td>TBD</td><td><span class="badge badge-unknown">❓ MISSING</span></td><td>Routing: [redacted] · Acct: [redacted]</td></tr>
     <tr><td>Freedom Mortgage</td><td>Mortgage — 501 Caroline St</td><td>adamljohns@icloud.com</td><td>See 1Password</td><td><span class="badge badge-ok">✅ IN 1PW</span></td><td>$1,562.82/mo</td></tr>
     <tr><td>PayPal Personal</td><td>Payment</td><td>TBD</td><td>TBD</td><td><span class="badge badge-unknown">❓ MISSING</span></td><td>UN/PW not confirmed</td></tr>
     <tr><td>Venmo</td><td>Payment</td><td>TBD</td><td>TBD</td><td><span class="badge badge-unknown">❓ MISSING</span></td><td></td></tr>
@@ -264,7 +290,7 @@ function moopAuth(){
   <div class="section-title">Maria's Accounts</div>
   <table class="cred-table">
     <tr><th>Institution</th><th>Account Type</th><th>Username</th><th>Password</th><th>Status</th><th>Notes</th></tr>
-    <tr><td>Capital One</td><td>Biz CC (Maria & B&A)</td><td>mariaejohns</td><td>Shiloh113!</td><td><span class="badge badge-unknown">❓ UNTESTED</span></td><td>Saved on Z-flip + Chrome. Opened bank acct too.</td></tr>
+    <tr><td>Capital One</td><td>Biz CC (Maria & B&A)</td><td>mariaejohns</td><td>[redacted]</td><td><span class="badge badge-unknown">❓ UNTESTED</span></td><td>Saved on Z-flip + Chrome. Opened bank acct too.</td></tr>
     <tr><td>Wells Fargo CC (Maria)</td><td>Credit Card</td><td>TBD</td><td>TBD</td><td><span class="badge badge-unknown">❓ MISSING</span></td><td>Card number needed</td></tr>
     <tr><td>Shopify</td><td>E-commerce</td><td>mariajohns@me.com</td><td>See 1Password</td><td><span class="badge badge-ok">✅ IN 1PW</span></td><td>Photography/business</td></tr>
     <tr><td>Printful</td><td>Print-on-demand</td><td>mariajohns@me.com</td><td>See 1Password</td><td><span class="badge badge-ok">✅ IN 1PW</span></td><td></td></tr>
@@ -276,7 +302,7 @@ function moopAuth(){
 <div class="entity-panel" id="panel-ba">
   <div class="entity-header">
     <div class="entity-icon">🏠</div>
-    <div><div class="entity-name">Bow & Arrow Studios LLC</div><div class="entity-desc">bowandarrowstudiollc@gmail.com · EIN: 87-2937218</div></div>
+    <div><div class="entity-name">Bow & Arrow Studios LLC</div><div class="entity-desc">bowandarrowstudiollc@gmail.com · EIN: [redacted — see 1Password]</div></div>
     <div class="entity-stats">
       <div class="estat"><div class="estat-val" style="color:var(--green)">$98,706</div><div class="estat-label">2024 Gross</div></div>
       <div class="estat"><div class="estat-val">5</div><div class="estat-label">Active Listings</div></div>
@@ -286,15 +312,15 @@ function moopAuth(){
   <div class="section-title">B&A Financial Accounts</div>
   <table class="cred-table">
     <tr><th>Institution</th><th>Account Type</th><th>Username</th><th>Password</th><th>Status</th><th>Notes</th></tr>
-    <tr><td>M&T Bank</td><td>Business Checking</td><td>BowAndArrowStudioLLC</td><td>See 1Password</td><td><span class="badge badge-ok">✅ IN 1PW</span></td><td>Routing: 052000113 · Acct: 9886636233</td></tr>
-    <tr><td>PNC Business</td><td>Business Bank</td><td>BowAndArrowStudio</td><td>See 1Password</td><td><span class="badge badge-ok">✅ IN 1PW</span></td><td>Routing: 054000030 · Acct: 5535694005</td></tr>
+    <tr><td>M&T Bank</td><td>Business Checking</td><td>BowAndArrowStudioLLC</td><td>See 1Password</td><td><span class="badge badge-ok">✅ IN 1PW</span></td><td>Routing: [redacted] · Acct: [redacted]</td></tr>
+    <tr><td>PNC Business</td><td>Business Bank</td><td>BowAndArrowStudio</td><td>See 1Password</td><td><span class="badge badge-ok">✅ IN 1PW</span></td><td>Routing: [redacted] · Acct: [redacted]</td></tr>
     <tr><td>Chase (B&A)</td><td>Business CC</td><td>Usmcministries2022</td><td>See 1Password</td><td><span class="badge badge-ok">✅ IN 1PW</span></td><td></td></tr>
-    <tr><td>Capital One (B&A)</td><td>Business CC</td><td>mariaejohns</td><td>Shiloh113!</td><td><span class="badge badge-unknown">❓ UNTESTED</span></td><td>Shared with Maria</td></tr>
-    <tr><td>USAA (B&A)</td><td>Banking</td><td>adamljohns78*</td><td>JesusLovesMe247!</td><td><span class="badge badge-unknown">❓ UNTESTED</span></td><td></td></tr>
+    <tr><td>Capital One (B&A)</td><td>Business CC</td><td>mariaejohns</td><td>[redacted]</td><td><span class="badge badge-unknown">❓ UNTESTED</span></td><td>Shared with Maria</td></tr>
+    <tr><td>USAA (B&A)</td><td>Banking</td><td>adamljohns78*</td><td>[redacted]</td><td><span class="badge badge-unknown">❓ UNTESTED</span></td><td></td></tr>
     <tr><td>Citibank (B&A)</td><td>CC</td><td>adamljohns@icloud.co</td><td>TBD</td><td><span class="badge badge-unknown">❓ UNTESTED</span></td><td></td></tr>
     <tr><td>Freedom Mortgage (B&A)</td><td>Property mortgage</td><td>adamljohns@icloud.com</td><td>See 1Password</td><td><span class="badge badge-ok">✅ IN 1PW</span></td><td></td></tr>
     <tr><td>PayPal Business</td><td>Payment</td><td>TBD</td><td>TBD</td><td><span class="badge badge-unknown">❓ MISSING</span></td><td></td></tr>
-    <tr><td>Airbnb</td><td>Host account</td><td>bowandarrowstudiollc@gmail.com</td><td>Shiloh113!</td><td><span class="badge badge-ok">✅ CONFIRMED</span></td><td>Primary revenue source</td></tr>
+    <tr><td>Airbnb</td><td>Host account</td><td>bowandarrowstudiollc@gmail.com</td><td>[redacted]</td><td><span class="badge badge-ok">✅ CONFIRMED</span></td><td>Primary revenue source</td></tr>
   </table>
 </div>
 
@@ -307,10 +333,10 @@ function moopAuth(){
   <div class="section-title">USMC Ministry Accounts</div>
   <table class="cred-table">
     <tr><th>Institution</th><th>Account Type</th><th>Username</th><th>Password</th><th>Status</th><th>Notes</th></tr>
-    <tr><td>Chase Ink (primary)</td><td>Business CC — main card</td><td>Usmcministries2022</td><td>See 1Password</td><td><span class="badge badge-ok">✅ IN 1PW</span></td><td>Card 6940 · Most ministry expenses here</td></tr>
+    <tr><td>Chase Ink (primary)</td><td>Business CC — main card</td><td>Usmcministries2022</td><td>See 1Password</td><td><span class="badge badge-ok">✅ IN 1PW</span></td><td>Card [redacted] · Most ministry expenses here</td></tr>
     <tr><td>Truist (USMC)</td><td>Ministry bank</td><td>Uniting Serving Ment</td><td>See 1Password</td><td><span class="badge badge-ok">✅ IN 1PW</span></td><td></td></tr>
     <tr><td>PayPal USMC</td><td>Donations payment</td><td>TBD</td><td>TBD</td><td><span class="badge badge-unknown">❓ MISSING</span></td><td>For ministry donations</td></tr>
-    <tr><td>Namecheap</td><td>Domain registrar</td><td>USMCMinistries</td><td>JesusLovesMe247!</td><td><span class="badge badge-ok">✅ CONFIRMED</span></td><td>usmcmin.com · usmcmin.org</td></tr>
+    <tr><td>Namecheap</td><td>Domain registrar</td><td>USMCMinistries</td><td>[redacted]</td><td><span class="badge badge-ok">✅ CONFIRMED</span></td><td>usmcmin.com · usmcmin.org</td></tr>
   </table>
 </div>
 
@@ -318,14 +344,14 @@ function moopAuth(){
 <div class="entity-panel" id="panel-c5isr">
   <div class="entity-header">
     <div class="entity-icon">₿</div>
-    <div><div class="entity-name">C5iSR LLC</div><div class="entity-desc">C5iSR97LLC@Gmail.com · EIN: 92-3564161</div></div>
+    <div><div class="entity-name">C5iSR LLC</div><div class="entity-desc">C5iSR97LLC@Gmail.com · EIN: [redacted — see 1Password]</div></div>
   </div>
   <div class="section-title">C5iSR Accounts</div>
   <table class="cred-table">
     <tr><th>Institution</th><th>Account Type</th><th>Username</th><th>Password</th><th>Status</th><th>Notes</th></tr>
-    <tr><td>US Bank</td><td>Business Checking</td><td>c5isrLLC</td><td>ILoveJesus247!</td><td><span class="badge badge-unknown">❓ UNTESTED</span></td><td>C5iSR primary bank</td></tr>
-    <tr><td>US Bank CC</td><td>Business Credit Card</td><td>c5isrLLC</td><td>ILoveJesus247!</td><td><span class="badge badge-unknown">❓ UNTESTED</span></td><td>Business expenses</td></tr>
-    <tr><td>SoFi</td><td>Bank/Loan</td><td>C5iSR97LLC@Gmail.com</td><td>Maria&Shiloh2021</td><td><span class="badge badge-stale">⚠️ STALE</span></td><td>Did a loan, closed. May add CC</td></tr>
+    <tr><td>US Bank</td><td>Business Checking</td><td>c5isrLLC</td><td>[redacted]</td><td><span class="badge badge-unknown">❓ UNTESTED</span></td><td>C5iSR primary bank</td></tr>
+    <tr><td>US Bank CC</td><td>Business Credit Card</td><td>c5isrLLC</td><td>[redacted]</td><td><span class="badge badge-unknown">❓ UNTESTED</span></td><td>Business expenses</td></tr>
+    <tr><td>SoFi</td><td>Bank/Loan</td><td>C5iSR97LLC@Gmail.com</td><td>[redacted]</td><td><span class="badge badge-stale">⚠️ STALE</span></td><td>Did a loan, closed. May add CC</td></tr>
     <tr><td>Truist (C5iSR)</td><td>Business bank</td><td>USMCMinistry</td><td>See 1Password</td><td><span class="badge badge-ok">✅ IN 1PW</span></td><td></td></tr>
     <tr><td>Anthropic (Claude)</td><td>AI subscription</td><td>adam.l.johns@gmail.com</td><td>OAuth</td><td><span class="badge badge-ok">✅ ACTIVE</span></td><td>20X MAX plan · $125/mo</td></tr>
     <tr><td>OpenAI</td><td>API</td><td>adam.l.johns@gmail.com</td><td>Google OAuth</td><td><span class="badge badge-ok">✅ ACTIVE</span></td><td>~$45/mo</td></tr>
@@ -333,10 +359,10 @@ function moopAuth(){
   </table>
   <div class="section-title">Routing & Account Numbers</div>
   <div class="accounts-grid">
-    <div class="account-card"><div class="acc-name">PNC Biz Bank</div><div class="acc-meta">Routing: 054000030<br>Account: 5535694005</div></div>
-    <div class="account-card"><div class="acc-name">PNC Personal</div><div class="acc-meta">Routing: 054000030<br>Account: 5400422117 / 2125/2133</div></div>
-    <div class="account-card"><div class="acc-name">M&T Biz Bank</div><div class="acc-meta">Routing: 052000113<br>Account: 9886636233</div></div>
-    <div class="account-card"><div class="acc-name">NFCU</div><div class="acc-meta">Routing: 256074974<br>Member: 3117157</div></div>
+    <div class="account-card"><div class="acc-name">PNC Biz Bank</div><div class="acc-meta">Routing: [redacted]<br>Account: [redacted]</div></div>
+    <div class="account-card"><div class="acc-name">PNC Personal</div><div class="acc-meta">Routing: [redacted]<br>Account: [redacted]</div></div>
+    <div class="account-card"><div class="acc-name">M&T Biz Bank</div><div class="acc-meta">Routing: [redacted]<br>Account: [redacted]</div></div>
+    <div class="account-card"><div class="acc-name">NFCU</div><div class="acc-meta">Routing: [redacted]<br>Member: [redacted]</div></div>
   </div>
 </div>
 
@@ -364,10 +390,10 @@ function moopAuth(){
   <div class="section-title">Phones</div>
   <table class="cred-table">
     <tr><th>Number</th><th>Entity</th><th>Platform</th><th>Status</th></tr>
-    <tr><td>(832) 721-4228</td><td>Personal</td><td>Primary iPhone</td><td><span class="badge badge-ok">✅ iMessage confirmed</span></td></tr>
-    <tr><td>(540) 684-7107</td><td>USMC Ministries</td><td>Ministry phone</td><td><span class="badge badge-ok">✅ SMS confirmed</span></td></tr>
-    <tr><td>(540) 681-7155</td><td>Bow & Arrow</td><td>B&A work phone</td><td><span class="badge badge-ok">✅ SMS confirmed</span></td></tr>
-    <tr><td>(202) 439-6333</td><td>C5iSR</td><td>Crypto phone</td><td><span class="badge badge-ok">✅ SMS confirmed</span></td></tr>
+    <tr><td>[redacted]</td><td>Personal</td><td>Primary iPhone</td><td><span class="badge badge-ok">✅ iMessage confirmed</span></td></tr>
+    <tr><td>[redacted]</td><td>USMC Ministries</td><td>Ministry phone</td><td><span class="badge badge-ok">✅ SMS confirmed</span></td></tr>
+    <tr><td>[redacted]</td><td>Bow & Arrow</td><td>B&A work phone</td><td><span class="badge badge-ok">✅ SMS confirmed</span></td></tr>
+    <tr><td>[redacted]</td><td>C5iSR</td><td>Crypto phone</td><td><span class="badge badge-ok">✅ SMS confirmed</span></td></tr>
   </table>
 </div>
 
@@ -399,7 +425,7 @@ function moopAuth(){
 
   <div class="linkage-card">
     <div class="linkage-title">Expense Flows (Subscriptions)</div>
-    <div class="linkage-row"><div class="link-from">Chase Ink 6940</div><div class="link-arrow">→</div><div class="link-to">Anthropic $125 · OpenAI ~$45 · ElevenLabs · Namecheap $220/yr · Ministry orgs</div></div>
+    <div class="linkage-row"><div class="link-from">Chase Ink</div><div class="link-arrow">→</div><div class="link-to">Anthropic $125 · OpenAI ~$45 · ElevenLabs · Namecheap $220/yr · Ministry orgs</div></div>
     <div class="linkage-row"><div class="link-from">M&T Business (3271)</div><div class="link-arrow">→</div><div class="link-to">B&A filing fees · LLC expenses</div></div>
     <div class="linkage-row"><div class="link-from">NFCU checking</div><div class="link-arrow">→</div><div class="link-to">Freedom Mortgage · Verizon · utilities · groceries</div></div>
   </div>
@@ -423,6 +449,124 @@ function showEntity(id) {
   document.getElementById('panel-' + id).classList.add('active');
   event.target.classList.add('active');
 }
+</script>
+<script>
+// ── Live snapshot loader ────────────────────────────────────────────────────
+// Fetches /snapshot from the subscribe-server (localhost when Adam is on his Mac,
+// the tunneled URL otherwise). Falls back to a clear error message if neither
+// is reachable. The steward password matches the dashboard's existing PIN
+// (kept in localStorage as 'moop_finance_auth' after the gate clears).
+(function() {
+  var SNAPSHOT_PROD = 'https://intake.usmcmin.com/snapshot';   // ← flip when tunnel is live
+  var SNAPSHOT_DEV  = 'http://127.0.0.1:3847/snapshot';
+  var stewardPw = localStorage.getItem('moop_finance_auth') || 'steward-2026';
+
+  function fmtMoney(n, opts) {
+    opts = opts || {};
+    if (n == null || isNaN(n)) return '—';
+    var abs = Math.abs(n);
+    var prefix = (n < 0 ? '-' : '') + '$';
+    var s;
+    if (opts.compact && abs >= 1000) {
+      s = (abs / 1000).toFixed(abs >= 10000 ? 1 : 2) + 'K';
+    } else {
+      s = abs.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+    }
+    return prefix + s;
+  }
+
+  function fmtPct(n) {
+    if (n == null || isNaN(n)) return '—';
+    return (n >= 0 ? '+' : '') + n.toFixed(2) + '%';
+  }
+
+  function render(snap) {
+    var sp = snap.spot_prices || {};
+    var m  = snap.metals_holdings || {};
+    var cp = snap.cash_position || {};
+    var ab = snap.airbnb || {};
+
+    document.getElementById('snap-btc').textContent = fmtMoney(sp.btc_usd);
+    document.getElementById('snap-btc-change').textContent = '24h: ' + fmtPct(sp.btc_change_24h);
+    document.getElementById('snap-eth').textContent = fmtMoney(sp.eth_usd);
+    document.getElementById('snap-eth-change').textContent = '24h: ' + fmtPct(sp.eth_change_24h);
+
+    document.getElementById('snap-gold-spot').textContent = fmtMoney(sp.gold_usd_per_oz) + '/oz';
+    document.getElementById('snap-gold-oz').textContent = (m.gold_oz || '—') + ' oz' + (m.gold_confirmed ? ' (confirmed)' : ' (unconfirmed)');
+    var goldValue = m.gold_oz && sp.gold_usd_per_oz ? m.gold_oz * sp.gold_usd_per_oz : null;
+    document.getElementById('snap-gold-value').textContent = 'Holdings value: ' + fmtMoney(goldValue);
+
+    document.getElementById('snap-silver-spot').textContent = fmtMoney(sp.silver_usd_per_oz) + '/oz';
+    document.getElementById('snap-silver-oz').textContent = (m.silver_oz || '—') + ' oz (working est.)';
+    var silverValue = m.silver_oz && sp.silver_usd_per_oz ? m.silver_oz * sp.silver_usd_per_oz : null;
+    document.getElementById('snap-silver-value').textContent = 'Holdings value (unconfirmed): ' + fmtMoney(silverValue);
+
+    document.getElementById('snap-assets').textContent = fmtMoney(cp.assets_total);
+    document.getElementById('snap-debts').textContent = fmtMoney(cp.debts_total);
+    document.getElementById('snap-net').textContent = fmtMoney(cp.net_worth_cash_only);
+    document.getElementById('snap-net-meta').textContent = (cp.total_accounts || '?') + ' accounts · as of ' + (cp.as_of || '?').slice(0,10);
+
+    if (ab.status === 'ok') {
+      document.getElementById('snap-airbnb').textContent = fmtMoney(ab.projected_payout);
+      var bits = [];
+      if (ab.upcoming_bookings != null) bits.push(ab.upcoming_bookings + ' upcoming');
+      if (ab.unread_messages != null) bits.push(ab.unread_messages + ' unread');
+      document.getElementById('snap-airbnb-meta').textContent = bits.join(' · ') || '—';
+    } else {
+      document.getElementById('snap-airbnb').textContent = '⚠️';
+      document.getElementById('snap-airbnb-meta').textContent = ab.status || 'unavailable';
+    }
+
+    var meta = snap._meta || {};
+    var ageStr = meta.file_age_minutes != null ? ' · snapshot ' + meta.file_age_minutes + 'min old' : '';
+    document.getElementById('snapshotUpdated').textContent =
+      'Snapshot generated ' + (snap.generated_at || 'unknown').replace('T', ' ').slice(0,19) + ' UTC' + ageStr;
+
+    document.getElementById('snapshotLoading').style.display = 'none';
+    document.getElementById('snapshotContent').style.display = 'block';
+  }
+
+  function fail(reason) {
+    document.getElementById('snapshotLoading').style.display = 'none';
+    var err = document.getElementById('snapshotError');
+    err.innerHTML = '<strong>Snapshot unavailable.</strong> ' + reason +
+      '<br>To fix: ensure usmcmin-subscribe-server is running on this Mac (<code>launchctl list | grep usmcmin.subscribe</code>) and <code>~/Scripts/publish-finance-snapshot.py</code> has run at least once.';
+    err.style.display = 'block';
+    document.getElementById('snapshotUpdated').textContent = 'Live snapshot unavailable';
+  }
+
+  function fetchFrom(url) {
+    return fetch(url + '?pw=' + encodeURIComponent(stewardPw))
+      .then(function(r){
+        if (!r.ok) throw new Error('HTTP ' + r.status);
+        return r.json();
+      })
+      .then(function(d){
+        if (!d.success || !d.snapshot) throw new Error('No snapshot payload');
+        render(d.snapshot);
+        return true;
+      });
+  }
+
+  function load() {
+    var isLocal = (location.hostname === '127.0.0.1' || location.hostname === 'localhost' || location.hostname === '');
+    var primary = isLocal ? SNAPSHOT_DEV : SNAPSHOT_PROD;
+    var secondary = isLocal ? SNAPSHOT_PROD : SNAPSHOT_DEV;
+    fetchFrom(primary).catch(function(){
+      return fetchFrom(secondary);
+    }).catch(function(err){
+      fail((err && err.message) || 'No backend reachable');
+    });
+  }
+
+  // Wait for the moop-auth-gate to clear before fetching (the gate hides body
+  // content until then; fetch immediately to keep TTFI low).
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', load);
+  } else {
+    load();
+  }
+})();
 </script>
 <script>
 (function(){var t=document.querySelector('.nav-toggle'),n=document.querySelector('.nav-links');if(t&&n)t.addEventListener('click',function(){n.classList.toggle('open');});})();

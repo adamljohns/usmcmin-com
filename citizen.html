@@ -205,6 +205,20 @@
     }
     .sc-filter select:focus, .sc-filter input:focus { border-color: var(--accent); }
     .sc-filter input { width: 220px; }
+    .sc-reset-btn {
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--gray);
+      padding: 8px 14px;
+      border-radius: var(--radius);
+      font-size: 0.85rem;
+      cursor: pointer;
+      transition: border-color 0.2s, color 0.2s;
+      white-space: nowrap;
+      font-family: inherit;
+    }
+    .sc-reset-btn:hover { border-color: #f87171; color: #f87171; }
+    .sc-reset-btn:focus { outline: 2px solid var(--accent); outline-offset: 2px; }
     .sc-count {
       text-align: center;
       font-size: 0.82rem;
@@ -583,6 +597,10 @@
     <div class="sc-field sc-field-grow">
       <label for="searchInput" class="sc-label">Search</label>
       <input type="search" id="searchInput" placeholder="Name, office, or city…" aria-label="Search candidates by name, office, or city" oninput="renderCards()">
+    </div>
+    <div class="sc-field" style="justify-content:flex-end;">
+      <label class="sc-label">&nbsp;</label>
+      <button type="button" class="sc-reset-btn" onclick="resetCitizenFilters()" aria-label="Reset all filters">&#8634; Reset</button>
     </div>
   </div>
   <div class="sc-summary" id="sc-summary" role="status" aria-live="polite" aria-atomic="true">
@@ -1081,6 +1099,28 @@ function onSortChange() {
     if (val === 'score-desc') url.searchParams.delete('sort');
     else url.searchParams.set('sort', val);
     window.history.replaceState({}, '', url);
+  } catch(e) {}
+  renderCards();
+}
+
+// Reset filters to defaults (state is preserved — only View, Party, Sort, Search reset).
+// Mirrors the resetFilters pattern on usmcmin.org/churches.html for consistency
+// across both directories.
+function resetCitizenFilters() {
+  var view = document.getElementById('filterView');
+  var party = document.getElementById('filterParty');
+  var sort = document.getElementById('filterSort');
+  var search = document.getElementById('searchInput');
+  if (view) view.value = 'all';
+  if (party) party.value = 'all';
+  if (sort) sort.value = 'score-desc';
+  if (search) search.value = '';
+  // Clear sort persistence so a reset survives a reload.
+  try {
+    var url = new URL(window.location);
+    url.searchParams.delete('sort');
+    window.history.replaceState({}, '', url);
+    localStorage.removeItem('rc-sort');
   } catch(e) {}
   renderCards();
 }

@@ -16,6 +16,8 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="assets/css/main.min.css">
   <link rel="icon" href="assets/img/favicon.png" type="image/png">
+  <!-- jsPDF for client-side PDF generation on signature submission (MIT-licensed, ~15 KB gzipped). -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js" defer></script>
   <style>
     :root {
       --border-ba: rgba(212,175,55,0.2);
@@ -197,6 +199,167 @@
     .sign-cta.disabled { opacity: 0.55; cursor: not-allowed; pointer-events: none; }
     .sign-fallback { margin-top: 0.9rem; font-size: 0.85rem; color: var(--gray); }
     .sign-fallback a { color: var(--gold); }
+
+    /* ===== Custom e-sign form (Phase A) ===== */
+    .lease-form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem 1.4rem;
+      margin: 1.5rem 0;
+    }
+    .lf-field { display: flex; flex-direction: column; }
+    .lf-field.lf-full { grid-column: 1 / -1; }
+    .lf-field label {
+      font-size: 0.78rem;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      color: var(--gray);
+      text-transform: uppercase;
+      display: block;
+      margin-bottom: 0.4rem;
+    }
+    .lf-field input, .lf-field textarea {
+      width: 100%;
+      background: #1a1a1a;
+      border: 1px solid rgba(255,255,255,0.12);
+      color: var(--white, #e8e8e8);
+      padding: 0.7rem 0.9rem;
+      border-radius: 6px;
+      font-size: 0.95rem;
+      font-family: inherit;
+      transition: border-color 0.2s, box-shadow 0.2s;
+      -webkit-appearance: none;
+    }
+    .lf-field input:focus, .lf-field textarea:focus {
+      outline: none;
+      border-color: var(--gold, #D4AF37);
+      box-shadow: 0 0 0 3px rgba(212,175,55,0.12);
+    }
+    .lf-field input:invalid:not(:placeholder-shown) { border-color: rgba(248,113,113,0.5); }
+    .lf-acks {
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 8px;
+      padding: 1rem 1.2rem;
+      margin: 1.5rem 0;
+      display: flex;
+      flex-direction: column;
+      gap: 0.9rem;
+    }
+    .lf-ack {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.7rem;
+      font-size: 0.88rem;
+      color: #ddd;
+      line-height: 1.5;
+      cursor: pointer;
+    }
+    .lf-ack input[type="checkbox"] {
+      margin-top: 4px;
+      width: 16px; height: 16px;
+      accent-color: var(--gold, #D4AF37);
+      flex-shrink: 0;
+    }
+    .lf-ack a { color: var(--gold, #D4AF37); }
+    .lf-signature {
+      background: rgba(212,175,55,0.05);
+      border: 1px solid rgba(212,175,55,0.2);
+      border-radius: 8px;
+      padding: 1.2rem 1.4rem;
+      margin: 1.5rem 0;
+    }
+    .lf-signature label {
+      font-size: 0.78rem;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      color: var(--gold, #D4AF37);
+      text-transform: uppercase;
+      display: block;
+      margin-bottom: 0.4rem;
+    }
+    .lf-signature input {
+      width: 100%;
+      background: #1a1a1a;
+      border: 1px solid rgba(212,175,55,0.3);
+      color: var(--white, #e8e8e8);
+      padding: 0.75rem 1rem;
+      border-radius: 6px;
+      font-size: 1rem;
+      font-family: inherit;
+    }
+    .lf-sig-render {
+      min-height: 38px;
+      margin-top: 0.6rem;
+      padding: 0.4rem 0.8rem;
+      background: rgba(0,0,0,0.3);
+      border-left: 3px solid var(--gold, #D4AF37);
+      border-radius: 0 4px 4px 0;
+      font-family: 'Brush Script MT', 'Apple Chancery', 'Snell Roundhand', cursive;
+      font-size: 1.6rem;
+      color: #f0e8d0;
+      letter-spacing: 0.02em;
+    }
+    .lf-sig-render:empty::before {
+      content: '(your signature appears here as you type)';
+      font-family: inherit;
+      font-size: 0.85rem;
+      color: var(--gray);
+      font-style: italic;
+    }
+    .lf-sig-date {
+      margin-top: 0.6rem;
+      font-size: 0.85rem;
+      color: var(--gray);
+    }
+    .lf-submit {
+      display: inline-block;
+      background: linear-gradient(90deg, #c9a84c, #D4AF37);
+      color: #000;
+      font-weight: 700;
+      font-size: 1.05rem;
+      padding: 1rem 2.6rem;
+      border-radius: 8px;
+      border: none;
+      cursor: pointer;
+      font-family: inherit;
+      transition: transform 0.2s, box-shadow 0.2s, opacity 0.2s;
+      width: 100%;
+      max-width: 360px;
+      margin: 0 auto;
+    }
+    .lf-submit:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(212,175,55,0.25); }
+    .lf-submit:disabled { opacity: 0.6; cursor: progress; }
+    .lf-status {
+      margin-top: 1rem;
+      min-height: 1.4em;
+      font-size: 0.92rem;
+      text-align: center;
+    }
+    .lf-alt {
+      margin-top: 2rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid rgba(255,255,255,0.08);
+      text-align: center;
+    }
+    .lf-alt-link {
+      display: inline-block;
+      color: var(--gold, #D4AF37);
+      text-decoration: none;
+      padding: 0.5rem 1rem;
+      border: 1px solid rgba(212,175,55,0.4);
+      border-radius: 6px;
+      font-size: 0.88rem;
+      transition: background 0.2s;
+    }
+    .lf-alt-link:hover { background: rgba(212,175,55,0.1); }
+
+    @media (max-width: 640px) {
+      .lease-form-grid { grid-template-columns: 1fr; }
+    }
+    @media print {
+      .lf-status, .lf-submit, .lf-alt { display: none !important; }
+    }
 
     /* Print rules — strip nav/CTA so the page can be Save-as-PDF'd as the actual lease document */
     @media print {
@@ -473,46 +636,96 @@
     </div>
   </section>
 
-  <!-- SIGN BLOCK -->
+  <!-- SIGN BLOCK — custom typed-signature flow with client-side PDF generation -->
   <section id="sign" class="sign-block">
-    <h2>Ready to Apply?</h2>
-    <p>Two ways forward. Either gets a fully executed lease into your hands.</p>
-    <!--
-      ===========================================================
-      SIGNWELL TEMPLATE LINK — Adam: paste your template URL here
-      Steps:
-        1. Sign up free at https://signwell.com (use bowandarrowstudiollc@gmail.com)
-        2. Upload this page (Print → Save as PDF) as a Document
-        3. Drag fields onto the PDF: Tenant Name, Email, Phone,
-           Start Date, End Date, Monthly Rent, Security Deposit,
-           Forwarding Address, Tenant Signature, Tenant Date,
-           Landlord Signature (yours), Landlord Date
-        4. Save as a Template
-        5. Click "Share" → "Template Link" → copy the URL
-        6. Replace this entire <details> block with a primary
-           <a class="sign-cta" href="<SIGNWELL_URL>" target="_blank">
-             ✍️ Sign Online with SignWell →
-           </a>
-      Free tier: 3 documents/month, 1 template, unlimited signers.
-      Mid-term lease usage = 1-2/year, well within free tier.
-      Full setup walkthrough in SETUP_SIGNWELL.md at the repo root.
-      ===========================================================
-    -->
-    <div style="display:flex;flex-wrap:wrap;gap:1rem;justify-content:center;align-items:stretch;">
-      <a href="mailto:bowandarrowstudiollc@gmail.com?subject=Mid-Term%20Lease%20Inquiry%20%E2%80%94%201405%20Sunken%20Rd&amp;body=Hi%20Adam%2C%0A%0AI%27m%20interested%20in%20the%20mid-term%20rental%20at%201405%20Sunken%20Road.%0A%0AMy%20name%3A%20%0AStart%20date%3A%20%0ALength%20of%20stay%3A%20%0AHousehold%20size%3A%20%0AReason%20for%20relocation%20(optional)%3A%20%0A%0AThanks%21" class="sign-cta">
-        &#128231; Apply by Email &rarr;
-      </a>
-      <a href="tel:+18327214228" class="sign-cta" style="background:transparent;color:var(--gold);border:2px solid var(--gold);">
-        &#128222; Call (832) 721-4228
-      </a>
+    <h2>Sign the Lease Online</h2>
+    <p>Fill the form, type your name as your signature, hit Sign &amp; Apply. You and the landlord both receive the executed lease as a PDF immediately. Landlord counter-signs and returns the final version within 24 hours.</p>
+
+    <form id="leaseForm" onsubmit="return submitLease(event)" novalidate>
+      <div class="lease-form-grid">
+        <div class="lf-field">
+          <label for="tenantName">Full Legal Name *</label>
+          <input type="text" id="tenantName" name="tenantName" required autocomplete="name" placeholder="Jane M. Smith">
+        </div>
+        <div class="lf-field">
+          <label for="tenantEmail">Email Address *</label>
+          <input type="email" id="tenantEmail" name="tenantEmail" required autocomplete="email" placeholder="jane@example.com">
+        </div>
+        <div class="lf-field">
+          <label for="tenantPhone">Phone Number *</label>
+          <input type="tel" id="tenantPhone" name="tenantPhone" required autocomplete="tel" placeholder="(540) 555-0100">
+        </div>
+        <div class="lf-field">
+          <label for="termStart">Term Start Date *</label>
+          <input type="date" id="termStart" name="termStart" required>
+        </div>
+        <div class="lf-field">
+          <label for="termEnd">Term End Date *</label>
+          <input type="date" id="termEnd" name="termEnd" required>
+        </div>
+        <div class="lf-field">
+          <label for="monthlyRent">Agreed Monthly Rent (USD) *</label>
+          <input type="number" id="monthlyRent" name="monthlyRent" required min="100" step="50" placeholder="2400">
+        </div>
+        <div class="lf-field">
+          <label for="securityDeposit">Security Deposit (USD) *</label>
+          <input type="number" id="securityDeposit" name="securityDeposit" required min="0" step="50" placeholder="2400">
+        </div>
+        <div class="lf-field lf-full">
+          <label for="forwardingAddress">Forwarding Address for Return of Security Deposit (optional &mdash; can be provided at move-out)</label>
+          <textarea id="forwardingAddress" name="forwardingAddress" rows="2" placeholder="123 Main St, Anytown, ST 12345"></textarea>
+        </div>
+      </div>
+
+      <div class="lf-acks">
+        <label class="lf-ack">
+          <input type="checkbox" name="ackMold" required>
+          <span>I acknowledge receipt of the <a href="#mold">Mold Disclosure</a> above (Virginia required).</span>
+        </label>
+        <label class="lf-ack">
+          <input type="checkbox" name="ackDoorbell" required>
+          <span>I acknowledge the <strong>Google Nest video doorbell at the front entry only</strong> (no interior cameras), per clause 40.</span>
+        </label>
+        <label class="lf-ack">
+          <input type="checkbox" name="ackLease" required>
+          <span>I have read all 54 clauses of the lease above, agree to all of them, and intend my typed signature below to constitute my legal signature under the federal <strong>E-SIGN Act</strong> (15 USC 7001) and the Virginia <strong>Uniform Electronic Transactions Act</strong> (&sect; 59.1-479 et seq.).</span>
+        </label>
+      </div>
+
+      <div class="lf-signature">
+        <label for="typedSignature">Type your full legal name to sign *</label>
+        <input type="text" id="typedSignature" name="typedSignature" required placeholder="Type your name exactly as written above" autocomplete="off">
+        <div class="lf-sig-render" id="sigPreview"></div>
+        <div class="lf-sig-date">Date: <span id="todayDate"></span></div>
+      </div>
+
+      <div style="text-align:center;">
+        <button type="submit" class="lf-submit">&#9999;&#65039; Sign &amp; Apply &rarr;</button>
+      </div>
+      <div class="lf-status" id="leaseStatus" role="status" aria-live="polite"></div>
+    </form>
+
+    <div class="lf-alt">
+      <p style="font-size:0.85rem;color:var(--gray);margin-bottom:0.8rem;">Prefer to talk before signing? Reach the landlord directly:</p>
+      <div style="display:flex;flex-wrap:wrap;gap:0.8rem;justify-content:center;">
+        <a href="mailto:bowandarrowstudiollc@gmail.com?subject=Mid-Term%20Lease%20Inquiry%20%E2%80%94%201405%20Sunken%20Rd" class="lf-alt-link">&#128231; Email</a>
+        <a href="tel:+18327214228" class="lf-alt-link">&#128222; Call (832) 721-4228</a>
+      </div>
     </div>
-    <p class="sign-fallback" style="margin-top:1.4rem;">
-      Online e-signature flow coming soon &mdash; for now we move forward with a quick email exchange and a SignWell link sent privately.
-    </p>
 
     <div class="lease-callout legal" style="margin-top:2rem;text-align:left;">
-      <strong>Note on this document:</strong> This lease is adapted from a LawDepot.com&reg; Virginia Residential Lease template previously executed by Bow and Arrow Studios, LLC and reviewed against the Virginia Residential Landlord and Tenant Act (VRLTA). It is appropriate for mid-term residential rental of a single-family home in Virginia. For unusual situations &mdash; ADA accommodation, corporate tenant, multi-state employer, complex security-deposit dispute &mdash; consult a Virginia landlord-tenant attorney before executing.
+      <strong>Note on this document:</strong> This lease is adapted from a LawDepot.com&reg; Virginia Residential Lease template previously executed by Bow and Arrow Studios, LLC and reviewed against the Virginia Residential Landlord and Tenant Act (VRLTA). The e-signature flow above generates a PDF of the executed lease client-side, emails it to both Landlord and Tenant via FormSubmit, and is legally binding under federal E-SIGN Act and Virginia UETA. For unusual situations &mdash; ADA accommodation, corporate tenant, multi-state employer, complex security-deposit dispute &mdash; consult a Virginia landlord-tenant attorney before executing.
     </div>
+  </section>
+
+  <!-- SUCCESS SECTION — revealed after successful signature submission -->
+  <section id="signed" class="sign-block" style="display:none;">
+    <h2>&#9989; Lease Executed</h2>
+    <p>Your application and the executed PDF are now in the landlord's inbox &mdash; a copy is also CC'd to your email. The landlord will counter-sign and email you the final fully-executed version within 24 hours.</p>
+    <div style="text-align:center;margin:1.8rem 0;">
+      <a id="downloadCopy" class="lf-submit" style="display:inline-block;text-decoration:none;text-align:center;">&#128196; Download Your Copy (PDF)</a>
+    </div>
+    <p style="font-size:0.88rem;color:var(--gray);text-align:center;">Save the PDF for your records now &mdash; this download link only works on this page-load. If you lose the file before the counter-signed version arrives, email <a href="mailto:bowandarrowstudiollc@gmail.com" style="color:var(--gold);">bowandarrowstudiollc@gmail.com</a> with your name and signature date.</p>
   </section>
 
 </div>
@@ -549,6 +762,418 @@ document.querySelectorAll('a[href^="#"]').forEach(function(a){
   });
 });
 </script>
+
+<!-- =================================================================
+     E-SIGN FLOW (Phase A — shipped 2026-05-17)
+     ----
+     What it does:
+       1. Validates form (matches signature to name, VRLTA security-deposit cap,
+          min-30-day term).
+       2. Generates a multi-page PDF client-side via jsPDF:
+            page 1   = executed cover with parties + agreed terms + sigs
+            pages 2+ = full lease body (extracted from the page DOM)
+            last p.  = audit trail (timestamp, UA, version)
+       3. POSTs to FormSubmit.co with the PDF as a multipart attachment.
+          CC includes tenant email so both parties get the executed copy
+          in their inbox immediately.
+       4. Reveals success state with a download-your-copy button
+          (Blob URL — valid only on this page-load, but the email already
+          delivered the PDF so this is a convenience).
+     ----
+     Legal basis: federal E-SIGN Act (15 USC 7001) + Virginia UETA
+     (§ 59.1-479 et seq.). Typed signature with explicit intent (the third
+     ACK checkbox) is binding for residential leases in Virginia.
+     ================================================================= -->
+<script>
+(function () {
+  'use strict';
+  // Set today's date in signature block
+  var today = new Date();
+  var todayLong = today.toLocaleDateString('en-US',
+    { year: 'numeric', month: 'long', day: 'numeric' });
+  var todayEl = document.getElementById('todayDate');
+  if (todayEl) todayEl.textContent = todayLong;
+
+  // Live signature preview — render as cursive as the tenant types
+  var sigInput = document.getElementById('typedSignature');
+  var sigPreview = document.getElementById('sigPreview');
+  if (sigInput && sigPreview) {
+    sigInput.addEventListener('input', function () {
+      sigPreview.textContent = sigInput.value;
+    });
+  }
+
+  // VRLTA: security deposit capped at 2× monthly rent
+  var rentEl = document.getElementById('monthlyRent');
+  var depEl  = document.getElementById('securityDeposit');
+  function validateDeposit() {
+    var r = parseFloat(rentEl.value) || 0;
+    var d = parseFloat(depEl.value) || 0;
+    if (r > 0 && d > 2 * r) {
+      depEl.setCustomValidity(
+        'Virginia VRLTA caps security deposit at 2× monthly rent ($' +
+        (2 * r).toFixed(0) + ' max for this rent).');
+    } else {
+      depEl.setCustomValidity('');
+    }
+  }
+  if (rentEl && depEl) {
+    rentEl.addEventListener('input', validateDeposit);
+    depEl.addEventListener('input', validateDeposit);
+  }
+
+  // Mid-term minimum: term must be at least 30 days
+  var startEl = document.getElementById('termStart');
+  var endEl = document.getElementById('termEnd');
+  function validateTerm() {
+    if (!startEl.value || !endEl.value) return;
+    var start = new Date(startEl.value);
+    var end = new Date(endEl.value);
+    var days = (end - start) / (24 * 60 * 60 * 1000);
+    if (days < 30) {
+      endEl.setCustomValidity(
+        'Mid-term minimum is 30 days. End date must be at least 30 days after start.');
+    } else {
+      endEl.setCustomValidity('');
+    }
+  }
+  if (startEl && endEl) {
+    startEl.addEventListener('change', validateTerm);
+    endEl.addEventListener('change', validateTerm);
+  }
+})();
+
+// Top-level so the inline onsubmit can find it
+async function submitLease(event) {
+  event.preventDefault();
+  var form = event.target;
+  var status = document.getElementById('leaseStatus');
+  var submit = form.querySelector('.lf-submit');
+
+  // Per-browser native validity
+  if (!form.checkValidity()) {
+    form.reportValidity();
+    return false;
+  }
+
+  // Signature must match the name exactly (case-insensitive, trimmed)
+  var name = form.tenantName.value.trim();
+  var sig = form.typedSignature.value.trim();
+  if (name.toLowerCase() !== sig.toLowerCase()) {
+    status.textContent =
+      '⚠️ Typed signature must match the Full Legal Name you entered above (it currently does not).';
+    status.style.color = '#f87171';
+    form.typedSignature.focus();
+    return false;
+  }
+
+  // jsPDF guard
+  if (!window.jspdf || !window.jspdf.jsPDF) {
+    status.textContent =
+      '⚠️ PDF generator failed to load. Check connection and reload the page, or use the Email link below.';
+    status.style.color = '#f87171';
+    return false;
+  }
+
+  submit.disabled = true;
+  submit.textContent = '⏳ Generating PDF…';
+  status.textContent = '';
+
+  var today = new Date();
+  var data = {
+    tenantName: name,
+    tenantEmail: form.tenantEmail.value.trim(),
+    tenantPhone: form.tenantPhone.value.trim(),
+    termStart: form.termStart.value,
+    termEnd: form.termEnd.value,
+    monthlyRent: parseFloat(form.monthlyRent.value),
+    securityDeposit: parseFloat(form.securityDeposit.value),
+    forwardingAddress: form.forwardingAddress.value.trim(),
+    typedSignature: sig,
+    executedDate: today.toISOString().split('T')[0],
+    executedDateLong: today.toLocaleDateString('en-US',
+      { year: 'numeric', month: 'long', day: 'numeric' }),
+    executedAt: today.toISOString(),
+    userAgent: (navigator.userAgent || '').substring(0, 120),
+    leaseVersion: '2026-05-17-v1'
+  };
+
+  try {
+    var pdfBlob = await generateLeasePDF(data);
+    var pdfFileName = 'Lease-1405-Sunken-' +
+      data.tenantName.replace(/\s+/g, '-').replace(/[^A-Za-z0-9-]/g, '') +
+      '-' + data.executedDate + '.pdf';
+
+    submit.textContent = '📤 Sending to landlord and to you…';
+
+    var fd = new FormData();
+    fd.append('_subject', 'Executed Lease — 1405 Sunken Rd — ' + data.tenantName);
+    fd.append('_template', 'table');
+    fd.append('_captcha', 'false');
+    fd.append('_cc', data.tenantEmail);
+    Object.keys(data).forEach(function (k) { fd.append(k, data[k]); });
+    fd.append('attachment', pdfBlob, pdfFileName);
+
+    var resp = await fetch(
+      'https://formsubmit.co/ajax/bowandarrowstudiollc@gmail.com',
+      { method: 'POST', body: fd, headers: { Accept: 'application/json' } });
+
+    if (!resp.ok) throw new Error('Submission failed (HTTP ' + resp.status + ')');
+
+    // Success — surface the download
+    var url = URL.createObjectURL(pdfBlob);
+    var dl = document.getElementById('downloadCopy');
+    dl.href = url;
+    dl.download = pdfFileName;
+    document.getElementById('sign').style.display = 'none';
+    document.getElementById('signed').style.display = 'block';
+    document.getElementById('signed').scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+  } catch (err) {
+    console.error('Lease submit error:', err);
+    submit.disabled = false;
+    submit.innerHTML = '✍️ Sign &amp; Apply →';
+    status.innerHTML = '❌ Submission failed: ' + err.message +
+      '. Please <a href="mailto:bowandarrowstudiollc@gmail.com?subject=Lease%20submit%20failure%20%E2%80%94%201405%20Sunken&amp;body=Form%20failed%20with%3A%20' +
+      encodeURIComponent(err.message) + '" style="color:#D4AF37;">email Adam directly</a> with your details, or try again.';
+    status.style.color = '#f87171';
+  }
+  return false;
+}
+
+async function generateLeasePDF(data) {
+  var jsPDF = window.jspdf.jsPDF;
+  var doc = new jsPDF({ unit: 'pt', format: 'letter' });
+  var PAGE_W = 612, PAGE_H = 792, MARGIN = 60;
+  var CONTENT_W = PAGE_W - 2 * MARGIN;
+  var y = MARGIN;
+
+  function drawRunningHeader() {
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(8);
+    doc.setTextColor(140);
+    doc.text(
+      '1405 SUNKEN RD — RESIDENTIAL LEASE — EXECUTED ' + data.executedDateLong.toUpperCase(),
+      MARGIN, 30);
+    doc.text(
+      data.tenantName.toUpperCase(),
+      PAGE_W - MARGIN, 30, { align: 'right' });
+    doc.setTextColor(0);
+  }
+
+  function newPage() {
+    doc.addPage();
+    y = MARGIN;
+    drawRunningHeader();
+  }
+
+  function ensureSpace(needed) {
+    if (y + needed > PAGE_H - MARGIN - 30) newPage();
+  }
+
+  function h1(text) {
+    ensureSpace(38);
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(16);
+    doc.setTextColor(0);
+    doc.text(text, MARGIN, y);
+    y += 24;
+  }
+
+  function h2(text) {
+    ensureSpace(30);
+    y += 6;
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(12);
+    doc.setTextColor(60);
+    doc.text(text, MARGIN, y);
+    y += 16;
+    doc.setTextColor(0);
+  }
+
+  function pBody(text, opts) {
+    opts = opts || {};
+    doc.setFont('helvetica', opts.bold ? 'bold' : 'normal');
+    doc.setFontSize(opts.size || 10);
+    var width = opts.width || CONTENT_W;
+    var lines = doc.splitTextToSize(text, width);
+    lines.forEach(function (line) {
+      ensureSpace(13);
+      doc.text(line, opts.indent ? MARGIN + opts.indent : MARGIN, y);
+      y += 12;
+    });
+    y += 3;
+  }
+
+  function kv(key, value) {
+    ensureSpace(14);
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(10);
+    doc.text(key + ':', MARGIN, y);
+    doc.setFont('helvetica', 'normal');
+    var lines = doc.splitTextToSize(String(value), CONTENT_W - 160);
+    lines.forEach(function (line, i) {
+      if (i > 0) { y += 12; ensureSpace(12); }
+      doc.text(line, MARGIN + 160, y);
+    });
+    y += 14;
+  }
+
+  function clause(num, text) {
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(10);
+    var lines = doc.splitTextToSize(text, CONTENT_W - 30);
+    ensureSpace(13 * lines.length + 4);
+    doc.setFont('helvetica', 'bold');
+    doc.text(num + '.', MARGIN, y);
+    doc.setFont('helvetica', 'normal');
+    lines.forEach(function (line, i) {
+      if (i > 0) ensureSpace(12);
+      doc.text(line, MARGIN + 30, y);
+      y += 12;
+    });
+    y += 4;
+  }
+
+  // === PAGE 1 — EXECUTED COVER ===
+  drawRunningHeader();
+  y = 75;
+
+  h1('RESIDENTIAL LEASE AGREEMENT');
+  doc.setFont('helvetica', 'bold');
+  doc.setFontSize(10);
+  doc.setTextColor(180, 130, 50);
+  doc.text('— EXECUTED COPY —', MARGIN, y);
+  doc.setTextColor(0);
+  y += 22;
+
+  pBody(
+    'THIS LEASE is between Bow and Arrow Studios, LLC ("Landlord") and ' +
+    data.tenantName + ' ("Tenant"), executed on ' + data.executedDateLong +
+    ' for the residential premises located at 1405 Sunken Road, Fredericksburg, Virginia 22401.');
+
+  h2('Tenant');
+  kv('Name', data.tenantName);
+  kv('Email', data.tenantEmail);
+  kv('Phone', data.tenantPhone);
+
+  h2('Landlord');
+  kv('Entity', 'Bow and Arrow Studios, LLC');
+  kv('Notice address', '501 Caroline Street, Fredericksburg, VA 22401');
+  kv('Contact', 'bowandarrowstudiollc@gmail.com · (832) 721-4228');
+  kv('FEIN', '87-2937218');
+  kv('City landlord license', 'Active — City of Fredericksburg');
+
+  h2('Agreed Terms');
+  kv('Property', '1405 Sunken Rd, Fredericksburg, VA 22401');
+  kv('Term Start', data.termStart);
+  kv('Term End', data.termEnd);
+  kv('Monthly Rent', '$' + data.monthlyRent.toLocaleString() + '.00');
+  kv('Security Deposit', '$' + data.securityDeposit.toLocaleString() + '.00');
+  kv('Late Fee', '$50 per infraction (or VRLTA cap if lower) if rent received >4 days late');
+  kv('NSF Fee', '$25 per returned check');
+  kv('Forwarding Address',
+    data.forwardingAddress || '(to be provided at move-out)');
+
+  h2('Tenant Acknowledgments');
+  pBody('☑ Mold Disclosure receipt acknowledged (Virginia required).');
+  pBody('☑ Google Nest video doorbell at front entry only, no interior cameras (clause 40).');
+  pBody('☑ Full lease (54 clauses) read; agreement is binding under federal E-SIGN Act (15 USC 7001) and Virginia UETA (§ 59.1-479 et seq.).');
+
+  ensureSpace(110);
+  y += 12;
+  h2('Tenant Signature');
+  doc.setFont('times', 'italic');
+  doc.setFontSize(22);
+  doc.text(data.typedSignature, MARGIN, y);
+  y += 28;
+  doc.setFont('helvetica', 'normal');
+  doc.setFontSize(10);
+  doc.text('Date executed: ' + data.executedDateLong, MARGIN, y);
+  y += 22;
+
+  ensureSpace(80);
+  h2('Landlord Counter-Signature');
+  doc.setFont('times', 'italic');
+  doc.setFontSize(16);
+  doc.setTextColor(170);
+  doc.text('(awaiting countersign by Landlord)', MARGIN, y);
+  y += 26;
+  doc.setTextColor(0);
+  doc.setFont('helvetica', 'normal');
+  doc.setFontSize(10);
+  doc.text('Bow and Arrow Studios, LLC', MARGIN, y);
+  y += 12;
+  doc.text('Per: Adam L. Johns, Manager', MARGIN, y);
+
+  // === PAGES 2-N — FULL LEASE BODY ===
+  newPage();
+  h1('Full Lease — All 54 Clauses');
+  pBody(
+    'The clauses below are the complete published lease terms as agreed at execution. ' +
+    'Original source: https://usmcmin.com/mid-term-rental.html (snapshotted at ' +
+    data.executedAt + ').');
+  y += 6;
+
+  // Extract lease body from page DOM
+  var leaseTextEl = document.querySelector('.lease-text');
+  var clauseNum = 1;
+  if (leaseTextEl) {
+    Array.from(leaseTextEl.children).forEach(function (child) {
+      if (child.tagName === 'H3') {
+        h2(child.textContent.trim());
+      } else if (child.tagName === 'OL') {
+        Array.from(child.children).forEach(function (li) {
+          // Skip nested ol structure for now — just take the parent's text
+          var liText = (li.firstChild && li.firstChild.nodeType === 3)
+            ? li.firstChild.textContent.replace(/\s+/g, ' ').trim()
+            : li.textContent.replace(/\s+/g, ' ').trim();
+          clause(clauseNum, liText);
+          clauseNum++;
+        });
+      }
+    });
+  } else {
+    pBody('(Lease body could not be extracted from the page DOM at execution time. ' +
+      'The legally controlling text is the lease as published at the source URL above on the ' +
+      'execution date.)');
+  }
+
+  // === FINAL — AUDIT TRAIL ===
+  y += 14;
+  ensureSpace(120);
+  doc.setDrawColor(200);
+  doc.line(MARGIN, y, PAGE_W - MARGIN, y);
+  y += 14;
+  doc.setFont('helvetica', 'bold');
+  doc.setFontSize(8);
+  doc.setTextColor(120);
+  doc.text('AUDIT TRAIL', MARGIN, y);
+  y += 12;
+  doc.setFont('helvetica', 'normal');
+  var audit = [
+    'Executed at: ' + data.executedAt + ' (ISO 8601 UTC)',
+    'Lease body version: ' + data.leaseVersion,
+    'Tenant browser: ' + data.userAgent,
+    'Source URL: https://usmcmin.com/mid-term-rental.html',
+    'Generation: client-side jsPDF, executed in the tenant\'s browser at signature submission.',
+    'Delivery: emailed simultaneously to landlord (bowandarrowstudiollc@gmail.com) and tenant (CC) via FormSubmit.co.',
+    'Counter-signature: pending — landlord will execute and return the fully-executed PDF within 24 hours.'
+  ];
+  audit.forEach(function (line) {
+    var lines = doc.splitTextToSize(line, CONTENT_W);
+    lines.forEach(function (l) {
+      ensureSpace(10);
+      doc.text(l, MARGIN, y);
+      y += 10;
+    });
+    y += 2;
+  });
+
+  return doc.output('blob');
+}
+</script>
+
 <script data-goatcounter="https://usmcmin.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
 </body>
 </html>

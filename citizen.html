@@ -568,6 +568,56 @@
     <p class="methodology">10 categories &times; 5 questions &times; 2 pts = 100 points max &middot; 60 God First + 40 America First &middot; <a href="scoring-system.html">How scoring works</a> &middot; <a href="#methodology">Full methodology</a></p>
   </div>
 
+  <!-- Global Name Search — find any rep across all 50 states without picking one first -->
+  <div id="globalSearchWrap" style="max-width:720px;margin:24px auto 0;position:relative;">
+    <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:12px;padding:16px 18px;">
+      <label for="globalSearchInput" style="display:block;font-size:0.74rem;color:var(--accent);text-transform:uppercase;letter-spacing:1.5px;font-weight:700;margin-bottom:8px;">&#128269; Search any rep nationwide</label>
+      <input type="search" id="globalSearchInput" placeholder="Type a name &mdash; e.g., Spanberger, Cruz, Warnock, McConnell&hellip;"
+        autocomplete="off"
+        aria-label="Search for any candidate or rep across all 50 states"
+        aria-autocomplete="list"
+        aria-controls="globalSearchDropdown"
+        style="width:100%;padding:11px 14px;background:var(--bg);border:1px solid var(--border);border-radius:8px;color:var(--white);font-size:0.95rem;outline:none;transition:border-color 0.2s;"
+        onfocus="this.style.borderColor='var(--accent)';loadGlobalSearchIndex()"
+        onblur="this.style.borderColor='var(--border)';setTimeout(closeGlobalSearchDropdown,200)"
+        oninput="renderGlobalSearchResults(this.value)"
+        onkeydown="handleGlobalSearchKey(event)">
+      <p id="globalSearchStatus" style="margin-top:6px;font-size:0.75rem;color:var(--gray);min-height:1.2em;">Across 8,400+ federal, state, and local officials. No state-pick required.</p>
+    </div>
+    <ul id="globalSearchDropdown" role="listbox" aria-label="Candidate search suggestions"
+        style="display:none;position:absolute;top:100%;left:0;right:0;background:var(--bg-card);border:1px solid var(--accent);border-top:none;border-radius:0 0 12px 12px;max-height:380px;overflow-y:auto;list-style:none;padding:0;margin:0;z-index:50;box-shadow:0 8px 24px rgba(0,0,0,0.35);"></ul>
+  </div>
+
+  <style>
+    #globalSearchDropdown li { padding: 0; border-bottom: 1px solid var(--border); }
+    #globalSearchDropdown li:last-child { border-bottom: none; }
+    #globalSearchDropdown a {
+      display: block; padding: 10px 14px; color: var(--white); text-decoration: none;
+      font-size: 0.88rem; line-height: 1.4; transition: background 0.15s;
+    }
+    #globalSearchDropdown a:hover, #globalSearchDropdown a:focus, #globalSearchDropdown li.active a {
+      background: rgba(168,176,188,0.10); outline: none;
+    }
+    #globalSearchDropdown .gs-name { font-weight: 600; color: var(--white); }
+    #globalSearchDropdown .gs-party {
+      display: inline-block; font-size: 0.68rem; font-weight: 700;
+      padding: 1px 6px; border-radius: 4px; margin-left: 6px;
+      vertical-align: 1px;
+    }
+    #globalSearchDropdown .gs-party.R { background: rgba(220,38,38,0.18); color: #ef4444; }
+    #globalSearchDropdown .gs-party.D { background: rgba(37,99,235,0.18); color: #6ea1ff; }
+    #globalSearchDropdown .gs-party.I { background: rgba(168,85,247,0.18); color: #c084fc; }
+    #globalSearchDropdown .gs-party.U { background: rgba(107,114,128,0.18); color: #9ca3af; }
+    #globalSearchDropdown .gs-meta {
+      display: block; font-size: 0.78rem; color: var(--gray); margin-top: 2px;
+    }
+    #globalSearchDropdown .gs-state {
+      display: inline-block; padding: 0 6px; border: 1px solid var(--border);
+      border-radius: 3px; font-size: 0.68rem; font-weight: 700; color: var(--accent);
+      letter-spacing: 0.5px; margin-right: 4px; vertical-align: 1px;
+    }
+  </style>
+
   <!-- Find My Reps CTA -->
   <div style="max-width:720px;margin:20px auto 0;padding:16px 20px;background:linear-gradient(135deg,rgba(168,176,188,0.12) 0%,rgba(30,58,95,0.08) 100%);border:1px solid rgba(168,176,188,0.35);border-radius:12px;text-align:center;">
     <div style="font-size:0.74rem;color:var(--accent);text-transform:uppercase;letter-spacing:1.5px;font-weight:700;margin-bottom:4px;">&#128205; NEW</div>
@@ -730,6 +780,121 @@ function submitCitizenTip(ev){
   form.style.display = 'none';
   document.getElementById('citizenTipThanks').style.display = 'block';
   return false;
+}
+
+// ─── Global Name Search ───────────────────────────────────────────
+// Lazy-loads data/search-index.json on first focus of #globalSearchInput,
+// then filters as the user types and shows up-to-8 suggestions. Each
+// suggestion routes directly to /candidates/<state>/<slug>.html so the
+// user never has to pick a state first.
+var GLOBAL_SEARCH = { index: null, loading: false, activeIdx: -1 };
+
+function loadGlobalSearchIndex() {
+  if (GLOBAL_SEARCH.index || GLOBAL_SEARCH.loading) return;
+  GLOBAL_SEARCH.loading = true;
+  var statusEl = document.getElementById('globalSearchStatus');
+  if (statusEl) statusEl.textContent = 'Loading nationwide index…';
+  fetch('data/search-index.json')
+    .then(function(r){ return r.json(); })
+    .then(function(d){
+      GLOBAL_SEARCH.index = d.rows || [];
+      // Pre-compute a normalized name for fast matching
+      GLOBAL_SEARCH.index.forEach(function(r){
+        r._norm = (r.n || '').toLowerCase();
+      });
+      if (statusEl) statusEl.textContent = 'Ready — ' + GLOBAL_SEARCH.index.length.toLocaleString() + ' officials indexed.';
+      // If user already typed something while loading, render now
+      var input = document.getElementById('globalSearchInput');
+      if (input && input.value) renderGlobalSearchResults(input.value);
+    })
+    .catch(function(err){
+      console.error('global search index load failed', err);
+      if (statusEl) { statusEl.textContent = 'Search index failed to load. Try refreshing.'; statusEl.style.color = '#f87171'; }
+    })
+    .then(function(){ GLOBAL_SEARCH.loading = false; });
+}
+
+function renderGlobalSearchResults(query) {
+  var dropdown = document.getElementById('globalSearchDropdown');
+  if (!dropdown) return;
+  var q = (query || '').trim().toLowerCase();
+  if (!q || q.length < 2 || !GLOBAL_SEARCH.index) {
+    dropdown.style.display = 'none';
+    dropdown.innerHTML = '';
+    return;
+  }
+  // Tokenize: every token must appear in the normalized name
+  var tokens = q.split(/\s+/).filter(function(t){ return t.length > 0; });
+  var matches = [];
+  for (var i = 0; i < GLOBAL_SEARCH.index.length && matches.length < 30; i++) {
+    var r = GLOBAL_SEARCH.index[i];
+    if (tokens.every(function(t){ return r._norm.indexOf(t) !== -1; })) {
+      matches.push(r);
+    }
+  }
+  // Sort: starts-with-first-token wins, then alphabetical
+  matches.sort(function(a, b){
+    var firstTok = tokens[0];
+    var aStart = a._norm.indexOf(firstTok) === 0 ? 0 : (a._norm.split(/\s+/).some(function(p){ return p.indexOf(firstTok) === 0; }) ? 1 : 2);
+    var bStart = b._norm.indexOf(firstTok) === 0 ? 0 : (b._norm.split(/\s+/).some(function(p){ return p.indexOf(firstTok) === 0; }) ? 1 : 2);
+    if (aStart !== bStart) return aStart - bStart;
+    return a._norm.localeCompare(b._norm);
+  });
+  var top = matches.slice(0, 8);
+  if (!top.length) {
+    dropdown.innerHTML = '<li style="padding:14px;color:var(--gray);text-align:center;font-size:0.85rem;">No matches found across 8,400+ officials. Try a partial name or check spelling.</li>';
+    dropdown.style.display = 'block';
+    return;
+  }
+  GLOBAL_SEARCH.activeIdx = -1;
+  dropdown.innerHTML = top.map(function(r, i){
+    var party = (r.p === 'R' || r.p === 'D' || r.p === 'I') ? r.p : 'U';
+    var partyLabel = r.p || '—';
+    var profileUrl = 'candidates/' + r.st + '/' + r.s + '.html';
+    var stateBadge = r.st.toUpperCase();
+    return '<li role="option"><a href="' + profileUrl + '"' +
+      ' data-idx="' + i + '">' +
+      '<span class="gs-name">' + esc(r.n) + '</span>' +
+      '<span class="gs-party ' + party + '">' + partyLabel + '</span>' +
+      '<span class="gs-meta"><span class="gs-state">' + stateBadge + '</span>' +
+        esc(r.o || '') + (r.j ? ' &middot; ' + esc(r.j) : '') + '</span>' +
+      '</a></li>';
+  }).join('');
+  dropdown.style.display = 'block';
+}
+
+function handleGlobalSearchKey(ev) {
+  var dropdown = document.getElementById('globalSearchDropdown');
+  if (!dropdown || dropdown.style.display === 'none') return;
+  var items = dropdown.querySelectorAll('li[role="option"]');
+  if (!items.length) return;
+  if (ev.key === 'ArrowDown') {
+    ev.preventDefault();
+    GLOBAL_SEARCH.activeIdx = Math.min(items.length - 1, GLOBAL_SEARCH.activeIdx + 1);
+    items.forEach(function(li, i){ li.classList.toggle('active', i === GLOBAL_SEARCH.activeIdx); });
+  } else if (ev.key === 'ArrowUp') {
+    ev.preventDefault();
+    GLOBAL_SEARCH.activeIdx = Math.max(0, GLOBAL_SEARCH.activeIdx - 1);
+    items.forEach(function(li, i){ li.classList.toggle('active', i === GLOBAL_SEARCH.activeIdx); });
+  } else if (ev.key === 'Enter') {
+    ev.preventDefault();
+    var idx = GLOBAL_SEARCH.activeIdx >= 0 ? GLOBAL_SEARCH.activeIdx : 0;
+    var link = items[idx] && items[idx].querySelector('a');
+    if (link) window.location.href = link.getAttribute('href');
+  } else if (ev.key === 'Escape') {
+    closeGlobalSearchDropdown();
+  }
+}
+
+function closeGlobalSearchDropdown() {
+  var dropdown = document.getElementById('globalSearchDropdown');
+  if (dropdown) { dropdown.style.display = 'none'; dropdown.innerHTML = ''; }
+  GLOBAL_SEARCH.activeIdx = -1;
+}
+
+// `esc` is defined elsewhere in this file; fall back if not present for any reason.
+if (typeof esc !== 'function') {
+  window.esc = function(s){ return String(s == null ? '' : s).replace(/[&<>"]/g, function(m){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[m]; }); };
 }
 </script>
 

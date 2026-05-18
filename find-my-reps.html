@@ -452,6 +452,14 @@
     }
     return t;
   }
+  // v4.0 letter grade — old-school report-card scale
+  function letterGrade(score) {
+    if (score >= 90) return 'A';
+    if (score >= 80) return 'B';
+    if (score >= 70) return 'C';
+    if (score >= 60) return 'D';
+    return 'F';
+  }
   function scoreClass(score, max) {
     if (max === 0) return 'score-none';
     var p = score / max;
@@ -769,7 +777,7 @@
         '<div class="fmr-rep-office">' + office + '</div>' +
         '<div class="fmr-rep-meta">' +
           '<span class="fmr-rep-party ' + partyClass + '">' + partyLabel + '</span>' +
-          '<span class="fmr-rep-score ' + klass + '">' + total + '/' + MAX_TOTAL + '</span>' +
+          '<span class="fmr-rep-score ' + klass + '">' + total + '/' + MAX_TOTAL + ' <span class="fmr-rep-grade" style="font-family:Georgia,serif;font-weight:800;margin-left:3px;">' + letterGrade(total) + '</span></span>' +
         '</div>' +
       '</div>' +
     '</a>';

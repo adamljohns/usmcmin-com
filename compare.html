@@ -320,7 +320,7 @@
   // v4.0 rubric: 10 categories × 5 questions × 2 pts = 100 max. Also surfaces
   // God-First / America-First tier subtotals by walking the loaded categories array.
   function calcTotal(scores){
-    if (!scores) return {score: 0, max: 100, answered: 0, god_first: 0, america_first: 0};
+    if (!scores) return {score: 0, max: 100, max_possible: 0, pct: 0, answered: 0, god_first: 0, america_first: 0};
     var total = 0; var answered = 0; var max = 100;
     var godFirst = 0, americaFirst = 0;
     var cats = (STATE.scorecard && STATE.scorecard.categories) || [];
@@ -335,7 +335,11 @@
       if (tierMap[cat] === 'god_first') godFirst += catTotal;
       else if (tierMap[cat] === 'america_first') americaFirst += catTotal;
     });
-    return {score: total, max: max, answered: answered,
+    // Dynamic max per 2026-05-18 directive: 2 pts × answered.
+    var maxPossible = answered * 2;
+    var pct = maxPossible > 0 ? Math.round(100 * total / maxPossible) : 0;
+    return {score: total, max: max, max_possible: maxPossible, pct: pct,
+            answered: answered,
             god_first: godFirst, america_first: americaFirst};
   }
   function letterGrade(pct){
@@ -374,7 +378,7 @@
       photo +
       '<div class="name"><a href="candidates/' + esc((c.state||"va").toLowerCase()) + '/' + esc(slug) + '.html">' + esc(c.name) + '</a></div>' +
       '<div class="party ' + partyClass(c.party) + '">' + esc(partyLabel(c.party)) + '</div>' +
-      '<div class="total"><span class="num">' + t.score + '</span> / ' + t.max + '<div class="label">' + t.answered + ' of 35 questions answered</div></div>' +
+      '<div class="total" title="' + t.answered + ' of 50 questions answered — dynamic max ' + t.max_possible + ' pts"><span class="num">' + t.score + '</span> / ' + t.max_possible + ' <span class="grade" style="font-family:Georgia,serif;font-weight:800;margin-left:6px;">' + letterGrade(t.pct) + '</span><div class="label">' + t.pct + '% &middot; ' + t.answered + ' of 50 answered</div></div>' +
       (badges.length ? '<div class="badges">' + badges.join('') + '</div>' : '') +
       '</div>';
   }

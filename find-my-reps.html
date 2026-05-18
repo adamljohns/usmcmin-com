@@ -441,32 +441,39 @@
   }
 
   // ---- Score calc (v4.0: 10 categories × 5 questions × 2 pts = 100 max) ----
+  // Dynamic-max per 2026-05-18 directive: candidate's letter grade is
+  // based on % of their personal max (2 pts × answered questions), not
+  // the fixed 100-pt scale. Stops penalizing officials for our inability
+  // to find evidence on a question.
   var POINTS_PER_TRUE = 2;
   var MAX_TOTAL = 100;
   function calcTotal(scores) {
-    if (!scores) return 0;
-    var t = 0;
+    if (!scores) return { score: 0, max_possible: 0, pct: 0 };
+    var t = 0, answered = 0;
     for (var k in scores) {
       if (!Object.prototype.hasOwnProperty.call(scores, k)) continue;
       var arr = scores[k] || [];
-      for (var i = 0; i < arr.length; i++) if (arr[i] === true) t += POINTS_PER_TRUE;
+      for (var i = 0; i < arr.length; i++) {
+        if (arr[i] === true) { t += POINTS_PER_TRUE; answered++; }
+        else if (arr[i] === false) { answered++; }
+      }
     }
-    return t;
+    var maxPossible = answered * POINTS_PER_TRUE;
+    var pct = maxPossible > 0 ? Math.round(100 * t / maxPossible) : 0;
+    return { score: t, max_possible: maxPossible, pct: pct, answered: answered };
   }
-  // v4.0 letter grade — old-school report-card scale
-  function letterGrade(score) {
-    if (score >= 90) return 'A';
-    if (score >= 80) return 'B';
-    if (score >= 70) return 'C';
-    if (score >= 60) return 'D';
+  // Letter grade takes a percentage (0-100)
+  function letterGrade(pct) {
+    if (pct >= 90) return 'A';
+    if (pct >= 80) return 'B';
+    if (pct >= 70) return 'C';
+    if (pct >= 60) return 'D';
     return 'F';
   }
-  function scoreClass(score, max) {
-    if (max === 0) return 'score-none';
-    var p = score / max;
-    if (p >= 0.7) return 'score-high';
-    if (p >= 0.4) return 'score-mid';
-    if (p > 0) return 'score-low';
+  function scoreClass(pct) {
+    if (pct >= 70) return 'score-high';
+    if (pct >= 40) return 'score-mid';
+    if (pct > 0) return 'score-low';
     return 'score-none';
   }
 
@@ -754,8 +761,9 @@
   }
 
   function repCardHtml(c, isDirect) {
-    var total = calcTotal(c.scores);
-    var klass = scoreClass(total, MAX_TOTAL);
+    var totalObj = calcTotal(c.scores);
+    var total = totalObj.score;
+    var klass = scoreClass(totalObj.pct);
     var party = (c.party || '').toUpperCase();
     var partyClass = party === 'R' ? 'party-r' : party === 'D' ? 'party-d' : party === 'I' ? 'party-i' : 'party-unknown';
     var partyLabel = party === 'R' ? 'R' : party === 'D' ? 'D' : party === 'I' ? 'I' : (party || 'N');
@@ -778,7 +786,7 @@
         '<div class="fmr-rep-office">' + office + '</div>' +
         '<div class="fmr-rep-meta">' +
           '<span class="fmr-rep-party ' + partyClass + '">' + partyLabel + '</span>' +
-          '<span class="fmr-rep-score ' + klass + '">' + total + '/' + MAX_TOTAL + ' <span class="fmr-rep-grade" style="font-family:Georgia,serif;font-weight:800;margin-left:3px;">' + letterGrade(total) + '</span></span>' +
+          '<span class="fmr-rep-score ' + klass + '" title="' + totalObj.answered + ' of 50 questions answered">' + total + '/' + totalObj.max_possible + ' <span class="fmr-rep-grade" style="font-family:Georgia,serif;font-weight:800;margin-left:3px;">' + letterGrade(totalObj.pct) + '</span></span>' +
         '</div>' +
       '</div>' +
     '</a>';

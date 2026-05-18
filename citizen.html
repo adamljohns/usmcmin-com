@@ -1182,11 +1182,17 @@ function calcTotalScore(scores, profile) {
   var adj = (profile && profile.score_adjustments) || {};
   var adjTotal = 0;
   Object.keys(adj).forEach(function(k){ adjTotal += (adj[k] && adj[k].delta) || 0; });
+  var adjusted = total + adjTotal;
+  // Dynamic max per 2026-05-18 directive: 2 pts × answered questions.
+  var maxPossible = maxAnswered * POINTS_PER_TRUE;
+  var pct = maxPossible > 0 ? Math.round(100 * adjusted / maxPossible) : 0;
   return {
     base: total,
-    score: total + adjTotal,    // adjusted score is the headline number
+    score: adjusted,    // adjusted score is the headline number
     adjustment: adjTotal,
     max: MAX_TOTAL,
+    max_possible: maxPossible,   // dynamic max for this candidate
+    pct: pct,                    // % of dynamic max earned
     answered: maxAnswered,
     god_first: godFirst,
     god_first_max: MAX_GOD_FIRST,
@@ -1195,7 +1201,8 @@ function calcTotalScore(scores, profile) {
   };
 }
 
-// Letter grade for the v2 100-pt scale — old-school report-card scale.
+// Letter grade — takes a percentage (0-100). Dynamic max means we grade
+// candidates on % of their personal max, not absolute /100.
 function letterGrade(pct) {
   if (pct >= 90) return 'A';
   if (pct >= 80) return 'B';
@@ -1433,7 +1440,8 @@ function renderCards() {
   var html = '';
   filtered.forEach(function(c, idx) {
     var total = calcTotalScore(c.scores, c.profile);
-    var totalColor = getScoreColor(total.score, total.max);
+    // Color based on percentage of dynamic max (matches letter grade)
+    var totalColor = getScoreColor(total.pct, 100);
     var barWidth = total.max > 0 ? Math.round((Math.max(0, Math.min(total.max, total.score)) / total.max) * 100) : 0;
     var adjBadge = total.adjustment ? ' <span class="card-adj ' + (total.adjustment>0?'card-adj-plus':'card-adj-minus') + '" title="Includes ' + (total.adjustment>0?'+':'') + total.adjustment + ' foreign-influence adjustment (base ' + total.base + ')">' + (total.adjustment>0?'+':'') + total.adjustment + '</span>' : '';
     var cardId = 'cand-' + c.slug + '-' + idx;
@@ -1469,11 +1477,11 @@ function renderCards() {
     html += '<div class="sc-sub af"><span class="sc-sub-label">🇺🇸 America First</span><span class="sc-sub-val">' + total.america_first + '<span class="sc-sub-max">/40</span></span></div>';
     html += '</div>';
 
-    var letter = letterGrade(total.score);
-    html += '<div class="sc-total" aria-label="Total score: ' + total.score + ' of ' + MAX_TOTAL + ', letter grade ' + letter + (total.adjustment?', includes ' + (total.adjustment>0?'+':'') + total.adjustment + ' foreign-influence adjustment':'') + '">';
-    html += '<span class="sc-total-label" aria-hidden="true">Total · <span class="sc-grade" style="color:' + totalColor + ';">' + letter + '</span></span>';
-    html += '<div class="sc-total-bar" aria-hidden="true"><div class="sc-total-fill" style="width:' + barWidth + '%;background:' + totalColor + ';"></div></div>';
-    html += '<span class="sc-total-score" aria-hidden="true" style="color:' + totalColor + ';">' + total.score + adjBadge + '<span style="font-size:0.7rem;color:var(--gray);">/' + MAX_TOTAL + '</span></span>';
+    var letter = letterGrade(total.pct);
+    html += '<div class="sc-total" aria-label="Total score: ' + total.score + ' of ' + total.max_possible + ' (' + total.pct + '%), letter grade ' + letter + (total.adjustment?', includes ' + (total.adjustment>0?'+':'') + total.adjustment + ' foreign-influence adjustment':'') + '">';
+    html += '<span class="sc-total-label" aria-hidden="true">Total · <span class="sc-grade" style="color:' + totalColor + ';">' + letter + '</span> <span style="color:var(--gray);font-size:0.78rem;">(' + total.pct + '%)</span></span>';
+    html += '<div class="sc-total-bar" aria-hidden="true"><div class="sc-total-fill" style="width:' + Math.min(100, total.pct) + '%;background:' + totalColor + ';"></div></div>';
+    html += '<span class="sc-total-score" aria-hidden="true" style="color:' + totalColor + ';" title="' + total.answered + ' of 50 questions answered — max ' + total.max_possible + ' pts">' + total.score + adjBadge + '<span style="font-size:0.7rem;color:var(--gray);">/' + total.max_possible + '</span></span>';
     html += '</div>';
 
     // Church affiliation cross-link (renders only if present on candidate record).

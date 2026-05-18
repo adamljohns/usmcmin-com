@@ -16,9 +16,16 @@ Schema per row (kept tight — every byte costs page-load):
         sum to less than base)
   gf  = god-first subtotal (0-60)
   af  = america-first subtotal (0-40)
-  lg  = letter grade (A/B/C/D/F)
+  lg  = letter grade (A/B/C/D/F) — dynamic-max version (based on
+        percentage of answered questions, per Adam's 2026-05-18 directive:
+        "if we can't find info on a question, don't penalize the candidate
+        — reduce their max instead")
   ans = number of answered questions (out of 50) — used by rankings page
         to mark partials
+  mp  = max_possible_score = 2 × ans (the dynamic max — what the candidate
+        could have earned given how many questions had findable evidence)
+  pct = percentage of max_possible the candidate earned (used for
+        dynamic-max sort + letter grade)
 
 Source: data/scorecard.json (master).
 Run from repo root: python3 build-search-index.py
@@ -30,11 +37,13 @@ SRC = 'data/scorecard.json'
 OUT = 'data/search-index.json'
 
 
-def letter_grade(score):
-    if score >= 90: return 'A'
-    if score >= 80: return 'B'
-    if score >= 70: return 'C'
-    if score >= 60: return 'D'
+def letter_grade(pct):
+    """A 90+, B 80, C 70, D 60, F <60 — standard report-card scale.
+    Takes a 0-100 percentage so it works for both absolute and dynamic-max."""
+    if pct >= 90: return 'A'
+    if pct >= 80: return 'B'
+    if pct >= 70: return 'C'
+    if pct >= 60: return 'D'
     return 'F'
 
 
@@ -73,6 +82,14 @@ def main():
             adj += int(info.get('delta') or 0)
         total = base + adj
 
+        # Dynamic max — 2 points × answered questions. Adjustments DON'T
+        # change the max (they're an additional rolling penalty/credit on
+        # top of category scoring). Percentage used for letter grade.
+        max_possible = 2 * answered
+        if max_possible > 0:
+            pct = round((total / max_possible) * 100)
+        else:
+            pct = 0
         rows.append({
             'n':   c.get('name', ''),
             's':   slug,
@@ -83,7 +100,9 @@ def main():
             'ts':  total,
             'gf':  gf,
             'af':  af,
-            'lg':  letter_grade(total),
+            'mp':  max_possible,
+            'pct': pct,
+            'lg':  letter_grade(pct),
             'ans': answered,
         })
 
@@ -96,7 +115,9 @@ def main():
         'schema': {'n': 'name', 's': 'slug', 'st': 'state', 'o': 'office',
                    'j': 'jurisdiction', 'p': 'party',
                    'ts': 'total_score', 'gf': 'god_first',
-                   'af': 'america_first', 'lg': 'letter_grade',
+                   'af': 'america_first',
+                   'mp': 'max_possible_score', 'pct': 'pct_of_max',
+                   'lg': 'letter_grade_dynamic',
                    'ans': 'answered_questions'},
         'rows': rows,
     }

@@ -16,12 +16,17 @@ MAX_TOTAL = 100  # v4.0 rubric: 10 categories × 10 pts = 100 (60 God First + 40
 MAX_GOD_FIRST = 60
 MAX_AMERICA_FIRST = 40
 
-def letter_grade(score: int) -> str:
-    """A 90+, B 80, C 70, D 60, F <60 — old-school report-card scale."""
-    if score >= 90: return 'A'
-    if score >= 80: return 'B'
-    if score >= 70: return 'C'
-    if score >= 60: return 'D'
+def letter_grade(pct):
+    """A 90+, B 80, C 70, D 60, F <60 — standard report-card scale.
+    Takes a 0-100 percentage. Per Adam's 2026-05-18 directive, candidates
+    are now graded on percentage-of-answered rather than absolute /100,
+    so a candidate scored on 45/50 questions with all True gets 100% = A
+    (their max is 90, score 90, percent 100) instead of 90% = A. The
+    point is to NOT penalize candidates for our inability to find info."""
+    if pct >= 90: return 'A'
+    if pct >= 80: return 'B'
+    if pct >= 70: return 'C'
+    if pct >= 60: return 'D'
     return 'F'
 
 def calc_cat_score(answers):
@@ -675,7 +680,19 @@ def generate_profile(candidate, categories, meta, nav=None):
     af_score = subtotals['america_first']
     gf_color = score_color(gf_score, MAX_GOD_FIRST)
     af_color = score_color(af_score, MAX_AMERICA_FIRST)
-    grade_letter = letter_grade(adjusted_score)
+
+    # v4.0 — Dynamic max per Adam's 2026-05-18 directive: candidate's max
+    # is 2 × answered_questions, not always 100. A candidate scored on
+    # 45/50 questions caps at 90; the letter grade is the percentage of
+    # *their* max, not the global 100. This stops penalizing officials for
+    # questions where our research found no public position either way.
+    answered_count = total['answered']
+    max_possible = answered_count * POINTS_PER_TRUE  # 2pt per answered Q
+    if max_possible > 0:
+        pct_of_max = round((adjusted_score / max_possible) * 100)
+    else:
+        pct_of_max = 0
+    grade_letter = letter_grade(pct_of_max)
 
     # Data-freshness: latest verified_date across this candidate's claims
     # (if any are verified), else fall back to scorecard-level last_updated.
@@ -1410,14 +1427,18 @@ def generate_profile(candidate, categories, meta, nav=None):
       <div class="prof-total-label">RESOLUTE Citizen Score</div>
       <div class="prof-total-headline">
         <span class="prof-total-score" style="color:{total_color};">{adjusted_score}</span>
-        <span class="prof-total-max">/ {MAX_TOTAL}</span>
-        <span class="prof-grade" style="color:{total_color};border-color:{total_color};" aria-label="Letter grade {grade_letter}">{grade_letter}</span>
+        <span class="prof-total-max" title="Dynamic max — 2 points × {answered_count} answered questions. Per RESOLUTE Citizen methodology, candidates are graded on the percentage of questions where we found public-record evidence, NOT a fixed 100-point scale. See scoring-system.html.">/ {max_possible}</span>
+        <span class="prof-grade" style="color:{total_color};border-color:{total_color};" aria-label="Letter grade {grade_letter} (%{pct_of_max} of dynamic max)">{grade_letter}</span>
+        <span class="prof-total-pct" title="Percentage of dynamic max earned">{pct_of_max}%</span>
       </div>
-      {f'''<div class="prof-total-detail">Base {total['score']}/{MAX_TOTAL}
+      <div class="prof-total-detail">
+        <span class="prof-answered" title="Number of questions with researched evidence. Out of 50 total ({MAX_TOTAL} pt scale). The remaining {50-answered_count} are unanswered — see scoring-system.html for methodology.">{answered_count} of 50 answered</span>
+        {f'''&middot; Base {total['score']}/{max_possible}
         <span class="prof-total-adj prof-total-adj-{('plus' if adj_total > 0 else 'minus')}">
           {('+' if adj_total > 0 else '')}{adj_total}
         </span>
-        adjustment</div>''' if adj_total != 0 else ''}
+        foreign-influence adjustment''' if adj_total != 0 else ''}
+      </div>
       {f'<div class="prof-freshness" title="Data freshness source: {freshness_source}">Last verified: <time datetime="{freshness_date}">{freshness_date}</time>{" · from claim evidence" if freshness_source == "claim" else " · scorecard-level timestamp"}</div>' if freshness_date else ''}
     </div>
     <div class="prof-total-right">

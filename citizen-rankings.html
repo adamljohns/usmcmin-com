@@ -446,7 +446,8 @@
       <div class="rk-filter-group">
         <label for="filterTier">Sort by</label>
         <select id="filterTier">
-          <option value="total">Total score</option>
+          <option value="pct">% of max (dynamic grade) ★</option>
+          <option value="total">Total score (absolute)</option>
           <option value="gf">God First only</option>
           <option value="af">America First only</option>
         </select>
@@ -479,11 +480,12 @@
             <th>Office</th>
             <th class="rk-num">GF</th>
             <th class="rk-num">AF</th>
-            <th class="rk-num">Total</th>
+            <th class="rk-num" title="Score / dynamic max — max is 2 pts × answered questions">Score</th>
+            <th class="rk-num" title="Percentage of dynamic max earned">%</th>
             <th class="rk-grade">Grade</th>
           </tr>
         </thead>
-        <tbody><tr><td colspan="9" class="rk-empty">Loading…</td></tr></tbody>
+        <tbody><tr><td colspan="10" class="rk-empty">Loading…</td></tr></tbody>
       </table>
     </div>
 
@@ -502,11 +504,12 @@
             <th>Office</th>
             <th class="rk-num">GF</th>
             <th class="rk-num">AF</th>
-            <th class="rk-num">Total</th>
+            <th class="rk-num" title="Score / dynamic max — max is 2 pts × answered questions">Score</th>
+            <th class="rk-num" title="Percentage of dynamic max earned">%</th>
             <th class="rk-grade">Grade</th>
           </tr>
         </thead>
-        <tbody><tr><td colspan="9" class="rk-empty">Loading…</td></tr></tbody>
+        <tbody><tr><td colspan="10" class="rk-empty">Loading…</td></tr></tbody>
       </table>
     </div>
 
@@ -717,16 +720,17 @@
         return true;
       });
 
-      // Sort by chosen tier
-      var sortKey = tier === 'gf' ? 'gf' : tier === 'af' ? 'af' : 'ts';
-      filtered.sort(function(a, b) { return b[sortKey] - a[sortKey]; });
-
-      var top = filtered.slice(0, 50);
+      // Sort by chosen tier — pct (dynamic grade) is the new default
+      var sortKey = tier === 'gf' ? 'gf' : tier === 'af' ? 'af' :
+                    tier === 'total' ? 'ts' : 'pct';
+      var scored = filtered.filter(function(r) { return r.ans > 0; });
+      scored.sort(function(a, b) { return b[sortKey] - a[sortKey]; });
+      var top = scored.slice(0, 50);
       // Bottom 50 — exclude rows with no answered questions (those are all
       // F at 0 without any signal — uninformative). Sort ascending.
-      var scored = filtered.filter(function(r) { return r.ans > 0; });
-      scored.sort(function(a, b) { return a[sortKey] - b[sortKey]; });
-      var bot = scored.slice(0, 50);
+      var botScored = scored.slice();
+      botScored.sort(function(a, b) { return a[sortKey] - b[sortKey]; });
+      var bot = botScored.slice(0, 50);
 
       renderTable('topTable', top, 1, false);
       renderTable('botTable', bot, 1, false);
@@ -739,7 +743,8 @@
       // Update sub-headers to reflect tier
       var tierLabel = tier === 'gf' ? 'God First (60)'
                     : tier === 'af' ? 'America First (40)'
-                    : 'Total (100)';
+                    : tier === 'total' ? 'absolute total (100)'
+                    : '% of dynamic max (the true letter grade)';
       document.getElementById('topSub').textContent = 'Highest by ' + tierLabel;
       document.getElementById('botSub').textContent = 'Lowest by ' + tierLabel + ' (excluding 0-answered)';
     }
@@ -748,7 +753,7 @@
       var table = document.getElementById(id);
       var tbody = table.querySelector('tbody');
       if (rows.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="9" class="rk-empty">No candidates match the current filters.</td></tr>';
+        tbody.innerHTML = '<tr><td colspan="10" class="rk-empty">No candidates match the current filters.</td></tr>';
         return;
       }
       var html = '';
@@ -762,7 +767,8 @@
           '<td class="rk-office" title="' + escapeHtml(r.o) + '">' + escapeHtml(r.o) + '</td>' +
           '<td class="rk-num">' + r.gf + '</td>' +
           '<td class="rk-num">' + r.af + '</td>' +
-          '<td class="rk-num">' + r.ts + '</td>' +
+          '<td class="rk-num" title="' + r.ans + ' of 50 answered">' + r.ts + '<span style="color:var(--gray);font-weight:400;font-size:0.78rem;">/' + r.mp + '</span></td>' +
+          '<td class="rk-num">' + r.pct + '%</td>' +
           '<td class="rk-grade ' + letterClass(r.lg) + '">' + r.lg + '</td>' +
           '</tr>';
       });

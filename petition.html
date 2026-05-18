@@ -258,19 +258,21 @@
         <select id="ptCategory" aria-label="Select a RESOLUTE Citizen category">
           <option value="">Pick a category…</option>
           <optgroup label="✝ God First — 60 pts">
-            <option value="life">Sanctity of Life — abortion abolition, anti-euthanasia, embryonic protection</option>
-            <option value="marriage">Biblical Marriage — one man / one woman, anti-gender ideology</option>
-            <option value="education">Family &amp; Child Sovereignty — parental authority, school choice, anti-grooming</option>
-            <option value="christian_heritage">Christian Liberty — public profession of Christ, conscience clauses</option>
-            <option value="america_first">Election Integrity — paper ballots, voter ID, anti-foreign-interference</option>
+            <option value="sanctity_of_life">Sanctity of Life — abortion abolition, anti-euthanasia, embryonic protection</option>
+            <option value="biblical_marriage">Biblical Marriage — one man / one woman, anti-gender ideology</option>
+            <option value="family_child_sovereignty">Family &amp; Child Sovereignty — parental authority, school choice, anti-grooming</option>
+            <option value="christian_liberty">Christian Liberty — public profession of Christ, conscience clauses</option>
+            <option value="economic_stewardship">Economic Stewardship — sound money, anti-CBDC, anti-usury</option>
+            <option value="election_integrity">Election Integrity — paper ballots, voter ID, anti-foreign-interference</option>
           </optgroup>
           <optgroup label="🇺🇸 America First — 40 pts">
-            <option value="immigration">Border &amp; Immigration — enforcement, deportation, E-Verify</option>
+            <option value="border_immigration">Border &amp; Immigration — enforcement, deportation, E-Verify</option>
             <option value="self_defense">Self-Defense &amp; 2A — constitutional carry, anti-disarmament</option>
+            <option value="foreign_policy_restraint">Foreign Policy Restraint — Article I war powers, anti-AIPAC, no forever wars</option>
+            <option value="industry_capture">Industry Capture — anti-Pharma capture, anti-Big-Ag consolidation, MIC accountability</option>
           </optgroup>
           <option value="custom">Custom — I will write my own letter</option>
         </select>
-        <p style="font-size:0.78rem;color:var(--gray);margin-top:6px;font-style:italic;">Note: letter templates for the v4.0 categories <strong>Economic Stewardship</strong>, <strong>Foreign Policy Restraint</strong>, and <strong>Industry Capture &amp; Sovereignty</strong> are being drafted. Pick <strong>Custom</strong> above to write your own for those issues in the meantime.</p>
       </div>
     </div>
     <p class="pt-hint">
@@ -341,7 +343,7 @@
   //     source-citing letter drafted in plain, respectful language.
   //     {{placeholders}} get filled from the personalize step.
   var TEMPLATES = {
-    life: {
+    sanctity_of_life: {
       subject: 'Please defend unborn life in {{state}}',
       body: 'Dear {{salutation}} {{rep_lastname}},\n\n' +
         'My name is {{name}} and I am a constituent writing from {{city}}. I am ' +
@@ -360,7 +362,7 @@
         'usmcmin.com and will be paying attention to your votes.\n\n' +
         'Respectfully,\n{{name}}\n{{city}}'
     },
-    marriage: {
+    biblical_marriage: {
       subject: 'Please defend biblical marriage and parental rights',
       body: 'Dear {{salutation}} {{rep_lastname}},\n\n' +
         'My name is {{name}} and I am a constituent writing from {{city}}. I am ' +
@@ -377,7 +379,7 @@
         'usmcmin.com and will be paying attention to your votes.\n\n' +
         'Respectfully,\n{{name}}\n{{city}}'
     },
-    immigration: {
+    border_immigration: {
       subject: 'Please restore a secure, lawful border',
       body: 'Dear {{salutation}} {{rep_lastname}},\n\n' +
         'My name is {{name}} and I am a constituent writing from {{city}}. I am ' +
@@ -412,7 +414,7 @@
         'usmcmin.com and will be paying attention to your votes.\n\n' +
         'Respectfully,\n{{name}}\n{{city}}'
     },
-    education: {
+    family_child_sovereignty: {
       subject: 'Please defend parental authority in education',
       body: 'Dear {{salutation}} {{rep_lastname}},\n\n' +
         'My name is {{name}} and I am a constituent writing from {{city}}. I am ' +
@@ -430,25 +432,96 @@
         'usmcmin.com and will be paying attention to your votes.\n\n' +
         'Respectfully,\n{{name}}\n{{city}}'
     },
-    america_first: {
-      subject: 'Please defend our elections and national sovereignty',
+    election_integrity: {
+      subject: 'Please defend hand-counted, verifiable elections in {{state}}',
       body: 'Dear {{salutation}} {{rep_lastname}},\n\n' +
         'My name is {{name}} and I am a constituent writing from {{city}}. I am ' +
-        'asking you to defend election integrity and America\'s national ' +
-        'sovereignty. A free people cannot consent to be governed if they ' +
-        'cannot trust the process that elects their representatives.\n\n' +
+        'asking you to defend election integrity. A free people cannot consent ' +
+        'to be governed if they cannot trust the process that elects their ' +
+        'representatives — and machine-tabulated mass mail-in voting is not a ' +
+        'process Christian citizens can trust.\n\n' +
         'Specifically I am asking you to:\n' +
-        '  (1) support universal paper-ballot + voter-ID requirements and ' +
-        'post-election hand-counted audits;\n' +
-        '  (2) refuse campaign contributions from foreign governments or ' +
-        'foreign-linked PACs; and\n' +
-        '  (3) oppose any treaty or international body that overrides the ' +
+        '  (1) support hand-counted paper ballots and oppose electronic ' +
+        'voting machines and electronic tabulators;\n' +
+        '  (2) support photo voter ID with citizenship verification, ' +
+        'single-day in-person voting, and absentee only for verified ' +
+        'medical/military exceptions; and\n' +
+        '  (3) oppose private election funding ("Zuckerbucks"), mass mail-in ' +
+        'voting, drop boxes, ballot harvesting, and any foreign-government ' +
+        'election interference.\n\n' +
+        'I am tracking this issue through the RESOLUTE Citizen scorecard at ' +
+        'usmcmin.com and will be paying attention to your votes.\n\n' +
+        'Respectfully,\n{{name}}\n{{city}}'
+    },
+    economic_stewardship: {
+      subject: 'Please defend sound money and biblical economic stewardship',
+      body: 'Dear {{salutation}} {{rep_lastname}},\n\n' +
+        'My name is {{name}} and I am a constituent writing from {{city}}. I am ' +
+        'asking you to honor the biblical mandate of economic stewardship — ' +
+        'sound money, restraint on debt, and opposition to globalist financial ' +
+        'capture. Scripture is direct: "the borrower is slave to the lender" ' +
+        '(Proverbs 22:7). A nation under crushing public debt and inflationary ' +
+        'fiat currency is not a free nation.\n\n' +
+        'Specifically I am asking you to:\n' +
+        '  (1) oppose any Central Bank Digital Currency (CBDC) and defend cash ' +
+        'and decentralized cryptocurrency as legal tender;\n' +
+        '  (2) support a constitutional balanced-budget amendment, aggressive ' +
+        'audit of the Federal Reserve, and restoration of gold/silver as ' +
+        'constitutional money; and\n' +
+        '  (3) oppose U.S. participation in WEF/Davos/ESG capture and support ' +
+        'anti-trust enforcement against monopolistic financial cartels and ' +
+        'usurious lending practices.\n\n' +
+        'I am tracking this issue through the RESOLUTE Citizen scorecard at ' +
+        'usmcmin.com and will be paying attention to your votes.\n\n' +
+        'Respectfully,\n{{name}}\n{{city}}'
+    },
+    foreign_policy_restraint: {
+      subject: 'Please honor Article I war powers and reject foreign-lobby capture',
+      body: 'Dear {{salutation}} {{rep_lastname}},\n\n' +
+        'My name is {{name}} and I am a constituent writing from {{city}}. I am ' +
+        'asking you to honor Article I of the U.S. Constitution — which vests ' +
+        'the war power in Congress, not the executive — and to refuse the ' +
+        'foreign-lobby money that captures so much of Washington\'s foreign ' +
+        'policy. American sons and daughters should not die in undeclared wars ' +
+        'fought on behalf of foreign governments.\n\n' +
+        'Specifically I am asking you to:\n' +
+        '  (1) refuse to authorize any U.S. military action without an ' +
+        'explicit congressional declaration of war or AUMF naming the ' +
+        'adversary, and repeal the standing 2001 and 2002 AUMFs;\n' +
+        '  (2) refuse all campaign contributions from foreign-backed lobbies ' +
+        '(AIPAC, China-linked PACs, Soros-network donor vectors) and disclose ' +
+        'any prior contributions; and\n' +
+        '  (3) oppose U.S. participation in WHO, U.N. governance overreach, ' +
+        'NATO expansion, and supranational treaties that bypass the ' +
         'constitutional authority of the American people.\n\n' +
         'I am tracking this issue through the RESOLUTE Citizen scorecard at ' +
         'usmcmin.com and will be paying attention to your votes.\n\n' +
         'Respectfully,\n{{name}}\n{{city}}'
     },
-    christian_heritage: {
+    industry_capture: {
+      subject: 'Please defend citizens against Pharma, Big-Ag, and defense-contractor capture',
+      body: 'Dear {{salutation}} {{rep_lastname}},\n\n' +
+        'My name is {{name}} and I am a constituent writing from {{city}}. I am ' +
+        'asking you to oppose corporate-state capture across the three ' +
+        'industries that exert the most undue influence on our laws: ' +
+        'pharmaceutical companies, agricultural cartels, and the ' +
+        'defense-contractor establishment.\n\n' +
+        'Specifically I am asking you to:\n' +
+        '  (1) repeal the 1986 National Childhood Vaccine Injury Act and the ' +
+        'PREP Act to restore tort accountability for pharmaceutical injuries, ' +
+        'and oppose all vaccine mandates of any kind (COVID, childhood, or ' +
+        'employer-required);\n' +
+        '  (2) support anti-trust action against Bayer/Monsanto/Cargill ' +
+        'consolidation in agriculture, defend raw-milk freedom and small-farm ' +
+        'protections, and oppose USDA/EPA overreach against family farms; and\n' +
+        '  (3) complete and publish the Pentagon audit, end revolving-door ' +
+        'appointments between the Department of Defense and the top defense ' +
+        'contractors, and support transparency in all foreign military aid.\n\n' +
+        'I am tracking this issue through the RESOLUTE Citizen scorecard at ' +
+        'usmcmin.com and will be paying attention to your votes.\n\n' +
+        'Respectfully,\n{{name}}\n{{city}}'
+    },
+    christian_liberty: {
       subject: 'Please acknowledge Christ\'s lordship in your public service',
       body: 'Dear {{salutation}} {{rep_lastname}},\n\n' +
         'My name is {{name}} and I am a constituent writing from {{city}}. I am ' +

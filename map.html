@@ -20,12 +20,12 @@
     .mp-hero { text-align: center; padding: 36px 20px 28px; border-bottom: 2px solid var(--border); margin-bottom: 22px; }
     .mp-hero-badge {
       display: inline-block; font-size: 0.66rem; font-weight: 700;
-      letter-spacing: 3px; text-transform: uppercase; color: #c9a84c;
-      background: rgba(201,168,76,0.12); border: 1px solid rgba(201,168,76,0.25);
+      letter-spacing: 3px; text-transform: uppercase; color: var(--accent);
+      background: rgba(168,176,188,0.12); border: 1px solid rgba(168,176,188,0.25);
       padding: 6px 18px; border-radius: 20px; margin-bottom: 14px;
     }
     .mp-hero h1 { font-size: clamp(1.7rem, 4vw, 2.4rem); color: var(--white); margin-bottom: 10px; font-weight: 800; }
-    .mp-hero h1 .gold { color: #c9a84c; }
+    .mp-hero h1 .gold { color: var(--accent); }
     .mp-hero p { color: var(--gray); font-size: 0.92rem; max-width: 720px; margin: 0 auto; line-height: 1.7; }
 
     .mp-controls {
@@ -47,7 +47,7 @@
       cursor: pointer; user-select: none;
     }
     .mp-toggle input { accent-color: var(--accent); margin: 0; }
-    .mp-toggle.on { background: rgba(201,168,76,0.12); border-color: var(--accent); color: var(--accent); }
+    .mp-toggle.on { background: rgba(168,176,188,0.12); border-color: var(--accent); color: var(--accent); }
 
     #mp-map {
       width: 100%;
@@ -69,7 +69,7 @@
       border-radius: 3px; margin-right: 5px; vertical-align: middle;
       border: 1px solid rgba(255,255,255,0.2);
     }
-    .sw-state    { background: rgba(201,168,76,0.18); border-color: #c9a84c; }
+    .sw-state    { background: rgba(168,176,188,0.18); border-color: var(--accent); }
     .sw-county   { background: rgba(94, 234, 212, 0.10); border-color: #5eead4; }
     .sw-cd       { background: rgba(168, 85, 247, 0.18); border-color: #a855f7; }
     .sw-city     { background: rgba(56, 189, 248, 0.6); border-color: #38bdf8; border-radius: 50%; }
@@ -111,7 +111,7 @@
       line-height: 1.7;
     }
     .mp-info strong { color: var(--white); }
-    .mp-info code { color: #c9a84c; font-family: "SF Mono", ui-monospace, monospace; }
+    .mp-info code { color: var(--accent); font-family: "SF Mono", ui-monospace, monospace; }
     .mp-info a { color: var(--accent); }
   </style>
 </head>
@@ -245,7 +245,7 @@
 
   function esc(s){ return String(s == null ? '' : s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
 
-  function styleState() { return { color: '#c9a84c', weight: 2, fillColor: '#c9a84c', fillOpacity: 0.05, opacity: 0.85 }; }
+  function styleState() { return { color: 'var(--accent)', weight: 2, fillColor: 'var(--accent)', fillOpacity: 0.05, opacity: 0.85 }; }
   function styleCounty() { return { color: '#5eead4', weight: 1, fillColor: '#5eead4', fillOpacity: 0.05, opacity: 0.55 }; }
   function styleCD()    { return { color: '#a855f7', weight: 1.4, fillColor: '#a855f7', fillOpacity: 0.05, opacity: 0.7, dashArray: '4,4' }; }
   function styleHighlight() { return { color: '#22c55e', weight: 3, fillColor: '#22c55e', fillOpacity: 0.32, opacity: 0.95, dashArray: null }; }

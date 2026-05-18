@@ -519,11 +519,11 @@ def render_page(cat):
   <meta property="og:description" content="{cat['tagline']} The full rubric for category #{cat['num']} of the RESOLUTE Citizen 100-point Christian voter scorecard.">
   <meta property="og:type" content="article">
   <meta property="og:url" content="https://usmcmin.com/citizen/{cat['slug']}.html">
-  <meta property="og:image" content="https://usmcmin.com/assets/og/og-citizen.jpg">
+  <meta property="og:image" content="https://usmcmin.com/assets/og/og-citizen-{cat['slug']}.jpg">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:image" content="https://usmcmin.com/assets/og/og-citizen.jpg">
+  <meta name="twitter:image" content="https://usmcmin.com/assets/og/og-citizen-{cat['slug']}.jpg">
   <link rel="stylesheet" href="/assets/css/main.min.css">
   <link rel="icon" href="/assets/img/favicon.png" type="image/png">
   <style>

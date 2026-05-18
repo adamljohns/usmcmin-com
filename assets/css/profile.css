@@ -538,6 +538,142 @@
   border-radius: 5px;
   transition: width 0.4s;
 }
+
+/* v4.0 — God First / America First subtotal pills + letter-grade badge.
+   Lives inside .prof-total. Left column (.prof-total-main) keeps the
+   score + adjustment + freshness; right column (.prof-total-right) holds
+   the two subtotal pills above the progress bar. */
+.prof-total-main { display: flex; flex-direction: column; gap: 4px; }
+.prof-total-headline {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+.prof-grade {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 38px;
+  height: 38px;
+  padding: 0 10px;
+  margin-left: 8px;
+  border: 2px solid currentColor;
+  border-radius: 8px;
+  font-family: var(--font-main, Georgia, serif);
+  font-size: 1.4rem;
+  font-weight: 800;
+  letter-spacing: 0.5px;
+  background: rgba(255,255,255,0.02);
+}
+.prof-total-right {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 220px;
+}
+.prof-subtotals {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+.prof-sub {
+  flex: 1;
+  min-width: 140px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 8px 12px;
+  background: rgba(255,255,255,0.02);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+}
+.prof-sub-label {
+  font-size: 0.7rem;
+  color: var(--gray);
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  font-weight: 700;
+}
+.prof-sub-val {
+  font-size: 1.2rem;
+  font-weight: 800;
+}
+.prof-sub-max {
+  font-size: 0.72rem;
+  color: var(--gray);
+  font-weight: 500;
+  margin-left: 3px;
+}
+.prof-sub-gf { border-left: 3px solid #D4AF37; }
+.prof-sub-af { border-left: 3px solid var(--accent, #A8B0BC); }
+
+/* v4.0 — Church affiliation block (cross-pollination with usmcmin.org).
+   Sits directly under the score block when c.church_affiliation is set. */
+.prof-church {
+  padding: 14px 18px;
+  margin-bottom: 16px;
+  background: linear-gradient(135deg, rgba(212,175,55,0.10) 0%, rgba(168,176,188,0.05) 100%);
+  border: 1px solid rgba(212,175,55,0.30);
+  border-radius: var(--radius);
+}
+.prof-church-head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.72rem;
+  color: #D4AF37;
+  text-transform: uppercase;
+  letter-spacing: 1.2px;
+  font-weight: 700;
+  margin-bottom: 6px;
+}
+.prof-church-icon { font-size: 1rem; }
+.prof-church-label { flex: 1; }
+.prof-church-verified, .prof-church-unverified {
+  padding: 2px 8px;
+  border-radius: 10px;
+  font-size: 0.62rem;
+  font-weight: 800;
+  letter-spacing: 0.4px;
+}
+.prof-church-verified {
+  background: rgba(76,175,80,0.15);
+  color: #4ade80;
+}
+.prof-church-unverified {
+  background: rgba(168,176,188,0.18);
+  color: var(--gray);
+}
+.prof-church-name {
+  font-size: 1.1rem;
+  font-weight: 700;
+  margin-bottom: 4px;
+}
+.prof-church-name a { color: var(--white); text-decoration: none; border-bottom: 1px dotted rgba(212,175,55,0.6); }
+.prof-church-name a:hover { color: #D4AF37; }
+.prof-church-meta {
+  font-size: 0.78rem;
+  color: var(--gray);
+  margin-bottom: 4px;
+}
+.prof-church-meta span { white-space: nowrap; }
+.prof-church-source {
+  font-size: 0.7rem;
+  color: var(--text-muted, #94a3b8);
+  word-break: break-all;
+}
+.prof-church-source a { color: var(--text-muted, #94a3b8); }
+.prof-church-cross {
+  margin-top: 8px;
+  padding-top: 8px;
+  border-top: 1px dashed rgba(212,175,55,0.20);
+  font-size: 0.72rem;
+  color: var(--gray);
+  line-height: 1.55;
+}
+.prof-church-cross a { color: #D4AF37; }
 .prof-freshness {
   margin-top: 6px;
   font-size: 0.72rem;

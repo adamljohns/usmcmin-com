@@ -21,7 +21,12 @@ import sys
 from collections import defaultdict
 
 ORG_CHURCHES_JSON = '/Users/moop_bot_pro/bible-reading-plan-bot/docs/data/churches.json'
-COM_STATES_DIR = 'data/states'
+COM_SCORECARD = 'data/scorecard.json'   # master source-of-truth; state files
+                                        # are regenerated FROM this by
+                                        # build-data.py. Earlier versions of
+                                        # this script wrote to data/states/*
+                                        # — those edits got clobbered on the
+                                        # next build-data.py run. (2026-05-18)
 
 # Titles / honorifics we strip when normalizing names for matching
 TITLE_RE = re.compile(
@@ -114,28 +119,23 @@ def main():
         for nm, chs in list(name_collisions.items())[:5]:
             print(f"   - {nm}: {chs}")
 
-    # 2. Walk .com state JSONs, find matches, plan writes
-    matches = []          # list of (state, slug, normalized_name, affiliation)
-    already_set = []      # candidates that already have church_affiliation
-    state_files = sorted(os.listdir(COM_STATES_DIR))
+    # 2. Walk .com scorecard.json (master source-of-truth), find matches
+    with open(COM_SCORECARD) as f:
+        scorecard = json.load(f)
 
-    for fn in state_files:
-        if not fn.endswith('.json'):
+    matches = []          # list of (state, slug, name, normalized_name, affiliation)
+    already_set = []      # candidates that already have church_affiliation
+    for c in scorecard.get('candidates', []):
+        nm = normalize_name(c.get('name', ''))
+        if not nm:
             continue
-        fp = os.path.join(COM_STATES_DIR, fn)
-        with open(fp) as f:
-            sd = json.load(f)
-        state_code = fn.replace('.json', '').upper()
-        for c in sd.get('candidates', []):
-            nm = normalize_name(c.get('name', ''))
-            if not nm:
-                continue
-            if c.get('church_affiliation'):
-                already_set.append((state_code, c.get('slug'), c.get('name')))
-                continue
-            if nm in name_to_affiliation:
-                matches.append((state_code, c.get('slug'), c.get('name'), nm,
-                                name_to_affiliation[nm]))
+        state_code = (c.get('state') or '').upper()
+        if c.get('church_affiliation'):
+            already_set.append((state_code, c.get('slug'), c.get('name')))
+            continue
+        if nm in name_to_affiliation:
+            matches.append((state_code, c.get('slug'), c.get('name'), nm,
+                            name_to_affiliation[nm]))
 
     print()
     print(f"=== MATCH SUMMARY ===")
@@ -154,37 +154,37 @@ def main():
     if dry_run and not apply_mode:
         print()
         print("Dry-run only. Re-run with --apply to write changes.")
+        print("After --apply: run build-data.py + generate-profiles.py to propagate.")
         return
 
-    # 3. Apply: group matches by state-file, rewrite each once
-    by_state = defaultdict(list)
-    for m in matches:
-        by_state[m[0]].append(m)
+    # 3. Apply: index by slug, mutate scorecard candidate records in-place,
+    # rewrite scorecard.json once. build-data.py + generate-profiles.py
+    # then propagate the field to per-state files + per-candidate profile pages.
+    slugs_to_set = {m[1]: m[4] for m in matches}
+    n_set = 0
+    for c in scorecard.get('candidates', []):
+        if c.get('slug') in slugs_to_set and not c.get('church_affiliation'):
+            # Strip None values for cleaner JSON
+            aff = {k: v for k, v in slugs_to_set[c['slug']].items() if v is not None}
+            c['church_affiliation'] = aff
+            n_set += 1
 
-    files_written = 0
-    for state_code, state_matches in by_state.items():
-        fp = os.path.join(COM_STATES_DIR, state_code.lower() + '.json')
-        with open(fp) as f:
-            sd = json.load(f)
-        slugs_to_set = {m[1]: m[4] for m in state_matches}
-        n_set = 0
-        for c in sd.get('candidates', []):
-            if c.get('slug') in slugs_to_set and not c.get('church_affiliation'):
-                # Strip None values for cleaner JSON
-                aff = {k: v for k, v in slugs_to_set[c['slug']].items() if v is not None}
-                c['church_affiliation'] = aff
-                n_set += 1
-        if n_set > 0:
-            # Save compact (matches the sibling-file convention)
-            with open(fp, 'w') as f:
-                json.dump(sd, f, ensure_ascii=False, separators=(',', ':'))
-            print(f"  wrote {fp} ({n_set} additions)")
-            files_written += 1
+    if n_set > 0:
+        # Save indent=2 + trailing newline — matches build-data.py's
+        # atomic_write(compact=False) convention for scorecard.json (humans
+        # occasionally inspect this file; compact output makes git diffs
+        # explode by ~2.2M lines on a 50 MB file).
+        with open(COM_SCORECARD, 'w') as f:
+            json.dump(scorecard, f, ensure_ascii=False, indent=2)
+            f.write('\n')
+        print(f"  wrote {COM_SCORECARD} ({n_set} additions)")
 
     print()
     print(f"=== APPLIED ===")
-    print(f"Files written: {files_written}")
-    print(f"Total candidates enriched: {sum(len(v) for v in by_state.values())}")
+    print(f"Candidates enriched: {n_set}")
+    print()
+    print("NEXT: python3 build-data.py && python3 generate-profiles.py")
+    print("      (propagates church_affiliation to state files + profile pages)")
 
 if __name__ == '__main__':
     main()

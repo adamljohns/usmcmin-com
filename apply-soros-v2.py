@@ -29,13 +29,17 @@ BRACKET_DELTA = {
 
 DESCRIPTOR = (
     "The Open Society Foundations and the Democracy PAC vehicles tied to "
-    "George Soros / Alex Soros direct hundreds of millions toward "
-    "progressive prosecutors, judges, and ballot measures. RESOLUTE Citizen "
-    "treats documented contributions as foreign-linked dark-money funding "
-    "hostile to the historically orthodox Christian moral order. The "
-    "specific failure mode is on life q4 — Soros-funded DAs systematically "
-    "decline to prosecute attacks on pro-life pregnancy centers and refuse "
-    "to enforce state abortion restrictions."
+    "George Soros / Alex Soros are direct funding rails for the WEF / ESG / "
+    "Davos capture agenda — Soros is a founding World Economic Forum "
+    "participant and OSF is one of its largest civil-society partners. "
+    "RESOLUTE Citizen treats documented Soros-network contributions as a "
+    "failure on economic_stewardship q5, the question that asks whether "
+    "the candidate opposes WEF/ESG/Davos economic capture and supports "
+    "anti-trust action against monopolistic financial cartels. The same "
+    "network funds the Fair and Just Prosecution cohort of progressive "
+    "DAs who decline to prosecute attacks on pro-life pregnancy centers "
+    "and refuse to enforce state abortion restrictions; that pattern is "
+    "tracked separately under sanctity_of_life claim evidence."
 )
 
 

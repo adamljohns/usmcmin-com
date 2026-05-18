@@ -40,6 +40,22 @@ def calc_total(scores, categories):
         answered += cs['answered']
     return {'score': total, 'answered': answered}
 
+def calc_subtotals(scores, categories):
+    """v4.0 — split total into God First (60) + America First (40) subtotals
+    by reading the tier field on each category. Mirrors citizen.html's
+    calcTotalScore() so the profile page shows the same two-pill breakdown
+    visitors already see on the home scorecard."""
+    gf = 0
+    af = 0
+    for cat in categories:
+        cs = calc_cat_score(scores.get(cat['id'], []))
+        tier = cat.get('tier', '')
+        if tier == 'god_first':
+            gf += cs['score']
+        elif tier == 'america_first':
+            af += cs['score']
+    return {'god_first': gf, 'america_first': af}
+
 def score_color(score, max_val):
     if max_val == 0:
         return '#666'
@@ -436,7 +452,7 @@ def generate_profile(candidate, categories, meta, nav=None):
     }
     SOURCE_DESCRIPTORS_ADJ = {
         'aipac': 'AIPAC operates a super-PAC (United Democracy Project) that spent over $100M during the 2024 cycle on independent expenditures targeting U.S. candidates who criticize Israeli government policy. The U.S. has no formal mutual-defense treaty with Israel. RESOLUTE Citizen treats documented AIPAC contributions as a failure on foreign_policy_restraint/q4 (the foreign-lobby question) AND applies a dollar-bracket adjustment to the total score.',
-        'soros': 'The Open Society Foundations and Democracy PAC vehicles tied to George Soros / Alex Soros direct hundreds of millions toward progressive prosecutors, judges, and ballot measures. Soros-funded DAs systematically decline to prosecute attacks on pro-life pregnancy centers and refuse to enforce state abortion restrictions. RESOLUTE Citizen treats documented Soros-network funding as a failure on economic_stewardship/q5 (legal protections for abortion providers) AND applies a dollar-bracket adjustment to the total score.',
+        'soros': 'The Open Society Foundations and the Democracy PAC vehicles tied to George Soros / Alex Soros are direct funding rails for the WEF / ESG / Davos capture agenda — Soros is a founding World Economic Forum attendee and OSF is one of its largest civil-society partners. RESOLUTE Citizen treats documented Soros-network contributions as a failure on economic_stewardship/q5, the question that asks whether the candidate opposes WEF/ESG/Davos economic capture and supports anti-trust action against monopolistic financial cartels — accepting money from the architect of that capture is a revealed preference against it. The same Soros DA network is documented to decline prosecution of attacks on pro-life pregnancy centers and refuse to enforce state abortion restrictions; that pattern is tracked separately under sanctity_of_life claims. A dollar-bracket adjustment is also applied to the total score.',
         'china': 'The CCP operates an explicit United Front Work Department to direct overseas members and proxies — including business executives such as Wanxiang Group\'s Pin Ni (named CCP member 15 times in Chinese state media) — to cultivate political relationships in the United States. Federal law (52 U.S.C. § 30121) prohibits foreign nationals including CCP members from donating to U.S. campaigns. RESOLUTE Citizen treats documented contributions from CCP-member or United Front-affiliated donors as a failure on foreign_policy_restraint/q4 (the foreign-lobby question) AND applies a dollar-bracket adjustment to the total score.',
         'foreign': 'Generic foreign-linked PAC contributions outside the AIPAC + Soros + China networks.',
     }
@@ -485,8 +501,8 @@ def generate_profile(candidate, categories, meta, nav=None):
             'federal law also prohibits CCP members from contributing.</p>'
             '<p class="prof-adj-lead">For every candidate with a documented donor record, two things '
             'happen: <strong>(1) the specific category question is marked False</strong> '
-            '(<code>america_first[q4]</code> for AIPAC + China; <code>economic_stewardship[q5]</code> for Soros-funded '
-            'prosecutors), so the per-category subscore drops by 2 points; <strong>(2) an additional '
+            '(<code>foreign_policy_restraint[q4]</code> for AIPAC + China; <code>economic_stewardship[q5]</code> — the '
+            'WEF/ESG/Davos capture question — for Soros-network donors), so the per-category subscore drops by 2 points; <strong>(2) an additional '
             'dollar-bracket adjustment is applied to the total</strong>, making the penalty proportional '
             'to the magnitude of the funding. Both impacts are visible on this page.</p>'
             '<p class="prof-adj-lead"><a href="/methodology-foreign-influence.html">Full methodology, '
@@ -496,6 +512,53 @@ def generate_profile(candidate, categories, meta, nav=None):
             f'<span class="prof-adj-arrow">→</span> '
             f'Adjusted <strong>{adjusted}/{MAX_TOTAL}</strong></div>'
             '<ul class="prof-adj-list">' + ''.join(rows) + '</ul>'
+            '</div>'
+        )
+
+    # ─── Church affiliation block (cross-pollination with usmcmin.org) ─────
+    # Renders directly under the score block if c['church_affiliation'] is
+    # set. Source-of-truth is the parallel agent's notable_attendees on
+    # /docs/data/churches.json over at usmcmin.org; backfilled via
+    # enrich-church-affiliation-from-org.py.
+    def render_church_affiliation_block(cand):
+        ca = cand.get('church_affiliation') or {}
+        if not (ca.get('name') or ca.get('denomination')):
+            return ''
+        name = ca.get('name') or 'Christian'
+        denom = ca.get('denomination') or ''
+        loc = ca.get('location') or ''
+        slug = ca.get('slug') or ''
+        # Link to .org directory-politicians.html (the cross-ref aggregator)
+        org_link = f'https://usmcmin.org/churches/{slug}.html' if slug else 'https://usmcmin.org/directory-politicians.html'
+        evidence = ca.get('evidence_url') or org_link
+        evidence_date = ca.get('evidence_date') or ''
+        association = ca.get('association') or ''
+        period = ca.get('period') or ''
+        verified = ca.get('verified')
+        verify_chip = (
+            '<span class="prof-church-verified" title="Verified by .org agent on '
+            f'{evidence_date}">verified</span>' if verified
+            else '<span class="prof-church-unverified" title="Pending verification">unverified</span>'
+        )
+        meta_bits = []
+        if denom: meta_bits.append(f'<span class="prof-church-denom">{denom}</span>')
+        if loc:   meta_bits.append(f'<span class="prof-church-loc">{loc}</span>')
+        if association:
+            assoc_label = association.replace('_', ' ').title()
+            meta_bits.append(f'<span class="prof-church-assoc">{assoc_label}</span>')
+        if period: meta_bits.append(f'<span class="prof-church-period">{period}</span>')
+        meta_html = ' &middot; '.join(meta_bits)
+        return (
+            '<div class="prof-church" role="note" aria-label="Church affiliation">'
+            '<div class="prof-church-head">'
+            '<span class="prof-church-icon" aria-hidden="true">&#9962;</span>'
+            '<span class="prof-church-label">Church Affiliation</span>'
+            f'{verify_chip}'
+            '</div>'
+            f'<div class="prof-church-name"><a href="{org_link}" target="_blank" rel="noopener">{name}</a></div>'
+            + (f'<div class="prof-church-meta">{meta_html}</div>' if meta_html else '')
+            + f'<div class="prof-church-source">Evidence: <a href="{evidence}" target="_blank" rel="noopener">{evidence[:65]}{("…" if len(evidence) > 65 else "")}</a></div>'
+            + '<div class="prof-church-cross">Cross-referenced from the <a href="https://usmcmin.org/directory-politicians.html" target="_blank" rel="noopener">USMC Ministries church directory</a> &mdash; see the <a href="https://usmcmin.org/churches.html" target="_blank" rel="noopener">Nationwide Church Directory</a> for the full 10-point theological scorecard on this church.</div>'
             '</div>'
         )
 
@@ -519,6 +582,18 @@ def generate_profile(candidate, categories, meta, nav=None):
 
     total_color = score_color(adjusted_score, MAX_TOTAL)
     bar_width = round((max(0, min(MAX_TOTAL, adjusted_score)) / MAX_TOTAL) * 100) if MAX_TOTAL > 0 else 0
+
+    # v4.0 — God First + America First subtotals + letter grade.
+    # Adjustments (AIPAC/Soros/etc.) are reflected in the headline number
+    # but NOT in the subtotal pills — those show pure category answers so
+    # a visitor can see at a glance how the candidate scored on Christian
+    # principle vs. American sovereignty before foreign-money penalties.
+    subtotals = calc_subtotals(c['scores'], categories)
+    gf_score = subtotals['god_first']
+    af_score = subtotals['america_first']
+    gf_color = score_color(gf_score, MAX_GOD_FIRST)
+    af_color = score_color(af_score, MAX_AMERICA_FIRST)
+    grade_letter = letter_grade(adjusted_score)
 
     # Data-freshness: latest verified_date across this candidate's claims
     # (if any are verified), else fall back to scorecard-level last_updated.
@@ -1244,11 +1319,12 @@ def generate_profile(candidate, categories, meta, nav=None):
   </div>
 
   <div class="prof-total">
-    <div>
+    <div class="prof-total-main">
       <div class="prof-total-label">RESOLUTE Citizen Score</div>
-      <div>
+      <div class="prof-total-headline">
         <span class="prof-total-score" style="color:{total_color};">{adjusted_score}</span>
         <span class="prof-total-max">/ {MAX_TOTAL}</span>
+        <span class="prof-grade" style="color:{total_color};border-color:{total_color};" aria-label="Letter grade {grade_letter}">{grade_letter}</span>
       </div>
       {f'''<div class="prof-total-detail">Base {total['score']}/{MAX_TOTAL}
         <span class="prof-total-adj prof-total-adj-{('plus' if adj_total > 0 else 'minus')}">
@@ -1257,10 +1333,24 @@ def generate_profile(candidate, categories, meta, nav=None):
         adjustment</div>''' if adj_total != 0 else ''}
       {f'<div class="prof-freshness" title="Data freshness source: {freshness_source}">Last verified: <time datetime="{freshness_date}">{freshness_date}</time>{" · from claim evidence" if freshness_source == "claim" else " · scorecard-level timestamp"}</div>' if freshness_date else ''}
     </div>
-    <div class="prof-total-bar">
-      <div class="prof-total-fill" style="width:{bar_width}%;background:{total_color};"></div>
+    <div class="prof-total-right">
+      <div class="prof-subtotals" aria-label="Subtotals — God First {gf_score} of {MAX_GOD_FIRST}, America First {af_score} of {MAX_AMERICA_FIRST}">
+        <div class="prof-sub prof-sub-gf" title="God First — sanctity of life, biblical marriage, family sovereignty, Christian liberty, economic stewardship, election integrity">
+          <span class="prof-sub-label">&#10013; God First</span>
+          <span class="prof-sub-val" style="color:{gf_color};">{gf_score}<span class="prof-sub-max">/ {MAX_GOD_FIRST}</span></span>
+        </div>
+        <div class="prof-sub prof-sub-af" title="America First — border &amp; immigration, self-defense &amp; 2A, foreign-policy restraint, industry capture &amp; sovereignty">
+          <span class="prof-sub-label">&#127482;&#127480; America First</span>
+          <span class="prof-sub-val" style="color:{af_color};">{af_score}<span class="prof-sub-max">/ {MAX_AMERICA_FIRST}</span></span>
+        </div>
+      </div>
+      <div class="prof-total-bar" aria-hidden="true">
+        <div class="prof-total-fill" style="width:{bar_width}%;background:{total_color};"></div>
+      </div>
     </div>
   </div>
+
+  {render_church_affiliation_block(c)}
 
   {render_adjustments_block(adj_lines, total['score'], adjusted_score) if adj_lines else ''}
 

@@ -219,6 +219,30 @@
     }
     .sc-reset-btn:hover { border-color: #f87171; color: #f87171; }
     .sc-reset-btn:focus { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+    /* Church affiliation — cross-pollination with usmcmin.org church directory */
+    .sc-affil {
+      font-size: 0.78rem;
+      padding: 8px 18px;
+      border-top: 1px solid var(--border);
+      color: var(--gray);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      line-height: 1.4;
+    }
+    .sc-affil a {
+      color: var(--accent);
+      text-decoration: none;
+      font-weight: 500;
+    }
+    .sc-affil a:hover { text-decoration: underline; }
+    .sc-affil .ca-icon {
+      flex-shrink: 0;
+      font-size: 0.92rem;
+      opacity: 0.85;
+    }
+    .sc-affil .ca-meta { color: var(--gray); }
     .sc-count {
       text-align: center;
       font-size: 0.82rem;
@@ -1232,6 +1256,20 @@ function renderCards() {
     html += '<span class="sc-total-score" aria-hidden="true" style="color:' + totalColor + ';">' + total.score + adjBadge + '<span style="font-size:0.7rem;color:var(--gray);">/' + MAX_TOTAL + '</span></span>';
     html += '</div>';
 
+    // Church affiliation cross-link (renders only if present on candidate record).
+    // Schema added 2026-05-17 for cross-pollination with usmcmin.org church directory.
+    if (c.church_affiliation && (c.church_affiliation.name || c.church_affiliation.denomination)) {
+      var ca = c.church_affiliation;
+      var label = ca.name ? esc(ca.name) : esc(ca.denomination || 'Christian');
+      var denomTag = ca.name && ca.denomination ? ' <span class="ca-meta">· ' + esc(ca.denomination) + '</span>' : '';
+      var orgLink = 'https://usmcmin.org/churches.html';
+      var verifyBadge = ca.verified ? '' : ' <span class="ca-meta" title="Awaiting verification">(unverified)</span>';
+      html += '<div class="sc-affil" title="Public church affiliation per primary source">' +
+        '<span class="ca-icon" aria-hidden="true">&#9962;</span>' +
+        '<a href="' + orgLink + '" target="_blank" rel="noopener">' + label + '</a>' +
+        denomTag + verifyBadge +
+        '</div>';
+    }
     html += '<div class="sc-card-footer"><a href="' + profileUrl + '" aria-label="View full profile for ' + esc(c.name) + '">View Full Profile &rarr;</a></div>';
     html += '</article>';
   });

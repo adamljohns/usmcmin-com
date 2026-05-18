@@ -25,6 +25,7 @@ from collections import Counter
 
 INDEX_PATH = 'data/index.json'
 STATES_DIR = 'data/states'
+SCORECARD_PATH = 'data/scorecard.json'  # MASTER source-of-truth — build-data.py regenerates state files from this
 
 # ────────────────────────────────────────────────────────────────────────────
 # V2 RUBRIC — 10 categories × 5 questions × 2 pts = 100 pts (60 GF / 40 AF)
@@ -287,8 +288,31 @@ def main():
     print(f'  Partial (some data carry):  {tally["result_partial"]}')
     print(f'  Mostly filled:              {tally["result_mostly_filled"]}')
 
+    # 3. ALSO migrate the master scorecard.json (build-data.py regenerates
+    # state files FROM this; if it's not migrated too, state files revert
+    # on next build).
+    if os.path.exists(SCORECARD_PATH):
+        print('\n=== SCORECARD.JSON (MASTER) ===')
+        with open(SCORECARD_PATH) as f:
+            sc = json.load(f)
+        old_cat_ids = [c['id'] for c in sc.get('categories', [])]
+        sc = update_index(sc)  # same meta + categories swap
+        sc_migrated = 0
+        for c in sc.get('candidates', []):
+            old_scores = c.get('scores', {})
+            new_scores = migrate_candidate_scores(old_scores)
+            c['scores'] = new_scores
+            sc_migrated += 1
+        print(f'Migrated {sc_migrated} candidates in scorecard.json')
+        print(f'Old categories: {old_cat_ids}')
+        print(f'New categories: {[c["id"] for c in sc["categories"]]}')
+        if apply:
+            with open(SCORECARD_PATH, 'w') as f:
+                json.dump(sc, f, ensure_ascii=False, separators=(',', ':'))
+            print(f'  → wrote {SCORECARD_PATH}')
+
     if apply:
-        print('\n✓ Migration applied. Re-build sitemap + stats next.')
+        print('\n✓ Migration applied. Run build-data.py next to verify state files match scorecard.json.')
     else:
         print('\nDry-run complete. Re-run with --apply to write.')
 

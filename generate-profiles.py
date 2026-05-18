@@ -12,7 +12,17 @@ BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
 POINTS_PER_TRUE = 2
 MAX_PER_TOPIC = 10
-MAX_TOTAL = 70
+MAX_TOTAL = 100  # v4.0 rubric: 10 categories × 10 pts = 100 (60 God First + 40 America First)
+MAX_GOD_FIRST = 60
+MAX_AMERICA_FIRST = 40
+
+def letter_grade(score: int) -> str:
+    """A 90+, B 80, C 70, D 60, F <60 — old-school report-card scale."""
+    if score >= 90: return 'A'
+    if score >= 80: return 'B'
+    if score >= 70: return 'C'
+    if score >= 60: return 'D'
+    return 'F'
 
 def calc_cat_score(answers):
     if not answers:
@@ -425,9 +435,9 @@ def generate_profile(candidate, categories, meta, nav=None):
         'foreign': 'Other foreign-linked PACs',
     }
     SOURCE_DESCRIPTORS_ADJ = {
-        'aipac': 'AIPAC operates a super-PAC (United Democracy Project) that spent over $100M during the 2024 cycle on independent expenditures targeting U.S. candidates who criticize Israeli government policy. The U.S. has no formal mutual-defense treaty with Israel. RESOLUTE Citizen treats documented AIPAC contributions as a failure on america_first/q4 (the foreign-lobby question) AND applies a dollar-bracket adjustment to the total score.',
-        'soros': 'The Open Society Foundations and Democracy PAC vehicles tied to George Soros / Alex Soros direct hundreds of millions toward progressive prosecutors, judges, and ballot measures. Soros-funded DAs systematically decline to prosecute attacks on pro-life pregnancy centers and refuse to enforce state abortion restrictions. RESOLUTE Citizen treats documented Soros-network funding as a failure on life/q4 (legal protections for abortion providers) AND applies a dollar-bracket adjustment to the total score.',
-        'china': 'The CCP operates an explicit United Front Work Department to direct overseas members and proxies — including business executives such as Wanxiang Group\'s Pin Ni (named CCP member 15 times in Chinese state media) — to cultivate political relationships in the United States. Federal law (52 U.S.C. § 30121) prohibits foreign nationals including CCP members from donating to U.S. campaigns. RESOLUTE Citizen treats documented contributions from CCP-member or United Front-affiliated donors as a failure on america_first/q4 (the foreign-lobby question) AND applies a dollar-bracket adjustment to the total score.',
+        'aipac': 'AIPAC operates a super-PAC (United Democracy Project) that spent over $100M during the 2024 cycle on independent expenditures targeting U.S. candidates who criticize Israeli government policy. The U.S. has no formal mutual-defense treaty with Israel. RESOLUTE Citizen treats documented AIPAC contributions as a failure on foreign_policy_restraint/q4 (the foreign-lobby question) AND applies a dollar-bracket adjustment to the total score.',
+        'soros': 'The Open Society Foundations and Democracy PAC vehicles tied to George Soros / Alex Soros direct hundreds of millions toward progressive prosecutors, judges, and ballot measures. Soros-funded DAs systematically decline to prosecute attacks on pro-life pregnancy centers and refuse to enforce state abortion restrictions. RESOLUTE Citizen treats documented Soros-network funding as a failure on economic_stewardship/q5 (legal protections for abortion providers) AND applies a dollar-bracket adjustment to the total score.',
+        'china': 'The CCP operates an explicit United Front Work Department to direct overseas members and proxies — including business executives such as Wanxiang Group\'s Pin Ni (named CCP member 15 times in Chinese state media) — to cultivate political relationships in the United States. Federal law (52 U.S.C. § 30121) prohibits foreign nationals including CCP members from donating to U.S. campaigns. RESOLUTE Citizen treats documented contributions from CCP-member or United Front-affiliated donors as a failure on foreign_policy_restraint/q4 (the foreign-lobby question) AND applies a dollar-bracket adjustment to the total score.',
         'foreign': 'Generic foreign-linked PAC contributions outside the AIPAC + Soros + China networks.',
     }
 
@@ -475,7 +485,7 @@ def generate_profile(candidate, categories, meta, nav=None):
             'federal law also prohibits CCP members from contributing.</p>'
             '<p class="prof-adj-lead">For every candidate with a documented donor record, two things '
             'happen: <strong>(1) the specific category question is marked False</strong> '
-            '(<code>america_first[q4]</code> for AIPAC + China; <code>life[q4]</code> for Soros-funded '
+            '(<code>america_first[q4]</code> for AIPAC + China; <code>economic_stewardship[q5]</code> for Soros-funded '
             'prosecutors), so the per-category subscore drops by 2 points; <strong>(2) an additional '
             'dollar-bracket adjustment is applied to the total</strong>, making the penalty proportional '
             'to the magnitude of the funding. Both impacts are visible on this page.</p>'

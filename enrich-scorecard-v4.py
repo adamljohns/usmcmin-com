@@ -63,11 +63,13 @@ def norm_name(name):
 
 def main():
     apply = '--apply' in sys.argv
+    overwrite_conflicts = '--overwrite-conflicts' in sys.argv
 
     with open(SCORECARD) as f:
         sc = json.load(f)
 
     tally = Counter()
+    conflict_log = []   # for --overwrite-conflicts mode reporting
 
     # ─── PASS 1: score_adjustments → fpr[3] and es[4] ───
     for c in sc['candidates']:
@@ -113,7 +115,22 @@ def main():
                     arr[q_idx] = False
                     tally[f'{label}_set'] += 1
                 elif arr[q_idx] is True:
-                    tally[f'{label}_conflict'] += 1
+                    # CONFLICT: candidate currently carries True (likely from
+                    # the v3→v4 migration carry-over where the old question
+                    # had looser wording the senator could honestly score
+                    # True on, while the v4 wording is tighter and their
+                    # YEA vote on this bill contradicts it.
+                    if overwrite_conflicts:
+                        arr[q_idx] = False
+                        tally[f'{label}_conflict_flipped'] += 1
+                        conflict_log.append(
+                            f'  flipped {c.get("name", "?")} ({c.get("state", "?")}) '
+                            f'{category}[{q_idx}] True → False ({label} YEA vote)')
+                    else:
+                        tally[f'{label}_conflict'] += 1
+                        conflict_log.append(
+                            f'  kept  {c.get("name", "?")} ({c.get("state", "?")}) '
+                            f'{category}[{q_idx}] = True (YEA on {label} — flip with --overwrite-conflicts)')
                 else:
                     tally[f'{label}_already_false'] += 1
                 break
@@ -126,13 +143,24 @@ def main():
     for k, v in sorted(tally.items()):
         print(f'  {k}: {v}')
 
+    if conflict_log:
+        print(f'\n=== CONFLICTS ({len(conflict_log)}) ===')
+        for line in conflict_log:
+            print(line)
+
     if apply:
+        # indent=2 + trailing newline to match build-data.py's
+        # atomic_write(compact=False) convention. Compact mode here
+        # explodes git diffs by 2.2M lines.
         with open(SCORECARD, 'w') as f:
-            json.dump(sc, f, ensure_ascii=False, separators=(',', ':'))
+            json.dump(sc, f, ensure_ascii=False, indent=2)
+            f.write('\n')
         print(f'\n✓ Wrote {SCORECARD}')
         print('Next: python3 build-data.py  → python3 generate-profiles.py')
     else:
         print('\nDry-run. Re-run with --apply to write.')
+        if not overwrite_conflicts:
+            print('Add --overwrite-conflicts to flip the True-conflict senators above to False.')
 
 if __name__ == '__main__':
     main()

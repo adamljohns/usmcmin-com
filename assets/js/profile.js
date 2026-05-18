@@ -203,6 +203,101 @@
   }
 })();
 
+// ─── Share button (X / email / SMS / copy-link) ──────────────────────────
+// Pre-fills text mentioning the candidate's name + RESOLUTE Citizen
+// branding. URL is built from window.location so it works on local +
+// production. Copy-link triggers a 1.5s "Copied!" feedback.
+(function() {
+  var menu = document.querySelector('.prof-share-menu');
+  if (!menu) return;
+  menu.addEventListener('click', function(e) {
+    var btn = e.target.closest('.prof-share-opt');
+    if (!btn) return;
+    var kind = btn.getAttribute('data-share');
+    var name = btn.getAttribute('data-name') || 'this candidate';
+    var url = window.location.href.split('#')[0];
+    var msg = 'RESOLUTE Citizen Scorecard: ' + name + ' — see the full record';
+    var encoded = encodeURIComponent(msg + ' ' + url);
+    if (kind === 'x') {
+      window.open('https://twitter.com/intent/tweet?text=' + encoded, '_blank', 'noopener');
+    } else if (kind === 'email') {
+      window.location.href = 'mailto:?subject=' + encodeURIComponent('RESOLUTE Citizen Scorecard: ' + name)
+        + '&body=' + encodeURIComponent(msg + '\n\n' + url + '\n\nFrom USMC Ministries.');
+    } else if (kind === 'sms') {
+      window.location.href = 'sms:?&body=' + encoded;
+    } else if (kind === 'copy') {
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(url).then(function() {
+          btn.classList.add('copied');
+          var prev = btn.textContent;
+          btn.textContent = 'Copied!';
+          setTimeout(function() {
+            btn.classList.remove('copied');
+            btn.textContent = prev;
+          }, 1500);
+        });
+      } else {
+        var ta = document.createElement('textarea');
+        ta.value = url;
+        document.body.appendChild(ta);
+        ta.select();
+        try { document.execCommand('copy'); } catch (err) {}
+        document.body.removeChild(ta);
+        btn.classList.add('copied');
+        setTimeout(function() { btn.classList.remove('copied'); }, 1500);
+      }
+    }
+    if (kind !== 'copy') {
+      var details = btn.closest('details');
+      if (details) details.open = false;
+    }
+  });
+  document.addEventListener('click', function(e) {
+    var details = document.querySelector('.prof-share');
+    if (details && details.open && !details.contains(e.target)) {
+      details.open = false;
+    }
+  });
+})();
+
+// ─── Sticky TOC: highlight the currently-visible section ──────────────────
+// Uses IntersectionObserver — simple, no scroll-listener perf cost. Section
+// with the highest intersection ratio wins the .active class.
+(function() {
+  var tocLinks = document.querySelectorAll('.prof-toc-link');
+  if (!tocLinks.length) return;
+  var byTarget = {};
+  tocLinks.forEach(function(l) { byTarget[l.getAttribute('data-target')] = l; });
+
+  var activeId = null;
+  function setActive(id) {
+    if (id === activeId) return;
+    activeId = id;
+    tocLinks.forEach(function(l) {
+      l.classList.toggle('active', l.getAttribute('data-target') === id);
+    });
+  }
+
+  var visible = new Map();
+  var io = new IntersectionObserver(function(entries) {
+    entries.forEach(function(e) {
+      if (e.isIntersecting) visible.set(e.target.id, e.intersectionRatio);
+      else visible.delete(e.target.id);
+    });
+    if (visible.size === 0) return;
+    var ids = Array.from(visible.keys());
+    var ratios = Array.from(visible.values());
+    var maxR = Math.max.apply(null, ratios);
+    var winner = ids[ratios.indexOf(maxR)];
+    setActive(winner);
+  }, { rootMargin: '-80px 0px -50% 0px', threshold: [0, 0.25, 0.5, 0.75, 1] });
+
+  Object.keys(byTarget).forEach(function(id) {
+    var el = document.getElementById(id);
+    if (el) io.observe(el);
+  });
+})();
+
 (function() {
   var toggle = document.getElementById('themeToggle');
   var saved = localStorage.getItem('usmc-theme');

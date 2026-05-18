@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="canonical" href="https://usmcmin.com/citizen-rankings.html">
+  <title>RESOLUTE Citizen Rankings — Top &amp; Bottom Scorers | U.S.M.C. Ministries</title>
+  <meta name="description" content="Live rankings of every elected official scored against the RESOLUTE Citizen 100-point Christian-voter rubric. Filter by office, party, or tier. Letter grades A-F.">
+  <meta property="og:site_name" content="RESOLUTE Citizen Scorecard">
+  <meta property="og:title" content="RESOLUTE Citizen Rankings — Top &amp; Bottom Scorers">
+  <meta property="og:description" content="Who actually scores well on Christian-voter criteria? Live rankings across 8,400+ officeholders. Filterable by office, party, and weighting tier.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://usmcmin.com/citizen-rankings.html">
+  <meta property="og:image" content="https://usmcmin.com/assets/og/og-citizen.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="RESOLUTE Citizen Rankings">
+  <meta name="twitter:description" content="Live A-F letter-grade rankings across 8,400+ elected officials.">
+  <meta name="twitter:image" content="https://usmcmin.com/assets/og/og-citizen.jpg">
+  <link rel="stylesheet" href="assets/css/main.min.css">
+  <link rel="icon" href="assets/img/favicon.png" type="image/png">
+  <style>
+    .rk-container { max-width: 1280px; margin: 0 auto; padding: 20px; }
+    .rk-hero {
+      padding: 28px 24px;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      margin-bottom: 18px;
+    }
+    .rk-hero h1 {
+      margin: 0 0 8px;
+      font-family: var(--font-main, Georgia, serif);
+      font-size: 2rem;
+      color: var(--white);
+      letter-spacing: -0.5px;
+    }
+    .rk-hero .rk-tagline {
+      color: var(--accent);
+      font-size: 0.78rem;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      font-weight: 700;
+      margin-bottom: 6px;
+    }
+    .rk-hero p {
+      color: var(--gray);
+      font-size: 0.95rem;
+      line-height: 1.65;
+      margin: 6px 0;
+      max-width: 880px;
+    }
+    .rk-hero a { color: var(--accent); }
+
+    /* Distribution chart — simple horizontal bars by letter grade */
+    .rk-dist {
+      margin-top: 18px;
+      padding: 16px 18px;
+      background: rgba(168,176,188,0.04);
+      border: 1px solid rgba(168,176,188,0.18);
+      border-radius: 10px;
+    }
+    .rk-dist-title {
+      font-size: 0.7rem;
+      color: var(--gray);
+      text-transform: uppercase;
+      letter-spacing: 1.3px;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+    .rk-dist-row {
+      display: grid;
+      grid-template-columns: 36px 1fr 70px;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 5px;
+    }
+    .rk-dist-letter {
+      font-family: var(--font-main, Georgia, serif);
+      font-weight: 800;
+      font-size: 1.1rem;
+      text-align: center;
+    }
+    .rk-dist-bar-wrap {
+      background: rgba(255,255,255,0.04);
+      border-radius: 4px;
+      overflow: hidden;
+      height: 14px;
+    }
+    .rk-dist-bar {
+      height: 100%;
+      border-radius: 4px;
+      transition: width 0.4s;
+    }
+    .rk-dist-count {
+      color: var(--gray);
+      font-size: 0.78rem;
+      text-align: right;
+      white-space: nowrap;
+    }
+
+    /* Filter bar */
+    .rk-filters {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      padding: 14px 18px;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      margin-bottom: 14px;
+    }
+    .rk-filter-group {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .rk-filter-group label {
+      font-size: 0.66rem;
+      color: var(--gray);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      font-weight: 700;
+    }
+    .rk-filter-group select {
+      padding: 8px 12px;
+      background: var(--bg-dark, #0A0A0A);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      color: var(--white);
+      font-size: 0.85rem;
+      min-width: 130px;
+    }
+    .rk-stats {
+      margin-left: auto;
+      align-self: center;
+      color: var(--gray);
+      font-size: 0.82rem;
+    }
+    .rk-stats strong { color: var(--white); }
+
+    /* Leaderboard tables */
+    .rk-board {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      margin-bottom: 18px;
+      overflow: hidden;
+    }
+    .rk-board-head {
+      padding: 14px 18px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .rk-board-title {
+      font-family: var(--font-main, Georgia, serif);
+      font-size: 1.2rem;
+      color: var(--white);
+      margin: 0;
+    }
+    .rk-board-sub {
+      color: var(--gray);
+      font-size: 0.78rem;
+    }
+    .rk-table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    .rk-table th, .rk-table td {
+      padding: 10px 14px;
+      text-align: left;
+      font-size: 0.86rem;
+      border-bottom: 1px solid rgba(168,176,188,0.10);
+    }
+    .rk-table th {
+      background: rgba(168,176,188,0.04);
+      color: var(--gray);
+      text-transform: uppercase;
+      font-size: 0.66rem;
+      letter-spacing: 1px;
+      font-weight: 700;
+    }
+    .rk-table tbody tr:hover { background: rgba(168,176,188,0.06); }
+    .rk-table .rk-rank {
+      color: var(--gray);
+      font-variant-numeric: tabular-nums;
+      width: 44px;
+      text-align: right;
+    }
+    .rk-table .rk-name { font-weight: 600; }
+    .rk-table .rk-name a { color: var(--white); text-decoration: none; }
+    .rk-table .rk-name a:hover { color: var(--accent); text-decoration: underline; }
+    .rk-table .rk-state {
+      color: var(--gray);
+      font-variant-numeric: tabular-nums;
+      width: 40px;
+      font-weight: 600;
+      text-align: center;
+    }
+    .rk-table .rk-party { width: 60px; text-align: center; }
+    .rk-party-r { color: #ef4444; font-weight: 700; }
+    .rk-party-d { color: #3b82f6; font-weight: 700; }
+    .rk-party-i { color: #a855f7; font-weight: 700; }
+    .rk-party-u { color: var(--gray); }
+    .rk-table .rk-office {
+      color: var(--gray);
+      font-size: 0.78rem;
+      max-width: 220px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .rk-table .rk-num {
+      font-variant-numeric: tabular-nums;
+      font-weight: 700;
+      text-align: right;
+      width: 60px;
+    }
+    .rk-table .rk-grade {
+      font-family: var(--font-main, Georgia, serif);
+      font-size: 1.05rem;
+      font-weight: 800;
+      width: 44px;
+      text-align: center;
+    }
+
+    /* Letter-grade colors */
+    .lg-A { color: #4CAF50; }
+    .lg-B { color: #8BC34A; }
+    .lg-C { color: #FFC107; }
+    .lg-D { color: #FF9800; }
+    .lg-F { color: #f44336; }
+
+    .rk-empty {
+      padding: 24px;
+      text-align: center;
+      color: var(--gray);
+      font-style: italic;
+      font-size: 0.88rem;
+    }
+    .rk-foot {
+      text-align: center;
+      padding: 14px;
+      color: var(--gray);
+      font-size: 0.75rem;
+    }
+
+    /* Mobile: hide office column to keep table on screen */
+    @media (max-width: 720px) {
+      .rk-table th:nth-child(5), .rk-table td:nth-child(5) { display: none; }
+      .rk-hero h1 { font-size: 1.5rem; }
+      .rk-stats { width: 100%; margin-left: 0; margin-top: 6px; }
+    }
+  </style>
+</head>
+<body>
+  <header role="banner" style="padding:14px 20px;background:var(--bg-card);border-bottom:1px solid var(--border);">
+    <nav style="max-width:1280px;margin:0 auto;display:flex;align-items:center;gap:18px;flex-wrap:wrap;">
+      <a href="index.html" style="color:var(--accent);font-family:var(--font-main);font-size:1.05rem;font-weight:700;text-decoration:none;">U.S.M.C. Ministries</a>
+      <a href="citizen.html" style="color:var(--gray);font-size:0.85rem;text-decoration:none;">Scorecard</a>
+      <a href="find-my-reps.html" style="color:var(--gray);font-size:0.85rem;text-decoration:none;">Find My Reps</a>
+      <a href="compare.html" style="color:var(--gray);font-size:0.85rem;text-decoration:none;">Compare</a>
+      <a href="scoring-system.html" style="color:var(--gray);font-size:0.85rem;text-decoration:none;">Rubric</a>
+      <a href="citizen-rankings.html" style="color:var(--white);font-size:0.85rem;text-decoration:none;border-bottom:1px solid var(--accent);">Rankings</a>
+    </nav>
+  </header>
+
+  <main class="rk-container">
+    <div class="rk-hero">
+      <div class="rk-tagline">RESOLUTE Citizen &middot; Live Rankings</div>
+      <h1>Who Actually Grades Well?</h1>
+      <p>Every elected official in our database scored against the v4.0 RESOLUTE Citizen rubric &mdash; 10 categories, 50 questions, 100 points. <strong>60 points come from God First</strong> (✝ life, marriage, family sovereignty, Christian liberty, economic stewardship, election integrity); <strong>40 from America First</strong> (🇺🇸 border, self-defense, foreign-policy restraint, industry capture). Scores include foreign-influence adjustments (AIPAC, Soros, China-linked PACs).</p>
+      <p style="font-size:0.82rem;">Most candidates remain unscored on the 6 new/reworked v4.0 categories &mdash; rescoring is a manual evidence-review process. Today, ~50 federal officials carry full v4.0 archetype-curated scores; the other 8,400+ are flagged as <em>partial</em>. <a href="scoring-system.html">Read the full methodology &rarr;</a></p>
+
+      <div class="rk-dist" id="distribution">
+        <div class="rk-dist-title">Score distribution across all 8,472 candidates (current snapshot)</div>
+        <!-- Populated by JS on load -->
+      </div>
+    </div>
+
+    <div class="rk-filters">
+      <div class="rk-filter-group">
+        <label for="filterOffice">Office level</label>
+        <select id="filterOffice">
+          <option value="all">All offices</option>
+          <option value="us_senate">US Senate</option>
+          <option value="us_house">US House</option>
+          <option value="us_executive">US Executive (Pres/VP/SCOTUS)</option>
+          <option value="governor">Governor</option>
+          <option value="lt_governor">Lt. Governor</option>
+          <option value="state_leg">State legislature</option>
+          <option value="state_exec">State executive (AG, Sec, etc.)</option>
+          <option value="local">Local (city, county, school)</option>
+        </select>
+      </div>
+      <div class="rk-filter-group">
+        <label for="filterParty">Party</label>
+        <select id="filterParty">
+          <option value="all">All parties</option>
+          <option value="R">Republican</option>
+          <option value="D">Democrat</option>
+          <option value="I">Independent</option>
+        </select>
+      </div>
+      <div class="rk-filter-group">
+        <label for="filterTier">Sort by</label>
+        <select id="filterTier">
+          <option value="total">Total score</option>
+          <option value="gf">God First only</option>
+          <option value="af">America First only</option>
+        </select>
+      </div>
+      <div class="rk-filter-group">
+        <label for="filterMin">Min answered</label>
+        <select id="filterMin">
+          <option value="0">All (include partials)</option>
+          <option value="20">≥ 20 answered (40%)</option>
+          <option value="30">≥ 30 answered (60%)</option>
+          <option value="40">≥ 40 answered (80%)</option>
+          <option value="50">50 (complete)</option>
+        </select>
+      </div>
+      <div class="rk-stats" id="stats">Loading…</div>
+    </div>
+
+    <div class="rk-board">
+      <div class="rk-board-head">
+        <h2 class="rk-board-title">Top 50</h2>
+        <span class="rk-board-sub" id="topSub">Highest scorers</span>
+      </div>
+      <table class="rk-table" id="topTable">
+        <thead>
+          <tr>
+            <th class="rk-rank">#</th>
+            <th>Name</th>
+            <th class="rk-state">State</th>
+            <th class="rk-party">Party</th>
+            <th>Office</th>
+            <th class="rk-num">GF</th>
+            <th class="rk-num">AF</th>
+            <th class="rk-num">Total</th>
+            <th class="rk-grade">Grade</th>
+          </tr>
+        </thead>
+        <tbody><tr><td colspan="9" class="rk-empty">Loading…</td></tr></tbody>
+      </table>
+    </div>
+
+    <div class="rk-board">
+      <div class="rk-board-head">
+        <h2 class="rk-board-title">Bottom 50</h2>
+        <span class="rk-board-sub" id="botSub">Lowest scorers (excluding all-zero / unanswered)</span>
+      </div>
+      <table class="rk-table" id="botTable">
+        <thead>
+          <tr>
+            <th class="rk-rank">#</th>
+            <th>Name</th>
+            <th class="rk-state">State</th>
+            <th class="rk-party">Party</th>
+            <th>Office</th>
+            <th class="rk-num">GF</th>
+            <th class="rk-num">AF</th>
+            <th class="rk-num">Total</th>
+            <th class="rk-grade">Grade</th>
+          </tr>
+        </thead>
+        <tbody><tr><td colspan="9" class="rk-empty">Loading…</td></tr></tbody>
+      </table>
+    </div>
+
+    <p class="rk-foot">
+      Data source: <code>data/search-index.json</code> (regenerated nightly via <code>build-search-index.py</code>).<br>
+      Have a correction? File a dispute on any candidate's profile page.
+    </p>
+  </main>
+
+  <script>
+    // ─── Office classification — match scorecard convention ───────────────
+    function classifyOffice(office) {
+      var s = (office || '').toLowerCase();
+      if (/u\.?s\.? sen/i.test(office) || /united states sen/i.test(office)) return 'us_senate';
+      if (/u\.?s\.? hous/i.test(office) || /u\.?s\.? rep/i.test(office)) return 'us_house';
+      if (/(president|vice president|supreme court|chief justice|associate justice)/i.test(office)
+          && !/city|county|school/i.test(office)) return 'us_executive';
+      if (s.indexOf('lieutenant governor') !== -1 || /^lt\.? gov/i.test(office)) return 'lt_governor';
+      if (s.indexOf('governor') !== -1) return 'governor';
+      if (/(state senate|state house|state representative|state assembl|delegate)/i.test(office)) return 'state_leg';
+      if (/(attorney general|secretary of state|state treasur|state auditor|state comptroller)/i.test(office)) return 'state_exec';
+      return 'local';
+    }
+
+    // ─── Letter-grade helper ─────────────────────────────────────────────
+    function letterClass(lg) { return 'lg-' + lg; }
+
+    function partyClass(p) {
+      if (p === 'R') return 'rk-party-r';
+      if (p === 'D') return 'rk-party-d';
+      if (p === 'I') return 'rk-party-i';
+      return 'rk-party-u';
+    }
+    function partyLabel(p) {
+      if (p === 'R') return 'R';
+      if (p === 'D') return 'D';
+      if (p === 'I') return 'I';
+      return '—';
+    }
+
+    var ALL_ROWS = null;
+
+    function fetchData() {
+      var stats = document.getElementById('stats');
+      fetch('data/search-index.json')
+        .then(function(r) { return r.json(); })
+        .then(function(payload) {
+          ALL_ROWS = payload.rows || [];
+          renderDistribution();
+          renderTables();
+        })
+        .catch(function(err) {
+          stats.textContent = 'Error loading rankings data: ' + err;
+        });
+    }
+
+    function renderDistribution() {
+      var container = document.getElementById('distribution');
+      // Drop the title (preserve it) then rebuild rows
+      var title = container.querySelector('.rk-dist-title');
+      container.innerHTML = '';
+      container.appendChild(title);
+
+      var counts = { A: 0, B: 0, C: 0, D: 0, F: 0 };
+      var withScore = 0;
+      ALL_ROWS.forEach(function(r) {
+        if (r.ans > 0) withScore++;
+        counts[r.lg] = (counts[r.lg] || 0) + 1;
+      });
+      var max = Math.max(counts.A, counts.B, counts.C, counts.D, counts.F);
+      ['A', 'B', 'C', 'D', 'F'].forEach(function(g) {
+        var pct = max > 0 ? Math.round(100 * counts[g] / max) : 0;
+        var row = document.createElement('div');
+        row.className = 'rk-dist-row';
+        row.innerHTML =
+          '<span class="rk-dist-letter ' + letterClass(g) + '">' + g + '</span>' +
+          '<div class="rk-dist-bar-wrap"><div class="rk-dist-bar ' + letterClass(g) + '" style="width:' + pct + '%;background:currentColor;"></div></div>' +
+          '<span class="rk-dist-count">' + counts[g].toLocaleString() + '</span>';
+        container.appendChild(row);
+      });
+    }
+
+    function renderTables() {
+      var office = document.getElementById('filterOffice').value;
+      var party = document.getElementById('filterParty').value;
+      var tier = document.getElementById('filterTier').value;
+      var minAns = parseInt(document.getElementById('filterMin').value, 10);
+
+      var filtered = ALL_ROWS.filter(function(r) {
+        if (party !== 'all' && r.p !== party) return false;
+        if (office !== 'all' && classifyOffice(r.o) !== office) return false;
+        if (r.ans < minAns) return false;
+        return true;
+      });
+
+      // Sort by chosen tier
+      var sortKey = tier === 'gf' ? 'gf' : tier === 'af' ? 'af' : 'ts';
+      filtered.sort(function(a, b) { return b[sortKey] - a[sortKey]; });
+
+      var top = filtered.slice(0, 50);
+      // Bottom 50 — exclude rows with no answered questions (those are all
+      // F at 0 without any signal — uninformative). Sort ascending.
+      var scored = filtered.filter(function(r) { return r.ans > 0; });
+      scored.sort(function(a, b) { return a[sortKey] - b[sortKey]; });
+      var bot = scored.slice(0, 50);
+
+      renderTable('topTable', top, 1, false);
+      renderTable('botTable', bot, 1, false);
+
+      var stats = document.getElementById('stats');
+      stats.innerHTML =
+        '<strong>' + filtered.length.toLocaleString() + '</strong> candidates match · ' +
+        '<strong>' + scored.length.toLocaleString() + '</strong> with at least one scored answer';
+
+      // Update sub-headers to reflect tier
+      var tierLabel = tier === 'gf' ? 'God First (60)'
+                    : tier === 'af' ? 'America First (40)'
+                    : 'Total (100)';
+      document.getElementById('topSub').textContent = 'Highest by ' + tierLabel;
+      document.getElementById('botSub').textContent = 'Lowest by ' + tierLabel + ' (excluding 0-answered)';
+    }
+
+    function renderTable(id, rows, startRank, isBottom) {
+      var table = document.getElementById(id);
+      var tbody = table.querySelector('tbody');
+      if (rows.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="9" class="rk-empty">No candidates match the current filters.</td></tr>';
+        return;
+      }
+      var html = '';
+      rows.forEach(function(r, i) {
+        html +=
+          '<tr>' +
+          '<td class="rk-rank">' + (startRank + i) + '</td>' +
+          '<td class="rk-name"><a href="candidates/' + r.st + '/' + r.s + '.html">' + escapeHtml(r.n) + '</a></td>' +
+          '<td class="rk-state">' + r.st.toUpperCase() + '</td>' +
+          '<td class="rk-party ' + partyClass(r.p) + '">' + partyLabel(r.p) + '</td>' +
+          '<td class="rk-office" title="' + escapeHtml(r.o) + '">' + escapeHtml(r.o) + '</td>' +
+          '<td class="rk-num">' + r.gf + '</td>' +
+          '<td class="rk-num">' + r.af + '</td>' +
+          '<td class="rk-num">' + r.ts + '</td>' +
+          '<td class="rk-grade ' + letterClass(r.lg) + '">' + r.lg + '</td>' +
+          '</tr>';
+      });
+      tbody.innerHTML = html;
+    }
+
+    function escapeHtml(s) {
+      return String(s || '').replace(/[&<>"']/g, function(c) {
+        return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+      });
+    }
+
+    // Bind filter changes
+    document.getElementById('filterOffice').addEventListener('change', renderTables);
+    document.getElementById('filterParty').addEventListener('change', renderTables);
+    document.getElementById('filterTier').addEventListener('change', renderTables);
+    document.getElementById('filterMin').addEventListener('change', renderTables);
+
+    // Load on page show
+    fetchData();
+  </script>
+</body>
+</html>

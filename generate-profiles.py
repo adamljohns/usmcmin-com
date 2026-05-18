@@ -201,7 +201,7 @@ def build_election_html(candidate, elections_data):
         f'if(el) el.textContent=d+" day"+(d===1?"":"s");}})();</script>'
     )
 
-    html = f'<div class="prof-election prof-election-{banner_class}">'
+    html = f'<div id="prof-election" class="prof-election prof-election-{banner_class}">'
     html += '<div class="prof-election-main">'
     html += f'<div class="prof-election-label">Next Election</div>'
     html += f'<div class="prof-election-date">{pretty_date}</div>'
@@ -380,7 +380,7 @@ def build_contact_html(candidate):
                 + '</div></details>'
             )
 
-    html = '<div class="prof-contact">'
+    html = '<div id="prof-contact" class="prof-contact">'
     html += '<h2>Contact This Official</h2>'
     html += '<div class="prof-contact-grid">' + ''.join(parts) + '</div>'
     if phone_note:
@@ -489,7 +489,7 @@ def generate_profile(candidate, categories, meta, nav=None):
                 + '</li>'
             )
         return (
-            '<div class="prof-adjustments" role="note" aria-label="Score adjustments">'
+            '<div id="prof-adjustments" class="prof-adjustments" role="note" aria-label="Score adjustments">'
             '<h3>Score adjustments</h3>'
             '<div class="prof-adj-explainer">'
             '<p class="prof-adj-lead"><strong>Foreign-lobby money compromises America First.</strong> '
@@ -513,6 +513,59 @@ def generate_profile(candidate, categories, meta, nav=None):
             f'Adjusted <strong>{adjusted}/{MAX_TOTAL}</strong></div>'
             '<ul class="prof-adj-list">' + ''.join(rows) + '</ul>'
             '</div>'
+        )
+
+    # ─── Sticky TOC + Share helpers (v4.0 navigation upgrade) ────────────
+    # Right-rail TOC that highlights the current section as the visitor
+    # scrolls; collapses to a hamburger trigger on mobile. Section anchors
+    # are added to .prof-total (#prof-score), .prof-church, .prof-adjustments,
+    # .prof-contact, .prof-election, h2#prof-categories, .prof-sources,
+    # .prof-feedback (already had id="feedback" — kept).
+    def render_profile_toc(cand):
+        # Build only entries that will actually exist on the page. Score
+        # always exists; everything else is conditional.
+        items = [('prof-score', 'Score')]
+        if (cand.get('church_affiliation') or {}).get('name'):
+            items.append(('prof-church', 'Church'))
+        if (cand.get('profile') or {}).get('score_adjustments'):
+            items.append(('prof-adjustments', 'Adjustments'))
+        items.append(('prof-contact', 'Contact'))
+        items.append(('prof-election', 'Election'))
+        items.append(('prof-categories', 'Categories'))
+        # Sources block is rendered only when there are sources; assume it
+        # exists for most candidates — the TOC link gracefully no-ops if not.
+        items.append(('prof-sources', 'Sources'))
+        items.append(('feedback', 'Feedback'))
+
+        links = ''
+        for anchor, label in items:
+            links += f'<a class="prof-toc-link" href="#{anchor}" data-target="{anchor}">{label}</a>'
+        return (
+            '<aside class="prof-toc" aria-label="On-page navigation" role="navigation">'
+            '<div class="prof-toc-head">On this page</div>'
+            f'<nav class="prof-toc-nav">{links}</nav>'
+            '</aside>'
+        )
+
+    def render_share_button(cand):
+        """Pre-filled X/email/SMS/copy-link share dropdown.
+        URL is built client-side from window.location so it works on local
+        + production. Pre-filled text mentions name + letter grade so the
+        share recipient knows what they're getting."""
+        nm = cand.get('name', '').replace('"', '&quot;').replace("'", '&#39;')
+        return (
+            '<details class="prof-share">'
+            '<summary class="prof-share-trigger" title="Share this profile">'
+            '<span aria-hidden="true">&#x21AA;</span>'
+            ' Share'
+            '</summary>'
+            '<div class="prof-share-menu" role="menu">'
+            f'<button class="prof-share-opt" type="button" data-share="x" data-name="{nm}">X / Twitter</button>'
+            f'<button class="prof-share-opt" type="button" data-share="email" data-name="{nm}">Email</button>'
+            f'<button class="prof-share-opt" type="button" data-share="sms" data-name="{nm}">SMS</button>'
+            f'<button class="prof-share-opt" type="button" data-share="copy" data-name="{nm}">Copy Link</button>'
+            '</div>'
+            '</details>'
         )
 
     # ─── Church affiliation block (cross-pollination with usmcmin.org) ─────
@@ -549,7 +602,7 @@ def generate_profile(candidate, categories, meta, nav=None):
         if period: meta_bits.append(f'<span class="prof-church-period">{period}</span>')
         meta_html = ' &middot; '.join(meta_bits)
         return (
-            '<div class="prof-church" role="note" aria-label="Church affiliation">'
+            '<div id="prof-church" class="prof-church" role="note" aria-label="Church affiliation">'
             '<div class="prof-church-head">'
             '<span class="prof-church-icon" aria-hidden="true">&#9962;</span>'
             '<span class="prof-church-label">Church Affiliation</span>'
@@ -1200,7 +1253,7 @@ def generate_profile(candidate, categories, meta, nav=None):
                 + ''.join(diversity_chips) +
                 '</div>'
             )
-        sources_html = '<div class="prof-sources"><h2>Sources &amp; Evidence</h2>'
+        sources_html = '<div id="prof-sources" class="prof-sources"><h2>Sources &amp; Evidence</h2>'
         sources_html += diversity_strip_html
         sources_html += '<div class="prof-source-list">'
         for src in sources:
@@ -1293,11 +1346,16 @@ def generate_profile(candidate, categories, meta, nav=None):
 <div class="prof-container">
   {breadcrumb_html}
 
-  <div class="prof-jump">
-    <label for="profJumpSelect">Jump to:</label>
-    <select id="profJumpSelect" data-state="{state_code}" data-current-slug="{c.get('slug','')}">
-      <option value="">Loading {state_name} officials…</option>
-    </select>
+  {render_profile_toc(c)}
+
+  <div class="prof-jump-row">
+    <div class="prof-jump">
+      <label for="profJumpSelect">Jump to:</label>
+      <select id="profJumpSelect" data-state="{state_code}" data-current-slug="{c.get('slug','')}">
+        <option value="">Loading {state_name} officials…</option>
+      </select>
+    </div>
+    {render_share_button(c)}
   </div>
 
   {prevnext_bar}
@@ -1318,7 +1376,7 @@ def generate_profile(candidate, categories, meta, nav=None):
     {map_link_html}
   </div>
 
-  <div class="prof-total">
+  <div id="prof-score" class="prof-total">
     <div class="prof-total-main">
       <div class="prof-total-label">RESOLUTE Citizen Score</div>
       <div class="prof-total-headline">
@@ -1364,7 +1422,7 @@ def generate_profile(candidate, categories, meta, nav=None):
     {f'<div class="prof-notes">{notes}</div>' if notes else ''}
   </div>""" if profile_html or notes else ''}
 
-  <h2 style="color:var(--accent);font-family:var(--font-main);margin-bottom:16px;">Category Breakdown</h2>
+  <h2 id="prof-categories" style="color:var(--accent);font-family:var(--font-main);margin-bottom:16px;">Category Breakdown</h2>
   {cat_html}
 
   {sources_html}

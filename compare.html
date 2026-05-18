@@ -317,16 +317,33 @@
     return p || 'Unknown';
   }
 
+  // v4.0 rubric: 10 categories × 5 questions × 2 pts = 100 max. Also surfaces
+  // God-First / America-First tier subtotals by walking the loaded categories array.
   function calcTotal(scores){
-    if (!scores) return {score: 0, max: 70, answered: 0};
-    var total = 0; var answered = 0; var max = 70;
+    if (!scores) return {score: 0, max: 100, answered: 0, god_first: 0, america_first: 0};
+    var total = 0; var answered = 0; var max = 100;
+    var godFirst = 0, americaFirst = 0;
+    var cats = (STATE.scorecard && STATE.scorecard.categories) || [];
+    var tierMap = {};
+    cats.forEach(function(c){ tierMap[c.id] = c.tier; });
     Object.keys(scores).forEach(function(cat){
+      var catTotal = 0;
       (scores[cat]||[]).forEach(function(v){
-        if (v === true) total += 2;
+        if (v === true) { total += 2; catTotal += 2; }
         if (v !== null && v !== undefined) answered += 1;
       });
+      if (tierMap[cat] === 'god_first') godFirst += catTotal;
+      else if (tierMap[cat] === 'america_first') americaFirst += catTotal;
     });
-    return {score: total, max: max, answered: answered};
+    return {score: total, max: max, answered: answered,
+            god_first: godFirst, america_first: americaFirst};
+  }
+  function letterGrade(pct){
+    if (pct >= 90) return 'A';
+    if (pct >= 80) return 'B';
+    if (pct >= 70) return 'C';
+    if (pct >= 60) return 'D';
+    return 'F';
   }
 
   function findCandidate(slug){

@@ -61,9 +61,15 @@ HIGH_PRIORITY = {
     "ai-boot-camp-tools.html": (0.5, "monthly"),
     # ai-boot-camp-heartbeat.html intentionally excluded from sitemap —
     # noindex,nofollow on the page itself; URL stays alive for direct links.
-    "citizen.html": (0.8, "weekly"),
+    "citizen.html": (0.9, "weekly"),
     "citizen-table.html": (0.8, "weekly"),
     "citizen-issues.html": (0.7, "weekly"),
+    "citizen-rankings.html": (0.9, "daily"),     # live A-F leaderboard — primary CTA
+    "find-my-reps.html": (0.9, "weekly"),
+    "scoring-system.html": (0.85, "monthly"),    # rubric explainer
+    "methodology-foreign-influence.html": (0.75, "monthly"),
+    "petition.html": (0.8, "monthly"),
+    "compare.html": (0.7, "weekly"),
     "council-notes.html": (0.6, "weekly"),
     "sitemap.html": (0.5, "monthly"),
     "bow-arrow/index.html": (0.7, "monthly"),
@@ -112,7 +118,7 @@ def render(urls):
             f"    <loc>{loc}</loc>",
             f"    <lastmod>{TODAY}</lastmod>",
             f"    <changefreq>{freq}</changefreq>",
-            f"    <priority>{prio:.1f}</priority>",
+            f"    <priority>{prio:.2f}</priority>",
             "  </url>",
         ]
     lines.append("</urlset>")

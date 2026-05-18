@@ -234,6 +234,124 @@
     .lg-D { color: #FF9800; }
     .lg-F { color: #f44336; }
 
+    /* Heat map grid cartogram */
+    .rk-heatmap {
+      margin-top: 18px;
+      padding: 16px 18px;
+      background: rgba(168,176,188,0.04);
+      border: 1px solid rgba(168,176,188,0.18);
+      border-radius: 10px;
+    }
+    .rk-heat-toggle {
+      float: right;
+      display: inline-flex;
+      gap: 4px;
+      margin-left: 12px;
+    }
+    .rk-heat-btn {
+      background: transparent;
+      color: var(--gray);
+      border: 1px solid var(--border);
+      border-radius: 5px;
+      padding: 3px 10px;
+      font-size: 0.7rem;
+      cursor: pointer;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      font-weight: 700;
+      transition: background 0.15s, color 0.15s;
+    }
+    .rk-heat-btn:hover { color: var(--white); }
+    .rk-heat-btn.active { background: rgba(168,176,188,0.18); color: var(--white); border-color: var(--accent); }
+    .rk-heat-grid {
+      display: grid;
+      grid-template-columns: repeat(11, 1fr);
+      gap: 3px;
+      max-width: 720px;
+      margin: 12px auto 6px;
+    }
+    .rk-heat-cell {
+      aspect-ratio: 1;
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.55rem;
+      font-weight: 800;
+      color: rgba(255,255,255,0.85);
+      font-family: var(--font-mono, monospace);
+      letter-spacing: 0.3px;
+      cursor: pointer;
+      transition: transform 0.12s, box-shadow 0.12s;
+      position: relative;
+      text-shadow: 0 1px 1px rgba(0,0,0,0.5);
+    }
+    .rk-heat-cell:hover {
+      transform: scale(1.15);
+      z-index: 5;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+    }
+    .rk-heat-cell-empty { background: rgba(168,176,188,0.08); cursor: default; }
+    .rk-heat-cell-empty:hover { transform: none; box-shadow: none; }
+    .rk-heat-spacer { background: transparent; pointer-events: none; }
+    .rk-heat-tooltip {
+      position: absolute;
+      bottom: calc(100% + 6px);
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 8px 10px;
+      font-size: 0.78rem;
+      font-weight: 500;
+      color: var(--white);
+      white-space: nowrap;
+      box-shadow: 0 6px 16px rgba(0,0,0,0.5);
+      pointer-events: none;
+      z-index: 10;
+      display: none;
+      letter-spacing: 0;
+      text-shadow: none;
+      font-family: var(--font-body, sans-serif);
+    }
+    .rk-heat-cell:hover .rk-heat-tooltip { display: block; }
+    .rk-heat-tooltip-state {
+      color: var(--accent);
+      font-weight: 700;
+      font-size: 0.85rem;
+      margin-bottom: 3px;
+    }
+    .rk-heat-tooltip-top {
+      color: var(--gray);
+      font-size: 0.72rem;
+      margin-top: 2px;
+    }
+    .rk-heat-legend {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.7rem;
+      color: var(--gray);
+      flex-wrap: wrap;
+    }
+    .rk-heat-gradient {
+      flex: 0 0 120px;
+      height: 10px;
+      border-radius: 5px;
+      background: linear-gradient(90deg, #f44336 0%, #FF9800 30%, #FFC107 55%, #8BC34A 78%, #4CAF50 100%);
+    }
+    .rk-heat-note {
+      flex: 1;
+      text-align: right;
+      font-style: italic;
+      min-width: 200px;
+    }
+    @media (max-width: 600px) {
+      .rk-heat-grid { gap: 2px; }
+      .rk-heat-cell { font-size: 0.5rem; }
+    }
+
     .rk-empty {
       padding: 24px;
       text-align: center;
@@ -273,11 +391,31 @@
       <div class="rk-tagline">RESOLUTE Citizen &middot; Live Rankings</div>
       <h1>Who Actually Grades Well?</h1>
       <p>Every elected official in our database scored against the v4.0 RESOLUTE Citizen rubric &mdash; 10 categories, 50 questions, 100 points. <strong>60 points come from God First</strong> (✝ life, marriage, family sovereignty, Christian liberty, economic stewardship, election integrity); <strong>40 from America First</strong> (🇺🇸 border, self-defense, foreign-policy restraint, industry capture). Scores include foreign-influence adjustments (AIPAC, Soros, China-linked PACs).</p>
-      <p style="font-size:0.82rem;">Most candidates remain unscored on the 6 new/reworked v4.0 categories &mdash; rescoring is a manual evidence-review process. Today, ~50 federal officials carry full v4.0 archetype-curated scores; the other 8,400+ are flagged as <em>partial</em>. <a href="scoring-system.html">Read the full methodology &rarr;</a></p>
+      <p style="font-size:0.82rem;">Most candidates remain unscored on the 6 new/reworked v4.0 categories &mdash; rescoring is a manual evidence-review process. Today, ~180 federal + governor officials carry full v4.0 archetype-curated scores; the other 8,290+ are flagged as <em>partial</em>. <a href="scoring-system.html">Read the full methodology &rarr;</a></p>
 
       <div class="rk-dist" id="distribution">
         <div class="rk-dist-title">Score distribution across all 8,472 candidates (current snapshot)</div>
         <!-- Populated by JS on load -->
+      </div>
+
+      <!-- US grid cartogram heat map — each tile = state, color = avg score -->
+      <div class="rk-heatmap" id="heatmap" aria-hidden="false">
+        <div class="rk-dist-title" style="margin-bottom:10px;">State heat map &mdash; average score by state
+          <span class="rk-heat-toggle">
+            <button type="button" class="rk-heat-btn active" data-metric="ts">Total</button>
+            <button type="button" class="rk-heat-btn" data-metric="gf">God First</button>
+            <button type="button" class="rk-heat-btn" data-metric="af">America First</button>
+          </span>
+        </div>
+        <div class="rk-heat-grid" id="heatGrid">
+          <!-- Populated by JS -->
+        </div>
+        <div class="rk-heat-legend">
+          <span>Lower</span>
+          <span class="rk-heat-gradient"></span>
+          <span>Higher</span>
+          <span class="rk-heat-note">Hover a state for top scorer · grey = no scored candidates yet</span>
+        </div>
       </div>
     </div>
 
@@ -418,12 +556,127 @@
         .then(function(payload) {
           ALL_ROWS = payload.rows || [];
           renderDistribution();
+          renderHeatmap('ts');
           renderTables();
         })
         .catch(function(err) {
           stats.textContent = 'Error loading rankings data: ' + err;
         });
     }
+
+    // ─── US state grid cartogram positions (NPR/NYT tilegram style) ────
+    // Each entry: [row, col, abbr]. Grid is 11 cols wide, 8 rows tall.
+    var STATE_GRID = [
+      [0,0,'AK'],                                                                                  [0,10,'ME'],
+                                                                                       [1,9,'VT'], [1,10,'NH'],
+              [2,1,'WA'],[2,2,'ID'],[2,3,'MT'],[2,4,'ND'],[2,5,'MN'],[2,6,'WI'],            [2,8,'MI'],[2,9,'NY'],[2,10,'MA'],
+              [3,1,'OR'],[3,2,'NV'],[3,3,'WY'],[3,4,'SD'],[3,5,'IA'],[3,6,'IL'],[3,7,'IN'],[3,8,'OH'],[3,9,'PA'],[3,10,'CT'],
+              [4,1,'CA'],[4,2,'UT'],[4,3,'CO'],[4,4,'NE'],[4,5,'MO'],[4,6,'KY'],[4,7,'WV'],[4,8,'VA'],[4,9,'NJ'],[4,10,'RI'],
+                         [5,2,'AZ'],[5,3,'NM'],[5,4,'KS'],[5,5,'AR'],[5,6,'TN'],[5,7,'NC'],[5,8,'DC'],[5,9,'DE'],[5,10,'MD'],
+                                               [6,4,'OK'],[6,5,'LA'],[6,6,'MS'],[6,7,'AL'],[6,8,'GA'],[6,9,'SC'],
+                                    [7,3,'TX'],                                                      [7,8,'FL'],            [7,10,'PR'],
+                         [7,2,'HI']
+    ];
+
+    function renderHeatmap(metric) {
+      var container = document.getElementById('heatGrid');
+      if (!container) return;
+      // Compute per-state averages from ALL_ROWS, restricted to scored candidates
+      var byState = {};
+      ALL_ROWS.forEach(function(r) {
+        if (r.ans === 0) return;
+        var st = r.st.toUpperCase();
+        if (!byState[st]) byState[st] = { sum: 0, n: 0, top: r };
+        byState[st].sum += r[metric] || 0;
+        byState[st].n += 1;
+        if ((r[metric] || -999) > (byState[st].top[metric] || -999)) byState[st].top = r;
+      });
+      // Find min/max for color scaling
+      var avgs = [];
+      Object.keys(byState).forEach(function(st) {
+        byState[st].avg = byState[st].sum / byState[st].n;
+        avgs.push(byState[st].avg);
+      });
+      var maxScore = metric === 'ts' ? 100 : metric === 'gf' ? 60 : 40;
+      var minScore = -50; // floor for color scaling — Soros adjustments etc.
+      // Render grid: max 11 cols × 8 rows = 88 cells
+      var grid = [];
+      for (var r = 0; r < 8; r++) {
+        for (var c = 0; c < 11; c++) {
+          grid.push({ row: r, col: c, st: null });
+        }
+      }
+      STATE_GRID.forEach(function(t) {
+        var idx = t[0] * 11 + t[1];
+        grid[idx] = { row: t[0], col: t[1], st: t[2] };
+      });
+      var html = '';
+      grid.forEach(function(cell) {
+        if (!cell.st) {
+          html += '<div class="rk-heat-spacer"></div>';
+          return;
+        }
+        var data = byState[cell.st];
+        if (!data) {
+          html += '<div class="rk-heat-cell rk-heat-cell-empty" title="' + cell.st + ' — no scored candidates">' + cell.st + '</div>';
+          return;
+        }
+        var color = heatColor(data.avg, minScore, maxScore);
+        var label = cell.st;
+        var tip = '<div class="rk-heat-tooltip">' +
+          '<div class="rk-heat-tooltip-state">' + cell.st + '</div>' +
+          'avg ' + metricLabel(metric) + ': <strong>' + data.avg.toFixed(1) + '</strong> · ' + data.n + ' scored' +
+          '<div class="rk-heat-tooltip-top">top: ' + escapeHtmlH(data.top.n) + ' (' + data.top[metric] + ')</div>' +
+          '</div>';
+        html += '<a class="rk-heat-cell" href="citizen.html?state=' + cell.st + '" style="background:' + color + ';">' +
+                label + tip + '</a>';
+      });
+      container.innerHTML = html;
+    }
+
+    function metricLabel(m) {
+      return m === 'gf' ? 'GF' : m === 'af' ? 'AF' : 'total';
+    }
+
+    function escapeHtmlH(s) {
+      return String(s || '').replace(/[&<>"']/g, function(c) {
+        return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+      });
+    }
+
+    // Heat color: piecewise-linear gradient across red → orange → yellow → light-green → green
+    function heatColor(score, min, max) {
+      var t = (score - min) / (max - min);
+      t = Math.max(0, Math.min(1, t));
+      var stops = [
+        [0.00, [244,67,54]],   // red
+        [0.40, [255,152,0]],   // orange
+        [0.55, [255,193,7]],   // yellow
+        [0.72, [139,195,74]],  // light green
+        [1.00, [76,175,80]]    // green
+      ];
+      for (var i = 1; i < stops.length; i++) {
+        if (t <= stops[i][0]) {
+          var s0 = stops[i-1], s1 = stops[i];
+          var frac = (t - s0[0]) / (s1[0] - s0[0]);
+          var r = Math.round(s0[1][0] + frac * (s1[1][0] - s0[1][0]));
+          var g = Math.round(s0[1][1] + frac * (s1[1][1] - s0[1][1]));
+          var b = Math.round(s0[1][2] + frac * (s1[1][2] - s0[1][2]));
+          return 'rgb(' + r + ',' + g + ',' + b + ')';
+        }
+      }
+      return 'rgb(76,175,80)';
+    }
+
+    // Heat-toggle button handlers
+    document.querySelectorAll('.rk-heat-btn').forEach(function(btn) {
+      btn.addEventListener('click', function() {
+        document.querySelectorAll('.rk-heat-btn').forEach(function(b) {
+          b.classList.toggle('active', b === btn);
+        });
+        renderHeatmap(btn.getAttribute('data-metric'));
+      });
+    });
 
     function renderDistribution() {
       var container = document.getElementById('distribution');

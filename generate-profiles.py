@@ -568,6 +568,35 @@ def generate_profile(candidate, categories, meta, nav=None):
             '</details>'
         )
 
+    # ─── National-rank callout ─────────────────────────────────────────────
+    # Computed in main() — meta['_rank_map'][slug] → (rank, total_ranked).
+    # Only renders for candidates with at least one scored answer (others
+    # don't appear in the rank table). Visitors get a one-glance idea of
+    # "where does this candidate fall among other scored candidates?" with
+    # a one-click jump to the live rankings page.
+    def render_rank_callout(cand, meta_):
+        rank_map = (meta_ or {}).get('_rank_map') or {}
+        rank_entry = rank_map.get(cand.get('slug'))
+        if not rank_entry:
+            return ''
+        rank, total = rank_entry
+        pct = (rank / total) * 100 if total else 0
+        pct_label = f'top {pct:.1f}%' if pct < 50 else f'bottom {(100-pct):.1f}%'
+        return (
+            '<div class="prof-rank-callout" role="note" aria-label="National rank">'
+            '<div class="prof-rank-head">'
+            '<span class="prof-rank-icon" aria-hidden="true">&#9733;</span>'
+            '<span class="prof-rank-label">National Rank</span>'
+            '</div>'
+            f'<div class="prof-rank-body">'
+            f'<span class="prof-rank-position"><strong>#{rank:,}</strong> of {total:,}</span>'
+            f' &middot; <span class="prof-rank-pct">{pct_label}</span>'
+            f' <span class="prof-rank-context">among candidates with at least one scored answer</span>'
+            '</div>'
+            '<a href="../../citizen-rankings.html" class="prof-rank-link">See the full rankings &rarr;</a>'
+            '</div>'
+        )
+
     # ─── Church affiliation block (cross-pollination with usmcmin.org) ─────
     # Renders directly under the score block if c['church_affiliation'] is
     # set. Source-of-truth is the parallel agent's notable_attendees on
@@ -1408,6 +1437,8 @@ def generate_profile(candidate, categories, meta, nav=None):
     </div>
   </div>
 
+  {render_rank_callout(c, meta)}
+
   {render_church_affiliation_block(c)}
 
   {render_adjustments_block(adj_lines, total['score'], adjusted_score) if adj_lines else ''}
@@ -1615,6 +1646,27 @@ def main():
     # Build navigation map once: for each candidate id, know prev/next peers
     # within the same (state, level, jurisdiction) group, ordered by score desc.
     nav_map = compute_nav_groups(data['candidates'], categories)
+
+    # Precompute national rank table — candidate.slug → (rank, total_scored,
+    # percentile_top). Used by the "where this candidate ranks" callout.
+    # Only ranks candidates with at least one scored answer (no point in
+    # ranking 8,000 zeroes against each other — the rank would be ~halfway
+    # for everyone and meaningless).
+    rank_rows = []
+    for c in data['candidates']:
+        scores = c.get('scores') or {}
+        any_scored = any(isinstance(v, list) and any(a is not None for a in v) for v in scores.values())
+        if not any_scored:
+            continue
+        tot = calc_total(scores, categories)['score']
+        adj = sum((info.get('delta') or 0) for info in ((c.get('profile') or {}).get('score_adjustments') or {}).values())
+        rank_rows.append((c.get('slug'), tot + adj))
+    rank_rows.sort(key=lambda r: -r[1])  # descending
+    rank_map = {}
+    total_ranked = len(rank_rows)
+    for i, (slug, _) in enumerate(rank_rows):
+        rank_map[slug] = (i + 1, total_ranked)
+    meta['_rank_map'] = rank_map
 
     for candidate in data['candidates']:
         slug = candidate.get('slug', '')

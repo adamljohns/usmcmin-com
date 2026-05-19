@@ -80,9 +80,179 @@ def parse_frontmatter(text):
 
 def _parse_yaml(text):
     """Minimal YAML parser sufficient for our contribution schema.
-    Supports: scalars, quoted strings, simple lists, nested 2-space dicts."""
-    import yaml  # if PyYAML available
-    return yaml.safe_load(text) or {}
+    Avoids the PyYAML dependency (Python on macOS is PEP 668 externally-
+    managed; would require --break-system-packages to pip-install).
+
+    Supports:
+      key: value
+      key: "quoted string"
+      key:
+        - item
+        - "quoted item"
+      key:
+        nested_key: value
+        another: [list, of, items]
+      [True, False, True, False, "N/A"]   # inline lists
+    """
+    out = {}
+    # Strip comments + blank lines
+    lines = []
+    for raw in text.split('\n'):
+        # Strip line that's only a comment
+        stripped = raw.rstrip()
+        if not stripped or stripped.lstrip().startswith('#'):
+            continue
+        # Strip trailing comment, but preserve # in quoted strings
+        if '#' in stripped and not _inside_quotes(stripped, stripped.index('#')):
+            stripped = stripped[:stripped.index('#')].rstrip()
+        lines.append(stripped)
+
+    i = 0
+    while i < len(lines):
+        line = lines[i]
+        # Top-level key (no leading whitespace)
+        if not line.startswith(' '):
+            if ':' not in line:
+                i += 1
+                continue
+            key, _, rest = line.partition(':')
+            key = key.strip()
+            rest = rest.strip()
+            if rest == '' or rest is None:
+                # Block-form value — collect indented children
+                children = []
+                j = i + 1
+                while j < len(lines) and lines[j].startswith('  '):
+                    children.append(lines[j][2:])  # strip 2-space indent
+                    j += 1
+                out[key] = _parse_block(children)
+                i = j
+            elif rest.startswith('['):
+                # Inline list
+                out[key] = _parse_inline_list(rest)
+                i += 1
+            elif rest.startswith('"') and rest.endswith('"'):
+                out[key] = rest[1:-1]
+                i += 1
+            elif rest.startswith("'") and rest.endswith("'"):
+                out[key] = rest[1:-1]
+                i += 1
+            else:
+                out[key] = _parse_scalar(rest)
+                i += 1
+        else:
+            i += 1
+    return out
+
+
+def _inside_quotes(s, pos):
+    """Return True if position `pos` inside `s` is inside a string literal."""
+    in_double = False
+    in_single = False
+    for i, ch in enumerate(s):
+        if i >= pos:
+            return in_double or in_single
+        if ch == '"' and not in_single:
+            in_double = not in_double
+        elif ch == "'" and not in_double:
+            in_single = not in_single
+    return False
+
+
+def _parse_block(lines):
+    """Parse a block (list of '- item' or nested 'key: value')."""
+    if not lines:
+        return None
+    if lines[0].lstrip().startswith('- '):
+        # List of items
+        items = []
+        for line in lines:
+            item = line.lstrip()
+            if item.startswith('- '):
+                v = item[2:].strip()
+                if v.startswith('"') and v.endswith('"'):
+                    items.append(v[1:-1])
+                elif v.startswith("'") and v.endswith("'"):
+                    items.append(v[1:-1])
+                else:
+                    items.append(_parse_scalar(v))
+        return items
+    else:
+        # Nested dict
+        out = {}
+        i = 0
+        while i < len(lines):
+            line = lines[i]
+            if ':' not in line:
+                i += 1
+                continue
+            key, _, rest = line.partition(':')
+            key = key.strip()
+            rest = rest.strip()
+            if rest.startswith('['):
+                out[key] = _parse_inline_list(rest)
+            elif rest.startswith('"') and rest.endswith('"'):
+                out[key] = rest[1:-1]
+            else:
+                out[key] = _parse_scalar(rest)
+            i += 1
+        return out
+
+
+def _parse_inline_list(s):
+    """Parse '[a, b, c]' style inline list."""
+    s = s.strip()
+    if s.startswith('[') and s.endswith(']'):
+        inner = s[1:-1]
+    else:
+        return [s]
+    items = []
+    cur = ''
+    depth = 0
+    in_str = False
+    str_char = ''
+    for ch in inner:
+        if in_str:
+            cur += ch
+            if ch == str_char:
+                in_str = False
+            continue
+        if ch in '"\'':
+            in_str = True
+            str_char = ch
+            cur += ch
+            continue
+        if ch == ',' and depth == 0:
+            items.append(_parse_scalar(cur.strip()))
+            cur = ''
+        else:
+            cur += ch
+    if cur.strip():
+        items.append(_parse_scalar(cur.strip()))
+    return items
+
+
+def _parse_scalar(v):
+    """Parse a scalar value: true / false / null / "string" / 'string' / number / bare-word."""
+    if not v:
+        return None
+    if v == 'true' or v == 'True':
+        return True
+    if v == 'false' or v == 'False':
+        return False
+    if v == 'null' or v == 'None' or v == '~':
+        return None
+    if v.startswith('"') and v.endswith('"'):
+        return v[1:-1]
+    if v.startswith("'") and v.endswith("'"):
+        return v[1:-1]
+    # Number?
+    try:
+        if '.' in v:
+            return float(v)
+        return int(v)
+    except ValueError:
+        return v  # bare word
 
 
 def load_contributions():

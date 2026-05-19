@@ -17,10 +17,40 @@ the rest of usmcmin.com.
 Run from repo root:
     python3 build-category-pages.py
 """
+import json
 import os
 import re
 
 OUT_DIR = 'citizen'
+SCORECARD_PATH = 'data/scorecard.json'
+
+# Load scorecard.json once at module import — we read three fields per
+# category (questions, questions_state, questions_local, applicable_at)
+# so the deep-dive page can render all three tier variants and let a reader
+# toggle between Federal / State / Local. Falling back to {} keeps the
+# script runnable from a checkout without data — the toggle will just
+# show federal-only wording in that case. (Added 2026-05-19 per Adam's
+# "the most intuitive iteration yet" tier-toggle directive.)
+def _load_scorecard_tier_data():
+    try:
+        with open(SCORECARD_PATH) as f:
+            data = json.load(f)
+    except (FileNotFoundError, json.JSONDecodeError):
+        return {}
+    out = {}
+    for cat in data.get('categories', []):
+        cid = cat.get('id')
+        if not cid:
+            continue
+        out[cid] = {
+            'questions': cat.get('questions') or [],
+            'questions_state': cat.get('questions_state') or [None] * 5,
+            'questions_local': cat.get('questions_local') or [None] * 5,
+            'applicable_at': cat.get('applicable_at') or [['federal', 'state', 'local']] * 5,
+        }
+    return out
+
+SCORECARD_TIER_DATA = _load_scorecard_tier_data()
 
 # Each category gets the rubric fields PLUS extra editorial fields:
 # - tier: "god_first" | "america_first"
@@ -490,9 +520,57 @@ def render_page(cat):
     tier_label = 'God First' if cat['tier'] == 'god_first' else 'America First'
     tier_pts = '60 pts total' if cat['tier'] == 'god_first' else '40 pts total'
 
-    questions_html = '\n'.join(
-        f'        <li><strong>Q{i+1}.</strong> {q}</li>'
-        for i, q in enumerate(cat['questions']))
+    # v4.3 tier-toggle data — pull state/local question variants + applicability
+    # map from scorecard.json so the federal-tier wording in CATEGORIES stays
+    # in sync with the formal wording the scorer uses. Falls back to the
+    # CATEGORIES dict if the JSON isn't available (offline / dev / first run).
+    sc_data = SCORECARD_TIER_DATA.get(cat['id'], {})
+    sc_questions_fed = sc_data.get('questions') or cat['questions']
+    sc_questions_state = sc_data.get('questions_state') or [None] * 5
+    sc_questions_local = sc_data.get('questions_local') or [None] * 5
+    applicable_at = sc_data.get('applicable_at') or [['federal', 'state', 'local']] * 5
+
+    n_federal = sum(1 for t in applicable_at if 'federal' in t)
+    n_state = sum(1 for t in applicable_at if 'state' in t)
+    n_local = sum(1 for t in applicable_at if 'local' in t)
+
+    # Render every question three times — once per tier — so the toggle is
+    # pure CSS visibility (no fetch / no template re-render). Questions
+    # without a state/local-specific variant fall back to the federal text
+    # so the toggle still works visually; questions where the tier isn't
+    # in applicable_at are rendered as a clearly-marked "Not scored at this
+    # tier" line so readers see WHY the count shrinks.
+    def _q_block(i):
+        fed_text = sc_questions_fed[i] if i < len(sc_questions_fed) else cat['questions'][i] if i < len(cat['questions']) else ''
+        state_raw = sc_questions_state[i] if i < len(sc_questions_state) else None
+        local_raw = sc_questions_local[i] if i < len(sc_questions_local) else None
+        state_text = state_raw if state_raw else fed_text
+        local_text = local_raw if local_raw else fed_text
+        tiers = applicable_at[i] if i < len(applicable_at) else ['federal', 'state', 'local']
+
+        # Federal — always renders (federal is the master tier)
+        fed_html = f'          <div class="cp-q-text cp-q-federal"><strong>Q{i+1}.</strong> {fed_text}</div>'
+
+        # State — variant text if applicable, otherwise N/A line
+        if 'state' in tiers:
+            state_html = f'          <div class="cp-q-text cp-q-state"><strong>Q{i+1}.</strong> {state_text}</div>'
+        else:
+            state_html = f'          <div class="cp-q-text cp-q-state cp-q-na"><strong>Q{i+1}.</strong> <em>Not scored at the state tier — federal-only question (no state-level chair).</em></div>'
+
+        # Local — variant text if applicable, otherwise N/A line
+        if 'local' in tiers:
+            local_html = f'          <div class="cp-q-text cp-q-local"><strong>Q{i+1}.</strong> {local_text}</div>'
+        else:
+            local_html = f'          <div class="cp-q-text cp-q-local cp-q-na"><strong>Q{i+1}.</strong> <em>Not scored at the local tier — federal/state-only question.</em></div>'
+
+        applicable_attr = ','.join(tiers)
+        return f'''        <li class="cp-q" data-applicable="{applicable_attr}">
+{fed_html}
+{state_html}
+{local_html}
+        </li>'''
+
+    questions_html = '\n'.join(_q_block(i) for i in range(5))
 
     bills_html = '\n'.join(
         f'        <li><strong>{lbl}</strong> &mdash; {desc}</li>'
@@ -576,6 +654,77 @@ def render_page(cat):
     .cp-disq h3 {{ color: #ff8a80; font-size: 0.95rem; margin-bottom: 6px; font-weight: 700; }}
     .cp-disq ul {{ margin: 0 0 0 22px; color: #ffb3ad; font-size: 0.9rem; }}
 
+    /* v4.3 — tier toggle (Federal / State / Local) for the questions section.
+       Pure-CSS visibility: all three variants are rendered, the parent <ol>
+       carries a data-tier attribute, and the active variant is shown. The
+       toggle persists across deep-dive pages via localStorage. */
+    .cp-tier-toggle {{
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin: 14px 0 18px;
+      padding: 10px 14px;
+      background: rgba(168,176,188,0.06);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+    }}
+    .cp-tier-toggle-label {{
+      font-size: 0.7rem;
+      color: var(--gray);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      font-weight: 700;
+      margin-right: 4px;
+    }}
+    .cp-tier-pill {{
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--gray);
+      padding: 5px 14px;
+      border-radius: 14px;
+      font-size: 0.78rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.15s, color 0.15s, border-color 0.15s;
+      font-family: inherit;
+    }}
+    .cp-tier-pill:hover {{ color: var(--accent); border-color: var(--accent); }}
+    .cp-tier-pill.active {{
+      background: rgba(168,176,188,0.18);
+      color: var(--accent);
+      border-color: var(--accent);
+    }}
+    .cp-tier-pill:focus-visible {{
+      outline: 2px solid var(--accent);
+      outline-offset: 2px;
+    }}
+    .cp-tier-meta {{
+      font-size: 0.78rem;
+      color: var(--gray);
+      margin-left: auto;
+    }}
+    .cp-tier-meta strong {{ color: var(--accent); font-weight: 700; }}
+
+    .cp-questions {{
+      color: var(--gray);
+      font-size: 0.92rem;
+      line-height: 1.7;
+      margin: 8px 0 12px 22px;
+    }}
+    .cp-questions li.cp-q {{ margin-bottom: 10px; }}
+    .cp-questions .cp-q-text {{ display: none; }}
+    .cp-questions[data-tier="federal"] .cp-q-federal,
+    .cp-questions[data-tier="state"] .cp-q-state,
+    .cp-questions[data-tier="local"] .cp-q-local {{ display: block; }}
+    .cp-questions .cp-q-na {{
+      color: rgba(168,176,188,0.55);
+      font-style: italic;
+    }}
+    .cp-questions .cp-q-na strong {{ color: rgba(168,176,188,0.55); font-weight: 600; }}
+    .cp-questions .cp-q-na em {{ color: rgba(168,176,188,0.55); }}
+    .cp-questions strong {{ color: var(--white); }}
+
     .cp-back {{
       display: inline-block; color: var(--accent); text-decoration: none;
       font-size: 0.88rem; margin-top: 28px; padding: 8px 14px;
@@ -655,8 +804,15 @@ def render_page(cat):
 
   <section class="cp-section">
     <h2>The 5 scored questions</h2>
-    <p>Each question is binary (True / False / null). True earns +2 points. Null is "not yet verified from primary sources" — neither penalized nor credited.</p>
-    <ol>
+    <p>Each question is binary (True / False / null). True earns +2 points. Null is "not yet verified from primary sources" — neither penalized nor credited. Use the toggle below to see the wording for federal, state, or local officials — the moral spirit is identical across tiers; what changes is the chair making the call. <a href="/scoring-system.html">Read the tier architecture explainer →</a></p>
+    <div class="cp-tier-toggle" role="tablist" aria-label="View question wording for federal, state, or local officials">
+      <span class="cp-tier-toggle-label">View as:</span>
+      <button type="button" class="cp-tier-pill active" data-tier="federal" role="tab" aria-selected="true">Federal</button>
+      <button type="button" class="cp-tier-pill" data-tier="state" role="tab" aria-selected="false">State</button>
+      <button type="button" class="cp-tier-pill" data-tier="local" role="tab" aria-selected="false">Local</button>
+      <span class="cp-tier-meta"><strong class="cp-tier-count-num">{n_federal}</strong> of 5 questions apply at this tier</span>
+    </div>
+    <ol class="cp-questions" data-tier="federal" data-n-federal="{n_federal}" data-n-state="{n_state}" data-n-local="{n_local}">
 {questions_html}
     </ol>
   </section>
@@ -701,6 +857,40 @@ def render_page(cat):
 
 <script>
 (function(){{var t=document.getElementById('themeToggle');if(!t)return;var s=localStorage.getItem('usmc-theme');if(s!=='light'){{document.documentElement.setAttribute('data-theme','dark');t.textContent='☀️';}}t.addEventListener('click',function(){{var d=document.documentElement.getAttribute('data-theme')==='dark';if(d){{document.documentElement.removeAttribute('data-theme');localStorage.setItem('usmc-theme','light');t.textContent='🌙';}}else{{document.documentElement.setAttribute('data-theme','dark');localStorage.setItem('usmc-theme','dark');t.textContent='☀️';}}}});}})();
+</script>
+<script>
+/* v4.3 tier toggle — Federal / State / Local. Choice persists across the
+   10 deep-dive pages via localStorage so a state-legislator-curious reader
+   doesn't have to keep re-selecting "State" on each category page. */
+(function(){{
+  var STORAGE_KEY = 'usmc-rubric-tier';
+  var ol = document.querySelector('.cp-questions');
+  if (!ol) return;
+  var pills = document.querySelectorAll('.cp-tier-pill');
+  var meta = document.querySelector('.cp-tier-count-num');
+  function apply(tier){{
+    if (tier !== 'federal' && tier !== 'state' && tier !== 'local') tier = 'federal';
+    ol.dataset.tier = tier;
+    pills.forEach(function(p){{
+      var on = p.dataset.tier === tier;
+      p.classList.toggle('active', on);
+      p.setAttribute('aria-selected', on ? 'true' : 'false');
+    }});
+    if (meta) {{
+      var key = 'n' + tier.charAt(0).toUpperCase() + tier.slice(1);
+      meta.textContent = ol.dataset[key] || '5';
+    }}
+  }}
+  pills.forEach(function(p){{
+    p.addEventListener('click', function(){{
+      apply(p.dataset.tier);
+      try {{ localStorage.setItem(STORAGE_KEY, p.dataset.tier); }} catch(e){{}}
+    }});
+  }});
+  var saved;
+  try {{ saved = localStorage.getItem(STORAGE_KEY); }} catch(e){{}}
+  if (saved && saved !== 'federal') apply(saved);
+}})();
 </script>
 <script data-goatcounter="https://usmcmin.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
 </body>

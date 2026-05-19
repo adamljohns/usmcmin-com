@@ -1488,6 +1488,37 @@ def generate_profile(candidate, categories, meta, nav=None):
         )
         sources_html += '</div>'
 
+    # v4.3 — tier callout. For state/local candidates, surface a small chip
+    # showing how many of the 50 rubric questions actually apply at their
+    # office level. Federal candidates already see "X of 50 answered" with
+    # 50 being the full possible — no chip needed. (Added 2026-05-19 per
+    # Adam's "surface state/local tier badges" directive.)
+    applicable_total = 0
+    for cat in categories:
+        aa = cat.get('applicable_at') or []
+        for tiers in aa:
+            if candidate_tier in tiers:
+                applicable_total += 1
+    if applicable_total == 0:
+        applicable_total = 50  # safety fallback if applicable_at metadata is absent
+
+    if candidate_tier in ('state', 'local'):
+        tier_pretty = 'State' if candidate_tier == 'state' else 'Local'
+        tier_pill_class = f'prof-tier-pill-{candidate_tier}'
+        tier_callout_html = (
+            f'<div class="prof-tier-callout" '
+            f'title="This office is classified at the {candidate_tier} tier per the v4.1 applicability matrix. '
+            f'{applicable_total} of the 50 rubric questions are scoreable at this chair; the rest are marked N/A '
+            f'because the office does not decide them. Dynamic-max grading divides by 2 × answered, never by 100.">'
+            f'<span class="prof-tier-pill {tier_pill_class}">{tier_pretty} tier</span>'
+            f'<span class="prof-tier-note"><strong>{applicable_total} of 50 rubric questions apply</strong> '
+            f'at this office level &mdash; federal-only questions are marked N/A and excluded from the dynamic max. '
+            f'<a href="/scoring-system.html#tiered-grading">How tier grading works &rarr;</a></span>'
+            f'</div>'
+        )
+    else:
+        tier_callout_html = ''
+
     return f'''<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -1590,13 +1621,14 @@ def generate_profile(candidate, categories, meta, nav=None):
         <span class="prof-total-pct" title="Percentage of dynamic max earned">{pct_of_max}%</span>
       </div>
       <div class="prof-total-detail">
-        <span class="prof-answered" title="Number of questions with researched evidence. Out of 50 total ({MAX_TOTAL} pt scale). The remaining {50-answered_count} are unanswered — see scoring-system.html for methodology.">{answered_count} of 50 answered</span>
+        <span class="prof-answered" title="Number of questions with researched evidence. Out of 50 total ({MAX_TOTAL} pt scale). The remaining {50-answered_count} are unanswered — see scoring-system.html for methodology.">{answered_count} of {applicable_total} answered</span>
         {f'''&middot; Base {total['score']}/{max_possible}
         <span class="prof-total-adj prof-total-adj-{('plus' if adj_total > 0 else 'minus')}">
           {('+' if adj_total > 0 else '')}{adj_total}
         </span>
         foreign-influence adjustment''' if adj_total != 0 else ''}
       </div>
+      {tier_callout_html}
       {f'<div class="prof-freshness" title="Data freshness source: {freshness_source}">Last verified: <time datetime="{freshness_date}">{freshness_date}</time>{" · from claim evidence" if freshness_source == "claim" else " · scorecard-level timestamp"}</div>' if freshness_date else ''}
     </div>
     <div class="prof-total-right">

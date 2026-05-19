@@ -67,6 +67,77 @@
     .cp-disq h3 { color: #ff8a80; font-size: 0.95rem; margin-bottom: 6px; font-weight: 700; }
     .cp-disq ul { margin: 0 0 0 22px; color: #ffb3ad; font-size: 0.9rem; }
 
+    /* v4.3 — tier toggle (Federal / State / Local) for the questions section.
+       Pure-CSS visibility: all three variants are rendered, the parent <ol>
+       carries a data-tier attribute, and the active variant is shown. The
+       toggle persists across deep-dive pages via localStorage. */
+    .cp-tier-toggle {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin: 14px 0 18px;
+      padding: 10px 14px;
+      background: rgba(168,176,188,0.06);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+    }
+    .cp-tier-toggle-label {
+      font-size: 0.7rem;
+      color: var(--gray);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      font-weight: 700;
+      margin-right: 4px;
+    }
+    .cp-tier-pill {
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--gray);
+      padding: 5px 14px;
+      border-radius: 14px;
+      font-size: 0.78rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.15s, color 0.15s, border-color 0.15s;
+      font-family: inherit;
+    }
+    .cp-tier-pill:hover { color: var(--accent); border-color: var(--accent); }
+    .cp-tier-pill.active {
+      background: rgba(168,176,188,0.18);
+      color: var(--accent);
+      border-color: var(--accent);
+    }
+    .cp-tier-pill:focus-visible {
+      outline: 2px solid var(--accent);
+      outline-offset: 2px;
+    }
+    .cp-tier-meta {
+      font-size: 0.78rem;
+      color: var(--gray);
+      margin-left: auto;
+    }
+    .cp-tier-meta strong { color: var(--accent); font-weight: 700; }
+
+    .cp-questions {
+      color: var(--gray);
+      font-size: 0.92rem;
+      line-height: 1.7;
+      margin: 8px 0 12px 22px;
+    }
+    .cp-questions li.cp-q { margin-bottom: 10px; }
+    .cp-questions .cp-q-text { display: none; }
+    .cp-questions[data-tier="federal"] .cp-q-federal,
+    .cp-questions[data-tier="state"] .cp-q-state,
+    .cp-questions[data-tier="local"] .cp-q-local { display: block; }
+    .cp-questions .cp-q-na {
+      color: rgba(168,176,188,0.55);
+      font-style: italic;
+    }
+    .cp-questions .cp-q-na strong { color: rgba(168,176,188,0.55); font-weight: 600; }
+    .cp-questions .cp-q-na em { color: rgba(168,176,188,0.55); }
+    .cp-questions strong { color: var(--white); }
+
     .cp-back {
       display: inline-block; color: var(--accent); text-decoration: none;
       font-size: 0.88rem; margin-top: 28px; padding: 8px 14px;
@@ -155,13 +226,40 @@
 
   <section class="cp-section">
     <h2>The 5 scored questions</h2>
-    <p>Each question is binary (True / False / null). True earns +2 points. Null is "not yet verified from primary sources" — neither penalized nor credited.</p>
-    <ol>
-        <li><strong>Q1.</strong> Candidate supports completed physical border barrier and active military border presence</li>
-        <li><strong>Q2.</strong> Candidate supports mandatory deportation of all illegal aliens, including those who entered as minors</li>
-        <li><strong>Q3.</strong> Candidate opposes sanctuary city/state policies and supports federal preemption against them</li>
-        <li><strong>Q4.</strong> Candidate supports mandatory E-Verify for all employment and benefit eligibility</li>
-        <li><strong>Q5.</strong> Candidate opposes birthright citizenship for children of illegal aliens, tourist births, and opposes foreign ownership of U.S. farmland</li>
+    <p>Each question is binary (True / False / null). True earns +2 points. Null is "not yet verified from primary sources" — neither penalized nor credited. Use the toggle below to see the wording for federal, state, or local officials — the moral spirit is identical across tiers; what changes is the chair making the call. <a href="/scoring-system.html">Read the tier architecture explainer →</a></p>
+    <div class="cp-tier-toggle" role="tablist" aria-label="View question wording for federal, state, or local officials">
+      <span class="cp-tier-toggle-label">View as:</span>
+      <button type="button" class="cp-tier-pill active" data-tier="federal" role="tab" aria-selected="true">Federal</button>
+      <button type="button" class="cp-tier-pill" data-tier="state" role="tab" aria-selected="false">State</button>
+      <button type="button" class="cp-tier-pill" data-tier="local" role="tab" aria-selected="false">Local</button>
+      <span class="cp-tier-meta"><strong class="cp-tier-count-num">5</strong> of 5 questions apply at this tier</span>
+    </div>
+    <ol class="cp-questions" data-tier="federal" data-n-federal="5" data-n-state="5" data-n-local="2">
+        <li class="cp-q" data-applicable="federal,state">
+          <div class="cp-q-text cp-q-federal"><strong>Q1.</strong> Candidate supports completed physical border barrier and active military border presence</div>
+          <div class="cp-q-text cp-q-state"><strong>Q1.</strong> Candidate (state) has voted for state-funded border-security measures (e.g., TX Operation Lone Star analog, AZ wall expansion)</div>
+          <div class="cp-q-text cp-q-local cp-q-na"><strong>Q1.</strong> <em>Not scored at the local tier — federal/state-only question.</em></div>
+        </li>
+        <li class="cp-q" data-applicable="federal,state,local">
+          <div class="cp-q-text cp-q-federal"><strong>Q2.</strong> Candidate supports mandatory deportation of all illegal aliens, including those who entered as minors</div>
+          <div class="cp-q-text cp-q-state"><strong>Q2.</strong> Candidate (state) has voted for state laws requiring local cooperation with ICE deportation enforcement</div>
+          <div class="cp-q-text cp-q-local"><strong>Q2.</strong> Candidate (DA/sheriff) cooperates with ICE detainers + transfers; (mayor/council) supports local cooperation with ICE rather than sanctuary policies</div>
+        </li>
+        <li class="cp-q" data-applicable="federal,state,local">
+          <div class="cp-q-text cp-q-federal"><strong>Q3.</strong> Candidate opposes sanctuary city/state policies and supports federal preemption against them</div>
+          <div class="cp-q-text cp-q-state"><strong>Q3.</strong> Candidate (state) has voted to preempt or punish sanctuary-city policies + ban state cities from declaring sanctuary status</div>
+          <div class="cp-q-text cp-q-local"><strong>Q3.</strong> Candidate (city/county) has voted against local sanctuary-city ordinances + supports city cooperation with federal immigration enforcement</div>
+        </li>
+        <li class="cp-q" data-applicable="federal,state">
+          <div class="cp-q-text cp-q-federal"><strong>Q4.</strong> Candidate supports mandatory E-Verify for all employment and benefit eligibility</div>
+          <div class="cp-q-text cp-q-state"><strong>Q4.</strong> Candidate (state) has voted for state E-Verify mandate (beyond federal floor) for state employers + state-benefit eligibility verification</div>
+          <div class="cp-q-text cp-q-local cp-q-na"><strong>Q4.</strong> <em>Not scored at the local tier — federal/state-only question.</em></div>
+        </li>
+        <li class="cp-q" data-applicable="federal,state">
+          <div class="cp-q-text cp-q-federal"><strong>Q5.</strong> Candidate opposes birthright citizenship for children of illegal aliens, tourist births, and opposes foreign ownership of U.S. farmland</div>
+          <div class="cp-q-text cp-q-state"><strong>Q5.</strong> Candidate (state) has voted to restrict foreign ownership of state farmland (e.g., China-buyer prohibitions)</div>
+          <div class="cp-q-text cp-q-local cp-q-na"><strong>Q5.</strong> <em>Not scored at the local tier — federal/state-only question.</em></div>
+        </li>
     </ol>
   </section>
 
@@ -215,6 +313,40 @@
 
 <script>
 (function(){var t=document.getElementById('themeToggle');if(!t)return;var s=localStorage.getItem('usmc-theme');if(s!=='light'){document.documentElement.setAttribute('data-theme','dark');t.textContent='☀️';}t.addEventListener('click',function(){var d=document.documentElement.getAttribute('data-theme')==='dark';if(d){document.documentElement.removeAttribute('data-theme');localStorage.setItem('usmc-theme','light');t.textContent='🌙';}else{document.documentElement.setAttribute('data-theme','dark');localStorage.setItem('usmc-theme','dark');t.textContent='☀️';}});})();
+</script>
+<script>
+/* v4.3 tier toggle — Federal / State / Local. Choice persists across the
+   10 deep-dive pages via localStorage so a state-legislator-curious reader
+   doesn't have to keep re-selecting "State" on each category page. */
+(function(){
+  var STORAGE_KEY = 'usmc-rubric-tier';
+  var ol = document.querySelector('.cp-questions');
+  if (!ol) return;
+  var pills = document.querySelectorAll('.cp-tier-pill');
+  var meta = document.querySelector('.cp-tier-count-num');
+  function apply(tier){
+    if (tier !== 'federal' && tier !== 'state' && tier !== 'local') tier = 'federal';
+    ol.dataset.tier = tier;
+    pills.forEach(function(p){
+      var on = p.dataset.tier === tier;
+      p.classList.toggle('active', on);
+      p.setAttribute('aria-selected', on ? 'true' : 'false');
+    });
+    if (meta) {
+      var key = 'n' + tier.charAt(0).toUpperCase() + tier.slice(1);
+      meta.textContent = ol.dataset[key] || '5';
+    }
+  }
+  pills.forEach(function(p){
+    p.addEventListener('click', function(){
+      apply(p.dataset.tier);
+      try { localStorage.setItem(STORAGE_KEY, p.dataset.tier); } catch(e){}
+    });
+  });
+  var saved;
+  try { saved = localStorage.getItem(STORAGE_KEY); } catch(e){}
+  if (saved && saved !== 'federal') apply(saved);
+})();
 </script>
 <script data-goatcounter="https://usmcmin.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
 </body>

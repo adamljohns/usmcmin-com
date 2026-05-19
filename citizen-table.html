@@ -449,7 +449,7 @@ function initSortDropdown() {
 // new state's JSON. Result: typical page load ~350 KB vs. the old 13 MB.
 var INDEX_DATA = null;
 
-fetch('data/index.json')
+fetch('data/index.json', { cache: 'no-cache' })
   .then(function(r) {
     if (!r.ok) throw new Error('Failed to load index');
     return r.json();

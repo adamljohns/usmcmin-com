@@ -797,7 +797,7 @@ function loadGlobalSearchIndex() {
   GLOBAL_SEARCH.loading = true;
   var statusEl = document.getElementById('globalSearchStatus');
   if (statusEl) statusEl.textContent = 'Loading nationwide index…';
-  fetch('data/search-index.json')
+  fetch('data/search-index.json', { cache: 'no-cache' })
     .then(function(r){ return r.json(); })
     .then(function(d){
       GLOBAL_SEARCH.index = d.rows || [];
@@ -1104,7 +1104,15 @@ function buildStateDropdown(currentState) {
 }
 
 // ---- Data Load (index first, then per-state) ----
-fetch('data/index.json')
+// Cache strategy: `cache: 'no-cache'` makes the browser revalidate every
+// load (sends If-Modified-Since; server returns 304 if unchanged, fresh
+// content if a recent deploy bumped the data). Without this, a returning
+// visitor whose browser cached the previous rubric (e.g. the old 7-category
+// index.json) sees broken category cards for up to 10 minutes after each
+// deploy because their cached JSON keys don't match the new ones. Added
+// 2026-05-19 after a live visit showed Mike Faris's brand-new card
+// rendering as 0/0 F because DATA.categories was still the cached 7-cat list.
+fetch('data/index.json', { cache: 'no-cache' })
   .then(function(r) {
     if (!r.ok) throw new Error('Failed to load index');
     return r.json();
@@ -1119,7 +1127,7 @@ fetch('data/index.json')
     if (!st) st = 'VA';
 
     var stateFile = 'data/states/' + st.toLowerCase() + '.json';
-    return fetch(stateFile)
+    return fetch(stateFile, { cache: 'no-cache' })
       .then(function(r) {
         if (!r.ok) throw new Error('Failed to load state: ' + st);
         return r.json();

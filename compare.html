@@ -467,8 +467,8 @@
 
   // Boot
   Promise.all([
-    fetch('data/races.json').then(function(r){ return r.json(); }),
-    fetch('data/scorecard.json').then(function(r){ return r.json(); }),
+    fetch('data/races.json', { cache: 'no-cache' }).then(function(r){ return r.json(); }),
+    fetch('data/scorecard.json', { cache: 'no-cache' }).then(function(r){ return r.json(); }),
   ]).then(function(arr){
     STATE.races = arr[0];
     STATE.scorecard = arr[1];

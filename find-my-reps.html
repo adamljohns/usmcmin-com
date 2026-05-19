@@ -495,7 +495,7 @@
   function loadPlaces() {
     if (PLACES) return Promise.resolve(PLACES);
     if (placesLoading) return placesLoading;
-    placesLoading = fetch('data/places.json')
+    placesLoading = fetch('data/places.json', { cache: 'no-cache' })
       .then(function(r){ return r.json(); })
       .then(function(data){
         PLACES = data;
@@ -517,7 +517,7 @@
   function loadZips() {
     if (ZIPS) return Promise.resolve(ZIPS);
     if (zipsLoading) return zipsLoading;
-    zipsLoading = fetch('data/zips.json')
+    zipsLoading = fetch('data/zips.json', { cache: 'no-cache' })
       .then(function(r){ return r.json(); })
       .then(function(data){ ZIPS = data; return ZIPS; })
       .catch(function(){ ZIPS = {}; return ZIPS; });
@@ -838,7 +838,7 @@
       slot.style.display = 'block';
     }
     if (STATE_LEG_LOOKUP_CACHE) { render(STATE_LEG_LOOKUP_CACHE); return; }
-    fetch('data/state_legislative_lookup.json', { cache: 'default' })
+    fetch('data/state_legislative_lookup.json', { cache: 'no-cache' })
       .then(function(r){ if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
       .then(function(lookup){ STATE_LEG_LOOKUP_CACHE = lookup; render(lookup); })
       .catch(function(){ slot.style.display = 'none'; });
@@ -851,7 +851,7 @@
 
     // Load per-state JSON
     var stateCode = place.state;
-    fetch('data/states/' + stateCode.toLowerCase() + '.json')
+    fetch('data/states/' + stateCode.toLowerCase() + '.json', { cache: 'no-cache' })
       .then(function(r){
         if (!r.ok) throw new Error('State not covered yet: ' + stateCode);
         return r.json();

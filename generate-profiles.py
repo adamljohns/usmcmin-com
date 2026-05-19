@@ -54,6 +54,61 @@ def calc_total(scores, categories):
         answered += cs['answered']
     return {'score': total, 'answered': answered}
 
+def classify_office_tier(c):
+    """v4.1+ — return 'federal' | 'state' | 'local' for a candidate based on office.
+    Mirror of apply-tier-applicability.py's classifier (kept inline here to avoid
+    package-imports). Updates to this function should also update the apply
+    script's version."""
+    office = c.get('office') or ''
+    if not office:
+        jur = (c.get('jurisdiction') or '').lower()
+        if 'executive branch' in jur or 'judicial branch' in jur:
+            return 'federal'
+        return 'state'
+    o = office.lower()
+    if re.search(r'\b(president|vice president|u\.?s\.?\s+sen|u\.?s\.?\s+hous|u\.?s\.?\s+rep|'
+                 r'united states sen|united states hous|united states rep|secretary of|'
+                 r'acting attorney general|attorney general of the united states|'
+                 r'director of|administrator of|ambassador|chief of staff|deputy chief of staff|'
+                 r'homeland security advisor|chief justice|associate justice.+supreme court|'
+                 r'special envoy)', o):
+        if re.search(r'^attorney general$|state attorney general', o) and 'united states' not in o:
+            return 'state'
+        return 'federal'
+    if re.search(r'\bgovernor\b|^lt\.?\s+governor|lieutenant governor|'
+                 r'state senator|state senate|state representative|state hous|'
+                 r'state assembl|^delegate$|delegate \(', o):
+        return 'state'
+    if re.search(r'^attorney general$|secretary of state$|state treasurer|state auditor|'
+                 r'state comptroller', o):
+        return 'state'
+    if 'state supreme court' in o or re.search(r'(chief justice|justice).+state', o):
+        return 'state'
+    if re.search(r'\bmayor\b|city council|town council|borough council|'
+                 r'county (commissioner|supervisor|judge|board)|'
+                 r'school board|board of education|'
+                 r'district attorney|sheriff|city clerk|city attorney|'
+                 r'commonwealth\'?s attorney', o):
+        return 'local'
+    return 'state'
+
+
+def question_text_for_tier(cat, q_idx, tier):
+    """v4.2/4.3 — return the tier-appropriate question text for display.
+    Falls back to the default federal text (questions[q_idx]) if no tier
+    variant is set. Per Adam's 2026-05-19 directive: "similar in scope
+    but different in implementation"."""
+    if tier == 'state':
+        qs = cat.get('questions_state') or []
+        if q_idx < len(qs) and qs[q_idx]:
+            return qs[q_idx]
+    elif tier == 'local':
+        qs = cat.get('questions_local') or []
+        if q_idx < len(qs) and qs[q_idx]:
+            return qs[q_idx]
+    return cat.get('questions', [''])[q_idx] if q_idx < len(cat.get('questions', [])) else ''
+
+
 def calc_subtotals(scores, categories):
     """v4.0 — split total into God First (60) + America First (40) subtotals
     by reading the tier field on each category. Mirrors citizen.html's
@@ -455,6 +510,11 @@ def generate_profile(candidate, categories, meta, nav=None):
     c = candidate
     total = calc_total(c['scores'], categories)
     profile = c.get('profile', {}) or {}
+
+    # v4.2/v4.3 — classify candidate's office tier once. Used by question_text_for_tier
+    # to pick the right question wording (federal vs state vs local). Falls back to
+    # 'federal' for ambiguous/unknown to avoid omitting questions.
+    candidate_tier = classify_office_tier(c) or 'federal'
 
     # Foreign-influence + dark-money adjustments. Sums delta across every
     # keyed source under profile.score_adjustments (aipac, soros, etc.)
@@ -1240,7 +1300,11 @@ def generate_profile(candidate, categories, meta, nav=None):
       <div class="prof-questions">'''
         questions = cat.get('questions', [])
         answers = c['scores'].get(cat['id'], [None]*5)
-        for i, q in enumerate(questions):
+        for i in range(len(questions)):
+            # v4.2/v4.3 — pick the tier-appropriate question text. Federal
+            # officials see the default; state officials see questions_state[i]
+            # if set; local officials see questions_local[i] if set.
+            q = question_text_for_tier(cat, i, candidate_tier)
             a = answers[i] if i < len(answers) else None
             claims_block = render_claims_block(cat['id'], i)
             fn_markers = render_fn_markers_for(cat['id'], i, a)

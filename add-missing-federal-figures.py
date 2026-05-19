@@ -395,16 +395,51 @@ def main():
     with open(SCORECARD) as f:
         sc = json.load(f)
 
-    existing_slugs = {c.get('slug') for c in sc['candidates']}
+    existing_by_slug = {c.get('slug'): c for c in sc['candidates']}
     max_id = max((c.get('id') or 0) for c in sc['candidates'])
 
     added = []
-    skipped_existing = []
+    updated_existing = []   # filled scores into existing-but-null record
+    skipped_existing = []   # already had non-null data — don't overwrite
 
     for tpl in NEW_CANDIDATES:
         slug = slugify(tpl['name'])
-        if slug in existing_slugs:
-            skipped_existing.append(tpl['name'])
+        existing = existing_by_slug.get(slug)
+        if existing is not None:
+            # Existing record — refresh office/jurisdiction (if newer than
+            # current, e.g. Rubio went from US Senator → Sec of State) +
+            # fill in scores only where currently null. NEVER overwrite
+            # existing answers.
+            cells_filled = 0
+            scores = existing.setdefault('scores', {})
+            for cat_id, pattern in tpl['scores'].items():
+                arr = scores.setdefault(cat_id, [None] * 5)
+                for i, want in enumerate(pattern):
+                    if i >= len(arr): break
+                    if want is None: continue
+                    if arr[i] is None:
+                        arr[i] = want
+                        cells_filled += 1
+            # Refresh office (cabinet roles are newer than Senate roles)
+            existing['office'] = tpl['office']
+            existing['jurisdiction'] = tpl['jurisdiction']
+            existing.setdefault('level', tpl.get('level', 'federal'))
+            prof = existing.setdefault('profile', {})
+            if prof.get('confidence') in (None, 'party_default'):
+                prof['confidence'] = 'archetype_curated'
+                prof['confidence_note'] = (
+                    f'2026-05-18 refresh: cabinet position updated, scores '
+                    f'filled where null. Source: add-missing-federal-figures.py '
+                    f'override pass. Pre-existing non-null answers preserved.'
+                )
+            if not prof.get('religion') and tpl.get('religion'):
+                prof['religion'] = tpl['religion']
+            if not prof.get('twitter') and tpl.get('twitter'):
+                prof['twitter'] = tpl['twitter']
+            if cells_filled > 0:
+                updated_existing.append(f'{tpl["name"]} ({cells_filled} cells filled)')
+            else:
+                skipped_existing.append(tpl['name'])
             continue
         max_id += 1
         record = {
@@ -452,8 +487,12 @@ def main():
     print(f'New candidates added: {len(added)}')
     for n in added:
         print(f'  + {n}')
+    if updated_existing:
+        print(f'\nExisting records updated (null cells filled): {len(updated_existing)}')
+        for n in updated_existing:
+            print(f'  ↻ {n}')
     if skipped_existing:
-        print(f'\nSkipped (already in scorecard): {len(skipped_existing)}')
+        print(f'\nSkipped (already had non-null scores): {len(skipped_existing)}')
         for n in skipped_existing:
             print(f'  · {n}')
 

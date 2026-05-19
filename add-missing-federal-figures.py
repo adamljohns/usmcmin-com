@@ -424,6 +424,32 @@ NEW_CANDIDATES = [
                  '(2019-2025, two terms), US House SD-AL (2011-2019). Strong pro-life + 2A + parental rights '
                  'record. Hawkish on foreign policy.',
     },
+    # ─── Anti-ESG state treasurers (economic_stewardship q4 evidence) ───
+    {
+        'name': 'Marlo Oaks',
+        'state': 'UT',
+        'party': 'R',
+        'office': 'Utah State Treasurer',
+        'jurisdiction': 'Utah',
+        'level': 'state-executive',
+        'religion': 'Christian',
+        'twitter': '@TreasurerOaks',
+        'sources': ['https://treasurer.utah.gov/', 'https://www.sltrib.com/news/politics/2022/09/18/utah-state-treasurer-pulls/'],
+        'scores': {
+            'sanctity_of_life':        [T, T, N, T, T],
+            'biblical_marriage':       [T, T, T, N, T],
+            'family_child_sovereignty': [T, T, T, N, T],
+            'christian_liberty':       [T, T, T, T, T],
+            'economic_stewardship':    [T, N, T, N, T],   # SIGNATURE ANTI-ESG RECORD
+            'election_integrity':      [N, T, T, T, T],
+            'border_immigration':      [T, T, T, T, T],
+            'self_defense':            [T, T, T, T, T],
+            'foreign_policy_restraint': [N, N, N, F, N],
+            'industry_capture':        [N, N, T, T, N],
+        },
+        'notes': 'Utah State Treasurer; head of State Financial Officers Foundation (SFOF). Divested $100M from BlackRock September 2022 in ESG protest. Led 26-state R coalition letter to BlackRock + Vanguard + State Street + other asset managers July 29, 2025 demanding they cease climate-as-long-term-risk framing. Reference SoS for the broader anti-ESG state-treasurer movement; perfect T on economic_stewardship[q4] (WEF/ESG opposition) by signature record.',
+    },
+
     # ─── More state SoS (election-integrity focus) ───
     {
         'name': 'Tre Hargett',

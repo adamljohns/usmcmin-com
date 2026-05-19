@@ -181,6 +181,7 @@
       <a href="citizen-rankings.html" style="color:var(--gray);font-size:0.85rem;text-decoration:none;">Rankings</a>
       <a href="citizen-formers.html" style="color:var(--white);font-size:0.85rem;text-decoration:none;border-bottom:1px solid var(--accent);">Former Officials</a>
       <a href="scoring-system.html" style="color:var(--gray);font-size:0.85rem;text-decoration:none;">Rubric</a>
+      <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme" title="Switch light/dark mode" style="margin-left:auto;background:none;border:1px solid var(--border);cursor:pointer;font-size:1.1rem;padding:0.3rem 0.55rem;border-radius:6px;line-height:1;">🌙</button>
     </nav>
   </header>
 
@@ -308,6 +309,9 @@
         render(tab.getAttribute('data-tab'));
       });
     });
+  </script>
+  <script>
+  (function(){var t=document.getElementById('themeToggle');if(!t)return;var s=localStorage.getItem('usmc-theme');if(s!=='light'){document.documentElement.setAttribute('data-theme','dark');t.textContent='☀️';}t.addEventListener('click',function(){var d=document.documentElement.getAttribute('data-theme')==='dark';if(d){document.documentElement.removeAttribute('data-theme');localStorage.setItem('usmc-theme','light');t.textContent='🌙';}else{document.documentElement.setAttribute('data-theme','dark');localStorage.setItem('usmc-theme','dark');t.textContent='☀️';}});})();
   </script>
 </body>
 </html>

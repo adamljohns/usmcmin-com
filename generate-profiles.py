@@ -1261,6 +1261,23 @@ def generate_profile(candidate, categories, meta, nav=None):
         'self_defense': 'self_defense', 'education': 'education',
         'america_first': 'america_first', 'christian_heritage': 'christian_heritage',
     }
+    # Deep-dive page slugs for each v4.x category. Files live under
+    # /citizen/<slug>.html — the rubric metric on each profile becomes a link
+    # so a reader can jump from "Sanctity of Life · 0/10" to the full
+    # rubric/anchor-scripture/disqualifier list for that category.
+    # Added 2026-05-19 per Adam's clickable-metrics directive.
+    CAT_DEEPDIVE_MAP = {
+        'sanctity_of_life': 'sanctity-of-life',
+        'biblical_marriage': 'biblical-marriage',
+        'family_child_sovereignty': 'family-child-sovereignty',
+        'christian_liberty': 'christian-liberty',
+        'economic_stewardship': 'economic-stewardship',
+        'election_integrity': 'election-integrity',
+        'border_immigration': 'border-immigration',
+        'self_defense': 'self-defense-2a',
+        'foreign_policy_restraint': 'foreign-policy-restraint',
+        'industry_capture': 'industry-capture',
+    }
 
     cat_html = ''
     for cat in categories:
@@ -1289,7 +1306,22 @@ def generate_profile(candidate, categories, meta, nav=None):
                 '&#9993;&#xFE0F; Petition your reps'
                 '</a>'
             )
-        cat_html += f'''
+        deepdive_slug = CAT_DEEPDIVE_MAP.get(cat['id'])
+        if deepdive_slug:
+            cat_html += f'''
+    <div class="prof-category">
+      <div class="prof-cat-header">
+        <a class="prof-cat-link" href="../../citizen/{deepdive_slug}.html" title="Open the full {cat['label']} rubric — questions, anchor Scripture, disqualifiers, and tier variants">
+          <img src="../../assets/icons/{cat['icon']}" alt="" width="24" height="24">
+          <h3>{cat['label']}</h3>
+          <span class="prof-cat-score" style="color:{color};">{cs['score']}/{MAX_PER_TOPIC}</span>
+          <span class="prof-cat-deepdive" aria-hidden="true">deep dive →</span>
+        </a>
+        {petition_btn}
+      </div>
+      <div class="prof-questions">'''
+        else:
+            cat_html += f'''
     <div class="prof-category">
       <div class="prof-cat-header">
         <img src="../../assets/icons/{cat['icon']}" alt="" width="24" height="24">

@@ -4,10 +4,10 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="canonical" href="https://usmcmin.com/scoring-system.html">
-  <title>How the RESOLUTE Citizen Scorecard Works — Scoring System | U.S.M.C. Ministries</title>
-  <meta name="description" content="The full rubric behind the RESOLUTE Citizen Scorecard. 10 categories, 100 points, weighted 60 God First / 40 America First. Every question, every disqualifier, every adjustment.">
-  <meta property="og:title" content="How the RESOLUTE Citizen Scorecard Works">
-  <meta property="og:description" content="The full rubric — 10 categories, 100 points, weighted 60 God First / 40 America First. Letter grades A–F. Every question public.">
+  <title>How the RESOLUTE Citizen Scorecard Works — Scoring System v4.3 | U.S.M.C. Ministries</title>
+  <meta name="description" content="The full rubric behind the RESOLUTE Citizen Scorecard. 10 categories, 50 questions, 100 points max, weighted 60 God First / 40 America First. Tier-aware (federal · state · local) with dynamic-max grading. Every question, every disqualifier, every adjustment.">
+  <meta property="og:title" content="How the RESOLUTE Citizen Scorecard Works (v4.3)">
+  <meta property="og:description" content="The full rubric — 10 categories, 50 questions, weighted 60 God First / 40 America First. Tier-aware federal · state · local variants with dynamic-max grading.">
   <meta property="og:type" content="article">
   <meta property="og:url" content="https://usmcmin.com/scoring-system.html">
   <meta property="og:image" content="https://usmcmin.com/assets/og/og-citizen.jpg">
@@ -104,21 +104,47 @@
 <div id="main" class="ss-container">
 
   <header class="ss-hero">
-    <span class="badge">v4.0 · 100-Point Scoring System</span>
+    <span class="badge">v4.3 · Tiered (Federal · State · Local) · Dynamic-Max</span>
     <h1>How the <span class="accent">RESOLUTE Citizen</span> Scorecard Works</h1>
-    <p>10 categories. 5 questions each. 2 points per "True." 100 points max — weighted 60 God First / 40 America First because that's the loyalty hierarchy. The 60/40 split is the editorial weapon: it doesn't just measure positions, it measures whom a candidate puts first.</p>
+    <p>10 categories. 5 questions each. 2 points per "True." 100 points max — weighted 60 God First / 40 America First because that's the loyalty hierarchy. The 60/40 split is the editorial weapon: it doesn't just measure positions, it measures whom a candidate puts first. Since v4.1 the rubric is <strong>tier-aware</strong>: federal officials see all 50 questions, while state and local officials see only the questions that actually apply to their office, with the wording adapted to their authority.</p>
   </header>
 
   <div class="ss-headline">
-    <div class="ss-headline-card"><div class="num">100</div><div class="lbl">Points possible</div></div>
+    <div class="ss-headline-card"><div class="num">100</div><div class="lbl">Points possible <span style="color:var(--gray);font-size:0.7rem;display:block;margin-top:3px;">(federal tier · all 50 q)</span></div></div>
     <div class="ss-headline-card"><div class="num">10</div><div class="lbl">Categories</div></div>
-    <div class="ss-headline-card"><div class="num">50</div><div class="lbl">Public questions</div></div>
+    <div class="ss-headline-card"><div class="num">50</div><div class="lbl">Public questions <span style="color:var(--gray);font-size:0.7rem;display:block;margin-top:3px;">(federal · 43 state · 22 local)</span></div></div>
   </div>
 
   <section class="ss-section">
     <h2>The 60/40 Weighting <span class="subt">Why God First isn't just a label</span></h2>
     <p>Every Christian voter scorecard ever built treats every issue as equal. We don't. The Bible doesn't. <strong>Mark 12:30</strong> — love the Lord your God with all your heart, soul, mind, strength <em>first</em>. <strong>Matthew 6:33</strong> — seek first the Kingdom of God, and all these things will be added. Country is downstream of conviction. The scorecard makes that loud and visible.</p>
     <p>A representative who scores 56 God First / 8 America First is doing a different thing than one who scores 12 God First / 38 America First. Today's two-subtotal headline tells voters which kind of representative they're actually electing. Old single-number scorecards couldn't show that difference.</p>
+  </section>
+
+  <section class="ss-section">
+    <h2>Tiered Grading <span class="subt">Federal · State · Local · v4.1 → v4.3</span></h2>
+    <p>The first time we tried to score a city council member against the same rubric as a U.S. senator, it broke. A councilor cannot vote on Article I war powers, cannot order a Pentagon audit, cannot sponsor a federal abortion ban. Marking those questions <code>False</code> by silence treated her like a senator who voted the wrong way, which is editorially dishonest. So we tiered the rubric.</p>
+    <p>The Boolean spirit of each question is the same across tiers — the question still measures the same conviction. What changes is <strong>which questions count</strong> and <strong>how they're worded</strong> for the office a candidate actually holds.</p>
+
+    <h3>v4.1 — Tier-aware applicability (the <code>N/A</code> mask)</h3>
+    <p>Every one of the 50 questions is tagged with the tiers where it's a fair test of office. A question that only a federal officeholder can vote on (Pentagon audits, Article I war powers, repeal of the National Firearms Act) is automatically marked <code>N/A</code> for state and local officials. <code>N/A</code> answers count toward neither the score nor the dynamic max — they simply shrink the denominator. We retrofitted 61,859 cells across the database on the v4.1 rollout (May 17, 2026). A city councilor's "out of 22" is calibrated to the 22 questions her chair actually decides, not the 50 a senator faces.</p>
+    <p style="color:var(--gray);font-size:0.86rem;font-style:italic;">Applicable counts at the current snapshot: <strong>federal = 50 / 50</strong>, <strong>state = 43 / 50</strong>, <strong>local = 22 / 50</strong>.</p>
+
+    <h3>v4.2 / v4.3 — Tier-specific question text</h3>
+    <p>For the questions that <em>do</em> apply at multiple tiers but require different evidence at each, the rubric stores parallel wording. The federal version asks "Has the candidate voted for the Article I war-powers requirement before any U.S. military action?" — the state version asks "Has the candidate voted for state legislative authorization before National Guard deployment?" — the local version asks "Has the city council adopted resolutions opposing U.S. military intervention without congressional authorization?" Same conviction. Different chair. Different evidence base.</p>
+    <p>The result is that the headline "0 / 10 on Foreign Policy Restraint" means the same restraint conviction at any tier, but a state senator gets graded on the votes she actually had and a city councilor gets graded on the resolutions her body actually considered. We do not require people to vote on bills they cannot vote on.</p>
+
+    <h3>What stays universal</h3>
+    <ul>
+      <li><strong>10 categories</strong> — every tier sees all 10 (Sanctity of Life through Industry Capture &amp; Sovereignty).</li>
+      <li><strong>60 / 40 weighting</strong> — God First subtotal stays 6 categories, America First stays 4. The subtotal caps shrink proportionally for state / local because some questions are <code>N/A</code>.</li>
+      <li><strong>Dynamic-max grading</strong> — the letter grade is the percentage of <em>your</em> denominator (2 × answered questions), not a flat 100. A state senator scored on 38 of 43 applicable questions caps at 76; if she earned 76 True, that's 100% A. <a href="citizen-rankings.html">See the rankings page for the full dynamic-max explainer.</a></li>
+      <li><strong>Foreign-lobby adjustment</strong> — applied at every tier where evidence exists (state legislators take AIPAC + Soros money too).</li>
+      <li><strong>Evidence-first</strong> — voting records, sponsored bills, on-camera statements, official sites. <em>Silence on an issue your office decides is still scored as failure.</em></li>
+    </ul>
+
+    <h3>Why this matters editorially</h3>
+    <p>Most scorecards either skip down-ballot officials or grade them on the same federal questions and let everyone score zero. The first option means voters have no signal for the offices closest to their daily life. The second option produces a uniform F that's useless for distinguishing the school-board candidate fighting CRT from the one introducing it. The tiered rubric lets every elected office below the federal level be graded on the conviction questions their actual chair decides, which is the only honest way to grade them. The Boolean still binds the moral spirit; the implementation shows the chair.</p>
   </section>
 
   <section class="ss-section">
@@ -286,7 +312,7 @@
 
   <section class="ss-section">
     <h2>Deep Dives — One Page Per Category</h2>
-    <p>Each of the 10 categories has its own page with the full rubric, scored questions, key bills + votes + organizations we track, position-level disqualifiers, and the Scripture anchor for that domain.</p>
+    <p>Each of the 10 categories has its own page with the full rubric, scored questions, key bills + votes + organizations we track, position-level disqualifiers, and the Scripture anchor for that domain. Every candidate profile page links the category header straight to its deep-dive — click any category title in a profile to land here. The deep-dive shows the federal-tier wording by default; tier variants are documented in the <a href="#" onclick="document.querySelector('h2:nth-of-type(2)')?.scrollIntoView({behavior:'smooth'}); return false;">Tiered Grading</a> section above.</p>
     <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:8px;margin-top:14px;">
       <a href="citizen/sanctity-of-life.html" style="display:block;padding:10px 14px;background:rgba(168,176,188,0.05);border:1px solid var(--border);border-radius:6px;text-decoration:none;color:var(--white);font-size:0.88rem;"><strong>1.</strong> Sanctity of Life <span style="color:var(--gray);font-size:0.78rem;">· ✝ God First</span></a>
       <a href="citizen/biblical-marriage.html" style="display:block;padding:10px 14px;background:rgba(168,176,188,0.05);border:1px solid var(--border);border-radius:6px;text-decoration:none;color:var(--white);font-size:0.88rem;"><strong>2.</strong> Biblical Marriage <span style="color:var(--gray);font-size:0.78rem;">· ✝ God First</span></a>
@@ -302,8 +328,18 @@
   </section>
 
   <section class="ss-section">
-    <h2>What Changed in v4.0</h2>
-    <p>The previous rubric was 7 categories × 5 questions × 2 pts = 70 points. The new rubric (v4.0) added three categories — <strong>Economic Stewardship</strong>, <strong>Industry Capture &amp; Sovereignty</strong>, and the elevation of <strong>Election Integrity</strong> from a sub-question to a full category — and reorganized the existing seven into the God First / America First two-tier structure. PCH/CBG was retired as a label and its substance absorbed into Family &amp; Child Sovereignty + Christian Liberty.</p>
+    <h2>Version history</h2>
+    <h3>v4.3 — Local-tier question variants (May 18, 2026)</h3>
+    <p>Added local-tier display text for 22 questions so city council, mayor, school-board, and sheriff candidates get rubric wording that matches what their chair actually decides. Boolean unchanged.</p>
+
+    <h3>v4.2 — State-tier question variants (May 18, 2026)</h3>
+    <p>Added state-tier display text for 39 questions. A state senator's "Article I war powers" line now reads "state legislative authorization for National Guard deployment." A state legislator's federal-only questions remain <code>N/A</code>.</p>
+
+    <h3>v4.1 — Tier-aware <code>N/A</code> masking (May 17, 2026)</h3>
+    <p>Tagged every one of the 50 questions with the tiers where it's a fair test of office. Retrofitted 61,859 cells across the database: state officials get 43-of-50 applicable, local officials 22-of-50, federal officials remain 50-of-50. Dynamic-max grading shrinks the denominator instead of penalizing officials for questions outside their chair's authority.</p>
+
+    <h3>v4.0 — God First / America First (May 2026)</h3>
+    <p>The previous rubric was 7 categories × 5 questions × 2 pts = 70 points. v4.0 added three categories — <strong>Economic Stewardship</strong>, <strong>Industry Capture &amp; Sovereignty</strong>, and the elevation of <strong>Election Integrity</strong> from a sub-question to a full category — and reorganized the existing seven into the God First / America First two-tier structure. PCH/CBG was retired as a label and its substance absorbed into Family &amp; Child Sovereignty + Christian Liberty.</p>
     <p>Result: the scorecard now catches gaps the old rubric masked. Specifically — establishment Republicans who score well on culture-war questions but take Pharma + defense-contractor + Big Ag money quietly. The new categories exist precisely to surface that pattern.</p>
   </section>
 
@@ -312,7 +348,7 @@
 </div>
 
 <footer>
-  <p><strong>RESOLUTE Citizen Scoring System v4.0</strong> &mdash; <a href="https://usmcmin.org">U.S.M.C. Ministries</a></p>
+  <p><strong>RESOLUTE Citizen Scoring System v4.3</strong> &mdash; Tier-aware (Federal · State · Local) with dynamic-max grading &mdash; <a href="https://usmcmin.org">U.S.M.C. Ministries</a></p>
   <p style="margin-top:6px;font-size:0.75rem;color:var(--gray);">"When the righteous are in authority, the people rejoice; but when the wicked beareth rule, the people mourn." &mdash; Proverbs 29:2 (KJV)</p>
 </footer>
 

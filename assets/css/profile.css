@@ -1338,11 +1338,55 @@
   border-bottom: 1px solid var(--border);
   flex-wrap: wrap;
 }
+/* Clickable category header — wraps icon + title + score in a link to the
+   per-category deep-dive page at /citizen/<slug>.html. Added 2026-05-19
+   per Adam's "make rubric metrics clickable" directive. */
+.prof-cat-link {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex: 1;
+  min-width: 0;
+  text-decoration: none;
+  color: inherit;
+  padding: 2px 4px;
+  margin: -2px -4px;
+  border-radius: 6px;
+  transition: background 0.15s, transform 0.15s;
+}
+.prof-cat-link:hover,
+.prof-cat-link:focus-visible {
+  background: rgba(168, 176, 188, 0.08);
+  text-decoration: none;
+  outline: none;
+}
+.prof-cat-link:focus-visible {
+  box-shadow: 0 0 0 2px var(--accent, #e3b662);
+}
+.prof-cat-deepdive {
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.6px;
+  text-transform: uppercase;
+  color: var(--accent, #e3b662);
+  opacity: 0;
+  transition: opacity 0.15s;
+  white-space: nowrap;
+}
+.prof-cat-link:hover .prof-cat-deepdive,
+.prof-cat-link:focus-visible .prof-cat-deepdive {
+  opacity: 1;
+}
+/* Always-visible hint on touch devices (no hover state) */
+@media (hover: none) {
+  .prof-cat-deepdive { opacity: 0.6; }
+}
 .prof-cat-header h3 {
   flex: 1;
   color: var(--white);
   font-size: 1rem;
   font-family: var(--font-main);
+  margin: 0;
 }
 .prof-cat-score {
   font-size: 1.3rem;

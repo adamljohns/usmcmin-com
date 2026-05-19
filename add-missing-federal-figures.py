@@ -548,9 +548,14 @@ def main():
                     if arr[i] is None:
                         arr[i] = want
                         cells_filled += 1
-            # Refresh office (cabinet roles are newer than Senate roles)
-            existing['office'] = tpl['office']
-            existing['jurisdiction'] = tpl['jurisdiction']
+            # Refresh office UNLESS the existing record is already marked
+            # 'former' (resigned/removed) — in that case the existing office
+            # string is intentionally annotated and shouldn't be clobbered
+            # by the template (which assumes the person is still in role).
+            current_status = existing.get('status') or 'active'
+            if current_status == 'active':
+                existing['office'] = tpl['office']
+                existing['jurisdiction'] = tpl['jurisdiction']
             existing.setdefault('level', tpl.get('level', 'federal'))
             prof = existing.setdefault('profile', {})
             if prof.get('confidence') in (None, 'party_default'):

@@ -358,6 +358,134 @@ NEW_CANDIDATES = [
                  '(2001-2013). Evangelical Christian. Signed RFRA Indiana 2015. Certified 2020 Electoral '
                  'College vote 1/6/2021 against Trump pressure. 2024 R presidential candidate (withdrew).',
     },
+    # ─── Cabinet additions (post-2026 changes) ───
+    {
+        'name': 'Todd Blanche',
+        'state': 'US',
+        'party': 'R',
+        'office': 'U.S. Acting Attorney General (since April 2026); Deputy AG since January 2025',
+        'jurisdiction': 'Executive Branch',
+        'level': 'executive',
+        'religion': 'Catholic',
+        'twitter': '@AGBlanche',
+        'sources': [
+            'https://en.wikipedia.org/wiki/Todd_Blanche',
+            'https://www.legistorm.com/person/bio/519568/Todd_Wallace_Blanche.html',
+        ],
+        'scores': {
+            'sanctity_of_life':        [N, N, N, N, T],
+            'biblical_marriage':       [N, N, N, N, N],
+            'family_child_sovereignty': [N, N, N, N, N],
+            'christian_liberty':       [T, T, T, N, N],
+            'economic_stewardship':    [N, N, N, N, N],
+            'election_integrity':      [N, T, N, N, T],
+            'border_immigration':      [T, T, N, N, T],
+            'self_defense':            [N, N, N, N, N],
+            'foreign_policy_restraint': [N, N, N, F, N],
+            'industry_capture':        [N, N, N, N, N],
+        },
+        'notes': 'Acting U.S. Attorney General since April 2, 2026, after President Trump removed Pam Bondi. '
+                 'Previously Deputy Attorney General (confirmed Senate 52-46 on March 5, 2025). Born 1974 '
+                 'in Denver CO, Brooklyn Law 2003. Spent 8 years at US Attorney\'s Office (SDNY) violent-crimes '
+                 'division, then Cadwalader partner. Best known as Donald Trump\'s personal defense attorney in '
+                 'his criminal trials (NY hush-money, Mar-a-Lago documents) before joining the administration. '
+                 'Most v4.0 categories left as unscored since he has not held elected office or taken broad '
+                 'public-policy positions on those questions — he is primarily a litigator-turned-administrator.',
+    },
+    {
+        'name': 'Kristi Noem',
+        'state': 'US',
+        'party': 'R',
+        'office': 'U.S. Special Envoy for the Shield of the Americas (since March 5, 2026); former Secretary of Homeland Security',
+        'jurisdiction': 'Executive Branch',
+        'level': 'executive',
+        'religion': 'Evangelical (Watertown Christian Reformed; raised Lutheran)',
+        'twitter': '@SecNoem',
+        'sources': [
+            'https://en.wikipedia.org/wiki/Kristi_Noem',
+            'https://thehill.com/policy/international/5769654-trump-appoints-noem-shield-americas/',
+        ],
+        'scores': {
+            'sanctity_of_life':        [T, T, T, T, T],   # signed SD heartbeat-equivalent bills as gov
+            'biblical_marriage':       [T, T, T, N, N],
+            'family_child_sovereignty': [T, T, T, N, T],
+            'christian_liberty':       [T, T, T, T, N],
+            'economic_stewardship':    [N, N, T, N, T],
+            'election_integrity':      [N, T, F, T, T],
+            'border_immigration':      [T, T, T, T, T],
+            'self_defense':            [T, T, T, T, T],
+            'foreign_policy_restraint': [F, F, F, F, F],   # establishment hawk
+            'industry_capture':        [F, F, F, N, F],
+        },
+        'notes': 'Special Envoy for the Shield of the Americas since March 5, 2026, a new initiative to '
+                 'coordinate Western Hemisphere security (drug cartels, trafficking, illegal migration). '
+                 'Previously Secretary of Homeland Security (Jan 2025 – March 2026) — removed by Trump after '
+                 'congressional hearings drew bipartisan criticism. Earlier: Governor of South Dakota '
+                 '(2019-2025, two terms), US House SD-AL (2011-2019). Strong pro-life + 2A + parental rights '
+                 'record. Hawkish on foreign policy.',
+    },
+    # ─── More missing federals (2026 verification pass) ───
+    {
+        'name': 'Sean Duffy',
+        'state': 'US',
+        'party': 'R',
+        'office': 'U.S. Secretary of Transportation (sworn January 28, 2025; 20th Sec)',
+        'jurisdiction': 'Executive Branch',
+        'level': 'executive',
+        'religion': 'Catholic',
+        'twitter': '@SecDuffy',
+        'sources': [
+            'https://www.transportation.gov/meet-secretary/us-transportation-secretary-sean-duffy',
+            'https://en.wikipedia.org/wiki/Sean_Duffy',
+        ],
+        'scores': {
+            'sanctity_of_life':        [T, T, T, N, T],
+            'biblical_marriage':       [T, T, T, N, N],
+            'family_child_sovereignty': [T, T, T, N, T],
+            'christian_liberty':       [T, T, T, T, N],
+            'economic_stewardship':    [N, N, T, N, T],
+            'election_integrity':      [N, T, F, T, T],
+            'border_immigration':      [T, T, N, N, T],
+            'self_defense':            [T, T, T, T, T],
+            'foreign_policy_restraint': [N, N, N, F, N],
+            'industry_capture':        [N, N, N, T, N],
+        },
+        'notes': 'Sworn in January 28, 2025 as 20th US Secretary of Transportation (confirmed 77-22). '
+                 'Also served as acting NASA Administrator July-Dec 2025 (succeeded by Jared Isaacman). '
+                 'Former US House WI-07 (2011-2019), Fox Business host, MTV "Real World" cast member. '
+                 'Catholic, married to former Fox News host Rachel Campos-Duffy.',
+    },
+    {
+        'name': 'Mikie Sherrill',
+        'state': 'NJ',
+        'party': 'D',
+        'office': 'Governor of New Jersey (57th, sworn January 20, 2026)',
+        'jurisdiction': 'New Jersey',
+        'level': 'state-executive',
+        'religion': 'Catholic',
+        'twitter': '@GovSherrill',
+        'sources': [
+            'https://en.wikipedia.org/wiki/Mikie_Sherrill',
+            'https://whyy.org/articles/mikie-sherrill-new-jersey-governor-sworn/',
+        ],
+        'scores': {
+            'sanctity_of_life':        [F, F, F, F, F],
+            'biblical_marriage':       [F, F, F, F, F],
+            'family_child_sovereignty': [F, F, F, F, F],
+            'christian_liberty':       [F, F, F, F, F],
+            'economic_stewardship':    [F, F, F, F, F],
+            'election_integrity':      [F, F, F, F, F],
+            'border_immigration':      [F, F, F, F, F],
+            'self_defense':            [F, F, F, F, F],
+            'foreign_policy_restraint': [F, F, F, F, F],   # ex-Navy helicopter pilot but D-hawk
+            'industry_capture':        [F, F, F, F, F],
+        },
+        'notes': 'Sworn in January 20, 2026 as 57th Governor of New Jersey after defeating Republican '
+                 'Jack Ciattarelli in the November 2025 general election (won by 14.36% margin). First '
+                 'Democratic female governor of NJ, first female military veteran to serve as US '
+                 'governor. Former US House NJ-11 (2019-2026), former US Navy helicopter pilot (1994-2003), '
+                 'former federal prosecutor. Catholic. Establishment-D archetype applied.',
+    },
     {
         'name': 'Nikki Haley',
         'state': 'US',

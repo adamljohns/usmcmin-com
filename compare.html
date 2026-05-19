@@ -341,7 +341,7 @@
     // N/A cells (out-of-tier per Option B) are excluded from both score
     // and max — they don't count against the official.
     var maxPossible = answered * 2;
-    var pct = maxPossible > 0 ? Math.round(100 * total / maxPossible) : 0;
+    var pct = maxPossible > 0 ? Math.max(0, Math.round(100 * total / maxPossible)) : 0;
     return {score: total, max: max, max_possible: maxPossible, pct: pct,
             answered: answered, na: na,
             god_first: godFirst, america_first: americaFirst};

@@ -700,7 +700,12 @@ def generate_profile(candidate, categories, meta, nav=None):
     answered_count = total['answered']
     max_possible = answered_count * POINTS_PER_TRUE  # 2pt per answered Q
     if max_possible > 0:
-        pct_of_max = round((adjusted_score / max_possible) * 100)
+        # Cap pct floor at 0 — when adjustments (e.g., -50 Soros) exceed
+        # max_possible, raw pct goes negative which displays as nonsense
+        # like "-250%". Cap display at 0; the absolute negative score is
+        # still visible in the adjusted_score field for full transparency.
+        raw_pct = round((adjusted_score / max_possible) * 100)
+        pct_of_max = max(0, raw_pct)
     else:
         pct_of_max = 0
     grade_letter = letter_grade(pct_of_max)

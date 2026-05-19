@@ -462,7 +462,7 @@
       }
     }
     var maxPossible = answered * POINTS_PER_TRUE;
-    var pct = maxPossible > 0 ? Math.round(100 * t / maxPossible) : 0;
+    var pct = maxPossible > 0 ? Math.max(0, Math.round(100 * t / maxPossible)) : 0;
     return { score: t, max_possible: maxPossible, pct: pct, answered: answered, na: na };
   }
   // Letter grade takes a percentage (0-100)

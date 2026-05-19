@@ -1189,7 +1189,9 @@ function calcTotalScore(scores, profile) {
   var adjusted = total + adjTotal;
   // Dynamic max per 2026-05-18 directive: 2 pts × answered questions.
   var maxPossible = maxAnswered * POINTS_PER_TRUE;
-  var pct = maxPossible > 0 ? Math.round(100 * adjusted / maxPossible) : 0;
+  // Cap pct floor at 0 — when adjustments exceed max_possible (e.g. -50 Soros
+  // on a small-max candidate), raw pct goes negative which displays nonsense.
+  var pct = maxPossible > 0 ? Math.max(0, Math.round(100 * adjusted / maxPossible)) : 0;
   return {
     base: total,
     score: adjusted,    // adjusted score is the headline number

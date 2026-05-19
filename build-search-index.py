@@ -93,7 +93,12 @@ def main():
         # top of category scoring). Percentage used for letter grade.
         max_possible = 2 * answered
         if max_possible > 0:
-            pct = round((total / max_possible) * 100)
+            # Cap pct floor at 0 (or display would show e.g. Bragg -250%
+            # when his -50 Soros adjustment exceeds his max_possible of 20).
+            # Negative-net scores get a special pct of 0 + the negative
+            # absolute score is still visible in `ts` for full context.
+            raw_pct = round((total / max_possible) * 100)
+            pct = max(0, raw_pct)
         else:
             pct = 0
         rows.append({

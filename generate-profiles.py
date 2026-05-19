@@ -765,6 +765,39 @@ def generate_profile(candidate, categories, meta, nav=None):
             '</a>'
         )
 
+    # FORMER / LOST banner: when c.status is non-active, render a clear
+    # banner at the top of the profile so visitors immediately know this
+    # person isn't currently in office. Profile remains live + searchable
+    # so a future appointment doesn't require re-creating the page.
+    status_banner_html = ''
+    status = c.get('status') or 'active'
+    if status == 'former':
+        candidacy_note = (profile.get('candidacy_note') or '').strip()
+        status_banner_html = (
+            '<div class="prof-status-banner prof-status-former" role="note" aria-label="Former officeholder">'
+            '<span class="prof-status-chip">FORMER</span>'
+            '<div class="prof-status-text">'
+            f'<strong>{c.get("name", "This person")}</strong> is no longer in active government service. '
+            'Profile preserved for historical reference + readiness if reappointed.'
+            f'{(" " + candidacy_note) if candidacy_note else ""}'
+            f' See <a href="../../citizen-formers.html">all former officials &rarr;</a>'
+            '</div>'
+            '</div>'
+        )
+    elif status == 'lost':
+        candidacy_note = (profile.get('candidacy_note') or '').strip()
+        status_banner_html = (
+            '<div class="prof-status-banner prof-status-lost" role="note" aria-label="Failed candidate">'
+            '<span class="prof-status-chip">LOST</span>'
+            '<div class="prof-status-text">'
+            f'<strong>{c.get("name", "This candidate")}</strong> lost the election for this position. '
+            'Scoring reflects their record at time of candidacy.'
+            f'{(" " + candidacy_note) if candidacy_note else ""}'
+            f' See <a href="../../citizen-formers.html">all failed candidates &rarr;</a>'
+            '</div>'
+            '</div>'
+        )
+
     # Candidacy banner: when profile.candidacy is set, surface "Running for X"
     # with a deep-link to the side-by-side comparison view for that race.
     candidacy_banner_html = ''
@@ -1417,6 +1450,7 @@ def generate_profile(candidate, categories, meta, nav=None):
         {f'<a href="{website}" target="_blank" rel="noopener" style="margin-left:12px;color:var(--accent);font-size:0.85rem;">Campaign Website &rarr;</a>' if website else ''}
       </div>
     </div>
+    {status_banner_html}
     {confidence_chip_html}
     {candidacy_banner_html}
     {map_link_html}

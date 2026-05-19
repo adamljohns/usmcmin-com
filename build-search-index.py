@@ -26,6 +26,9 @@ Schema per row (kept tight — every byte costs page-load):
         could have earned given how many questions had findable evidence)
   pct = percentage of max_possible the candidate earned (used for
         dynamic-max sort + letter grade)
+  sts = status: 'active' | 'former' | 'lost' | 'lame_duck' (per
+        backfill-status-field.py). Active layouts filter to 'active' by
+        default; /citizen-formers.html shows former + lost.
 
 Source: data/scorecard.json (master).
 Run from repo root: python3 build-search-index.py
@@ -104,6 +107,7 @@ def main():
             'pct': pct,
             'lg':  letter_grade(pct),
             'ans': answered,
+            'sts': c.get('status') or 'active',
         })
 
     # Sort by state then name for deterministic output (helps git diffs)
@@ -118,7 +122,8 @@ def main():
                    'af': 'america_first',
                    'mp': 'max_possible_score', 'pct': 'pct_of_max',
                    'lg': 'letter_grade_dynamic',
-                   'ans': 'answered_questions'},
+                   'ans': 'answered_questions',
+                   'sts': 'status'},
         'rows': rows,
     }
     with open(OUT, 'w') as f:

@@ -234,6 +234,28 @@
     .lg-D { color: #FF9800; }
     .lg-F { color: #f44336; }
 
+    /* Status badges (former, lost) */
+    .rk-status-badge {
+      display: inline-block;
+      padding: 1px 6px;
+      margin-left: 6px;
+      border-radius: 4px;
+      font-size: 0.58rem;
+      font-weight: 800;
+      letter-spacing: 0.6px;
+      vertical-align: middle;
+    }
+    .rk-status-former {
+      background: rgba(168,176,188,0.18);
+      color: var(--gray);
+    }
+    .rk-status-lost {
+      background: rgba(244,67,54,0.15);
+      color: #f44336;
+    }
+    .rk-row-former { opacity: 0.78; }
+    .rk-row-former:hover { opacity: 1; }
+
     /* Heat map grid cartogram */
     .rk-heatmap {
       margin-top: 18px;
@@ -383,6 +405,7 @@
       <a href="compare.html" style="color:var(--gray);font-size:0.85rem;text-decoration:none;">Compare</a>
       <a href="scoring-system.html" style="color:var(--gray);font-size:0.85rem;text-decoration:none;">Rubric</a>
       <a href="citizen-rankings.html" style="color:var(--white);font-size:0.85rem;text-decoration:none;border-bottom:1px solid var(--accent);">Rankings</a>
+      <a href="citizen-formers.html" style="color:var(--gray);font-size:0.85rem;text-decoration:none;">Former Officials</a>
     </nav>
   </header>
 
@@ -468,6 +491,14 @@
           <option value="30">≥ 30 answered (60%)</option>
           <option value="40">≥ 40 answered (80%)</option>
           <option value="50">50 (complete)</option>
+        </select>
+      </div>
+      <div class="rk-filter-group">
+        <label for="filterStatus">Officials</label>
+        <select id="filterStatus">
+          <option value="active">Active only</option>
+          <option value="all">Active + former</option>
+          <option value="former">Former only</option>
         </select>
       </div>
       <div class="rk-stats" id="stats">Loading…</div>
@@ -721,10 +752,15 @@
       var tier = document.getElementById('filterTier').value;
       var minAns = parseInt(document.getElementById('filterMin').value, 10);
 
+      var statusFilter = document.getElementById('filterStatus').value;
       var filtered = ALL_ROWS.filter(function(r) {
         if (party !== 'all' && r.p !== party) return false;
         if (office !== 'all' && classifyOffice(r.o) !== office) return false;
         if (r.ans < minAns) return false;
+        var sts = r.sts || 'active';
+        if (statusFilter === 'active' && sts !== 'active') return false;
+        if (statusFilter === 'former' && sts === 'active') return false;
+        // 'all' = no status filter
         return true;
       });
 
@@ -766,10 +802,20 @@
       }
       var html = '';
       rows.forEach(function(r, i) {
+        var statusBadge = '';
+        var rowClass = '';
+        var sts = r.sts || 'active';
+        if (sts === 'former') {
+          statusBadge = ' <span class="rk-status-badge rk-status-former" title="No longer in office">FORMER</span>';
+          rowClass = ' class="rk-row-former"';
+        } else if (sts === 'lost') {
+          statusBadge = ' <span class="rk-status-badge rk-status-lost" title="Failed candidate">LOST</span>';
+          rowClass = ' class="rk-row-former"';
+        }
         html +=
-          '<tr>' +
+          '<tr' + rowClass + '>' +
           '<td class="rk-rank">' + (startRank + i) + '</td>' +
-          '<td class="rk-name"><a href="candidates/' + r.st + '/' + r.s + '.html">' + escapeHtml(r.n) + '</a></td>' +
+          '<td class="rk-name"><a href="candidates/' + r.st + '/' + r.s + '.html">' + escapeHtml(r.n) + '</a>' + statusBadge + '</td>' +
           '<td class="rk-state">' + r.st.toUpperCase() + '</td>' +
           '<td class="rk-party ' + partyClass(r.p) + '">' + partyLabel(r.p) + '</td>' +
           '<td class="rk-office" title="' + escapeHtml(r.o) + '">' + escapeHtml(r.o) + '</td>' +
@@ -794,6 +840,7 @@
     document.getElementById('filterParty').addEventListener('change', renderTables);
     document.getElementById('filterTier').addEventListener('change', renderTables);
     document.getElementById('filterMin').addEventListener('change', renderTables);
+    document.getElementById('filterStatus').addEventListener('change', renderTables);
 
     // Load on page show
     fetchData();

@@ -645,6 +645,7 @@
     <a href="citizen-issues.html" id="linkIssues">Issues</a>
     <a href="find-my-reps.html">Find My Reps</a>
     <a href="citizen-rankings.html">Rankings</a>
+    <a href="citizen-formers.html">Former</a>
     <a href="stats.html">Stats</a>
     <a href="changelog.html">Changelog</a>
   </nav>
@@ -1388,6 +1389,12 @@ function renderCards() {
   var party = document.getElementById('filterParty').value;
 
   var filtered = DATA.candidates.filter(function(c) {
+    // Status filter — hide 'former' and 'lost' by default unless the user
+    // typed a search query (in which case we still show matches with a
+    // small badge — searchability stays even when filtered out of browse).
+    // See /citizen-formers.html for the dedicated former-officials view.
+    var sts = c.status || 'active';
+    if (!search && sts !== 'active') return false;
     // View filter
     if (view === 'local' && c.level !== 'local') return false;
     if (view === 'state' && c.level !== 'state') return false;

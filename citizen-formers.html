@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="canonical" href="https://usmcmin.com/citizen-formers.html">
+  <title>Former Officials &amp; Failed Candidates — RESOLUTE Citizen | U.S.M.C. Ministries</title>
+  <meta name="description" content="Records preserved for officials who have left office (resigned, removed, retired) or who lost their election bid. Scoring remains intact in case they return to public service.">
+  <meta property="og:site_name" content="RESOLUTE Citizen Scorecard">
+  <meta property="og:title" content="Former Officials &amp; Failed Candidates — RESOLUTE Citizen">
+  <meta property="og:description" content="Records preserved for officials who left office or lost. Scoring intact in case they re-enter public service.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://usmcmin.com/citizen-formers.html">
+  <meta property="og:image" content="https://usmcmin.com/assets/og/og-citizen.jpg">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Former Officials — RESOLUTE Citizen">
+  <meta name="twitter:description" content="Records preserved for officials no longer in active office.">
+  <meta name="twitter:image" content="https://usmcmin.com/assets/og/og-citizen.jpg">
+  <link rel="stylesheet" href="assets/css/main.min.css">
+  <link rel="icon" href="assets/img/favicon.png" type="image/png">
+  <style>
+    .fm-container { max-width: 1180px; margin: 0 auto; padding: 20px; }
+    .fm-hero {
+      padding: 24px 24px 18px;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      margin-bottom: 14px;
+    }
+    .fm-hero h1 {
+      margin: 0 0 8px;
+      font-family: var(--font-main, Georgia, serif);
+      font-size: 1.8rem;
+      color: var(--white);
+    }
+    .fm-tagline {
+      color: var(--gray);
+      font-size: 0.74rem;
+      text-transform: uppercase;
+      letter-spacing: 1.4px;
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+    .fm-hero p { color: var(--gray); font-size: 0.93rem; line-height: 1.65; max-width: 820px; }
+    .fm-hero a { color: var(--accent); }
+
+    .fm-tabs {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-bottom: 14px;
+    }
+    .fm-tab {
+      padding: 8px 14px;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      color: var(--gray);
+      font-size: 0.85rem;
+      cursor: pointer;
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+      font-weight: 700;
+      transition: background 0.15s, color 0.15s, border-color 0.15s;
+    }
+    .fm-tab:hover { color: var(--white); }
+    .fm-tab.active {
+      background: rgba(168,176,188,0.18);
+      color: var(--white);
+      border-color: var(--accent);
+    }
+    .fm-tab .fm-tab-count {
+      margin-left: 6px;
+      font-size: 0.7rem;
+      color: var(--gray);
+      font-weight: 500;
+    }
+    .fm-tab.active .fm-tab-count { color: rgba(255,255,255,0.7); }
+
+    .fm-card {
+      display: flex;
+      gap: 16px;
+      padding: 16px 18px;
+      margin-bottom: 12px;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      transition: border-color 0.15s, background 0.15s;
+    }
+    .fm-card:hover { border-color: var(--accent); }
+    .fm-card-photo {
+      flex: 0 0 60px;
+      height: 60px;
+      border-radius: 50%;
+      background: rgba(168,176,188,0.10);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      color: var(--accent);
+      font-size: 1.2rem;
+      overflow: hidden;
+    }
+    .fm-card-photo img { width: 100%; height: 100%; object-fit: cover; }
+    .fm-card-body { flex: 1; min-width: 0; }
+    .fm-card-name {
+      font-family: var(--font-main, Georgia, serif);
+      font-size: 1.15rem;
+      font-weight: 700;
+      margin-bottom: 2px;
+    }
+    .fm-card-name a { color: var(--white); text-decoration: none; }
+    .fm-card-name a:hover { color: var(--accent); text-decoration: underline; }
+    .fm-card-office {
+      color: var(--gray);
+      font-size: 0.83rem;
+      margin-bottom: 6px;
+    }
+    .fm-card-meta {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      flex-wrap: wrap;
+      font-size: 0.78rem;
+      color: var(--gray);
+    }
+    .fm-card-meta strong { color: var(--white); }
+    .fm-status-badge {
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: 5px;
+      font-size: 0.65rem;
+      font-weight: 800;
+      letter-spacing: 0.6px;
+    }
+    .fm-status-former {
+      background: rgba(168,176,188,0.22);
+      color: var(--white);
+    }
+    .fm-status-lost {
+      background: rgba(244,67,54,0.18);
+      color: #f87171;
+    }
+    .fm-card-score { font-variant-numeric: tabular-nums; }
+    .fm-party-r { color: #ef4444; font-weight: 700; }
+    .fm-party-d { color: #3b82f6; font-weight: 700; }
+    .fm-party-i { color: #a855f7; font-weight: 700; }
+    .fm-party-u { color: var(--gray); }
+    .fm-card-note {
+      color: var(--gray);
+      font-size: 0.78rem;
+      line-height: 1.55;
+      margin-top: 6px;
+      font-style: italic;
+    }
+    .fm-empty {
+      padding: 32px;
+      text-align: center;
+      color: var(--gray);
+      font-style: italic;
+    }
+    .fm-footnote {
+      padding: 16px 20px;
+      margin-top: 18px;
+      background: rgba(168,176,188,0.04);
+      border: 1px solid rgba(168,176,188,0.18);
+      border-radius: 10px;
+      color: var(--gray);
+      font-size: 0.84rem;
+      line-height: 1.6;
+    }
+    .fm-footnote strong { color: var(--white); }
+  </style>
+</head>
+<body>
+  <header role="banner" style="padding:14px 20px;background:var(--bg-card);border-bottom:1px solid var(--border);">
+    <nav style="max-width:1180px;margin:0 auto;display:flex;align-items:center;gap:18px;flex-wrap:wrap;">
+      <a href="index.html" style="color:var(--accent);font-family:var(--font-main);font-size:1.05rem;font-weight:700;text-decoration:none;">U.S.M.C. Ministries</a>
+      <a href="citizen.html" style="color:var(--gray);font-size:0.85rem;text-decoration:none;">Scorecard</a>
+      <a href="find-my-reps.html" style="color:var(--gray);font-size:0.85rem;text-decoration:none;">Find My Reps</a>
+      <a href="citizen-rankings.html" style="color:var(--gray);font-size:0.85rem;text-decoration:none;">Rankings</a>
+      <a href="citizen-formers.html" style="color:var(--white);font-size:0.85rem;text-decoration:none;border-bottom:1px solid var(--accent);">Former Officials</a>
+      <a href="scoring-system.html" style="color:var(--gray);font-size:0.85rem;text-decoration:none;">Rubric</a>
+    </nav>
+  </header>
+
+  <main class="fm-container">
+    <div class="fm-hero">
+      <div class="fm-tagline">RESOLUTE Citizen &middot; Archive</div>
+      <h1>Former Officials &amp; Failed Candidates</h1>
+      <p>Records preserved for officials who have left active government service &mdash; resigned, removed, retired, or moved to private sector &mdash; and for candidates who lost their election bid. We keep their scoring intact so that if they return to public office in the future, the page is ready and the historical record is documented. <a href="scoring-system.html">Methodology &rarr;</a></p>
+    </div>
+
+    <div class="fm-tabs" role="tablist">
+      <button class="fm-tab active" data-tab="all" type="button" role="tab">All <span class="fm-tab-count" id="countAll"></span></button>
+      <button class="fm-tab" data-tab="former" type="button" role="tab">Former officials <span class="fm-tab-count" id="countFormer"></span></button>
+      <button class="fm-tab" data-tab="lost" type="button" role="tab">Failed candidates <span class="fm-tab-count" id="countLost"></span></button>
+    </div>
+
+    <div id="formersList">
+      <div class="fm-empty">Loading…</div>
+    </div>
+
+    <div class="fm-footnote">
+      <strong>Why we keep these records:</strong> Government personnel rotate frequently &mdash; today's "former" appointee can be tomorrow's nominee. Preserving the scoring + evidence base means we don't recreate every record from scratch when someone is named to a new position. It also serves as a public-record audit trail.
+      <br><br>
+      <strong>Eventually monthly updates:</strong> A local-LLM persistent agent on Adam's fleet will sweep this list against current public records monthly, flag candidates who have moved back into active office, refresh the score where new evidence is available, and add new "former" records as new officials leave service.
+      <br><br>
+      <strong>Spotted an error?</strong> Each profile page has a dispute form. Misclassified active/former, wrong office details, or stale scoring &mdash; please submit a correction.
+    </div>
+  </main>
+
+  <script>
+    var ALL = null;
+
+    function escapeHtml(s) {
+      return String(s || '').replace(/[&<>"']/g, function(c) {
+        return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+      });
+    }
+    function initials(name) {
+      var p = (name || '').split(' ').filter(Boolean);
+      return ((p[0] || '')[0] || '') + ((p[p.length-1] || '')[0] || '');
+    }
+    function partyClass(p) {
+      if (p === 'R') return 'fm-party-r';
+      if (p === 'D') return 'fm-party-d';
+      if (p === 'I') return 'fm-party-i';
+      return 'fm-party-u';
+    }
+    function partyLabel(p) {
+      if (p === 'R') return 'Republican';
+      if (p === 'D') return 'Democrat';
+      if (p === 'I') return 'Independent';
+      return 'Nonpartisan';
+    }
+
+    function render(tab) {
+      var list = document.getElementById('formersList');
+      var rows = ALL.filter(function(r) {
+        var sts = r.sts || 'active';
+        if (tab === 'all') return sts === 'former' || sts === 'lost';
+        if (tab === 'former') return sts === 'former';
+        if (tab === 'lost') return sts === 'lost';
+        return false;
+      });
+      // Sort: by score desc, then by name
+      rows.sort(function(a, b) {
+        if (b.ts !== a.ts) return b.ts - a.ts;
+        return a.n.localeCompare(b.n);
+      });
+      if (rows.length === 0) {
+        list.innerHTML = '<div class="fm-empty">No candidates in this category yet.</div>';
+        return;
+      }
+      var html = '';
+      rows.forEach(function(r) {
+        var sts = r.sts || 'active';
+        var badge = sts === 'former'
+          ? '<span class="fm-status-badge fm-status-former">FORMER</span>'
+          : '<span class="fm-status-badge fm-status-lost">LOST</span>';
+        var pct = r.pct;
+        html +=
+          '<div class="fm-card">' +
+            '<div class="fm-card-photo">' + escapeHtml(initials(r.n)) + '</div>' +
+            '<div class="fm-card-body">' +
+              '<div class="fm-card-name"><a href="candidates/' + r.st + '/' + r.s + '.html">' + escapeHtml(r.n) + '</a> ' + badge + '</div>' +
+              '<div class="fm-card-office">' + escapeHtml(r.o) + ' &middot; ' + r.st.toUpperCase() + '</div>' +
+              '<div class="fm-card-meta">' +
+                '<span class="' + partyClass(r.p) + '">' + escapeHtml(partyLabel(r.p)) + '</span>' +
+                '<span class="fm-card-score" title="Score at time of leaving office / failing election">' +
+                  'Score: <strong>' + r.ts + '/' + r.mp + '</strong> (' + pct + '%, ' + r.lg + ')</span>' +
+                '<span>' + r.ans + ' of 50 questions answered</span>' +
+              '</div>' +
+            '</div>' +
+          '</div>';
+      });
+      list.innerHTML = html;
+    }
+
+    function updateCounts() {
+      var counts = { all: 0, former: 0, lost: 0 };
+      ALL.forEach(function(r) {
+        var sts = r.sts || 'active';
+        if (sts === 'former' || sts === 'lost') counts.all++;
+        if (sts === 'former') counts.former++;
+        if (sts === 'lost') counts.lost++;
+      });
+      document.getElementById('countAll').textContent = '(' + counts.all + ')';
+      document.getElementById('countFormer').textContent = '(' + counts.former + ')';
+      document.getElementById('countLost').textContent = '(' + counts.lost + ')';
+    }
+
+    fetch('data/search-index.json')
+      .then(function(r) { return r.json(); })
+      .then(function(payload) {
+        ALL = payload.rows || [];
+        updateCounts();
+        render('all');
+      })
+      .catch(function(err) {
+        document.getElementById('formersList').innerHTML = '<div class="fm-empty">Error loading data: ' + err + '</div>';
+      });
+
+    document.querySelectorAll('.fm-tab').forEach(function(tab) {
+      tab.addEventListener('click', function() {
+        document.querySelectorAll('.fm-tab').forEach(function(t) { t.classList.toggle('active', t === tab); });
+        render(tab.getAttribute('data-tab'));
+      });
+    });
+  </script>
+</body>
+</html>

@@ -424,7 +424,251 @@ NEW_CANDIDATES = [
                  '(2019-2025, two terms), US House SD-AL (2011-2019). Strong pro-life + 2A + parental rights '
                  'record. Hawkish on foreign policy.',
     },
-    # ─── More missing federals (2026 verification pass) ───
+    # ─── Trump 2nd-Term Cabinet additions (2026-05-18 sweep) ───
+    {
+        'name': 'Scott Bessent',
+        'state': 'US',
+        'party': 'R',
+        'office': 'U.S. Secretary of the Treasury (79th, sworn January 28, 2025)',
+        'jurisdiction': 'Executive Branch',
+        'level': 'executive',
+        'religion': 'Episcopalian',
+        'twitter': '@SecScottBessent',
+        'sources': [
+            'https://en.wikipedia.org/wiki/Scott_Bessent',
+            'https://home.treasury.gov',
+        ],
+        'scores': {
+            'sanctity_of_life':        [N, N, N, N, T],
+            'biblical_marriage':       [F, F, F, N, N],   # openly gay; pro-LGBT
+            'family_child_sovereignty': [N, T, N, N, T],
+            'christian_liberty':       [T, T, T, N, N],
+            'economic_stewardship':    [N, F, F, N, T],  # hedge fund background; pro-tax-cuts but not balanced budget
+            'election_integrity':      [N, T, F, N, T],
+            'border_immigration':      [T, T, N, N, T],
+            'self_defense':            [T, T, T, N, T],
+            'foreign_policy_restraint': [N, N, N, F, N],
+            'industry_capture':        [F, F, F, F, F],   # Wall Street insider
+        },
+        'notes': 'Sworn in as 79th US Treasury Secretary on January 28, 2025. Founder/CEO Key Square Group '
+                 '(hedge fund). Former CIO Soros Fund Management (1991-2000). Openly gay, married. Yale '
+                 'graduate. Trump signature: replaced traditional Treasury Secretary name on dollar with '
+                 'his own (March 2026). Pulled into Situation Room mid-interview on Iran 2026.',
+    },
+    {
+        'name': 'Howard Lutnick',
+        'state': 'US',
+        'party': 'R',
+        'office': 'U.S. Secretary of Commerce (41st, sworn February 21, 2025)',
+        'jurisdiction': 'Executive Branch',
+        'level': 'executive',
+        'religion': 'Jewish (Reform)',
+        'twitter': '@howardlutnick',
+        'sources': [
+            'https://en.wikipedia.org/wiki/Howard_Lutnick',
+            'https://www.commerce.gov',
+        ],
+        'scores': {
+            'sanctity_of_life':        [N, N, N, N, T],
+            'biblical_marriage':       [N, N, T, N, N],
+            'family_child_sovereignty': [N, N, T, N, N],
+            'christian_liberty':       [T, T, T, N, N],
+            'economic_stewardship':    [N, F, F, N, F],  # Wall Street CEO; tariff architect
+            'election_integrity':      [N, T, F, N, T],
+            'border_immigration':      [T, T, N, N, T],
+            'self_defense':            [T, T, T, N, T],
+            'foreign_policy_restraint': [N, N, N, F, N],
+            'industry_capture':        [F, F, F, F, F],   # consummate Wall Street insider (Cantor CEO)
+        },
+        'notes': 'Sworn in as 41st US Commerce Secretary in February 2025. Former Chairman/CEO of Cantor '
+                 'Fitzgerald — survived 9/11 (lost 658 employees including brother Gary). Designed Trump T2 '
+                 'tariff strategy. Dems demanded resignation May 2026 over Epstein interview answers.',
+    },
+    {
+        'name': 'Doug Collins',
+        'state': 'US',
+        'party': 'R',
+        'office': 'U.S. Secretary of Veterans Affairs (sworn February 5, 2025)',
+        'jurisdiction': 'Executive Branch',
+        'level': 'executive',
+        'religion': 'Southern Baptist (ordained pastor)',
+        'twitter': '@SecVetAffairs',
+        'sources': [
+            'https://en.wikipedia.org/wiki/Doug_Collins_(Georgia_politician)',
+            'https://www.va.gov',
+        ],
+        'scores': {
+            'sanctity_of_life':        [T, T, T, T, T],
+            'biblical_marriage':       [T, T, T, T, T],
+            'family_child_sovereignty': [T, T, T, T, T],
+            'christian_liberty':       [T, T, T, T, T],
+            'economic_stewardship':    [N, N, T, N, T],
+            'election_integrity':      [N, T, T, T, T],
+            'border_immigration':      [T, T, T, T, T],
+            'self_defense':            [T, T, T, T, T],
+            'foreign_policy_restraint': [N, N, N, F, N],
+            'industry_capture':        [T, N, N, N, T],
+        },
+        'notes': 'Sworn in as Secretary of Veterans Affairs February 5, 2025. Ordained Southern Baptist '
+                 'pastor; USAF Reserve chaplain (Lt Col). Former US House GA-09 (2013-2021). Led Trump T1 '
+                 'House impeachment defense. Pastor-veteran combo gives him strong personal cred on '
+                 'religious + military service. Has cut 30K+ VA positions in T2 reorganization; testified '
+                 'Feb 2026 clashed with Dems over VA streamlining; 100K new veterans signed up for VA '
+                 'health care following improvements.',
+    },
+    {
+        'name': 'Scott Turner',
+        'state': 'US',
+        'party': 'R',
+        'office': 'U.S. Secretary of Housing and Urban Development (sworn February 5, 2025)',
+        'jurisdiction': 'Executive Branch',
+        'level': 'executive',
+        'religion': 'Christian (Evangelical)',
+        'twitter': '@SecScottTurner',
+        'sources': [
+            'https://en.wikipedia.org/wiki/Scott_Turner_(politician)',
+            'https://www.hud.gov',
+        ],
+        'scores': {
+            'sanctity_of_life':        [T, T, T, N, T],
+            'biblical_marriage':       [T, T, T, N, T],
+            'family_child_sovereignty': [T, T, T, N, T],
+            'christian_liberty':       [T, T, T, T, N],
+            'economic_stewardship':    [T, N, T, N, T],
+            'election_integrity':      [N, T, T, T, T],
+            'border_immigration':      [T, T, T, T, T],
+            'self_defense':            [T, T, T, N, T],
+            'foreign_policy_restraint': [N, N, N, F, N],
+            'industry_capture':        [N, N, N, N, N],
+        },
+        'notes': 'Sworn in as US Secretary of Housing and Urban Development on February 5, 2025. Former NFL '
+                 'cornerback (1995-2003, Washington/SD/Denver). Former TX State Rep (R, 2013-2017). Trump T1 '
+                 'Executive Director of White House Opportunity & Revitalization Council. Evangelical '
+                 'Christian. Has signed multiple deregulatory orders + budget cuts to HUD rental + '
+                 'homelessness programs.',
+    },
+    {
+        'name': 'Chris Wright',
+        'state': 'US',
+        'party': 'R',
+        'office': 'U.S. Secretary of Energy (17th, sworn February 3, 2025)',
+        'jurisdiction': 'Executive Branch',
+        'level': 'executive',
+        'religion': 'Catholic',
+        'twitter': '@SecretaryWright',
+        'sources': [
+            'https://en.wikipedia.org/wiki/Chris_Wright_(businessman)',
+            'https://www.energy.gov',
+        ],
+        'scores': {
+            'sanctity_of_life':        [N, N, N, N, T],
+            'biblical_marriage':       [T, T, T, N, N],
+            'family_child_sovereignty': [T, T, T, N, T],
+            'christian_liberty':       [T, T, T, N, N],
+            'economic_stewardship':    [T, N, T, N, T],   # vocal anti-WEF; cheap-energy focused
+            'election_integrity':      [N, T, T, T, T],
+            'border_immigration':      [T, T, N, N, T],
+            'self_defense':            [T, T, T, N, T],
+            'foreign_policy_restraint': [N, N, N, F, N],
+            'industry_capture':        [N, N, N, N, N],
+        },
+        'notes': 'Sworn in as 17th US Secretary of Energy February 3, 2025. Founder/CEO Liberty Energy '
+                 '(fracking services company). Vocal climate-policy skeptic. Catholic. Strong cheap-energy '
+                 '+ anti-Net-Zero advocate; opposed WEF/ESG-style energy mandates.',
+    },
+    {
+        'name': 'Russ Vought',
+        'state': 'US',
+        'party': 'R',
+        'office': 'Director of the Office of Management and Budget (sworn February 7, 2025); Acting Director, Consumer Financial Protection Bureau',
+        'jurisdiction': 'Executive Branch',
+        'level': 'executive',
+        'religion': 'Evangelical (Project 2025 architect)',
+        'twitter': '@russvought',
+        'sources': [
+            'https://en.wikipedia.org/wiki/Russ_Vought',
+            'https://www.whitehouse.gov/omb',
+        ],
+        'scores': {
+            'sanctity_of_life':        [T, T, T, T, T],
+            'biblical_marriage':       [T, T, T, T, T],
+            'family_child_sovereignty': [T, T, T, T, T],
+            'christian_liberty':       [T, T, T, T, T],
+            'economic_stewardship':    [T, T, T, N, T],
+            'election_integrity':      [T, T, T, T, T],
+            'border_immigration':      [T, T, T, T, T],
+            'self_defense':            [T, T, T, T, T],
+            'foreign_policy_restraint': [N, N, N, F, N],
+            'industry_capture':        [T, T, N, T, T],
+        },
+        'notes': 'Sworn in as Director of OMB February 7, 2025. Also acting CFPB Director. Trump T1 OMB '
+                 'Director. Founder/President of Center for Renewing America. Lead architect of Project 2025 '
+                 'and the "Mandate for Leadership." Evangelical Christian, member of New City Church '
+                 '(Arlington VA). Has overseen large-scale federal workforce reductions and agency '
+                 'restructurings. Among the most ideologically MAGA-aligned cabinet officials.',
+    },
+    {
+        'name': 'Kash Patel',
+        'state': 'US',
+        'party': 'R',
+        'office': 'Director of the Federal Bureau of Investigation (sworn February 21, 2025)',
+        'jurisdiction': 'Executive Branch',
+        'level': 'executive',
+        'religion': 'Hindu',
+        'twitter': '@FBIDirectorKash',
+        'sources': [
+            'https://en.wikipedia.org/wiki/Kash_Patel',
+            'https://www.fbi.gov',
+        ],
+        'scores': {
+            'sanctity_of_life':        [T, T, N, N, T],
+            'biblical_marriage':       [T, T, T, N, N],
+            'family_child_sovereignty': [T, T, T, T, T],
+            'christian_liberty':       [T, T, T, T, N],
+            'economic_stewardship':    [N, N, T, N, T],
+            'election_integrity':      [T, T, T, T, T],
+            'border_immigration':      [T, T, T, T, T],
+            'self_defense':            [T, T, T, N, T],
+            'foreign_policy_restraint': [T, T, T, F, T],   # vocal anti-forever-war + IC-deep-state critic
+            'industry_capture':        [T, T, N, N, T],
+        },
+        'notes': 'Confirmed by Senate to lead the FBI under Trump T2 (sworn Feb 2025). Also acting ATF '
+                 'Director briefly. Former Department of Defense Chief of Staff (Trump T1). Author of '
+                 '"Government Gangsters" detailing alleged FBI/DOJ abuses. Hindu. Indian-American. Tied '
+                 'job security at FBI to purging agents linked to Trump probes (per fired acting FBI chief '
+                 'Brian Driscoll testimony May 2026).',
+    },
+    {
+        'name': 'Stephen Miller',
+        'state': 'US',
+        'party': 'R',
+        'office': 'White House Deputy Chief of Staff for Policy and Homeland Security Advisor',
+        'jurisdiction': 'Executive Branch',
+        'level': 'executive',
+        'religion': 'Jewish',
+        'twitter': '@StephenM',
+        'sources': [
+            'https://en.wikipedia.org/wiki/Stephen_Miller_(political_advisor)',
+            'https://www.whitehouse.gov',
+        ],
+        'scores': {
+            'sanctity_of_life':        [T, T, T, T, T],
+            'biblical_marriage':       [T, T, T, T, T],
+            'family_child_sovereignty': [T, T, T, T, T],
+            'christian_liberty':       [T, T, T, T, T],
+            'economic_stewardship':    [T, N, T, N, T],
+            'election_integrity':      [T, T, T, T, T],
+            'border_immigration':      [T, T, T, T, T],   # signature issue — chief immigration hawk
+            'self_defense':            [T, T, T, N, T],
+            'foreign_policy_restraint': [N, N, N, F, N],
+            'industry_capture':        [N, N, N, N, N],
+        },
+        'notes': 'White House Deputy Chief of Staff for Policy + Homeland Security Advisor in Trump T2. '
+                 'Trump T1 senior policy advisor. Founder of America First Legal. Lead architect of Trump '
+                 'immigration policy (travel ban, family separation, asylum restrictions). Jewish. '
+                 'Among the most influential non-cabinet officials in the Trump administration; signature '
+                 'issue is immigration restriction.',
+    },
     {
         'name': 'Sean Duffy',
         'state': 'US',

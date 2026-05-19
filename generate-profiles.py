@@ -797,6 +797,18 @@ def generate_profile(candidate, categories, meta, nav=None):
             '</div>'
             '</div>'
         )
+    elif status == 'lame_duck':
+        candidacy_note = (profile.get('candidacy_note') or '').strip()
+        status_banner_html = (
+            '<div class="prof-status-banner prof-status-lame" role="note" aria-label="Not seeking re-election">'
+            '<span class="prof-status-chip">LAME DUCK</span>'
+            '<div class="prof-status-text">'
+            f'<strong>{c.get("name", "This official")}</strong> is still in active office '
+            'but has announced they will not seek re-election in 2026.'
+            f'{(" " + candidacy_note) if candidacy_note else ""}'
+            '</div>'
+            '</div>'
+        )
 
     # Candidacy banner: when profile.candidacy is set, surface "Running for X"
     # with a deep-link to the side-by-side comparison view for that race.

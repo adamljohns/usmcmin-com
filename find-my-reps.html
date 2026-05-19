@@ -856,11 +856,12 @@
       })
       .then(function(data){
         // Hide former/lost candidates from find-my-reps — they don't
-        // represent anyone anymore. They're still on /citizen-formers.html
-        // and searchable on the main citizen.html scorecard.
+        // represent anyone anymore. lame_duck IS shown because they
+        // still represent you through end of term. They're still on
+        // /citizen-formers.html and searchable on the main scorecard.
         var all = (data.candidates || []).filter(function(c) {
           var sts = c.status || 'active';
-          return sts === 'active';
+          return sts === 'active' || sts === 'lame_duck';
         });
         var grouped = filterCandidates(all, place);
 

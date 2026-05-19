@@ -253,6 +253,10 @@
       background: rgba(244,67,54,0.15);
       color: #f44336;
     }
+    .rk-status-lame {
+      background: rgba(255,193,7,0.18);
+      color: #FFC107;
+    }
     .rk-row-former { opacity: 0.78; }
     .rk-row-former:hover { opacity: 1; }
 
@@ -758,8 +762,9 @@
         if (office !== 'all' && classifyOffice(r.o) !== office) return false;
         if (r.ans < minAns) return false;
         var sts = r.sts || 'active';
-        if (statusFilter === 'active' && sts !== 'active') return false;
-        if (statusFilter === 'former' && sts === 'active') return false;
+        var isActiveLike = (sts === 'active' || sts === 'lame_duck');
+        if (statusFilter === 'active' && !isActiveLike) return false;
+        if (statusFilter === 'former' && isActiveLike) return false;
         // 'all' = no status filter
         return true;
       });
@@ -811,6 +816,8 @@
         } else if (sts === 'lost') {
           statusBadge = ' <span class="rk-status-badge rk-status-lost" title="Failed candidate">LOST</span>';
           rowClass = ' class="rk-row-former"';
+        } else if (sts === 'lame_duck') {
+          statusBadge = ' <span class="rk-status-badge rk-status-lame" title="Not seeking re-election in 2026">LAME DUCK</span>';
         }
         html +=
           '<tr' + rowClass + '>' +

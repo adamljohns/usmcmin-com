@@ -1390,11 +1390,13 @@ function renderCards() {
 
   var filtered = DATA.candidates.filter(function(c) {
     // Status filter — hide 'former' and 'lost' by default unless the user
-    // typed a search query (in which case we still show matches with a
-    // small badge — searchability stays even when filtered out of browse).
+    // typed a search query (in which case we still show matches — search
+    // bypasses the filter so searchability stays intact). 'lame_duck' is
+    // treated as active (they're still in office through end of term).
     // See /citizen-formers.html for the dedicated former-officials view.
     var sts = c.status || 'active';
-    if (!search && sts !== 'active') return false;
+    var isActiveLike = (sts === 'active' || sts === 'lame_duck');
+    if (!search && !isActiveLike) return false;
     // View filter
     if (view === 'local' && c.level !== 'local') return false;
     if (view === 'state' && c.level !== 'state') return false;

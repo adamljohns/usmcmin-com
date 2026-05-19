@@ -449,19 +449,21 @@
   var POINTS_PER_TRUE = 2;
   var MAX_TOTAL = 100;
   function calcTotal(scores) {
-    if (!scores) return { score: 0, max_possible: 0, pct: 0 };
-    var t = 0, answered = 0;
+    if (!scores) return { score: 0, max_possible: 0, pct: 0, answered: 0, na: 0 };
+    var t = 0, answered = 0, na = 0;
     for (var k in scores) {
       if (!Object.prototype.hasOwnProperty.call(scores, k)) continue;
       var arr = scores[k] || [];
       for (var i = 0; i < arr.length; i++) {
         if (arr[i] === true) { t += POINTS_PER_TRUE; answered++; }
         else if (arr[i] === false) { answered++; }
+        else if (arr[i] === 'N/A') { na++; }
+        // null = unanswered
       }
     }
     var maxPossible = answered * POINTS_PER_TRUE;
     var pct = maxPossible > 0 ? Math.round(100 * t / maxPossible) : 0;
-    return { score: t, max_possible: maxPossible, pct: pct, answered: answered };
+    return { score: t, max_possible: maxPossible, pct: pct, answered: answered, na: na };
   }
   // Letter grade takes a percentage (0-100)
   function letterGrade(pct) {

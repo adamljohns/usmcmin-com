@@ -1160,13 +1160,16 @@ function getLevelClass(level) {
 }
 
 function calcCategoryScore(answers) {
-  if (!answers) return { score: 0, max: MAX_PER_TOPIC, answered: 0 };
-  var raw = 0, answered = 0;
+  if (!answers) return { score: 0, max: MAX_PER_TOPIC, answered: 0, na: 0 };
+  var raw = 0, answered = 0, na = 0;
   answers.forEach(function(a) {
     if (a === true) { raw++; answered++; }
     else if (a === false) { answered++; }
+    else if (a === 'N/A') { na++; }
+    // null = unanswered (counts neither)
   });
-  return { score: raw * POINTS_PER_TRUE, raw: raw, max: MAX_PER_TOPIC, answered: answered };
+  return { score: raw * POINTS_PER_TRUE, raw: raw, max: MAX_PER_TOPIC,
+           answered: answered, na: na };
 }
 
 function calcTotalScore(scores, profile) {

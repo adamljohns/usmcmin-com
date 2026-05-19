@@ -320,8 +320,8 @@
   // v4.0 rubric: 10 categories × 5 questions × 2 pts = 100 max. Also surfaces
   // God-First / America-First tier subtotals by walking the loaded categories array.
   function calcTotal(scores){
-    if (!scores) return {score: 0, max: 100, max_possible: 0, pct: 0, answered: 0, god_first: 0, america_first: 0};
-    var total = 0; var answered = 0; var max = 100;
+    if (!scores) return {score: 0, max: 100, max_possible: 0, pct: 0, answered: 0, na: 0, god_first: 0, america_first: 0};
+    var total = 0; var answered = 0; var na = 0; var max = 100;
     var godFirst = 0, americaFirst = 0;
     var cats = (STATE.scorecard && STATE.scorecard.categories) || [];
     var tierMap = {};
@@ -329,17 +329,21 @@
     Object.keys(scores).forEach(function(cat){
       var catTotal = 0;
       (scores[cat]||[]).forEach(function(v){
-        if (v === true) { total += 2; catTotal += 2; }
-        if (v !== null && v !== undefined) answered += 1;
+        if (v === true) { total += 2; catTotal += 2; answered += 1; }
+        else if (v === false) { answered += 1; }
+        else if (v === 'N/A') { na += 1; }
+        // null = unanswered (counts neither)
       });
       if (tierMap[cat] === 'god_first') godFirst += catTotal;
       else if (tierMap[cat] === 'america_first') americaFirst += catTotal;
     });
     // Dynamic max per 2026-05-18 directive: 2 pts × answered.
+    // N/A cells (out-of-tier per Option B) are excluded from both score
+    // and max — they don't count against the official.
     var maxPossible = answered * 2;
     var pct = maxPossible > 0 ? Math.round(100 * total / maxPossible) : 0;
     return {score: total, max: max, max_possible: maxPossible, pct: pct,
-            answered: answered,
+            answered: answered, na: na,
             god_first: godFirst, america_first: americaFirst};
   }
   function letterGrade(pct){

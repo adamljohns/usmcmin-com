@@ -64,7 +64,7 @@ def main():
             continue
 
         scores = c.get('scores') or {}
-        gf, af, answered = 0, 0, 0
+        gf, af, answered, na = 0, 0, 0, 0
         for cat_id, vals in scores.items():
             if not isinstance(vals, list):
                 continue
@@ -78,6 +78,9 @@ def main():
                         af += pts
                 elif a is False:
                     answered += 1
+                elif a == 'N/A':
+                    na += 1
+                # else: None — counts toward neither answered nor N/A
         base = gf + af
         # Adjustments (AIPAC/Soros/China etc.)
         adj = 0
@@ -107,6 +110,7 @@ def main():
             'pct': pct,
             'lg':  letter_grade(pct),
             'ans': answered,
+            'na':  na,
             'sts': c.get('status') or 'active',
         })
 
@@ -123,6 +127,7 @@ def main():
                    'mp': 'max_possible_score', 'pct': 'pct_of_max',
                    'lg': 'letter_grade_dynamic',
                    'ans': 'answered_questions',
+                   'na': 'na_questions',
                    'sts': 'status'},
         'rows': rows,
     }

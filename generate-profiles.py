@@ -30,11 +30,20 @@ def letter_grade(pct):
     return 'F'
 
 def calc_cat_score(answers):
+    """Score a category's answer array.
+    Values:
+      True  → +2 (counts toward score + max)
+      False → 0  (counts toward max)
+      None  → unanswered (counts toward neither)
+      'N/A' → not applicable to this office tier (counts toward neither;
+              visually distinct from None per Option B tier-masking)
+    """
     if not answers:
-        return {'score': 0, 'raw': 0, 'answered': 0}
+        return {'score': 0, 'raw': 0, 'answered': 0, 'na': 0}
     raw = sum(1 for a in answers if a is True)
-    answered = sum(1 for a in answers if a is not None)
-    return {'score': raw * POINTS_PER_TRUE, 'raw': raw, 'answered': answered}
+    answered = sum(1 for a in answers if a is True or a is False)
+    na = sum(1 for a in answers if a == 'N/A')
+    return {'score': raw * POINTS_PER_TRUE, 'raw': raw, 'answered': answered, 'na': na}
 
 def calc_total(scores, categories):
     total = 0
@@ -96,6 +105,8 @@ def answer_display(val):
         return '<span style="color:#4CAF50;font-weight:700;">TRUE (+2)</span>'
     if val is False:
         return '<span style="color:#f44336;font-weight:700;">FALSE (0)</span>'
+    if val == 'N/A':
+        return '<span style="color:#888;font-style:italic;text-decoration:line-through;" title="This question is not scoreable at this office tier — official has no direct authority to act on this issue.">N/A &middot; out of tier</span>'
     return '<span style="color:#666;font-style:italic;">Not yet verified</span>'
 
 # ---- Navigation & photo helpers (added for prev/next + initials fallback) ----

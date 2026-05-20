@@ -118,6 +118,65 @@
     .tool-card { padding:16px; }
   }
 </style>
+<style>
+  /* ── TIER OVERLAY (S/A/B/C) — Compass + Sovereign ── */
+  .tool-card { position: relative; }
+  .tool-card[data-tier="S"] { border: 2px solid #CE8E31 !important; }
+  .tool-card[data-tier="A"] { border: 2px solid #1E293B !important; }
+  .tool-card[data-tier="B"] { border: 2px solid #6BA368 !important; }
+  .tool-card[data-tier="C"] { border: 2px solid #9CA3AF !important; opacity: 0.8; }
+  .tool-card .tier-badge {
+    position: absolute; top: -12px; left: -12px;
+    width: 28px; height: 28px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    color: #FFFFFF; font-weight: 800; font-size: 0.78rem;
+    font-family: var(--font-main, system-ui); line-height: 1;
+    z-index: 2; pointer-events: none;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.35);
+  }
+  .tool-card[data-tier="S"] .tier-badge { background: #CE8E31; }
+  .tool-card[data-tier="A"] .tier-badge { background: #1E293B; }
+  .tool-card[data-tier="B"] .tier-badge { background: #6BA368; }
+  .tool-card[data-tier="C"] .tier-badge { background: #9CA3AF; }
+
+  /* "Show S+A only" filter — when .filter-sa-only is on the grid,
+     fade out B+C cards (don't hide so layout stays calm). */
+  .tools-grid.filter-sa-only .tool-card[data-tier="B"],
+  .tools-grid.filter-sa-only .tool-card[data-tier="C"],
+  #toolsGrid.filter-sa-only .tool-card[data-tier="B"],
+  #toolsGrid.filter-sa-only .tool-card[data-tier="C"] {
+    opacity: 0.18; filter: grayscale(0.6); pointer-events: none;
+  }
+
+  /* Tier legend bar */
+  .tier-legend { max-width:1200px; margin:0 auto 16px; padding:14px 18px;
+    background:var(--bg-card); border:1px solid var(--border); border-radius:var(--radius);
+    display:flex; gap:12px; align-items:center; flex-wrap:wrap; justify-content:center; }
+  .tier-legend .tl-row { display:flex; align-items:center; gap:8px; padding:4px 10px; }
+  .tier-legend .tl-badge { width:22px; height:22px; border-radius:50%;
+    display:flex; align-items:center; justify-content:center;
+    color:#FFFFFF; font-weight:800; font-size:0.68rem;
+    box-shadow:0 1px 2px rgba(0,0,0,0.35); }
+  .tier-legend .tl-row[data-tier="S"] .tl-badge { background:#CE8E31; }
+  .tier-legend .tl-row[data-tier="A"] .tl-badge { background:#1E293B; }
+  .tier-legend .tl-row[data-tier="B"] .tl-badge { background:#6BA368; }
+  .tier-legend .tl-row[data-tier="C"] .tl-badge { background:#9CA3AF; }
+  .tier-legend .tl-label { font-size:0.8rem; color:var(--white); font-weight:700; letter-spacing:1px; }
+  .tier-legend .tl-desc  { font-size:0.78rem; color:var(--gray-light); }
+  @media (max-width:720px) {
+    .tier-legend { flex-direction:column; align-items:flex-start; gap:8px; }
+  }
+
+  /* "Show S+A only" chip — uses existing .chip class so it sits naturally in the filter row */
+  .chip.tier-toggle {
+    border: 1.5px solid #CE8E31 !important;
+    color: #CE8E31 !important;
+    font-weight: 700;
+  }
+  .chip.tier-toggle.active {
+    background: #CE8E31 !important; color: #FFFFFF !important;
+  }
+</style>
 </head>
 <body>
 
@@ -161,6 +220,15 @@
   </div>
 </div>
 
+<!-- TIER LEGEND -->
+
+<div class="tier-legend" role="region" aria-label="Tier legend">
+  <div class="tl-row" data-tier="S"><span class="tl-badge">S</span><span class="tl-label">START HERE</span><span class="tl-desc">— Don't skip these.</span></div>
+  <div class="tl-row" data-tier="A"><span class="tl-badge">A</span><span class="tl-label">CORE</span><span class="tl-desc">— Adopt in the first month.</span></div>
+  <div class="tl-row" data-tier="B"><span class="tl-badge">B</span><span class="tl-label">DEPTH</span><span class="tl-desc">— After the basics are running.</span></div>
+  <div class="tl-row" data-tier="C"><span class="tl-badge">C</span><span class="tl-label">OPTIONAL</span><span class="tl-desc">— Most watchmen skip these.</span></div>
+</div>
+
 <!-- FILTERS -->
 <nav class="filters" aria-label="Filter local tools by category">
   <div class="filters-inner">
@@ -172,6 +240,7 @@
     <button class="chip" data-filter="code">Coding <span class="count">4</span></button>
     <button class="chip" data-filter="rag">Knowledge / RAG <span class="count">4</span></button>
     <button class="chip" data-filter="automation">Automation <span class="count">3</span></button>
+    <button class="chip tier-toggle" type="button" aria-label="Toggle Show S+A only" title="Show only S and A tier tools">Show S+A only</button>
   </div>
 </nav>
 
@@ -179,7 +248,8 @@
   <h2 class="section-title">The 30 local tools</h2>
   <p class="section-sub">Each card shows agent capability, Model Context Protocol (MCP) support, minimum RAM, and supported platforms.</p>
   <div class="tools-grid" id="toolsGrid">
-      <article class="tool-card" data-cat="runner">
+      <article class="tool-card" data-cat="runner" data-tier="S">
+        <span class="tier-badge" data-tier="S" aria-label="Tier S: Start Here">S</span>
         <span class="tool-cat">LLM Runner</span>
         <h2><a href="https://ollama.com" target="_blank" rel="noopener" style="color:inherit; text-decoration:none; border-bottom:1px dotted var(--gold);">Ollama <span style="opacity:0.6; font-size:0.75em;">↗</span></a></h2>
         <p class="tool-type">Local LLM runner (CLI + API)</p>
@@ -196,7 +266,8 @@
         <div class="best-for">Best for: technical watchmen comfortable with the terminal; the foundation other local tools build on.</div>
         <div class="watchman-call">Start here. Most-used local runner for a reason — simple, stable, fast.</div>
       </article>
-      <article class="tool-card" data-cat="runner">
+      <article class="tool-card" data-cat="runner" data-tier="S">
+        <span class="tier-badge" data-tier="S" aria-label="Tier S: Start Here">S</span>
         <span class="tool-cat">LLM Runner</span>
         <h2><a href="https://lmstudio.ai" target="_blank" rel="noopener" style="color:inherit; text-decoration:none; border-bottom:1px dotted var(--gold);">LM Studio <span style="opacity:0.6; font-size:0.75em;">↗</span></a></h2>
         <p class="tool-type">Local LLM runner (GUI app)</p>
@@ -213,7 +284,8 @@
         <div class="best-for">Best for: watchmen who want point-and-click local AI without learning a terminal.</div>
         <div class="watchman-call">Best entry point if you don't already love the terminal. Free, fast, works.</div>
       </article>
-      <article class="tool-card" data-cat="runner">
+      <article class="tool-card" data-cat="runner" data-tier="A">
+        <span class="tier-badge" data-tier="A" aria-label="Tier A: Core">A</span>
         <span class="tool-cat">LLM Runner</span>
         <h2><a href="https://ml-explore.github.io/mlx/" target="_blank" rel="noopener" style="color:inherit; text-decoration:none; border-bottom:1px dotted var(--gold);">MLX <span style="opacity:0.6; font-size:0.75em;">↗</span></a></h2>
         <p class="tool-type">Apple Silicon ML framework</p>
@@ -230,7 +302,8 @@
         <div class="best-for">Best for: Mac watchmen who want maximum performance from their unified memory.</div>
         <div class="watchman-call">If you have a Mac Studio M3 Ultra, this is what makes 70B+ models feel snappy.</div>
       </article>
-      <article class="tool-card" data-cat="runner">
+      <article class="tool-card" data-cat="runner" data-tier="A">
+        <span class="tier-badge" data-tier="A" aria-label="Tier A: Core">A</span>
         <span class="tool-cat">LLM Runner</span>
         <h2><a href="https://github.com/ggerganov/llama.cpp" target="_blank" rel="noopener" style="color:inherit; text-decoration:none; border-bottom:1px dotted var(--gold);">llama.cpp <span style="opacity:0.6; font-size:0.75em;">↗</span></a></h2>
         <p class="tool-type">Local LLM inference engine</p>
@@ -247,7 +320,8 @@
         <div class="best-for">Best for: watchmen who want fine-grained control over inference parameters and model formats.</div>
         <div class="watchman-call">You don't need this directly unless you're benchmarking. Trust Ollama / LM Studio to handle it.</div>
       </article>
-      <article class="tool-card" data-cat="runner">
+      <article class="tool-card" data-cat="runner" data-tier="A">
+        <span class="tier-badge" data-tier="A" aria-label="Tier A: Core">A</span>
         <span class="tool-cat">LLM Runner</span>
         <h2><a href="https://openwebui.com" target="_blank" rel="noopener" style="color:inherit; text-decoration:none; border-bottom:1px dotted var(--gold);">Open WebUI <span style="opacity:0.6; font-size:0.75em;">↗</span></a></h2>
         <p class="tool-type">Local web UI for any LLM backend</p>
@@ -264,7 +338,8 @@
         <div class="best-for">Best for: watchmen who want a polished web interface for their local models.</div>
         <div class="watchman-call">Best 'looks like ChatGPT, runs on my hardware' choice. Pair with Ollama; you're set.</div>
       </article>
-      <article class="tool-card" data-cat="model">
+      <article class="tool-card" data-cat="model" data-tier="S">
+        <span class="tier-badge" data-tier="S" aria-label="Tier S: Start Here">S</span>
         <span class="tool-cat">Frontier Model</span>
         <h2><a href="https://www.llama.com" target="_blank" rel="noopener" style="color:inherit; text-decoration:none; border-bottom:1px dotted var(--gold);">Llama 4 (Meta) <span style="opacity:0.6; font-size:0.75em;">↗</span></a></h2>
         <p class="tool-type">Open-weight frontier model family</p>
@@ -281,7 +356,8 @@
         <div class="best-for">Best for: watchmen who want the strongest open-weight English-language model.</div>
         <div class="watchman-call">Default model for the local stack. 70B Q4 on a 128GB Mac and you're set.</div>
       </article>
-      <article class="tool-card" data-cat="model">
+      <article class="tool-card" data-cat="model" data-tier="A">
+        <span class="tier-badge" data-tier="A" aria-label="Tier A: Core">A</span>
         <span class="tool-cat">Frontier Model</span>
         <h2><a href="https://qwenlm.github.io" target="_blank" rel="noopener" style="color:inherit; text-decoration:none; border-bottom:1px dotted var(--gold);">Qwen 3 (Alibaba) <span style="opacity:0.6; font-size:0.75em;">↗</span></a></h2>
         <p class="tool-type">Open-weight Chinese frontier model (multilingual, MoE)</p>
@@ -298,7 +374,8 @@
         <div class="best-for">Best for: watchmen doing multilingual ministry, technical reasoning, or who want the most capable open MoE.</div>
         <div class="watchman-call">Worth pulling alongside Llama. Try both on a real task; one will click for your style.</div>
       </article>
-      <article class="tool-card" data-cat="model">
+      <article class="tool-card" data-cat="model" data-tier="A">
+        <span class="tier-badge" data-tier="A" aria-label="Tier A: Core">A</span>
         <span class="tool-cat">Frontier Model</span>
         <h2><a href="https://huggingface.co/deepseek-ai" target="_blank" rel="noopener" style="color:inherit; text-decoration:none; border-bottom:1px dotted var(--gold);">DeepSeek R1 / V3 <span style="opacity:0.6; font-size:0.75em;">↗</span></a></h2>
         <p class="tool-type">Open-weight reasoning model (671B MoE)</p>
@@ -315,7 +392,8 @@
         <div class="best-for">Best for: watchmen who want frontier reasoning on their own hardware, no API key required.</div>
         <div class="watchman-call">Patience required (slow on Mac without dedicated inference). But it's frontier-class for free.</div>
       </article>
-      <article class="tool-card" data-cat="model">
+      <article class="tool-card" data-cat="model" data-tier="B">
+        <span class="tier-badge" data-tier="B" aria-label="Tier B: Depth">B</span>
         <span class="tool-cat">Frontier Model</span>
         <h2><a href="https://mistral.ai" target="_blank" rel="noopener" style="color:inherit; text-decoration:none; border-bottom:1px dotted var(--gold);">Mistral Large 2 <span style="opacity:0.6; font-size:0.75em;">↗</span></a></h2>
         <p class="tool-type">European open-weight frontier model</p>
@@ -332,7 +410,8 @@
         <div class="best-for">Best for: watchmen in European-language ministries or doing technical work where Mistral's tuning shines.</div>
         <div class="watchman-call">Worth a side-by-side test against Llama if your work touches French / Spanish / German.</div>
       </article>
-      <article class="tool-card" data-cat="model">
+      <article class="tool-card" data-cat="model" data-tier="B">
+        <span class="tier-badge" data-tier="B" aria-label="Tier B: Depth">B</span>
         <span class="tool-cat">Frontier Model</span>
         <h2><a href="https://mistral.ai" target="_blank" rel="noopener" style="color:inherit; text-decoration:none; border-bottom:1px dotted var(--gold);">Mixtral 8×22B (Mistral) <span style="opacity:0.6; font-size:0.75em;">↗</span></a></h2>
         <p class="tool-type">Mixture-of-Experts open-weight model</p>
@@ -349,7 +428,8 @@
         <div class="best-for">Best for: watchmen who want quality output at faster speeds than dense models.</div>
         <div class="watchman-call">Solid second model behind Llama / Qwen. Pull it if you want to A/B test.</div>
       </article>
-      <article class="tool-card" data-cat="model">
+      <article class="tool-card" data-cat="model" data-tier="B">
+        <span class="tier-badge" data-tier="B" aria-label="Tier B: Depth">B</span>
         <span class="tool-cat">Frontier Model</span>
         <h2><a href="https://ai.google.dev/gemma" target="_blank" rel="noopener" style="color:inherit; text-decoration:none; border-bottom:1px dotted var(--gold);">Gemma 3 (Google) <span style="opacity:0.6; font-size:0.75em;">↗</span></a></h2>
         <p class="tool-type">Open-weight Google model family</p>
@@ -366,7 +446,8 @@
         <div class="best-for">Best for: watchmen with mid-tier hardware (32-64GB) who want capable local AI.</div>
         <div class="watchman-call">Best balance of capability vs. RAM footprint for the 32-64GB Mac.</div>
       </article>
-      <article class="tool-card" data-cat="model">
+      <article class="tool-card" data-cat="model" data-tier="B">
+        <span class="tier-badge" data-tier="B" aria-label="Tier B: Depth">B</span>
         <span class="tool-cat">Frontier Model</span>
         <h2><a href="https://cohere.com/command" target="_blank" rel="noopener" style="color:inherit; text-decoration:none; border-bottom:1px dotted var(--gold);">Command R+ (Cohere) <span style="opacity:0.6; font-size:0.75em;">↗</span></a></h2>
         <p class="tool-type">Open-weight enterprise / RAG-tuned model</p>
@@ -383,7 +464,8 @@
         <div class="best-for">Best for: watchmen running local RAG over their own documents (sermons, books, business records).</div>
         <div class="watchman-call">Underrated for the watchman who wants strong RAG without sending docs to the cloud.</div>
       </article>
-      <article class="tool-card" data-cat="model">
+      <article class="tool-card" data-cat="model" data-tier="B">
+        <span class="tier-badge" data-tier="B" aria-label="Tier B: Depth">B</span>
         <span class="tool-cat">Frontier Model</span>
         <h2><a href="https://huggingface.co/microsoft/phi-4" target="_blank" rel="noopener" style="color:inherit; text-decoration:none; border-bottom:1px dotted var(--gold);">Phi-4 (Microsoft) <span style="opacity:0.6; font-size:0.75em;">↗</span></a></h2>
         <p class="tool-type">Small but capable Microsoft model</p>
@@ -400,7 +482,8 @@
         <div class="best-for">Best for: watchmen running on lighter hardware (16-32GB) who still want frontier-tier reasoning.</div>
         <div class="watchman-call">If your Mac is 16GB or 32GB, this is your workhorse. Tiny, fast, smart.</div>
       </article>
-      <article class="tool-card" data-cat="image">
+      <article class="tool-card" data-cat="image" data-tier="B">
+        <span class="tier-badge" data-tier="B" aria-label="Tier B: Depth">B</span>
         <span class="tool-cat">Image</span>
         <h2><a href="https://blackforestlabs.ai" target="_blank" rel="noopener" style="color:inherit; text-decoration:none; border-bottom:1px dotted var(--gold);">FLUX.1 dev <span style="opacity:0.6; font-size:0.75em;">↗</span></a></h2>
         <p class="tool-type">Open-weight image generation</p>
@@ -417,7 +500,8 @@
         <div class="best-for">Best for: watchmen who want Midjourney-quality output running on their own hardware.</div>
         <div class="watchman-call">Run via ComfyUI for full control. Quantized FLUX runs on 24GB+ Mac unified memory.</div>
       </article>
-      <article class="tool-card" data-cat="image">
+      <article class="tool-card" data-cat="image" data-tier="B">
+        <span class="tier-badge" data-tier="B" aria-label="Tier B: Depth">B</span>
         <span class="tool-cat">Image</span>
         <h2><a href="https://stability.ai" target="_blank" rel="noopener" style="color:inherit; text-decoration:none; border-bottom:1px dotted var(--gold);">Stable Diffusion 3.5 <span style="opacity:0.6; font-size:0.75em;">↗</span></a></h2>
         <p class="tool-type">Open-weight image generation</p>
@@ -434,7 +518,8 @@
         <div class="best-for">Best for: watchmen who want a vast library of fine-tuned styles and LoRAs.</div>
         <div class="watchman-call">Use FLUX as your default; pull SD 3.5 for community fine-tunes and specific styles.</div>
       </article>
-      <article class="tool-card" data-cat="image">
+      <article class="tool-card" data-cat="image" data-tier="B">
+        <span class="tier-badge" data-tier="B" aria-label="Tier B: Depth">B</span>
         <span class="tool-cat">Image</span>
         <h2><a href="https://github.com/comfyanonymous/ComfyUI" target="_blank" rel="noopener" style="color:inherit; text-decoration:none; border-bottom:1px dotted var(--gold);">ComfyUI <span style="opacity:0.6; font-size:0.75em;">↗</span></a></h2>
         <p class="tool-type">Visual workflow editor for image / video models</p>
@@ -451,7 +536,8 @@
         <div class="best-for">Best for: watchmen making serious volume of visual content who want a reproducible pipeline.</div>
         <div class="watchman-call">Pair with FLUX. Steeper curve, but once you have a workflow saved, it's repeatable.</div>
       </article>
-      <article class="tool-card" data-cat="voice">
+      <article class="tool-card" data-cat="voice" data-tier="A">
+        <span class="tier-badge" data-tier="A" aria-label="Tier A: Core">A</span>
         <span class="tool-cat">Voice</span>
         <h2><a href="https://github.com/ggerganov/whisper.cpp" target="_blank" rel="noopener" style="color:inherit; text-decoration:none; border-bottom:1px dotted var(--gold);">Whisper.cpp <span style="opacity:0.6; font-size:0.75em;">↗</span></a></h2>
         <p class="tool-type">Local speech-to-text (Whisper port)</p>
@@ -468,7 +554,8 @@
         <div class="best-for">Best for: watchmen transcribing sensitive content (counseling notes, sermon prep) who don't want audio leaving the machine.</div>
         <div class="watchman-call">Use this over the API when content is sensitive. Free and fast.</div>
       </article>
-      <article class="tool-card" data-cat="voice">
+      <article class="tool-card" data-cat="voice" data-tier="B">
+        <span class="tier-badge" data-tier="B" aria-label="Tier B: Depth">B</span>
         <span class="tool-cat">Voice</span>
         <h2><a href="https://github.com/m-bain/whisperX" target="_blank" rel="noopener" style="color:inherit; text-decoration:none; border-bottom:1px dotted var(--gold);">WhisperX <span style="opacity:0.6; font-size:0.75em;">↗</span></a></h2>
         <p class="tool-type">Whisper + speaker diarization</p>
@@ -485,7 +572,8 @@
         <div class="best-for">Best for: watchmen transcribing multi-speaker recordings (conversations, panels, group prayer, board meetings).</div>
         <div class="watchman-call">Use when you need to know who said what. Free.</div>
       </article>
-      <article class="tool-card" data-cat="voice">
+      <article class="tool-card" data-cat="voice" data-tier="C">
+        <span class="tier-badge" data-tier="C" aria-label="Tier C: Optional">C</span>
         <span class="tool-cat">Voice</span>
         <h2><a href="https://github.com/myshell-ai/OpenVoice" target="_blank" rel="noopener" style="color:inherit; text-decoration:none; border-bottom:1px dotted var(--gold);">OpenVoice / Bark <span style="opacity:0.6; font-size:0.75em;">↗</span></a></h2>
         <p class="tool-type">Local text-to-speech / voice cloning</p>
@@ -502,7 +590,8 @@
         <div class="best-for">Best for: watchmen experimenting with voice cloning on private data without uploading samples to a service.</div>
         <div class="watchman-call">Local TTS quality lags ElevenLabs. Use these for privacy-sensitive experiments only.</div>
       </article>
-      <article class="tool-card" data-cat="code">
+      <article class="tool-card" data-cat="code" data-tier="A">
+        <span class="tier-badge" data-tier="A" aria-label="Tier A: Core">A</span>
         <span class="tool-cat">Coding</span>
         <h2><a href="https://continue.dev" target="_blank" rel="noopener" style="color:inherit; text-decoration:none; border-bottom:1px dotted var(--gold);">Continue.dev <span style="opacity:0.6; font-size:0.75em;">↗</span></a></h2>
         <p class="tool-type">VS Code extension w/ local model support</p>
@@ -519,7 +608,8 @@
         <div class="best-for">Best for: watchmen who want Cursor-style coding without the subscription, using their local models.</div>
         <div class="watchman-call">Best free Cursor alternative for the local-first watchman.</div>
       </article>
-      <article class="tool-card" data-cat="code">
+      <article class="tool-card" data-cat="code" data-tier="A">
+        <span class="tier-badge" data-tier="A" aria-label="Tier A: Core">A</span>
         <span class="tool-cat">Coding</span>
         <h2><a href="https://github.com/cline/cline" target="_blank" rel="noopener" style="color:inherit; text-decoration:none; border-bottom:1px dotted var(--gold);">Cline (formerly Claude Dev) <span style="opacity:0.6; font-size:0.75em;">↗</span></a></h2>
         <p class="tool-type">Open-source agentic VS Code extension</p>
@@ -536,7 +626,8 @@
         <div class="best-for">Best for: watchmen who want an autonomous coding agent that can run on local models.</div>
         <div class="watchman-call">Excellent. Pairs with Llama 4 70B locally for a free Claude Code substitute.</div>
       </article>
-      <article class="tool-card" data-cat="code">
+      <article class="tool-card" data-cat="code" data-tier="C">
+        <span class="tier-badge" data-tier="C" aria-label="Tier C: Optional">C</span>
         <span class="tool-cat">Coding</span>
         <h2><a href="https://aider.chat" target="_blank" rel="noopener" style="color:inherit; text-decoration:none; border-bottom:1px dotted var(--gold);">Aider (local backend) <span style="opacity:0.6; font-size:0.75em;">↗</span></a></h2>
         <p class="tool-type">Terminal AI pair programmer (local-friendly)</p>
@@ -553,7 +644,8 @@
         <div class="best-for">Best for: terminal-loving watchmen who want Claude Code's shape with their own local model.</div>
         <div class="watchman-call">If you already use Aider with Claude API, switching it to a local backend takes 30 seconds.</div>
       </article>
-      <article class="tool-card" data-cat="code">
+      <article class="tool-card" data-cat="code" data-tier="C">
+        <span class="tier-badge" data-tier="C" aria-label="Tier C: Optional">C</span>
         <span class="tool-cat">Coding</span>
         <h2><a href="https://www.tabbyml.com" target="_blank" rel="noopener" style="color:inherit; text-decoration:none; border-bottom:1px dotted var(--gold);">Tabby <span style="opacity:0.6; font-size:0.75em;">↗</span></a></h2>
         <p class="tool-type">Self-hosted code autocomplete</p>
@@ -570,7 +662,8 @@
         <div class="best-for">Best for: watchmen in regulated industries who can't send code to a cloud autocomplete service.</div>
         <div class="watchman-call">Niche. Use only if compliance forbids cloud Copilot.</div>
       </article>
-      <article class="tool-card" data-cat="rag">
+      <article class="tool-card" data-cat="rag" data-tier="A">
+        <span class="tier-badge" data-tier="A" aria-label="Tier A: Core">A</span>
         <span class="tool-cat">Knowledge / RAG</span>
         <h2><a href="https://anythingllm.com" target="_blank" rel="noopener" style="color:inherit; text-decoration:none; border-bottom:1px dotted var(--gold);">AnythingLLM <span style="opacity:0.6; font-size:0.75em;">↗</span></a></h2>
         <p class="tool-type">Local RAG over your documents</p>
@@ -587,7 +680,8 @@
         <div class="best-for">Best for: watchmen who want NotebookLM but local — chat over your own books, sermons, family records.</div>
         <div class="watchman-call">Best NotebookLM alternative that runs entirely on your machine.</div>
       </article>
-      <article class="tool-card" data-cat="rag">
+      <article class="tool-card" data-cat="rag" data-tier="B">
+        <span class="tier-badge" data-tier="B" aria-label="Tier B: Depth">B</span>
         <span class="tool-cat">Knowledge / RAG</span>
         <h2><a href="https://khoj.dev" target="_blank" rel="noopener" style="color:inherit; text-decoration:none; border-bottom:1px dotted var(--gold);">Khoj <span style="opacity:0.6; font-size:0.75em;">↗</span></a></h2>
         <p class="tool-type">Personal AI search engine</p>
@@ -604,7 +698,8 @@
         <div class="best-for">Best for: watchmen with a deep personal corpus (Obsidian + email + files) who want AI search over all of it.</div>
         <div class="watchman-call">Killer pairing with Obsidian. Free, fast, private.</div>
       </article>
-      <article class="tool-card" data-cat="rag">
+      <article class="tool-card" data-cat="rag" data-tier="C">
+        <span class="tier-badge" data-tier="C" aria-label="Tier C: Optional">C</span>
         <span class="tool-cat">Knowledge / RAG</span>
         <h2><a href="https://github.com/ItzCrazyKns/Perplexica" target="_blank" rel="noopener" style="color:inherit; text-decoration:none; border-bottom:1px dotted var(--gold);">Perplexica <span style="opacity:0.6; font-size:0.75em;">↗</span></a></h2>
         <p class="tool-type">Open-source Perplexity clone</p>
@@ -621,7 +716,8 @@
         <div class="best-for">Best for: watchmen who do research-heavy work and want Perplexity's UX without a subscription.</div>
         <div class="watchman-call">Solid Perplexity alternative for the local-first watchman.</div>
       </article>
-      <article class="tool-card" data-cat="rag">
+      <article class="tool-card" data-cat="rag" data-tier="C">
+        <span class="tier-badge" data-tier="C" aria-label="Tier C: Optional">C</span>
         <span class="tool-cat">Knowledge / RAG</span>
         <h2><a href="https://obsidian.md" target="_blank" rel="noopener" style="color:inherit; text-decoration:none; border-bottom:1px dotted var(--gold);">Obsidian + Smart Connections <span style="opacity:0.6; font-size:0.75em;">↗</span></a></h2>
         <p class="tool-type">Local-first knowledge graph + AI search plugin</p>
@@ -638,7 +734,8 @@
         <div class="best-for">Best for: watchmen already on Obsidian who want a privacy-first AI layer over their notes.</div>
         <div class="watchman-call">If Obsidian is your second brain, add Smart Connections + a local model and you have private AI search over everything.</div>
       </article>
-      <article class="tool-card" data-cat="automation">
+      <article class="tool-card" data-cat="automation" data-tier="C">
+        <span class="tier-badge" data-tier="C" aria-label="Tier C: Optional">C</span>
         <span class="tool-cat">Automation</span>
         <h2><a href="https://n8n.io" target="_blank" rel="noopener" style="color:inherit; text-decoration:none; border-bottom:1px dotted var(--gold);">n8n self-hosted <span style="opacity:0.6; font-size:0.75em;">↗</span></a></h2>
         <p class="tool-type">Self-hosted automation platform</p>
@@ -655,7 +752,8 @@
         <div class="best-for">Best for: watchmen who want enterprise-grade automation with zero data leaving their network.</div>
         <div class="watchman-call">If you have a homelab, n8n + Ollama is the local automation stack.</div>
       </article>
-      <article class="tool-card" data-cat="automation">
+      <article class="tool-card" data-cat="automation" data-tier="B">
+        <span class="tier-badge" data-tier="B" aria-label="Tier B: Depth">B</span>
         <span class="tool-cat">Automation</span>
         <h2><a href="https://modelcontextprotocol.io" target="_blank" rel="noopener" style="color:inherit; text-decoration:none; border-bottom:1px dotted var(--gold);">MCP Servers <span style="opacity:0.6; font-size:0.75em;">↗</span></a></h2>
         <p class="tool-type">Local Model Context Protocol servers</p>
@@ -672,7 +770,8 @@
         <div class="best-for">Best for: watchmen extending Cowork with local capabilities (custom databases, internal APIs, file systems).</div>
         <div class="watchman-call">Future-proof. As MCP grows, more watchman-relevant servers will exist.</div>
       </article>
-      <article class="tool-card" data-cat="automation">
+      <article class="tool-card" data-cat="automation" data-tier="B">
+        <span class="tier-badge" data-tier="B" aria-label="Tier B: Depth">B</span>
         <span class="tool-cat">Automation</span>
         <h2><a href="https://block.github.io/goose/" target="_blank" rel="noopener" style="color:inherit; text-decoration:none; border-bottom:1px dotted var(--gold);">Goose (local backend) <span style="opacity:0.6; font-size:0.75em;">↗</span></a></h2>
         <p class="tool-type">Open-source agentic desktop tool</p>
@@ -812,6 +911,22 @@
     empty.style.display = visible === 0 ? 'block' : 'none';
     window.scrollTo({top: 200, behavior: 'instant'});
   }));
+})();
+</script>
+
+
+<script>
+(function() {
+  // "Show S+A only" toggle for tool grids
+  const chip = document.querySelector('.chip.tier-toggle');
+  if (!chip) return;
+  const grid = document.getElementById('toolsGrid');
+  if (!grid) return;
+  chip.addEventListener('click', (e) => {
+    e.preventDefault();
+    grid.classList.toggle('filter-sa-only');
+    chip.classList.toggle('active');
+  });
 })();
 </script>
 

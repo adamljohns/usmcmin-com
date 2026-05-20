@@ -159,6 +159,65 @@
     .tool-card { padding:16px; }
   }
 </style>
+<style>
+  /* ── TIER OVERLAY (S/A/B/C) — Compass + Sovereign ── */
+  .tool-card { position: relative; }
+  .tool-card[data-tier="S"] { border: 2px solid #CE8E31 !important; }
+  .tool-card[data-tier="A"] { border: 2px solid #1E293B !important; }
+  .tool-card[data-tier="B"] { border: 2px solid #6BA368 !important; }
+  .tool-card[data-tier="C"] { border: 2px solid #9CA3AF !important; opacity: 0.8; }
+  .tool-card .tier-badge {
+    position: absolute; top: -12px; left: -12px;
+    width: 28px; height: 28px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    color: #FFFFFF; font-weight: 800; font-size: 0.78rem;
+    font-family: var(--font-main, system-ui); line-height: 1;
+    z-index: 2; pointer-events: none;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.35);
+  }
+  .tool-card[data-tier="S"] .tier-badge { background: #CE8E31; }
+  .tool-card[data-tier="A"] .tier-badge { background: #1E293B; }
+  .tool-card[data-tier="B"] .tier-badge { background: #6BA368; }
+  .tool-card[data-tier="C"] .tier-badge { background: #9CA3AF; }
+
+  /* "Show S+A only" filter — when .filter-sa-only is on the grid,
+     fade out B+C cards (don't hide so layout stays calm). */
+  .tools-grid.filter-sa-only .tool-card[data-tier="B"],
+  .tools-grid.filter-sa-only .tool-card[data-tier="C"],
+  #toolsGrid.filter-sa-only .tool-card[data-tier="B"],
+  #toolsGrid.filter-sa-only .tool-card[data-tier="C"] {
+    opacity: 0.18; filter: grayscale(0.6); pointer-events: none;
+  }
+
+  /* Tier legend bar */
+  .tier-legend { max-width:1200px; margin:0 auto 16px; padding:14px 18px;
+    background:var(--bg-card); border:1px solid var(--border); border-radius:var(--radius);
+    display:flex; gap:12px; align-items:center; flex-wrap:wrap; justify-content:center; }
+  .tier-legend .tl-row { display:flex; align-items:center; gap:8px; padding:4px 10px; }
+  .tier-legend .tl-badge { width:22px; height:22px; border-radius:50%;
+    display:flex; align-items:center; justify-content:center;
+    color:#FFFFFF; font-weight:800; font-size:0.68rem;
+    box-shadow:0 1px 2px rgba(0,0,0,0.35); }
+  .tier-legend .tl-row[data-tier="S"] .tl-badge { background:#CE8E31; }
+  .tier-legend .tl-row[data-tier="A"] .tl-badge { background:#1E293B; }
+  .tier-legend .tl-row[data-tier="B"] .tl-badge { background:#6BA368; }
+  .tier-legend .tl-row[data-tier="C"] .tl-badge { background:#9CA3AF; }
+  .tier-legend .tl-label { font-size:0.8rem; color:var(--white); font-weight:700; letter-spacing:1px; }
+  .tier-legend .tl-desc  { font-size:0.78rem; color:var(--gray-light); }
+  @media (max-width:720px) {
+    .tier-legend { flex-direction:column; align-items:flex-start; gap:8px; }
+  }
+
+  /* "Show S+A only" chip — uses existing .chip class so it sits naturally in the filter row */
+  .chip.tier-toggle {
+    border: 1.5px solid #CE8E31 !important;
+    color: #CE8E31 !important;
+    font-weight: 700;
+  }
+  .chip.tier-toggle.active {
+    background: #CE8E31 !important; color: #FFFFFF !important;
+  }
+</style>
 </head>
 <body>
 
@@ -216,6 +275,15 @@
   </dl>
 </details>
 
+<!-- TIER LEGEND -->
+
+<div class="tier-legend" role="region" aria-label="Tier legend">
+  <div class="tl-row" data-tier="S"><span class="tl-badge">S</span><span class="tl-label">START HERE</span><span class="tl-desc">— Don't skip these.</span></div>
+  <div class="tl-row" data-tier="A"><span class="tl-badge">A</span><span class="tl-label">CORE</span><span class="tl-desc">— Adopt in the first month.</span></div>
+  <div class="tl-row" data-tier="B"><span class="tl-badge">B</span><span class="tl-label">DEPTH</span><span class="tl-desc">— After the basics are running.</span></div>
+  <div class="tl-row" data-tier="C"><span class="tl-badge">C</span><span class="tl-label">OPTIONAL</span><span class="tl-desc">— Most watchmen skip these.</span></div>
+</div>
+
 <!-- FILTERS -->
 <nav class="filters" aria-label="Filter tools by category">
   <div class="filters-inner">
@@ -228,6 +296,7 @@
     <button class="chip" data-filter="code">Coding <span class="count">5</span></button>
     <button class="chip" data-filter="video">Video <span class="count">4</span></button>
     <button class="chip" data-filter="frontier">Agentic Frontier <span class="count">12</span></button>
+    <button class="chip tier-toggle" type="button" aria-label="Toggle Show S+A only" title="Show only S and A tier tools">Show S+A only</button>
   </div>
 </nav>
 
@@ -235,7 +304,8 @@
   <h2 class="section-title">The 49 tools</h2>
   <p class="section-sub">Tap a chip above to filter. Cards group by category in the default view. Each card shows AI/Agentic Level and MCP support inline.</p>
   <div class="tools-grid" id="toolsGrid">
-      <article class="tool-card" data-cat="chat">
+      <article class="tool-card" data-cat="chat" data-tier="S">
+        <span class="tier-badge" data-tier="S" aria-label="Tier S: Start Here">S</span>
         <span class="tool-cat">Chat</span>
         <h2><a href="https://claude.ai" target="_blank" rel="noopener" style="color:inherit; text-decoration:none; border-bottom:1px dotted var(--gold);">Claude <span style="opacity:0.6; font-size:0.75em;">↗</span></a></h2>
         <p class="tool-type">General-purpose AI assistant + agentic Cowork mode</p>
@@ -250,7 +320,8 @@
         <div class="best-for">Best for: any watchman who can only afford one AI subscription and needs writing + reasoning + agentic capability all in one.</div>
         <div class="watchman-call">Best default for most men. If you only buy one, this is the one.</div>
       </article>
-      <article class="tool-card" data-cat="chat">
+      <article class="tool-card" data-cat="chat" data-tier="A">
+        <span class="tier-badge" data-tier="A" aria-label="Tier A: Core">A</span>
         <span class="tool-cat">Chat</span>
         <h2><a href="https://chatgpt.com" target="_blank" rel="noopener" style="color:inherit; text-decoration:none; border-bottom:1px dotted var(--gold);">ChatGPT <span style="opacity:0.6; font-size:0.75em;">↗</span></a></h2>
         <p class="tool-type">General-purpose AI assistant + computer-use Agent</p>
@@ -265,7 +336,8 @@
         <div class="best-for">Best for: watchmen who want strong image generation + voice mode + a sanity-check second opinion alongside Claude.</div>
         <div class="watchman-call">Plus at $20 is the right tier as a #2 for image gen + sanity check. Pro at $200/mo is overkill for a family-captain stack — nobody in this cohort needs that ceiling.</div>
       </article>
-      <article class="tool-card" data-cat="chat">
+      <article class="tool-card" data-cat="chat" data-tier="A">
+        <span class="tier-badge" data-tier="A" aria-label="Tier A: Core">A</span>
         <span class="tool-cat">Chat</span>
         <h2><a href="https://gemini.google.com" target="_blank" rel="noopener" style="color:inherit; text-decoration:none; border-bottom:1px dotted var(--gold);">Gemini <span style="opacity:0.6; font-size:0.75em;">↗</span></a></h2>
         <p class="tool-type">Google Workspace-native AI assistant</p>
@@ -280,7 +352,8 @@
         <div class="best-for">Best for: watchmen whose ministry/business runs in Google Drive, Docs, Sheets, Gmail.</div>
         <div class="watchman-call">Skip unless you're deep in Google. Free tier is decent for the curious.</div>
       </article>
-      <article class="tool-card" data-cat="chat">
+      <article class="tool-card" data-cat="chat" data-tier="B">
+        <span class="tier-badge" data-tier="B" aria-label="Tier B: Depth">B</span>
         <span class="tool-cat">Chat</span>
         <h2><a href="https://grok.com" target="_blank" rel="noopener" style="color:inherit; text-decoration:none; border-bottom:1px dotted var(--gold);">Grok <span style="opacity:0.6; font-size:0.75em;">↗</span></a></h2>
         <p class="tool-type">X-integrated AI chat with live X data</p>
@@ -295,7 +368,8 @@
         <div class="best-for">Best for: watchmen who post on X heavily and want real-time X-data context for replies and posts.</div>
         <div class="watchman-call">Skip unless you're a heavy X user or want a contrarian second take. Don't pay for it as a primary.</div>
       </article>
-      <article class="tool-card" data-cat="chat">
+      <article class="tool-card" data-cat="chat" data-tier="A">
+        <span class="tier-badge" data-tier="A" aria-label="Tier A: Core">A</span>
         <span class="tool-cat">Chat</span>
         <h2><a href="https://perplexity.ai" target="_blank" rel="noopener" style="color:inherit; text-decoration:none; border-bottom:1px dotted var(--gold);">Perplexity <span style="opacity:0.6; font-size:0.75em;">↗</span></a></h2>
         <p class="tool-type">Search-first AI with citations</p>
@@ -310,7 +384,8 @@
         <div class="best-for">Best for: watchmen doing research-heavy work — sermon prep, due diligence, fact-checking — who need cited sources.</div>
         <div class="watchman-call">Free tier is enough for 90%. Pro only if you research daily for work.</div>
       </article>
-      <article class="tool-card" data-cat="chat">
+      <article class="tool-card" data-cat="chat" data-tier="A">
+        <span class="tier-badge" data-tier="A" aria-label="Tier A: Core">A</span>
         <span class="tool-cat">Chat</span>
         <h2><a href="https://copilot.microsoft.com" target="_blank" rel="noopener" style="color:inherit; text-decoration:none; border-bottom:1px dotted var(--gold);">Microsoft Copilot <span style="opacity:0.6; font-size:0.75em;">↗</span></a></h2>
         <p class="tool-type">Microsoft 365 AI assistant</p>
@@ -325,7 +400,8 @@
         <div class="best-for">Best for: watchmen whose business runs on Word, Excel, Outlook, and Teams.</div>
         <div class="watchman-call">Pay only if your daily work is in Word / Excel / Outlook. Otherwise skip.</div>
       </article>
-      <article class="tool-card" data-cat="chat">
+      <article class="tool-card" data-cat="chat" data-tier="C">
+        <span class="tier-badge" data-tier="C" aria-label="Tier C: Optional">C</span>
         <span class="tool-cat">Chat</span>
         <h2><a href="https://chat.deepseek.com" target="_blank" rel="noopener" style="color:inherit; text-decoration:none; border-bottom:1px dotted var(--gold);">DeepSeek <span style="opacity:0.6; font-size:0.75em;">↗</span></a></h2>
         <p class="tool-type">Open-weight AI assistant (free, capable)</p>
@@ -340,7 +416,8 @@
         <div class="best-for">Best for: watchmen on a $0 budget who still want frontier-class output. Sanity-check tab next to your primary AI.</div>
         <div class="watchman-call">Worth a sanity-check tab next to Claude. Don't make it primary — but free firepower is real.</div>
       </article>
-      <article class="tool-card" data-cat="voice">
+      <article class="tool-card" data-cat="voice" data-tier="S">
+        <span class="tier-badge" data-tier="S" aria-label="Tier S: Start Here">S</span>
         <span class="tool-cat">Voice</span>
         <h2><a href="https://github.com/openai/whisper" target="_blank" rel="noopener" style="color:inherit; text-decoration:none; border-bottom:1px dotted var(--gold);">OpenAI Whisper <span style="opacity:0.6; font-size:0.75em;">↗</span></a></h2>
         <p class="tool-type">Speech-to-text model (open source)</p>
@@ -355,7 +432,8 @@
         <div class="best-for">Best for: watchmen who record voice memos / interviews / sermon dictation and want clean transcripts.</div>
         <div class="watchman-call">Run locally on a Mac if you have one. Otherwise let Apple or Otter handle it.</div>
       </article>
-      <article class="tool-card" data-cat="voice">
+      <article class="tool-card" data-cat="voice" data-tier="S">
+        <span class="tier-badge" data-tier="S" aria-label="Tier S: Start Here">S</span>
         <span class="tool-cat">Voice</span>
         <h2><a href="https://www.apple.com/apple-intelligence/" target="_blank" rel="noopener" style="color:inherit; text-decoration:none; border-bottom:1px dotted var(--gold);">Apple Voice Memos <span style="opacity:0.6; font-size:0.75em;">↗</span></a></h2>
         <p class="tool-type">Built-in iPhone voice recording + transcription</p>
@@ -370,7 +448,8 @@
         <div class="best-for">Best for: watchmen who already have an iPhone and want zero-friction voice capture.</div>
         <div class="watchman-call">Try this first. If it covers your captures, you're done.</div>
       </article>
-      <article class="tool-card" data-cat="voice">
+      <article class="tool-card" data-cat="voice" data-tier="A">
+        <span class="tier-badge" data-tier="A" aria-label="Tier A: Core">A</span>
         <span class="tool-cat">Voice</span>
         <h2><a href="https://otter.ai" target="_blank" rel="noopener" style="color:inherit; text-decoration:none; border-bottom:1px dotted var(--gold);">Otter.ai <span style="opacity:0.6; font-size:0.75em;">↗</span></a></h2>
         <p class="tool-type">Live meeting transcription service</p>
@@ -385,7 +464,8 @@
         <div class="best-for">Best for: watchmen with 3+ meetings/week they wish they'd captured (counseling, coaching calls, board meetings).</div>
         <div class="watchman-call">Worth it if you have 3+ meetings/week you wish you'd captured. Otherwise skip.</div>
       </article>
-      <article class="tool-card" data-cat="voice">
+      <article class="tool-card" data-cat="voice" data-tier="A">
+        <span class="tier-badge" data-tier="A" aria-label="Tier A: Core">A</span>
         <span class="tool-cat">Voice</span>
         <h2><a href="https://descript.com" target="_blank" rel="noopener" style="color:inherit; text-decoration:none; border-bottom:1px dotted var(--gold);">Descript <span style="opacity:0.6; font-size:0.75em;">↗</span></a></h2>
         <p class="tool-type">Audio/video editor that edits transcripts</p>
@@ -400,7 +480,8 @@
         <div class="best-for">Best for: watchmen starting a podcast, YouTube channel, or audio-content creation.</div>
         <div class="watchman-call">Buy it the month you start a podcast or YouTube channel. Skip otherwise.</div>
       </article>
-      <article class="tool-card" data-cat="voice">
+      <article class="tool-card" data-cat="voice" data-tier="A">
+        <span class="tier-badge" data-tier="A" aria-label="Tier A: Core">A</span>
         <span class="tool-cat">Voice</span>
         <h2><a href="https://podcast.adobe.com" target="_blank" rel="noopener" style="color:inherit; text-decoration:none; border-bottom:1px dotted var(--gold);">Adobe Podcast Enhance <span style="opacity:0.6; font-size:0.75em;">↗</span></a></h2>
         <p class="tool-type">One-click audio cleanup tool</p>
@@ -415,7 +496,8 @@
         <div class="best-for">Best for: pastors, podcasters, and ministry leaders recording on phones in less-than-ideal rooms.</div>
         <div class="watchman-call">First tool I'd hand a pastor recording on his iPhone. Try it once and you'll never not use it.</div>
       </article>
-      <article class="tool-card" data-cat="image">
+      <article class="tool-card" data-cat="image" data-tier="B">
+        <span class="tier-badge" data-tier="B" aria-label="Tier B: Depth">B</span>
         <span class="tool-cat">Image</span>
         <h2><a href="https://midjourney.com" target="_blank" rel="noopener" style="color:inherit; text-decoration:none; border-bottom:1px dotted var(--gold);">Midjourney <span style="opacity:0.6; font-size:0.75em;">↗</span></a></h2>
         <p class="tool-type">AI image generation (artistic / stylized)</p>
@@ -430,7 +512,8 @@
         <div class="best-for">Best for: watchmen making weekly visual content (sermon graphics, social posts, blog hero images).</div>
         <div class="watchman-call">Worth it if you make weekly visual content. Skip if image gen is occasional — ChatGPT's built-in is enough.</div>
       </article>
-      <article class="tool-card" data-cat="image">
+      <article class="tool-card" data-cat="image" data-tier="A">
+        <span class="tier-badge" data-tier="A" aria-label="Tier A: Core">A</span>
         <span class="tool-cat">Image</span>
         <h2><a href="https://chatgpt.com" target="_blank" rel="noopener" style="color:inherit; text-decoration:none; border-bottom:1px dotted var(--gold);">DALL-E (in ChatGPT) <span style="opacity:0.6; font-size:0.75em;">↗</span></a></h2>
         <p class="tool-type">Image gen baked into ChatGPT</p>
@@ -445,7 +528,8 @@
         <div class="best-for">Best for: watchmen who already pay for ChatGPT and only need occasional image generation in-flow.</div>
         <div class="watchman-call">The right pick if you only generate the occasional image. Don't pay for ChatGPT just for this.</div>
       </article>
-      <article class="tool-card" data-cat="image">
+      <article class="tool-card" data-cat="image" data-tier="B">
+        <span class="tier-badge" data-tier="B" aria-label="Tier B: Depth">B</span>
         <span class="tool-cat">Image</span>
         <h2><a href="https://firefly.adobe.com" target="_blank" rel="noopener" style="color:inherit; text-decoration:none; border-bottom:1px dotted var(--gold);">Adobe Firefly <span style="opacity:0.6; font-size:0.75em;">↗</span></a></h2>
         <p class="tool-type">Commercially-safe AI image generation</p>
@@ -460,7 +544,8 @@
         <div class="best-for">Best for: watchmen creating commercial work (logos, products to sell, branded marketing) where IP-safety matters.</div>
         <div class="watchman-call">Use it ONLY as part of a Creative Cloud bundle. The $4.99 standalone is a trap — watchmen who buy it will then need Photoshop or Illustrator to actually USE what Firefly generates, and that's the real cost. If you don't already pay for CC, pick Midjourney or Ideogram instead.</div>
       </article>
-      <article class="tool-card" data-cat="image">
+      <article class="tool-card" data-cat="image" data-tier="C">
+        <span class="tier-badge" data-tier="C" aria-label="Tier C: Optional">C</span>
         <span class="tool-cat">Image</span>
         <h2><a href="https://ideogram.ai" target="_blank" rel="noopener" style="color:inherit; text-decoration:none; border-bottom:1px dotted var(--gold);">Ideogram <span style="opacity:0.6; font-size:0.75em;">↗</span></a></h2>
         <p class="tool-type">AI image generation specialized for text-in-image</p>
@@ -475,7 +560,8 @@
         <div class="best-for">Best for: watchmen making flyers, sermon-graphic cards, posters — anything with text rendered IN the image.</div>
         <div class="watchman-call">$7 stack-add for the watchman who makes flyers, sermon graphics, or marketing posts.</div>
       </article>
-      <article class="tool-card" data-cat="image">
+      <article class="tool-card" data-cat="image" data-tier="B">
+        <span class="tier-badge" data-tier="B" aria-label="Tier B: Depth">B</span>
         <span class="tool-cat">Image</span>
         <h2><a href="https://blackforestlabs.ai" target="_blank" rel="noopener" style="color:inherit; text-decoration:none; border-bottom:1px dotted var(--gold);">Stable Diffusion / FLUX.1 <span style="opacity:0.6; font-size:0.75em;">↗</span></a></h2>
         <p class="tool-type">Open-source image generation models</p>
@@ -490,7 +576,8 @@
         <div class="best-for">Best for: technical watchmen who want to own the image-gen stack (local privacy, custom fine-tuning, no per-image cost).</div>
         <div class="watchman-call">Skip unless you're technical and want to own the stack. Most watchmen are better served by Midjourney or Firefly.</div>
       </article>
-      <article class="tool-card" data-cat="image">
+      <article class="tool-card" data-cat="image" data-tier="C">
+        <span class="tier-badge" data-tier="C" aria-label="Tier C: Optional">C</span>
         <span class="tool-cat">Image</span>
         <h2><a href="https://magnific.ai" target="_blank" rel="noopener" style="color:inherit; text-decoration:none; border-bottom:1px dotted var(--gold);">Magnific AI <span style="opacity:0.6; font-size:0.75em;">↗</span></a></h2>
         <p class="tool-type">AI image upscaler / enhancer</p>
@@ -505,7 +592,8 @@
         <div class="best-for">Best for: watchmen making print-quality flyers, posters, merch — output that needs to look sharp at large sizes.</div>
         <div class="watchman-call">Skip for most watchmen. Midjourney's built-in upscale + Ideogram already cover the family-captain print use case. Magnific is $39/mo with no free tier — only worth it if you're running print-shop volumes weekly.</div>
       </article>
-      <article class="tool-card" data-cat="notes">
+      <article class="tool-card" data-cat="notes" data-tier="A">
+        <span class="tier-badge" data-tier="A" aria-label="Tier A: Core">A</span>
         <span class="tool-cat">Notes</span>
         <h2><a href="https://notion.com" target="_blank" rel="noopener" style="color:inherit; text-decoration:none; border-bottom:1px dotted var(--gold);">Notion AI <span style="opacity:0.6; font-size:0.75em;">↗</span></a></h2>
         <p class="tool-type">AI inside the Notion workspace</p>
@@ -520,7 +608,8 @@
         <div class="best-for">Best for: watchmen running their business / family ops in Notion who want AI Q&amp;A across their docs.</div>
         <div class="watchman-call">Add the AI on if Notion is your daily driver. Skip if you only open Notion monthly.</div>
       </article>
-      <article class="tool-card" data-cat="notes">
+      <article class="tool-card" data-cat="notes" data-tier="A">
+        <span class="tier-badge" data-tier="A" aria-label="Tier A: Core">A</span>
         <span class="tool-cat">Notes</span>
         <h2><a href="https://obsidian.md" target="_blank" rel="noopener" style="color:inherit; text-decoration:none; border-bottom:1px dotted var(--gold);">Obsidian + AI plugins <span style="opacity:0.6; font-size:0.75em;">↗</span></a></h2>
         <p class="tool-type">Local-first knowledge graph w/ AI plugins</p>
@@ -535,7 +624,8 @@
         <div class="best-for">Best for: watchmen who want files on disk (portable, owned, private) and AI search over their own corpus.</div>
         <div class="watchman-call">For the watchman who wants files on disk, owned, portable. Curve is steeper than Notion's.</div>
       </article>
-      <article class="tool-card" data-cat="notes">
+      <article class="tool-card" data-cat="notes" data-tier="A">
+        <span class="tier-badge" data-tier="A" aria-label="Tier A: Core">A</span>
         <span class="tool-cat">Notes</span>
         <h2><a href="https://www.apple.com/apple-intelligence/" target="_blank" rel="noopener" style="color:inherit; text-decoration:none; border-bottom:1px dotted var(--gold);">Apple Notes <span style="opacity:0.6; font-size:0.75em;">↗</span></a></h2>
         <p class="tool-type">Built-in iOS/macOS notes w/ Apple Intelligence</p>
@@ -550,7 +640,8 @@
         <div class="best-for">Best for: watchmen on Apple devices who want zero-friction note-taking with AI baked in.</div>
         <div class="watchman-call">Try this first. Move to Notion / Obsidian only if you hit a wall.</div>
       </article>
-      <article class="tool-card" data-cat="notes">
+      <article class="tool-card" data-cat="notes" data-tier="A">
+        <span class="tier-badge" data-tier="A" aria-label="Tier A: Core">A</span>
         <span class="tool-cat">Notes</span>
         <h2><a href="https://granola.ai" target="_blank" rel="noopener" style="color:inherit; text-decoration:none; border-bottom:1px dotted var(--gold);">Granola <span style="opacity:0.6; font-size:0.75em;">↗</span></a></h2>
         <p class="tool-type">AI meeting notes (Mac-only)</p>
@@ -565,7 +656,8 @@
         <div class="best-for">Best for: Mac-using watchmen with back-to-back calls who want clean structured notes without active note-taking.</div>
         <div class="watchman-call">Worth it if your day is back-to-back calls. Free tier is enough to test.</div>
       </article>
-      <article class="tool-card" data-cat="notes">
+      <article class="tool-card" data-cat="notes" data-tier="A">
+        <span class="tier-badge" data-tier="A" aria-label="Tier A: Core">A</span>
         <span class="tool-cat">Notes</span>
         <h2><a href="https://notebooklm.google.com" target="_blank" rel="noopener" style="color:inherit; text-decoration:none; border-bottom:1px dotted var(--gold);">NotebookLM <span style="opacity:0.6; font-size:0.75em;">↗</span></a></h2>
         <p class="tool-type">AI research notebook (Google) — free</p>
@@ -580,7 +672,8 @@
         <div class="best-for">Best for: watchmen digesting books, study materials, or large document sets — especially for sermon prep.</div>
         <div class="watchman-call">Drop your mission materials in, ask 'what's the watchman's role in Week 3?' Pure leverage. Free.</div>
       </article>
-      <article class="tool-card" data-cat="auto">
+      <article class="tool-card" data-cat="auto" data-tier="S">
+        <span class="tier-badge" data-tier="S" aria-label="Tier S: Start Here">S</span>
         <span class="tool-cat">Automation</span>
         <h2><a href="https://claude.com/cowork" target="_blank" rel="noopener" style="color:inherit; text-decoration:none; border-bottom:1px dotted var(--gold);">Anthropic Cowork <span style="opacity:0.6; font-size:0.75em;">↗</span></a></h2>
         <p class="tool-type">Desktop / mobile AI agent built into Claude</p>
@@ -595,7 +688,8 @@
         <div class="best-for">Best for: watchmen who want a true AI adjutant on their machine — files, browser, code, all under watchman oversight.</div>
         <div class="watchman-call">This is the differentiator. The reason Claude is the mission's default.</div>
       </article>
-      <article class="tool-card" data-cat="auto">
+      <article class="tool-card" data-cat="auto" data-tier="A">
+        <span class="tier-badge" data-tier="A" aria-label="Tier A: Core">A</span>
         <span class="tool-cat">Automation</span>
         <h2><a href="https://zapier.com" target="_blank" rel="noopener" style="color:inherit; text-decoration:none; border-bottom:1px dotted var(--gold);">Zapier <span style="opacity:0.6; font-size:0.75em;">↗</span></a></h2>
         <p class="tool-type">No-code automation between apps</p>
@@ -610,7 +704,8 @@
         <div class="best-for">Best for: watchmen who need to wire up SaaS apps that don't talk to each other (Mailchimp → Google Sheets, etc.).</div>
         <div class="watchman-call">Free tier is fine for the watchman with 1–2 simple automations. Pay only if you have a real workflow.</div>
       </article>
-      <article class="tool-card" data-cat="auto">
+      <article class="tool-card" data-cat="auto" data-tier="B">
+        <span class="tier-badge" data-tier="B" aria-label="Tier B: Depth">B</span>
         <span class="tool-cat">Automation</span>
         <h2><a href="https://make.com" target="_blank" rel="noopener" style="color:inherit; text-decoration:none; border-bottom:1px dotted var(--gold);">Make.com <span style="opacity:0.6; font-size:0.75em;">↗</span></a></h2>
         <p class="tool-type">Visual automation platform</p>
@@ -625,7 +720,8 @@
         <div class="best-for">Best for: watchmen whose automations branch / loop / hit the data-volume cliff in Zapier.</div>
         <div class="watchman-call">Pick this over Zapier if your automations branch or loop. Otherwise Zapier's marketplace is bigger.</div>
       </article>
-      <article class="tool-card" data-cat="auto">
+      <article class="tool-card" data-cat="auto" data-tier="B">
+        <span class="tier-badge" data-tier="B" aria-label="Tier B: Depth">B</span>
         <span class="tool-cat">Automation</span>
         <h2><a href="https://n8n.io" target="_blank" rel="noopener" style="color:inherit; text-decoration:none; border-bottom:1px dotted var(--gold);">n8n <span style="opacity:0.6; font-size:0.75em;">↗</span></a></h2>
         <p class="tool-type">Open-source automation, self-hostable</p>
@@ -640,7 +736,8 @@
         <div class="best-for">Best for: technical watchmen who want full control + data sovereignty + zero per-execution fees.</div>
         <div class="watchman-call">Skip unless you're already running a homelab or care about data sovereignty.</div>
       </article>
-      <article class="tool-card" data-cat="auto">
+      <article class="tool-card" data-cat="auto" data-tier="B">
+        <span class="tier-badge" data-tier="B" aria-label="Tier B: Depth">B</span>
         <span class="tool-cat">Automation</span>
         <h2><a href="https://lindy.ai" target="_blank" rel="noopener" style="color:inherit; text-decoration:none; border-bottom:1px dotted var(--gold);">Lindy <span style="opacity:0.6; font-size:0.75em;">↗</span></a></h2>
         <p class="tool-type">AI agent automation — Zapier with reasoning</p>
@@ -655,7 +752,8 @@
         <div class="best-for">Best for: watchmen running real businesses with email overload who can't afford a virtual assistant.</div>
         <div class="watchman-call">For watchmen running real businesses with email overload. Skip if Zapier+AI covers you.</div>
       </article>
-      <article class="tool-card" data-cat="code">
+      <article class="tool-card" data-cat="code" data-tier="S">
+        <span class="tier-badge" data-tier="S" aria-label="Tier S: Start Here">S</span>
         <span class="tool-cat">Coding</span>
         <h2><a href="https://claude.com/code" target="_blank" rel="noopener" style="color:inherit; text-decoration:none; border-bottom:1px dotted var(--gold);">Claude Code <span style="opacity:0.6; font-size:0.75em;">↗</span></a></h2>
         <p class="tool-type">Terminal coding agent (Anthropic)</p>
@@ -670,7 +768,8 @@
         <div class="best-for">Best for: watchmen shipping real code who live in a terminal and want autonomous-with-oversight coding.</div>
         <div class="watchman-call">For watchmen shipping real code — this is the mission's recommendation.</div>
       </article>
-      <article class="tool-card" data-cat="code">
+      <article class="tool-card" data-cat="code" data-tier="A">
+        <span class="tier-badge" data-tier="A" aria-label="Tier A: Core">A</span>
         <span class="tool-cat">Coding</span>
         <h2><a href="https://cursor.com" target="_blank" rel="noopener" style="color:inherit; text-decoration:none; border-bottom:1px dotted var(--gold);">Cursor <span style="opacity:0.6; font-size:0.75em;">↗</span></a></h2>
         <p class="tool-type">AI-first code editor (VS Code fork)</p>
@@ -685,7 +784,8 @@
         <div class="best-for">Best for: watchmen who code in a graphical editor and want AI assistance baked into every keystroke.</div>
         <div class="watchman-call">Pick this if you live in a graphical editor; Claude Code if you live in a terminal.</div>
       </article>
-      <article class="tool-card" data-cat="code">
+      <article class="tool-card" data-cat="code" data-tier="B">
+        <span class="tier-badge" data-tier="B" aria-label="Tier B: Depth">B</span>
         <span class="tool-cat">Coding</span>
         <h2><a href="https://github.com/features/copilot" target="_blank" rel="noopener" style="color:inherit; text-decoration:none; border-bottom:1px dotted var(--gold);">GitHub Copilot <span style="opacity:0.6; font-size:0.75em;">↗</span></a></h2>
         <p class="tool-type">AI coding assistant in GitHub / VS Code</p>
@@ -700,7 +800,8 @@
         <div class="best-for">Best for: watchmen on GitHub-native teams who want AI tightly bound to their code-review and PR flow.</div>
         <div class="watchman-call">For developers already on GitHub-native teams, $10/mo is fair. For non-developers learning to ship, Cursor or Windsurf at the same price are stronger picks — Copilot's autocomplete shines only when you can already read code.</div>
       </article>
-      <article class="tool-card" data-cat="code">
+      <article class="tool-card" data-cat="code" data-tier="B">
+        <span class="tier-badge" data-tier="B" aria-label="Tier B: Depth">B</span>
         <span class="tool-cat">Coding</span>
         <h2><a href="https://windsurf.com" target="_blank" rel="noopener" style="color:inherit; text-decoration:none; border-bottom:1px dotted var(--gold);">Windsurf <span style="opacity:0.6; font-size:0.75em;">↗</span></a></h2>
         <p class="tool-type">AI code editor — Cursor competitor</p>
@@ -715,7 +816,8 @@
         <div class="best-for">Best for: watchmen evaluating AI editors — try both Cursor and Windsurf, keep whichever clicks.</div>
         <div class="watchman-call">Worth a 1-week trial alongside Cursor; whichever feels more natural is the winner.</div>
       </article>
-      <article class="tool-card" data-cat="code">
+      <article class="tool-card" data-cat="code" data-tier="B">
+        <span class="tier-badge" data-tier="B" aria-label="Tier B: Depth">B</span>
         <span class="tool-cat">Coding</span>
         <h2><a href="https://aider.chat" target="_blank" rel="noopener" style="color:inherit; text-decoration:none; border-bottom:1px dotted var(--gold);">Aider <span style="opacity:0.6; font-size:0.75em;">↗</span></a></h2>
         <p class="tool-type">Open-source AI pair programmer (terminal)</p>
@@ -730,7 +832,8 @@
         <div class="best-for">Best for: technical watchmen who want full control over which model they use + zero subscription lock-in.</div>
         <div class="watchman-call">For technical watchmen who want full control + multi-model flexibility. Skip if Claude Code already works.</div>
       </article>
-      <article class="tool-card" data-cat="video">
+      <article class="tool-card" data-cat="video" data-tier="B">
+        <span class="tier-badge" data-tier="B" aria-label="Tier B: Depth">B</span>
         <span class="tool-cat">Video</span>
         <h2><a href="https://elevenlabs.io" target="_blank" rel="noopener" style="color:inherit; text-decoration:none; border-bottom:1px dotted var(--gold);">ElevenLabs <span style="opacity:0.6; font-size:0.75em;">↗</span></a></h2>
         <p class="tool-type">AI voice generation / cloning</p>
@@ -745,7 +848,8 @@
         <div class="best-for">Best for: watchmen producing audiobooks, narrated devotionals, or polished video voiceovers at scale.</div>
         <div class="watchman-call">For the watchman producing audiobooks, narrated devotionals, or polished video voiceovers.</div>
       </article>
-      <article class="tool-card" data-cat="video">
+      <article class="tool-card" data-cat="video" data-tier="C">
+        <span class="tier-badge" data-tier="C" aria-label="Tier C: Optional">C</span>
         <span class="tool-cat">Video</span>
         <h2><a href="https://heygen.com" target="_blank" rel="noopener" style="color:inherit; text-decoration:none; border-bottom:1px dotted var(--gold);">HeyGen <span style="opacity:0.6; font-size:0.75em;">↗</span></a></h2>
         <p class="tool-type">AI talking-head avatar video</p>
@@ -760,7 +864,8 @@
         <div class="best-for">Skip for personal cohort use (real face matters). Worth it for high-volume course / sales content.</div>
         <div class="watchman-call">Confirmed skip for a watchman cohort. Your real face matters to your men. HeyGen earns its keep ONLY when you're producing course or sales content at a volume you can't physically film yourself.</div>
       </article>
-      <article class="tool-card" data-cat="video">
+      <article class="tool-card" data-cat="video" data-tier="B">
+        <span class="tier-badge" data-tier="B" aria-label="Tier B: Depth">B</span>
         <span class="tool-cat">Video</span>
         <h2><a href="https://opus.pro" target="_blank" rel="noopener" style="color:inherit; text-decoration:none; border-bottom:1px dotted var(--gold);">OpusClip <span style="opacity:0.6; font-size:0.75em;">↗</span></a></h2>
         <p class="tool-type">Long-video to short-form auto-clipper</p>
@@ -775,7 +880,8 @@
         <div class="best-for">Best for: watchmen publishing weekly to TikTok / Instagram Reels / YouTube Shorts.</div>
         <div class="watchman-call">Worth $9 if you publish weekly to short-form social. Skip otherwise.</div>
       </article>
-      <article class="tool-card" data-cat="video">
+      <article class="tool-card" data-cat="video" data-tier="B">
+        <span class="tier-badge" data-tier="B" aria-label="Tier B: Depth">B</span>
         <span class="tool-cat">Video</span>
         <h2><a href="https://suno.com" target="_blank" rel="noopener" style="color:inherit; text-decoration:none; border-bottom:1px dotted var(--gold);">Suno <span style="opacity:0.6; font-size:0.75em;">↗</span></a></h2>
         <p class="tool-type">AI music generation</p>
@@ -790,7 +896,8 @@
         <div class="best-for">Best for: watchmen making audio/video content who need custom intros, beds, or full tracks without licensing royalty-free music.</div>
         <div class="watchman-call">For watchmen making any audio/video content. Don't sleep on the free tier — it's enough for casual use.</div>
       </article>
-      <article class="tool-card" data-cat="frontier">
+      <article class="tool-card" data-cat="frontier" data-tier="B">
+        <span class="tier-badge" data-tier="B" aria-label="Tier B: Depth">B</span>
         <span class="tool-cat">Agentic Frontier</span>
         <h2><a href="https://replit.com" target="_blank" rel="noopener" style="color:inherit; text-decoration:none; border-bottom:1px dotted var(--gold);">Replit Agent <span style="opacity:0.6; font-size:0.75em;">↗</span></a></h2>
         <p class="tool-type">Browser-based full-stack coding agent</p>
@@ -805,7 +912,8 @@
         <div class="best-for">Best for: non-technical watchmen who want to ship a working web app or simple SaaS without installing anything.</div>
         <div class="watchman-call">Best browser-based agentic builder for watchmen who don't want to touch a terminal.</div>
       </article>
-      <article class="tool-card" data-cat="frontier">
+      <article class="tool-card" data-cat="frontier" data-tier="B">
+        <span class="tier-badge" data-tier="B" aria-label="Tier B: Depth">B</span>
         <span class="tool-cat">Agentic Frontier</span>
         <h2><a href="https://lovable.dev" target="_blank" rel="noopener" style="color:inherit; text-decoration:none; border-bottom:1px dotted var(--gold);">Lovable.dev <span style="opacity:0.6; font-size:0.75em;">↗</span></a></h2>
         <p class="tool-type">Text-to-app generator (full-stack)</p>
@@ -820,7 +928,8 @@
         <div class="best-for">Best for: watchmen who want a working web app shipped this weekend without learning React.</div>
         <div class="watchman-call">First pick for non-coders who want to ship something real. Free tier gets you a working prototype.</div>
       </article>
-      <article class="tool-card" data-cat="frontier">
+      <article class="tool-card" data-cat="frontier" data-tier="B">
+        <span class="tier-badge" data-tier="B" aria-label="Tier B: Depth">B</span>
         <span class="tool-cat">Agentic Frontier</span>
         <h2><a href="https://v0.dev" target="_blank" rel="noopener" style="color:inherit; text-decoration:none; border-bottom:1px dotted var(--gold);">v0.dev <span style="opacity:0.6; font-size:0.75em;">↗</span></a></h2>
         <p class="tool-type">Text-to-React UI generator (Vercel)</p>
@@ -835,7 +944,8 @@
         <div class="best-for">Best for: watchmen who already have a backend and just need polished React UI fast.</div>
         <div class="watchman-call">Pick this over Lovable if you want UI-only output that drops into an existing codebase.</div>
       </article>
-      <article class="tool-card" data-cat="frontier">
+      <article class="tool-card" data-cat="frontier" data-tier="C">
+        <span class="tier-badge" data-tier="C" aria-label="Tier C: Optional">C</span>
         <span class="tool-cat">Agentic Frontier</span>
         <h2><a href="https://bolt.new" target="_blank" rel="noopener" style="color:inherit; text-decoration:none; border-bottom:1px dotted var(--gold);">Bolt.new <span style="opacity:0.6; font-size:0.75em;">↗</span></a></h2>
         <p class="tool-type">Full-stack agentic builder (StackBlitz)</p>
@@ -850,7 +960,8 @@
         <div class="best-for">Best for: watchmen shipping prototypes fast — internal tools, MVPs, ministry-facing simple apps.</div>
         <div class="watchman-call">Bolt and Lovable both work. Try the free tier of each. Whichever lands first, use that one.</div>
       </article>
-      <article class="tool-card" data-cat="frontier">
+      <article class="tool-card" data-cat="frontier" data-tier="B">
+        <span class="tier-badge" data-tier="B" aria-label="Tier B: Depth">B</span>
         <span class="tool-cat">Agentic Frontier</span>
         <h2><a href="https://manus.im" target="_blank" rel="noopener" style="color:inherit; text-decoration:none; border-bottom:1px dotted var(--gold);">Manus <span style="opacity:0.6; font-size:0.75em;">↗</span></a></h2>
         <p class="tool-type">Autonomous web agent</p>
@@ -865,7 +976,8 @@
         <div class="best-for">Best for: watchmen with research-heavy projects (due diligence, market scans, prep docs) who want autonomous synthesis.</div>
         <div class="watchman-call">Worth a $39 month-long test if you have a research-heavy quarter. Free tier shows the shape.</div>
       </article>
-      <article class="tool-card" data-cat="frontier">
+      <article class="tool-card" data-cat="frontier" data-tier="B">
+        <span class="tier-badge" data-tier="B" aria-label="Tier B: Depth">B</span>
         <span class="tool-cat">Agentic Frontier</span>
         <h2><a href="https://perplexity.ai/comet" target="_blank" rel="noopener" style="color:inherit; text-decoration:none; border-bottom:1px dotted var(--gold);">Perplexity Comet <span style="opacity:0.6; font-size:0.75em;">↗</span></a></h2>
         <p class="tool-type">Agentic AI browser (Perplexity)</p>
@@ -880,7 +992,8 @@
         <div class="best-for">Best for: research-heavy watchmen who already pay for Perplexity Pro and want their browser to be agentic.</div>
         <div class="watchman-call">Free with Perplexity Pro. If you have Perplexity, you have Comet — try it.</div>
       </article>
-      <article class="tool-card" data-cat="frontier">
+      <article class="tool-card" data-cat="frontier" data-tier="C">
+        <span class="tier-badge" data-tier="C" aria-label="Tier C: Optional">C</span>
         <span class="tool-cat">Agentic Frontier</span>
         <h2><a href="https://www.diabrowser.com" target="_blank" rel="noopener" style="color:inherit; text-decoration:none; border-bottom:1px dotted var(--gold);">Dia Browser <span style="opacity:0.6; font-size:0.75em;">↗</span></a></h2>
         <p class="tool-type">AI-native browser (Browser Company)</p>
@@ -895,7 +1008,8 @@
         <div class="best-for">Best for: watchmen whose primary tool is the browser and who want AI woven through every action there.</div>
         <div class="watchman-call">Free during beta. Easy to try alongside your current browser without commitment.</div>
       </article>
-      <article class="tool-card" data-cat="frontier">
+      <article class="tool-card" data-cat="frontier" data-tier="B">
+        <span class="tier-badge" data-tier="B" aria-label="Tier B: Depth">B</span>
         <span class="tool-cat">Agentic Frontier</span>
         <h2><a href="https://chatgpt.com" target="_blank" rel="noopener" style="color:inherit; text-decoration:none; border-bottom:1px dotted var(--gold);">ChatGPT Agent <span style="opacity:0.6; font-size:0.75em;">↗</span></a></h2>
         <p class="tool-type">Computer-use agent (OpenAI)</p>
@@ -910,7 +1024,8 @@
         <div class="best-for">Best for: watchmen who already pay for ChatGPT Plus / Pro and want a hands-off task agent.</div>
         <div class="watchman-call">If you have ChatGPT Plus, you have Agent. Worth experimenting once a month with a real task.</div>
       </article>
-      <article class="tool-card" data-cat="frontier">
+      <article class="tool-card" data-cat="frontier" data-tier="C">
+        <span class="tier-badge" data-tier="C" aria-label="Tier C: Optional">C</span>
         <span class="tool-cat">Agentic Frontier</span>
         <h2><a href="https://block.github.io/goose/" target="_blank" rel="noopener" style="color:inherit; text-decoration:none; border-bottom:1px dotted var(--gold);">Goose <span style="opacity:0.6; font-size:0.75em;">↗</span></a></h2>
         <p class="tool-type">Open-source desktop agent (Block)</p>
@@ -925,7 +1040,8 @@
         <div class="best-for">Best for: technical watchmen who want a local-first, open-source agent under their own control.</div>
         <div class="watchman-call">Skip unless you're technical — but for hackers, this is an excellent free Cowork alternative.</div>
       </article>
-      <article class="tool-card" data-cat="frontier">
+      <article class="tool-card" data-cat="frontier" data-tier="C">
+        <span class="tier-badge" data-tier="C" aria-label="Tier C: Optional">C</span>
         <span class="tool-cat">Agentic Frontier</span>
         <h2><a href="https://www.openinterpreter.com" target="_blank" rel="noopener" style="color:inherit; text-decoration:none; border-bottom:1px dotted var(--gold);">Open Interpreter <span style="opacity:0.6; font-size:0.75em;">↗</span></a></h2>
         <p class="tool-type">Local code-execution agent</p>
@@ -940,7 +1056,8 @@
         <div class="best-for">Best for: technical watchmen who want to run agentic code on local files without sending them to the cloud.</div>
         <div class="watchman-call">For the watchman doing data work or local automation — useful, free, but technical.</div>
       </article>
-      <article class="tool-card" data-cat="frontier">
+      <article class="tool-card" data-cat="frontier" data-tier="C">
+        <span class="tier-badge" data-tier="C" aria-label="Tier C: Optional">C</span>
         <span class="tool-cat">Agentic Frontier</span>
         <h2><a href="https://www.genspark.ai" target="_blank" rel="noopener" style="color:inherit; text-decoration:none; border-bottom:1px dotted var(--gold);">Genspark <span style="opacity:0.6; font-size:0.75em;">↗</span></a></h2>
         <p class="tool-type">Autonomous research / task agent</p>
@@ -955,7 +1072,8 @@
         <div class="best-for">Best for: watchmen who want a research-and-build agent for ministry, business, or content tasks.</div>
         <div class="watchman-call">Free tier shows what's possible. Plus tier is reasonable if you do project work weekly.</div>
       </article>
-      <article class="tool-card" data-cat="frontier">
+      <article class="tool-card" data-cat="frontier" data-tier="C">
+        <span class="tier-badge" data-tier="C" aria-label="Tier C: Optional">C</span>
         <span class="tool-cat">Agentic Frontier</span>
         <h2><a href="https://browser-use.com" target="_blank" rel="noopener" style="color:inherit; text-decoration:none; border-bottom:1px dotted var(--gold);">Browser Use <span style="opacity:0.6; font-size:0.75em;">↗</span></a></h2>
         <p class="tool-type">Open-source browser automation agent</p>
@@ -1149,6 +1267,22 @@
     empty.style.display = visible === 0 ? 'block' : 'none';
     window.scrollTo({top: 200, behavior: 'instant'});
   }));
+})();
+</script>
+
+
+<script>
+(function() {
+  // "Show S+A only" toggle for tool grids
+  const chip = document.querySelector('.chip.tier-toggle');
+  if (!chip) return;
+  const grid = document.getElementById('toolsGrid');
+  if (!grid) return;
+  chip.addEventListener('click', (e) => {
+    e.preventDefault();
+    grid.classList.toggle('filter-sa-only');
+    chip.classList.toggle('active');
+  });
 })();
 </script>
 

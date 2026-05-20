@@ -616,7 +616,9 @@ function renderTables() {
       html += '<tr>';
       html += '<th scope="row" class="cell-cand"><a class="cand-link" href="candidates/' + esc((c.state || 'va').toLowerCase()) + '/' + esc(c.slug) + '.html">' + esc(c.name) + '</a><br><span style="font-size:0.7rem;color:var(--gray);font-weight:400;">' + esc(c.office) + '</span></th>';
       html += '<td aria-label="Party: ' + esc(c.party || 'Unknown') + '">' + partyHtml(c.party) + '</td>';
-      html += '<td aria-label="Total score ' + total.score + ' of ' + MAX_TOTAL + (total.adjustment ? ', includes ' + (total.adjustment>0?'+':'') + total.adjustment + ' adjustment' : '') + '"><span class="' + tc + '">' + total.score + adjBadge + '/' + MAX_TOTAL + '</span></td>';
+      // 2026-05-20 normalized /100: show pct/100 as primary, with raw in tooltip
+      var pct = total.max_possible > 0 ? Math.max(0, Math.round(total.score * 100 / total.max_possible)) : 0;
+      html += '<td aria-label="Score ' + pct + ' of 100 (raw ' + total.score + ' of ' + total.max_possible + ' dynamic max)' + (total.adjustment ? ', includes ' + (total.adjustment>0?'+':'') + total.adjustment + ' adjustment' : '') + '" title="Raw: ' + total.score + '/' + total.max_possible + ' dynamic max"><span class="' + tc + '">' + pct + adjBadge + '/100</span></td>';
 
       DATA.categories.forEach(function(cat) {
         var cs = calcCatScore(c.scores[cat.id]);

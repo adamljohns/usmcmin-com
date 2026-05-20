@@ -1615,15 +1615,14 @@ def generate_profile(candidate, categories, meta, nav=None):
     <div class="prof-total-main">
       <div class="prof-total-label">RESOLUTE Citizen Score</div>
       <div class="prof-total-headline">
-        <span class="prof-total-score" style="color:{total_color};">{adjusted_score}</span>
-        <span class="prof-total-max" title="Dynamic max — 2 points × {answered_count} answered questions. Per RESOLUTE Citizen methodology, candidates are graded on the percentage of questions where we found public-record evidence, NOT a fixed 100-point scale. See scoring-system.html.">/ {max_possible}</span>
-        <span class="prof-grade" style="color:{total_color};border-color:{total_color};" aria-label="Letter grade {grade_letter} (%{pct_of_max} of dynamic max)">{grade_letter}</span>
-        <span class="prof-total-pct" title="Percentage of dynamic max earned">{pct_of_max}%</span>
+        <span class="prof-total-score" style="color:{total_color};" title="Score on a uniform /100 scale (percentage of dynamic max). Lets you compare a state councilor, state senator, and U.S. senator at a glance even though they answer different question counts.">{pct_of_max}</span>
+        <span class="prof-total-max" title="Uniform /100 display scale — every official is shown on the same 100-point visual whether they're scored on 22, 43, or 50 questions. The underlying math is unchanged: {adjusted_score} earned of {max_possible} dynamic max (2 pts × {answered_count} answered).">/ 100</span>
+        <span class="prof-grade" style="color:{total_color};border-color:{total_color};" aria-label="Letter grade {grade_letter} ({pct_of_max} of 100)">{grade_letter}</span>
       </div>
       <div class="prof-total-detail">
-        <span class="prof-answered" title="Number of questions with researched evidence. Out of 50 total ({MAX_TOTAL} pt scale). The remaining {50-answered_count} are unanswered — see scoring-system.html for methodology.">{answered_count} of {applicable_total} answered</span>
-        {f'''&middot; Base {total['score']}/{max_possible}
-        <span class="prof-total-adj prof-total-adj-{('plus' if adj_total > 0 else 'minus')}">
+        <span class="prof-raw" title="Raw dynamic-max number: 2 points × {answered_count} answered questions. Federal officials max out at /100 when all 50 questions are scored. State officials max out at /86 (43 applicable × 2). Local officials max out at /44 (22 applicable × 2). The headline above normalizes all of these to a uniform /100 visual; this caption keeps the raw integer for transparency.">Raw: <strong>{adjusted_score}</strong> of <strong>{max_possible}</strong> dynamic max</span>
+        &middot; <span class="prof-answered" title="Number of questions with researched public-record evidence. Out of {applicable_total} applicable at this office tier (or 50 total if federal). The remaining are unanswered — see scoring-system.html for methodology.">{answered_count} of {applicable_total} answered</span>
+        {f'''&middot; <span class="prof-total-adj prof-total-adj-{('plus' if adj_total > 0 else 'minus')}">
           {('+' if adj_total > 0 else '')}{adj_total}
         </span>
         foreign-influence adjustment''' if adj_total != 0 else ''}

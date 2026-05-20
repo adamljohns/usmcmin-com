@@ -1500,10 +1500,14 @@ function renderCards() {
     html += '</div>';
 
     var letter = letterGrade(total.pct);
-    html += '<div class="sc-total" aria-label="Total score: ' + total.score + ' of ' + total.max_possible + ' (' + total.pct + '%), letter grade ' + letter + (total.adjustment?', includes ' + (total.adjustment>0?'+':'') + total.adjustment + ' foreign-influence adjustment':'') + '">';
-    html += '<span class="sc-total-label" aria-hidden="true">Total · <span class="sc-grade" style="color:' + totalColor + ';">' + letter + '</span> <span style="color:var(--gray);font-size:0.78rem;">(' + total.pct + '%)</span></span>';
+    // 2026-05-20 — normalized /100 display: every card shows score as percentage
+    // out of 100 for uniform comparability (federal/state/local all read the same
+    // visual scale). Raw dynamic-max number stays in the tooltip for transparency.
+    var rawSuffix = ' · raw ' + total.score + '/' + total.max_possible;
+    html += '<div class="sc-total" aria-label="Score: ' + total.pct + ' of 100 (raw ' + total.score + ' of ' + total.max_possible + ' dynamic max), letter grade ' + letter + (total.adjustment?', includes ' + (total.adjustment>0?'+':'') + total.adjustment + ' foreign-influence adjustment':'') + '">';
+    html += '<span class="sc-total-label" aria-hidden="true">Total · <span class="sc-grade" style="color:' + totalColor + ';">' + letter + '</span> <span style="color:var(--gray);font-size:0.72rem;">(raw ' + total.score + '/' + total.max_possible + ')</span></span>';
     html += '<div class="sc-total-bar" aria-hidden="true"><div class="sc-total-fill" style="width:' + Math.min(100, total.pct) + '%;background:' + totalColor + ';"></div></div>';
-    html += '<span class="sc-total-score" aria-hidden="true" style="color:' + totalColor + ';" title="' + total.answered + ' of 50 questions answered — max ' + total.max_possible + ' pts">' + total.score + adjBadge + '<span style="font-size:0.7rem;color:var(--gray);">/' + total.max_possible + '</span></span>';
+    html += '<span class="sc-total-score" aria-hidden="true" style="color:' + totalColor + ';" title="Normalized /100 — every official displays on uniform scale. Raw: ' + total.score + adjBadge + ' of ' + total.max_possible + ' dynamic max from ' + total.answered + ' answered questions.">' + total.pct + adjBadge + '<span style="font-size:0.7rem;color:var(--gray);">/100</span></span>';
     html += '</div>';
 
     // Church affiliation cross-link (renders only if present on candidate record).

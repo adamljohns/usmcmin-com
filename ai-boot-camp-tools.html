@@ -1273,16 +1273,18 @@
 
 <script>
 (function() {
-  // "Show S+A only" toggle for tool grids
+  // "Show S+A only" toggle. Use capture phase + stopImmediatePropagation
+  // so we win over the existing category-filter handler that also targets .chip.
   const chip = document.querySelector('.chip.tier-toggle');
   if (!chip) return;
   const grid = document.getElementById('toolsGrid');
   if (!grid) return;
   chip.addEventListener('click', (e) => {
     e.preventDefault();
+    e.stopImmediatePropagation();
     grid.classList.toggle('filter-sa-only');
     chip.classList.toggle('active');
-  });
+  }, true /* capture phase */);
 })();
 </script>
 

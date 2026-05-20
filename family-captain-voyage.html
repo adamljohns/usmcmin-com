@@ -81,6 +81,59 @@
   .task-circle .task-name { font-size:0.7rem; line-height:1.2; text-align:center; }
   .task-circle.shipped .task-name { color:var(--bg-dark); font-weight:700; }
   .task-circle .task-actions { display:flex; gap:4px; margin-top:3px; }
+
+  /* ── TIER OVERLAY (S/A/B/C) ── */
+  /* Task-circle gets a 2px tier-colored border + a 24px badge top-left.
+     C-tier cards drop to 80% opacity so they recede visually.
+     Position: relative on .task-circle is required for the absolute badge. */
+  .task-circle { position: relative; }
+  .task-circle[data-tier="S"] { border: 2px solid #CE8E31; }
+  .task-circle[data-tier="A"] { border: 2px solid #1E293B; }
+  .task-circle[data-tier="B"] { border: 2px solid #6BA368; }
+  .task-circle[data-tier="C"] { border: 2px solid #9CA3AF; opacity: 0.8; }
+  .task-circle .tier-badge {
+    position: absolute; top: -10px; left: -10px;
+    width: 24px; height: 24px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    color: #FFFFFF; font-weight: 800; font-size: 0.72rem;
+    font-family: var(--font-main, system-ui);
+    line-height: 1; letter-spacing: 0;
+    z-index: 2; pointer-events: none;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.35);
+  }
+  .task-circle[data-tier="S"] .tier-badge { background: #CE8E31; }
+  .task-circle[data-tier="A"] .tier-badge { background: #1E293B; }
+  .task-circle[data-tier="B"] .tier-badge { background: #6BA368; }
+  .task-circle[data-tier="C"] .tier-badge { background: #9CA3AF; }
+  /* Show/Hide-by-tier filter (driven by JS toggling .filter-sa-only on the chart) */
+  .voyage-chart.filter-sa-only .task-circle[data-tier="B"],
+  .voyage-chart.filter-sa-only .task-circle[data-tier="C"] {
+    opacity: 0.25; filter: grayscale(0.5);
+  }
+
+  /* ── TIER LEGEND (above the chart) ── */
+  .tier-legend { max-width:1100px; margin:24px auto 8px; padding:14px 18px;
+    background:var(--bg-card); border:1px solid var(--border); border-radius:var(--radius);
+    display:flex; gap:12px; align-items:center; flex-wrap:wrap; justify-content:center; }
+  .tier-legend .tl-row { display:flex; align-items:center; gap:8px;
+    padding:4px 10px; }
+  .tier-legend .tl-badge {
+    width:22px; height:22px; border-radius:50%;
+    display:flex; align-items:center; justify-content:center;
+    color:#FFFFFF; font-weight:800; font-size:0.68rem;
+    box-shadow:0 1px 2px rgba(0,0,0,0.35);
+  }
+  .tier-legend .tl-row[data-tier="S"] .tl-badge { background:#CE8E31; }
+  .tier-legend .tl-row[data-tier="A"] .tl-badge { background:#1E293B; }
+  .tier-legend .tl-row[data-tier="B"] .tl-badge { background:#6BA368; }
+  .tier-legend .tl-row[data-tier="C"] .tl-badge { background:#9CA3AF; }
+  .tier-legend .tl-label { font-size:0.8rem; color:var(--white); font-weight:700; letter-spacing:1px; }
+  .tier-legend .tl-desc  { font-size:0.78rem; color:var(--gray-light); }
+  [data-theme="light"] .tier-legend .tl-label,
+  .tier-legend .tl-label { color: var(--white); }
+  @media (max-width:720px) {
+    .tier-legend { flex-direction:column; align-items:flex-start; gap:8px; }
+  }
   .task-toggle { width:18px; height:18px; border-radius:50%;
     border:1px solid var(--border); background:transparent; cursor:pointer;
     display:flex; align-items:center; justify-content:center; padding:0; line-height:1;
@@ -872,6 +925,13 @@
   <div class="progress-bar"><div id="barFill"></div></div>
 </div>
 
+<div class="tier-legend" id="tierLegend" role="region" aria-label="Tier legend">
+  <div class="tl-row" data-tier="S"><span class="tl-badge">S</span><span class="tl-label">START HERE</span><span class="tl-desc">— Don't skip these.</span></div>
+  <div class="tl-row" data-tier="A"><span class="tl-badge">A</span><span class="tl-label">CORE</span><span class="tl-desc">— Adopt in the first month.</span></div>
+  <div class="tl-row" data-tier="B"><span class="tl-badge">B</span><span class="tl-label">DEPTH</span><span class="tl-desc">— After the basics are running.</span></div>
+  <div class="tl-row" data-tier="C"><span class="tl-badge">C</span><span class="tl-label">OPTIONAL</span><span class="tl-desc">— Most captains skip these.</span></div>
+</div>
+
 <div class="voyage-chart" id="voyageChart">
       <div class="week-port" id="week1" data-week="1">
         <div class="week-num">Week 1</div>
@@ -879,17 +939,20 @@
         <h3>Vision</h3>
         <div class="week-tag">Write the vision plain. AI drafts; the captain decides where he's going.</div>
         <div class="task-circles">
-          <a class="task-circle" data-key="1.1" data-pdf="downloads/family-captain/Family_Captain_Task_PDFs/W1_T1_Draft_Your_AI_Charter.pdf" href="downloads/family-captain/Family_Captain_Task_PDFs/W1_T1_Draft_Your_AI_Charter.pdf" target="_blank" rel="noopener" title="Open W1.T1 PDF">
+          <a class="task-circle" data-key="1.1" data-tier="S" data-pdf="downloads/family-captain/Family_Captain_Task_PDFs/W1_T1_Draft_Your_AI_Charter.pdf" href="downloads/family-captain/Family_Captain_Task_PDFs/W1_T1_Draft_Your_AI_Charter.pdf" target="_blank" rel="noopener" title="Open W1.T1 PDF — tier S (Start Here)">
+            <span class="tier-badge" aria-label="Tier S: Start Here">S</span>
             <div class="task-num">T1</div>
             <div class="task-name">Draft Your AI Charter</div>
             <div class="task-actions"><button class="task-toggle" type="button" data-toggle="1.1" aria-label="Mark T1 shipped">●</button></div>
           </a>
-          <a class="task-circle" data-key="1.2" data-pdf="downloads/family-captain/Family_Captain_Task_PDFs/W1_T2_Write_Your_5-Year_Captains_Vision.pdf" href="downloads/family-captain/Family_Captain_Task_PDFs/W1_T2_Write_Your_5-Year_Captains_Vision.pdf" target="_blank" rel="noopener" title="Open W1.T2 PDF">
+          <a class="task-circle" data-key="1.2" data-tier="A" data-pdf="downloads/family-captain/Family_Captain_Task_PDFs/W1_T2_Write_Your_5-Year_Captains_Vision.pdf" href="downloads/family-captain/Family_Captain_Task_PDFs/W1_T2_Write_Your_5-Year_Captains_Vision.pdf" target="_blank" rel="noopener" title="Open W1.T2 PDF — tier A (Core)">
+            <span class="tier-badge" aria-label="Tier A: Core">A</span>
             <div class="task-num">T2</div>
             <div class="task-name">Write Your 5-Year Captain's Vision</div>
             <div class="task-actions"><button class="task-toggle" type="button" data-toggle="1.2" aria-label="Mark T2 shipped">●</button></div>
           </a>
-          <a class="task-circle" data-key="1.3" data-pdf="downloads/family-captain/Family_Captain_Task_PDFs/W1_T3_Build_Your_Tool_Stack.pdf" href="downloads/family-captain/Family_Captain_Task_PDFs/W1_T3_Build_Your_Tool_Stack.pdf" target="_blank" rel="noopener" title="Open W1.T3 PDF">
+          <a class="task-circle" data-key="1.3" data-tier="A" data-pdf="downloads/family-captain/Family_Captain_Task_PDFs/W1_T3_Build_Your_Tool_Stack.pdf" href="downloads/family-captain/Family_Captain_Task_PDFs/W1_T3_Build_Your_Tool_Stack.pdf" target="_blank" rel="noopener" title="Open W1.T3 PDF — tier A (Core)">
+            <span class="tier-badge" aria-label="Tier A: Core">A</span>
             <div class="task-num">T3</div>
             <div class="task-name">Build Your Tool Stack</div>
             <div class="task-actions"><button class="task-toggle" type="button" data-toggle="1.3" aria-label="Mark T3 shipped">●</button></div>
@@ -903,17 +966,20 @@
         <h3>Body</h3>
         <div class="week-tag">Steward the temple. The captain trains the body that carries the load.</div>
         <div class="task-circles">
-          <a class="task-circle" data-key="2.1" data-pdf="downloads/family-captain/Family_Captain_Task_PDFs/W2_T1_Weekly_Movement_Practice.pdf" href="downloads/family-captain/Family_Captain_Task_PDFs/W2_T1_Weekly_Movement_Practice.pdf" target="_blank" rel="noopener" title="Open W2.T1 PDF">
+          <a class="task-circle" data-key="2.1" data-tier="A" data-pdf="downloads/family-captain/Family_Captain_Task_PDFs/W2_T1_Weekly_Movement_Practice.pdf" href="downloads/family-captain/Family_Captain_Task_PDFs/W2_T1_Weekly_Movement_Practice.pdf" target="_blank" rel="noopener" title="Open W2.T1 PDF — tier A (Core)">
+            <span class="tier-badge" aria-label="Tier A: Core">A</span>
             <div class="task-num">T1</div>
             <div class="task-name">Weekly Movement Practice</div>
             <div class="task-actions"><button class="task-toggle" type="button" data-toggle="2.1" aria-label="Mark T1 shipped">●</button></div>
           </a>
-          <a class="task-circle" data-key="2.2" data-pdf="downloads/family-captain/Family_Captain_Task_PDFs/W2_T2_Captains_Meal_Plan.pdf" href="downloads/family-captain/Family_Captain_Task_PDFs/W2_T2_Captains_Meal_Plan.pdf" target="_blank" rel="noopener" title="Open W2.T2 PDF">
+          <a class="task-circle" data-key="2.2" data-tier="B" data-pdf="downloads/family-captain/Family_Captain_Task_PDFs/W2_T2_Captains_Meal_Plan.pdf" href="downloads/family-captain/Family_Captain_Task_PDFs/W2_T2_Captains_Meal_Plan.pdf" target="_blank" rel="noopener" title="Open W2.T2 PDF — tier B (Depth)">
+            <span class="tier-badge" aria-label="Tier B: Depth">B</span>
             <div class="task-num">T2</div>
             <div class="task-name">Captain's Meal Plan</div>
             <div class="task-actions"><button class="task-toggle" type="button" data-toggle="2.2" aria-label="Mark T2 shipped">●</button></div>
           </a>
-          <a class="task-circle" data-key="2.3" data-pdf="downloads/family-captain/Family_Captain_Task_PDFs/W2_T3_5-Night_Sleep_Audit.pdf" href="downloads/family-captain/Family_Captain_Task_PDFs/W2_T3_5-Night_Sleep_Audit.pdf" target="_blank" rel="noopener" title="Open W2.T3 PDF">
+          <a class="task-circle" data-key="2.3" data-tier="C" data-pdf="downloads/family-captain/Family_Captain_Task_PDFs/W2_T3_5-Night_Sleep_Audit.pdf" href="downloads/family-captain/Family_Captain_Task_PDFs/W2_T3_5-Night_Sleep_Audit.pdf" target="_blank" rel="noopener" title="Open W2.T3 PDF — tier C (Optional)">
+            <span class="tier-badge" aria-label="Tier C: Optional">C</span>
             <div class="task-num">T3</div>
             <div class="task-name">5-Night Sleep Audit</div>
             <div class="task-actions"><button class="task-toggle" type="button" data-toggle="2.3" aria-label="Mark T3 shipped">●</button></div>
@@ -927,17 +993,20 @@
         <h3>Spiritual</h3>
         <div class="week-tag">Walk with God. The captain's command flows from his communion.</div>
         <div class="task-circles">
-          <a class="task-circle" data-key="3.1" data-pdf="downloads/family-captain/Family_Captain_Task_PDFs/W3_T1_Scripture_Study_You_Lead.pdf" href="downloads/family-captain/Family_Captain_Task_PDFs/W3_T1_Scripture_Study_You_Lead.pdf" target="_blank" rel="noopener" title="Open W3.T1 PDF">
+          <a class="task-circle" data-key="3.1" data-tier="A" data-pdf="downloads/family-captain/Family_Captain_Task_PDFs/W3_T1_Scripture_Study_You_Lead.pdf" href="downloads/family-captain/Family_Captain_Task_PDFs/W3_T1_Scripture_Study_You_Lead.pdf" target="_blank" rel="noopener" title="Open W3.T1 PDF — tier A (Core)">
+            <span class="tier-badge" aria-label="Tier A: Core">A</span>
             <div class="task-num">T1</div>
             <div class="task-name">10-Min Scripture Study, You Lead</div>
             <div class="task-actions"><button class="task-toggle" type="button" data-toggle="3.1" aria-label="Mark T1 shipped">●</button></div>
           </a>
-          <a class="task-circle" data-key="3.2" data-pdf="downloads/family-captain/Family_Captain_Task_PDFs/W3_T2_Family_Devotion_Generator.pdf" href="downloads/family-captain/Family_Captain_Task_PDFs/W3_T2_Family_Devotion_Generator.pdf" target="_blank" rel="noopener" title="Open W3.T2 PDF">
+          <a class="task-circle" data-key="3.2" data-tier="B" data-pdf="downloads/family-captain/Family_Captain_Task_PDFs/W3_T2_Family_Devotion_Generator.pdf" href="downloads/family-captain/Family_Captain_Task_PDFs/W3_T2_Family_Devotion_Generator.pdf" target="_blank" rel="noopener" title="Open W3.T2 PDF — tier B (Depth)">
+            <span class="tier-badge" aria-label="Tier B: Depth">B</span>
             <div class="task-num">T2</div>
             <div class="task-name">Family Devotion Generator</div>
             <div class="task-actions"><button class="task-toggle" type="button" data-toggle="3.2" aria-label="Mark T2 shipped">●</button></div>
           </a>
-          <a class="task-circle" data-key="3.3" data-pdf="downloads/family-captain/Family_Captain_Task_PDFs/W3_T3_Sermon_Notes_to_Captains_Actions.pdf" href="downloads/family-captain/Family_Captain_Task_PDFs/W3_T3_Sermon_Notes_to_Captains_Actions.pdf" target="_blank" rel="noopener" title="Open W3.T3 PDF">
+          <a class="task-circle" data-key="3.3" data-tier="C" data-pdf="downloads/family-captain/Family_Captain_Task_PDFs/W3_T3_Sermon_Notes_to_Captains_Actions.pdf" href="downloads/family-captain/Family_Captain_Task_PDFs/W3_T3_Sermon_Notes_to_Captains_Actions.pdf" target="_blank" rel="noopener" title="Open W3.T3 PDF — tier C (Optional)">
+            <span class="tier-badge" aria-label="Tier C: Optional">C</span>
             <div class="task-num">T3</div>
             <div class="task-name">Sermon Notes → Captain's Actions</div>
             <div class="task-actions"><button class="task-toggle" type="button" data-toggle="3.3" aria-label="Mark T3 shipped">●</button></div>
@@ -951,17 +1020,20 @@
         <h3>Husbanding</h3>
         <div class="week-tag">Lead with love. The captain's first crew is one woman.</div>
         <div class="task-circles">
-          <a class="task-circle" data-key="4.1" data-pdf="downloads/family-captain/Family_Captain_Task_PDFs/W4_T1_The_5-Minute_Wife_Audit.pdf" href="downloads/family-captain/Family_Captain_Task_PDFs/W4_T1_The_5-Minute_Wife_Audit.pdf" target="_blank" rel="noopener" title="Open W4.T1 PDF">
+          <a class="task-circle" data-key="4.1" data-tier="A" data-pdf="downloads/family-captain/Family_Captain_Task_PDFs/W4_T1_The_5-Minute_Wife_Audit.pdf" href="downloads/family-captain/Family_Captain_Task_PDFs/W4_T1_The_5-Minute_Wife_Audit.pdf" target="_blank" rel="noopener" title="Open W4.T1 PDF — tier A (Core)">
+            <span class="tier-badge" aria-label="Tier A: Core">A</span>
             <div class="task-num">T1</div>
             <div class="task-name">The 5-Minute Wife Audit</div>
             <div class="task-actions"><button class="task-toggle" type="button" data-toggle="4.1" aria-label="Mark T1 shipped">●</button></div>
           </a>
-          <a class="task-circle" data-key="4.2" data-pdf="downloads/family-captain/Family_Captain_Task_PDFs/W4_T2_Prep_One_Hard_Conversation.pdf" href="downloads/family-captain/Family_Captain_Task_PDFs/W4_T2_Prep_One_Hard_Conversation.pdf" target="_blank" rel="noopener" title="Open W4.T2 PDF">
+          <a class="task-circle" data-key="4.2" data-tier="B" data-pdf="downloads/family-captain/Family_Captain_Task_PDFs/W4_T2_Prep_One_Hard_Conversation.pdf" href="downloads/family-captain/Family_Captain_Task_PDFs/W4_T2_Prep_One_Hard_Conversation.pdf" target="_blank" rel="noopener" title="Open W4.T2 PDF — tier B (Depth)">
+            <span class="tier-badge" aria-label="Tier B: Depth">B</span>
             <div class="task-num">T2</div>
             <div class="task-name">Prep One Hard Conversation</div>
             <div class="task-actions"><button class="task-toggle" type="button" data-toggle="4.2" aria-label="Mark T2 shipped">●</button></div>
           </a>
-          <a class="task-circle" data-key="4.3" data-pdf="downloads/family-captain/Family_Captain_Task_PDFs/W4_T3_Letter_to_Your_Wife.pdf" href="downloads/family-captain/Family_Captain_Task_PDFs/W4_T3_Letter_to_Your_Wife.pdf" target="_blank" rel="noopener" title="Open W4.T3 PDF">
+          <a class="task-circle" data-key="4.3" data-tier="C" data-pdf="downloads/family-captain/Family_Captain_Task_PDFs/W4_T3_Letter_to_Your_Wife.pdf" href="downloads/family-captain/Family_Captain_Task_PDFs/W4_T3_Letter_to_Your_Wife.pdf" target="_blank" rel="noopener" title="Open W4.T3 PDF — tier C (Optional)">
+            <span class="tier-badge" aria-label="Tier C: Optional">C</span>
             <div class="task-num">T3</div>
             <div class="task-name">Letter to Your Wife</div>
             <div class="task-actions"><button class="task-toggle" type="button" data-toggle="4.3" aria-label="Mark T3 shipped">●</button></div>
@@ -975,17 +1047,20 @@
         <h3>Fathering</h3>
         <div class="week-tag">Train up your children. AI assists; the captain disciples.</div>
         <div class="task-circles">
-          <a class="task-circle" data-key="5.1" data-pdf="downloads/family-captain/Family_Captain_Task_PDFs/W5_T1_3_Questions_for_the_Dinner_Table.pdf" href="downloads/family-captain/Family_Captain_Task_PDFs/W5_T1_3_Questions_for_the_Dinner_Table.pdf" target="_blank" rel="noopener" title="Open W5.T1 PDF">
+          <a class="task-circle" data-key="5.1" data-tier="A" data-pdf="downloads/family-captain/Family_Captain_Task_PDFs/W5_T1_3_Questions_for_the_Dinner_Table.pdf" href="downloads/family-captain/Family_Captain_Task_PDFs/W5_T1_3_Questions_for_the_Dinner_Table.pdf" target="_blank" rel="noopener" title="Open W5.T1 PDF — tier A (Core)">
+            <span class="tier-badge" aria-label="Tier A: Core">A</span>
             <div class="task-num">T1</div>
             <div class="task-name">3 Questions for the Dinner Table</div>
             <div class="task-actions"><button class="task-toggle" type="button" data-toggle="5.1" aria-label="Mark T1 shipped">●</button></div>
           </a>
-          <a class="task-circle" data-key="5.2" data-pdf="downloads/family-captain/Family_Captain_Task_PDFs/W5_T2_Build_a_Family_Rhythm_Asset.pdf" href="downloads/family-captain/Family_Captain_Task_PDFs/W5_T2_Build_a_Family_Rhythm_Asset.pdf" target="_blank" rel="noopener" title="Open W5.T2 PDF">
+          <a class="task-circle" data-key="5.2" data-tier="B" data-pdf="downloads/family-captain/Family_Captain_Task_PDFs/W5_T2_Build_a_Family_Rhythm_Asset.pdf" href="downloads/family-captain/Family_Captain_Task_PDFs/W5_T2_Build_a_Family_Rhythm_Asset.pdf" target="_blank" rel="noopener" title="Open W5.T2 PDF — tier B (Depth)">
+            <span class="tier-badge" aria-label="Tier B: Depth">B</span>
             <div class="task-num">T2</div>
             <div class="task-name">Build a Family Rhythm Asset</div>
             <div class="task-actions"><button class="task-toggle" type="button" data-toggle="5.2" aria-label="Mark T2 shipped">●</button></div>
           </a>
-          <a class="task-circle" data-key="5.3" data-pdf="downloads/family-captain/Family_Captain_Task_PDFs/W5_T3_Write_Your_Family_AI_Policy.pdf" href="downloads/family-captain/Family_Captain_Task_PDFs/W5_T3_Write_Your_Family_AI_Policy.pdf" target="_blank" rel="noopener" title="Open W5.T3 PDF">
+          <a class="task-circle" data-key="5.3" data-tier="S" data-pdf="downloads/family-captain/Family_Captain_Task_PDFs/W5_T3_Write_Your_Family_AI_Policy.pdf" href="downloads/family-captain/Family_Captain_Task_PDFs/W5_T3_Write_Your_Family_AI_Policy.pdf" target="_blank" rel="noopener" title="Open W5.T3 PDF — tier S (Start Here)">
+            <span class="tier-badge" aria-label="Tier S: Start Here">S</span>
             <div class="task-num">T3</div>
             <div class="task-name">Write Your Family AI Policy</div>
             <div class="task-actions"><button class="task-toggle" type="button" data-toggle="5.3" aria-label="Mark T3 shipped">●</button></div>
@@ -999,17 +1074,20 @@
         <h3>Finance</h3>
         <div class="week-tag">Captain of the storehouse. Tithe first, then everything else.</div>
         <div class="task-circles">
-          <a class="task-circle" data-key="6.1" data-pdf="downloads/family-captain/Family_Captain_Task_PDFs/W6_T1_Tithe-First_Budget.pdf" href="downloads/family-captain/Family_Captain_Task_PDFs/W6_T1_Tithe-First_Budget.pdf" target="_blank" rel="noopener" title="Open W6.T1 PDF">
+          <a class="task-circle" data-key="6.1" data-tier="A" data-pdf="downloads/family-captain/Family_Captain_Task_PDFs/W6_T1_Tithe-First_Budget.pdf" href="downloads/family-captain/Family_Captain_Task_PDFs/W6_T1_Tithe-First_Budget.pdf" target="_blank" rel="noopener" title="Open W6.T1 PDF — tier A (Core)">
+            <span class="tier-badge" aria-label="Tier A: Core">A</span>
             <div class="task-num">T1</div>
             <div class="task-name">Tithe-First Budget</div>
             <div class="task-actions"><button class="task-toggle" type="button" data-toggle="6.1" aria-label="Mark T1 shipped">●</button></div>
           </a>
-          <a class="task-circle" data-key="6.2" data-pdf="downloads/family-captain/Family_Captain_Task_PDFs/W6_T2_Subscription_Audit.pdf" href="downloads/family-captain/Family_Captain_Task_PDFs/W6_T2_Subscription_Audit.pdf" target="_blank" rel="noopener" title="Open W6.T2 PDF">
+          <a class="task-circle" data-key="6.2" data-tier="B" data-pdf="downloads/family-captain/Family_Captain_Task_PDFs/W6_T2_Subscription_Audit.pdf" href="downloads/family-captain/Family_Captain_Task_PDFs/W6_T2_Subscription_Audit.pdf" target="_blank" rel="noopener" title="Open W6.T2 PDF — tier B (Depth)">
+            <span class="tier-badge" aria-label="Tier B: Depth">B</span>
             <div class="task-num">T2</div>
             <div class="task-name">Subscription Audit</div>
             <div class="task-actions"><button class="task-toggle" type="button" data-toggle="6.2" aria-label="Mark T2 shipped">●</button></div>
           </a>
-          <a class="task-circle" data-key="6.3" data-pdf="downloads/family-captain/Family_Captain_Task_PDFs/W6_T3_Legacy_Plan_Starter.pdf" href="downloads/family-captain/Family_Captain_Task_PDFs/W6_T3_Legacy_Plan_Starter.pdf" target="_blank" rel="noopener" title="Open W6.T3 PDF">
+          <a class="task-circle" data-key="6.3" data-tier="B" data-pdf="downloads/family-captain/Family_Captain_Task_PDFs/W6_T3_Legacy_Plan_Starter.pdf" href="downloads/family-captain/Family_Captain_Task_PDFs/W6_T3_Legacy_Plan_Starter.pdf" target="_blank" rel="noopener" title="Open W6.T3 PDF — tier B (Depth)">
+            <span class="tier-badge" aria-label="Tier B: Depth">B</span>
             <div class="task-num">T3</div>
             <div class="task-name">Legacy Plan Starter</div>
             <div class="task-actions"><button class="task-toggle" type="button" data-toggle="6.3" aria-label="Mark T3 shipped">●</button></div>
@@ -1023,17 +1101,20 @@
         <h3>Sabbath</h3>
         <div class="week-tag">The captain rests. The crew sees a man who isn't running on fumes.</div>
         <div class="task-circles">
-          <a class="task-circle" data-key="7.1" data-pdf="downloads/family-captain/Family_Captain_Task_PDFs/W7_T1_Plan_Your_Sabbath.pdf" href="downloads/family-captain/Family_Captain_Task_PDFs/W7_T1_Plan_Your_Sabbath.pdf" target="_blank" rel="noopener" title="Open W7.T1 PDF">
+          <a class="task-circle" data-key="7.1" data-tier="A" data-pdf="downloads/family-captain/Family_Captain_Task_PDFs/W7_T1_Plan_Your_Sabbath.pdf" href="downloads/family-captain/Family_Captain_Task_PDFs/W7_T1_Plan_Your_Sabbath.pdf" target="_blank" rel="noopener" title="Open W7.T1 PDF — tier A (Core)">
+            <span class="tier-badge" aria-label="Tier A: Core">A</span>
             <div class="task-num">T1</div>
             <div class="task-name">Plan Your Sabbath</div>
             <div class="task-actions"><button class="task-toggle" type="button" data-toggle="7.1" aria-label="Mark T1 shipped">●</button></div>
           </a>
-          <a class="task-circle" data-key="7.2" data-pdf="downloads/family-captain/Family_Captain_Task_PDFs/W7_T2_Saturday_Captains_Audit.pdf" href="downloads/family-captain/Family_Captain_Task_PDFs/W7_T2_Saturday_Captains_Audit.pdf" target="_blank" rel="noopener" title="Open W7.T2 PDF">
+          <a class="task-circle" data-key="7.2" data-tier="B" data-pdf="downloads/family-captain/Family_Captain_Task_PDFs/W7_T2_Saturday_Captains_Audit.pdf" href="downloads/family-captain/Family_Captain_Task_PDFs/W7_T2_Saturday_Captains_Audit.pdf" target="_blank" rel="noopener" title="Open W7.T2 PDF — tier B (Depth)">
+            <span class="tier-badge" aria-label="Tier B: Depth">B</span>
             <div class="task-num">T2</div>
             <div class="task-name">Saturday Captain's Audit</div>
             <div class="task-actions"><button class="task-toggle" type="button" data-toggle="7.2" aria-label="Mark T2 shipped">●</button></div>
           </a>
-          <a class="task-circle" data-key="7.3" data-pdf="downloads/family-captain/Family_Captain_Task_PDFs/W7_T3_Teach_One_Person_One_Thing.pdf" href="downloads/family-captain/Family_Captain_Task_PDFs/W7_T3_Teach_One_Person_One_Thing.pdf" target="_blank" rel="noopener" title="Open W7.T3 PDF">
+          <a class="task-circle" data-key="7.3" data-tier="S" data-pdf="downloads/family-captain/Family_Captain_Task_PDFs/W7_T3_Teach_One_Person_One_Thing.pdf" href="downloads/family-captain/Family_Captain_Task_PDFs/W7_T3_Teach_One_Person_One_Thing.pdf" target="_blank" rel="noopener" title="Open W7.T3 PDF — tier S (Start Here)">
+            <span class="tier-badge" aria-label="Tier S: Start Here">S</span>
             <div class="task-num">T3</div>
             <div class="task-name">Teach One Person One Thing</div>
             <div class="task-actions"><button class="task-toggle" type="button" data-toggle="7.3" aria-label="Mark T3 shipped">●</button></div>

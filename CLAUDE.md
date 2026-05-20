@@ -1,30 +1,38 @@
-# CLAUDE.md
+# usmcmin.com — Working Notes for Claude
 
-> **Claude Code (and other AI agents): start with `AGENTS.md`.**
+## Brand voice
+- Captain voice: direct, calm, plain. Talk to one operator, not a crowd.
+- NO hype. No "revolutionary/game-changing/unlock/supercharge."
+  No exclamation-point enthusiasm. Honesty over salesmanship —
+  the "Captain's Call" recs tell people what to SKIP, and that's the brand.
 
-This repo follows the [agents.md](https://agents.md/) convention. The
-canonical agent guide lives at `./AGENTS.md` — read that first. It
-documents:
+## Visual rules
+- Palette: muted golds + navy. Soft sage + light gray accents.
+- TFC private track uses bronze #CE8E31 (text-bronze #8B5A1F, deeper button bronze #B07320)
+  + slate #1E293B. USMC public track uses USMC navy + gold.
+- No neon. No animations. No hover-jiggles. Static, calm, scannable.
+- WCAG AA contrast minimum. Never encode meaning in hue alone — pair color with a
+  letter, label, or shape.
 
-- The dev loop (`build-data.py` → `generate-profiles.py`)
-- All 46 Python scripts grouped by purpose (build / add / enrich / fetch /
-  fix / optimize / claims)
-- Source-of-truth vs. derived data files
-- Front-end shared assets (`profile.css`, `profile.js`)
-- Anti-patterns ("don't edit data/states/\*.json by hand")
-- Common Q&A for agents
+## Tier system (S/A/B/C)
+- S = START HERE (10–15%). A = CORE (30–40%). B = DEPTH (30–40%). C = OPTIONAL (15–20%).
+- If everything is S, nothing is. Hold the distribution line.
+- Visual: bronze S, slate A, sage B, gray C. Letter in white on a 32px circle, top-left
+  of every task/tool card. Card border (2px) matches tier. C-tier cards at 80% opacity.
+- Filter chip "Show S+A only" on Compass + Sovereign filter rows.
 
-## Tooling preferences
+## Two-track architecture
+- TRACK=usmc → 5-week public (Watchman lexicon, AI Mission branding).
+- TRACK=fc   → 7-week private (Captain lexicon, TFC visual identity, Armada order:
+  Vision → Body → Spiritual → Husbanding → Fathering → Finance → Sabbath).
+- One `build/site_pages.py` source. `fc_track_builder.py` + `watchman_track_builder.py`
+  are post-processors. Per-week pages emit only on TRACK=fc.
 
-- Python 3 (system `python3`, no venv assumed)
-- Standard libs + `curl` (no pip installs unless explicitly approved)
-- `sips` for image work on macOS (or `magick` / `convert` as fallback)
-- `node` available for JS validation
-- Push to `claude/quick-wins-pr` branch (Adam merges to main)
+## Out of scope unless asked
+- Don't touch the Heartbeat Posts page.
+- Don't rewrite task/tool content (it's been through 6 iterations).
+- Don't build wizards/quizzes.
 
-## When something's unclear
-
-The `AGENTS.md` "Questions agents commonly have" section answers most
-recurring scenarios. If your task isn't covered, look at the most
-recent `git log --oneline -20` for examples of the commit cadence and
-script-usage patterns Adam expects.
+## Before any page is "done"
+- Open it in a browser. Verify at ~390px width.
+- Type-checking ≠ feature-checking — actually look at it.

@@ -251,10 +251,20 @@ the old top-level `candidates/<slug>.html` scheme was fully retired
 
 ---
 
-## 6. PROPOSED REDESIGN — three tier-specific rubrics
+## 6. THREE TIER-SPECIFIC RUBRICS — ✅ SHIPPED v5.0 (2026-05-21)
 
-> Status: **proposed, not implemented.** Adam's direction (2026-05-21). Awaiting
-> reconciliation with a parallel dispatch prompt before build.
+> Status: **SHIPPED and live.** Built end-to-end on 2026-05-21 (commits
+> 2812c8e0 → fbf22acb). Federal 60/40, state/local 70/30, three new categories
+> (Public Justice, Refuse Federal/State Overreach). Tier-aware across profiles,
+> home cards, search index, rankings, compare, methodology, and category deep-
+> dive pages. Home-page JS verified byte-identical to the Python generator
+> across all 8,968 candidates (0 mismatches). New categories backfilled from
+> existing scoring patterns (7,488 seeded, 440 left null as ambiguous).
+> Edge-call rulings: state/local 70/30; Self-Defense & 2A → Government pillar;
+> Election Integrity → God First; Industry Capture + Foreign Policy federal-only;
+> Soros axis extensible to local DAs. See `meta.rubrics` in scorecard.json and
+> the v5.0 entry in scoring-system.html. The design rationale below is retained
+> as the decision record.
 
 ### The proposal
 

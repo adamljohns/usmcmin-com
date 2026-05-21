@@ -1,6 +1,12 @@
-# v5.0 Three-Rubric Redesign — Ratification Draft
+# v5.0 Three-Rubric Redesign — ✅ SHIPPED 2026-05-21
 
-**Status: DRAFT for Adam's sign-off. Nothing migrated yet.**
+**Status: BUILT AND LIVE.** Adam ratified + delegated edge calls; shipped
+end-to-end the same day (see DATABASE-LAYOUT.md §6). This file is retained as
+the decision record + the authored question text for the three new categories.
+
+---
+
+_Original ratification draft below._
 Supersedes the rough sketch in `DATABASE-LAYOUT.md` §6 with concrete category
 assignments, draft questions for the new categories, the score-impact analysis,
 and a migration plan. Once you ratify §1–§3 (and rule on the §4 edge calls), the

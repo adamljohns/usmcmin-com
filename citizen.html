@@ -1540,6 +1540,9 @@ function renderCards() {
     // v2 subtotal row — God First (60 max) + America First (40 max) breakdown
     var gfPct = total.god_first_max > 0 ? Math.round(100 * total.god_first / total.god_first_max) : 0;
     var afPct = total.america_first_max > 0 ? Math.round(100 * total.america_first / total.america_first_max) : 0;
+    var tierPretty = total.tier.charAt(0).toUpperCase() + total.tier.slice(1);
+    var tierWeight = total.tier === 'federal' ? '60/40' : '70/30';
+    html += '<div class="sc-tier-chip" style="display:inline-block;font-size:0.62rem;text-transform:uppercase;letter-spacing:0.8px;font-weight:700;color:var(--gray);border:1px solid rgba(168,176,188,0.25);border-radius:4px;padding:2px 7px;margin-bottom:6px;" title="Scored on the ' + tierPretty + ' rubric — God First weighted ' + tierWeight.split("/")[0] + '%, ' + esc(total.gov_label) + ' ' + tierWeight.split("/")[1] + '%. Every official displays on the same /100 scale so tiers are comparable at a glance.">' + tierPretty + ' rubric · ' + tierWeight + '</div>';
     html += '<div class="sc-subtotals" aria-label="Subtotals — God First ' + total.god_first + '/' + total.god_first_max + ', ' + total.gov_label + ' ' + total.america_first + '/' + total.america_first_max + '">';
     html += '<div class="sc-sub gf"><span class="sc-sub-label">✝ God First</span><span class="sc-sub-val">' + total.god_first + '<span class="sc-sub-max">/' + total.god_first_max + '</span></span></div>';
     html += '<div class="sc-sub af"><span class="sc-sub-label">' + total.gov_emoji + ' ' + esc(total.gov_label) + '</span><span class="sc-sub-val">' + total.america_first + '<span class="sc-sub-max">/' + total.america_first_max + '</span></span></div>';

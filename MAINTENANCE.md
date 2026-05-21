@@ -21,7 +21,7 @@ auditable, and reversible.
 | Trigger | Cadence | Action |
 |---|---|---|
 | Primary/general election nights | As they happen (Tue nights, Mar–Nov) | Verify + record results within 48h |
-| Routine sweep | **Weekly (Mondays)** | Run the election-results sweep (§3); draft proposed updates |
+| Routine sweep | **Weekly (Mondays 08:00)** | Auto: `com.moop.scorecard-sweep` launchd job → `~/Scripts/scorecard-sweep-rounds.sh` → Telegram digest of races needing attention (§3) |
 | Foreign-influence refresh | Monthly | Re-pull AIPAC / Soros / CCP donor data, re-apply adjustments |
 | Data-quality audit | Monthly | Dedup scan + orphan check + coverage audit (§5) |
 | Full rebuild + deploy | After any data change | §4 build pipeline |

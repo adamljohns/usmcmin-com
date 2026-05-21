@@ -44,6 +44,8 @@ def main():
     ap.add_argument('--days', type=int, default=30, help='upcoming window (days)')
     ap.add_argument('--today', default=None, help='override today (YYYY-MM-DD)')
     ap.add_argument('--out', default=None, help='write report to file instead of stdout')
+    ap.add_argument('--digest', action='store_true',
+                    help='compact Telegram-friendly summary (counts + resolved-pending only)')
     args = ap.parse_args()
 
     today = parse_date(args.today) if args.today else datetime.date.today()
@@ -87,6 +89,28 @@ def main():
                 lines.append(f'- **{name}** ({st}{d}) · {edate} · `{slug}`  \n  {office}')
             lines.append('')
         return '\n'.join(lines) + '\n'
+
+    if args.digest:
+        # Compact summary for Telegram (cap ~3500 chars)
+        lines = [f'Scorecard sweep — {today.isoformat()}',
+                 f'{len(resolved_pending)} resolved-pending · {len(upcoming)} upcoming({args.days}d) · '
+                 f'{len(stale_incumbents)} incumbent-confirms',
+                 '', '⚠️ RESOLVED, NEEDS RESULT (verify + update):']
+        by_state = defaultdict(list)
+        for r in resolved_pending:
+            by_state[r[0]].append(r[2])
+        for st in sorted(by_state):
+            names = by_state[st]
+            shown = ', '.join(names[:6]) + (f' +{len(names)-6} more' if len(names) > 6 else '')
+            lines.append(f'• {st} ({len(names)}): {shown}')
+        lines.append('')
+        lines.append('Run `python3 weekly-election-sweep.py` in the repo for the full report.')
+        out = '\n'.join(lines)[:3900]
+        if args.out:
+            Path(args.out).write_text(out)
+        else:
+            print(out)
+        return
 
     report = []
     report.append('# Scorecard Election Sweep')

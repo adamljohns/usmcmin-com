@@ -748,6 +748,93 @@
   .callout-label {
     color: #8B5A1F !important;
   }
+
+  /* ─────────────────────────────────────────────────────────────────
+     FOOTER — FC partnership disclosure + The Family Captain LLC links
+     (injected footer block; see FC_FOOTER in fc_track_builder.py)
+     ───────────────────────────────────────────────────────────── */
+  footer .fc-partner-note {
+    margin-top: 16px;
+    padding-top: 14px;
+    border-top: 1px solid #33445C;
+    font-size: 0.82rem !important;
+    line-height: 1.6;
+    color: #CBD5E1 !important;
+  }
+  footer .fc-partner-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px 18px;
+    margin-top: 10px;
+  }
+  footer .fc-partner-links a {
+    font-size: 0.82rem !important;
+    color: #CE8E31 !important;
+    text-decoration: none;
+    font-weight: 500;
+  }
+  footer .fc-partner-links a:hover {
+    color: #FFFFFF !important;
+    text-decoration: underline;
+  }
+
+  /* ═══════════════════════════════════════════════════════════════
+     v7 CONTRAST — DEFINITIVE SWEEP (2026-05-21, MOOP: "still white
+     text on light grey, totally unreadable").
+     Root cause: the base site theme paints text white; the FC track
+     forces light card/page backgrounds — so white-on-light appears
+     everywhere the earlier class-by-class sweeps never reached
+     (b, strong, em, dt, dd, summary, h2/h3, td/th, .cost,
+     .post-title, .hw-chip, the tier legend, etc.).
+     Verified live: tools.html 19 low-contrast groups -> 0,
+     voyage / sovereign / heartbeat / week pages all clear.
+     All rules unconditional — FC surfaces are theme-independent.
+     ═══════════════════════════════════════════════════════════════ */
+
+  /* (1) STRUCTURAL — every generic text tag on FC content → dark slate.
+     The :not() keeps the fixed dark zones (hero / week-hero / footer /
+     cta-band / drill-cell) untouched so their light text is preserved.
+     #334155 clears WCAG AA on every FC light surface (white 12.6:1,
+     warm-gray #F4F5F7 9.7:1, panel #EBEDF0 9.3:1). */
+  body[data-track="family-captain"] :is(p,li,b,strong,em,i,h2,h3,h4,h5,h6,
+    dt,dd,summary,small,caption,figcaption,blockquote,th,td):not(
+    :is(.module-hero,.week-hero,footer,.cta-band,.drill-cell) *) {
+    color: #334155 !important;
+  }
+
+  /* (2) DARK-ZONE REPAIRS — only the genuinely broken bits. The dark
+     zones otherwise keep their existing (correct) light text. */
+  body[data-track="family-captain"] :is(.module-hero,.week-hero,.cta-band) a {
+    color: #CE8E31 !important;
+  }
+  /* week-hero tag + scripture lines (were dark-slate on dark slate) */
+  body[data-track="family-captain"] .week-hero :is(.week-tag,.week-scrip) {
+    color: #CBD5E1 !important;
+  }
+
+  /* (3) LIGHT-SURFACE class offenders the earlier sweeps missed. */
+  body[data-track="family-captain"] :is(.cost,.uc-winner,.tl-label,
+    .byline-name,.post-title,.task-num) { color: #1E293B !important; }
+  body[data-track="family-captain"] :is(.best-for,.tl-desc,.hw-chip,
+    .task-name,.post-question,.uc-case) { color: #334155 !important; }
+  body[data-track="family-captain"] :is(.disclaimer,.for,.redundant,
+    .byline-meta,.chip-code,.chip-week) { color: #475569 !important; }
+  /* a light disclaimer panel can sit inside the dark hero — force its
+     nested text dark too (it is a light #EBEDF0 panel) */
+  body[data-track="family-captain"] .disclaimer * { color: #475569 !important; }
+  /* bronze labels on light → dark bronze (keeps the bronze accent, AA-pass) */
+  body[data-track="family-captain"] :is(.post-type,.ram) {
+    color: #8B5A1F !important;
+  }
+
+  /* (4) DRILL CELLS are always dark slate — number must be bright bronze,
+     label white (the v6 light-surface bronze broke them in light theme). */
+  body[data-track="family-captain"] .drill-cell .drill-num {
+    color: #CE8E31 !important;
+  }
+  body[data-track="family-captain"] .drill-cell .drill-label {
+    color: #FFFFFF !important;
+  }
 </style>
 
 </head>
@@ -798,7 +885,7 @@
   <p class="week-tag">Lead with love. The captain's first crew is one woman.</p>
   <p class="week-scrip">📖 <a href="https://usmcmin.org/bible.html" target="_blank" rel="noopener">Ephesians 5:25–28 ↗</a></p>
   <div class="armada-frame">
-    <img src="assets/img/family-captain/armada-husbanding.svg" alt="Armada Theme — Week 4 Husbanding centered" />
+    <img src="assets/img/family-captain/armada-husbanding.jpg" alt="Armada Theme — Week 4 Husbanding centered" />
   </div>
 </header>
 
@@ -902,6 +989,7 @@
 </nav>
 
 <!-- ── FOOTER ── -->
+<!-- ── FOOTER (FC track) ── -->
 <footer>
   <div class="footer-inner">
     <div class="footer-top">
@@ -909,45 +997,51 @@
         <div class="name">U.S.M.C. Ministries</div>
         <div class="tag">Warriors Equipped. Kingdom Advancing.</div>
         <p>Helping men become better husbands, fathers, and citizens as they follow Jesus. Based in Fredericksburg, VA.</p>
+        <p class="fc-partner-note">U.S.M.C. Ministries &mdash; Uniting, Serving, Mentoring, and Counseling Ministries &mdash; is an unofficial partner of The Family Captain LLC.</p>
+        <div class="fc-partner-links">
+          <a href="https://thefamilycaptain.com/" target="_blank" rel="noopener">Official Site &#8599;</a>
+          <a href="https://www.youtube.com/@familycaptain" target="_blank" rel="noopener">YouTube &#8599;</a>
+          <a href="https://open.spotify.com/show/6Hyn3dQ5Kw931obEvx3YEK" target="_blank" rel="noopener">Spotify Podcast &#8599;</a>
+          <a href="https://www.facebook.com/TheFamilyCaptain/" target="_blank" rel="noopener">Facebook &#8599;</a>
+        </div>
       </div>
       <div class="footer-col">
         <h4>Resources</h4>
         <ul>
           <li><a href="shop.html">Ministry Shop</a></li>
           <li><a href="books.html">Books &amp; Devos</a></li>
-          <li><a href="https://usmcmin.org" target="_blank">Bible Reading Plan</a></li>
+          <li><a href="https://usmcmin.org/bible.html" target="_blank" rel="noopener">Bible Reading Plan</a></li>
           <li><a href="coaching.html#membership">Warriors Circle</a></li>
         </ul>
       </div>
       <div class="footer-col">
-        <h4>The Family Captain</h4>
+        <h4>For Captains</h4>
         <ul>
-          <li><a href="husband.html">Husband (HAPPY)</a></li>
-          <li><a href="father.html">Father</a></li>
           <li><a href="family-captain.html">AI Boot Camp</a></li>
           <li><a href="family-captain-tools.html">AI Tools Landscape</a></li>
+          <li><a href="husband.html">Husband (HAPPY)</a></li>
+          <li><a href="father.html">Father</a></li>
         </ul>
       </div>
       <div class="footer-col">
         <h4>Coaching</h4>
         <ul>
-          <li><a href="https://cal.com/usmc-ministries-2022/uniting" target="_blank">Brotherhood Session</a></li>
-          <li><a href="https://cal.com/usmc-ministries-2022/counseling" target="_blank">Pastoral Counsel</a></li>
-          <li><a href="https://cal.com/usmc-ministries-2022/mentoring" target="_blank">Discipleship</a></li>
+          <li><a href="https://cal.com/usmc-ministries-2022/uniting" target="_blank" rel="noopener">Brotherhood Session</a></li>
+          <li><a href="https://cal.com/usmc-ministries-2022/counseling" target="_blank" rel="noopener">Pastoral Counsel</a></li>
+          <li><a href="https://cal.com/usmc-ministries-2022/mentoring" target="_blank" rel="noopener">Discipleship</a></li>
         </ul>
       </div>
       <div class="footer-col">
         <h4>Ministry</h4>
         <ul>
           <li><a href="about.html">About Adam</a></li>
-          <li><a href="https://usmcmin.org" target="_blank">usmcmin.org</a></li>
+          <li><a href="https://usmcmin.org" target="_blank" rel="noopener">usmcmin.org</a></li>
           <li><a href="mailto:usmcministries2022@gmail.com">Contact</a></li>
         </ul>
       </div>
     </div>
     <div class="footer-bottom">
-      <div style="color:var(--gray);font-size:0.85rem;margin-bottom:0.5rem">Looking for ministry resources &amp; Bible study? Visit <a href="https://usmcmin.org" target="_blank" style="color:var(--gold)">usmcmin.org</a></div>
-      <div style="color:var(--gray);font-size:0.8rem">© 2026 U.S.M.C. Ministries. All rights reserved. &nbsp;|&nbsp; <a href="sitemap.html">Sitemap</a></div>
+      <div style="font-size:0.8rem">&copy; 2026 U.S.M.C. Ministries. All rights reserved. &nbsp;|&nbsp; <a href="sitemap.html">Sitemap</a></div>
     </div>
   </div>
 </footer>

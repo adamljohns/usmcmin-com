@@ -53,6 +53,9 @@
     max-width:820px; color:var(--gray); font-size:0.85rem; }
   .module-hero .meta b { color:var(--white); font-weight:700; }
   .module-hero .hero-cta { margin-top:24px; display:flex; gap:12px; justify-content:center; flex-wrap:wrap; }
+  /* Defensive: hero CTA buttons never carry layout margins (the nav-cta class
+     used to leak margin-left:auto here, shoving the row off-center). */
+  .module-hero .hero-cta .btn { margin:0; }
 
   .module-container { max-width:1080px; margin:0 auto; padding:56px 20px; }
   .section-title { font-family:var(--font-main); font-size:1.9rem; font-weight:700;
@@ -815,6 +818,93 @@
   .callout-label {
     color: #8B5A1F !important;
   }
+
+  /* ─────────────────────────────────────────────────────────────────
+     FOOTER — FC partnership disclosure + The Family Captain LLC links
+     (injected footer block; see FC_FOOTER in fc_track_builder.py)
+     ───────────────────────────────────────────────────────────── */
+  footer .fc-partner-note {
+    margin-top: 16px;
+    padding-top: 14px;
+    border-top: 1px solid #33445C;
+    font-size: 0.82rem !important;
+    line-height: 1.6;
+    color: #CBD5E1 !important;
+  }
+  footer .fc-partner-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px 18px;
+    margin-top: 10px;
+  }
+  footer .fc-partner-links a {
+    font-size: 0.82rem !important;
+    color: #CE8E31 !important;
+    text-decoration: none;
+    font-weight: 500;
+  }
+  footer .fc-partner-links a:hover {
+    color: #FFFFFF !important;
+    text-decoration: underline;
+  }
+
+  /* ═══════════════════════════════════════════════════════════════
+     v7 CONTRAST — DEFINITIVE SWEEP (2026-05-21, MOOP: "still white
+     text on light grey, totally unreadable").
+     Root cause: the base site theme paints text white; the FC track
+     forces light card/page backgrounds — so white-on-light appears
+     everywhere the earlier class-by-class sweeps never reached
+     (b, strong, em, dt, dd, summary, h2/h3, td/th, .cost,
+     .post-title, .hw-chip, the tier legend, etc.).
+     Verified live: tools.html 19 low-contrast groups -> 0,
+     voyage / sovereign / heartbeat / week pages all clear.
+     All rules unconditional — FC surfaces are theme-independent.
+     ═══════════════════════════════════════════════════════════════ */
+
+  /* (1) STRUCTURAL — every generic text tag on FC content → dark slate.
+     The :not() keeps the fixed dark zones (hero / week-hero / footer /
+     cta-band / drill-cell) untouched so their light text is preserved.
+     #334155 clears WCAG AA on every FC light surface (white 12.6:1,
+     warm-gray #F4F5F7 9.7:1, panel #EBEDF0 9.3:1). */
+  body[data-track="family-captain"] :is(p,li,b,strong,em,i,h2,h3,h4,h5,h6,
+    dt,dd,summary,small,caption,figcaption,blockquote,th,td):not(
+    :is(.module-hero,.week-hero,footer,.cta-band,.drill-cell) *) {
+    color: #334155 !important;
+  }
+
+  /* (2) DARK-ZONE REPAIRS — only the genuinely broken bits. The dark
+     zones otherwise keep their existing (correct) light text. */
+  body[data-track="family-captain"] :is(.module-hero,.week-hero,.cta-band) a {
+    color: #CE8E31 !important;
+  }
+  /* week-hero tag + scripture lines (were dark-slate on dark slate) */
+  body[data-track="family-captain"] .week-hero :is(.week-tag,.week-scrip) {
+    color: #CBD5E1 !important;
+  }
+
+  /* (3) LIGHT-SURFACE class offenders the earlier sweeps missed. */
+  body[data-track="family-captain"] :is(.cost,.uc-winner,.tl-label,
+    .byline-name,.post-title,.task-num) { color: #1E293B !important; }
+  body[data-track="family-captain"] :is(.best-for,.tl-desc,.hw-chip,
+    .task-name,.post-question,.uc-case) { color: #334155 !important; }
+  body[data-track="family-captain"] :is(.disclaimer,.for,.redundant,
+    .byline-meta,.chip-code,.chip-week) { color: #475569 !important; }
+  /* a light disclaimer panel can sit inside the dark hero — force its
+     nested text dark too (it is a light #EBEDF0 panel) */
+  body[data-track="family-captain"] .disclaimer * { color: #475569 !important; }
+  /* bronze labels on light → dark bronze (keeps the bronze accent, AA-pass) */
+  body[data-track="family-captain"] :is(.post-type,.ram) {
+    color: #8B5A1F !important;
+  }
+
+  /* (4) DRILL CELLS are always dark slate — number must be bright bronze,
+     label white (the v6 light-surface bronze broke them in light theme). */
+  body[data-track="family-captain"] .drill-cell .drill-num {
+    color: #CE8E31 !important;
+  }
+  body[data-track="family-captain"] .drill-cell .drill-label {
+    color: #FFFFFF !important;
+  }
 </style>
 
 </head>
@@ -870,7 +960,7 @@
     <span><b>Cohort:</b> Private Telegram channel</span>
   </div>
   <div class="hero-cta">
-    <a class="btn nav-cta" href="https://t.me/+ddnHqJEqkKk3ZmVh" target="_blank" rel="noopener">Join the Telegram channel</a>
+    <a class="btn" href="https://t.me/+ddnHqJEqkKk3ZmVh" target="_blank" rel="noopener">Join the Telegram channel</a>
     <a class="btn" href="#path" style="background:transparent;border:1px solid var(--border);color:var(--gold)">Preview the path ↓</a>
   </div>
 </div>
@@ -904,7 +994,7 @@
   <h2 class="section-title">The Armada Theme.</h2>
   <p class="section-sub">Seven themes orbit the captain. Each week, one moves to center.</p>
   <div style="max-width:540px;margin:22px auto 0;">
-    <img src="assets/img/family-captain/armada-overview.svg" alt="The Family Captain Armada — 7-week framework (Vision, Body, Spiritual, Husbanding, Fathering, Finance, Sabbath)" style="width:100%;height:auto;display:block;">
+    <img src="assets/img/family-captain/armada-overview.jpg" alt="The Family Captain Armada — 7-week framework (Vision, Body, Spiritual, Husbanding, Fathering, Finance, Sabbath)" style="width:100%;height:auto;display:block;" loading="lazy">
   </div>
   <p class="note" style="text-align:center;margin-top:14px;">Each week's section page features that week's themed Armada view.</p>
 </div>
@@ -979,11 +1069,12 @@
 <div class="cta-band" id="join">
   <h2>Captain — your wheel is waiting.</h2>
   <p>Join the private Telegram channel. Read the pinned index. Start with Task W1.T1 today. Three tasks a week. Iron sharpens iron in the comments.</p>
-  <a class="btn nav-cta" href="https://t.me/+ddnHqJEqkKk3ZmVh" target="_blank" rel="noopener">Join the Telegram channel</a>
+  <a class="btn" href="https://t.me/+ddnHqJEqkKk3ZmVh" target="_blank" rel="noopener">Join the Telegram channel</a>
   <span class="cta-secondary">or <a href="mailto:usmcministries2022@gmail.com?subject=Family%20Captain%20AI%20Boot%20Camp%20%E2%80%94%20question" style="color:var(--gold)">email Adam</a> first</span>
 </div>
 
 <!-- ── FOOTER ── -->
+<!-- ── FOOTER (FC track) ── -->
 <footer>
   <div class="footer-inner">
     <div class="footer-top">
@@ -991,45 +1082,51 @@
         <div class="name">U.S.M.C. Ministries</div>
         <div class="tag">Warriors Equipped. Kingdom Advancing.</div>
         <p>Helping men become better husbands, fathers, and citizens as they follow Jesus. Based in Fredericksburg, VA.</p>
+        <p class="fc-partner-note">U.S.M.C. Ministries &mdash; Uniting, Serving, Mentoring, and Counseling Ministries &mdash; is an unofficial partner of The Family Captain LLC.</p>
+        <div class="fc-partner-links">
+          <a href="https://thefamilycaptain.com/" target="_blank" rel="noopener">Official Site &#8599;</a>
+          <a href="https://www.youtube.com/@familycaptain" target="_blank" rel="noopener">YouTube &#8599;</a>
+          <a href="https://open.spotify.com/show/6Hyn3dQ5Kw931obEvx3YEK" target="_blank" rel="noopener">Spotify Podcast &#8599;</a>
+          <a href="https://www.facebook.com/TheFamilyCaptain/" target="_blank" rel="noopener">Facebook &#8599;</a>
+        </div>
       </div>
       <div class="footer-col">
         <h4>Resources</h4>
         <ul>
           <li><a href="shop.html">Ministry Shop</a></li>
           <li><a href="books.html">Books &amp; Devos</a></li>
-          <li><a href="https://usmcmin.org" target="_blank">Bible Reading Plan</a></li>
+          <li><a href="https://usmcmin.org/bible.html" target="_blank" rel="noopener">Bible Reading Plan</a></li>
           <li><a href="coaching.html#membership">Warriors Circle</a></li>
         </ul>
       </div>
       <div class="footer-col">
-        <h4>The Family Captain</h4>
+        <h4>For Captains</h4>
         <ul>
-          <li><a href="husband.html">Husband (HAPPY)</a></li>
-          <li><a href="father.html">Father</a></li>
           <li><a href="family-captain.html">AI Boot Camp</a></li>
           <li><a href="family-captain-tools.html">AI Tools Landscape</a></li>
+          <li><a href="husband.html">Husband (HAPPY)</a></li>
+          <li><a href="father.html">Father</a></li>
         </ul>
       </div>
       <div class="footer-col">
         <h4>Coaching</h4>
         <ul>
-          <li><a href="https://cal.com/usmc-ministries-2022/uniting" target="_blank">Brotherhood Session</a></li>
-          <li><a href="https://cal.com/usmc-ministries-2022/counseling" target="_blank">Pastoral Counsel</a></li>
-          <li><a href="https://cal.com/usmc-ministries-2022/mentoring" target="_blank">Discipleship</a></li>
+          <li><a href="https://cal.com/usmc-ministries-2022/uniting" target="_blank" rel="noopener">Brotherhood Session</a></li>
+          <li><a href="https://cal.com/usmc-ministries-2022/counseling" target="_blank" rel="noopener">Pastoral Counsel</a></li>
+          <li><a href="https://cal.com/usmc-ministries-2022/mentoring" target="_blank" rel="noopener">Discipleship</a></li>
         </ul>
       </div>
       <div class="footer-col">
         <h4>Ministry</h4>
         <ul>
           <li><a href="about.html">About Adam</a></li>
-          <li><a href="https://usmcmin.org" target="_blank">usmcmin.org</a></li>
+          <li><a href="https://usmcmin.org" target="_blank" rel="noopener">usmcmin.org</a></li>
           <li><a href="mailto:usmcministries2022@gmail.com">Contact</a></li>
         </ul>
       </div>
     </div>
     <div class="footer-bottom">
-      <div style="color:var(--gray);font-size:0.85rem;margin-bottom:0.5rem">Looking for ministry resources &amp; Bible study? Visit <a href="https://usmcmin.org" target="_blank" style="color:var(--gold)">usmcmin.org</a></div>
-      <div style="color:var(--gray);font-size:0.8rem">© 2026 U.S.M.C. Ministries. All rights reserved. &nbsp;|&nbsp; <a href="sitemap.html">Sitemap</a></div>
+      <div style="font-size:0.8rem">&copy; 2026 U.S.M.C. Ministries. All rights reserved. &nbsp;|&nbsp; <a href="sitemap.html">Sitemap</a></div>
     </div>
   </div>
 </footer>
@@ -1052,7 +1149,7 @@ const DOWNLOAD_URLS = {
   architecture: "downloads/family-captain/Family_Captain_Bootcamp_Architecture_v2.md",
 };
 
-const WEEKS = [{"n": 1, "icon": "🗺️", "title": "Vision", "tag": "Write the vision plain. AI drafts; the captain decides where he's going.", "scrip": "Habakkuk 2:2", "tasks": [{"t": "Draft Your AI Charter", "pdf": "W1_T1_Draft_Your_AI_Charter.pdf"}, {"t": "Write Your 5-Year Captain's Vision", "pdf": "W1_T2_Write_Your_5-Year_Captains_Vision.pdf"}, {"t": "Build Your Tool Stack", "pdf": "W1_T3_Build_Your_Tool_Stack.pdf"}]}, {"n": 2, "icon": "💪", "title": "Body", "tag": "Steward the temple. The captain trains the body that carries the load.", "scrip": "1 Corinthians 6:19–20", "tasks": [{"t": "Weekly Movement Practice", "pdf": "W2_T1_Weekly_Movement_Practice.pdf"}, {"t": "Captain's Meal Plan", "pdf": "W2_T2_Captains_Meal_Plan.pdf"}, {"t": "5-Night Sleep Audit", "pdf": "W2_T3_5-Night_Sleep_Audit.pdf"}]}, {"n": 3, "icon": "✝️", "title": "Spiritual", "tag": "Walk with God. The captain's command flows from his communion.", "scrip": "Joshua 1:8", "tasks": [{"t": "10-Min Scripture Study, You Lead", "pdf": "W3_T1_Scripture_Study_You_Lead.pdf"}, {"t": "Family Devotion Generator", "pdf": "W3_T2_Family_Devotion_Generator.pdf"}, {"t": "Sermon Notes → Captain's Actions", "pdf": "W3_T3_Sermon_Notes_to_Captains_Actions.pdf"}]}, {"n": 4, "icon": "💍", "title": "Husbanding", "tag": "Lead with love. The captain's first crew is one woman.", "scrip": "Ephesians 5:25–28", "tasks": [{"t": "The 5-Minute Wife Audit", "pdf": "W4_T1_The_5-Minute_Wife_Audit.pdf"}, {"t": "Prep One Hard Conversation", "pdf": "W4_T2_Prep_One_Hard_Conversation.pdf"}, {"t": "Letter to Your Wife", "pdf": "W4_T3_Letter_to_Your_Wife.pdf"}]}, {"n": 5, "icon": "🏡", "title": "Fathering", "tag": "Train up your children. AI assists; the captain disciples.", "scrip": "Deuteronomy 6:6–7", "tasks": [{"t": "3 Questions for the Dinner Table", "pdf": "W5_T1_3_Questions_for_the_Dinner_Table.pdf"}, {"t": "Build a Family Rhythm Asset", "pdf": "W5_T2_Build_a_Family_Rhythm_Asset.pdf"}, {"t": "Write Your Family AI Policy", "pdf": "W5_T3_Write_Your_Family_AI_Policy.pdf"}]}, {"n": 6, "icon": "💰", "title": "Finance", "tag": "Captain of the storehouse. Tithe first, then everything else.", "scrip": "Malachi 3:10", "tasks": [{"t": "Tithe-First Budget", "pdf": "W6_T1_Tithe-First_Budget.pdf"}, {"t": "Subscription Audit", "pdf": "W6_T2_Subscription_Audit.pdf"}, {"t": "Legacy Plan Starter", "pdf": "W6_T3_Legacy_Plan_Starter.pdf"}]}, {"n": 7, "icon": "🌅", "title": "Sabbath", "tag": "The captain rests. The crew sees a man who isn't running on fumes.", "scrip": "Exodus 20:8", "tasks": [{"t": "Plan Your Sabbath", "pdf": "W7_T1_Plan_Your_Sabbath.pdf"}, {"t": "Saturday Captain's Audit", "pdf": "W7_T2_Saturday_Captains_Audit.pdf"}, {"t": "Teach One Person One Thing", "pdf": "W7_T3_Teach_One_Person_One_Thing.pdf"}]}];
+const WEEKS = [{"n": 1, "icon": "🗺️", "title": "Vision", "tag": "Write the vision plain. AI drafts; the captain decides where he's going.", "scrip": "Habakkuk 2:2", "tasks": [{"t": "Draft Your AI Charter", "pdf": "W1_T1_Draft_Your_AI_Charter.pdf", "tier": "S"}, {"t": "Write Your 5-Year Captain's Vision", "pdf": "W1_T2_Write_Your_5-Year_Captains_Vision.pdf", "tier": "A"}, {"t": "Build Your Tool Stack", "pdf": "W1_T3_Build_Your_Tool_Stack.pdf", "tier": "A"}]}, {"n": 2, "icon": "💪", "title": "Body", "tag": "Steward the temple. The captain trains the body that carries the load.", "scrip": "1 Corinthians 6:19–20", "tasks": [{"t": "Weekly Movement Practice", "pdf": "W2_T1_Weekly_Movement_Practice.pdf", "tier": "A"}, {"t": "Captain's Meal Plan", "pdf": "W2_T2_Captains_Meal_Plan.pdf", "tier": "B"}, {"t": "5-Night Sleep Audit", "pdf": "W2_T3_5-Night_Sleep_Audit.pdf", "tier": "C"}]}, {"n": 3, "icon": "✝️", "title": "Spiritual", "tag": "Walk with God. The captain's command flows from his communion.", "scrip": "Joshua 1:8", "tasks": [{"t": "10-Min Scripture Study, You Lead", "pdf": "W3_T1_Scripture_Study_You_Lead.pdf", "tier": "A"}, {"t": "Family Devotion Generator", "pdf": "W3_T2_Family_Devotion_Generator.pdf", "tier": "B"}, {"t": "Sermon Notes → Captain's Actions", "pdf": "W3_T3_Sermon_Notes_to_Captains_Actions.pdf", "tier": "C"}]}, {"n": 4, "icon": "💍", "title": "Husbanding", "tag": "Lead with love. The captain's first crew is one woman.", "scrip": "Ephesians 5:25–28", "tasks": [{"t": "The 5-Minute Wife Audit", "pdf": "W4_T1_The_5-Minute_Wife_Audit.pdf", "tier": "A"}, {"t": "Prep One Hard Conversation", "pdf": "W4_T2_Prep_One_Hard_Conversation.pdf", "tier": "B"}, {"t": "Letter to Your Wife", "pdf": "W4_T3_Letter_to_Your_Wife.pdf", "tier": "C"}]}, {"n": 5, "icon": "🏡", "title": "Fathering", "tag": "Train up your children. AI assists; the captain disciples.", "scrip": "Deuteronomy 6:6–7", "tasks": [{"t": "3 Questions for the Dinner Table", "pdf": "W5_T1_3_Questions_for_the_Dinner_Table.pdf", "tier": "A"}, {"t": "Build a Family Rhythm Asset", "pdf": "W5_T2_Build_a_Family_Rhythm_Asset.pdf", "tier": "B"}, {"t": "Write Your Family AI Policy", "pdf": "W5_T3_Write_Your_Family_AI_Policy.pdf", "tier": "S"}]}, {"n": 6, "icon": "💰", "title": "Finance", "tag": "Captain of the storehouse. Tithe first, then everything else.", "scrip": "Malachi 3:10", "tasks": [{"t": "Tithe-First Budget", "pdf": "W6_T1_Tithe-First_Budget.pdf", "tier": "A"}, {"t": "Subscription Audit", "pdf": "W6_T2_Subscription_Audit.pdf", "tier": "B"}, {"t": "Legacy Plan Starter", "pdf": "W6_T3_Legacy_Plan_Starter.pdf", "tier": "B"}]}, {"n": 7, "icon": "🌅", "title": "Sabbath", "tag": "The captain rests. The crew sees a man who isn't running on fumes.", "scrip": "Exodus 20:8", "tasks": [{"t": "Plan Your Sabbath", "pdf": "W7_T1_Plan_Your_Sabbath.pdf", "tier": "A"}, {"t": "Saturday Captain's Audit", "pdf": "W7_T2_Saturday_Captains_Audit.pdf", "tier": "B"}, {"t": "Teach One Person One Thing", "pdf": "W7_T3_Teach_One_Person_One_Thing.pdf", "tier": "S"}]}];
 
 const DOWNLOADS = [
   { key:"voyage",    icon:"🧭", title:"The Captain's Chart", body:"Gamified track of your 7-week journey. Tap any task to open its PDF, mark it shipped, earn badges, and unlock the commissioning ceremony when all 21 land. Replaces print-and-fill with a digital captain's log.", cta:"Chart your course →", target:"_self" },

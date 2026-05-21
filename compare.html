@@ -317,34 +317,46 @@
     return p || 'Unknown';
   }
 
-  // v4.0 rubric: 10 categories × 5 questions × 2 pts = 100 max. Also surfaces
-  // God-First / America-First tier subtotals by walking the loaded categories array.
-  function calcTotal(scores){
-    if (!scores) return {score: 0, max: 100, max_possible: 0, pct: 0, answered: 0, na: 0, god_first: 0, america_first: 0};
-    var total = 0; var answered = 0; var na = 0; var max = 100;
-    var godFirst = 0, americaFirst = 0;
+  // v5.0 — tier-aware rubric helpers (mirror of tier_classify.py).
+  function classifyOfficeTier(office){var o=(office||'').toLowerCase();if(!o)return 'state';
+    if(/\b(president|vice president|u\.?s\.?\s+sen|u\.?s\.?\s+hous|u\.?s\.?\s+rep|united states sen|united states hous|united states rep|secretary of|acting attorney general|attorney general of the united states|director of|administrator of|ambassador|chief of staff|deputy chief of staff|homeland security advisor|chief justice|associate justice.+supreme court|special envoy)/.test(o)){if(/^attorney general$|state attorney general/.test(o)&&o.indexOf('united states')===-1)return 'state';return 'federal';}
+    if(/\bgovernor\b|^lt\.?\s+governor|lieutenant governor|state senator|state senate|state representative|state hous|state assembl|^delegate$|delegate \(|house of delegates/.test(o))return 'state';
+    if(/^attorney general$|secretary of state$|state treasurer|state auditor|state comptroller/.test(o))return 'state';
+    if(o.indexOf('state supreme court')!==-1||/(chief justice|justice).+state/.test(o))return 'state';
+    if(/\bmayor\b|city council|town council|borough council|county (commissioner|supervisor|judge|board)|school board|board of education|district attorney|sheriff|city clerk|city attorney|commonwealth'?s attorney/.test(o))return 'local';
+    return 'state';}
+  function pillarOf(cat,tier){var p=cat.pillars;if(!p)return cat.tier||null;return p[tier]||null;}
+  function pyRound(x){var fl=Math.floor(x),diff=x-fl;if(diff<0.5)return fl;if(diff>0.5)return fl+1;return (fl%2===0)?fl:fl+1;}
+  var CMP_GOV_LABEL = { federal:'America First', state:'State First', local:'Local First' };
+
+  // v5.0 tier-aware: score ONLY the candidate's tier-rubric categories, split
+  // God First vs the tier's Government pillar (60/40 federal, 70/30 state/local).
+  function calcTotal(scores, office){
+    var tier = classifyOfficeTier(office);
+    if (!scores) return {score:0, max:100, max_possible:0, pct:0, answered:0, na:0, tier:tier, god_first:0, america_first:0, god_first_max:0, america_first_max:0, gov_label:CMP_GOV_LABEL[tier]};
+    var total = 0, answered = 0, na = 0;
+    var godFirst = 0, govFirst = 0, godMax = 0, govMax = 0;
     var cats = (STATE.scorecard && STATE.scorecard.categories) || [];
-    var tierMap = {};
-    cats.forEach(function(c){ tierMap[c.id] = c.tier; });
-    Object.keys(scores).forEach(function(cat){
-      var catTotal = 0;
-      (scores[cat]||[]).forEach(function(v){
-        if (v === true) { total += 2; catTotal += 2; answered += 1; }
-        else if (v === false) { answered += 1; }
+    cats.forEach(function(cat){
+      var pill = pillarOf(cat, tier);
+      if (!pill) return; // not in this tier's rubric
+      var arr = scores[cat.id] || [];
+      var catTotal = 0, catAns = 0;
+      arr.forEach(function(v){
+        if (v === true) { total += 2; catTotal += 2; answered += 1; catAns += 1; }
+        else if (v === false) { answered += 1; catAns += 1; }
         else if (v === 'N/A') { na += 1; }
-        // null = unanswered (counts neither)
       });
-      if (tierMap[cat] === 'god_first') godFirst += catTotal;
-      else if (tierMap[cat] === 'america_first') americaFirst += catTotal;
+      if (pill === 'god_first') { godFirst += catTotal; godMax += 10; }
+      else { govFirst += catTotal; govMax += 10; }
     });
-    // Dynamic max per 2026-05-18 directive: 2 pts × answered.
-    // N/A cells (out-of-tier per Option B) are excluded from both score
-    // and max — they don't count against the official.
     var maxPossible = answered * 2;
-    var pct = maxPossible > 0 ? Math.max(0, Math.round(100 * total / maxPossible)) : 0;
-    return {score: total, max: max, max_possible: maxPossible, pct: pct,
-            answered: answered, na: na,
-            god_first: godFirst, america_first: americaFirst};
+    var pct = maxPossible > 0 ? Math.max(0, pyRound(100 * total / maxPossible)) : 0;
+    return {score: total, max: 100, max_possible: maxPossible, pct: pct,
+            answered: answered, na: na, tier: tier,
+            god_first: godFirst, america_first: govFirst,
+            god_first_max: godMax, america_first_max: govMax,
+            gov_label: CMP_GOV_LABEL[tier] || 'America First'};
   }
   function letterGrade(pct){
     if (pct >= 90) return 'A';
@@ -365,7 +377,7 @@
     if (!c) {
       return '<div class="cmp-cand-header"><div class="name">' + esc(slug) + '</div><div class="label">Not found in scorecard</div></div>';
     }
-    var t = calcTotal(c.scores);
+    var t = calcTotal(c.scores, c.office);
     var photo = c.photo
       ? '<img class="photo" src="' + esc(c.photo) + '" alt="' + esc(c.name) + '">'
       : '<div class="photo" aria-hidden="true"></div>';

@@ -915,6 +915,41 @@ var MAX_TOTAL = 100; // v2 rubric (10 categories × 10 pts = 100 pts; 60 God Fir
 var MAX_GOD_FIRST = 60;
 var MAX_AMERICA_FIRST = 40;
 
+// v5.0 — tier-aware rubric helpers (mirror of tier_classify.py + generate-profiles.py
+// so home-page cards match profile pages: federal 60/40, state/local 70/30).
+function classifyOfficeTier(office) {
+  var o = (office || '').toLowerCase();
+  if (!o) return 'state';
+  if (/\b(president|vice president|u\.?s\.?\s+sen|u\.?s\.?\s+hous|u\.?s\.?\s+rep|united states sen|united states hous|united states rep|secretary of|acting attorney general|attorney general of the united states|director of|administrator of|ambassador|chief of staff|deputy chief of staff|homeland security advisor|chief justice|associate justice.+supreme court|special envoy)/.test(o)) {
+    if (/^attorney general$|state attorney general/.test(o) && o.indexOf('united states') === -1) return 'state';
+    return 'federal';
+  }
+  if (/\bgovernor\b|^lt\.?\s+governor|lieutenant governor|state senator|state senate|state representative|state hous|state assembl|^delegate$|delegate \(|house of delegates/.test(o)) return 'state';
+  if (/^attorney general$|secretary of state$|state treasurer|state auditor|state comptroller/.test(o)) return 'state';
+  if (o.indexOf('state supreme court') !== -1 || /(chief justice|justice).+state/.test(o)) return 'state';
+  if (/\bmayor\b|city council|town council|borough council|county (commissioner|supervisor|judge|board)|school board|board of education|district attorney|sheriff|city clerk|city attorney|commonwealth'?s attorney/.test(o)) return 'local';
+  return 'state';
+}
+// Pillar of a category at a tier: 'god_first' | 'america_first' | 'state_first' |
+// 'local_first', or null if not in that tier's rubric. Legacy categories without
+// `pillars` fall back to their flat `tier` field (federal-style).
+function pillarOf(cat, tier) {
+  var p = cat.pillars;
+  if (!p) return cat.tier || null;
+  return p[tier] || null;
+}
+// Match Python's round() (banker's rounding, ties-to-even) so home-page card
+// percentages are byte-identical to the profile pages + search index for scores
+// that land exactly on .5. (x assumed >= 0; pct is floored at 0 by the caller.)
+function pyRound(x) {
+  var fl = Math.floor(x), diff = x - fl;
+  if (diff < 0.5) return fl;
+  if (diff > 0.5) return fl + 1;
+  return (fl % 2 === 0) ? fl : fl + 1;
+}
+var GOV_PILLAR_LABEL = { federal: 'America First', state: 'State First', local: 'Local First' };
+var GOV_PILLAR_EMOJI = { federal: '🇺🇸', state: '🏛️', local: '🏛️' };
+
 var STATE_NAMES = {
   'AL':'Alabama','AK':'Alaska','AZ':'Arizona','AR':'Arkansas','CA':'California',
   'CO':'Colorado','CT':'Connecticut','DE':'Delaware','DC':'Washington D.C.',
@@ -1180,15 +1215,22 @@ function calcCategoryScore(answers) {
            answered: answered, na: na };
 }
 
-function calcTotalScore(scores, profile) {
+function calcTotalScore(scores, profile, office) {
+  // v5.0 — tier-aware. Count ONLY categories in the candidate's tier rubric;
+  // split God First (Pillar A) vs the tier's Government pillar (Pillar B:
+  // America/State/Local First). Maxes derive from category counts (federal 60/40,
+  // state/local 70/30).
+  var tier = classifyOfficeTier(office);
   var total = 0, maxAnswered = 0;
-  var godFirst = 0, americaFirst = 0;
+  var godFirst = 0, govFirst = 0, godMax = 0, govMax = 0;
   DATA.categories.forEach(function(cat) {
+    var pill = pillarOf(cat, tier);
+    if (!pill) return; // category not in this tier's rubric
     var cs = calcCategoryScore(scores[cat.id]);
     total += cs.score;
     maxAnswered += cs.answered;
-    if (cat.tier === 'god_first') godFirst += cs.score;
-    else if (cat.tier === 'america_first') americaFirst += cs.score;
+    if (pill === 'god_first') { godFirst += cs.score; godMax += MAX_PER_TOPIC; }
+    else { govFirst += cs.score; govMax += MAX_PER_TOPIC; }
   });
   // Sum any score_adjustments (aipac, soros, etc.) into a single delta.
   var adj = (profile && profile.score_adjustments) || {};
@@ -1199,7 +1241,7 @@ function calcTotalScore(scores, profile) {
   var maxPossible = maxAnswered * POINTS_PER_TRUE;
   // Cap pct floor at 0 — when adjustments exceed max_possible (e.g. -50 Soros
   // on a small-max candidate), raw pct goes negative which displays nonsense.
-  var pct = maxPossible > 0 ? Math.max(0, Math.round(100 * adjusted / maxPossible)) : 0;
+  var pct = maxPossible > 0 ? Math.max(0, pyRound(100 * adjusted / maxPossible)) : 0;
   return {
     base: total,
     score: adjusted,    // adjusted score is the headline number
@@ -1208,10 +1250,13 @@ function calcTotalScore(scores, profile) {
     max_possible: maxPossible,   // dynamic max for this candidate
     pct: pct,                    // % of dynamic max earned
     answered: maxAnswered,
+    tier: tier,
     god_first: godFirst,
-    god_first_max: MAX_GOD_FIRST,
-    america_first: americaFirst,
-    america_first_max: MAX_AMERICA_FIRST,
+    god_first_max: godMax || MAX_GOD_FIRST,
+    america_first: govFirst,                       // Pillar B subtotal (any tier)
+    america_first_max: govMax || MAX_AMERICA_FIRST,
+    gov_label: GOV_PILLAR_LABEL[tier] || 'America First',
+    gov_emoji: GOV_PILLAR_EMOJI[tier] || '🇺🇸',
   };
 }
 
@@ -1299,7 +1344,7 @@ function fuzzyMatch(haystack, needle) {
 var LEVEL_RANK = { executive: 1, judicial: 2, federal: 3, state: 4, local: 5 };
 var PARTY_RANK = { R: 1, D: 2, I: 3 }; // Republican first, then Democrat, Independent, Unknown
 function makeComparator(sortKey) {
-  function totalOf(c) { return calcTotalScore(c.scores, c.profile).score; }
+  function totalOf(c) { return calcTotalScore(c.scores, c.profile, c.office).score; }
   function nameOf(c) { return (c.name || '').toLowerCase(); }
   function nameTiebreak(a, b) { return nameOf(a).localeCompare(nameOf(b)); }
   function levelRank(c) { return LEVEL_RANK[c.level] || 6; }
@@ -1461,7 +1506,7 @@ function renderCards() {
 
   var html = '';
   filtered.forEach(function(c, idx) {
-    var total = calcTotalScore(c.scores, c.profile);
+    var total = calcTotalScore(c.scores, c.profile, c.office);
     // Color based on percentage of dynamic max (matches letter grade)
     var totalColor = getScoreColor(total.pct, 100);
     var barWidth = total.max > 0 ? Math.round((Math.max(0, Math.min(total.max, total.score)) / total.max) * 100) : 0;
@@ -1478,6 +1523,7 @@ function renderCards() {
 
     html += '<div class="sc-scores" role="list" aria-label="Category subscores">';
     DATA.categories.forEach(function(cat) {
+      if (!pillarOf(cat, total.tier)) return; // v5.0 — skip categories not in this tier's rubric
       var cs = calcCategoryScore(c.scores[cat.id]);
       var color = cs.answered > 0 ? getScoreColor(cs.score, cs.max) : '#666';
       var label = cat.label.length > 10 ? cat.label.substring(0, 9) + '.' : cat.label;
@@ -1494,9 +1540,9 @@ function renderCards() {
     // v2 subtotal row — God First (60 max) + America First (40 max) breakdown
     var gfPct = total.god_first_max > 0 ? Math.round(100 * total.god_first / total.god_first_max) : 0;
     var afPct = total.america_first_max > 0 ? Math.round(100 * total.america_first / total.america_first_max) : 0;
-    html += '<div class="sc-subtotals" aria-label="Subtotals — God First ' + total.god_first + '/60, America First ' + total.america_first + '/40">';
-    html += '<div class="sc-sub gf"><span class="sc-sub-label">✝ God First</span><span class="sc-sub-val">' + total.god_first + '<span class="sc-sub-max">/60</span></span></div>';
-    html += '<div class="sc-sub af"><span class="sc-sub-label">🇺🇸 America First</span><span class="sc-sub-val">' + total.america_first + '<span class="sc-sub-max">/40</span></span></div>';
+    html += '<div class="sc-subtotals" aria-label="Subtotals — God First ' + total.god_first + '/' + total.god_first_max + ', ' + total.gov_label + ' ' + total.america_first + '/' + total.america_first_max + '">';
+    html += '<div class="sc-sub gf"><span class="sc-sub-label">✝ God First</span><span class="sc-sub-val">' + total.god_first + '<span class="sc-sub-max">/' + total.god_first_max + '</span></span></div>';
+    html += '<div class="sc-sub af"><span class="sc-sub-label">' + total.gov_emoji + ' ' + esc(total.gov_label) + '</span><span class="sc-sub-val">' + total.america_first + '<span class="sc-sub-max">/' + total.america_first_max + '</span></span></div>';
     html += '</div>';
 
     var letter = letterGrade(total.pct);

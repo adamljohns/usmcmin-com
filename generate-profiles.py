@@ -1333,6 +1333,9 @@ def generate_profile(candidate, categories, meta, nav=None):
         'self_defense': 'self-defense-2a',
         'foreign_policy_restraint': 'foreign-policy-restraint',
         'industry_capture': 'industry-capture',
+        'public_justice': 'public-justice',
+        'refuse_federal_overreach': 'refuse-federal-overreach',
+        'refuse_state_overreach': 'refuse-state-overreach',
     }
 
     cat_html = ''

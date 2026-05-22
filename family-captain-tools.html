@@ -2085,24 +2085,65 @@
 
 
 <script>
+/* Combined filter: category chips + "Configure Your Stack" hardware tiers.
+   Both drive one display predicate so they compose (a card shows only if it
+   passes BOTH). The "Show S+A only" toggle stays a separate opacity fade
+   (TIER_FILTER_SCRIPT) and layers on top of whatever is displayed.
+   On the Compass page there are no hardware tiers, so that half is inert. */
 (function(){
   const grid = document.getElementById('toolsGrid');
   const empty = document.getElementById('empty');
-  const cards = grid.querySelectorAll('.tool-card');
-  const chips = document.querySelectorAll('.chip');
-  chips.forEach(chip => chip.addEventListener('click', () => {
-    chips.forEach(c => c.classList.remove('active'));
-    chip.classList.add('active');
-    const filter = chip.dataset.filter;
+  if(!grid) return;
+  const cards = Array.prototype.slice.call(grid.querySelectorAll('.tool-card'));
+  const catChips = document.querySelectorAll('.chip[data-filter]');
+  const hwCards = document.querySelectorAll('.hw-card[data-tier-gb]');
+  const resetBtn = document.getElementById('hwReset');
+  const state = { cat: 'all', ram: null };
+
+  function apply(){
     let visible = 0;
     cards.forEach(c => {
-      const show = filter === 'all' || c.dataset.cat === filter;
-      c.style.display = show ? '' : 'none';
-      if (show) visible++;
+      const catOk = state.cat === 'all' || c.dataset.cat === state.cat;
+      const ramOk = state.ram === null || (parseInt(c.dataset.ram || '8', 10) <= state.ram);
+      const ok = catOk && ramOk;
+      c.style.display = ok ? '' : 'none';
+      if (ok) visible++;
     });
-    empty.style.display = visible === 0 ? 'block' : 'none';
+    if (empty) empty.style.display = visible === 0 ? 'block' : 'none';
+  }
+
+  catChips.forEach(chip => chip.addEventListener('click', () => {
+    catChips.forEach(c => c.classList.remove('active'));
+    chip.classList.add('active');
+    state.cat = chip.dataset.filter;
+    apply();
     window.scrollTo({top: 200, behavior: 'instant'});
   }));
+
+  function selectTier(gb){
+    state.ram = (state.ram === gb) ? null : gb;   // tap a selected tier again to clear
+    hwCards.forEach(h => {
+      const on = state.ram !== null && parseInt(h.dataset.tierGb, 10) === state.ram;
+      h.classList.toggle('hw-selected', on);
+      h.setAttribute('aria-pressed', on ? 'true' : 'false');
+    });
+    if (resetBtn) resetBtn.style.display = state.ram === null ? 'none' : 'inline-flex';
+    apply();
+    if (state.ram !== null) grid.scrollIntoView({block:'start', behavior:'smooth'});
+  }
+
+  hwCards.forEach(hw => {
+    const gb = parseInt(hw.dataset.tierGb, 10);
+    hw.addEventListener('click', () => selectTier(gb));
+    hw.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); selectTier(gb); } });
+  });
+
+  if (resetBtn) resetBtn.addEventListener('click', () => {
+    state.ram = null;
+    hwCards.forEach(h => { h.classList.remove('hw-selected'); h.setAttribute('aria-pressed','false'); });
+    resetBtn.style.display = 'none';
+    apply();
+  });
 })();
 </script>
 

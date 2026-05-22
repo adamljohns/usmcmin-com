@@ -218,6 +218,7 @@
     background: #CE8E31 !important; color: #FFFFFF !important;
   }
 </style>
+  <meta name="robots" content="noindex, nofollow">
 </head>
 <body>
 
@@ -250,7 +251,7 @@
 <div class="module-hero">
   <div class="module-hero-inner">
     <a href="ai-boot-camp.html" class="back-link">← USMC Ministries Mission</a>
-    <span class="module-badge" style="margin-top:14px">USMC Ministries · The Watchman&rsquo;s Compass</span>
+    <span class="module-badge" style="margin-top:14px">The Watchman&rsquo;s Compass · USMC Ministries</span>
     <h1><span class="gold">AI Tools</span> Landscape</h1>
     <p class="subtitle">Forty-nine tools across eight categories &mdash; 37 utility tools (modeled after King David&rsquo;s mighty men) plus 12 agentic-frontier tools (the 12 disciples). Each card carries the four signals that matter in 2026: <b>type</b>, <b>AI/Agentic Level</b>, <b>Model Context Protocol (MCP) support</b>, and <b>Best For Watchman</b>. Most watchmen need 2&ndash;4 of these &mdash; not all 49. Skip to <a href="#usecase" style="color:var(--gold)">Use Case &rarr; Winner</a> for task-based picks, or <a href="#stacks" style="color:var(--gold)">Watchman&rsquo;s Stacks</a> for spend-based picks.</p>
     <div class="meta">
@@ -1249,24 +1250,65 @@
 
 
 <script>
+/* Combined filter: category chips + "Configure Your Stack" hardware tiers.
+   Both drive one display predicate so they compose (a card shows only if it
+   passes BOTH). The "Show S+A only" toggle stays a separate opacity fade
+   (TIER_FILTER_SCRIPT) and layers on top of whatever is displayed.
+   On the Compass page there are no hardware tiers, so that half is inert. */
 (function(){
   const grid = document.getElementById('toolsGrid');
   const empty = document.getElementById('empty');
-  const cards = grid.querySelectorAll('.tool-card');
-  const chips = document.querySelectorAll('.chip');
-  chips.forEach(chip => chip.addEventListener('click', () => {
-    chips.forEach(c => c.classList.remove('active'));
-    chip.classList.add('active');
-    const filter = chip.dataset.filter;
+  if(!grid) return;
+  const cards = Array.prototype.slice.call(grid.querySelectorAll('.tool-card'));
+  const catChips = document.querySelectorAll('.chip[data-filter]');
+  const hwCards = document.querySelectorAll('.hw-card[data-tier-gb]');
+  const resetBtn = document.getElementById('hwReset');
+  const state = { cat: 'all', ram: null };
+
+  function apply(){
     let visible = 0;
     cards.forEach(c => {
-      const show = filter === 'all' || c.dataset.cat === filter;
-      c.style.display = show ? '' : 'none';
-      if (show) visible++;
+      const catOk = state.cat === 'all' || c.dataset.cat === state.cat;
+      const ramOk = state.ram === null || (parseInt(c.dataset.ram || '8', 10) <= state.ram);
+      const ok = catOk && ramOk;
+      c.style.display = ok ? '' : 'none';
+      if (ok) visible++;
     });
-    empty.style.display = visible === 0 ? 'block' : 'none';
+    if (empty) empty.style.display = visible === 0 ? 'block' : 'none';
+  }
+
+  catChips.forEach(chip => chip.addEventListener('click', () => {
+    catChips.forEach(c => c.classList.remove('active'));
+    chip.classList.add('active');
+    state.cat = chip.dataset.filter;
+    apply();
     window.scrollTo({top: 200, behavior: 'instant'});
   }));
+
+  function selectTier(gb){
+    state.ram = (state.ram === gb) ? null : gb;   // tap a selected tier again to clear
+    hwCards.forEach(h => {
+      const on = state.ram !== null && parseInt(h.dataset.tierGb, 10) === state.ram;
+      h.classList.toggle('hw-selected', on);
+      h.setAttribute('aria-pressed', on ? 'true' : 'false');
+    });
+    if (resetBtn) resetBtn.style.display = state.ram === null ? 'none' : 'inline-flex';
+    apply();
+    if (state.ram !== null) grid.scrollIntoView({block:'start', behavior:'smooth'});
+  }
+
+  hwCards.forEach(hw => {
+    const gb = parseInt(hw.dataset.tierGb, 10);
+    hw.addEventListener('click', () => selectTier(gb));
+    hw.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); selectTier(gb); } });
+  });
+
+  if (resetBtn) resetBtn.addEventListener('click', () => {
+    state.ram = null;
+    hwCards.forEach(h => { h.classList.remove('hw-selected'); h.setAttribute('aria-pressed','false'); });
+    resetBtn.style.display = 'none';
+    apply();
+  });
 })();
 </script>
 

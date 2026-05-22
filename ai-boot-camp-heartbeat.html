@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Heartbeat Posts — USMC Ministries Mission · USMC Ministries</title>
+  <title>Pacing Prompts — USMC Ministries Mission · USMC Ministries</title>
   <meta name="description" content="Cohort feed preview — 24 posts that drop in our Telegram channel.">
   <meta name="robots" content="noindex,nofollow">
   <link rel="stylesheet" href="assets/css/main.css">
@@ -109,8 +109,8 @@
 <div class="module-hero">
   <div class="module-hero-inner">
     <a href="ai-boot-camp.html" class="back-link">← USMC Ministries Mission</a>
-    <span class="module-badge" style="margin-top:14px">USMC Ministries · Cohort Feed Preview</span>
-    <h1><span class="gold">Heartbeat</span> Posts</h1>
+    <span class="module-badge" style="margin-top:14px">Cohort Feed Preview · USMC Ministries</span>
+    <h1><span class="gold">Pacing</span> Prompts</h1>
     <p class="subtitle">The 24 cohort posts that run alongside the mission in our Telegram channel. Brotherly watchman-to-captain voice. Each post ends with a comment-magnet question. This is what the cohort feed actually looks and sounds like.</p>
     <div class="meta">
       <span><b>5</b> Monday Kickoffs</span>
@@ -686,6 +686,24 @@
     empty.style.display = visible === 0 ? 'block' : 'none';
     window.scrollTo({top: 200, behavior: 'instant'});
   }));
+})();
+</script>
+
+
+<script>
+(function() {
+  // "Show S+A only" toggle. Use capture phase + stopImmediatePropagation
+  // so we win over the existing category-filter handler that also targets .chip.
+  const chip = document.querySelector('.chip.tier-toggle');
+  if (!chip) return;
+  const grid = document.getElementById('toolsGrid');
+  if (!grid) return;
+  chip.addEventListener('click', (e) => {
+    e.preventDefault();
+    e.stopImmediatePropagation();
+    grid.classList.toggle('filter-sa-only');
+    chip.classList.toggle('active');
+  }, true /* capture phase */);
 })();
 </script>
 

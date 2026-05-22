@@ -101,8 +101,23 @@
 
   .empty { padding:40px 0; text-align:center; color:var(--gray); font-size:0.88rem; display:none; }
 
-  /* hardware sizing guide */
-  .hwguide { margin:48px 0 0; padding:32px 0; border-top:1px solid var(--border); }
+  /* smooth in-page jumps; offset anchors so the sticky nav doesn't cover them */
+  html { scroll-behavior:smooth; }
+  #hwguide, #explainer { scroll-margin-top:88px; }
+
+  /* jump bar (Work Order 8A) — hardware-first wayfinding directly under the hero */
+  .hw-jumpbar { max-width:880px; margin:0 auto; padding:18px 16px 2px;
+    display:flex; gap:10px; flex-wrap:wrap; align-items:center; }
+  .hw-jumpbar .btn.hw-jump { font-size:0.92rem; padding:11px 20px; margin:0; }
+  @media (max-width:560px){
+    .hw-jumpbar { flex-direction:column; align-items:stretch; }
+    .hw-jumpbar .btn.hw-jump { text-align:center; }
+  }
+
+  /* hardware sizing guide — moved ABOVE the tool list (Work Order 8A); now a
+     top-level section, so it carries its own max-width + centering (was inside
+     <main>) and drops the divider border it used when it sat beneath the grid. */
+  .hwguide { max-width:880px; margin:10px auto 0; padding:16px 16px 8px; }
   .hwguide h2 { font-family:var(--font-main); font-size:1.6rem; color:var(--white); margin:0 0 4px; }
   .hwguide .lede { color:var(--gray-light); font-size:0.88rem; margin-bottom:18px; max-width:680px; }
   .hw-grid { display:grid; grid-template-columns:repeat(3, 1fr); gap:14px; }
@@ -850,7 +865,10 @@
     gap: 36px 48px;
     align-items: flex-start;
   }
-  footer .footer-brand { flex: 0 1 430px; }
+  footer .footer-brand { flex: 0 1 600px; }
+  /* Keep the ministry blurb from wrapping after only ~30 chars — let it use the
+     brand block's full width so it reads as ~2 lines (MOOP 2026-05-21). */
+  footer .fc-usmc-block p, footer .fc-usmc-block .fc-partner-note { max-width: none; }
   footer .footer-col { flex: 0 0 auto; }
 
   /* The Family Captain — bronze ship's-wheel logo, front and centre. */
@@ -954,6 +972,12 @@
   body[data-track="family-captain"] :is(.post-type,.ram) {
     color: #8B5A1F !important;
   }
+  /* Kicker pseudo-labels on light card panels — the source sets these to
+     light --silver / bright --gold, which fail AA on warm-gray (~1.9–2.3:1).
+     Darken to match the v6 label treatment. (Pseudo-elements, so the v7
+     structural text sweep never reaches them.) */
+  body[data-track="family-captain"] .tool-card .best-for::before { color:#475569 !important; }
+  body[data-track="family-captain"] .tool-card .captain-call::before { color:#8B5A1F !important; }
 
   /* (4) DRILL CELLS are always dark slate — number must be bright bronze,
      label white (the v6 light-surface bronze broke them in light theme). */
@@ -977,6 +1001,10 @@
     background: #0F172A;
     border: 1px solid #33445C;
   }
+  /* Fallback copy inside <video> renders on the dark #0F172A surface, so it
+     must stay light — the v7 sweep otherwise forces it to dark slate. */
+  body[data-track="family-captain"] .fc-video video { color: #CBD5E1 !important; }
+  body[data-track="family-captain"] .fc-video video a { color: #CE8E31 !important; }
 </style>
 
 </head>
@@ -987,10 +1015,10 @@
   <a href="https://thefamilycaptain.com/" target="_blank" rel="noopener" class="fc-wordmark">THE FAMILY <span class="accent">CAPTAIN</span></a>
   <nav class="fc-nav">
       <a href="family-captain.html">Bootcamp</a>
-      <a href="family-captain-tools.html">Compass</a>
       <a href="family-captain-voyage.html">Chart</a>
-      <a href="family-captain-sovereign.html" class="active">Sovereign</a>
+      <a href="family-captain-tools.html">Compass</a>
       <a href="family-captain-heartbeat.html">Pacing Prompts</a>
+      <a href="family-captain-sovereign.html" class="active">Sovereign</a>
   </nav>
 </header>
 
@@ -1034,6 +1062,62 @@
     <div class="disclaimer">All tools listed are open-source or have free local-use tiers. Pricing snapshot: <b>2026 Q2</b>. Local AI is moving even faster than cloud AI &mdash; expect significant turnover at every 6-month refresh.</div>
   </div>
 </div>
+
+<!-- HARDWARE / EXPLAINER JUMP BAR (Work Order 8A) -->
+<!-- A <div> landmark, not a <nav>: the FC track hides every `body > nav`
+     (to drop the site nav), which would also hide this bar and the filters. -->
+<div class="hw-jumpbar" role="navigation" aria-label="Jump to hardware and explainer">
+  <a class="btn btn-primary hw-jump" href="#hwguide">Recommended hardware &rarr;</a>
+  <a class="btn btn-primary hw-jump" href="#explainer">Watch the explainer &rarr;</a>
+</div>
+
+<!-- HARDWARE SIZING GUIDE — hardware-first, ahead of the tool list (Work Order 8A) -->
+  <section class="hwguide" id="hwguide">
+    <h2>Hardware Sizing Guide</h2>
+    <p class="lede">What fits in what. Pick the tier that matches your machine; the tool cards below show which tools live there.</p>
+    <div class="hw-grid">
+      <div class="hw-card">
+        <div class="ram">32 GB · REALISTIC FLOOR</div>
+        <h3>Where local AI starts being useful</h3>
+        <ul>
+          <li><b>Models:</b> Gemma 3 27B Q4 (18GB), Phi-4 14B (9GB)</li>
+          <li><b>Image:</b> SD 3.5, FLUX.1 quantized</li>
+          <li><b>Coding:</b> Continue / Cline with 27B-class</li>
+          <li><b>Use:</b> daily workflows. Below this, local feels like a science project.</li>
+        </ul>
+      </div>
+      <div class="hw-card">
+        <div class="ram">64 GB · STRONG</div>
+        <h3>70B territory — frontier class</h3>
+        <ul>
+          <li><b>Models:</b> Llama 4 70B Q4 (~48GB), Mistral Large 2 Q4</li>
+          <li><b>Image:</b> FLUX.1 dev full</li>
+          <li><b>Multiple loaded:</b> One 70B + one small model</li>
+          <li><b>Use:</b> frontier-class output, agentic flows.</li>
+        </ul>
+      </div>
+      <div class="hw-card" style="border-color:var(--gold)">
+        <div class="ram">128 GB · CAPTAIN'S TIER</div>
+        <h3>Qwen 235B-A22B territory</h3>
+        <ul>
+          <li><b>Models:</b> Qwen 3 235B-A22B Q4 (96GB+) · Llama 4 70B + small model · DeepSeek R1 Q2 (~64GB) · Mixtral 8×22B Q4</li>
+          <li><b>Image:</b> FLUX dev full + SD 3.5 swappable</li>
+          <li><b>Stack loaded:</b> Frontier model + agent (Goose/Cline) + RAG + n8n self-hosted</li>
+          <li><b>Use:</b> sovereign AI workstation. The setup this page is built for.</li>
+        </ul>
+      </div>
+      <div class="hw-card">
+        <div class="ram">192 GB+ · MAX</div>
+        <h3>The full stack</h3>
+        <ul>
+          <li><b>Models:</b> DeepSeek R1 Q4 (~96-100GB), Qwen 235B Q5</li>
+          <li><b>Multiple frontier loaded:</b> Llama 4 70B + Qwen 32B + image + voice all live</li>
+          <li><b>Use:</b> dev-grade local AI lab. Cluster-class without a cluster.</li>
+        </ul>
+      </div>
+    </div>
+    <p style="font-size:0.82rem; color:var(--gray); margin-top:14px; max-width:680px;">Honest note: below 32 GB unified RAM, local AI will technically run (Phi-4, Gemma 1B-9B) but most captains will find it slower and less useful than the cloud Compass tools. The hardware investment only pays off above 32 GB.</p>
+  </section>
 
 <!-- TIER LEGEND -->
 
@@ -1605,53 +1689,6 @@
       </article>
   </div>
   <div class="empty" id="empty">No tools in this filter.</div>
-
-  <section class="hwguide" id="hwguide">
-    <h2>Hardware Sizing Guide</h2>
-    <p class="lede">What fits in what. Pick the tier that matches your machine; the cards above tell you which tools live there.</p>
-    <div class="hw-grid">
-      <div class="hw-card">
-        <div class="ram">32 GB · REALISTIC FLOOR</div>
-        <h3>Where local AI starts being useful</h3>
-        <ul>
-          <li><b>Models:</b> Gemma 3 27B Q4 (18GB), Phi-4 14B (9GB)</li>
-          <li><b>Image:</b> SD 3.5, FLUX.1 quantized</li>
-          <li><b>Coding:</b> Continue / Cline with 27B-class</li>
-          <li><b>Use:</b> daily workflows. Below this, local feels like a science project.</li>
-        </ul>
-      </div>
-      <div class="hw-card">
-        <div class="ram">64 GB · STRONG</div>
-        <h3>70B territory — frontier class</h3>
-        <ul>
-          <li><b>Models:</b> Llama 4 70B Q4 (~48GB), Mistral Large 2 Q4</li>
-          <li><b>Image:</b> FLUX.1 dev full</li>
-          <li><b>Multiple loaded:</b> One 70B + one small model</li>
-          <li><b>Use:</b> frontier-class output, agentic flows.</li>
-        </ul>
-      </div>
-      <div class="hw-card" style="border-color:var(--gold)">
-        <div class="ram">128 GB · CAPTAIN'S TIER</div>
-        <h3>Qwen 235B-A22B territory</h3>
-        <ul>
-          <li><b>Models:</b> Qwen 3 235B-A22B Q4 (96GB+) · Llama 4 70B + small model · DeepSeek R1 Q2 (~64GB) · Mixtral 8×22B Q4</li>
-          <li><b>Image:</b> FLUX dev full + SD 3.5 swappable</li>
-          <li><b>Stack loaded:</b> Frontier model + agent (Goose/Cline) + RAG + n8n self-hosted</li>
-          <li><b>Use:</b> sovereign AI workstation. The setup this page is built for.</li>
-        </ul>
-      </div>
-      <div class="hw-card">
-        <div class="ram">192 GB+ · MAX</div>
-        <h3>The full stack</h3>
-        <ul>
-          <li><b>Models:</b> DeepSeek R1 Q4 (~96-100GB), Qwen 235B Q5</li>
-          <li><b>Multiple frontier loaded:</b> Llama 4 70B + Qwen 32B + image + voice all live</li>
-          <li><b>Use:</b> dev-grade local AI lab. Cluster-class without a cluster.</li>
-        </ul>
-      </div>
-    </div>
-    <p style="font-size:0.82rem; color:var(--gray); margin-top:14px; max-width:680px;">Honest note: below 32 GB unified RAM, local AI will technically run (Phi-4, Gemma 1B-9B) but most captains will find it slower and less useful than the cloud Compass tools. The hardware investment only pays off above 32 GB.</p>
-  </section>
 </main>
 
 <!-- ── FOOTER ── -->
@@ -1703,6 +1740,9 @@
           <li><a href="mailto:usmcministries2022@gmail.com">Contact</a></li>
           <li><a href="husband.html">Husband</a></li>
           <li><a href="father.html">Father</a></li>
+          <li><a href="citizen.html">Citizen</a></li>
+          <li><a href="fitness/fitness.html">Fitness</a></li>
+          <li><a href="finance/">Finance</a></li>
         </ul>
       </div>
 
@@ -1710,9 +1750,10 @@
         <h4>For Captains</h4>
         <ul>
           <li><a href="family-captain.html">AI Boot Camp</a></li>
+          <li><a href="family-captain-voyage.html">The Captain&rsquo;s Chart</a></li>
           <li><a href="family-captain-tools.html">AI Tools Landscape</a></li>
-          <li><a href="family-captain-sovereign.html">The Sovereign Stack</a></li>
           <li><a href="family-captain-heartbeat.html">Pacing Prompts</a></li>
+          <li><a href="family-captain-sovereign.html">The Sovereign Stack</a></li>
         </ul>
       </div>
 
@@ -1775,7 +1816,7 @@
 (function() {
   const toggle = document.getElementById('themeToggle');
   const saved = localStorage.getItem('usmc-theme');
-  if (saved !== 'light') { document.documentElement.setAttribute('data-theme', 'dark'); toggle.textContent = '☀️'; }
+  if (true) { document.documentElement.setAttribute('data-theme', 'light'); toggle.textContent = '☀️'; }
   toggle.addEventListener('click', function() {
     const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
     if (isDark) { document.documentElement.removeAttribute('data-theme'); localStorage.setItem('usmc-theme', 'light'); toggle.textContent = '☽'; }

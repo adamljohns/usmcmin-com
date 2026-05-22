@@ -204,6 +204,20 @@
     background: #CE8E31 !important; color: #FFFFFF !important;
   }
 </style>
+<style>
+  .tools-controls { display:flex; flex-wrap:wrap; align-items:center; gap:10px 14px; margin:14px 0 20px; }
+  .tool-search { flex:1 1 240px; min-width:180px; max-width:360px; font-family:inherit;
+    font-size:0.9rem; padding:9px 14px; border-radius:99px; border:1px solid var(--border);
+    background:var(--bg-card); color:var(--white); }
+  .tool-search::placeholder { color:var(--gray); opacity:1; }
+  .tool-search:focus { outline:none; border-color:var(--gold); box-shadow:0 0 0 2px var(--gold-dim); }
+  .sort-group { display:inline-flex; align-items:center; gap:6px; flex-wrap:wrap; }
+  .sort-label { font-size:0.6rem; font-weight:800; letter-spacing:2px; text-transform:uppercase; color:var(--gray); }
+  .sort-btn { font-family:inherit; font-size:0.78rem; font-weight:600; padding:6px 13px; border-radius:99px;
+    border:1px solid var(--border); background:var(--bg-card); color:var(--gray-light); cursor:pointer; transition:all .15s; white-space:nowrap; }
+  .sort-btn:hover { border-color:var(--gold); color:var(--gold); }
+  .sort-btn.active { background:var(--gold); color:var(--bg-dark); border-color:var(--gold); }
+</style>
 
 <!-- ── FAMILY CAPTAIN TRACK — TFC VISUAL IDENTITY (Phase B 2026-05-11) ── -->
 <meta name="robots" content="noindex, nofollow">
@@ -277,6 +291,13 @@
   nav.filters .chip { background:#F4F5F7 !important; color:#334155 !important; border-color:#D1D5DB !important; }
   nav.filters .chip:hover { color:#A66A1F !important; border-color:#CE8E31 !important; }
   nav.filters .chip.active { background:#CE8E31 !important; color:#1A1A1A !important; border-color:#CE8E31 !important; }
+  /* Search + sort controls: same light-theme restyle (AA contrast) */
+  .tools-controls .tool-search { background:#FFFFFF !important; color:#1A1A1A !important; border-color:#D1D5DB !important; }
+  .tools-controls .tool-search::placeholder { color:#6B7280 !important; }
+  .tools-controls .sort-label { color:#6B7280 !important; }
+  .tools-controls .sort-btn { background:#F4F5F7 !important; color:#334155 !important; border-color:#D1D5DB !important; }
+  .tools-controls .sort-btn:hover { color:#A66A1F !important; border-color:#CE8E31 !important; }
+  .tools-controls .sort-btn.active { background:#CE8E31 !important; color:#1A1A1A !important; border-color:#CE8E31 !important; }
   /* FC mini-header (injected below; styles here) */
   .fc-header {
     background: #1E293B;
@@ -1163,9 +1184,18 @@
 
 <main class="tools-main">
   <h2 class="section-title">The 30 local tools</h2>
-  <p class="section-sub">Each card shows agent capability, Model Context Protocol (MCP) support, minimum RAM, and supported platforms.</p>
+  <p class="section-sub">Filter by category, search by name, or re-sort &mdash; the controls compose with the hardware tiers above. <b>Best first</b> ranks by tier (S&rarr;C).</p>
+  <div class="tools-controls">
+    <input type="search" id="toolSearch" class="tool-search" placeholder="Search tools by name&hellip;" aria-label="Search tools by name" autocomplete="off">
+    <div class="sort-group" role="group" aria-label="Sort tools">
+      <span class="sort-label">Sort</span>
+      <button type="button" class="sort-btn active" data-sort="default">Category</button>
+      <button type="button" class="sort-btn" data-sort="tier">Best first</button>
+      <button type="button" class="sort-btn" data-sort="name">A&ndash;Z</button>
+    </div>
+  </div>
   <div class="tools-grid" id="toolsGrid">
-      <article class="tool-card" data-cat="runner" data-tier="S" data-ram="8">
+      <article class="tool-card" data-cat="runner" data-tier="S" data-ram="8" data-name="ollama" data-search="ollama the standard for running open models on your own machine. llm runner">
         <span class="tier-badge" data-tier="S" aria-label="Tier S: Start Here">S</span>
         <span class="tool-cat">LLM Runner</span>
         <h2><a href="https://ollama.com" target="_blank" rel="noopener" style="color:inherit; text-decoration:none; border-bottom:1px dotted var(--gold);">Ollama <span style="opacity:0.6; font-size:0.75em;">↗</span></a></h2>
@@ -1183,7 +1213,7 @@
         <div class="best-for">Best for: technical captains comfortable with the terminal; the foundation other local tools build on.</div>
         <div class="captain-call">Start here. Most-used local runner for a reason — simple, stable, fast.</div>
       </article>
-      <article class="tool-card" data-cat="runner" data-tier="S" data-ram="8">
+      <article class="tool-card" data-cat="runner" data-tier="S" data-ram="8" data-name="lm studio" data-search="lm studio the captain-friendly way to run local models. llm runner">
         <span class="tier-badge" data-tier="S" aria-label="Tier S: Start Here">S</span>
         <span class="tool-cat">LLM Runner</span>
         <h2><a href="https://lmstudio.ai" target="_blank" rel="noopener" style="color:inherit; text-decoration:none; border-bottom:1px dotted var(--gold);">LM Studio <span style="opacity:0.6; font-size:0.75em;">↗</span></a></h2>
@@ -1201,7 +1231,7 @@
         <div class="best-for">Best for: captains who want point-and-click local AI without learning a terminal.</div>
         <div class="captain-call">Best entry point if you don't already love the terminal. Free, fast, works.</div>
       </article>
-      <article class="tool-card" data-cat="runner" data-tier="A" data-ram="8">
+      <article class="tool-card" data-cat="runner" data-tier="A" data-ram="8" data-name="mlx" data-search="mlx the fastest way to run local models on mac. llm runner">
         <span class="tier-badge" data-tier="A" aria-label="Tier A: Core">A</span>
         <span class="tool-cat">LLM Runner</span>
         <h2><a href="https://ml-explore.github.io/mlx/" target="_blank" rel="noopener" style="color:inherit; text-decoration:none; border-bottom:1px dotted var(--gold);">MLX <span style="opacity:0.6; font-size:0.75em;">↗</span></a></h2>
@@ -1219,7 +1249,7 @@
         <div class="best-for">Best for: Mac captains who want maximum performance from their unified memory.</div>
         <div class="captain-call">If you have a Mac Studio M3 Ultra, this is what makes 70B+ models feel snappy.</div>
       </article>
-      <article class="tool-card" data-cat="runner" data-tier="A" data-ram="8">
+      <article class="tool-card" data-cat="runner" data-tier="A" data-ram="8" data-name="llama.cpp" data-search="llama.cpp the c++ engine under most local llm tools. llm runner">
         <span class="tier-badge" data-tier="A" aria-label="Tier A: Core">A</span>
         <span class="tool-cat">LLM Runner</span>
         <h2><a href="https://github.com/ggerganov/llama.cpp" target="_blank" rel="noopener" style="color:inherit; text-decoration:none; border-bottom:1px dotted var(--gold);">llama.cpp <span style="opacity:0.6; font-size:0.75em;">↗</span></a></h2>
@@ -1237,7 +1267,7 @@
         <div class="best-for">Best for: captains who want fine-grained control over inference parameters and model formats.</div>
         <div class="captain-call">You don't need this directly unless you're benchmarking. Trust Ollama / LM Studio to handle it.</div>
       </article>
-      <article class="tool-card" data-cat="runner" data-tier="A" data-ram="8">
+      <article class="tool-card" data-cat="runner" data-tier="A" data-ram="8" data-name="open webui" data-search="open webui chatgpt-style ui for your local models. llm runner">
         <span class="tier-badge" data-tier="A" aria-label="Tier A: Core">A</span>
         <span class="tool-cat">LLM Runner</span>
         <h2><a href="https://openwebui.com" target="_blank" rel="noopener" style="color:inherit; text-decoration:none; border-bottom:1px dotted var(--gold);">Open WebUI <span style="opacity:0.6; font-size:0.75em;">↗</span></a></h2>
@@ -1255,7 +1285,7 @@
         <div class="best-for">Best for: captains who want a polished web interface for their local models.</div>
         <div class="captain-call">Best 'looks like ChatGPT, runs on my hardware' choice. Pair with Ollama; you're set.</div>
       </article>
-      <article class="tool-card" data-cat="model" data-tier="S" data-ram="64">
+      <article class="tool-card" data-cat="model" data-tier="S" data-ram="64" data-name="llama 4 (meta)" data-search="llama 4 (meta) meta&#x27;s open frontier — still the default workhorse. frontier model">
         <span class="tier-badge" data-tier="S" aria-label="Tier S: Start Here">S</span>
         <span class="tool-cat">Frontier Model</span>
         <h2><a href="https://www.llama.com" target="_blank" rel="noopener" style="color:inherit; text-decoration:none; border-bottom:1px dotted var(--gold);">Llama 4 (Meta) <span style="opacity:0.6; font-size:0.75em;">↗</span></a></h2>
@@ -1273,7 +1303,7 @@
         <div class="best-for">Best for: captains who want a proven, strong open-weight English-language model.</div>
         <div class="captain-call">Solid default. 70B Q4 on a 128GB Mac and you're set; reach for Scout if you process long docs.</div>
       </article>
-      <article class="tool-card" data-cat="model" data-tier="A" data-ram="32">
+      <article class="tool-card" data-cat="model" data-tier="A" data-ram="32" data-name="qwen 3.5 / 3.6 (alibaba)" data-search="qwen 3.5 / 3.6 (alibaba) alibaba&#x27;s open frontier. best-in-class multilingual + strong coding. frontier model">
         <span class="tier-badge" data-tier="A" aria-label="Tier A: Core">A</span>
         <span class="tool-cat">Frontier Model</span>
         <h2>Qwen 3.5 / 3.6 (Alibaba)</h2>
@@ -1291,7 +1321,7 @@
         <div class="best-for">Best for: captains doing multilingual ministry, coding, or who want the most capable open MoE.</div>
         <div class="captain-call">The 27B is the everyday workhorse on 32-64GB; pull the 235B only if you've got 128GB+.</div>
       </article>
-      <article class="tool-card" data-cat="model" data-tier="A" data-ram="128">
+      <article class="tool-card" data-cat="model" data-tier="A" data-ram="128" data-name="deepseek v4" data-search="deepseek v4 the deepseek that tops the open leaderboards — on your own machine. frontier model">
         <span class="tier-badge" data-tier="A" aria-label="Tier A: Core">A</span>
         <span class="tool-cat">Frontier Model</span>
         <h2>DeepSeek V4</h2>
@@ -1309,7 +1339,7 @@
         <div class="best-for">Best for: captains who want the strongest open reasoning model, no API key, full privacy.</div>
         <div class="captain-call">Frontier-class for free — but heavy. Worth it only if you've got 128GB+ or a GPU box.</div>
       </article>
-      <article class="tool-card" data-cat="model" data-tier="B" data-ram="32">
+      <article class="tool-card" data-cat="model" data-tier="B" data-ram="32" data-name="mistral large 3 / medium 3.5" data-search="mistral large 3 / medium 3.5 france&#x27;s open-weight contender — strong code, eu-friendly. frontier model">
         <span class="tier-badge" data-tier="B" aria-label="Tier B: Depth">B</span>
         <span class="tool-cat">Frontier Model</span>
         <h2>Mistral Large 3 / Medium 3.5</h2>
@@ -1327,7 +1357,7 @@
         <div class="best-for">Best for: captains in European-language ministries or technical work where Mistral's tuning shines.</div>
         <div class="captain-call">Worth a side-by-side vs Llama / Qwen if your work touches European languages.</div>
       </article>
-      <article class="tool-card" data-cat="model" data-tier="B" data-ram="128">
+      <article class="tool-card" data-cat="model" data-tier="B" data-ram="128" data-name="mixtral 8×22b (mistral)" data-search="mixtral 8×22b (mistral) 176b parameters, 39b active. speed of small, quality of large. frontier model">
         <span class="tier-badge" data-tier="B" aria-label="Tier B: Depth">B</span>
         <span class="tool-cat">Frontier Model</span>
         <h2><a href="https://mistral.ai" target="_blank" rel="noopener" style="color:inherit; text-decoration:none; border-bottom:1px dotted var(--gold);">Mixtral 8×22B (Mistral) <span style="opacity:0.6; font-size:0.75em;">↗</span></a></h2>
@@ -1345,7 +1375,7 @@
         <div class="best-for">Best for: captains who want quality output at faster speeds than dense models.</div>
         <div class="captain-call">Solid second model behind Llama / Qwen. Pull it if you want to A/B test.</div>
       </article>
-      <article class="tool-card" data-cat="model" data-tier="B" data-ram="8">
+      <article class="tool-card" data-cat="model" data-tier="B" data-ram="8" data-name="gemma 4 (google)" data-search="gemma 4 (google) google&#x27;s open-weight family — now the on-device champion. frontier model">
         <span class="tier-badge" data-tier="B" aria-label="Tier B: Depth">B</span>
         <span class="tool-cat">Frontier Model</span>
         <h2>Gemma 4 (Google)</h2>
@@ -1363,7 +1393,7 @@
         <div class="best-for">Best for: captains who want the most capable model that still runs on modest hardware — laptop to Mac Studio.</div>
         <div class="captain-call">Pull Gemma 4 first. The 26B MoE runs great on 32GB; the E4B even runs on phone-class hardware.</div>
       </article>
-      <article class="tool-card" data-cat="model" data-tier="B" data-ram="64">
+      <article class="tool-card" data-cat="model" data-tier="B" data-ram="64" data-name="command r+ (cohere)" data-search="command r+ (cohere) cohere&#x27;s rag-tuned open release. frontier model">
         <span class="tier-badge" data-tier="B" aria-label="Tier B: Depth">B</span>
         <span class="tool-cat">Frontier Model</span>
         <h2><a href="https://cohere.com/command" target="_blank" rel="noopener" style="color:inherit; text-decoration:none; border-bottom:1px dotted var(--gold);">Command R+ (Cohere) <span style="opacity:0.6; font-size:0.75em;">↗</span></a></h2>
@@ -1381,7 +1411,7 @@
         <div class="best-for">Best for: captains running local RAG over their own documents (sermons, books, business records).</div>
         <div class="captain-call">Underrated for the captain who wants strong RAG without sending docs to the cloud.</div>
       </article>
-      <article class="tool-card" data-cat="model" data-tier="B" data-ram="8">
+      <article class="tool-card" data-cat="model" data-tier="B" data-ram="8" data-name="phi-4 / phi-4 mini (microsoft)" data-search="phi-4 / phi-4 mini (microsoft) punches above its weight — and mini runs on almost anything. frontier model">
         <span class="tier-badge" data-tier="B" aria-label="Tier B: Depth">B</span>
         <span class="tool-cat">Frontier Model</span>
         <h2>Phi-4 / Phi-4 Mini (Microsoft)</h2>
@@ -1399,7 +1429,7 @@
         <div class="best-for">Best for: captains on lighter hardware (8-32GB) who still want solid reasoning.</div>
         <div class="captain-call">If your Mac is 8-32GB, Phi-4 (or Mini) + Gemma 4 are your workhorses. Tiny, fast, smart.</div>
       </article>
-      <article class="tool-card" data-cat="image" data-tier="B" data-ram="16">
+      <article class="tool-card" data-cat="image" data-tier="B" data-ram="16" data-name="flux.1 dev" data-search="flux.1 dev the current open-weight image champion. image">
         <span class="tier-badge" data-tier="B" aria-label="Tier B: Depth">B</span>
         <span class="tool-cat">Image</span>
         <h2><a href="https://blackforestlabs.ai" target="_blank" rel="noopener" style="color:inherit; text-decoration:none; border-bottom:1px dotted var(--gold);">FLUX.1 dev <span style="opacity:0.6; font-size:0.75em;">↗</span></a></h2>
@@ -1417,7 +1447,7 @@
         <div class="best-for">Best for: captains who want Midjourney-quality output running on their own hardware.</div>
         <div class="captain-call">Run via ComfyUI for full control. Quantized FLUX runs on 24GB+ Mac unified memory.</div>
       </article>
-      <article class="tool-card" data-cat="image" data-tier="B" data-ram="16">
+      <article class="tool-card" data-cat="image" data-tier="B" data-ram="16" data-name="stable diffusion 3.5" data-search="stable diffusion 3.5 stability ai&#x27;s flagship open model. image">
         <span class="tier-badge" data-tier="B" aria-label="Tier B: Depth">B</span>
         <span class="tool-cat">Image</span>
         <h2><a href="https://stability.ai" target="_blank" rel="noopener" style="color:inherit; text-decoration:none; border-bottom:1px dotted var(--gold);">Stable Diffusion 3.5 <span style="opacity:0.6; font-size:0.75em;">↗</span></a></h2>
@@ -1435,7 +1465,7 @@
         <div class="best-for">Best for: captains who want a vast library of fine-tuned styles and LoRAs.</div>
         <div class="captain-call">Use FLUX as your default; pull SD 3.5 for community fine-tunes and specific styles.</div>
       </article>
-      <article class="tool-card" data-cat="image" data-tier="B" data-ram="16">
+      <article class="tool-card" data-cat="image" data-tier="B" data-ram="16" data-name="comfyui" data-search="comfyui node-based ui for flux / sd / video models. image">
         <span class="tier-badge" data-tier="B" aria-label="Tier B: Depth">B</span>
         <span class="tool-cat">Image</span>
         <h2><a href="https://github.com/comfyanonymous/ComfyUI" target="_blank" rel="noopener" style="color:inherit; text-decoration:none; border-bottom:1px dotted var(--gold);">ComfyUI <span style="opacity:0.6; font-size:0.75em;">↗</span></a></h2>
@@ -1453,7 +1483,7 @@
         <div class="best-for">Best for: captains making serious volume of visual content who want a reproducible pipeline.</div>
         <div class="captain-call">Pair with FLUX. Steeper curve, but once you have a workflow saved, it's repeatable.</div>
       </article>
-      <article class="tool-card" data-cat="voice" data-tier="A" data-ram="8">
+      <article class="tool-card" data-cat="voice" data-tier="A" data-ram="8" data-name="whisper.cpp" data-search="whisper.cpp whisper running locally — no api calls. voice">
         <span class="tier-badge" data-tier="A" aria-label="Tier A: Core">A</span>
         <span class="tool-cat">Voice</span>
         <h2><a href="https://github.com/ggerganov/whisper.cpp" target="_blank" rel="noopener" style="color:inherit; text-decoration:none; border-bottom:1px dotted var(--gold);">Whisper.cpp <span style="opacity:0.6; font-size:0.75em;">↗</span></a></h2>
@@ -1471,7 +1501,7 @@
         <div class="best-for">Best for: captains transcribing sensitive content (counseling notes, sermon prep) who don't want audio leaving the machine.</div>
         <div class="captain-call">Use this over the API when content is sensitive. Free and fast.</div>
       </article>
-      <article class="tool-card" data-cat="voice" data-tier="B" data-ram="16">
+      <article class="tool-card" data-cat="voice" data-tier="B" data-ram="16" data-name="whisperx" data-search="whisperx whisper with speaker labels and word-level timestamps. voice">
         <span class="tier-badge" data-tier="B" aria-label="Tier B: Depth">B</span>
         <span class="tool-cat">Voice</span>
         <h2><a href="https://github.com/m-bain/whisperX" target="_blank" rel="noopener" style="color:inherit; text-decoration:none; border-bottom:1px dotted var(--gold);">WhisperX <span style="opacity:0.6; font-size:0.75em;">↗</span></a></h2>
@@ -1489,7 +1519,7 @@
         <div class="best-for">Best for: captains transcribing multi-speaker recordings (conversations, panels, group prayer, board meetings).</div>
         <div class="captain-call">Use when you need to know who said what. Free.</div>
       </article>
-      <article class="tool-card" data-cat="voice" data-tier="C" data-ram="8">
+      <article class="tool-card" data-cat="voice" data-tier="C" data-ram="8" data-name="kokoro / openvoice" data-search="kokoro / openvoice local tts — your voice, on your machine. voice">
         <span class="tier-badge" data-tier="C" aria-label="Tier C: Optional">C</span>
         <span class="tool-cat">Voice</span>
         <h2>Kokoro / OpenVoice</h2>
@@ -1507,7 +1537,7 @@
         <div class="best-for">Best for: captains who want natural narration (devotionals, audio overviews) or private voice cloning without uploading samples.</div>
         <div class="captain-call">Kokoro is shockingly good for its size and runs on CPU. Start there; reach for OpenVoice only if you need cloning.</div>
       </article>
-      <article class="tool-card" data-cat="code" data-tier="A" data-ram="8">
+      <article class="tool-card" data-cat="code" data-tier="A" data-ram="8" data-name="continue.dev" data-search="continue.dev cursor-like ai coding with your local llm. coding">
         <span class="tier-badge" data-tier="A" aria-label="Tier A: Core">A</span>
         <span class="tool-cat">Coding</span>
         <h2><a href="https://continue.dev" target="_blank" rel="noopener" style="color:inherit; text-decoration:none; border-bottom:1px dotted var(--gold);">Continue.dev <span style="opacity:0.6; font-size:0.75em;">↗</span></a></h2>
@@ -1525,7 +1555,7 @@
         <div class="best-for">Best for: captains who want Cursor-style coding without the subscription, using their local models.</div>
         <div class="captain-call">Best free Cursor alternative for the local-first captain.</div>
       </article>
-      <article class="tool-card" data-cat="code" data-tier="A" data-ram="8">
+      <article class="tool-card" data-cat="code" data-tier="A" data-ram="8" data-name="cline (formerly claude dev)" data-search="cline (formerly claude dev) open-source autonomous coding agent. coding">
         <span class="tier-badge" data-tier="A" aria-label="Tier A: Core">A</span>
         <span class="tool-cat">Coding</span>
         <h2><a href="https://github.com/cline/cline" target="_blank" rel="noopener" style="color:inherit; text-decoration:none; border-bottom:1px dotted var(--gold);">Cline (formerly Claude Dev) <span style="opacity:0.6; font-size:0.75em;">↗</span></a></h2>
@@ -1543,7 +1573,7 @@
         <div class="best-for">Best for: captains who want an autonomous coding agent that can run on local models.</div>
         <div class="captain-call">Excellent. Pairs with Llama 4 70B locally for a free Claude Code substitute.</div>
       </article>
-      <article class="tool-card" data-cat="code" data-tier="C" data-ram="8">
+      <article class="tool-card" data-cat="code" data-tier="C" data-ram="8" data-name="aider (local backend)" data-search="aider (local backend) same aider from the compass — running on your local llm. coding">
         <span class="tier-badge" data-tier="C" aria-label="Tier C: Optional">C</span>
         <span class="tool-cat">Coding</span>
         <h2><a href="https://aider.chat" target="_blank" rel="noopener" style="color:inherit; text-decoration:none; border-bottom:1px dotted var(--gold);">Aider (local backend) <span style="opacity:0.6; font-size:0.75em;">↗</span></a></h2>
@@ -1561,7 +1591,7 @@
         <div class="best-for">Best for: terminal-loving captains who want Claude Code's shape with their own local model.</div>
         <div class="captain-call">If you already use Aider with Claude API, switching it to a local backend takes 30 seconds.</div>
       </article>
-      <article class="tool-card" data-cat="code" data-tier="C" data-ram="16">
+      <article class="tool-card" data-cat="code" data-tier="C" data-ram="16" data-name="tabby" data-search="tabby github copilot-style autocomplete, on your own server. coding">
         <span class="tier-badge" data-tier="C" aria-label="Tier C: Optional">C</span>
         <span class="tool-cat">Coding</span>
         <h2><a href="https://www.tabbyml.com" target="_blank" rel="noopener" style="color:inherit; text-decoration:none; border-bottom:1px dotted var(--gold);">Tabby <span style="opacity:0.6; font-size:0.75em;">↗</span></a></h2>
@@ -1579,7 +1609,7 @@
         <div class="best-for">Best for: captains in regulated industries who can't send code to a cloud autocomplete service.</div>
         <div class="captain-call">Niche. Use only if compliance forbids cloud Copilot.</div>
       </article>
-      <article class="tool-card" data-cat="rag" data-tier="A" data-ram="16">
+      <article class="tool-card" data-cat="rag" data-tier="A" data-ram="16" data-name="anythingllm" data-search="anythingllm chatgpt-style chat over your own files. 100% local. knowledge / rag">
         <span class="tier-badge" data-tier="A" aria-label="Tier A: Core">A</span>
         <span class="tool-cat">Knowledge / RAG</span>
         <h2><a href="https://anythingllm.com" target="_blank" rel="noopener" style="color:inherit; text-decoration:none; border-bottom:1px dotted var(--gold);">AnythingLLM <span style="opacity:0.6; font-size:0.75em;">↗</span></a></h2>
@@ -1597,7 +1627,7 @@
         <div class="best-for">Best for: captains who want NotebookLM but local — chat over your own books, sermons, family records.</div>
         <div class="captain-call">Best NotebookLM alternative that runs entirely on your machine.</div>
       </article>
-      <article class="tool-card" data-cat="rag" data-tier="B" data-ram="16">
+      <article class="tool-card" data-cat="rag" data-tier="B" data-ram="16" data-name="khoj" data-search="khoj ai search across your notes, emails, files. knowledge / rag">
         <span class="tier-badge" data-tier="B" aria-label="Tier B: Depth">B</span>
         <span class="tool-cat">Knowledge / RAG</span>
         <h2><a href="https://khoj.dev" target="_blank" rel="noopener" style="color:inherit; text-decoration:none; border-bottom:1px dotted var(--gold);">Khoj <span style="opacity:0.6; font-size:0.75em;">↗</span></a></h2>
@@ -1615,7 +1645,7 @@
         <div class="best-for">Best for: captains with a deep personal corpus (Obsidian + email + files) who want AI search over all of it.</div>
         <div class="captain-call">Killer pairing with Obsidian. Free, fast, private.</div>
       </article>
-      <article class="tool-card" data-cat="rag" data-tier="C" data-ram="16">
+      <article class="tool-card" data-cat="rag" data-tier="C" data-ram="16" data-name="perplexica" data-search="perplexica perplexity, but local + uses your own models. knowledge / rag">
         <span class="tier-badge" data-tier="C" aria-label="Tier C: Optional">C</span>
         <span class="tool-cat">Knowledge / RAG</span>
         <h2><a href="https://github.com/ItzCrazyKns/Perplexica" target="_blank" rel="noopener" style="color:inherit; text-decoration:none; border-bottom:1px dotted var(--gold);">Perplexica <span style="opacity:0.6; font-size:0.75em;">↗</span></a></h2>
@@ -1633,7 +1663,7 @@
         <div class="best-for">Best for: captains who do research-heavy work and want Perplexity's UX without a subscription.</div>
         <div class="captain-call">Solid Perplexity alternative for the local-first captain.</div>
       </article>
-      <article class="tool-card" data-cat="rag" data-tier="C" data-ram="8">
+      <article class="tool-card" data-cat="rag" data-tier="C" data-ram="8" data-name="obsidian + smart connections" data-search="obsidian + smart connections obsidian + ai plugins, fully local. knowledge / rag">
         <span class="tier-badge" data-tier="C" aria-label="Tier C: Optional">C</span>
         <span class="tool-cat">Knowledge / RAG</span>
         <h2><a href="https://obsidian.md" target="_blank" rel="noopener" style="color:inherit; text-decoration:none; border-bottom:1px dotted var(--gold);">Obsidian + Smart Connections <span style="opacity:0.6; font-size:0.75em;">↗</span></a></h2>
@@ -1651,7 +1681,7 @@
         <div class="best-for">Best for: captains already on Obsidian who want a privacy-first AI layer over their notes.</div>
         <div class="captain-call">If Obsidian is your second brain, add Smart Connections + a local model and you have private AI search over everything.</div>
       </article>
-      <article class="tool-card" data-cat="automation" data-tier="C" data-ram="8">
+      <article class="tool-card" data-cat="automation" data-tier="C" data-ram="8" data-name="n8n self-hosted" data-search="n8n self-hosted same n8n from the compass — running on your machine. automation">
         <span class="tier-badge" data-tier="C" aria-label="Tier C: Optional">C</span>
         <span class="tool-cat">Automation</span>
         <h2><a href="https://n8n.io" target="_blank" rel="noopener" style="color:inherit; text-decoration:none; border-bottom:1px dotted var(--gold);">n8n self-hosted <span style="opacity:0.6; font-size:0.75em;">↗</span></a></h2>
@@ -1669,7 +1699,7 @@
         <div class="best-for">Best for: captains who want enterprise-grade automation with zero data leaving their network.</div>
         <div class="captain-call">If you have a homelab, n8n + Ollama is the local automation stack.</div>
       </article>
-      <article class="tool-card" data-cat="automation" data-tier="B" data-ram="8">
+      <article class="tool-card" data-cat="automation" data-tier="B" data-ram="8" data-name="mcp servers" data-search="mcp servers run mcp servers on your machine to wire local tools into cowork. automation">
         <span class="tier-badge" data-tier="B" aria-label="Tier B: Depth">B</span>
         <span class="tool-cat">Automation</span>
         <h2><a href="https://modelcontextprotocol.io" target="_blank" rel="noopener" style="color:inherit; text-decoration:none; border-bottom:1px dotted var(--gold);">MCP Servers <span style="opacity:0.6; font-size:0.75em;">↗</span></a></h2>
@@ -1687,7 +1717,7 @@
         <div class="best-for">Best for: captains extending Cowork with local capabilities (custom databases, internal APIs, file systems).</div>
         <div class="captain-call">Future-proof. As MCP grows, more captain-relevant servers will exist.</div>
       </article>
-      <article class="tool-card" data-cat="automation" data-tier="B" data-ram="8">
+      <article class="tool-card" data-cat="automation" data-tier="B" data-ram="8" data-name="goose (local backend)" data-search="goose (local backend) same goose from the frontier — running purely local. automation">
         <span class="tier-badge" data-tier="B" aria-label="Tier B: Depth">B</span>
         <span class="tool-cat">Automation</span>
         <h2><a href="https://block.github.io/goose/" target="_blank" rel="noopener" style="color:inherit; text-decoration:none; border-bottom:1px dotted var(--gold);">Goose (local backend) <span style="opacity:0.6; font-size:0.75em;">↗</span></a></h2>
@@ -1785,30 +1815,48 @@
 
 
 <script>
-/* Combined filter: category chips + "Configure Your Stack" hardware tiers.
-   Both drive one display predicate so they compose (a card shows only if it
-   passes BOTH). The "Show S+A only" toggle stays a separate opacity fade
-   (TIER_FILTER_SCRIPT) and layers on top of whatever is displayed.
-   On the Compass page there are no hardware tiers, so that half is inert. */
+/* Combined controls: category chips + hardware tiers + name search + sort.
+   Category, hardware (RAM) and search compose into ONE display predicate (a
+   card shows only if it passes ALL three). Sort reorders the grid in place.
+   The "Show S+A only" toggle stays a separate opacity fade (TIER_FILTER_SCRIPT)
+   layered on top. On the Compass page there are no hardware tiers (inert). */
 (function(){
   const grid = document.getElementById('toolsGrid');
   const empty = document.getElementById('empty');
   if(!grid) return;
   const cards = Array.prototype.slice.call(grid.querySelectorAll('.tool-card'));
+  const originalOrder = cards.slice();           // DOM order at load = category-grouped default
   const catChips = document.querySelectorAll('.chip[data-filter]');
   const hwCards = document.querySelectorAll('.hw-card[data-tier-gb]');
   const resetBtn = document.getElementById('hwReset');
-  const state = { cat: 'all', ram: null };
+  const searchInput = document.getElementById('toolSearch');
+  const sortBtns = document.querySelectorAll('.sort-btn[data-sort]');
+  const TIER_RANK = { S:0, A:1, B:2, C:3 };
+  const state = { cat: 'all', ram: null, q: '', sort: 'default' };
 
+  function matches(c){
+    const catOk = state.cat === 'all' || c.dataset.cat === state.cat;
+    const ramOk = state.ram === null || (parseInt(c.dataset.ram || '8', 10) <= state.ram);
+    const qOk = state.q === '' || (c.dataset.search || c.textContent || '').toLowerCase().indexOf(state.q) !== -1;
+    return catOk && ramOk && qOk;
+  }
+  function applyOrder(){
+    const arr = originalOrder.slice();
+    if (state.sort === 'name'){
+      arr.sort((a,b) => (a.dataset.name||'').localeCompare(b.dataset.name||''));
+    } else if (state.sort === 'tier'){
+      arr.sort((a,b) => {
+        const ra = (TIER_RANK[a.dataset.tier] != null) ? TIER_RANK[a.dataset.tier] : 9;
+        const rb = (TIER_RANK[b.dataset.tier] != null) ? TIER_RANK[b.dataset.tier] : 9;
+        return ra !== rb ? ra - rb : originalOrder.indexOf(a) - originalOrder.indexOf(b);
+      });
+    }
+    arr.forEach(c => grid.appendChild(c));         // default re-appends original order
+  }
   function apply(){
+    applyOrder();
     let visible = 0;
-    cards.forEach(c => {
-      const catOk = state.cat === 'all' || c.dataset.cat === state.cat;
-      const ramOk = state.ram === null || (parseInt(c.dataset.ram || '8', 10) <= state.ram);
-      const ok = catOk && ramOk;
-      c.style.display = ok ? '' : 'none';
-      if (ok) visible++;
-    });
+    cards.forEach(c => { const ok = matches(c); c.style.display = ok ? '' : 'none'; if (ok) visible++; });
     if (empty) empty.style.display = visible === 0 ? 'block' : 'none';
   }
 
@@ -1818,6 +1866,18 @@
     state.cat = chip.dataset.filter;
     apply();
     window.scrollTo({top: 200, behavior: 'instant'});
+  }));
+
+  if (searchInput) searchInput.addEventListener('input', () => {
+    state.q = searchInput.value.trim().toLowerCase();
+    apply();
+  });
+
+  sortBtns.forEach(b => b.addEventListener('click', () => {
+    sortBtns.forEach(x => x.classList.remove('active'));
+    b.classList.add('active');
+    state.sort = b.dataset.sort;
+    apply();
   }));
 
   function selectTier(gb){

@@ -16,6 +16,13 @@ MAX_TOTAL = 100  # v4.0 rubric: 10 categories × 10 pts = 100 (60 God First + 40
 MAX_GOD_FIRST = 60
 MAX_AMERICA_FIRST = 40
 
+# RESOLUTE Local civic-tool links by jurisdiction. Local officials whose city
+# has a live RESOLUTE Local page get a banner linking to it (live agendas +
+# briefs + how-to-weigh-in). Add an entry per city as the tool expands.
+CIVIC_TOOL_MAP = {
+    'City of Fredericksburg': 'https://adamljohns.github.io/resolute-local/city/fredericksburg.html',
+}
+
 def letter_grade(pct):
     """A 90+, B 80, C 70, D 60, F <60 — standard report-card scale.
     Takes a 0-100 percentage. Per Adam's 2026-05-18 directive, candidates
@@ -897,6 +904,21 @@ def generate_profile(candidate, categories, meta, nav=None):
             '</a>'
         )
 
+    # RESOLUTE Local civic-tool banner — for local officials whose city has a
+    # live civic page (live agendas + citizen briefs + how to weigh in).
+    civic_tool_html = ''
+    _civic_url = CIVIC_TOOL_MAP.get((c.get('jurisdiction') or '').strip())
+    if _civic_url:
+        civic_tool_html = (
+            '<a class="prof-civic-link" '
+            f'href="{_civic_url}" target="_blank" rel="noopener" '
+            'style="display:inline-block;margin-top:8px;background:linear-gradient(90deg,#c9a84c,#D4AF37);'
+            'color:#000;font-weight:700;padding:7px 14px;border-radius:6px;text-decoration:none;font-size:0.82rem;" '
+            'aria-label="Track this council live on RESOLUTE Local">'
+            '📍 Track this council live — agendas, briefs &amp; how to weigh in &rarr;'
+            '</a>'
+        )
+
     # FORMER / LOST banner: when c.status is non-active, render a clear
     # banner at the top of the profile so visitors immediately know this
     # person isn't currently in office. Profile remains live + searchable
@@ -1678,6 +1700,7 @@ def generate_profile(candidate, categories, meta, nav=None):
     {confidence_chip_html}
     {candidacy_banner_html}
     {map_link_html}
+    {civic_tool_html}
   </div>
 
   <div id="prof-score" class="prof-total">

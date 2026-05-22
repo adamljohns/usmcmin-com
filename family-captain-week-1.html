@@ -150,10 +150,16 @@
     color: #CE8E31 !important;
     border: 1px solid #CE8E31 !important;
   }
-  /* Hide the USMC site-wide nav on FC track */
-  body > nav,
+  /* Hide the USMC site-wide nav on FC track (but NOT in-page .filters bars) */
+  body > nav:not(.filters),
   nav.site-nav,
   header.site-header { display: none !important; }
+  /* FC mini-header is static (scrolls away), so pin in-page filter bars to the very top */
+  nav.filters { top: 0 !important; }
+  /* Filter chips were styled for the dark theme; restyle for FC light (AA contrast) */
+  nav.filters .chip { background:#F4F5F7 !important; color:#334155 !important; border-color:#D1D5DB !important; }
+  nav.filters .chip:hover { color:#A66A1F !important; border-color:#CE8E31 !important; }
+  nav.filters .chip.active { background:#CE8E31 !important; color:#1A1A1A !important; border-color:#CE8E31 !important; }
   /* FC mini-header (injected below; styles here) */
   .fc-header {
     background: #1E293B;

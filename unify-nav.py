@@ -102,20 +102,12 @@ def render_nav(depth: int, page_basename: str, in_scorecard_subdir: bool = False
       <div class="tag">Warriors Equipped</div>
     </div>
   </a>
+  <!-- Reverted 2026-05-23: Citizen ▾ dropdown removed per Adam's feedback —
+       scorecard/civic resources are reachable via the index hero card, the
+       footer Resources column, and direct URLs; they don't need to clutter
+       the top nav on every page. See unify-nav.py history for the dropdown
+       block if/when it makes sense to reintroduce in a different form. -->
   <ul class="nav-links">
-    <li class="has-sub">
-      <a href="{p}citizen.html"{citizen_cls}>Citizen</a>
-      <ul class="nav-sub">
-        <li><a href="{p}citizen.html"{sub_cls("Scorecard Home")}>Scorecard Home</a></li>
-        <li><a href="{p}find-my-reps.html"{sub_cls("Find My Reps")}>Find My Reps</a></li>
-        <li><a href="{p}citizen-rankings.html"{sub_cls("Rankings")}>Rankings</a></li>
-        <li><a href="{p}compare.html"{sub_cls("Compare Candidates")}>Compare Candidates</a></li>
-        <li><a href="{p}scoring-system.html"{sub_cls("Scoring System")}>Scoring System</a></li>
-        <li><a href="{p}how-to-use.html"{sub_cls("How to Use")}>How to Use</a></li>
-        <li><a href="{p}council-notes.html"{sub_cls("Council Watch")}>Council Watch</a></li>
-        <li><a href="https://adamljohns.github.io/resolute-local/" target="_blank" rel="noopener">RESOLUTE Local &#x2197;</a></li>
-      </ul>
-    </li>
     <li><a href="{p}mission.html"{cls("Mission")}>Mission</a></li>
     <li><a href="{p}shop.html"{cls("Shop")}>Shop</a></li>
     <li><a href="{p}books.html"{cls("Books")}>Books</a></li>

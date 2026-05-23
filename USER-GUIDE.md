@@ -248,4 +248,4 @@ minutes a month rather than ten hours.
 ---
 
 *Last updated: 2026-05-23 · maintained by Adam Johns ·
-[bowandarrowstudiollc@gmail.com](mailto:bowandarrowstudiollc@gmail.com)*
+[usmcministries2022@gmail.com](mailto:usmcministries2022@gmail.com)*

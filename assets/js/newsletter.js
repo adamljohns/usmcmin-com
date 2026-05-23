@@ -1,9 +1,13 @@
 /* USMC Ministries — newsletter signup
  *
- * Default behavior: opens user's mail client with a pre-filled subscribe email
- * (works without any server). To upgrade to an API endpoint later, set
- * window.USMC_NEWSLETTER_ENDPOINT = "https://api.example.com/subscribe"
- * before this script runs (e.g., in a <script> tag in <head>).
+ * Default behavior (2026-05-23 onwards): silently POSTs the email to
+ * FormSubmit, which relays it to the USMC business mailbox. No mail-client
+ * popup, no "open your mail app and hit send" friction — the visitor stays
+ * on the page and we capture every signup.
+ *
+ * To upgrade to a first-party API endpoint later, set
+ *   window.USMC_NEWSLETTER_ENDPOINT = "https://api.example.com/subscribe"
+ * before this script runs and the FormSubmit fallback is skipped.
  *
  * Forms must have:
  *   <form data-newsletter [data-source="page-name"]>
@@ -14,8 +18,7 @@
 (function () {
   'use strict';
 
-  var TO    = 'info@usmcmin.com';
-  var SUBJ  = 'Subscribe me to the Field Brief';
+  var FORMSUBMIT_URL = 'https://formsubmit.co/ajax/usmcministries2022@gmail.com';
 
   document.querySelectorAll('form[data-newsletter]').forEach(function (form) {
     form.addEventListener('submit', function (e) {
@@ -36,7 +39,7 @@
       }
 
       if (endpoint) {
-        // API mode — POST JSON
+        // API mode — POST JSON to a first-party subscribe endpoint.
         fetch(endpoint, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -54,14 +57,31 @@
           showStatus('Network error. Please try again.', false);
         });
       } else {
-        // Mailto fallback — opens the user's mail client
-        var body = 'Please subscribe me to the Field Brief.\n\nEmail: ' + email +
-                   '\nSource: ' + source + '\n';
-        var href = 'mailto:' + TO +
-                   '?subject=' + encodeURIComponent(SUBJ) +
-                   '&body=' + encodeURIComponent(body);
-        window.location.href = href;
-        showStatus('Opening your mail app — just hit send.', true);
+        // FormSubmit relay — emails the subscriber's address to USMC.
+        var payload = {
+          _subject: 'USMC Field Brief — new subscriber',
+          _template: 'table',
+          _captcha: 'false',
+          email: email,
+          source: source,
+          submittedAt: new Date().toISOString()
+        };
+        fetch(FORMSUBMIT_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+          body: JSON.stringify(payload)
+        }).then(function (r) {
+          return r.ok ? r.json().catch(function () { return { success: true }; }) : { success: false };
+        }).then(function (data) {
+          if (data && (data.success || data.success === undefined)) {
+            form.reset();
+            showStatus("You're in. Welcome to the brotherhood.", true);
+          } else {
+            showStatus('Subscribe failed. Please try again.', false);
+          }
+        }).catch(function () {
+          showStatus('Network error. Please try again.', false);
+        });
       }
     });
   });

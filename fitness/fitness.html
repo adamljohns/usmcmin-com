@@ -928,6 +928,43 @@ function submitForm() {
   const tdee = bmr ? Math.round(bmr * 1.4) : null;
   const proteinTarget = Math.round(parseFloat(getVal('goalWeight')) || wt * 0.9);
 
+  // ── Email the intake to USMC Ministries via FormSubmit ──
+  // Added 2026-05-23 — until this was wired, submitForm() only computed
+  // BMI/BMR/TDEE on screen and Adam never received the intake. Routing
+  // mirrors shop/citizen/council and the other USMC products.
+  (function emailIntake() {
+    var FORMSUBMIT_URL = 'https://formsubmit.co/ajax/usmcministries2022@gmail.com';
+    var TEXT_IDS = ['firstName','lastName','age','email','phone','height','weight',
+      'waist','bodyFat','visceralFat','restingHR','hrvBaseline','sleep','goalWeight',
+      'dietRestrictions','injuries','currentRoutine','homeRun','readinessScore',
+      'stressLevel','mealsPerDay','waterIntake','otherSupps','successVision',
+      'faithFitness','additionalNotes'];
+    var CHECK_FIELDS = ['additionalGoals','alcoholConsumption','bedtime','caffeineAmount',
+      'caffeineCutoff','calsPerDay','carbSources','cpap','currentSupps','dailySteps',
+      'dietQuality','eatingBehaviors','energyLevels','experience','fatSources','firstMealTime'];
+    var payload = {
+      _subject: 'USMC Ministries — Fitness Intake: ' + (getVal('firstName') || '') + ' ' + (getVal('lastName') || ''),
+      _template: 'table',
+      _captcha: 'false',
+      submittedAt: new Date().toISOString()
+    };
+    TEXT_IDS.forEach(function(id) { payload[id] = getVal(id); });
+    // formData carries every radio selection (gender, parq1-6, primaryGoal, etc.)
+    Object.keys(formData).forEach(function(k) { payload[k] = formData[k]; });
+    CHECK_FIELDS.forEach(function(f) { payload[f] = getChecked(f).join(', '); });
+    if (bmi) payload.computedBMI = bmi;
+    if (bmr) payload.computedBMR = bmr;
+    if (tdee) payload.estTDEE = tdee;
+    payload.proteinTarget = proteinTarget;
+    // Local snapshot so Adam can recover client-side even if FormSubmit hiccups.
+    try { localStorage.setItem('fitness_intake_' + ((getVal('firstName')||'anon').toLowerCase()), JSON.stringify(payload)); } catch (e) {}
+    fetch(FORMSUBMIT_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+      body: JSON.stringify(payload)
+    }).catch(function() { /* best-effort — UI already shows results regardless */ });
+  })();
+
   let estHtml = '<h3 style="color:var(--gold);margin:20px 0 12px;">Initial Estimates</h3>';
   if (bmi) estHtml += `<div class="metric"><span class="metric-label">BMI</span><span class="metric-value">${bmi}</span></div>`;
   if (bmr) estHtml += `<div class="metric"><span class="metric-label">BMR</span><span class="metric-value">${bmr.toLocaleString()} cal/day</span></div>`;

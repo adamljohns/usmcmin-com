@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="canonical" href="https://usmcmin.com/how-to-use.html">
+  <title>How to Use RESOLUTE Citizen + Local — Quick Start &amp; Common Tasks | U.S.M.C. Ministries</title>
+  <meta name="description" content="A practical, 5-minute walkthrough of both tools: the RESOLUTE Citizen scorecard and the RESOLUTE Local civic-engagement tool. How to look up a candidate, find your reps, draft a petition, watch your city council, and weigh in &mdash; with worked examples.">
+  <meta property="og:title" content="How to Use RESOLUTE Citizen + Local">
+  <meta property="og:description" content="The 5-minute tour of both tools and the common tasks each handles &mdash; in plain English.">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://usmcmin.com/how-to-use.html">
+  <meta property="og:image" content="https://usmcmin.com/assets/og/og-citizen.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="https://usmcmin.com/assets/og/og-citizen.jpg">
+  <link rel="stylesheet" href="assets/css/main.min.css">
+  <link rel="icon" href="assets/icons/favicon.svg" type="image/svg+xml">
+  <style>
+    .htu-container { max-width: 920px; margin: 0 auto; padding: 24px 20px 60px; }
+    .htu-hero { text-align: center; padding: 36px 20px 28px; border-bottom: 2px solid var(--border); margin-bottom: 28px; }
+    .htu-hero .badge { display: inline-block; font-size: 0.7rem; font-weight: 700; letter-spacing: 2.5px; text-transform: uppercase; color: var(--accent); background: rgba(168,176,188,0.12); border: 1px solid rgba(168,176,188,0.25); padding: 5px 16px; border-radius: 20px; margin-bottom: 14px; }
+    .htu-hero h1 { font-size: clamp(1.7rem, 4vw, 2.4rem); color: var(--white); margin-bottom: 10px; font-weight: 800; line-height: 1.2; }
+    .htu-hero h1 .accent { color: var(--accent); }
+    .htu-hero p { color: var(--gray); font-size: 1rem; max-width: 660px; margin: 0 auto; line-height: 1.65; }
+
+    .htu-toc { background: var(--bg-card); border: 1px solid var(--border); border-radius: 10px; padding: 16px 18px; margin: 22px 0 32px; }
+    .htu-toc h4 { font-size: 0.7rem; color: var(--accent); text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 10px; font-weight: 700; }
+    .htu-toc ul { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 6px 18px; }
+    .htu-toc li { font-size: 0.88rem; }
+    .htu-toc a { color: var(--gray); text-decoration: none; }
+    .htu-toc a:hover { color: var(--accent); text-decoration: underline; }
+
+    .htu-tools { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; margin: 18px 0 34px; }
+    .htu-tool { background: var(--bg-card); border: 1px solid var(--border); border-radius: 10px; padding: 22px 22px 18px; border-top: 4px solid var(--accent); }
+    .htu-tool h3 { color: var(--accent); font-size: 1.05rem; margin: 0 0 6px; font-weight: 700; }
+    .htu-tool .url { font-size: 0.75rem; color: var(--gray); margin-bottom: 12px; font-family: 'SF Mono', 'Menlo', monospace; word-break: break-all; }
+    .htu-tool p { color: var(--gray); font-size: 0.9rem; line-height: 1.6; margin-bottom: 12px; }
+    .htu-tool .htu-go { display: inline-block; background: linear-gradient(90deg, #c9a84c, #D4AF37); color: #000; font-weight: 700; padding: 8px 16px; border-radius: 6px; text-decoration: none; font-size: 0.85rem; }
+
+    .htu-section { margin-top: 36px; padding-top: 26px; border-top: 1px solid var(--border); }
+    .htu-section h2 { color: var(--accent); font-size: 1.4rem; margin-bottom: 8px; font-weight: 700; scroll-margin-top: 80px; }
+    .htu-section h2 .subt { color: var(--gray); font-size: 0.72rem; font-weight: 500; letter-spacing: 1.4px; text-transform: uppercase; margin-left: 8px; }
+    .htu-section h3 { color: var(--white); font-size: 1.05rem; margin: 22px 0 6px; font-weight: 700; }
+    .htu-section p { color: var(--gray); font-size: 0.94rem; line-height: 1.7; margin-bottom: 12px; }
+    .htu-section ul, .htu-section ol { color: var(--gray); font-size: 0.92rem; line-height: 1.7; margin: 8px 0 14px 22px; }
+    .htu-section li { margin-bottom: 6px; }
+    .htu-section a { color: var(--accent); text-decoration: underline; }
+
+    .htu-tour { background: var(--bg-card); border: 1px solid var(--border); border-radius: 10px; padding: 18px 20px; margin: 14px 0; counter-reset: step; }
+    .htu-tour ol { list-style: none; margin: 0; padding: 0; }
+    .htu-tour li { counter-increment: step; position: relative; padding: 4px 0 14px 38px; color: var(--gray); font-size: 0.92rem; line-height: 1.65; }
+    .htu-tour li::before {
+      content: counter(step);
+      position: absolute; left: 0; top: 2px;
+      width: 26px; height: 26px; border-radius: 50%;
+      background: rgba(168,176,188,0.16); color: var(--accent);
+      font-weight: 800; font-size: 0.82rem;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .htu-tour li:last-child { padding-bottom: 0; }
+
+    .htu-task-table { width: 100%; border-collapse: collapse; margin: 12px 0 18px; font-size: 0.88rem; }
+    .htu-task-table th { text-align: left; padding: 8px 12px; color: var(--accent); font-size: 0.7rem; text-transform: uppercase; letter-spacing: 1.2px; border-bottom: 2px solid var(--accent); font-weight: 700; }
+    .htu-task-table td { padding: 8px 12px; border-bottom: 1px solid var(--border); color: var(--gray); vertical-align: top; }
+    .htu-task-table td:first-child { width: 38%; color: #ddd; font-weight: 600; }
+    .htu-task-table td:nth-child(2) { width: 22%; font-family: 'SF Mono', 'Menlo', monospace; font-size: 0.78rem; }
+
+    .htu-tier-example { background: rgba(168,176,188,0.05); border: 1px solid var(--border); border-radius: 8px; padding: 14px 18px; margin: 12px 0; }
+    .htu-tier-example .tier-row { display: grid; grid-template-columns: 80px 1fr; gap: 12px; padding: 6px 0; border-bottom: 1px solid var(--border); }
+    .htu-tier-example .tier-row:last-child { border-bottom: none; }
+    .htu-tier-example .tier-tag { font-size: 0.7rem; color: var(--accent); font-weight: 800; text-transform: uppercase; letter-spacing: 1.2px; padding-top: 2px; }
+    .htu-tier-example .tier-label { color: #ddd; font-size: 0.88rem; line-height: 1.55; }
+
+    .htu-faq details { background: var(--bg-card); border: 1px solid var(--border); border-radius: 8px; padding: 10px 16px; margin: 8px 0; }
+    .htu-faq summary { color: var(--white); font-weight: 700; cursor: pointer; font-size: 0.95rem; }
+    .htu-faq summary:hover { color: var(--accent); }
+    .htu-faq details[open] summary { color: var(--accent); margin-bottom: 8px; }
+    .htu-faq details p { margin-top: 6px; color: var(--gray); font-size: 0.92rem; line-height: 1.65; }
+
+    footer { text-align: center; padding: 30px 20px; color: var(--gray); font-size: 0.82rem; border-top: 1px solid var(--border); margin-top: 40px; }
+    footer a { color: var(--accent); text-decoration: none; }
+
+    @media (max-width: 700px) {
+      .htu-tools { grid-template-columns: 1fr; }
+      .htu-task-table td:nth-child(2) { display: none; }
+      .htu-task-table td:first-child { width: 45%; }
+    }
+  </style>
+</head>
+<body>
+
+<a href="#main" class="skip-link">Skip to content</a>
+
+<nav>
+  <a href="/" class="nav-brand" style="text-decoration:none">
+    <img src="assets/img/logo.png" alt="U.S.M.C. Ministries" style="object-fit:contain">
+    <div class="nav-brand-text">
+      <div class="name">U.S.M.C. Ministries</div>
+      <div class="tag">Warriors Equipped</div>
+    </div>
+  </a>
+  <ul class="nav-links">
+    <li class="has-sub">
+      <a href="citizen.html" class="active">Citizen</a>
+      <ul class="nav-sub">
+        <li><a href="citizen.html">Scorecard Home</a></li>
+        <li><a href="find-my-reps.html">Find My Reps</a></li>
+        <li><a href="citizen-rankings.html">Rankings</a></li>
+        <li><a href="compare.html">Compare Candidates</a></li>
+        <li><a href="scoring-system.html">Scoring System</a></li>
+        <li><a href="how-to-use.html" class="active">How to Use</a></li>
+        <li><a href="council-notes.html">Council Watch</a></li>
+        <li><a href="https://adamljohns.github.io/resolute-local/" target="_blank" rel="noopener">RESOLUTE Local &#x2197;</a></li>
+      </ul>
+    </li>
+    <li><a href="mission.html">Mission</a></li>
+    <li><a href="shop.html">Shop</a></li>
+    <li><a href="books.html">Books</a></li>
+    <li><a href="coaching.html">Coaching</a></li>
+    <li><a href="fitness/fitness.html">Fitness</a></li>
+    <li><a href="finance/">Finance</a></li>
+    <li><a href="about.html">About</a></li>
+    <li><a href="https://usmcmin.org" target="_blank">Ministry Site</a></li>
+  </ul>
+  <a href="coaching.html" class="btn nav-cta">Book a Session</a>
+  <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme" title="Switch light/dark mode">&#127769;</button>
+  <button class="nav-toggle" aria-label="Menu"><span></span><span></span><span></span></button>
+</nav>
+
+<div id="main" class="htu-container">
+
+  <header class="htu-hero">
+    <span class="badge">5-minute tour &middot; both tools</span>
+    <h1>How to Use <span class="accent">RESOLUTE Citizen</span> + Local</h1>
+    <p>A practical walkthrough of both tools the U.S.M.C. Ministries citizen-engagement stack provides: the candidate scorecard and the civic-engagement tool for your city. Quick start, common tasks, worked examples &mdash; in plain English.</p>
+  </header>
+
+  <nav class="htu-toc" aria-label="Page contents">
+    <h4>On this page</h4>
+    <ul>
+      <li><a href="#tools">The two tools</a></li>
+      <li><a href="#scorecard-tour">Scorecard quick tour</a></li>
+      <li><a href="#scorecard-tasks">Scorecard common tasks</a></li>
+      <li><a href="#tier-framing">How tier framing works</a></li>
+      <li><a href="#civic-tour">Civic-tool quick tour</a></li>
+      <li><a href="#civic-tasks">Civic-tool common tasks</a></li>
+      <li><a href="#participate">How to weigh in (FXBG)</a></li>
+      <li><a href="#faq">FAQ</a></li>
+    </ul>
+  </nav>
+
+  <section id="tools" class="htu-section">
+    <h2>The two tools</h2>
+    <p>Both run on the same proven methodology &mdash; scrape a public source, transform it to structured data, layer in a citizen-friendly LLM brief where useful, render it as a fast static page on GitHub Pages. Different domain, different audience.</p>
+
+    <div class="htu-tools">
+      <div class="htu-tool">
+        <h3>RESOLUTE Citizen</h3>
+        <div class="url">usmcmin.com/citizen.html</div>
+        <p>The <strong>candidate scorecard</strong>. 8,972 federal, state, and local candidates scored on a tier-aware biblical rubric. Every claim cites a primary source. Federal weighted 60/40 God First / America First; state and local weighted 70/30.</p>
+        <a class="htu-go" href="citizen.html">Open the scorecard &rarr;</a>
+      </div>
+      <div class="htu-tool">
+        <h3>RESOLUTE Local</h3>
+        <div class="url">adamljohns.github.io/resolute-local</div>
+        <p>The <strong>civic-engagement tool</strong>. Live council agendas (refreshed twice daily), plain-English citizen briefs from a local LLM, calendar invites, and a draft-a-public-comment helper. Currently Fredericksburg, expanding by request.</p>
+        <a class="htu-go" href="https://adamljohns.github.io/resolute-local/" target="_blank" rel="noopener">Open RESOLUTE Local &#x2197;</a>
+      </div>
+    </div>
+  </section>
+
+  <section id="scorecard-tour" class="htu-section">
+    <h2>Scorecard quick tour <span class="subt">30 seconds</span></h2>
+    <div class="htu-tour">
+      <ol>
+        <li>Open <a href="citizen.html">citizen.html</a>. You'll see candidates as cards &mdash; each shows the score (e.g., <em>18/100 &middot; F</em>) and a tier chip (<em>Federal rubric &middot; 60/40</em>).</li>
+        <li>Type a name in the search box, or filter by state, party, status, or rubric tier.</li>
+        <li>Click any card &rarr; full profile with all 13 categories, every scored question, citations to primary sources, and a deep-dive link to each category's full rubric.</li>
+        <li>The top nav's <strong>Citizen &#9662;</strong> dropdown reaches every supporting page: Find My Reps, Rankings, Compare, Scoring System, Council Watch, plus a cross-link to RESOLUTE Local.</li>
+      </ol>
+    </div>
+  </section>
+
+  <section id="scorecard-tasks" class="htu-section">
+    <h2>Scorecard &mdash; common tasks</h2>
+    <table class="htu-task-table">
+      <thead>
+        <tr><th>I want to&hellip;</th><th>Go to</th><th>How</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Look up a specific candidate</td><td>citizen.html</td><td>Type their name in the search box at the top.</td></tr>
+        <tr><td>See my federal + state reps</td><td>find-my-reps.html</td><td>Enter your address &mdash; pulls your House district + state legislators.</td></tr>
+        <tr><td>Compare two candidates head-to-head</td><td>compare.html</td><td>Pick a race, or pick any two candidates &mdash; scores side-by-side.</td></tr>
+        <tr><td>Browse top-scoring candidates by state</td><td>citizen-rankings.html</td><td>Filter by state, party, office.</td></tr>
+        <tr><td>See who's been voted out or retired</td><td>citizen-formers.html</td><td>Shows resolved candidacies (lost / retired / former).</td></tr>
+        <tr><td>Understand the rubric in depth</td><td>scoring-system.html</td><td>Full explainer of 60/40 federal &amp; 70/30 state/local weighting.</td></tr>
+        <tr><td>Read a category's full rubric + Scripture</td><td>citizen/&lt;slug&gt;.html</td><td>E.g., <a href="citizen/sanctity-of-life.html">citizen/sanctity-of-life.html</a> &mdash; anchor verse, all 5 questions per tier (toggle Federal/State/Local at the top), disqualifiers, key bills + orgs.</td></tr>
+        <tr><td>Watch state ballot issues</td><td>citizen-issues.html</td><td>Track constitutional amendments + initiatives by state.</td></tr>
+        <tr><td>Send a petition to your reps</td><td>petition.html</td><td>Pre-fills a template; edit + copy to email.</td></tr>
+        <tr><td>Dispute a claim on a profile</td><td>any profile, under any answered question</td><td>Click <em>Dispute this claim</em> &rarr; opens email with the source line auto-quoted.</td></tr>
+      </tbody>
+    </table>
+
+    <h3>How to read a profile</h3>
+    <p>Every profile is laid out the same way:</p>
+    <ul>
+      <li><strong>Score header</strong>: total /100 (e.g., 64/100 &mdash; B), plus God-First subtotal and Government-pillar subtotal. The latter changes per tier &mdash; <em>America First</em> for federal, <em>State First</em> for state, <em>Local First</em> for local.</li>
+      <li><strong>Tier chip</strong> under the score tells you which rubric is in play (<em>Local rubric &middot; 70/30</em>).</li>
+      <li><strong>Category cards</strong>: 13 total, but only the ones applicable to this office's tier render. Each shows the score (6/10), an icon, and a "deep dive &rarr;" link.</li>
+      <li><strong>Per-question rows</strong>: True / False / null. <em>True</em> earns +2; <em>null</em> means "not yet verified from primary sources" (neither penalized nor credited).</li>
+      <li><strong>Evidence drawer</strong> (the small <em>i</em> button) expands citations for any answered question &mdash; typically AP, NBC, state Secretary of State, official records.</li>
+      <li><strong>"&#128205; Track this council live"</strong> banner appears on Fredericksburg city officials' profiles &rarr; jumps to the civic tool for that city.</li>
+    </ul>
+  </section>
+
+  <section id="tier-framing" class="htu-section">
+    <h2>How tier framing works <span class="subt">v5.6 &middot; per-tier labels</span></h2>
+    <p>The same canonical category looks different on the profile depending on the office, because what a U.S. senator decides about <em>Sanctity of Life</em> is not what a city council decides. v5.6 makes that drill-down visible:</p>
+
+    <div class="htu-tier-example">
+      <div class="tier-row">
+        <div class="tier-tag">Federal</div>
+        <div class="tier-label"><strong>Sanctity of Life</strong> &mdash; full personhood from conception, federal abortion law, SCOTUS confirmations, Hyde Amendment.</div>
+      </div>
+      <div class="tier-row">
+        <div class="tier-tag">State</div>
+        <div class="tier-label"><strong>Sanctity of Life &mdash; State abortion law &amp; funding</strong> &mdash; state code, Medicaid defunding, parental consent, clinic-safety regulation.</div>
+      </div>
+      <div class="tier-row">
+        <div class="tier-tag">Local</div>
+        <div class="tier-label"><strong>Sanctity of Life &mdash; Protect the Vulnerable</strong> &mdash; DA priorities, no PP zoning, crisis-pregnancy support, child protection in schools and city contracts.</div>
+      </div>
+    </div>
+
+    <p>Same Scripture, same conviction; what changes is the chair making the call. On the category deep-dive pages (e.g., <a href="citizen/sanctity-of-life.html">/citizen/sanctity-of-life.html</a>) you can toggle Federal/State/Local at the top to see all three framings &mdash; label, description, and the actual scored questions all swap together.</p>
+  </section>
+
+  <section id="civic-tour" class="htu-section">
+    <h2>Civic-tool quick tour <span class="subt">RESOLUTE Local</span></h2>
+    <div class="htu-tour">
+      <ol>
+        <li>Open <a href="https://adamljohns.github.io/resolute-local/" target="_blank" rel="noopener">adamljohns.github.io/resolute-local</a>. You'll see the city directory &mdash; <strong>Fredericksburg</strong> today; <em>Request your city</em> for the rest.</li>
+        <li>Click <em>Open Fredericksburg</em> &rarr; the live council page: next meeting (date, time, agenda link, plain-English LLM brief), current council members with ward + contact, active issues this cycle, and the how-to-participate ladder.</li>
+        <li>Click <strong>&#128197; Add to my calendar</strong> on the next meeting &rarr; downloads a <code>.ics</code> file you import to Apple/Google/Outlook calendar.</li>
+        <li>Click <strong>&#9997;&#65039; Draft a public comment</strong> &rarr; opens an editable template; click <em>Copy to clipboard</em>, then paste into email or read at the podium.</li>
+        <li>Top nav links cross-domain to the <strong>Scorecard &#x2197;</strong> for these same council members on usmcmin.com, plus the <strong>Council Notes</strong> page (past meetings, votes, policy analysis).</li>
+      </ol>
+    </div>
+    <p style="color:var(--gray);font-size:0.86rem;font-style:italic;">The data refreshes <strong>twice daily</strong> (06:00 + 18:00 EDT) &mdash; a cron pulls the official agenda center, transforms it, has a local LLM write the citizen brief, and pushes any changes for live deploy. You always see the latest published agenda + the freshest brief.</p>
+  </section>
+
+  <section id="civic-tasks" class="htu-section">
+    <h2>Civic-tool &mdash; common tasks</h2>
+    <table class="htu-task-table">
+      <thead>
+        <tr><th>I want to&hellip;</th><th>Where</th><th>How</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Know what's on the next council meeting</td><td>city page top</td><td>"Next Meeting" section &mdash; date, agenda link, plain-English LLM brief.</td></tr>
+        <tr><td>Calendar the next meeting</td><td>city page</td><td>"&#128197; Add to my calendar" &rarr; opens <code>.ics</code> file.</td></tr>
+        <tr><td>Email a councilor</td><td>city page council grid</td><td>Each councilor card links to the city contact directory.</td></tr>
+        <tr><td>See what just happened at a meeting</td><td>Council Notes</td><td>Past meetings, votes, policy tags, video links.</td></tr>
+        <tr><td>Draft a public comment to read at the podium</td><td>city page</td><td>"&#9997;&#65039; Draft a public comment" &rarr; edits a template, copies to clipboard.</td></tr>
+        <tr><td>Score my councilor on the scorecard</td><td>city page council grid</td><td>Each councilor card has a "Profile" button &rarr; opens their RESOLUTE Citizen scorecard.</td></tr>
+        <tr><td>Request RESOLUTE Local for my city</td><td>Council Notes bottom</td><td>"Want Council Watch in your city?" form.</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section id="participate" class="htu-section">
+    <h2>How to weigh in &mdash; FXBG example <span class="subt">the 10-minutes-a-month ladder</span></h2>
+    <p>The whole tool is designed around the assumption that you have <em>ten minutes a month</em> to be a faithful citizen of your city &mdash; not ten hours. Here's the ladder:</p>
+    <ol>
+      <li><strong>Watch</strong> &mdash; on the morning of the meeting, open the city page, skim the LLM brief (60 sec). If nothing jumps out, you're done.</li>
+      <li><strong>Email</strong> &mdash; if one item matters to you, click the councilor cards, copy emails, send a 3-sentence note <em>before 5 PM the day of the meeting</em> (most councils close comment that afternoon).</li>
+      <li><strong>Comment</strong> &mdash; if it's bigger than email, click "Draft a public comment," edit the template, and read it at the podium (Fredericksburg holds public comment at the start of every Regular Session).</li>
+      <li><strong>Show up</strong> &mdash; for the biggest items, attend. The room being full changes how votes go.</li>
+    </ol>
+    <p>Most issues are settled at step 1 or 2. The toolkit lowers the friction so steps 3 and 4 are available when they matter.</p>
+  </section>
+
+  <section id="faq" class="htu-section htu-faq">
+    <h2>FAQ</h2>
+
+    <details>
+      <summary>Why are some categories not shown on a state or local profile?</summary>
+      <p>Because they don't apply at that tier. A city councilor doesn't vote on foreign policy or federal industry capture, so those categories are hidden on local profiles &mdash; the rubric grades them on what their chair actually decides. Federal officials get the full 10-category federal rubric; state officials see the 10-category state rubric (with "Refuse Federal Overreach" and "Public Justice" in place of the federal-only categories); local officials see the 10-category local rubric (with "Refuse State Overreach" replacing the federal-only ones).</p>
+    </details>
+
+    <details>
+      <summary>What does <em>null</em> mean on a question?</summary>
+      <p>"Not yet verified from a primary source." It's neither True nor False &mdash; it doesn't penalize the candidate, but it doesn't credit them either. The dynamic-max grading reduces the denominator by the unanswered questions so the percentage still reflects what we know. As primary sources surface (votes, public statements, filings), null answers convert to True/False with citations.</p>
+    </details>
+
+    <details>
+      <summary>How do I dispute a claim?</summary>
+      <p>On any profile, find the answered question and click the small <em>i</em> button to see the source. Below the sources is a <em>Dispute this claim</em> link &mdash; click it and your email opens pre-filled with the disputed line so we can investigate.</p>
+    </details>
+
+    <details>
+      <summary>How fresh is the data?</summary>
+      <p><strong>Scorecard:</strong> election results are verified and updated within 48 hours of resolution (we cite a reputable source &mdash; AP, NBC, state SoS &mdash; before changing any status). A weekly sweep on Monday mornings flags races needing attention. Background: AIPAC / Soros / CCP donor adjustments refresh monthly.<br>
+      <strong>RESOLUTE Local:</strong> twice daily (06:00 + 18:00 EDT) &mdash; the agenda center is scraped, the brief regenerated, and any changes pushed live.</p>
+    </details>
+
+    <details>
+      <summary>I'm a candidate &mdash; how do I get my profile updated?</summary>
+      <p>Email <a href="mailto:bowandarrowstudiollc@gmail.com">bowandarrowstudiollc@gmail.com</a> with primary-source links (campaign site, voting record, signed pledges, public statements) for the questions you want re-scored. Every change requires a citation. We update on a rolling basis.</p>
+    </details>
+
+    <details>
+      <summary>I want RESOLUTE Local for my city &mdash; what's involved?</summary>
+      <p>The pattern generalizes to any locality whose agenda center is publicly published (most VA cities run CivicPlus / Granicus / Legistar; one adapter covers each). Request it via the form at the bottom of the <a href="council-notes.html">Council Notes</a> page; we're rolling out demand-driven across the Commonwealth (and beyond).</p>
+    </details>
+
+    <details>
+      <summary>Is this affiliated with a party or campaign?</summary>
+      <p>No. U.S.M.C. Ministries is a Christian ministry; the scorecard grades candidates against a biblical rubric, not a party platform. The data is sourced from official records and reputable journalism only. Every claim cites its source &mdash; we welcome scrutiny.</p>
+    </details>
+
+    <details>
+      <summary>How is the scoring weighted?</summary>
+      <p>Three rubrics, all on a 0-100 scale. <strong>Federal:</strong> 60 God First / 40 America First. <strong>State and Local:</strong> 70 God First / 30 State (or Local) First &mdash; because the lower the office, the narrower its national-issue scope, so a leader's faithfulness to Christ is proportionally more of what their record reveals. See the full <a href="scoring-system.html">Scoring System</a> page for the math, the dynamic-max grading, and the letter-grade scale.</p>
+    </details>
+  </section>
+
+  <p style="margin-top:34px;text-align:center;">
+    <a href="citizen.html" style="display:inline-block;background:linear-gradient(90deg,#c9a84c,#D4AF37);color:#000;font-weight:700;padding:10px 20px;border-radius:6px;text-decoration:none;font-size:0.9rem;">Open the scorecard &rarr;</a>
+    &nbsp;
+    <a href="https://adamljohns.github.io/resolute-local/" target="_blank" rel="noopener" style="display:inline-block;border:1px solid var(--accent);color:var(--accent);font-weight:600;padding:10px 20px;border-radius:6px;text-decoration:none;font-size:0.9rem;">Open RESOLUTE Local &#x2197;</a>
+  </p>
+
+</div>
+
+<footer>
+  <p><strong>U.S.M.C. Ministries</strong> &mdash; <a href="citizen.html">RESOLUTE Citizen</a> &middot; <a href="https://adamljohns.github.io/resolute-local/" target="_blank" rel="noopener">RESOLUTE Local</a> &middot; <a href="scoring-system.html">Scoring System</a> &middot; <a href="https://usmcmin.org">usmcmin.org</a></p>
+  <p style="margin-top:6px;font-size:0.75rem;">"When the righteous are in authority, the people rejoice; but when the wicked beareth rule, the people mourn." &mdash; <a href="https://usmcmin.org/bible.html?ref=Proverbs+29:2">Proverbs 29:2</a></p>
+</footer>
+
+<script>
+(function(){var t=document.getElementById('themeToggle');if(!t)return;var s=localStorage.getItem('usmc-theme');if(s!=='light'){document.documentElement.setAttribute('data-theme','dark');t.textContent='☀️';}t.addEventListener('click',function(){var d=document.documentElement.getAttribute('data-theme')==='dark';if(d){document.documentElement.removeAttribute('data-theme');localStorage.setItem('usmc-theme','light');t.textContent='🌙';}else{document.documentElement.setAttribute('data-theme','dark');localStorage.setItem('usmc-theme','dark');t.textContent='☀️';}});})();
+</script>
+<script src="assets/js/main.js" defer></script>
+</body>
+</html>

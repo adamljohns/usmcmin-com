@@ -53,6 +53,7 @@ SCORECARD_FAMILY = {
     "stats.html", "state.html", "map.html",
     "scorecard-table.html", "scorecard.html",
     "methodology-foreign-influence.html", "changelog.html", "sitemap.html",
+    "how-to-use.html",  # v5.6: the on-site walkthrough
 }
 MARKETING_ACTIVE = {
     "mission.html": "Mission",
@@ -69,6 +70,7 @@ SUB_ACTIVE = {
     "citizen-rankings.html": "Rankings",
     "compare.html": "Compare Candidates",
     "scoring-system.html": "Scoring System",
+    "how-to-use.html": "How to Use",
     "council-notes.html": "Council Watch",
 }
 
@@ -109,6 +111,7 @@ def render_nav(depth: int, page_basename: str, in_scorecard_subdir: bool = False
         <li><a href="{p}citizen-rankings.html"{sub_cls("Rankings")}>Rankings</a></li>
         <li><a href="{p}compare.html"{sub_cls("Compare Candidates")}>Compare Candidates</a></li>
         <li><a href="{p}scoring-system.html"{sub_cls("Scoring System")}>Scoring System</a></li>
+        <li><a href="{p}how-to-use.html"{sub_cls("How to Use")}>How to Use</a></li>
         <li><a href="{p}council-notes.html"{sub_cls("Council Watch")}>Council Watch</a></li>
         <li><a href="https://adamljohns.github.io/resolute-local/" target="_blank" rel="noopener">RESOLUTE Local &#x2197;</a></li>
       </ul>

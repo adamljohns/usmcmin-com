@@ -150,16 +150,22 @@
     color: #CE8E31 !important;
     border: 1px solid #CE8E31 !important;
   }
-  /* Hide the USMC site-wide nav on FC track (but NOT in-page .filters bars) */
-  body > nav:not(.filters),
+  /* Hide the USMC site-wide nav on FC track. .filters is a <div> (not nav), so it's unaffected. */
+  body > nav,
   nav.site-nav,
   header.site-header { display: none !important; }
   /* FC mini-header is static (scrolls away), so pin in-page filter bars to the very top */
-  nav.filters { top: 0 !important; }
+  .filters { top: 0 !important; }
   /* Filter chips were styled for the dark theme; restyle for FC light (AA contrast) */
-  nav.filters .chip { background:#F4F5F7 !important; color:#334155 !important; border-color:#D1D5DB !important; }
-  nav.filters .chip:hover { color:#A66A1F !important; border-color:#CE8E31 !important; }
-  nav.filters .chip.active { background:#CE8E31 !important; color:#1A1A1A !important; border-color:#CE8E31 !important; }
+  .filters .chip { background:#F4F5F7 !important; color:#334155 !important; border-color:#D1D5DB !important; }
+  .filters .chip:hover { color:#A66A1F !important; border-color:#CE8E31 !important; }
+  .filters .chip.active { background:#CE8E31 !important; color:#1A1A1A !important; border-color:#CE8E31 !important; }
+  /* Tier checkbox labels: lighter colors fade on white; use darker variants for FC light */
+  .filters .tier-check { background:#F4F5F7 !important; border-color:#D1D5DB !important; }
+  .filters .tier-check .t-S { color:#A66A1F !important; }
+  .filters .tier-check .t-A { color:#5C7A4A !important; }
+  .filters .tier-check .t-B { color:#4B5563 !important; }
+  .filters .tier-check .t-C { color:#6B7280 !important; }
   /* Search + sort controls: same light-theme restyle (AA contrast) */
   .tools-controls .tool-search { background:#FFFFFF !important; color:#1A1A1A !important; border-color:#D1D5DB !important; }
   .tools-controls .tool-search::placeholder { color:#6B7280 !important; }

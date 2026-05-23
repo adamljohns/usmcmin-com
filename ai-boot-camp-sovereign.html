@@ -217,6 +217,23 @@
     border:1px solid var(--border); background:var(--bg-card); color:var(--gray-light); cursor:pointer; transition:all .15s; white-space:nowrap; }
   .sort-btn:hover { border-color:var(--gold); color:var(--gold); }
   .sort-btn.active { background:var(--gold); color:var(--bg-dark); border-color:var(--gold); }
+
+  /* Multi-row filter bar (tier row stacked under category row) */
+  .filters-inner + .filters-inner { margin-top:8px; }
+  .filter-label { align-self:center; flex-shrink:0; font-size:0.6rem; font-weight:800;
+    letter-spacing:2px; text-transform:uppercase; color:var(--gray); margin-right:4px; }
+  /* Tier checkboxes — label-chip wrapping a native checkbox (default all checked) */
+  .tier-check { display:inline-flex; align-items:center; gap:7px; padding:6px 13px; border-radius:99px;
+    border:1px solid var(--border); background:var(--bg-card); color:var(--white);
+    font-size:0.82rem; font-weight:700; letter-spacing:0.5px; cursor:pointer; user-select:none;
+    transition:opacity .15s, border-color .15s; white-space:nowrap; }
+  .tier-check:hover { border-color:var(--gold); }
+  .tier-check.unchecked { opacity:0.45; }
+  .tier-check input { accent-color:var(--gold); margin:0; cursor:pointer; }
+  .tier-check .t-S { color:#CE8E31; }
+  .tier-check .t-A { color:#7C9A6B; }
+  .tier-check .t-B { color:#9CA3AF; }
+  .tier-check .t-C { color:#C8C8C8; }
 </style>
   <meta name="robots" content="noindex, nofollow">
 </head>
@@ -266,11 +283,11 @@
 <!-- A <div> landmark, not a <nav>: the FC track hides every `body > nav`
      (to drop the site nav), which would also hide this bar and the filters. -->
 <div class="hw-jumpbar" role="navigation" aria-label="Jump to hardware and explainer">
-  <a class="btn btn-primary hw-jump" href="#hwguide">Recommended hardware &rarr;</a>
+  <button type="button" class="btn btn-primary hw-jump" id="hwToggle" aria-controls="hwguide" aria-expanded="false">Recommended hardware &darr;</button>
 </div>
 
 <!-- HARDWARE SIZING GUIDE — hardware-first, ahead of the tool list (Work Order 8A) -->
-  <section class="hwguide" id="hwguide">
+  <section class="hwguide" id="hwguide" hidden>
     <h2>Hardware Sizing Guide</h2>
     <p class="lede">Tap a tier to <b>configure your stack</b> &mdash; the tool list below filters to what actually runs on that hardware. Tap it again to clear. <button type="button" id="hwReset" class="hw-reset" style="display:none">Show all tiers &#10005;</button></p>
     <div class="hw-grid">
@@ -326,8 +343,8 @@
   <div class="tl-row" data-tier="C"><span class="tl-badge">C</span><span class="tl-label">OPTIONAL</span><span class="tl-desc">— Most watchmen skip these.</span></div>
 </div>
 
-<!-- FILTERS -->
-<nav class="filters" aria-label="Filter local tools by category">
+<!-- FILTERS — div (not nav) to avoid inheriting main.css body>nav site-nav styles -->
+<div class="filters" role="navigation" aria-label="Filter local tools by category">
   <div class="filters-inner">
     <button class="chip active" data-filter="all">All <span class="count">30</span></button>
     <button class="chip" data-filter="runner">LLM Runners <span class="count">5</span></button>
@@ -337,9 +354,15 @@
     <button class="chip" data-filter="code">Coding <span class="count">4</span></button>
     <button class="chip" data-filter="rag">Knowledge / RAG <span class="count">4</span></button>
     <button class="chip" data-filter="automation">Automation <span class="count">3</span></button>
-    <button class="chip tier-toggle" type="button" aria-label="Toggle Show S+A only" title="Show only S and A tier tools">Show S+A only</button>
   </div>
-</nav>
+  <div class="filters-inner" data-dim="tier" aria-label="Filter by tier">
+    <span class="filter-label">Tier</span>
+    <label class="tier-check"><input type="checkbox" data-tier="S" checked> <span class="t-S">S</span></label>
+    <label class="tier-check"><input type="checkbox" data-tier="A" checked> <span class="t-A">A</span></label>
+    <label class="tier-check"><input type="checkbox" data-tier="B" checked> <span class="t-B">B</span></label>
+    <label class="tier-check"><input type="checkbox" data-tier="C" checked> <span class="t-C">C</span></label>
+  </div>
+</div>
 
 <main class="tools-main">
   <h2 class="section-title">The 30 local tools</h2>
@@ -968,14 +991,16 @@
   const resetBtn = document.getElementById('hwReset');
   const searchInput = document.getElementById('toolSearch');
   const sortBtns = document.querySelectorAll('.sort-btn[data-sort]');
+  const tierChecks = document.querySelectorAll('.tier-check input[type="checkbox"]');
   const TIER_RANK = { S:0, A:1, B:2, C:3 };
-  const state = { cat: 'all', ram: null, q: '', sort: 'default' };
+  const state = { cat: 'all', ram: null, q: '', sort: 'default', tiers: new Set(['S','A','B','C']) };
 
   function matches(c){
     const catOk = state.cat === 'all' || c.dataset.cat === state.cat;
     const ramOk = state.ram === null || (parseInt(c.dataset.ram || '8', 10) <= state.ram);
     const qOk = state.q === '' || (c.dataset.search || c.textContent || '').toLowerCase().indexOf(state.q) !== -1;
-    return catOk && ramOk && qOk;
+    const tierOk = state.tiers.has(c.dataset.tier);
+    return catOk && ramOk && qOk && tierOk;
   }
   function applyOrder(){
     const arr = originalOrder.slice();
@@ -1002,7 +1027,6 @@
     chip.classList.add('active');
     state.cat = chip.dataset.filter;
     apply();
-    window.scrollTo({top: 200, behavior: 'instant'});
   }));
 
   if (searchInput) searchInput.addEventListener('input', () => {
@@ -1014,6 +1038,12 @@
     sortBtns.forEach(x => x.classList.remove('active'));
     b.classList.add('active');
     state.sort = b.dataset.sort;
+    apply();
+  }));
+
+  tierChecks.forEach(cb => cb.addEventListener('change', () => {
+    if (cb.checked) state.tiers.add(cb.dataset.tier); else state.tiers.delete(cb.dataset.tier);
+    cb.closest('.tier-check').classList.toggle('unchecked', !cb.checked);
     apply();
   }));
 
@@ -1041,24 +1071,27 @@
     resetBtn.style.display = 'none';
     apply();
   });
-})();
-</script>
 
-
-<script>
-(function() {
-  // "Show S+A only" toggle. Use capture phase + stopImmediatePropagation
-  // so we win over the existing category-filter handler that also targets .chip.
-  const chip = document.querySelector('.chip.tier-toggle');
-  if (!chip) return;
-  const grid = document.getElementById('toolsGrid');
-  if (!grid) return;
-  chip.addEventListener('click', (e) => {
-    e.preventDefault();
-    e.stopImmediatePropagation();
-    grid.classList.toggle('filter-sa-only');
-    chip.classList.toggle('active');
-  }, true /* capture phase */);
+  // Hardware sizing guide collapsibility (Sovereign only — no-op when elements absent)
+  const hwBtn = document.getElementById('hwToggle');
+  const hwGuide = document.getElementById('hwguide');
+  if (hwBtn && hwGuide) {
+    const updateHwBtn = () => {
+      const open = !hwGuide.hasAttribute('hidden');
+      hwBtn.setAttribute('aria-expanded', open ? 'true' : 'false');
+      hwBtn.innerHTML = open ? 'Hide hardware &uarr;' : 'Recommended hardware &darr;';
+    };
+    hwBtn.addEventListener('click', () => {
+      if (hwGuide.hasAttribute('hidden')) {
+        hwGuide.removeAttribute('hidden');
+        requestAnimationFrame(() => hwGuide.scrollIntoView({block:'start', behavior:'smooth'}));
+      } else {
+        hwGuide.setAttribute('hidden', '');
+      }
+      updateHwBtn();
+    });
+    updateHwBtn();
+  }
 })();
 </script>
 

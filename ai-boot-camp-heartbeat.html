@@ -12,7 +12,7 @@
   .module-hero { padding:120px 20px 40px; border-bottom:1px solid var(--border);
     background: linear-gradient(180deg, rgba(30,58,95,0.10) 0%, transparent 100%); }
   [data-theme="dark"] .module-hero { background: linear-gradient(180deg, rgba(30,58,95,0.28) 0%, transparent 100%); }
-  .module-hero-inner { max-width:760px; margin:0 auto; }
+  .module-hero-inner { max-width:880px; margin:0 auto; }
   .module-badge { display:inline-block; font-size:0.68rem; font-weight:700; text-transform:uppercase;
     letter-spacing:3px; color:var(--gold); background:var(--gold-dim); border:1px solid var(--border);
     padding:6px 18px; border-radius:20px; margin-bottom:14px; }
@@ -27,7 +27,7 @@
 
   .filters { display:block; position:sticky; top:70px; background:var(--bg-dark); border-bottom:1px solid var(--border);
     padding:12px 16px; z-index:9; overflow-x:auto; white-space:nowrap; }
-  .filters-inner { max-width:760px; margin:0 auto; display:flex; gap:8px; }
+  .filters-inner { max-width:880px; margin:0 auto; display:flex; gap:8px; }
   .chip { display:inline-flex; align-items:center; padding:7px 14px; border-radius:99px;
     border:1px solid var(--border); background:var(--bg-card); color:var(--gray-light);
     font-size:0.82rem; font-weight:600; cursor:pointer; transition:all 0.15s; white-space:nowrap; font-family:inherit; }
@@ -38,7 +38,7 @@
   .filter-label { align-self:center; flex-shrink:0; font-size:0.6rem; font-weight:800;
     letter-spacing:2px; text-transform:uppercase; color:var(--gray); margin-right:4px; }
 
-  .feed { max-width:760px; margin:0 auto; padding:24px 16px 80px; }
+  .feed { max-width:880px; margin:0 auto; padding:24px 16px 80px; }
   .feed-empty { padding:40px 0; text-align:center; color:var(--gray); font-size:0.88rem; display:none; }
 
   .post { background:var(--bg-card); border:1px solid var(--border); border-radius:var(--radius);
@@ -125,8 +125,8 @@
   </div>
 </div>
 
-<!-- FILTERS -->
-<nav class="filters" aria-label="Filter posts">
+<!-- FILTERS — div (not nav) to avoid inheriting main.css body>nav site-nav styles -->
+<div class="filters" role="navigation" aria-label="Filter posts">
   <div class="filters-inner" data-dim="type" aria-label="Filter by type">
     <span class="filter-label">Type</span>
     <button class="chip active" data-val="all">All <span class="count">24</span></button>
@@ -145,7 +145,7 @@
     <button class="chip" data-val="4">Week 4 <span class="count">4</span></button>
     <button class="chip" data-val="5">Week 5 <span class="count">4</span></button>
   </div>
-</nav>
+</div>
 
 <main class="feed" id="feed">
   <article class="post" data-type="kickoff" data-week="1">
@@ -704,27 +704,8 @@
       chip.classList.add('active');
       state[dim] = chip.dataset.val;
       apply();
-      window.scrollTo({top: 200, behavior: 'instant'});
     }));
   });
-})();
-</script>
-
-
-<script>
-(function() {
-  // "Show S+A only" toggle. Use capture phase + stopImmediatePropagation
-  // so we win over the existing category-filter handler that also targets .chip.
-  const chip = document.querySelector('.chip.tier-toggle');
-  if (!chip) return;
-  const grid = document.getElementById('toolsGrid');
-  if (!grid) return;
-  chip.addEventListener('click', (e) => {
-    e.preventDefault();
-    e.stopImmediatePropagation();
-    grid.classList.toggle('filter-sa-only');
-    chip.classList.toggle('active');
-  }, true /* capture phase */);
 })();
 </script>
 

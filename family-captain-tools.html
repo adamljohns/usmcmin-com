@@ -208,6 +208,13 @@
     .tier-legend { flex-direction:column; align-items:flex-start; gap:8px; }
   }
 
+  /* Clickable legend rows — used on Compass + Sovereign for tier filtering */
+  .tier-legend label.tl-row { cursor: pointer; border-radius: var(--radius);
+    transition: opacity 0.15s, background 0.15s; }
+  .tier-legend label.tl-row:hover { background: rgba(206, 142, 49, 0.10); }
+  .tier-legend .tl-check { accent-color: var(--gold); cursor: pointer; margin: 0 2px 0 0; flex-shrink: 0; }
+  .tier-legend .tl-row.unchecked { opacity: 0.4; }
+
   /* "Show S+A only" chip — uses existing .chip class so it sits naturally in the filter row */
   .chip.tier-toggle {
     border: 1.5px solid #CE8E31 !important;
@@ -1168,11 +1175,11 @@
 
 <!-- TIER LEGEND -->
 
-<div class="tier-legend" role="region" aria-label="Tier legend">
-  <div class="tl-row" data-tier="S"><span class="tl-badge">S</span><span class="tl-label">START HERE</span><span class="tl-desc">— Don't skip these.</span></div>
-  <div class="tl-row" data-tier="A"><span class="tl-badge">A</span><span class="tl-label">CORE</span><span class="tl-desc">— Adopt in the first month.</span></div>
-  <div class="tl-row" data-tier="B"><span class="tl-badge">B</span><span class="tl-label">DEPTH</span><span class="tl-desc">— After the basics are running.</span></div>
-  <div class="tl-row" data-tier="C"><span class="tl-badge">C</span><span class="tl-label">OPTIONAL</span><span class="tl-desc">— Most captains skip these.</span></div>
+<div class="tier-legend" role="region" aria-label="Tier legend &mdash; click a row to hide that tier">
+  <label class="tl-row" data-tier="S"><input type="checkbox" data-tier="S" class="tl-check" checked><span class="tl-badge">S</span><span class="tl-label">ESSENTIAL</span><span class="tl-desc">&mdash; The 2&ndash;4 every captain runs daily.</span></label>
+  <label class="tl-row" data-tier="A"><input type="checkbox" data-tier="A" class="tl-check" checked><span class="tl-badge">A</span><span class="tl-label">RECOMMENDED</span><span class="tl-desc">&mdash; Add once Essential is set.</span></label>
+  <label class="tl-row" data-tier="B"><input type="checkbox" data-tier="B" class="tl-check" checked><span class="tl-badge">B</span><span class="tl-label">DEEPER</span><span class="tl-desc">&mdash; When you&rsquo;re going further.</span></label>
+  <label class="tl-row" data-tier="C"><input type="checkbox" data-tier="C" class="tl-check" checked><span class="tl-badge">C</span><span class="tl-label">SPECIALTY</span><span class="tl-desc">&mdash; Purpose-built &mdash; pick if your work needs it.</span></label>
 </div>
 
 <!-- FILTERS — div (not nav) to avoid inheriting main.css body>nav site-nav styles -->
@@ -1187,13 +1194,6 @@
     <button class="chip" data-filter="code">Coding <span class="count">5</span></button>
     <button class="chip" data-filter="video">Video <span class="count">4</span></button>
     <button class="chip" data-filter="frontier">Agentic Frontier <span class="count">12</span></button>
-  </div>
-  <div class="filters-inner" data-dim="tier" aria-label="Filter by tier">
-    <span class="filter-label">Tier</span>
-    <label class="tier-check"><input type="checkbox" data-tier="S" checked> <span class="t-S">S</span></label>
-    <label class="tier-check"><input type="checkbox" data-tier="A" checked> <span class="t-A">A</span></label>
-    <label class="tier-check"><input type="checkbox" data-tier="B" checked> <span class="t-B">B</span></label>
-    <label class="tier-check"><input type="checkbox" data-tier="C" checked> <span class="t-C">C</span></label>
   </div>
 </div>
 
@@ -1211,7 +1211,7 @@
   </div>
   <div class="tools-grid" id="toolsGrid">
       <article class="tool-card" data-cat="chat" data-tier="S" data-name="claude" data-search="claude anthropic&#x27;s general ai assistant. chat">
-        <span class="tier-badge" data-tier="S" aria-label="Tier S: Start Here">S</span>
+        <span class="tier-badge" data-tier="S" aria-label="Tier S: Essential">S</span>
         <span class="tool-cat">Chat</span>
         <h2><a href="https://claude.ai" target="_blank" rel="noopener" style="color:inherit; text-decoration:none; border-bottom:1px dotted var(--gold);">Claude <span style="opacity:0.6; font-size:0.75em;">↗</span></a></h2>
         <p class="tool-type">General-purpose AI assistant + agentic Cowork mode</p>
@@ -1227,7 +1227,7 @@
         <div class="captain-call">Best default for most men. If you only buy one, this is the one.</div>
       </article>
       <article class="tool-card" data-cat="chat" data-tier="A" data-name="chatgpt" data-search="chatgpt openai&#x27;s assistant. largest install base. chat">
-        <span class="tier-badge" data-tier="A" aria-label="Tier A: Core">A</span>
+        <span class="tier-badge" data-tier="A" aria-label="Tier A: Recommended">A</span>
         <span class="tool-cat">Chat</span>
         <h2><a href="https://chatgpt.com" target="_blank" rel="noopener" style="color:inherit; text-decoration:none; border-bottom:1px dotted var(--gold);">ChatGPT <span style="opacity:0.6; font-size:0.75em;">↗</span></a></h2>
         <p class="tool-type">General-purpose AI assistant + computer-use Agent</p>
@@ -1243,7 +1243,7 @@
         <div class="captain-call">Plus at $20 is the right tier as a #2 for image gen + sanity check. Pro at $200/mo is overkill for a family-captain stack — nobody in this cohort needs that ceiling.</div>
       </article>
       <article class="tool-card" data-cat="chat" data-tier="A" data-name="gemini" data-search="gemini google&#x27;s ai, baked into workspace. chat">
-        <span class="tier-badge" data-tier="A" aria-label="Tier A: Core">A</span>
+        <span class="tier-badge" data-tier="A" aria-label="Tier A: Recommended">A</span>
         <span class="tool-cat">Chat</span>
         <h2><a href="https://gemini.google.com" target="_blank" rel="noopener" style="color:inherit; text-decoration:none; border-bottom:1px dotted var(--gold);">Gemini <span style="opacity:0.6; font-size:0.75em;">↗</span></a></h2>
         <p class="tool-type">Google Workspace-native AI assistant</p>
@@ -1259,7 +1259,7 @@
         <div class="captain-call">Skip unless you're deep in Google. Free tier is decent for the curious.</div>
       </article>
       <article class="tool-card" data-cat="chat" data-tier="B" data-name="grok" data-search="grok xai&#x27;s chat, built into x (twitter). chat">
-        <span class="tier-badge" data-tier="B" aria-label="Tier B: Depth">B</span>
+        <span class="tier-badge" data-tier="B" aria-label="Tier B: Deeper">B</span>
         <span class="tool-cat">Chat</span>
         <h2><a href="https://grok.com" target="_blank" rel="noopener" style="color:inherit; text-decoration:none; border-bottom:1px dotted var(--gold);">Grok <span style="opacity:0.6; font-size:0.75em;">↗</span></a></h2>
         <p class="tool-type">X-integrated AI chat with live X data</p>
@@ -1275,7 +1275,7 @@
         <div class="captain-call">Skip unless you're a heavy X user or want a contrarian second take. Don't pay for it as a primary.</div>
       </article>
       <article class="tool-card" data-cat="chat" data-tier="A" data-name="perplexity" data-search="perplexity search-first ai. citations built in. chat">
-        <span class="tier-badge" data-tier="A" aria-label="Tier A: Core">A</span>
+        <span class="tier-badge" data-tier="A" aria-label="Tier A: Recommended">A</span>
         <span class="tool-cat">Chat</span>
         <h2><a href="https://perplexity.ai" target="_blank" rel="noopener" style="color:inherit; text-decoration:none; border-bottom:1px dotted var(--gold);">Perplexity <span style="opacity:0.6; font-size:0.75em;">↗</span></a></h2>
         <p class="tool-type">Search-first AI with citations</p>
@@ -1291,7 +1291,7 @@
         <div class="captain-call">Free tier is enough for 90%. Pro only if you research daily for work.</div>
       </article>
       <article class="tool-card" data-cat="chat" data-tier="A" data-name="microsoft copilot" data-search="microsoft copilot microsoft&#x27;s ai in edge, windows, m365. chat">
-        <span class="tier-badge" data-tier="A" aria-label="Tier A: Core">A</span>
+        <span class="tier-badge" data-tier="A" aria-label="Tier A: Recommended">A</span>
         <span class="tool-cat">Chat</span>
         <h2><a href="https://copilot.microsoft.com" target="_blank" rel="noopener" style="color:inherit; text-decoration:none; border-bottom:1px dotted var(--gold);">Microsoft Copilot <span style="opacity:0.6; font-size:0.75em;">↗</span></a></h2>
         <p class="tool-type">Microsoft 365 AI assistant</p>
@@ -1307,7 +1307,7 @@
         <div class="captain-call">Pay only if your daily work is in Word / Excel / Outlook. Otherwise skip.</div>
       </article>
       <article class="tool-card" data-cat="chat" data-tier="C" data-name="deepseek" data-search="deepseek open-weight chinese model. free. capable. chat">
-        <span class="tier-badge" data-tier="C" aria-label="Tier C: Optional">C</span>
+        <span class="tier-badge" data-tier="C" aria-label="Tier C: Specialty">C</span>
         <span class="tool-cat">Chat</span>
         <h2><a href="https://chat.deepseek.com" target="_blank" rel="noopener" style="color:inherit; text-decoration:none; border-bottom:1px dotted var(--gold);">DeepSeek <span style="opacity:0.6; font-size:0.75em;">↗</span></a></h2>
         <p class="tool-type">Open-weight AI assistant (free, capable)</p>
@@ -1323,7 +1323,7 @@
         <div class="captain-call">Worth a sanity-check tab next to Claude. Don't make it primary — but free firepower is real.</div>
       </article>
       <article class="tool-card" data-cat="voice" data-tier="S" data-name="openai whisper" data-search="openai whisper industry-leading transcription. voice">
-        <span class="tier-badge" data-tier="S" aria-label="Tier S: Start Here">S</span>
+        <span class="tier-badge" data-tier="S" aria-label="Tier S: Essential">S</span>
         <span class="tool-cat">Voice</span>
         <h2><a href="https://github.com/openai/whisper" target="_blank" rel="noopener" style="color:inherit; text-decoration:none; border-bottom:1px dotted var(--gold);">OpenAI Whisper <span style="opacity:0.6; font-size:0.75em;">↗</span></a></h2>
         <p class="tool-type">Speech-to-text model (open source)</p>
@@ -1339,7 +1339,7 @@
         <div class="captain-call">Run locally on a Mac if you have one. Otherwise let Apple or Otter handle it.</div>
       </article>
       <article class="tool-card" data-cat="voice" data-tier="S" data-name="apple voice memos" data-search="apple voice memos built-in iphone transcription. voice">
-        <span class="tier-badge" data-tier="S" aria-label="Tier S: Start Here">S</span>
+        <span class="tier-badge" data-tier="S" aria-label="Tier S: Essential">S</span>
         <span class="tool-cat">Voice</span>
         <h2><a href="https://www.apple.com/apple-intelligence/" target="_blank" rel="noopener" style="color:inherit; text-decoration:none; border-bottom:1px dotted var(--gold);">Apple Voice Memos <span style="opacity:0.6; font-size:0.75em;">↗</span></a></h2>
         <p class="tool-type">Built-in iPhone voice recording + transcription</p>
@@ -1355,7 +1355,7 @@
         <div class="captain-call">Try this first. If it covers your captures, you're done.</div>
       </article>
       <article class="tool-card" data-cat="voice" data-tier="A" data-name="otter.ai" data-search="otter.ai live meeting transcription, speaker id. voice">
-        <span class="tier-badge" data-tier="A" aria-label="Tier A: Core">A</span>
+        <span class="tier-badge" data-tier="A" aria-label="Tier A: Recommended">A</span>
         <span class="tool-cat">Voice</span>
         <h2><a href="https://otter.ai" target="_blank" rel="noopener" style="color:inherit; text-decoration:none; border-bottom:1px dotted var(--gold);">Otter.ai <span style="opacity:0.6; font-size:0.75em;">↗</span></a></h2>
         <p class="tool-type">Live meeting transcription service</p>
@@ -1371,7 +1371,7 @@
         <div class="captain-call">Worth it if you have 3+ meetings/week you wish you'd captured. Otherwise skip.</div>
       </article>
       <article class="tool-card" data-cat="voice" data-tier="A" data-name="descript" data-search="descript edit audio &amp;amp; video by editing the transcript. voice">
-        <span class="tier-badge" data-tier="A" aria-label="Tier A: Core">A</span>
+        <span class="tier-badge" data-tier="A" aria-label="Tier A: Recommended">A</span>
         <span class="tool-cat">Voice</span>
         <h2><a href="https://descript.com" target="_blank" rel="noopener" style="color:inherit; text-decoration:none; border-bottom:1px dotted var(--gold);">Descript <span style="opacity:0.6; font-size:0.75em;">↗</span></a></h2>
         <p class="tool-type">Audio/video editor that edits transcripts</p>
@@ -1387,7 +1387,7 @@
         <div class="captain-call">Buy it the month you start a podcast or YouTube channel. Skip otherwise.</div>
       </article>
       <article class="tool-card" data-cat="voice" data-tier="A" data-name="adobe podcast enhance" data-search="adobe podcast enhance fixes terrible audio in one click. free. voice">
-        <span class="tier-badge" data-tier="A" aria-label="Tier A: Core">A</span>
+        <span class="tier-badge" data-tier="A" aria-label="Tier A: Recommended">A</span>
         <span class="tool-cat">Voice</span>
         <h2><a href="https://podcast.adobe.com" target="_blank" rel="noopener" style="color:inherit; text-decoration:none; border-bottom:1px dotted var(--gold);">Adobe Podcast Enhance <span style="opacity:0.6; font-size:0.75em;">↗</span></a></h2>
         <p class="tool-type">One-click audio cleanup tool</p>
@@ -1403,7 +1403,7 @@
         <div class="captain-call">First tool I'd hand a pastor recording on his iPhone. Try it once and you'll never not use it.</div>
       </article>
       <article class="tool-card" data-cat="image" data-tier="B" data-name="midjourney" data-search="midjourney best aesthetic quality for stylized images. image">
-        <span class="tier-badge" data-tier="B" aria-label="Tier B: Depth">B</span>
+        <span class="tier-badge" data-tier="B" aria-label="Tier B: Deeper">B</span>
         <span class="tool-cat">Image</span>
         <h2><a href="https://midjourney.com" target="_blank" rel="noopener" style="color:inherit; text-decoration:none; border-bottom:1px dotted var(--gold);">Midjourney <span style="opacity:0.6; font-size:0.75em;">↗</span></a></h2>
         <p class="tool-type">AI image generation (artistic / stylized)</p>
@@ -1419,7 +1419,7 @@
         <div class="captain-call">Worth it if you make weekly visual content. Skip if image gen is occasional — ChatGPT's built-in is enough.</div>
       </article>
       <article class="tool-card" data-cat="image" data-tier="A" data-name="dall-e (in chatgpt)" data-search="dall-e (in chatgpt) image gen baked into chatgpt. image">
-        <span class="tier-badge" data-tier="A" aria-label="Tier A: Core">A</span>
+        <span class="tier-badge" data-tier="A" aria-label="Tier A: Recommended">A</span>
         <span class="tool-cat">Image</span>
         <h2><a href="https://chatgpt.com" target="_blank" rel="noopener" style="color:inherit; text-decoration:none; border-bottom:1px dotted var(--gold);">DALL-E (in ChatGPT) <span style="opacity:0.6; font-size:0.75em;">↗</span></a></h2>
         <p class="tool-type">Image gen baked into ChatGPT</p>
@@ -1435,7 +1435,7 @@
         <div class="captain-call">The right pick if you only generate the occasional image. Don't pay for ChatGPT just for this.</div>
       </article>
       <article class="tool-card" data-cat="image" data-tier="B" data-name="adobe firefly" data-search="adobe firefly commercially safe, trained on licensed content. image">
-        <span class="tier-badge" data-tier="B" aria-label="Tier B: Depth">B</span>
+        <span class="tier-badge" data-tier="B" aria-label="Tier B: Deeper">B</span>
         <span class="tool-cat">Image</span>
         <h2><a href="https://firefly.adobe.com" target="_blank" rel="noopener" style="color:inherit; text-decoration:none; border-bottom:1px dotted var(--gold);">Adobe Firefly <span style="opacity:0.6; font-size:0.75em;">↗</span></a></h2>
         <p class="tool-type">Commercially-safe AI image generation</p>
@@ -1451,7 +1451,7 @@
         <div class="captain-call">Use it ONLY as part of a Creative Cloud bundle. The $4.99 standalone is a trap — captains who buy it will then need Photoshop or Illustrator to actually USE what Firefly generates, and that's the real cost. If you don't already pay for CC, pick Midjourney or Ideogram instead.</div>
       </article>
       <article class="tool-card" data-cat="image" data-tier="C" data-name="ideogram" data-search="ideogram best for text-in-image (logos, posters). image">
-        <span class="tier-badge" data-tier="C" aria-label="Tier C: Optional">C</span>
+        <span class="tier-badge" data-tier="C" aria-label="Tier C: Specialty">C</span>
         <span class="tool-cat">Image</span>
         <h2><a href="https://ideogram.ai" target="_blank" rel="noopener" style="color:inherit; text-decoration:none; border-bottom:1px dotted var(--gold);">Ideogram <span style="opacity:0.6; font-size:0.75em;">↗</span></a></h2>
         <p class="tool-type">AI image generation specialized for text-in-image</p>
@@ -1467,7 +1467,7 @@
         <div class="captain-call">$7 stack-add for the captain who makes flyers, sermon graphics, or marketing posts.</div>
       </article>
       <article class="tool-card" data-cat="image" data-tier="B" data-name="stable diffusion / flux.1" data-search="stable diffusion / flux.1 open source. free if you self-host. image">
-        <span class="tier-badge" data-tier="B" aria-label="Tier B: Depth">B</span>
+        <span class="tier-badge" data-tier="B" aria-label="Tier B: Deeper">B</span>
         <span class="tool-cat">Image</span>
         <h2><a href="https://blackforestlabs.ai" target="_blank" rel="noopener" style="color:inherit; text-decoration:none; border-bottom:1px dotted var(--gold);">Stable Diffusion / FLUX.1 <span style="opacity:0.6; font-size:0.75em;">↗</span></a></h2>
         <p class="tool-type">Open-source image generation models</p>
@@ -1483,7 +1483,7 @@
         <div class="captain-call">Skip unless you're technical and want to own the stack. Most captains are better served by Midjourney or Firefly.</div>
       </article>
       <article class="tool-card" data-cat="image" data-tier="C" data-name="magnific ai" data-search="magnific ai ai upscaler / enhancer. print-quality output. image">
-        <span class="tier-badge" data-tier="C" aria-label="Tier C: Optional">C</span>
+        <span class="tier-badge" data-tier="C" aria-label="Tier C: Specialty">C</span>
         <span class="tool-cat">Image</span>
         <h2><a href="https://magnific.ai" target="_blank" rel="noopener" style="color:inherit; text-decoration:none; border-bottom:1px dotted var(--gold);">Magnific AI <span style="opacity:0.6; font-size:0.75em;">↗</span></a></h2>
         <p class="tool-type">AI image upscaler / enhancer</p>
@@ -1499,7 +1499,7 @@
         <div class="captain-call">Skip for most captains. Midjourney's built-in upscale + Ideogram already cover the family-captain print use case. Magnific is $39/mo with no free tier — only worth it if you're running print-shop volumes weekly.</div>
       </article>
       <article class="tool-card" data-cat="notes" data-tier="A" data-name="notion ai" data-search="notion ai ai inside the notion docs you already use. notes">
-        <span class="tier-badge" data-tier="A" aria-label="Tier A: Core">A</span>
+        <span class="tier-badge" data-tier="A" aria-label="Tier A: Recommended">A</span>
         <span class="tool-cat">Notes</span>
         <h2><a href="https://notion.com" target="_blank" rel="noopener" style="color:inherit; text-decoration:none; border-bottom:1px dotted var(--gold);">Notion AI <span style="opacity:0.6; font-size:0.75em;">↗</span></a></h2>
         <p class="tool-type">AI inside the Notion workspace</p>
@@ -1515,7 +1515,7 @@
         <div class="captain-call">Add the AI on if Notion is your daily driver. Skip if you only open Notion monthly.</div>
       </article>
       <article class="tool-card" data-cat="notes" data-tier="A" data-name="obsidian + ai plugins" data-search="obsidian + ai plugins local-first knowledge graph. notes">
-        <span class="tier-badge" data-tier="A" aria-label="Tier A: Core">A</span>
+        <span class="tier-badge" data-tier="A" aria-label="Tier A: Recommended">A</span>
         <span class="tool-cat">Notes</span>
         <h2><a href="https://obsidian.md" target="_blank" rel="noopener" style="color:inherit; text-decoration:none; border-bottom:1px dotted var(--gold);">Obsidian + AI plugins <span style="opacity:0.6; font-size:0.75em;">↗</span></a></h2>
         <p class="tool-type">Local-first knowledge graph w/ AI plugins</p>
@@ -1531,7 +1531,7 @@
         <div class="captain-call">For the captain who wants files on disk, owned, portable. Curve is steeper than Notion's.</div>
       </article>
       <article class="tool-card" data-cat="notes" data-tier="A" data-name="apple notes" data-search="apple notes built-in. now ai-aware. notes">
-        <span class="tier-badge" data-tier="A" aria-label="Tier A: Core">A</span>
+        <span class="tier-badge" data-tier="A" aria-label="Tier A: Recommended">A</span>
         <span class="tool-cat">Notes</span>
         <h2><a href="https://www.apple.com/apple-intelligence/" target="_blank" rel="noopener" style="color:inherit; text-decoration:none; border-bottom:1px dotted var(--gold);">Apple Notes <span style="opacity:0.6; font-size:0.75em;">↗</span></a></h2>
         <p class="tool-type">Built-in iOS/macOS notes w/ Apple Intelligence</p>
@@ -1547,7 +1547,7 @@
         <div class="captain-call">Try this first. Move to Notion / Obsidian only if you hit a wall.</div>
       </article>
       <article class="tool-card" data-cat="notes" data-tier="A" data-name="granola" data-search="granola ai meeting notes that listen to your audio context. notes">
-        <span class="tier-badge" data-tier="A" aria-label="Tier A: Core">A</span>
+        <span class="tier-badge" data-tier="A" aria-label="Tier A: Recommended">A</span>
         <span class="tool-cat">Notes</span>
         <h2><a href="https://granola.ai" target="_blank" rel="noopener" style="color:inherit; text-decoration:none; border-bottom:1px dotted var(--gold);">Granola <span style="opacity:0.6; font-size:0.75em;">↗</span></a></h2>
         <p class="tool-type">AI meeting notes (Mac-only)</p>
@@ -1563,7 +1563,7 @@
         <div class="captain-call">Worth it if your day is back-to-back calls. Free tier is enough to test.</div>
       </article>
       <article class="tool-card" data-cat="notes" data-tier="A" data-name="notebooklm" data-search="notebooklm google&#x27;s ai research notebook. free. notes">
-        <span class="tier-badge" data-tier="A" aria-label="Tier A: Core">A</span>
+        <span class="tier-badge" data-tier="A" aria-label="Tier A: Recommended">A</span>
         <span class="tool-cat">Notes</span>
         <h2><a href="https://notebooklm.google.com" target="_blank" rel="noopener" style="color:inherit; text-decoration:none; border-bottom:1px dotted var(--gold);">NotebookLM <span style="opacity:0.6; font-size:0.75em;">↗</span></a></h2>
         <p class="tool-type">AI research notebook (Google) — free</p>
@@ -1579,7 +1579,7 @@
         <div class="captain-call">Drop your bootcamp materials in, ask 'what's the captain's role in Week 3?' Pure leverage. Free.</div>
       </article>
       <article class="tool-card" data-cat="auto" data-tier="S" data-name="anthropic cowork" data-search="anthropic cowork desktop / mobile agent built into claude. automation">
-        <span class="tier-badge" data-tier="S" aria-label="Tier S: Start Here">S</span>
+        <span class="tier-badge" data-tier="S" aria-label="Tier S: Essential">S</span>
         <span class="tool-cat">Automation</span>
         <h2><a href="https://claude.com/cowork" target="_blank" rel="noopener" style="color:inherit; text-decoration:none; border-bottom:1px dotted var(--gold);">Anthropic Cowork <span style="opacity:0.6; font-size:0.75em;">↗</span></a></h2>
         <p class="tool-type">Desktop / mobile AI agent built into Claude</p>
@@ -1595,7 +1595,7 @@
         <div class="captain-call">This is the differentiator. The reason Claude is the bootcamp's default.</div>
       </article>
       <article class="tool-card" data-cat="auto" data-tier="A" data-name="zapier" data-search="zapier no-code automation between apps. automation">
-        <span class="tier-badge" data-tier="A" aria-label="Tier A: Core">A</span>
+        <span class="tier-badge" data-tier="A" aria-label="Tier A: Recommended">A</span>
         <span class="tool-cat">Automation</span>
         <h2><a href="https://zapier.com" target="_blank" rel="noopener" style="color:inherit; text-decoration:none; border-bottom:1px dotted var(--gold);">Zapier <span style="opacity:0.6; font-size:0.75em;">↗</span></a></h2>
         <p class="tool-type">No-code automation between apps</p>
@@ -1611,7 +1611,7 @@
         <div class="captain-call">Free tier is fine for the captain with 1–2 simple automations. Pay only if you have a real workflow.</div>
       </article>
       <article class="tool-card" data-cat="auto" data-tier="B" data-name="make.com" data-search="make.com more flexible than zapier. visual. automation">
-        <span class="tier-badge" data-tier="B" aria-label="Tier B: Depth">B</span>
+        <span class="tier-badge" data-tier="B" aria-label="Tier B: Deeper">B</span>
         <span class="tool-cat">Automation</span>
         <h2><a href="https://make.com" target="_blank" rel="noopener" style="color:inherit; text-decoration:none; border-bottom:1px dotted var(--gold);">Make.com <span style="opacity:0.6; font-size:0.75em;">↗</span></a></h2>
         <p class="tool-type">Visual automation platform</p>
@@ -1627,7 +1627,7 @@
         <div class="captain-call">Pick this over Zapier if your automations branch or loop. Otherwise Zapier's marketplace is bigger.</div>
       </article>
       <article class="tool-card" data-cat="auto" data-tier="B" data-name="n8n" data-search="n8n open source automation. self-hosted option. automation">
-        <span class="tier-badge" data-tier="B" aria-label="Tier B: Depth">B</span>
+        <span class="tier-badge" data-tier="B" aria-label="Tier B: Deeper">B</span>
         <span class="tool-cat">Automation</span>
         <h2><a href="https://n8n.io" target="_blank" rel="noopener" style="color:inherit; text-decoration:none; border-bottom:1px dotted var(--gold);">n8n <span style="opacity:0.6; font-size:0.75em;">↗</span></a></h2>
         <p class="tool-type">Open-source automation, self-hostable</p>
@@ -1643,7 +1643,7 @@
         <div class="captain-call">Skip unless you're already running a homelab or care about data sovereignty.</div>
       </article>
       <article class="tool-card" data-cat="auto" data-tier="B" data-name="lindy" data-search="lindy ai agent automation. zapier with reasoning. automation">
-        <span class="tier-badge" data-tier="B" aria-label="Tier B: Depth">B</span>
+        <span class="tier-badge" data-tier="B" aria-label="Tier B: Deeper">B</span>
         <span class="tool-cat">Automation</span>
         <h2><a href="https://lindy.ai" target="_blank" rel="noopener" style="color:inherit; text-decoration:none; border-bottom:1px dotted var(--gold);">Lindy <span style="opacity:0.6; font-size:0.75em;">↗</span></a></h2>
         <p class="tool-type">AI agent automation — Zapier with reasoning</p>
@@ -1659,7 +1659,7 @@
         <div class="captain-call">For captains running real businesses with email overload. Skip if Zapier+AI covers you.</div>
       </article>
       <article class="tool-card" data-cat="code" data-tier="S" data-name="claude code" data-search="claude code anthropic&#x27;s terminal coding agent. coding">
-        <span class="tier-badge" data-tier="S" aria-label="Tier S: Start Here">S</span>
+        <span class="tier-badge" data-tier="S" aria-label="Tier S: Essential">S</span>
         <span class="tool-cat">Coding</span>
         <h2><a href="https://claude.com/code" target="_blank" rel="noopener" style="color:inherit; text-decoration:none; border-bottom:1px dotted var(--gold);">Claude Code <span style="opacity:0.6; font-size:0.75em;">↗</span></a></h2>
         <p class="tool-type">Terminal coding agent (Anthropic)</p>
@@ -1675,7 +1675,7 @@
         <div class="captain-call">For captains shipping real code — this is the bootcamp's recommendation.</div>
       </article>
       <article class="tool-card" data-cat="code" data-tier="A" data-name="cursor" data-search="cursor ai-first code editor. fork of vs code. coding">
-        <span class="tier-badge" data-tier="A" aria-label="Tier A: Core">A</span>
+        <span class="tier-badge" data-tier="A" aria-label="Tier A: Recommended">A</span>
         <span class="tool-cat">Coding</span>
         <h2><a href="https://cursor.com" target="_blank" rel="noopener" style="color:inherit; text-decoration:none; border-bottom:1px dotted var(--gold);">Cursor <span style="opacity:0.6; font-size:0.75em;">↗</span></a></h2>
         <p class="tool-type">AI-first code editor (VS Code fork)</p>
@@ -1691,7 +1691,7 @@
         <div class="captain-call">Pick this if you live in a graphical editor; Claude Code if you live in a terminal.</div>
       </article>
       <article class="tool-card" data-cat="code" data-tier="B" data-name="github copilot" data-search="github copilot tight github / vs code integration. coding">
-        <span class="tier-badge" data-tier="B" aria-label="Tier B: Depth">B</span>
+        <span class="tier-badge" data-tier="B" aria-label="Tier B: Deeper">B</span>
         <span class="tool-cat">Coding</span>
         <h2><a href="https://github.com/features/copilot" target="_blank" rel="noopener" style="color:inherit; text-decoration:none; border-bottom:1px dotted var(--gold);">GitHub Copilot <span style="opacity:0.6; font-size:0.75em;">↗</span></a></h2>
         <p class="tool-type">AI coding assistant in GitHub / VS Code</p>
@@ -1707,7 +1707,7 @@
         <div class="captain-call">For developers already on GitHub-native teams, $10/mo is fair. For non-developers learning to ship, Cursor or Windsurf at the same price are stronger picks — Copilot's autocomplete shines only when you can already read code.</div>
       </article>
       <article class="tool-card" data-cat="code" data-tier="B" data-name="windsurf" data-search="windsurf cursor competitor. strong agent mode. coding">
-        <span class="tier-badge" data-tier="B" aria-label="Tier B: Depth">B</span>
+        <span class="tier-badge" data-tier="B" aria-label="Tier B: Deeper">B</span>
         <span class="tool-cat">Coding</span>
         <h2><a href="https://windsurf.com" target="_blank" rel="noopener" style="color:inherit; text-decoration:none; border-bottom:1px dotted var(--gold);">Windsurf <span style="opacity:0.6; font-size:0.75em;">↗</span></a></h2>
         <p class="tool-type">AI code editor — Cursor competitor</p>
@@ -1723,7 +1723,7 @@
         <div class="captain-call">Worth a 1-week trial alongside Cursor; whichever feels more natural is the winner.</div>
       </article>
       <article class="tool-card" data-cat="code" data-tier="B" data-name="aider" data-search="aider open-source ai pair programmer. model-agnostic. coding">
-        <span class="tier-badge" data-tier="B" aria-label="Tier B: Depth">B</span>
+        <span class="tier-badge" data-tier="B" aria-label="Tier B: Deeper">B</span>
         <span class="tool-cat">Coding</span>
         <h2><a href="https://aider.chat" target="_blank" rel="noopener" style="color:inherit; text-decoration:none; border-bottom:1px dotted var(--gold);">Aider <span style="opacity:0.6; font-size:0.75em;">↗</span></a></h2>
         <p class="tool-type">Open-source AI pair programmer (terminal)</p>
@@ -1739,7 +1739,7 @@
         <div class="captain-call">For technical captains who want full control + multi-model flexibility. Skip if Claude Code already works.</div>
       </article>
       <article class="tool-card" data-cat="video" data-tier="B" data-name="elevenlabs" data-search="elevenlabs industry-leading ai voice / tts. video">
-        <span class="tier-badge" data-tier="B" aria-label="Tier B: Depth">B</span>
+        <span class="tier-badge" data-tier="B" aria-label="Tier B: Deeper">B</span>
         <span class="tool-cat">Video</span>
         <h2><a href="https://elevenlabs.io" target="_blank" rel="noopener" style="color:inherit; text-decoration:none; border-bottom:1px dotted var(--gold);">ElevenLabs <span style="opacity:0.6; font-size:0.75em;">↗</span></a></h2>
         <p class="tool-type">AI voice generation / cloning</p>
@@ -1755,7 +1755,7 @@
         <div class="captain-call">For the captain producing audiobooks, narrated devotionals, or polished video voiceovers.</div>
       </article>
       <article class="tool-card" data-cat="video" data-tier="C" data-name="heygen" data-search="heygen ai avatars. talking-head video without filming. video">
-        <span class="tier-badge" data-tier="C" aria-label="Tier C: Optional">C</span>
+        <span class="tier-badge" data-tier="C" aria-label="Tier C: Specialty">C</span>
         <span class="tool-cat">Video</span>
         <h2><a href="https://heygen.com" target="_blank" rel="noopener" style="color:inherit; text-decoration:none; border-bottom:1px dotted var(--gold);">HeyGen <span style="opacity:0.6; font-size:0.75em;">↗</span></a></h2>
         <p class="tool-type">AI talking-head avatar video</p>
@@ -1771,7 +1771,7 @@
         <div class="captain-call">Confirmed skip for a captain cohort. Your real face matters to your men. HeyGen earns its keep ONLY when you're producing course or sales content at a volume you can't physically film yourself.</div>
       </article>
       <article class="tool-card" data-cat="video" data-tier="B" data-name="opusclip" data-search="opusclip auto-clip long videos into shorts. video">
-        <span class="tier-badge" data-tier="B" aria-label="Tier B: Depth">B</span>
+        <span class="tier-badge" data-tier="B" aria-label="Tier B: Deeper">B</span>
         <span class="tool-cat">Video</span>
         <h2><a href="https://opus.pro" target="_blank" rel="noopener" style="color:inherit; text-decoration:none; border-bottom:1px dotted var(--gold);">OpusClip <span style="opacity:0.6; font-size:0.75em;">↗</span></a></h2>
         <p class="tool-type">Long-video to short-form auto-clipper</p>
@@ -1787,7 +1787,7 @@
         <div class="captain-call">Worth $9 if you publish weekly to short-form social. Skip otherwise.</div>
       </article>
       <article class="tool-card" data-cat="video" data-tier="B" data-name="suno" data-search="suno ai music generation. hum a vibe, get a song. video">
-        <span class="tier-badge" data-tier="B" aria-label="Tier B: Depth">B</span>
+        <span class="tier-badge" data-tier="B" aria-label="Tier B: Deeper">B</span>
         <span class="tool-cat">Video</span>
         <h2><a href="https://suno.com" target="_blank" rel="noopener" style="color:inherit; text-decoration:none; border-bottom:1px dotted var(--gold);">Suno <span style="opacity:0.6; font-size:0.75em;">↗</span></a></h2>
         <p class="tool-type">AI music generation</p>
@@ -1803,7 +1803,7 @@
         <div class="captain-call">For captains making any audio/video content. Don't sleep on the free tier — it's enough for casual use.</div>
       </article>
       <article class="tool-card" data-cat="frontier" data-tier="B" data-name="replit agent" data-search="replit agent build full apps from a prompt — no laptop required. agentic frontier">
-        <span class="tier-badge" data-tier="B" aria-label="Tier B: Depth">B</span>
+        <span class="tier-badge" data-tier="B" aria-label="Tier B: Deeper">B</span>
         <span class="tool-cat">Agentic Frontier</span>
         <h2><a href="https://replit.com" target="_blank" rel="noopener" style="color:inherit; text-decoration:none; border-bottom:1px dotted var(--gold);">Replit Agent <span style="opacity:0.6; font-size:0.75em;">↗</span></a></h2>
         <p class="tool-type">Browser-based full-stack coding agent</p>
@@ -1819,7 +1819,7 @@
         <div class="captain-call">Best browser-based agentic builder for captains who don't want to touch a terminal.</div>
       </article>
       <article class="tool-card" data-cat="frontier" data-tier="B" data-name="lovable.dev" data-search="lovable.dev ship a full-stack app from a prompt. agentic frontier">
-        <span class="tier-badge" data-tier="B" aria-label="Tier B: Depth">B</span>
+        <span class="tier-badge" data-tier="B" aria-label="Tier B: Deeper">B</span>
         <span class="tool-cat">Agentic Frontier</span>
         <h2><a href="https://lovable.dev" target="_blank" rel="noopener" style="color:inherit; text-decoration:none; border-bottom:1px dotted var(--gold);">Lovable.dev <span style="opacity:0.6; font-size:0.75em;">↗</span></a></h2>
         <p class="tool-type">Text-to-app generator (full-stack)</p>
@@ -1835,7 +1835,7 @@
         <div class="captain-call">First pick for non-coders who want to ship something real. Free tier gets you a working prototype.</div>
       </article>
       <article class="tool-card" data-cat="frontier" data-tier="B" data-name="v0.dev" data-search="v0.dev vercel&#x27;s text-to-ui generator. agentic frontier">
-        <span class="tier-badge" data-tier="B" aria-label="Tier B: Depth">B</span>
+        <span class="tier-badge" data-tier="B" aria-label="Tier B: Deeper">B</span>
         <span class="tool-cat">Agentic Frontier</span>
         <h2><a href="https://v0.dev" target="_blank" rel="noopener" style="color:inherit; text-decoration:none; border-bottom:1px dotted var(--gold);">v0.dev <span style="opacity:0.6; font-size:0.75em;">↗</span></a></h2>
         <p class="tool-type">Text-to-React UI generator (Vercel)</p>
@@ -1851,7 +1851,7 @@
         <div class="captain-call">Pick this over Lovable if you want UI-only output that drops into an existing codebase.</div>
       </article>
       <article class="tool-card" data-cat="frontier" data-tier="C" data-name="bolt.new" data-search="bolt.new stackblitz&#x27;s in-browser full-stack agent. agentic frontier">
-        <span class="tier-badge" data-tier="C" aria-label="Tier C: Optional">C</span>
+        <span class="tier-badge" data-tier="C" aria-label="Tier C: Specialty">C</span>
         <span class="tool-cat">Agentic Frontier</span>
         <h2><a href="https://bolt.new" target="_blank" rel="noopener" style="color:inherit; text-decoration:none; border-bottom:1px dotted var(--gold);">Bolt.new <span style="opacity:0.6; font-size:0.75em;">↗</span></a></h2>
         <p class="tool-type">Full-stack agentic builder (StackBlitz)</p>
@@ -1867,7 +1867,7 @@
         <div class="captain-call">Bolt and Lovable both work. Try the free tier of each. Whichever lands first, use that one.</div>
       </article>
       <article class="tool-card" data-cat="frontier" data-tier="B" data-name="manus" data-search="manus general-purpose autonomous ai agent. agentic frontier">
-        <span class="tier-badge" data-tier="B" aria-label="Tier B: Depth">B</span>
+        <span class="tier-badge" data-tier="B" aria-label="Tier B: Deeper">B</span>
         <span class="tool-cat">Agentic Frontier</span>
         <h2><a href="https://manus.im" target="_blank" rel="noopener" style="color:inherit; text-decoration:none; border-bottom:1px dotted var(--gold);">Manus <span style="opacity:0.6; font-size:0.75em;">↗</span></a></h2>
         <p class="tool-type">Autonomous web agent</p>
@@ -1883,7 +1883,7 @@
         <div class="captain-call">Worth a $39 month-long test if you have a research-heavy quarter. Free tier shows the shape.</div>
       </article>
       <article class="tool-card" data-cat="frontier" data-tier="B" data-name="perplexity comet" data-search="perplexity comet perplexity&#x27;s ai-powered agentic browser. agentic frontier">
-        <span class="tier-badge" data-tier="B" aria-label="Tier B: Depth">B</span>
+        <span class="tier-badge" data-tier="B" aria-label="Tier B: Deeper">B</span>
         <span class="tool-cat">Agentic Frontier</span>
         <h2><a href="https://perplexity.ai/comet" target="_blank" rel="noopener" style="color:inherit; text-decoration:none; border-bottom:1px dotted var(--gold);">Perplexity Comet <span style="opacity:0.6; font-size:0.75em;">↗</span></a></h2>
         <p class="tool-type">Agentic AI browser (Perplexity)</p>
@@ -1899,7 +1899,7 @@
         <div class="captain-call">Free with Perplexity Pro. If you have Perplexity, you have Comet — try it.</div>
       </article>
       <article class="tool-card" data-cat="frontier" data-tier="C" data-name="dia browser" data-search="dia browser ai-first browser from the makers of arc. agentic frontier">
-        <span class="tier-badge" data-tier="C" aria-label="Tier C: Optional">C</span>
+        <span class="tier-badge" data-tier="C" aria-label="Tier C: Specialty">C</span>
         <span class="tool-cat">Agentic Frontier</span>
         <h2><a href="https://www.diabrowser.com" target="_blank" rel="noopener" style="color:inherit; text-decoration:none; border-bottom:1px dotted var(--gold);">Dia Browser <span style="opacity:0.6; font-size:0.75em;">↗</span></a></h2>
         <p class="tool-type">AI-native browser (Browser Company)</p>
@@ -1915,7 +1915,7 @@
         <div class="captain-call">Free during beta. Easy to try alongside your current browser without commitment.</div>
       </article>
       <article class="tool-card" data-cat="frontier" data-tier="B" data-name="chatgpt agent" data-search="chatgpt agent openai&#x27;s computer-use agent. agentic frontier">
-        <span class="tier-badge" data-tier="B" aria-label="Tier B: Depth">B</span>
+        <span class="tier-badge" data-tier="B" aria-label="Tier B: Deeper">B</span>
         <span class="tool-cat">Agentic Frontier</span>
         <h2><a href="https://chatgpt.com" target="_blank" rel="noopener" style="color:inherit; text-decoration:none; border-bottom:1px dotted var(--gold);">ChatGPT Agent <span style="opacity:0.6; font-size:0.75em;">↗</span></a></h2>
         <p class="tool-type">Computer-use agent (OpenAI)</p>
@@ -1931,7 +1931,7 @@
         <div class="captain-call">If you have ChatGPT Plus, you have Agent. Worth experimenting once a month with a real task.</div>
       </article>
       <article class="tool-card" data-cat="frontier" data-tier="C" data-name="goose" data-search="goose block&#x27;s open-source local desktop agent. agentic frontier">
-        <span class="tier-badge" data-tier="C" aria-label="Tier C: Optional">C</span>
+        <span class="tier-badge" data-tier="C" aria-label="Tier C: Specialty">C</span>
         <span class="tool-cat">Agentic Frontier</span>
         <h2><a href="https://block.github.io/goose/" target="_blank" rel="noopener" style="color:inherit; text-decoration:none; border-bottom:1px dotted var(--gold);">Goose <span style="opacity:0.6; font-size:0.75em;">↗</span></a></h2>
         <p class="tool-type">Open-source desktop agent (Block)</p>
@@ -1947,7 +1947,7 @@
         <div class="captain-call">Skip unless you're technical — but for hackers, this is an excellent free Cowork alternative.</div>
       </article>
       <article class="tool-card" data-cat="frontier" data-tier="C" data-name="open interpreter" data-search="open interpreter run code on your machine via natural language. agentic frontier">
-        <span class="tier-badge" data-tier="C" aria-label="Tier C: Optional">C</span>
+        <span class="tier-badge" data-tier="C" aria-label="Tier C: Specialty">C</span>
         <span class="tool-cat">Agentic Frontier</span>
         <h2><a href="https://www.openinterpreter.com" target="_blank" rel="noopener" style="color:inherit; text-decoration:none; border-bottom:1px dotted var(--gold);">Open Interpreter <span style="opacity:0.6; font-size:0.75em;">↗</span></a></h2>
         <p class="tool-type">Local code-execution agent</p>
@@ -1963,7 +1963,7 @@
         <div class="captain-call">For the captain doing data work or local automation — useful, free, but technical.</div>
       </article>
       <article class="tool-card" data-cat="frontier" data-tier="C" data-name="genspark" data-search="genspark multi-agent system for research, presentations, and complex tasks. agentic frontier">
-        <span class="tier-badge" data-tier="C" aria-label="Tier C: Optional">C</span>
+        <span class="tier-badge" data-tier="C" aria-label="Tier C: Specialty">C</span>
         <span class="tool-cat">Agentic Frontier</span>
         <h2><a href="https://www.genspark.ai" target="_blank" rel="noopener" style="color:inherit; text-decoration:none; border-bottom:1px dotted var(--gold);">Genspark <span style="opacity:0.6; font-size:0.75em;">↗</span></a></h2>
         <p class="tool-type">Autonomous research / task agent</p>
@@ -1979,7 +1979,7 @@
         <div class="captain-call">Free tier shows what's possible. Plus tier is reasonable if you do project work weekly.</div>
       </article>
       <article class="tool-card" data-cat="frontier" data-tier="C" data-name="browser use" data-search="browser use open-source agent that drives any website. agentic frontier">
-        <span class="tier-badge" data-tier="C" aria-label="Tier C: Optional">C</span>
+        <span class="tier-badge" data-tier="C" aria-label="Tier C: Specialty">C</span>
         <span class="tool-cat">Agentic Frontier</span>
         <h2><a href="https://browser-use.com" target="_blank" rel="noopener" style="color:inherit; text-decoration:none; border-bottom:1px dotted var(--gold);">Browser Use <span style="opacity:0.6; font-size:0.75em;">↗</span></a></h2>
         <p class="tool-type">Open-source browser automation agent</p>
@@ -2179,7 +2179,7 @@
   const resetBtn = document.getElementById('hwReset');
   const searchInput = document.getElementById('toolSearch');
   const sortBtns = document.querySelectorAll('.sort-btn[data-sort]');
-  const tierChecks = document.querySelectorAll('.tier-check input[type="checkbox"]');
+  const tierChecks = document.querySelectorAll('input[type="checkbox"][data-tier]');
   const TIER_RANK = { S:0, A:1, B:2, C:3 };
   const state = { cat: 'all', ram: null, q: '', sort: 'default', tiers: new Set(['S','A','B','C']) };
 
@@ -2231,7 +2231,7 @@
 
   tierChecks.forEach(cb => cb.addEventListener('change', () => {
     if (cb.checked) state.tiers.add(cb.dataset.tier); else state.tiers.delete(cb.dataset.tier);
-    cb.closest('.tier-check').classList.toggle('unchecked', !cb.checked);
+    cb.closest('.tl-row, .tier-check').classList.toggle('unchecked', !cb.checked);
     apply();
   }));
 

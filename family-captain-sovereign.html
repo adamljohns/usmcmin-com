@@ -194,6 +194,13 @@
     .tier-legend { flex-direction:column; align-items:flex-start; gap:8px; }
   }
 
+  /* Clickable legend rows — used on Compass + Sovereign for tier filtering */
+  .tier-legend label.tl-row { cursor: pointer; border-radius: var(--radius);
+    transition: opacity 0.15s, background 0.15s; }
+  .tier-legend label.tl-row:hover { background: rgba(206, 142, 49, 0.10); }
+  .tier-legend .tl-check { accent-color: var(--gold); cursor: pointer; margin: 0 2px 0 0; flex-shrink: 0; }
+  .tier-legend .tl-row.unchecked { opacity: 0.4; }
+
   /* "Show S+A only" chip — uses existing .chip class so it sits naturally in the filter row */
   .chip.tier-toggle {
     border: 1.5px solid #CE8E31 !important;
@@ -1196,11 +1203,11 @@
 
 <!-- TIER LEGEND -->
 
-<div class="tier-legend" role="region" aria-label="Tier legend">
-  <div class="tl-row" data-tier="S"><span class="tl-badge">S</span><span class="tl-label">START HERE</span><span class="tl-desc">— Don't skip these.</span></div>
-  <div class="tl-row" data-tier="A"><span class="tl-badge">A</span><span class="tl-label">CORE</span><span class="tl-desc">— Adopt in the first month.</span></div>
-  <div class="tl-row" data-tier="B"><span class="tl-badge">B</span><span class="tl-label">DEPTH</span><span class="tl-desc">— After the basics are running.</span></div>
-  <div class="tl-row" data-tier="C"><span class="tl-badge">C</span><span class="tl-label">OPTIONAL</span><span class="tl-desc">— Most captains skip these.</span></div>
+<div class="tier-legend" role="region" aria-label="Tier legend &mdash; click a row to hide that tier">
+  <label class="tl-row" data-tier="S"><input type="checkbox" data-tier="S" class="tl-check" checked><span class="tl-badge">S</span><span class="tl-label">ESSENTIAL</span><span class="tl-desc">&mdash; The 2&ndash;4 every captain runs daily.</span></label>
+  <label class="tl-row" data-tier="A"><input type="checkbox" data-tier="A" class="tl-check" checked><span class="tl-badge">A</span><span class="tl-label">RECOMMENDED</span><span class="tl-desc">&mdash; Add once Essential is set.</span></label>
+  <label class="tl-row" data-tier="B"><input type="checkbox" data-tier="B" class="tl-check" checked><span class="tl-badge">B</span><span class="tl-label">DEEPER</span><span class="tl-desc">&mdash; When you&rsquo;re going further.</span></label>
+  <label class="tl-row" data-tier="C"><input type="checkbox" data-tier="C" class="tl-check" checked><span class="tl-badge">C</span><span class="tl-label">SPECIALTY</span><span class="tl-desc">&mdash; Purpose-built &mdash; pick if your work needs it.</span></label>
 </div>
 
 <!-- FILTERS — div (not nav) to avoid inheriting main.css body>nav site-nav styles -->
@@ -1214,13 +1221,6 @@
     <button class="chip" data-filter="code">Coding <span class="count">4</span></button>
     <button class="chip" data-filter="rag">Knowledge / RAG <span class="count">4</span></button>
     <button class="chip" data-filter="automation">Automation <span class="count">3</span></button>
-  </div>
-  <div class="filters-inner" data-dim="tier" aria-label="Filter by tier">
-    <span class="filter-label">Tier</span>
-    <label class="tier-check"><input type="checkbox" data-tier="S" checked> <span class="t-S">S</span></label>
-    <label class="tier-check"><input type="checkbox" data-tier="A" checked> <span class="t-A">A</span></label>
-    <label class="tier-check"><input type="checkbox" data-tier="B" checked> <span class="t-B">B</span></label>
-    <label class="tier-check"><input type="checkbox" data-tier="C" checked> <span class="t-C">C</span></label>
   </div>
 </div>
 
@@ -1238,7 +1238,7 @@
   </div>
   <div class="tools-grid" id="toolsGrid">
       <article class="tool-card" data-cat="runner" data-tier="S" data-ram="8" data-name="ollama" data-search="ollama the standard for running open models on your own machine. llm runner">
-        <span class="tier-badge" data-tier="S" aria-label="Tier S: Start Here">S</span>
+        <span class="tier-badge" data-tier="S" aria-label="Tier S: Essential">S</span>
         <span class="tool-cat">LLM Runner</span>
         <h2><a href="https://ollama.com" target="_blank" rel="noopener" style="color:inherit; text-decoration:none; border-bottom:1px dotted var(--gold);">Ollama <span style="opacity:0.6; font-size:0.75em;">↗</span></a></h2>
         <p class="tool-type">Local LLM runner (CLI + API)</p>
@@ -1256,7 +1256,7 @@
         <div class="captain-call">Start here. Most-used local runner for a reason — simple, stable, fast.</div>
       </article>
       <article class="tool-card" data-cat="runner" data-tier="S" data-ram="8" data-name="lm studio" data-search="lm studio the captain-friendly way to run local models. llm runner">
-        <span class="tier-badge" data-tier="S" aria-label="Tier S: Start Here">S</span>
+        <span class="tier-badge" data-tier="S" aria-label="Tier S: Essential">S</span>
         <span class="tool-cat">LLM Runner</span>
         <h2><a href="https://lmstudio.ai" target="_blank" rel="noopener" style="color:inherit; text-decoration:none; border-bottom:1px dotted var(--gold);">LM Studio <span style="opacity:0.6; font-size:0.75em;">↗</span></a></h2>
         <p class="tool-type">Local LLM runner (GUI app)</p>
@@ -1274,7 +1274,7 @@
         <div class="captain-call">Best entry point if you don't already love the terminal. Free, fast, works.</div>
       </article>
       <article class="tool-card" data-cat="runner" data-tier="A" data-ram="8" data-name="mlx" data-search="mlx the fastest way to run local models on mac. llm runner">
-        <span class="tier-badge" data-tier="A" aria-label="Tier A: Core">A</span>
+        <span class="tier-badge" data-tier="A" aria-label="Tier A: Recommended">A</span>
         <span class="tool-cat">LLM Runner</span>
         <h2><a href="https://ml-explore.github.io/mlx/" target="_blank" rel="noopener" style="color:inherit; text-decoration:none; border-bottom:1px dotted var(--gold);">MLX <span style="opacity:0.6; font-size:0.75em;">↗</span></a></h2>
         <p class="tool-type">Apple Silicon ML framework</p>
@@ -1292,7 +1292,7 @@
         <div class="captain-call">If you have a Mac Studio M3 Ultra, this is what makes 70B+ models feel snappy.</div>
       </article>
       <article class="tool-card" data-cat="runner" data-tier="A" data-ram="8" data-name="llama.cpp" data-search="llama.cpp the c++ engine under most local llm tools. llm runner">
-        <span class="tier-badge" data-tier="A" aria-label="Tier A: Core">A</span>
+        <span class="tier-badge" data-tier="A" aria-label="Tier A: Recommended">A</span>
         <span class="tool-cat">LLM Runner</span>
         <h2><a href="https://github.com/ggerganov/llama.cpp" target="_blank" rel="noopener" style="color:inherit; text-decoration:none; border-bottom:1px dotted var(--gold);">llama.cpp <span style="opacity:0.6; font-size:0.75em;">↗</span></a></h2>
         <p class="tool-type">Local LLM inference engine</p>
@@ -1310,7 +1310,7 @@
         <div class="captain-call">You don't need this directly unless you're benchmarking. Trust Ollama / LM Studio to handle it.</div>
       </article>
       <article class="tool-card" data-cat="runner" data-tier="A" data-ram="8" data-name="open webui" data-search="open webui chatgpt-style ui for your local models. llm runner">
-        <span class="tier-badge" data-tier="A" aria-label="Tier A: Core">A</span>
+        <span class="tier-badge" data-tier="A" aria-label="Tier A: Recommended">A</span>
         <span class="tool-cat">LLM Runner</span>
         <h2><a href="https://openwebui.com" target="_blank" rel="noopener" style="color:inherit; text-decoration:none; border-bottom:1px dotted var(--gold);">Open WebUI <span style="opacity:0.6; font-size:0.75em;">↗</span></a></h2>
         <p class="tool-type">Local web UI for any LLM backend</p>
@@ -1328,7 +1328,7 @@
         <div class="captain-call">Best 'looks like ChatGPT, runs on my hardware' choice. Pair with Ollama; you're set.</div>
       </article>
       <article class="tool-card" data-cat="model" data-tier="S" data-ram="64" data-name="llama 4 (meta)" data-search="llama 4 (meta) meta&#x27;s open frontier — still the default workhorse. frontier model">
-        <span class="tier-badge" data-tier="S" aria-label="Tier S: Start Here">S</span>
+        <span class="tier-badge" data-tier="S" aria-label="Tier S: Essential">S</span>
         <span class="tool-cat">Frontier Model</span>
         <h2><a href="https://www.llama.com" target="_blank" rel="noopener" style="color:inherit; text-decoration:none; border-bottom:1px dotted var(--gold);">Llama 4 (Meta) <span style="opacity:0.6; font-size:0.75em;">↗</span></a></h2>
         <p class="tool-type">Open-weight frontier model family</p>
@@ -1346,7 +1346,7 @@
         <div class="captain-call">Solid default. 70B Q4 on a 128GB Mac and you're set; reach for Scout if you process long docs.</div>
       </article>
       <article class="tool-card" data-cat="model" data-tier="A" data-ram="32" data-name="qwen 3.5 / 3.6 (alibaba)" data-search="qwen 3.5 / 3.6 (alibaba) alibaba&#x27;s open frontier. best-in-class multilingual + strong coding. frontier model">
-        <span class="tier-badge" data-tier="A" aria-label="Tier A: Core">A</span>
+        <span class="tier-badge" data-tier="A" aria-label="Tier A: Recommended">A</span>
         <span class="tool-cat">Frontier Model</span>
         <h2>Qwen 3.5 / 3.6 (Alibaba)</h2>
         <p class="tool-type">Open-weight frontier family (multilingual, MoE + dense)</p>
@@ -1364,7 +1364,7 @@
         <div class="captain-call">The 27B is the everyday workhorse on 32-64GB; pull the 235B only if you've got 128GB+.</div>
       </article>
       <article class="tool-card" data-cat="model" data-tier="A" data-ram="128" data-name="deepseek v4" data-search="deepseek v4 the deepseek that tops the open leaderboards — on your own machine. frontier model">
-        <span class="tier-badge" data-tier="A" aria-label="Tier A: Core">A</span>
+        <span class="tier-badge" data-tier="A" aria-label="Tier A: Recommended">A</span>
         <span class="tool-cat">Frontier Model</span>
         <h2>DeepSeek V4</h2>
         <p class="tool-type">Open-weight frontier reasoning model (MoE, 1M context)</p>
@@ -1382,7 +1382,7 @@
         <div class="captain-call">Frontier-class for free — but heavy. Worth it only if you've got 128GB+ or a GPU box.</div>
       </article>
       <article class="tool-card" data-cat="model" data-tier="B" data-ram="32" data-name="mistral large 3 / medium 3.5" data-search="mistral large 3 / medium 3.5 france&#x27;s open-weight contender — strong code, eu-friendly. frontier model">
-        <span class="tier-badge" data-tier="B" aria-label="Tier B: Depth">B</span>
+        <span class="tier-badge" data-tier="B" aria-label="Tier B: Deeper">B</span>
         <span class="tool-cat">Frontier Model</span>
         <h2>Mistral Large 3 / Medium 3.5</h2>
         <p class="tool-type">European open-weight frontier model</p>
@@ -1400,7 +1400,7 @@
         <div class="captain-call">Worth a side-by-side vs Llama / Qwen if your work touches European languages.</div>
       </article>
       <article class="tool-card" data-cat="model" data-tier="B" data-ram="128" data-name="mixtral 8×22b (mistral)" data-search="mixtral 8×22b (mistral) 176b parameters, 39b active. speed of small, quality of large. frontier model">
-        <span class="tier-badge" data-tier="B" aria-label="Tier B: Depth">B</span>
+        <span class="tier-badge" data-tier="B" aria-label="Tier B: Deeper">B</span>
         <span class="tool-cat">Frontier Model</span>
         <h2><a href="https://mistral.ai" target="_blank" rel="noopener" style="color:inherit; text-decoration:none; border-bottom:1px dotted var(--gold);">Mixtral 8×22B (Mistral) <span style="opacity:0.6; font-size:0.75em;">↗</span></a></h2>
         <p class="tool-type">Mixture-of-Experts open-weight model</p>
@@ -1418,7 +1418,7 @@
         <div class="captain-call">Solid second model behind Llama / Qwen. Pull it if you want to A/B test.</div>
       </article>
       <article class="tool-card" data-cat="model" data-tier="B" data-ram="8" data-name="gemma 4 (google)" data-search="gemma 4 (google) google&#x27;s open-weight family — now the on-device champion. frontier model">
-        <span class="tier-badge" data-tier="B" aria-label="Tier B: Depth">B</span>
+        <span class="tier-badge" data-tier="B" aria-label="Tier B: Deeper">B</span>
         <span class="tool-cat">Frontier Model</span>
         <h2>Gemma 4 (Google)</h2>
         <p class="tool-type">Open-weight Google model family (Apache 2.0)</p>
@@ -1436,7 +1436,7 @@
         <div class="captain-call">Pull Gemma 4 first. The 26B MoE runs great on 32GB; the E4B even runs on phone-class hardware.</div>
       </article>
       <article class="tool-card" data-cat="model" data-tier="B" data-ram="64" data-name="command r+ (cohere)" data-search="command r+ (cohere) cohere&#x27;s rag-tuned open release. frontier model">
-        <span class="tier-badge" data-tier="B" aria-label="Tier B: Depth">B</span>
+        <span class="tier-badge" data-tier="B" aria-label="Tier B: Deeper">B</span>
         <span class="tool-cat">Frontier Model</span>
         <h2><a href="https://cohere.com/command" target="_blank" rel="noopener" style="color:inherit; text-decoration:none; border-bottom:1px dotted var(--gold);">Command R+ (Cohere) <span style="opacity:0.6; font-size:0.75em;">↗</span></a></h2>
         <p class="tool-type">Open-weight enterprise / RAG-tuned model</p>
@@ -1454,7 +1454,7 @@
         <div class="captain-call">Underrated for the captain who wants strong RAG without sending docs to the cloud.</div>
       </article>
       <article class="tool-card" data-cat="model" data-tier="B" data-ram="8" data-name="phi-4 / phi-4 mini (microsoft)" data-search="phi-4 / phi-4 mini (microsoft) punches above its weight — and mini runs on almost anything. frontier model">
-        <span class="tier-badge" data-tier="B" aria-label="Tier B: Depth">B</span>
+        <span class="tier-badge" data-tier="B" aria-label="Tier B: Deeper">B</span>
         <span class="tool-cat">Frontier Model</span>
         <h2>Phi-4 / Phi-4 Mini (Microsoft)</h2>
         <p class="tool-type">Small but capable Microsoft models</p>
@@ -1472,7 +1472,7 @@
         <div class="captain-call">If your Mac is 8-32GB, Phi-4 (or Mini) + Gemma 4 are your workhorses. Tiny, fast, smart.</div>
       </article>
       <article class="tool-card" data-cat="image" data-tier="B" data-ram="16" data-name="flux.1 dev" data-search="flux.1 dev the current open-weight image champion. image">
-        <span class="tier-badge" data-tier="B" aria-label="Tier B: Depth">B</span>
+        <span class="tier-badge" data-tier="B" aria-label="Tier B: Deeper">B</span>
         <span class="tool-cat">Image</span>
         <h2><a href="https://blackforestlabs.ai" target="_blank" rel="noopener" style="color:inherit; text-decoration:none; border-bottom:1px dotted var(--gold);">FLUX.1 dev <span style="opacity:0.6; font-size:0.75em;">↗</span></a></h2>
         <p class="tool-type">Open-weight image generation</p>
@@ -1490,7 +1490,7 @@
         <div class="captain-call">Run via ComfyUI for full control. Quantized FLUX runs on 24GB+ Mac unified memory.</div>
       </article>
       <article class="tool-card" data-cat="image" data-tier="B" data-ram="16" data-name="stable diffusion 3.5" data-search="stable diffusion 3.5 stability ai&#x27;s flagship open model. image">
-        <span class="tier-badge" data-tier="B" aria-label="Tier B: Depth">B</span>
+        <span class="tier-badge" data-tier="B" aria-label="Tier B: Deeper">B</span>
         <span class="tool-cat">Image</span>
         <h2><a href="https://stability.ai" target="_blank" rel="noopener" style="color:inherit; text-decoration:none; border-bottom:1px dotted var(--gold);">Stable Diffusion 3.5 <span style="opacity:0.6; font-size:0.75em;">↗</span></a></h2>
         <p class="tool-type">Open-weight image generation</p>
@@ -1508,7 +1508,7 @@
         <div class="captain-call">Use FLUX as your default; pull SD 3.5 for community fine-tunes and specific styles.</div>
       </article>
       <article class="tool-card" data-cat="image" data-tier="B" data-ram="16" data-name="comfyui" data-search="comfyui node-based ui for flux / sd / video models. image">
-        <span class="tier-badge" data-tier="B" aria-label="Tier B: Depth">B</span>
+        <span class="tier-badge" data-tier="B" aria-label="Tier B: Deeper">B</span>
         <span class="tool-cat">Image</span>
         <h2><a href="https://github.com/comfyanonymous/ComfyUI" target="_blank" rel="noopener" style="color:inherit; text-decoration:none; border-bottom:1px dotted var(--gold);">ComfyUI <span style="opacity:0.6; font-size:0.75em;">↗</span></a></h2>
         <p class="tool-type">Visual workflow editor for image / video models</p>
@@ -1526,7 +1526,7 @@
         <div class="captain-call">Pair with FLUX. Steeper curve, but once you have a workflow saved, it's repeatable.</div>
       </article>
       <article class="tool-card" data-cat="voice" data-tier="A" data-ram="8" data-name="whisper.cpp" data-search="whisper.cpp whisper running locally — no api calls. voice">
-        <span class="tier-badge" data-tier="A" aria-label="Tier A: Core">A</span>
+        <span class="tier-badge" data-tier="A" aria-label="Tier A: Recommended">A</span>
         <span class="tool-cat">Voice</span>
         <h2><a href="https://github.com/ggerganov/whisper.cpp" target="_blank" rel="noopener" style="color:inherit; text-decoration:none; border-bottom:1px dotted var(--gold);">Whisper.cpp <span style="opacity:0.6; font-size:0.75em;">↗</span></a></h2>
         <p class="tool-type">Local speech-to-text (Whisper port)</p>
@@ -1544,7 +1544,7 @@
         <div class="captain-call">Use this over the API when content is sensitive. Free and fast.</div>
       </article>
       <article class="tool-card" data-cat="voice" data-tier="B" data-ram="16" data-name="whisperx" data-search="whisperx whisper with speaker labels and word-level timestamps. voice">
-        <span class="tier-badge" data-tier="B" aria-label="Tier B: Depth">B</span>
+        <span class="tier-badge" data-tier="B" aria-label="Tier B: Deeper">B</span>
         <span class="tool-cat">Voice</span>
         <h2><a href="https://github.com/m-bain/whisperX" target="_blank" rel="noopener" style="color:inherit; text-decoration:none; border-bottom:1px dotted var(--gold);">WhisperX <span style="opacity:0.6; font-size:0.75em;">↗</span></a></h2>
         <p class="tool-type">Whisper + speaker diarization</p>
@@ -1562,7 +1562,7 @@
         <div class="captain-call">Use when you need to know who said what. Free.</div>
       </article>
       <article class="tool-card" data-cat="voice" data-tier="C" data-ram="8" data-name="kokoro / openvoice" data-search="kokoro / openvoice local tts — your voice, on your machine. voice">
-        <span class="tier-badge" data-tier="C" aria-label="Tier C: Optional">C</span>
+        <span class="tier-badge" data-tier="C" aria-label="Tier C: Specialty">C</span>
         <span class="tool-cat">Voice</span>
         <h2>Kokoro / OpenVoice</h2>
         <p class="tool-type">Local text-to-speech / voice cloning</p>
@@ -1580,7 +1580,7 @@
         <div class="captain-call">Kokoro is shockingly good for its size and runs on CPU. Start there; reach for OpenVoice only if you need cloning.</div>
       </article>
       <article class="tool-card" data-cat="code" data-tier="A" data-ram="8" data-name="continue.dev" data-search="continue.dev cursor-like ai coding with your local llm. coding">
-        <span class="tier-badge" data-tier="A" aria-label="Tier A: Core">A</span>
+        <span class="tier-badge" data-tier="A" aria-label="Tier A: Recommended">A</span>
         <span class="tool-cat">Coding</span>
         <h2><a href="https://continue.dev" target="_blank" rel="noopener" style="color:inherit; text-decoration:none; border-bottom:1px dotted var(--gold);">Continue.dev <span style="opacity:0.6; font-size:0.75em;">↗</span></a></h2>
         <p class="tool-type">VS Code extension w/ local model support</p>
@@ -1598,7 +1598,7 @@
         <div class="captain-call">Best free Cursor alternative for the local-first captain.</div>
       </article>
       <article class="tool-card" data-cat="code" data-tier="A" data-ram="8" data-name="cline (formerly claude dev)" data-search="cline (formerly claude dev) open-source autonomous coding agent. coding">
-        <span class="tier-badge" data-tier="A" aria-label="Tier A: Core">A</span>
+        <span class="tier-badge" data-tier="A" aria-label="Tier A: Recommended">A</span>
         <span class="tool-cat">Coding</span>
         <h2><a href="https://github.com/cline/cline" target="_blank" rel="noopener" style="color:inherit; text-decoration:none; border-bottom:1px dotted var(--gold);">Cline (formerly Claude Dev) <span style="opacity:0.6; font-size:0.75em;">↗</span></a></h2>
         <p class="tool-type">Open-source agentic VS Code extension</p>
@@ -1616,7 +1616,7 @@
         <div class="captain-call">Excellent. Pairs with Llama 4 70B locally for a free Claude Code substitute.</div>
       </article>
       <article class="tool-card" data-cat="code" data-tier="C" data-ram="8" data-name="aider (local backend)" data-search="aider (local backend) same aider from the compass — running on your local llm. coding">
-        <span class="tier-badge" data-tier="C" aria-label="Tier C: Optional">C</span>
+        <span class="tier-badge" data-tier="C" aria-label="Tier C: Specialty">C</span>
         <span class="tool-cat">Coding</span>
         <h2><a href="https://aider.chat" target="_blank" rel="noopener" style="color:inherit; text-decoration:none; border-bottom:1px dotted var(--gold);">Aider (local backend) <span style="opacity:0.6; font-size:0.75em;">↗</span></a></h2>
         <p class="tool-type">Terminal AI pair programmer (local-friendly)</p>
@@ -1634,7 +1634,7 @@
         <div class="captain-call">If you already use Aider with Claude API, switching it to a local backend takes 30 seconds.</div>
       </article>
       <article class="tool-card" data-cat="code" data-tier="C" data-ram="16" data-name="tabby" data-search="tabby github copilot-style autocomplete, on your own server. coding">
-        <span class="tier-badge" data-tier="C" aria-label="Tier C: Optional">C</span>
+        <span class="tier-badge" data-tier="C" aria-label="Tier C: Specialty">C</span>
         <span class="tool-cat">Coding</span>
         <h2><a href="https://www.tabbyml.com" target="_blank" rel="noopener" style="color:inherit; text-decoration:none; border-bottom:1px dotted var(--gold);">Tabby <span style="opacity:0.6; font-size:0.75em;">↗</span></a></h2>
         <p class="tool-type">Self-hosted code autocomplete</p>
@@ -1652,7 +1652,7 @@
         <div class="captain-call">Niche. Use only if compliance forbids cloud Copilot.</div>
       </article>
       <article class="tool-card" data-cat="rag" data-tier="A" data-ram="16" data-name="anythingllm" data-search="anythingllm chatgpt-style chat over your own files. 100% local. knowledge / rag">
-        <span class="tier-badge" data-tier="A" aria-label="Tier A: Core">A</span>
+        <span class="tier-badge" data-tier="A" aria-label="Tier A: Recommended">A</span>
         <span class="tool-cat">Knowledge / RAG</span>
         <h2><a href="https://anythingllm.com" target="_blank" rel="noopener" style="color:inherit; text-decoration:none; border-bottom:1px dotted var(--gold);">AnythingLLM <span style="opacity:0.6; font-size:0.75em;">↗</span></a></h2>
         <p class="tool-type">Local RAG over your documents</p>
@@ -1670,7 +1670,7 @@
         <div class="captain-call">Best NotebookLM alternative that runs entirely on your machine.</div>
       </article>
       <article class="tool-card" data-cat="rag" data-tier="B" data-ram="16" data-name="khoj" data-search="khoj ai search across your notes, emails, files. knowledge / rag">
-        <span class="tier-badge" data-tier="B" aria-label="Tier B: Depth">B</span>
+        <span class="tier-badge" data-tier="B" aria-label="Tier B: Deeper">B</span>
         <span class="tool-cat">Knowledge / RAG</span>
         <h2><a href="https://khoj.dev" target="_blank" rel="noopener" style="color:inherit; text-decoration:none; border-bottom:1px dotted var(--gold);">Khoj <span style="opacity:0.6; font-size:0.75em;">↗</span></a></h2>
         <p class="tool-type">Personal AI search engine</p>
@@ -1688,7 +1688,7 @@
         <div class="captain-call">Killer pairing with Obsidian. Free, fast, private.</div>
       </article>
       <article class="tool-card" data-cat="rag" data-tier="C" data-ram="16" data-name="perplexica" data-search="perplexica perplexity, but local + uses your own models. knowledge / rag">
-        <span class="tier-badge" data-tier="C" aria-label="Tier C: Optional">C</span>
+        <span class="tier-badge" data-tier="C" aria-label="Tier C: Specialty">C</span>
         <span class="tool-cat">Knowledge / RAG</span>
         <h2><a href="https://github.com/ItzCrazyKns/Perplexica" target="_blank" rel="noopener" style="color:inherit; text-decoration:none; border-bottom:1px dotted var(--gold);">Perplexica <span style="opacity:0.6; font-size:0.75em;">↗</span></a></h2>
         <p class="tool-type">Open-source Perplexity clone</p>
@@ -1706,7 +1706,7 @@
         <div class="captain-call">Solid Perplexity alternative for the local-first captain.</div>
       </article>
       <article class="tool-card" data-cat="rag" data-tier="C" data-ram="8" data-name="obsidian + smart connections" data-search="obsidian + smart connections obsidian + ai plugins, fully local. knowledge / rag">
-        <span class="tier-badge" data-tier="C" aria-label="Tier C: Optional">C</span>
+        <span class="tier-badge" data-tier="C" aria-label="Tier C: Specialty">C</span>
         <span class="tool-cat">Knowledge / RAG</span>
         <h2><a href="https://obsidian.md" target="_blank" rel="noopener" style="color:inherit; text-decoration:none; border-bottom:1px dotted var(--gold);">Obsidian + Smart Connections <span style="opacity:0.6; font-size:0.75em;">↗</span></a></h2>
         <p class="tool-type">Local-first knowledge graph + AI search plugin</p>
@@ -1724,7 +1724,7 @@
         <div class="captain-call">If Obsidian is your second brain, add Smart Connections + a local model and you have private AI search over everything.</div>
       </article>
       <article class="tool-card" data-cat="automation" data-tier="C" data-ram="8" data-name="n8n self-hosted" data-search="n8n self-hosted same n8n from the compass — running on your machine. automation">
-        <span class="tier-badge" data-tier="C" aria-label="Tier C: Optional">C</span>
+        <span class="tier-badge" data-tier="C" aria-label="Tier C: Specialty">C</span>
         <span class="tool-cat">Automation</span>
         <h2><a href="https://n8n.io" target="_blank" rel="noopener" style="color:inherit; text-decoration:none; border-bottom:1px dotted var(--gold);">n8n self-hosted <span style="opacity:0.6; font-size:0.75em;">↗</span></a></h2>
         <p class="tool-type">Self-hosted automation platform</p>
@@ -1742,7 +1742,7 @@
         <div class="captain-call">If you have a homelab, n8n + Ollama is the local automation stack.</div>
       </article>
       <article class="tool-card" data-cat="automation" data-tier="B" data-ram="8" data-name="mcp servers" data-search="mcp servers run mcp servers on your machine to wire local tools into cowork. automation">
-        <span class="tier-badge" data-tier="B" aria-label="Tier B: Depth">B</span>
+        <span class="tier-badge" data-tier="B" aria-label="Tier B: Deeper">B</span>
         <span class="tool-cat">Automation</span>
         <h2><a href="https://modelcontextprotocol.io" target="_blank" rel="noopener" style="color:inherit; text-decoration:none; border-bottom:1px dotted var(--gold);">MCP Servers <span style="opacity:0.6; font-size:0.75em;">↗</span></a></h2>
         <p class="tool-type">Local Model Context Protocol servers</p>
@@ -1760,7 +1760,7 @@
         <div class="captain-call">Future-proof. As MCP grows, more captain-relevant servers will exist.</div>
       </article>
       <article class="tool-card" data-cat="automation" data-tier="B" data-ram="8" data-name="goose (local backend)" data-search="goose (local backend) same goose from the frontier — running purely local. automation">
-        <span class="tier-badge" data-tier="B" aria-label="Tier B: Depth">B</span>
+        <span class="tier-badge" data-tier="B" aria-label="Tier B: Deeper">B</span>
         <span class="tool-cat">Automation</span>
         <h2><a href="https://block.github.io/goose/" target="_blank" rel="noopener" style="color:inherit; text-decoration:none; border-bottom:1px dotted var(--gold);">Goose (local backend) <span style="opacity:0.6; font-size:0.75em;">↗</span></a></h2>
         <p class="tool-type">Open-source agentic desktop tool</p>
@@ -1873,7 +1873,7 @@
   const resetBtn = document.getElementById('hwReset');
   const searchInput = document.getElementById('toolSearch');
   const sortBtns = document.querySelectorAll('.sort-btn[data-sort]');
-  const tierChecks = document.querySelectorAll('.tier-check input[type="checkbox"]');
+  const tierChecks = document.querySelectorAll('input[type="checkbox"][data-tier]');
   const TIER_RANK = { S:0, A:1, B:2, C:3 };
   const state = { cat: 'all', ram: null, q: '', sort: 'default', tiers: new Set(['S','A','B','C']) };
 
@@ -1925,7 +1925,7 @@
 
   tierChecks.forEach(cb => cb.addEventListener('change', () => {
     if (cb.checked) state.tiers.add(cb.dataset.tier); else state.tiers.delete(cb.dataset.tier);
-    cb.closest('.tier-check').classList.toggle('unchecked', !cb.checked);
+    cb.closest('.tl-row, .tier-check').classList.toggle('unchecked', !cb.checked);
     apply();
   }));
 

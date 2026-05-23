@@ -66,3 +66,35 @@ def category_pillar(cat, tier):
     if pill is None and tier == 'federal':
         return cat.get('tier')
     return pill
+
+
+def tier_label(cat, tier):
+    """v5.6 — Return the tier-specific category label for display.
+
+    Federal uses the canonical `label`. State/local prefer `label_state` /
+    `label_local` if present (drill-down: 'Sanctity of Life — Protect the
+    Vulnerable' at local), else fall back to canonical.
+
+    Implements Adam's per-tier rubric drill-down so state-rep / city-council
+    profiles visibly show tier-tailored framing rather than identical
+    federal labels."""
+    if tier == 'state':
+        return cat.get('label_state') or cat.get('label', '')
+    if tier == 'local':
+        return cat.get('label_local') or cat.get('label', '')
+    return cat.get('label', '')
+
+
+def tier_description(cat, tier):
+    """v5.6 — Return the tier-specific category description for display.
+
+    Federal uses canonical `description`; state/local prefer
+    `description_state` / `description_local` if present. Used on category
+    deep-dive pages so each tier's variant shows what THAT office actually
+    decides at that level (state abortion code vs local DA priorities,
+    etc.) rather than a generic federal-framed description."""
+    if tier == 'state':
+        return cat.get('description_state') or cat.get('description', '')
+    if tier == 'local':
+        return cat.get('description_local') or cat.get('description', '')
+    return cat.get('description', '')

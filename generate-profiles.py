@@ -5,6 +5,10 @@ import os
 import re
 
 import source_bias as sb
+# v5.6 — tier-aware label/description helpers (per-tier rubric drill-down).
+# Federal profiles show canonical labels; state/local profiles show tier-
+# specific subtitles ("Sanctity of Life — Protect the Vulnerable" at local).
+from tier_classify import tier_label, tier_description
 
 # Resolve once at import — used to check for sibling .webp photos at
 # generation time (so we only emit <picture> when a WebP actually exists).
@@ -1373,12 +1377,16 @@ def generate_profile(candidate, categories, meta, nav=None):
         pet_cat = PETITION_CAT_MAP.get(cat['id'])
         pet_state = (c.get('state') or '').upper() if c.get('state') else ''
         petition_btn = ''
+        # v5.6 — tier-aware label so state/local profiles display the
+        # tier-specific subtitle (e.g. 'Sanctity of Life — Protect the
+        # Vulnerable' at local). Federal falls back to canonical.
+        _cat_label = tier_label(cat, candidate_tier)
         if pet_cat and pet_state and pet_state not in ('US',):
             petition_btn = (
                 f'<a class="prof-cat-petition" '
                 f'href="../../petition.html?state={pet_state}&cat={pet_cat}" '
-                f'aria-label="Draft a petition to your {pet_state} reps about {cat["label"]}" '
-                f'title="Draft a petition to your {pet_state} reps about {cat["label"]}">'
+                f'aria-label="Draft a petition to your {pet_state} reps about {_cat_label}" '
+                f'title="Draft a petition to your {pet_state} reps about {_cat_label}">'
                 '&#9993;&#xFE0F; Petition your reps'
                 '</a>'
             )
@@ -1388,8 +1396,8 @@ def generate_profile(candidate, categories, meta, nav=None):
             petition_btn = (
                 f'<a class="prof-cat-petition" '
                 f'href="../../petition.html?cat={pet_cat}" '
-                f'aria-label="Draft a petition to your reps about {cat["label"]}" '
-                f'title="Draft a petition to your reps about {cat["label"]}">'
+                f'aria-label="Draft a petition to your reps about {_cat_label}" '
+                f'title="Draft a petition to your reps about {_cat_label}">'
                 '&#9993;&#xFE0F; Petition your reps'
                 '</a>'
             )
@@ -1398,9 +1406,9 @@ def generate_profile(candidate, categories, meta, nav=None):
             cat_html += f'''
     <div class="prof-category">
       <div class="prof-cat-header">
-        <a class="prof-cat-link" href="../../citizen/{deepdive_slug}.html" title="Open the full {cat['label']} rubric — questions, anchor Scripture, disqualifiers, and tier variants">
+        <a class="prof-cat-link" href="../../citizen/{deepdive_slug}.html" title="Open the full {_cat_label} rubric — questions, anchor Scripture, disqualifiers, and tier variants">
           <img src="../../assets/icons/{cat['icon']}" alt="" width="24" height="24">
-          <h3>{cat['label']}</h3>
+          <h3>{_cat_label}</h3>
           <span class="prof-cat-score" style="color:{color};">{cs['score']}/{MAX_PER_TOPIC}</span>
           <span class="prof-cat-deepdive" aria-hidden="true">deep dive →</span>
         </a>
@@ -1412,7 +1420,7 @@ def generate_profile(candidate, categories, meta, nav=None):
     <div class="prof-category">
       <div class="prof-cat-header">
         <img src="../../assets/icons/{cat['icon']}" alt="" width="24" height="24">
-        <h3>{cat['label']}</h3>
+        <h3>{_cat_label}</h3>
         <span class="prof-cat-score" style="color:{color};">{cs['score']}/{MAX_PER_TOPIC}</span>
         {petition_btn}
       </div>

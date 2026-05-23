@@ -47,6 +47,13 @@ def _load_scorecard_tier_data():
             'questions_state': cat.get('questions_state') or [None] * 5,
             'questions_local': cat.get('questions_local') or [None] * 5,
             'applicable_at': cat.get('applicable_at') or [['federal', 'state', 'local']] * 5,
+            # v5.6 — per-tier label/description for the visible drill-down on
+            # the deep-dive page (toggle "State" → H1 + description swap to
+            # the state-specific framing). None means no override → canonical.
+            'label_state': cat.get('label_state'),
+            'label_local': cat.get('label_local'),
+            'description_state': cat.get('description_state'),
+            'description_local': cat.get('description_local'),
         }
     return out
 
@@ -656,6 +663,19 @@ def render_page(cat):
     sc_questions_local = sc_data.get('questions_local') or [None] * 5
     applicable_at = sc_data.get('applicable_at') or [['federal', 'state', 'local']] * 5
 
+    # v5.6 — per-tier visible drill-down. When a reader toggles "State" or
+    # "Local" at the top, the H1 + description swap to the tier-specific
+    # framing (e.g. "Sanctity of Life — Protect the Vulnerable" + a local-
+    # DA-focused description). Fall back to canonical if no override.
+    fed_label = cat['label']
+    fed_desc = cat['description']
+    state_label = sc_data.get('label_state') or fed_label
+    local_label = sc_data.get('label_local') or fed_label
+    state_desc = sc_data.get('description_state') or fed_desc
+    local_desc = sc_data.get('description_local') or fed_desc
+    import html as _html
+    _attr = _html.escape  # escape quotes/HTML for data-* attrs
+
     n_federal = sum(1 for t in applicable_at if 'federal' in t)
     n_state = sum(1 for t in applicable_at if 'state' in t)
     n_local = sum(1 for t in applicable_at if 'local' in t)
@@ -905,7 +925,7 @@ def render_page(cat):
 
   <header class="cp-hero">
     <span class="cp-tier-badge">{tier_emoji} {tier_label} &middot; Category #{cat['num']} &middot; 10 pts</span>
-    <h1>{cat['label']}</h1>
+    <h1 class="cp-cat-label" data-label-federal="{_attr(fed_label)}" data-label-state="{_attr(state_label)}" data-label-local="{_attr(local_label)}">{cat['label']}</h1>
     <p class="cp-tagline">{cat['tagline']}</p>
     <p class="cp-meta">5 questions &times; 2 pts = 10 max &middot; <a href="/scoring-system.html">How scoring works</a> &middot; <a href="/citizen.html">Back to scorecard</a></p>
   </header>
@@ -916,7 +936,7 @@ def render_page(cat):
 
   <section class="cp-section">
     <h2>What this measures</h2>
-    <p>{cat['description']}</p>
+    <p class="cp-cat-desc" data-desc-federal="{_attr(fed_desc)}" data-desc-state="{_attr(state_desc)}" data-desc-local="{_attr(local_desc)}">{cat['description']}</p>
   </section>
 
   <section class="cp-section">
@@ -994,6 +1014,10 @@ def render_page(cat):
   if (!ol) return;
   var pills = document.querySelectorAll('.cp-tier-pill');
   var meta = document.querySelector('.cp-tier-count-num');
+  // v5.6 — also swap the category H1 label + description on tier change so
+  // the visible drill-down matches the question wording.
+  var catLabel = document.querySelector('.cp-cat-label');
+  var catDesc = document.querySelector('.cp-cat-desc');
   function apply(tier){{
     if (tier !== 'federal' && tier !== 'state' && tier !== 'local') tier = 'federal';
     ol.dataset.tier = tier;
@@ -1005,6 +1029,14 @@ def render_page(cat):
     if (meta) {{
       var key = 'n' + tier.charAt(0).toUpperCase() + tier.slice(1);
       meta.textContent = ol.dataset[key] || '5';
+    }}
+    if (catLabel) {{
+      var newLabel = catLabel.dataset['label' + tier.charAt(0).toUpperCase() + tier.slice(1)];
+      if (newLabel) catLabel.textContent = newLabel;
+    }}
+    if (catDesc) {{
+      var newDesc = catDesc.dataset['desc' + tier.charAt(0).toUpperCase() + tier.slice(1)];
+      if (newDesc) catDesc.textContent = newDesc;
     }}
   }}
   pills.forEach(function(p){{

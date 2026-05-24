@@ -1146,7 +1146,12 @@ fetch('data/index.json', { cache: 'no-cache' })
   })
   .catch(function(err) {
     console.error('Data load error:', err);
-    document.getElementById('visibleCount').textContent = 'Error loading data';
+    // visibleCount was renamed to summaryCount in the v5 redesign — fall back
+    // to either, and swallow if neither exists (status row may be absent on
+    // some layouts).
+    var statusEl = document.getElementById('summaryCount') ||
+                   document.getElementById('visibleCount');
+    if (statusEl) statusEl.textContent = 'Error loading data';
   });
 
 function getPartyClass(party) {
@@ -1544,7 +1549,12 @@ function renderCards() {
   });
 
   document.getElementById('cardGrid').innerHTML = html;
-  document.getElementById('visibleCount').textContent = filtered.length;
+  // visibleCount was renamed to summaryCount in the v5 redesign; renderCards
+  // ran for months calling the old ID and silently logging a TypeError every
+  // paint. Update count in whichever element actually exists.
+  var countEl = document.getElementById('summaryCount') ||
+                document.getElementById('visibleCount');
+  if (countEl) countEl.textContent = filtered.length.toLocaleString() + ' officials';
 }
 </script>
 

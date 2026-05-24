@@ -3,15 +3,20 @@
 that the money compromises, so the impact is visible in the per-category
 score (not just the total).
 
-Mapping:
-  - aipac money    → america_first[3] = False (q4 literally names AIPAC)
-  - china money    → america_first[3] = False (q4 covers "foreign-linked
-                                               PACs" and "foreign governments")
-  - soros funding  → life[3] = False (Soros-funded DAs protect abortion
-                                       provider access by declining
-                                       prosecution; q4 = "rejects any public
-                                       funding, subsidies, or legal protections
-                                       for abortion providers or procedures")
+v5 mapping (rubric_version v2-god-first-america-first-100pt, shipped
+2026-05-21 — see v5-rubric-draft.md):
+  - aipac money    → foreign_policy_restraint[3] = False
+                     (q4 literally names AIPAC: "Candidate has never accepted
+                     donations from foreign-backed lobbies (e.g., AIPAC) or
+                     foreign-linked PACs")
+  - china money    → foreign_policy_restraint[3] = False
+                     (same q4; covers "foreign-linked PACs" / "foreign
+                     governments hostile to U.S. interests")
+  - soros funding  → economic_stewardship[4] = False
+                     (q5: "Candidate opposes WEF/ESG/Davos economic capture
+                     and supports anti-trust action against monopolistic
+                     financial cartels". Soros is a founding WEF participant
+                     and OSF is one of its largest civil-society partners.)
 
 We also stamp an `answer_footnote` on the affected cell so a visitor can
 click through and see why the answer was flipped.
@@ -19,6 +24,14 @@ click through and see why the answer was flipped.
 This script is idempotent: it only flips True → False (never the reverse),
 and it records what it flipped in profile.category_overrides so we can
 audit the chain.
+
+History: pre-v5 mapping was (aipac, america_first, 3) and (soros, life, 3).
+The v5 rubric renamed america_first→foreign_policy_restraint and pushed the
+Soros failure mode from sanctity_of_life into economic_stewardship, where it
+hits the WEF/ESG/Davos question that better matches the underlying donor
+network's published policy agenda. Local DAs (Soros prosecutorial network)
+do not have economic_stewardship in their score dict at local tier; the
+dollar-bracket adjustment still applies to the total.
 """
 import json
 import sys
@@ -30,9 +43,9 @@ SCORECARD = ROOT / "data" / "scorecard.json"
 
 # (adjustment_key, category_id, question_index)
 LOBBY_TO_QUESTION = [
-    ("aipac", "america_first", 3),
-    ("china", "america_first", 3),
-    ("soros", "life", 3),
+    ("aipac", "foreign_policy_restraint", 3),
+    ("china", "foreign_policy_restraint", 3),
+    ("soros", "economic_stewardship", 4),
 ]
 
 

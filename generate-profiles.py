@@ -1668,7 +1668,7 @@ def generate_profile(candidate, categories, meta, nav=None):
     <li><a href="../../shop.html">Shop</a></li>
     <li><a href="../../books.html">Books</a></li>
     <li><a href="../../coaching.html">Coaching</a></li>
-    <li><a href="../../fitness/fitness.html">Fitness</a></li>
+    <li><a href="../../fitness/">Fitness</a></li>
     <li><a href="../../finance/">Finance</a></li>
     <li><a href="../../about.html">About</a></li>
     <li><a href="https://usmcmin.org" target="_blank">Ministry Site</a></li>

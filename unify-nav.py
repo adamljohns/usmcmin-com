@@ -112,7 +112,7 @@ def render_nav(depth: int, page_basename: str, in_scorecard_subdir: bool = False
     <li><a href="{p}shop.html"{cls("Shop")}>Shop</a></li>
     <li><a href="{p}books.html"{cls("Books")}>Books</a></li>
     <li><a href="{p}coaching.html"{cls("Coaching")}>Coaching</a></li>
-    <li><a href="{p}fitness/fitness.html">Fitness</a></li>
+    <li><a href="{p}fitness/">Fitness</a></li>
     <li><a href="{p}finance/">Finance</a></li>
     <li><a href="{p}about.html"{cls("About")}>About</a></li>
     <li><a href="https://usmcmin.org" target="_blank">Ministry Site</a></li>
@@ -186,7 +186,7 @@ def main():
         for f in sorted(os.listdir(REPO)):
             if f.endswith(".html"):
                 targets.append(os.path.join(REPO, f))
-        for sub in ("citizen", "issues"):
+        for sub in ("citizen", "issues", "fitness", "finance"):
             d = os.path.join(REPO, sub)
             if os.path.isdir(d):
                 for f in sorted(os.listdir(d)):

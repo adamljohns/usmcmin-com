@@ -169,30 +169,37 @@
 
 <nav>
   <a href="/" class="nav-brand" style="text-decoration:none">
-    <img src="/assets/img/logo.png" alt="U.S.M.C. Ministries" style="object-fit:contain">
+    <img src="../assets/img/logo.png" alt="U.S.M.C. Ministries" style="object-fit:contain">
     <div class="nav-brand-text">
       <div class="name">U.S.M.C. Ministries</div>
       <div class="tag">Warriors Equipped</div>
     </div>
   </a>
+  <!-- Reverted 2026-05-23: Citizen ▾ dropdown removed per Adam's feedback —
+       scorecard/civic resources are reachable via the index hero card, the
+       footer Resources column, and direct URLs; they don't need to clutter
+       the top nav on every page. See unify-nav.py history for the dropdown
+       block if/when it makes sense to reintroduce in a different form. -->
   <ul class="nav-links">
-    <li><a href="/citizen.html">Scorecard</a></li>
-    <li><a href="/find-my-reps.html">Find My Reps</a></li>
-    <li><a href="/state.html">By State</a></li>
-    <li><a href="/map.html">Maps</a></li>
-    <li><a href="/scoring-system.html">Scoring</a></li>
-    <li><a href="/compare.html">Compare</a></li>
-    <li><a href="/petition.html">Petition</a></li>
-    <li><a href="/changelog.html">Changelog</a></li>
+    <li><a href="../mission.html">Mission</a></li>
+    <li><a href="../shop.html">Shop</a></li>
+    <li><a href="../books.html">Books</a></li>
+    <li><a href="../coaching.html">Coaching</a></li>
+    <li><a href="../fitness/">Fitness</a></li>
+    <li><a href="../finance/">Finance</a></li>
+    <li><a href="../about.html">About</a></li>
+    <li><a href="https://usmcmin.org" target="_blank">Ministry Site</a></li>
   </ul>
-  <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">🌙</button>
+  <a href="../coaching.html" class="btn nav-cta">Book a Session</a>
+  <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme" title="Switch light/dark mode">&#127769;</button>
+  <button class="nav-toggle" aria-label="Menu"><span></span><span></span><span></span></button>
 </nav>
 
 <div id="main" class="cp-container">
 
   <header class="cp-hero">
     <span class="cp-tier-badge">✝ God First &middot; Category #1 &middot; 10 pts</span>
-    <h1>Sanctity of Life</h1>
+    <h1 class="cp-cat-label" data-label-federal="Sanctity of Life" data-label-state="Sanctity of Life — State abortion law &amp; funding" data-label-local="Sanctity of Life — Protect the Vulnerable">Sanctity of Life</h1>
     <p class="cp-tagline">Personhood from conception. No carve-outs.</p>
     <p class="cp-meta">5 questions &times; 2 pts = 10 max &middot; <a href="/scoring-system.html">How scoring works</a> &middot; <a href="/citizen.html">Back to scorecard</a></p>
   </header>
@@ -208,11 +215,14 @@
     <a href="/citizen/self-defense-2a.html">8. Self-Defense & 2A</a>
     <a href="/citizen/foreign-policy-restraint.html">9. Foreign Policy Restraint</a>
     <a href="/citizen/industry-capture.html">10. Industry Capture & Sovereignty</a>
+    <a href="/citizen/public-justice.html">11. Public Justice & Law/Order</a>
+    <a href="/citizen/refuse-federal-overreach.html">12. Refuse Federal Overreach</a>
+    <a href="/citizen/refuse-state-overreach.html">13. Refuse State Overreach</a>
   </nav>
 
   <section class="cp-section">
     <h2>What this measures</h2>
-    <p>Does this candidate affirm full personhood from conception and oppose abortion, infanticide, euthanasia, and embryonic experimentation?</p>
+    <p class="cp-cat-desc" data-desc-federal="Does this candidate affirm full personhood from conception and oppose abortion, infanticide, euthanasia, and embryonic experimentation?" data-desc-state="Does this state official affirm full personhood and vote for state-level abortion abolition, Medicaid defunding of abortion, parental-consent requirements, clinic-safety regulation, and protection of unborn life under state criminal and civil code?" data-desc-local="Does this local official prioritize prosecuting violence against the vulnerable, refuse to zone or publicly fund abortion providers, support crisis-pregnancy outreach, and protect children in schools, libraries, parks, and city contracts from harm and exploitation?">Does this candidate affirm full personhood from conception and oppose abortion, infanticide, euthanasia, and embryonic experimentation?</p>
   </section>
 
   <section class="cp-section">
@@ -322,6 +332,10 @@
   if (!ol) return;
   var pills = document.querySelectorAll('.cp-tier-pill');
   var meta = document.querySelector('.cp-tier-count-num');
+  // v5.6 — also swap the category H1 label + description on tier change so
+  // the visible drill-down matches the question wording.
+  var catLabel = document.querySelector('.cp-cat-label');
+  var catDesc = document.querySelector('.cp-cat-desc');
   function apply(tier){
     if (tier !== 'federal' && tier !== 'state' && tier !== 'local') tier = 'federal';
     ol.dataset.tier = tier;
@@ -333,6 +347,14 @@
     if (meta) {
       var key = 'n' + tier.charAt(0).toUpperCase() + tier.slice(1);
       meta.textContent = ol.dataset[key] || '5';
+    }
+    if (catLabel) {
+      var newLabel = catLabel.dataset['label' + tier.charAt(0).toUpperCase() + tier.slice(1)];
+      if (newLabel) catLabel.textContent = newLabel;
+    }
+    if (catDesc) {
+      var newDesc = catDesc.dataset['desc' + tier.charAt(0).toUpperCase() + tier.slice(1)];
+      if (newDesc) catDesc.textContent = newDesc;
     }
   }
   pills.forEach(function(p){

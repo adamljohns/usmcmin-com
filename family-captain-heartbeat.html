@@ -3,16 +3,16 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Heartbeat Posts — Family Captain Boot Camp · USMC Ministries</title>
+  <title>Pacing Prompts — Family Captain Boot Camp · USMC Ministries</title>
   <meta name="description" content="Cohort feed preview — 24 posts that drop in our Telegram channel.">
   <meta name="robots" content="noindex,nofollow">
   <link rel="stylesheet" href="assets/css/main.css">
   <link rel="icon" href="assets/img/favicon.png" type="image/png">
 <style>
-  .module-hero { padding:90px 20px 40px; border-bottom:1px solid var(--border);
+  .module-hero { padding:120px 20px 40px; border-bottom:1px solid var(--border);
     background: linear-gradient(180deg, rgba(30,58,95,0.10) 0%, transparent 100%); }
   [data-theme="dark"] .module-hero { background: linear-gradient(180deg, rgba(30,58,95,0.28) 0%, transparent 100%); }
-  .module-hero-inner { max-width:760px; margin:0 auto; }
+  .module-hero-inner { max-width:880px; margin:0 auto; }
   .module-badge { display:inline-block; font-size:0.68rem; font-weight:700; text-transform:uppercase;
     letter-spacing:3px; color:var(--gold); background:var(--gold-dim); border:1px solid var(--border);
     padding:6px 18px; border-radius:20px; margin-bottom:14px; }
@@ -25,17 +25,20 @@
   .back-link { color:var(--gray); font-size:0.82rem; text-decoration:none; }
   .back-link:hover { color:var(--gold); text-decoration:underline; }
 
-  .filters { position:sticky; top:70px; background:var(--bg-dark); border-bottom:1px solid var(--border);
+  .filters { display:block; position:sticky; top:70px; background:var(--bg-dark); border-bottom:1px solid var(--border);
     padding:12px 16px; z-index:9; overflow-x:auto; white-space:nowrap; }
-  .filters-inner { max-width:760px; margin:0 auto; display:flex; gap:8px; }
+  .filters-inner { max-width:880px; margin:0 auto; display:flex; gap:8px; }
   .chip { display:inline-flex; align-items:center; padding:7px 14px; border-radius:99px;
     border:1px solid var(--border); background:var(--bg-card); color:var(--gray-light);
     font-size:0.82rem; font-weight:600; cursor:pointer; transition:all 0.15s; white-space:nowrap; font-family:inherit; }
   .chip:hover { border-color:var(--gold); color:var(--gold); }
   .chip.active { background:var(--gold); color:var(--bg-dark); border-color:var(--gold); }
   .chip .count { margin-left:6px; font-size:0.7rem; opacity:0.7; }
+  .filters-inner + .filters-inner { margin-top:8px; }
+  .filter-label { align-self:center; flex-shrink:0; font-size:0.6rem; font-weight:800;
+    letter-spacing:2px; text-transform:uppercase; color:var(--gray); margin-right:4px; }
 
-  .feed { max-width:760px; margin:0 auto; padding:24px 16px 80px; }
+  .feed { max-width:880px; margin:0 auto; padding:24px 16px 80px; }
   .feed-empty { padding:40px 0; text-align:center; color:var(--gray); font-size:0.88rem; display:none; }
 
   .post { background:var(--bg-card); border:1px solid var(--border); border-radius:var(--radius);
@@ -72,7 +75,7 @@
     font-size:0.6rem; letter-spacing:2.5px; color:var(--gold); font-weight:800; display:block; margin-bottom:4px; }
 
   @media (max-width:640px){
-    .module-hero { padding:80px 18px 30px; }
+    .module-hero { padding:90px 18px 30px; }
     .post { padding:18px 18px 16px; }
     .post-title { font-size:1.1rem; }
   }
@@ -140,10 +143,29 @@
     color: #CE8E31 !important;
     border: 1px solid #CE8E31 !important;
   }
-  /* Hide the USMC site-wide nav on FC track */
+  /* Hide the USMC site-wide nav on FC track. .filters is a <div> (not nav), so it's unaffected. */
   body > nav,
   nav.site-nav,
   header.site-header { display: none !important; }
+  /* FC mini-header is static (scrolls away), so pin in-page filter bars to the very top */
+  .filters { top: 0 !important; }
+  /* Filter chips were styled for the dark theme; restyle for FC light (AA contrast) */
+  .filters .chip { background:#F4F5F7 !important; color:#334155 !important; border-color:#D1D5DB !important; }
+  .filters .chip:hover { color:#A66A1F !important; border-color:#CE8E31 !important; }
+  .filters .chip.active { background:#CE8E31 !important; color:#1A1A1A !important; border-color:#CE8E31 !important; }
+  /* Tier checkbox labels: lighter colors fade on white; use darker variants for FC light */
+  .filters .tier-check { background:#F4F5F7 !important; border-color:#D1D5DB !important; }
+  .filters .tier-check .t-S { color:#A66A1F !important; }
+  .filters .tier-check .t-A { color:#5C7A4A !important; }
+  .filters .tier-check .t-B { color:#4B5563 !important; }
+  .filters .tier-check .t-C { color:#6B7280 !important; }
+  /* Search + sort controls: same light-theme restyle (AA contrast) */
+  .tools-controls .tool-search { background:#FFFFFF !important; color:#1A1A1A !important; border-color:#D1D5DB !important; }
+  .tools-controls .tool-search::placeholder { color:#6B7280 !important; }
+  .tools-controls .sort-label { color:#6B7280 !important; }
+  .tools-controls .sort-btn { background:#F4F5F7 !important; color:#334155 !important; border-color:#D1D5DB !important; }
+  .tools-controls .sort-btn:hover { color:#A66A1F !important; border-color:#CE8E31 !important; }
+  .tools-controls .sort-btn.active { background:#CE8E31 !important; color:#1A1A1A !important; border-color:#CE8E31 !important; }
   /* FC mini-header (injected below; styles here) */
   .fc-header {
     background: #1E293B;
@@ -750,7 +772,10 @@
     gap: 36px 48px;
     align-items: flex-start;
   }
-  footer .footer-brand { flex: 0 1 430px; }
+  footer .footer-brand { flex: 0 1 600px; }
+  /* Keep the ministry blurb from wrapping after only ~30 chars — let it use the
+     brand block's full width so it reads as ~2 lines (MOOP 2026-05-21). */
+  footer .fc-usmc-block p, footer .fc-usmc-block .fc-partner-note { max-width: none; }
   footer .footer-col { flex: 0 0 auto; }
 
   /* The Family Captain — bronze ship's-wheel logo, front and centre. */
@@ -854,6 +879,12 @@
   body[data-track="family-captain"] :is(.post-type,.ram) {
     color: #8B5A1F !important;
   }
+  /* Kicker pseudo-labels on light card panels — the source sets these to
+     light --silver / bright --gold, which fail AA on warm-gray (~1.9–2.3:1).
+     Darken to match the v6 label treatment. (Pseudo-elements, so the v7
+     structural text sweep never reaches them.) */
+  body[data-track="family-captain"] .tool-card .best-for::before { color:#475569 !important; }
+  body[data-track="family-captain"] .tool-card .captain-call::before { color:#8B5A1F !important; }
 
   /* (4) DRILL CELLS are always dark slate — number must be bright bronze,
      label white (the v6 light-surface bronze broke them in light theme). */
@@ -863,6 +894,24 @@
   body[data-track="family-captain"] .drill-cell .drill-label {
     color: #FFFFFF !important;
   }
+
+  /* NotebookLM explainer video — Sovereign page (pilot feature) */
+  body[data-track="family-captain"] .fc-video {
+    max-width: 880px;
+    margin: 24px auto 0;
+  }
+  body[data-track="family-captain"] .fc-video iframe,
+  body[data-track="family-captain"] .fc-video video {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    display: block;
+    background: #0F172A;
+    border: 1px solid #33445C;
+  }
+  /* Fallback copy inside <video> renders on the dark #0F172A surface, so it
+     must stay light — the v7 sweep otherwise forces it to dark slate. */
+  body[data-track="family-captain"] .fc-video video { color: #CBD5E1 !important; }
+  body[data-track="family-captain"] .fc-video video a { color: #CE8E31 !important; }
 </style>
 
 </head>
@@ -873,10 +922,10 @@
   <a href="https://thefamilycaptain.com/" target="_blank" rel="noopener" class="fc-wordmark">THE FAMILY <span class="accent">CAPTAIN</span></a>
   <nav class="fc-nav">
       <a href="family-captain.html">Bootcamp</a>
-      <a href="family-captain-tools.html">Compass</a>
       <a href="family-captain-voyage.html">Chart</a>
+      <a href="family-captain-tools.html">Compass</a>
+      <a href="family-captain-heartbeat.html" class="active">Pacing Prompts</a>
       <a href="family-captain-sovereign.html">Sovereign</a>
-      <a href="family-captain-heartbeat.html" class="active">Heartbeat</a>
   </nav>
 </header>
 
@@ -911,7 +960,7 @@
   <div class="module-hero-inner">
     <a href="family-captain.html" class="back-link">← Family Captain Boot Camp</a>
     <span class="module-badge" style="margin-top:14px">Cohort Feed Preview · USMC Ministries</span>
-    <h1><span class="gold">Heartbeat</span> Posts</h1>
+    <h1><span class="gold">Pacing</span> Prompts</h1>
     <p class="subtitle">The 24 cohort posts that run alongside the bootcamp in our Telegram channel. Brotherly captain-to-captain voice. Each post ends with a comment-magnet question. This is what the cohort feed actually looks and sounds like.</p>
     <div class="meta">
       <span><b>5</b> Monday Kickoffs</span>
@@ -923,17 +972,27 @@
   </div>
 </div>
 
-<!-- FILTERS -->
-<nav class="filters" aria-label="Filter posts by type">
-  <div class="filters-inner">
-    <button class="chip active" data-filter="all">All <span class="count">24</span></button>
-    <button class="chip" data-filter="kickoff">Mon Kickoff <span class="count">5</span></button>
-    <button class="chip" data-filter="call">Captain's Call <span class="count">5</span></button>
-    <button class="chip" data-filter="closeout">Fri Close-Out <span class="count">5</span></button>
-    <button class="chip" data-filter="scripture">Scripture <span class="count">5</span></button>
-    <button class="chip" data-filter="bonus">Bonus <span class="count">4</span></button>
+<!-- FILTERS — div (not nav) to avoid inheriting main.css body>nav site-nav styles -->
+<div class="filters" role="navigation" aria-label="Filter posts">
+  <div class="filters-inner" data-dim="type" aria-label="Filter by type">
+    <span class="filter-label">Type</span>
+    <button class="chip active" data-val="all">All <span class="count">24</span></button>
+    <button class="chip" data-val="kickoff">Mon Kickoff <span class="count">5</span></button>
+    <button class="chip" data-val="call">Captain's Call <span class="count">5</span></button>
+    <button class="chip" data-val="closeout">Fri Close-Out <span class="count">5</span></button>
+    <button class="chip" data-val="scripture">Scripture <span class="count">5</span></button>
+    <button class="chip" data-val="bonus">Bonus <span class="count">4</span></button>
   </div>
-</nav>
+  <div class="filters-inner" data-dim="week" aria-label="Filter by week">
+    <span class="filter-label">Week</span>
+    <button class="chip active" data-val="all">All weeks</button>
+    <button class="chip" data-val="1">Week 1 <span class="count">4</span></button>
+    <button class="chip" data-val="2">Week 2 <span class="count">4</span></button>
+    <button class="chip" data-val="3">Week 3 <span class="count">4</span></button>
+    <button class="chip" data-val="4">Week 4 <span class="count">4</span></button>
+    <button class="chip" data-val="5">Week 5 <span class="count">4</span></button>
+  </div>
+</div>
 
 <main class="feed" id="feed">
   <article class="post" data-type="kickoff" data-week="1">
@@ -1449,6 +1508,11 @@
           <li><a href="about.html">About Adam</a></li>
           <li><a href="https://usmcmin.org" target="_blank" rel="noopener">usmcmin.org</a></li>
           <li><a href="mailto:usmcministries2022@gmail.com">Contact</a></li>
+          <li><a href="husband.html">Husband</a></li>
+          <li><a href="father.html">Father</a></li>
+          <li><a href="citizen.html">Citizen</a></li>
+          <li><a href="fitness/fitness.html">Fitness</a></li>
+          <li><a href="finance/">Finance</a></li>
         </ul>
       </div>
 
@@ -1456,9 +1520,10 @@
         <h4>For Captains</h4>
         <ul>
           <li><a href="family-captain.html">AI Boot Camp</a></li>
+          <li><a href="family-captain-voyage.html">The Captain&rsquo;s Chart</a></li>
           <li><a href="family-captain-tools.html">AI Tools Landscape</a></li>
-          <li><a href="husband.html">Husband (HAPPY)</a></li>
-          <li><a href="father.html">Father</a></li>
+          <li><a href="family-captain-heartbeat.html">Pacing Prompts</a></li>
+          <li><a href="family-captain-sovereign.html">The Sovereign Stack</a></li>
         </ul>
       </div>
 
@@ -1473,40 +1538,29 @@
 
 <script>
 (function(){
-  const chips = document.querySelectorAll('.chip');
   const posts = document.querySelectorAll('.post');
   const empty = document.getElementById('feedEmpty');
-  chips.forEach(chip => chip.addEventListener('click', () => {
-    chips.forEach(c => c.classList.remove('active'));
-    chip.classList.add('active');
-    const filter = chip.dataset.filter;
+  const state = { type: 'all', week: 'all' };
+  function apply(){
     let visible = 0;
     posts.forEach(p => {
-      const show = filter === 'all' || p.dataset.type === filter;
+      const okType = state.type === 'all' || p.dataset.type === state.type;
+      const okWeek = state.week === 'all' || p.dataset.week === state.week;
+      const show = okType && okWeek;
       p.style.display = show ? '' : 'none';
       if (show) visible++;
     });
     empty.style.display = visible === 0 ? 'block' : 'none';
-    window.scrollTo({top: 200, behavior: 'instant'});
-  }));
-})();
-</script>
-
-
-<script>
-(function() {
-  // "Show S+A only" toggle. Use capture phase + stopImmediatePropagation
-  // so we win over the existing category-filter handler that also targets .chip.
-  const chip = document.querySelector('.chip.tier-toggle');
-  if (!chip) return;
-  const grid = document.getElementById('toolsGrid');
-  if (!grid) return;
-  chip.addEventListener('click', (e) => {
-    e.preventDefault();
-    e.stopImmediatePropagation();
-    grid.classList.toggle('filter-sa-only');
-    chip.classList.toggle('active');
-  }, true /* capture phase */);
+  }
+  document.querySelectorAll('.filters-inner[data-dim]').forEach(row => {
+    const dim = row.dataset.dim;
+    row.querySelectorAll('.chip').forEach(chip => chip.addEventListener('click', () => {
+      row.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
+      chip.classList.add('active');
+      state[dim] = chip.dataset.val;
+      apply();
+    }));
+  });
 })();
 </script>
 
@@ -1520,7 +1574,7 @@
 (function() {
   const toggle = document.getElementById('themeToggle');
   const saved = localStorage.getItem('usmc-theme');
-  if (saved !== 'light') { document.documentElement.setAttribute('data-theme', 'dark'); toggle.textContent = '☀️'; }
+  if (true) { document.documentElement.setAttribute('data-theme', 'light'); toggle.textContent = '☀️'; }
   toggle.addEventListener('click', function() {
     const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
     if (isDark) { document.documentElement.removeAttribute('data-theme'); localStorage.setItem('usmc-theme', 'light'); toggle.textContent = '☽'; }

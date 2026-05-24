@@ -5,6 +5,10 @@ import os
 import re
 
 import source_bias as sb
+# v5.6 — tier-aware label/description helpers (per-tier rubric drill-down).
+# Federal profiles show canonical labels; state/local profiles show tier-
+# specific subtitles ("Sanctity of Life — Protect the Vulnerable" at local).
+from tier_classify import tier_label, tier_description
 
 # Resolve once at import — used to check for sibling .webp photos at
 # generation time (so we only emit <picture> when a WebP actually exists).
@@ -15,6 +19,13 @@ MAX_PER_TOPIC = 10
 MAX_TOTAL = 100  # v4.0 rubric: 10 categories × 10 pts = 100 (60 God First + 40 America First)
 MAX_GOD_FIRST = 60
 MAX_AMERICA_FIRST = 40
+
+# RESOLUTE Local civic-tool links by jurisdiction. Local officials whose city
+# has a live RESOLUTE Local page get a banner linking to it (live agendas +
+# briefs + how-to-weigh-in). Add an entry per city as the tool expands.
+CIVIC_TOOL_MAP = {
+    'City of Fredericksburg': 'https://adamljohns.github.io/resolute-local/city/fredericksburg.html',
+}
 
 def letter_grade(pct):
     """A 90+, B 80, C 70, D 60, F <60 — standard report-card scale.
@@ -45,10 +56,22 @@ def calc_cat_score(answers):
     na = sum(1 for a in answers if a == 'N/A')
     return {'score': raw * POINTS_PER_TRUE, 'raw': raw, 'answered': answered, 'na': na}
 
-def calc_total(scores, categories):
+def calc_total(scores, categories, office_tier=None):
+    """Sum True×2 + answered across categories.
+
+    v5.0 — when office_tier is given ('federal'|'state'|'local'), only count
+    categories that belong to that tier's rubric (those whose `pillars` map
+    includes the tier). This excludes federal-only categories (Foreign Policy,
+    Industry Capture) from state/local totals and includes the tier's
+    Refuse-Overreach / Public Justice categories. office_tier=None counts all
+    (back-compat)."""
     total = 0
     answered = 0
     for cat in categories:
+        if office_tier is not None:
+            pillars = cat.get('pillars')
+            if pillars is not None and office_tier not in pillars:
+                continue  # category not part of this tier's rubric
         cs = calc_cat_score(scores.get(cat['id'], []))
         total += cs['score']
         answered += cs['answered']
@@ -109,21 +132,45 @@ def question_text_for_tier(cat, q_idx, tier):
     return cat.get('questions', [''])[q_idx] if q_idx < len(cat.get('questions', [])) else ''
 
 
-def calc_subtotals(scores, categories):
-    """v4.0 — split total into God First (60) + America First (40) subtotals
-    by reading the tier field on each category. Mirrors citizen.html's
-    calcTotalScore() so the profile page shows the same two-pill breakdown
-    visitors already see on the home scorecard."""
-    gf = 0
-    af = 0
+def calc_subtotals(scores, categories, office_tier='federal'):
+    """v5.0 — split total into Pillar A (God First) + Pillar B (America First /
+    State First / Local First) using each category's `pillars[office_tier]`.
+
+    God First always = Pillar A. Pillar B is whatever the tier's second pillar
+    is named (america_first federal, state_first state, local_first local).
+    Categories not in the tier's rubric are skipped. Falls back to the legacy
+    `tier` field for federal records that predate the `pillars` map.
+
+    Returns {'god_first': a, 'gov_first': b} — `gov_first` is the Pillar-B
+    subtotal regardless of its tier-specific name."""
+    a = 0  # God First (Pillar A)
+    b = 0  # Pillar B (america/state/local first)
     for cat in categories:
+        pillars = cat.get('pillars') or {}
+        pill = pillars.get(office_tier)
+        if pill is None:
+            if office_tier == 'federal':
+                pill = cat.get('tier')  # legacy fallback
+            else:
+                continue  # category not part of this tier's rubric
         cs = calc_cat_score(scores.get(cat['id'], []))
-        tier = cat.get('tier', '')
-        if tier == 'god_first':
-            gf += cs['score']
-        elif tier == 'america_first':
-            af += cs['score']
-    return {'god_first': gf, 'america_first': af}
+        if pill == 'god_first':
+            a += cs['score']
+        else:
+            b += cs['score']
+    return {'god_first': a, 'gov_first': b}
+
+
+def tier_pillar_info(meta, office_tier):
+    """v5.0 — return (pillar_b_label, god_max, gov_max) for a candidate's tier
+    from meta.rubrics. Maxes = (#categories in pillar) × 10. Defaults to the
+    federal 60/40 shape if the tier or rubrics block is missing."""
+    rubrics = (meta or {}).get('rubrics') or {}
+    r = rubrics.get(office_tier) or rubrics.get('federal') or {}
+    b_label = r.get('pillar_b_label', 'America First')
+    god_max = (len(r.get('pillar_a', [])) or 6) * 10
+    gov_max = (len(r.get('pillar_b', [])) or 4) * 10
+    return b_label, god_max, gov_max
 
 def score_color(score, max_val):
     if max_val == 0:
@@ -475,7 +522,7 @@ def compute_nav_groups(candidates, categories):
     # Score lookup (once per candidate) so we don't recompute during sort.
     scored = []
     for c in candidates:
-        t = calc_total(c.get('scores', {}), categories)
+        t = calc_total(c.get('scores', {}), categories, classify_office_tier(c) or 'federal')
         scored.append((c, t['score']))
 
     # Group key = (state, level_rank, jurisdiction)
@@ -508,13 +555,14 @@ def compute_nav_groups(candidates, categories):
 
 def generate_profile(candidate, categories, meta, nav=None):
     c = candidate
-    total = calc_total(c['scores'], categories)
     profile = c.get('profile', {}) or {}
 
     # v4.2/v4.3 — classify candidate's office tier once. Used by question_text_for_tier
     # to pick the right question wording (federal vs state vs local). Falls back to
     # 'federal' for ambiguous/unknown to avoid omitting questions.
+    # v5.0 — also drives tier-specific rubric: which categories count + pillar split.
     candidate_tier = classify_office_tier(c) or 'federal'
+    total = calc_total(c['scores'], categories, candidate_tier)
 
     # Foreign-influence + dark-money adjustments. Sums delta across every
     # keyed source under profile.score_adjustments (aipac, soros, etc.)
@@ -746,11 +794,30 @@ def generate_profile(candidate, categories, meta, nav=None):
     # but NOT in the subtotal pills — those show pure category answers so
     # a visitor can see at a glance how the candidate scored on Christian
     # principle vs. American sovereignty before foreign-money penalties.
-    subtotals = calc_subtotals(c['scores'], categories)
+    subtotals = calc_subtotals(c['scores'], categories, candidate_tier)
     gf_score = subtotals['god_first']
-    af_score = subtotals['america_first']
-    gf_color = score_color(gf_score, MAX_GOD_FIRST)
-    af_color = score_color(af_score, MAX_AMERICA_FIRST)
+    af_score = subtotals['gov_first']
+    # v5.0 — pillar-B label + maxes vary by tier (federal 60/40 America First;
+    # state/local 70/30 State|Local First).
+    pillar_b_label, max_god, max_gov = tier_pillar_info(meta, candidate_tier)
+    gf_color = score_color(gf_score, max_god)
+    af_color = score_color(af_score, max_gov)
+    # v5.0 — tier-specific Pillar-B emoji + hover title
+    _PILLAR_B_META = {
+        'federal': ('\U0001F1FA\U0001F1F8',
+                    'America First — border &amp; immigration, self-defense &amp; 2A, '
+                    'foreign-policy restraint, industry capture &amp; sovereignty'),
+        'state':   ('\U0001F3DB️',
+                    'State First — refuse federal overreach (10A sovereignty), '
+                    'border enforcement, self-defense &amp; 2A'),
+        'local':   ('\U0001F3DB️',
+                    'Local First — refuse state overreach (subsidiarity), '
+                    'public safety &amp; cooperation, self-defense &amp; 2A'),
+    }
+    pillar_b_emoji, pillar_b_title = _PILLAR_B_META.get(candidate_tier, _PILLAR_B_META['federal'])
+    god_title = ('God First — sanctity of life, biblical marriage, family sovereignty, '
+                 'Christian liberty, economic stewardship, election integrity'
+                 + (', public justice &amp; law/order' if candidate_tier in ('state', 'local') else ''))
 
     # v4.0 — Dynamic max per Adam's 2026-05-18 directive: candidate's max
     # is 2 × answered_questions, not always 100. A candidate scored on
@@ -838,6 +905,21 @@ def generate_profile(candidate, categories, meta, nav=None):
             f'href="../../state.html?st={_state_code_up}" '
             f'aria-label="Open {_state_full} home page with state shape">'
             f'🗺️ {_state_full} home'
+            '</a>'
+        )
+
+    # RESOLUTE Local civic-tool banner — for local officials whose city has a
+    # live civic page (live agendas + citizen briefs + how to weigh in).
+    civic_tool_html = ''
+    _civic_url = CIVIC_TOOL_MAP.get((c.get('jurisdiction') or '').strip())
+    if _civic_url:
+        civic_tool_html = (
+            '<a class="prof-civic-link" '
+            f'href="{_civic_url}" target="_blank" rel="noopener" '
+            'style="display:inline-block;margin-top:8px;background:linear-gradient(90deg,#c9a84c,#D4AF37);'
+            'color:#000;font-weight:700;padding:7px 14px;border-radius:6px;text-decoration:none;font-size:0.82rem;" '
+            'aria-label="Track this council live on RESOLUTE Local">'
+            '📍 Track this council live — agendas, briefs &amp; how to weigh in &rarr;'
             '</a>'
         )
 
@@ -1277,21 +1359,34 @@ def generate_profile(candidate, categories, meta, nav=None):
         'self_defense': 'self-defense-2a',
         'foreign_policy_restraint': 'foreign-policy-restraint',
         'industry_capture': 'industry-capture',
+        'public_justice': 'public-justice',
+        'refuse_federal_overreach': 'refuse-federal-overreach',
+        'refuse_state_overreach': 'refuse-state-overreach',
     }
 
     cat_html = ''
     for cat in categories:
+        # v5.0 — only render categories in this candidate's tier rubric.
+        # (Federal-only categories like Foreign Policy are hidden for state/local;
+        # Refuse-Overreach / Public Justice are hidden for federal.)
+        _pillars = cat.get('pillars')
+        if _pillars is not None and candidate_tier not in _pillars:
+            continue
         cs = calc_cat_score(c['scores'].get(cat['id'], []))
         color = score_color(cs['score'], MAX_PER_TOPIC) if cs['answered'] > 0 else '#666'
         pet_cat = PETITION_CAT_MAP.get(cat['id'])
         pet_state = (c.get('state') or '').upper() if c.get('state') else ''
         petition_btn = ''
+        # v5.6 — tier-aware label so state/local profiles display the
+        # tier-specific subtitle (e.g. 'Sanctity of Life — Protect the
+        # Vulnerable' at local). Federal falls back to canonical.
+        _cat_label = tier_label(cat, candidate_tier)
         if pet_cat and pet_state and pet_state not in ('US',):
             petition_btn = (
                 f'<a class="prof-cat-petition" '
                 f'href="../../petition.html?state={pet_state}&cat={pet_cat}" '
-                f'aria-label="Draft a petition to your {pet_state} reps about {cat["label"]}" '
-                f'title="Draft a petition to your {pet_state} reps about {cat["label"]}">'
+                f'aria-label="Draft a petition to your {pet_state} reps about {_cat_label}" '
+                f'title="Draft a petition to your {pet_state} reps about {_cat_label}">'
                 '&#9993;&#xFE0F; Petition your reps'
                 '</a>'
             )
@@ -1301,8 +1396,8 @@ def generate_profile(candidate, categories, meta, nav=None):
             petition_btn = (
                 f'<a class="prof-cat-petition" '
                 f'href="../../petition.html?cat={pet_cat}" '
-                f'aria-label="Draft a petition to your reps about {cat["label"]}" '
-                f'title="Draft a petition to your reps about {cat["label"]}">'
+                f'aria-label="Draft a petition to your reps about {_cat_label}" '
+                f'title="Draft a petition to your reps about {_cat_label}">'
                 '&#9993;&#xFE0F; Petition your reps'
                 '</a>'
             )
@@ -1311,9 +1406,9 @@ def generate_profile(candidate, categories, meta, nav=None):
             cat_html += f'''
     <div class="prof-category">
       <div class="prof-cat-header">
-        <a class="prof-cat-link" href="../../citizen/{deepdive_slug}.html" title="Open the full {cat['label']} rubric — questions, anchor Scripture, disqualifiers, and tier variants">
+        <a class="prof-cat-link" href="../../citizen/{deepdive_slug}.html" title="Open the full {_cat_label} rubric — questions, anchor Scripture, disqualifiers, and tier variants">
           <img src="../../assets/icons/{cat['icon']}" alt="" width="24" height="24">
-          <h3>{cat['label']}</h3>
+          <h3>{_cat_label}</h3>
           <span class="prof-cat-score" style="color:{color};">{cs['score']}/{MAX_PER_TOPIC}</span>
           <span class="prof-cat-deepdive" aria-hidden="true">deep dive →</span>
         </a>
@@ -1325,7 +1420,7 @@ def generate_profile(candidate, categories, meta, nav=None):
     <div class="prof-category">
       <div class="prof-cat-header">
         <img src="../../assets/icons/{cat['icon']}" alt="" width="24" height="24">
-        <h3>{cat['label']}</h3>
+        <h3>{_cat_label}</h3>
         <span class="prof-cat-score" style="color:{color};">{cs['score']}/{MAX_PER_TOPIC}</span>
         {petition_btn}
       </div>
@@ -1495,6 +1590,10 @@ def generate_profile(candidate, categories, meta, nav=None):
     # Adam's "surface state/local tier badges" directive.)
     applicable_total = 0
     for cat in categories:
+        # v5.0 — only count questions in categories that are in this tier's rubric
+        _pillars = cat.get('pillars')
+        if _pillars is not None and candidate_tier not in _pillars:
+            continue
         aa = cat.get('applicable_at') or []
         for tiers in aa:
             if candidate_tier in tiers:
@@ -1525,7 +1624,7 @@ def generate_profile(candidate, categories, meta, nav=None):
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>{c['name']} — RESOLUTE Citizen Scorecard | U.S.M.C. Ministries</title>
-  <meta name="description" content="RESOLUTE Citizen Scorecard for {c['name']} ({party_label(c['party'])}). {c['office']}, {c['jurisdiction']}. Score: {total['score']}/{MAX_TOTAL}.">
+  <meta name="description" content="RESOLUTE Citizen Scorecard for {c['name']} ({party_label(c['party'])}). {c['office']}, {c['jurisdiction']}. Score: {pct_of_max}/100 ({grade_letter}).">
 
   <!-- Canonical URL for SEO + social previews -->
   <link rel="canonical" href="https://usmcmin.com/candidates/{state_code.lower()}/{c.get('slug','')}.html">
@@ -1534,7 +1633,7 @@ def generate_profile(candidate, categories, meta, nav=None):
   <meta property="og:site_name" content="RESOLUTE Citizen Scorecard">
   <meta property="og:type" content="profile">
   <meta property="og:title" content="{c['name']} — {total['score']}/{MAX_TOTAL} on the RESOLUTE Citizen Scorecard">
-  <meta property="og:description" content="{party_label(c['party'])} · {c['office']}, {c['jurisdiction']}. Scored on Christian voter principles across 7 categories. Click to see voting record + sources.">
+  <meta property="og:description" content="{party_label(c['party'])} · {c['office']}, {c['jurisdiction']}. Score {pct_of_max}/100 ({grade_letter}) on the RESOLUTE Citizen {candidate_tier} rubric. Click to see voting record + sources.">
   <meta property="og:url" content="https://usmcmin.com/candidates/{state_code.lower()}/{c.get('slug','')}.html">
   <meta property="og:image" content="{('https://usmcmin.com/' + photo_path) if photo_path else 'https://usmcmin.com/assets/og/og-citizen.jpg'}">
   <meta property="og:image:alt" content="{c['name']}">
@@ -1549,7 +1648,7 @@ def generate_profile(candidate, categories, meta, nav=None):
   <script type="application/ld+json">{json_ld}</script>
 
   <link rel="stylesheet" href="../../assets/css/main.min.css">
-  <link rel="icon" href="../../assets/img/favicon.png" type="image/png">
+  <link rel="icon" href="../../assets/icons/favicon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="../../assets/css/profile.min.css">
 </head>
 <body>
@@ -1562,12 +1661,14 @@ def generate_profile(candidate, categories, meta, nav=None):
       <div class="tag">Warriors Equipped</div>
     </div>
   </a>
+  <!-- Reverted 2026-05-23: Citizen ▾ dropdown removed per Adam's feedback —
+       scorecard pages reachable via index hero, footer, and direct URL. -->
   <ul class="nav-links">
     <li><a href="../../mission.html">Mission</a></li>
     <li><a href="../../shop.html">Shop</a></li>
     <li><a href="../../books.html">Books</a></li>
     <li><a href="../../coaching.html">Coaching</a></li>
-    <li><a href="../../fitness/fitness.html">Fitness</a></li>
+    <li><a href="../../fitness/">Fitness</a></li>
     <li><a href="../../finance/">Finance</a></li>
     <li><a href="../../about.html">About</a></li>
     <li><a href="https://usmcmin.org" target="_blank">Ministry Site</a></li>
@@ -1609,6 +1710,7 @@ def generate_profile(candidate, categories, meta, nav=None):
     {confidence_chip_html}
     {candidacy_banner_html}
     {map_link_html}
+    {civic_tool_html}
   </div>
 
   <div id="prof-score" class="prof-total">
@@ -1631,14 +1733,14 @@ def generate_profile(candidate, categories, meta, nav=None):
       {f'<div class="prof-freshness" title="Data freshness source: {freshness_source}">Last verified: <time datetime="{freshness_date}">{freshness_date}</time>{" · from claim evidence" if freshness_source == "claim" else " · scorecard-level timestamp"}</div>' if freshness_date else ''}
     </div>
     <div class="prof-total-right">
-      <div class="prof-subtotals" aria-label="Subtotals — God First {gf_score} of {MAX_GOD_FIRST}, America First {af_score} of {MAX_AMERICA_FIRST}">
-        <div class="prof-sub prof-sub-gf" title="God First — sanctity of life, biblical marriage, family sovereignty, Christian liberty, economic stewardship, election integrity">
+      <div class="prof-subtotals" aria-label="Subtotals — God First {gf_score} of {max_god}, {pillar_b_label} {af_score} of {max_gov}">
+        <div class="prof-sub prof-sub-gf" title="{god_title}">
           <span class="prof-sub-label">&#10013; God First</span>
-          <span class="prof-sub-val" style="color:{gf_color};">{gf_score}<span class="prof-sub-max">/ {MAX_GOD_FIRST}</span></span>
+          <span class="prof-sub-val" style="color:{gf_color};">{gf_score}<span class="prof-sub-max">/ {max_god}</span></span>
         </div>
-        <div class="prof-sub prof-sub-af" title="America First — border &amp; immigration, self-defense &amp; 2A, foreign-policy restraint, industry capture &amp; sovereignty">
-          <span class="prof-sub-label">&#127482;&#127480; America First</span>
-          <span class="prof-sub-val" style="color:{af_color};">{af_score}<span class="prof-sub-max">/ {MAX_AMERICA_FIRST}</span></span>
+        <div class="prof-sub prof-sub-af" title="{pillar_b_title}">
+          <span class="prof-sub-label">{pillar_b_emoji} {pillar_b_label}</span>
+          <span class="prof-sub-val" style="color:{af_color};">{af_score}<span class="prof-sub-max">/ {max_gov}</span></span>
         </div>
       </div>
       <div class="prof-total-bar" aria-hidden="true">
@@ -1868,7 +1970,7 @@ def main():
         any_scored = any(isinstance(v, list) and any(a is not None for a in v) for v in scores.values())
         if not any_scored:
             continue
-        tot = calc_total(scores, categories)['score']
+        tot = calc_total(scores, categories, classify_office_tier(c) or 'federal')['score']
         adj = sum((info.get('delta') or 0) for info in ((c.get('profile') or {}).get('score_adjustments') or {}).values())
         rank_rows.append((c.get('slug'), tot + adj))
     rank_rows.sort(key=lambda r: -r[1])  # descending

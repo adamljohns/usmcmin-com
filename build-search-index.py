@@ -36,6 +36,8 @@ Run from repo root: python3 build-search-index.py
 import json
 import os
 
+from tier_classify import classify_office_tier, category_pillar
+
 SRC = 'data/scorecard.json'
 OUT = 'data/search-index.json'
 
@@ -54,8 +56,8 @@ def main():
     with open(SRC) as f:
         sc = json.load(f)
 
-    # Cat-id → tier map (for GF/AF split)
-    tier_by_cat = {cat['id']: cat.get('tier') for cat in sc.get('categories', [])}
+    # v5.0 — category objects by id (carry `pillars` map for per-tier rubric)
+    cat_by_id = {cat['id']: cat for cat in sc.get('categories', [])}
 
     rows = []
     for c in sc.get('candidates', []):
@@ -63,19 +65,28 @@ def main():
         if not slug:
             continue
 
+        # v5.0 — classify tier, then score ONLY the categories in that tier's
+        # rubric, splitting God First (gf) vs the tier's Government pillar (af:
+        # america/state/local first). Keeps cards consistent with profile pages.
+        tier = classify_office_tier(c) or 'federal'
         scores = c.get('scores') or {}
         gf, af, answered, na = 0, 0, 0, 0
         for cat_id, vals in scores.items():
             if not isinstance(vals, list):
                 continue
+            cat = cat_by_id.get(cat_id)
+            if cat is None:
+                continue
+            pill = category_pillar(cat, tier)
+            if pill is None:
+                continue  # category not part of this candidate's tier rubric
             for a in vals:
                 if a is True:
-                    pts = 2
                     answered += 1
-                    if tier_by_cat.get(cat_id) == 'god_first':
-                        gf += pts
-                    elif tier_by_cat.get(cat_id) == 'america_first':
-                        af += pts
+                    if pill == 'god_first':
+                        gf += 2
+                    else:
+                        af += 2  # america_first | state_first | local_first
                 elif a is False:
                     answered += 1
                 elif a == 'N/A':
@@ -117,6 +128,7 @@ def main():
             'ans': answered,
             'na':  na,
             'sts': c.get('status') or 'active',
+            'tr':  tier,  # v5.0 — federal|state|local (drives 60/40 vs 70/30 display)
         })
 
     # Sort by state then name for deterministic output (helps git diffs)
@@ -133,7 +145,8 @@ def main():
                    'lg': 'letter_grade_dynamic',
                    'ans': 'answered_questions',
                    'na': 'na_questions',
-                   'sts': 'status'},
+                   'sts': 'status',
+                   'tr': 'tier'},
         'rows': rows,
     }
     with open(OUT, 'w') as f:

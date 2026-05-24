@@ -47,6 +47,13 @@ def _load_scorecard_tier_data():
             'questions_state': cat.get('questions_state') or [None] * 5,
             'questions_local': cat.get('questions_local') or [None] * 5,
             'applicable_at': cat.get('applicable_at') or [['federal', 'state', 'local']] * 5,
+            # v5.6 — per-tier label/description for the visible drill-down on
+            # the deep-dive page (toggle "State" → H1 + description swap to
+            # the state-specific framing). None means no override → canonical.
+            'label_state': cat.get('label_state'),
+            'label_local': cat.get('label_local'),
+            'description_state': cat.get('description_state'),
+            'description_local': cat.get('description_local'),
         }
     return out
 
@@ -509,16 +516,142 @@ CATEGORIES = [
             'Took identifiable donations from top-5 defense contractor PACs above $50K per cycle',
         ],
     },
+    # ── v5.0 NEW — God First (state + local) ──────────────────────────────────
+    {
+        'slug': 'public-justice',
+        'id': 'public_justice',
+        'tier': 'god_first',
+        'tier_pts': 70,
+        'num': 11,
+        'label': 'Public Justice & Law/Order',
+        'tagline': 'The magistrate bears the sword to punish evil and protect the innocent.',
+        'description': "Does this official uphold lawful order — backing law enforcement, opposing soft-on-crime and rogue-prosecutor agendas, and defending victims?",
+        'scripture': ('Romans 13:3–4', 'For rulers are not a terror to good conduct, but to bad… he is the servant of God, an avenger who carries out God\'s wrath on the wrongdoer.'),
+        'why_it_matters': (
+            'God ordained civil government for one first purpose: to punish evildoers and '
+            'protect those who do good (1 Peter 2:14). A leader who lets the violent go free, '
+            'defunds the police who restrain them, or installs prosecutors who refuse to '
+            'prosecute has inverted Romans 13 — rewarding evil and terrorizing the innocent. '
+            'This is a God First conviction, weighed at the state and local level where sheriffs, '
+            'district attorneys, councils, and legislators actually decide it.'),
+        'questions': [
+            'Candidate has publicly backed law enforcement and opposed defunding/dismantling police',
+            'Candidate opposes cashless-bail, soft-on-crime, and rogue-prosecutor (e.g. Soros-DA) policy',
+            'Candidate supports victim restitution and proportional punishment of evildoers',
+            'Candidate refuses to treat violent crime as a "public health" excuse to avoid punishment',
+            'Candidate affirms the magistrate\'s God-ordained duty to bear the sword (Rom. 13:4)',
+        ],
+        'key_bills': [
+            ('Back-the-Blue / police-funding measures', 'Votes to fund, protect, or expand law enforcement vs. defund/divest.'),
+            ('Bail-reform rollbacks', 'Support for repealing cashless-bail and catch-and-release statutes.'),
+            ('Truth-in-sentencing / victims\' rights acts', 'Restitution, proportional sentencing, and victim-notification laws.'),
+        ],
+        'key_orgs': [
+            ('Fraternal Order of Police / state sheriffs\' associations', 'Endorsements factored as positive evidence (verify by primary source).'),
+            ('Soros-network prosecutor PACs', 'Funding to a candidate or allied DA zeroes out this category.'),
+        ],
+        'disqualifiers': [
+            'Backed defunding, disbanding, or "reimagining away" police funding',
+            'Installed or endorsed a non-prosecution / catch-and-release prosecutor',
+            'Took identifiable Soros-network "justice reform" PAC money',
+        ],
+    },
+    # ── v5.0 NEW — State First ────────────────────────────────────────────────
+    {
+        'slug': 'refuse-federal-overreach',
+        'id': 'refuse_federal_overreach',
+        'tier': 'state_first',
+        'tier_pts': 30,
+        'num': 12,
+        'label': 'Refuse Federal Overreach',
+        'tagline': '10th-Amendment sovereignty — nullify unconstitutional federal mandates.',
+        'description': "Does this state official defend state sovereignty against unconstitutional federal action — anti-commandeering, refusing federal strings, resisting overreach on guns, life, and religious liberty?",
+        'scripture': ('Proverbs 22:28', 'Do not move the ancient landmark that your fathers have set.'),
+        'why_it_matters': (
+            'The federal government is one of enumerated, delegated powers (10th Amendment); '
+            'everything else belongs to the states and the people. A state legislator who '
+            'rubber-stamps every unconstitutional federal mandate — on guns, life, education, '
+            'or religious liberty — has surrendered the very sovereignty his oath defends. '
+            'Subsidiarity is a creational ordinance: authority belongs at the lowest competent '
+            'level. This category measures whether a state official guards that landmark.'),
+        'questions': [
+            'Official has voted for or sponsored 10th-Amendment nullification or anti-commandeering measures',
+            'Official has declined unconstitutional federal mandates or federal strings on the state',
+            'Official has resisted federal overreach on guns, life, education, or religious liberty',
+            'Official affirms state sovereignty against unconstitutional federal action',
+            'Official has opposed federal capture of state elections, data, or land',
+        ],
+        'key_bills': [
+            ('Second Amendment Sanctuary / Firearms Protection Acts', 'State refusal to enforce federal gun control.'),
+            ('Anti-commandeering / nullification statutes', 'State bills declining to enforce specific unconstitutional federal acts.'),
+            ('Federal-funds-with-strings refusals', 'Votes to reject federal money that compels ungodly or unconstitutional policy.'),
+        ],
+        'key_orgs': [
+            ('Tenth Amendment Center', 'Model nullification legislation; sponsorship factored as positive evidence.'),
+            ('State sovereignty / convention-of-states caucuses', 'Membership factored as positive evidence (verify by primary source).'),
+        ],
+        'disqualifiers': [
+            'Voted to accept federal mandates that violate state constitutional limits',
+            'Opposed Second Amendment sanctuary or anti-commandeering protections',
+            'Surrendered control of state elections or land to federal capture',
+        ],
+    },
+    # ── v5.0 NEW — Local First ────────────────────────────────────────────────
+    {
+        'slug': 'refuse-state-overreach',
+        'id': 'refuse_state_overreach',
+        'tier': 'local_first',
+        'tier_pts': 30,
+        'num': 13,
+        'label': 'Refuse State Overreach',
+        'tagline': 'Subsidiarity — local control against unconstitutional state mandates.',
+        'description': "Does this local official assert lawful local control against unconstitutional state mandates, affirm subsidiarity, and protect citizens from state overreach?",
+        'scripture': ('Exodus 18:21', 'Look for able men… and place such men over the people as chiefs of thousands, of hundreds, of fifties, and of tens.'),
+        'why_it_matters': (
+            'Jethro\'s counsel to Moses is the biblical pattern for subsidiarity: govern at the '
+            'lowest competent level, closest to the people. A mayor, council, sheriff, or school '
+            'board that meekly enforces every unconstitutional state mandate — lockdowns, '
+            'curriculum dictates, ESG/CBDC pilots — has abandoned the citizens it was elected to '
+            'shield. This category measures whether a local official guards the household and the '
+            'town against overreach from the level above.'),
+        'questions': [
+            'Official has asserted local control against unconstitutional state mandates',
+            'Official has declined state strings that compel ungodly or unconstitutional local policy',
+            'Official has protected local citizens from state overreach (lockdowns, mandates, ESG)',
+            'Official affirms subsidiarity — decisions made at the lowest competent level',
+            'Official has refused to enforce unconstitutional state directives',
+        ],
+        'key_bills': [
+            ('Local sanctuary / non-enforcement resolutions', 'Council or county refusal to enforce unconstitutional state directives.'),
+            ('Local control / home-rule assertions', 'Measures protecting local authority against state preemption that compels ungodly policy.'),
+            ('Anti-ESG / anti-CBDC local resolutions', 'Refusals to pilot or mandate ESG scoring or central-bank digital currency.'),
+        ],
+        'key_orgs': [
+            ('County sheriffs\' constitutional caucuses', 'Constitutional-sheriff commitments factored as positive evidence (verify by primary source).'),
+            ('Local parental-rights / school-board coalitions', 'Resistance to state curriculum mandates factored as positive evidence.'),
+        ],
+        'disqualifiers': [
+            'Enforced unconstitutional state lockdowns or mandates against local citizens',
+            'Surrendered home-rule authority to compel ungodly state policy locally',
+            'Piloted ESG scoring or CBDC infrastructure at the local level',
+        ],
+    },
 ]
 
 # ────────────────────────────────────────────────────────────────────────────
 # HTML TEMPLATE
 # ────────────────────────────────────────────────────────────────────────────
 def render_page(cat):
-    tier_color = '#dadada' if cat['tier'] == 'god_first' else '#c9a84c'
-    tier_emoji = '✝' if cat['tier'] == 'god_first' else '🇺🇸'
-    tier_label = 'God First' if cat['tier'] == 'god_first' else 'America First'
-    tier_pts = '60 pts total' if cat['tier'] == 'god_first' else '40 pts total'
+    # v5.0 — pillar may be god_first | america_first | state_first | local_first
+    _GOV = {'america_first': ('🇺🇸', 'America First'),
+            'state_first': ('🏛️', 'State First'),
+            'local_first': ('🏛️', 'Local First')}
+    if cat['tier'] == 'god_first':
+        tier_color, tier_emoji, tier_label = '#dadada', '✝', 'God First'
+    else:
+        tier_color = '#c9a84c'
+        tier_emoji, tier_label = _GOV.get(cat['tier'], ('🇺🇸', 'America First'))
+    tier_pts = '{} pts total'.format(cat.get('tier_pts', 60 if cat['tier'] == 'god_first' else 40))
 
     # v4.3 tier-toggle data — pull state/local question variants + applicability
     # map from scorecard.json so the federal-tier wording in CATEGORIES stays
@@ -529,6 +662,19 @@ def render_page(cat):
     sc_questions_state = sc_data.get('questions_state') or [None] * 5
     sc_questions_local = sc_data.get('questions_local') or [None] * 5
     applicable_at = sc_data.get('applicable_at') or [['federal', 'state', 'local']] * 5
+
+    # v5.6 — per-tier visible drill-down. When a reader toggles "State" or
+    # "Local" at the top, the H1 + description swap to the tier-specific
+    # framing (e.g. "Sanctity of Life — Protect the Vulnerable" + a local-
+    # DA-focused description). Fall back to canonical if no override.
+    fed_label = cat['label']
+    fed_desc = cat['description']
+    state_label = sc_data.get('label_state') or fed_label
+    local_label = sc_data.get('label_local') or fed_label
+    state_desc = sc_data.get('description_state') or fed_desc
+    local_desc = sc_data.get('description_local') or fed_desc
+    import html as _html
+    _attr = _html.escape  # escape quotes/HTML for data-* attrs
 
     n_federal = sum(1 for t in applicable_at if 'federal' in t)
     n_state = sum(1 for t in applicable_at if 'state' in t)
@@ -779,7 +925,7 @@ def render_page(cat):
 
   <header class="cp-hero">
     <span class="cp-tier-badge">{tier_emoji} {tier_label} &middot; Category #{cat['num']} &middot; 10 pts</span>
-    <h1>{cat['label']}</h1>
+    <h1 class="cp-cat-label" data-label-federal="{_attr(fed_label)}" data-label-state="{_attr(state_label)}" data-label-local="{_attr(local_label)}">{cat['label']}</h1>
     <p class="cp-tagline">{cat['tagline']}</p>
     <p class="cp-meta">5 questions &times; 2 pts = 10 max &middot; <a href="/scoring-system.html">How scoring works</a> &middot; <a href="/citizen.html">Back to scorecard</a></p>
   </header>
@@ -790,7 +936,7 @@ def render_page(cat):
 
   <section class="cp-section">
     <h2>What this measures</h2>
-    <p>{cat['description']}</p>
+    <p class="cp-cat-desc" data-desc-federal="{_attr(fed_desc)}" data-desc-state="{_attr(state_desc)}" data-desc-local="{_attr(local_desc)}">{cat['description']}</p>
   </section>
 
   <section class="cp-section">
@@ -868,6 +1014,10 @@ def render_page(cat):
   if (!ol) return;
   var pills = document.querySelectorAll('.cp-tier-pill');
   var meta = document.querySelector('.cp-tier-count-num');
+  // v5.6 — also swap the category H1 label + description on tier change so
+  // the visible drill-down matches the question wording.
+  var catLabel = document.querySelector('.cp-cat-label');
+  var catDesc = document.querySelector('.cp-cat-desc');
   function apply(tier){{
     if (tier !== 'federal' && tier !== 'state' && tier !== 'local') tier = 'federal';
     ol.dataset.tier = tier;
@@ -879,6 +1029,14 @@ def render_page(cat):
     if (meta) {{
       var key = 'n' + tier.charAt(0).toUpperCase() + tier.slice(1);
       meta.textContent = ol.dataset[key] || '5';
+    }}
+    if (catLabel) {{
+      var newLabel = catLabel.dataset['label' + tier.charAt(0).toUpperCase() + tier.slice(1)];
+      if (newLabel) catLabel.textContent = newLabel;
+    }}
+    if (catDesc) {{
+      var newDesc = catDesc.dataset['desc' + tier.charAt(0).toUpperCase() + tier.slice(1)];
+      if (newDesc) catDesc.textContent = newDesc;
     }}
   }}
   pills.forEach(function(p){{

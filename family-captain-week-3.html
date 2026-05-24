@@ -150,10 +150,29 @@
     color: #CE8E31 !important;
     border: 1px solid #CE8E31 !important;
   }
-  /* Hide the USMC site-wide nav on FC track */
+  /* Hide the USMC site-wide nav on FC track. .filters is a <div> (not nav), so it's unaffected. */
   body > nav,
   nav.site-nav,
   header.site-header { display: none !important; }
+  /* FC mini-header is static (scrolls away), so pin in-page filter bars to the very top */
+  .filters { top: 0 !important; }
+  /* Filter chips were styled for the dark theme; restyle for FC light (AA contrast) */
+  .filters .chip { background:#F4F5F7 !important; color:#334155 !important; border-color:#D1D5DB !important; }
+  .filters .chip:hover { color:#A66A1F !important; border-color:#CE8E31 !important; }
+  .filters .chip.active { background:#CE8E31 !important; color:#1A1A1A !important; border-color:#CE8E31 !important; }
+  /* Tier checkbox labels: lighter colors fade on white; use darker variants for FC light */
+  .filters .tier-check { background:#F4F5F7 !important; border-color:#D1D5DB !important; }
+  .filters .tier-check .t-S { color:#A66A1F !important; }
+  .filters .tier-check .t-A { color:#5C7A4A !important; }
+  .filters .tier-check .t-B { color:#4B5563 !important; }
+  .filters .tier-check .t-C { color:#6B7280 !important; }
+  /* Search + sort controls: same light-theme restyle (AA contrast) */
+  .tools-controls .tool-search { background:#FFFFFF !important; color:#1A1A1A !important; border-color:#D1D5DB !important; }
+  .tools-controls .tool-search::placeholder { color:#6B7280 !important; }
+  .tools-controls .sort-label { color:#6B7280 !important; }
+  .tools-controls .sort-btn { background:#F4F5F7 !important; color:#334155 !important; border-color:#D1D5DB !important; }
+  .tools-controls .sort-btn:hover { color:#A66A1F !important; border-color:#CE8E31 !important; }
+  .tools-controls .sort-btn.active { background:#CE8E31 !important; color:#1A1A1A !important; border-color:#CE8E31 !important; }
   /* FC mini-header (injected below; styles here) */
   .fc-header {
     background: #1E293B;
@@ -760,7 +779,10 @@
     gap: 36px 48px;
     align-items: flex-start;
   }
-  footer .footer-brand { flex: 0 1 430px; }
+  footer .footer-brand { flex: 0 1 600px; }
+  /* Keep the ministry blurb from wrapping after only ~30 chars — let it use the
+     brand block's full width so it reads as ~2 lines (MOOP 2026-05-21). */
+  footer .fc-usmc-block p, footer .fc-usmc-block .fc-partner-note { max-width: none; }
   footer .footer-col { flex: 0 0 auto; }
 
   /* The Family Captain — bronze ship's-wheel logo, front and centre. */
@@ -864,6 +886,12 @@
   body[data-track="family-captain"] :is(.post-type,.ram) {
     color: #8B5A1F !important;
   }
+  /* Kicker pseudo-labels on light card panels — the source sets these to
+     light --silver / bright --gold, which fail AA on warm-gray (~1.9–2.3:1).
+     Darken to match the v6 label treatment. (Pseudo-elements, so the v7
+     structural text sweep never reaches them.) */
+  body[data-track="family-captain"] .tool-card .best-for::before { color:#475569 !important; }
+  body[data-track="family-captain"] .tool-card .captain-call::before { color:#8B5A1F !important; }
 
   /* (4) DRILL CELLS are always dark slate — number must be bright bronze,
      label white (the v6 light-surface bronze broke them in light theme). */
@@ -873,6 +901,24 @@
   body[data-track="family-captain"] .drill-cell .drill-label {
     color: #FFFFFF !important;
   }
+
+  /* NotebookLM explainer video — Sovereign page (pilot feature) */
+  body[data-track="family-captain"] .fc-video {
+    max-width: 880px;
+    margin: 24px auto 0;
+  }
+  body[data-track="family-captain"] .fc-video iframe,
+  body[data-track="family-captain"] .fc-video video {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    display: block;
+    background: #0F172A;
+    border: 1px solid #33445C;
+  }
+  /* Fallback copy inside <video> renders on the dark #0F172A surface, so it
+     must stay light — the v7 sweep otherwise forces it to dark slate. */
+  body[data-track="family-captain"] .fc-video video { color: #CBD5E1 !important; }
+  body[data-track="family-captain"] .fc-video video a { color: #CE8E31 !important; }
 </style>
 
 </head>
@@ -883,10 +929,10 @@
   <a href="https://thefamilycaptain.com/" target="_blank" rel="noopener" class="fc-wordmark">THE FAMILY <span class="accent">CAPTAIN</span></a>
   <nav class="fc-nav">
       <a href="family-captain.html">Bootcamp</a>
-      <a href="family-captain-tools.html">Compass</a>
       <a href="family-captain-voyage.html">Chart</a>
+      <a href="family-captain-tools.html">Compass</a>
+      <a href="family-captain-heartbeat.html">Pacing Prompts</a>
       <a href="family-captain-sovereign.html">Sovereign</a>
-      <a href="family-captain-heartbeat.html">Heartbeat</a>
   </nav>
 </header>
 
@@ -1059,6 +1105,11 @@
           <li><a href="about.html">About Adam</a></li>
           <li><a href="https://usmcmin.org" target="_blank" rel="noopener">usmcmin.org</a></li>
           <li><a href="mailto:usmcministries2022@gmail.com">Contact</a></li>
+          <li><a href="husband.html">Husband</a></li>
+          <li><a href="father.html">Father</a></li>
+          <li><a href="citizen.html">Citizen</a></li>
+          <li><a href="fitness/fitness.html">Fitness</a></li>
+          <li><a href="finance/">Finance</a></li>
         </ul>
       </div>
 
@@ -1066,9 +1117,10 @@
         <h4>For Captains</h4>
         <ul>
           <li><a href="family-captain.html">AI Boot Camp</a></li>
+          <li><a href="family-captain-voyage.html">The Captain&rsquo;s Chart</a></li>
           <li><a href="family-captain-tools.html">AI Tools Landscape</a></li>
-          <li><a href="husband.html">Husband (HAPPY)</a></li>
-          <li><a href="father.html">Father</a></li>
+          <li><a href="family-captain-heartbeat.html">Pacing Prompts</a></li>
+          <li><a href="family-captain-sovereign.html">The Sovereign Stack</a></li>
         </ul>
       </div>
 
@@ -1090,7 +1142,7 @@
 (function() {
   const toggle = document.getElementById('themeToggle');
   const saved = localStorage.getItem('usmc-theme');
-  if (saved !== 'light') { document.documentElement.setAttribute('data-theme', 'dark'); toggle.textContent = '☀️'; }
+  if (true) { document.documentElement.setAttribute('data-theme', 'light'); toggle.textContent = '☀️'; }
   toggle.addEventListener('click', function() {
     const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
     if (isDark) { document.documentElement.removeAttribute('data-theme'); localStorage.setItem('usmc-theme', 'light'); toggle.textContent = '☽'; }

@@ -11,7 +11,7 @@
   <meta property="og:url" content="https://usmcmin.com/fitness/cert-cnc.html">
   <meta property="og:type" content="website">
   <link rel="stylesheet" href="../assets/css/main.min.css">
-  <link rel="icon" href="../assets/img/favicon.png" type="image/png">
+  <link rel="icon" href="../assets/icons/favicon.svg" type="image/svg+xml">
   <style>
     .cert-hero{text-align:center;padding:60px 20px 40px;background:linear-gradient(180deg,rgba(212,175,55,0.10) 0%,transparent 100%);border-bottom:1px solid var(--border);}
     .cert-abbr{font-size:3.5rem;font-weight:700;color:var(--gold);line-height:1;}
@@ -28,31 +28,60 @@
     .benefit-label{color:var(--gold);font-size:0.72rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;margin-bottom:8px;}
     .benefit-block p{font-style:italic;font-size:0.95rem;line-height:1.65;}
     .cert-meta-row{display:flex;justify-content:space-between;padding:6px 0;font-size:0.8rem;}
+    .domain-card{background:var(--bg,#0a0a0a);border:1px solid var(--border);border-left:3px solid var(--gold);border-radius:6px;padding:14px 16px;margin:10px 0;}
+    .domain-card h3{color:var(--gold);font-size:0.98rem;margin:0 0 6px;font-weight:700;letter-spacing:0.02em;}
+    .domain-card p{font-size:0.9rem;line-height:1.6;margin:0;}
+    .myth-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:14px 0;}
+    @media(max-width:600px){.myth-grid{grid-template-columns:1fr;}}
+    .myth-cell,.truth-cell{padding:12px 14px;border-radius:6px;font-size:0.88rem;line-height:1.55;}
+    .myth-cell{background:rgba(220,80,80,0.08);border:1px solid rgba(220,80,80,0.25);}
+    .truth-cell{background:rgba(80,160,90,0.08);border:1px solid rgba(80,160,90,0.25);}
+    .myth-label{color:#d96666;font-size:0.7rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;margin-bottom:4px;}
+    .truth-label{color:#6abf72;font-size:0.7rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;margin-bottom:4px;}
+    .sample-block{background:var(--bg-card,#111);border:1px solid var(--border);border-radius:8px;padding:18px 20px;margin:14px 0;}
+    .sample-block h3{color:var(--gold);font-size:1rem;margin:0 0 10px;}
+    .sample-block table{width:100%;border-collapse:collapse;font-size:0.86rem;margin-top:8px;}
+    .sample-block th,.sample-block td{text-align:left;padding:7px 10px;border-bottom:1px solid var(--border);}
+    .sample-block th{color:var(--gold);font-weight:600;font-size:0.78rem;text-transform:uppercase;letter-spacing:0.06em;}
+    .sample-block td{color:#ccc;}
+    .scripture{font-style:italic;color:#bbb;border-left:2px solid var(--gold);padding:8px 14px;margin:14px 0;font-size:0.92rem;line-height:1.6;}
+    .scripture cite{display:block;margin-top:4px;color:var(--gold);font-style:normal;font-size:0.78rem;letter-spacing:0.04em;}
+    .plate-vis{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:12px 0;}
+    .plate-vis div{padding:10px 12px;border-radius:6px;border:1px solid var(--border);background:var(--bg,#0a0a0a);font-size:0.86rem;}
+    .plate-vis div strong{color:var(--gold);display:block;font-size:0.8rem;letter-spacing:0.04em;margin-bottom:3px;}
   </style>
 </head>
 <body>
 <nav>
   <a href="/" class="nav-brand" style="text-decoration:none">
     <img src="../assets/img/logo.png" alt="U.S.M.C. Ministries" style="object-fit:contain">
-    <div class="nav-brand-text"><div class="name">U.S.M.C. Ministries</div><div class="tag">Warriors Equipped</div></div>
+    <div class="nav-brand-text">
+      <div class="name">U.S.M.C. Ministries</div>
+      <div class="tag">Warriors Equipped</div>
+    </div>
   </a>
+  <!-- Reverted 2026-05-23: Citizen ▾ dropdown removed per Adam's feedback —
+       scorecard/civic resources are reachable via the index hero card, the
+       footer Resources column, and direct URLs; they don't need to clutter
+       the top nav on every page. See unify-nav.py history for the dropdown
+       block if/when it makes sense to reintroduce in a different form. -->
   <ul class="nav-links">
     <li><a href="../mission.html">Mission</a></li>
     <li><a href="../shop.html">Shop</a></li>
     <li><a href="../books.html">Books</a></li>
     <li><a href="../coaching.html">Coaching</a></li>
-    <li><a href="fitness.html">Fitness</a></li>
-    <li><a href="../finance/financial-intake.html">Finance</a></li>
+    <li><a href="../fitness/">Fitness</a></li>
+    <li><a href="../finance/">Finance</a></li>
     <li><a href="../about.html">About</a></li>
     <li><a href="https://usmcmin.org" target="_blank">Ministry Site</a></li>
   </ul>
   <a href="../coaching.html" class="btn nav-cta">Book a Session</a>
-  <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">🌙</button>
+  <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme" title="Switch light/dark mode">&#127769;</button>
   <button class="nav-toggle" aria-label="Menu"><span></span><span></span><span></span></button>
 </nav>
 
 <div class="back-bar">
-  <a href="fitness.html">← Back to Fitness Intake</a>
+  <a href="fitness-intake.html">← Back to Fitness Intake</a>
   <span style="color:var(--gray);font-size:0.82rem;text-transform:uppercase;letter-spacing:0.06em">usmcmin.com</span>
   <div style="width:120px"></div>
 </div>
@@ -65,27 +94,110 @@
 </div>
 
 <section>
-  <div class="container" style="max-width:700px">
+  <div class="container" style="max-width:740px">
 
     <div class="offer-card" style="margin-bottom:1.5rem">
       <h2 style="color:var(--gold);font-size:1.25rem;margin-bottom:16px;display:flex;align-items:center;gap:10px"><img src="../assets/icons/shields/shield-dumbbell.png" alt="" width="22"> What This Certification Means For You</h2>
-      <p>Nutrition is where body composition is won or lost. Having a coach who understands both the science and the behavior behind eating means your plan actually fits your real life — not a fantasy version of it.</p>
+      <p>You cannot out-train a bad diet. I have watched men spend hours a week in the gym and still look exactly the same in the mirror twelve months later, because nobody ever sat them down and said: here is what to eat, here is why, and here is how to keep doing it when life gets loud. The NASM Certified Nutrition Coach (CNC) credential is the framework I use to fix that.</p>
       <div class="benefit-block">
         <div class="benefit-label">Coach Adam — Direct to You</div>
-        <p>"Nutrition is 80% of body composition. Coach Adam's CNC credential means your eating plan is built on science, not trends — real habits, sustainable results."</p>
+        <p>"Body composition is built in the kitchen — recovery, hormones, energy, sleep — all of it. The CNC means I can build you a plan that is rooted in real food, real math, and a behavior strategy that will survive a Friday night out and a three-day work trip."</p>
       </div>
-      <div class="benefit-block">
-        <div class="benefit-label">Coach Moop's Commitment</div>
-        <p>"Coach Moop will build a plan around your real habits — not an ideal that doesn't fit your life."</p>
+      <p>No fad diets. No "clean" versus "dirty" food morality. No 1,200-calorie protocols designed for a woman half your size. The CNC is evidence-based macronutrient planning, behavioral nutrition coaching, and a sustainable system you can actually maintain past week three.</p>
+      <div class="scripture">
+        "So whether you eat or drink or whatever you do, do it all for the glory of God."
+        <cite>— 1 Corinthians 10:31</cite>
       </div>
-      <p>No fad diets. No unrealistic restriction. Just evidence-based macronutrient planning, behavioral nutrition coaching, and a sustainable system you can actually maintain.</p>
     </div>
 
     <div class="offer-card" style="margin-bottom:1.5rem">
-      <h2 style="color:var(--gold);font-size:1.25rem;margin-bottom:16px;display:flex;align-items:center;gap:10px"><img src="../assets/icons/shields/shield-bible.png" alt="" width="22"> About This Credential</h2>
-      <p>The NASM Certified Nutrition Coach (CNC) is an evidence-based nutrition coaching credential. CNC-certified coaches guide clients using proven nutrition strategies to support performance, recovery, and long-term health.</p>
-      <p style="margin-top:0.75rem">The CNC is not a Registered Dietitian (RD) designation — it is a coaching credential focused on behavioral nutrition, macronutrient planning, and lifestyle nutrition strategy.</p>
-      <p style="margin-top:0.75rem">Key curriculum areas: energy balance, macronutrient programming, behavioral nutrition psychology, habit formation, supplement literacy, and nutrition for performance and recovery.</p>
+      <h2 style="color:var(--gold);font-size:1.25rem;margin-bottom:16px;display:flex;align-items:center;gap:10px"><img src="../assets/icons/shields/shield-star.png" alt="" width="22"> What This Credential Covers</h2>
+      <p>The CNC is a coaching credential — not an RD. NASM is explicit about the scope: I do not diagnose, treat, or prescribe for clinical conditions, and I do not write medical nutrition therapy. What I <em>do</em> is coach generally healthy adults toward better fueling, body composition, and habits. The curriculum spans five domains.</p>
+
+      <div class="domain-card">
+        <h3>1. Energy Balance and Body Composition</h3>
+        <p>Total Daily Energy Expenditure (TDEE) — broken into BMR, TEF, EAT, and NEAT — and how to estimate it accurately. How a caloric surplus, deficit, or maintenance translates into fat mass, lean mass, and water weight on the scale. Why the scale lies on a Monday morning after a salty Saturday dinner.</p>
+      </div>
+
+      <div class="domain-card">
+        <h3>2. Macronutrients and Micronutrients</h3>
+        <p>Protein (4 kcal/g), carbohydrate (4 kcal/g), fat (9 kcal/g), and alcohol (7 kcal/g). Protein targets of roughly 0.7 to 1.0 g per pound of body weight for active adults. Fat minimums for hormonal health (~20-30% of calories). Carbohydrate as the lever — adjusted up for training volume, adjusted down for fat loss. Micronutrient density and the role of vegetables, dairy, and whole grains.</p>
+      </div>
+
+      <div class="domain-card">
+        <h3>3. Digestion, Absorption, and Gut Health</h3>
+        <p>How food actually becomes you — the mechanical and chemical breakdown, nutrient transport, and the role of the gut microbiome in inflammation, mood, and metabolism. Practical implications for fiber, fermented foods, and food intolerance.</p>
+      </div>
+
+      <div class="domain-card">
+        <h3>4. Behavioral Nutrition Coaching</h3>
+        <p>This is the part most "macro coaches" skip. Habit stacking, environment design, the difference between hunger and appetite, emotional eating patterns, and the stages-of-change model. NASM teaches you to coach the person, not just the spreadsheet.</p>
+      </div>
+
+      <div class="domain-card">
+        <h3>5. Nutrition for Performance, Health, and Special Populations</h3>
+        <p>Pre- and post-workout fueling, hydration, supplement literacy (creatine, whey, omega-3, vitamin D — what is supported, what is hype), and adjustments for aging adults, vegetarians, and clients with common dietary patterns. Plus referral protocols for anything that exits scope.</p>
+      </div>
+    </div>
+
+    <div class="offer-card" style="margin-bottom:1.5rem">
+      <h2 style="color:var(--gold);font-size:1.25rem;margin-bottom:16px;display:flex;align-items:center;gap:10px"><img src="../assets/icons/shields/shield-swords.png" alt="" width="22"> How Adam Uses This In Your Program</h2>
+      <p>Here is what holding the CNC actually looks like once we start working together.</p>
+
+      <ul style="line-height:1.7;font-size:0.93rem;padding-left:1.2rem;margin-top:10px">
+        <li><strong style="color:var(--gold)">I start with a 7-day food log, not a 30-day meal plan.</strong> I do not know what to change about your eating until I know what your eating actually looks like. We will photograph or jot down a week of meals — no judgment, just data.</li>
+        <li><strong style="color:var(--gold)">I run the energy-balance math.</strong> Your TDEE estimate, your protein target, your goal-specific caloric target, and a realistic weekly rate-of-change (typically 0.5-1% of body weight per week for fat loss). No starvation deficits.</li>
+        <li><strong style="color:var(--gold)">I teach you the plate, not just the spreadsheet.</strong> Most clients do not want to weigh chicken for the rest of their lives. I teach hand-portion estimates and a plate template you can run at any restaurant, in any kitchen, with any food.</li>
+        <li><strong style="color:var(--gold)">I coach the behavior, not just the calorie.</strong> When the deficit gets hard, we work on sleep, stress, alcohol, and meal timing — not just smaller portions. Cortisol is real. Hunger hormones are real. White-knuckling does not scale.</li>
+        <li><strong style="color:var(--gold)">I know when to refer.</strong> Disordered eating patterns, suspected food allergies, GI conditions, diabetes management — all of that goes to a Registered Dietitian or physician. I will coach you all day on habits and fueling. I will not pretend to be a clinician.</li>
+        <li><strong style="color:var(--gold)">I keep the table sacred.</strong> Family meals matter. Communion matters. I will not write a plan that pulls you out of dinner with your wife and kids — that is a non-starter in this house.</li>
+      </ul>
+    </div>
+
+    <div class="offer-card" style="margin-bottom:1.5rem">
+      <h2 style="color:var(--gold);font-size:1.25rem;margin-bottom:16px;display:flex;align-items:center;gap:10px"><img src="../assets/icons/shields/shield-bible.png" alt="" width="22"> Sample Plate — 200-lb Male, -300 kcal Deficit</h2>
+      <p>Let me walk you through what a real CNC-built plan looks like. This is a worked example for a 200-pound man, sedentary office job, training three days a week, goal of fat loss while preserving lean mass.</p>
+
+      <div class="sample-block">
+        <h3>The Math</h3>
+        <table>
+          <tbody>
+            <tr><td>Estimated BMR (Mifflin-St Jeor, age 40)</td><td>~1,900 kcal</td></tr>
+            <tr><td>Activity multiplier (light, 1.4)</td><td>~2,660 kcal TDEE</td></tr>
+            <tr><td>Fat-loss target (-300 kcal/day ≈ 0.5 lb/week)</td><td><strong style="color:var(--gold)">~2,360 kcal/day</strong></td></tr>
+            <tr><td>Protein target (~0.9 g/lb)</td><td>180 g · 720 kcal</td></tr>
+            <tr><td>Fat target (~25% of calories)</td><td>65 g · 585 kcal</td></tr>
+            <tr><td>Carbohydrate (remainder)</td><td>~265 g · 1,060 kcal</td></tr>
+          </tbody>
+        </table>
+        <h3 style="margin-top:16px">Sample Dinner Plate</h3>
+        <div class="plate-vis">
+          <div><strong>Protein — 1/4 plate</strong>8 oz grilled sirloin (~50 g protein)</div>
+          <div><strong>Veg — 1/2 plate</strong>Roasted broccoli + side salad (greens, tomato, cucumber, olive oil + vinegar)</div>
+          <div><strong>Starch — 1/4 plate</strong>1 cup white rice or 1 medium baked potato</div>
+          <div><strong>Fat — thumb portion</strong>1 tbsp olive oil on the veg, or 1 oz feta on the salad</div>
+        </div>
+        <p style="font-size:0.88rem;color:var(--gray);margin-top:10px;font-style:italic">Roughly 750-800 kcal, ~55 g protein, ~25 g fat, ~70 g carbs. Two more meals like this and a Greek-yogurt-and-fruit snack and you are within 50 kcal of target without ever logging a thing.</p>
+      </div>
+    </div>
+
+    <div class="offer-card" style="margin-bottom:1.5rem">
+      <h2 style="color:var(--gold);font-size:1.25rem;margin-bottom:16px;display:flex;align-items:center;gap:10px"><img src="../assets/icons/shields/shield-bible.png" alt="" width="22"> Common Myths This Credential Debunks</h2>
+
+      <div class="myth-grid">
+        <div class="myth-cell"><div class="myth-label">Myth</div>"Carbs make you fat."</div>
+        <div class="truth-cell"><div class="truth-label">Truth</div>A caloric surplus makes you fat. Carbohydrate is the primary fuel for moderate-to-high-intensity training. Cutting carbs only "works" because it cuts total calories.</div>
+      </div>
+
+      <div class="myth-grid">
+        <div class="myth-cell"><div class="myth-label">Myth</div>"Eating after 8 PM ruins fat loss."</div>
+        <div class="truth-cell"><div class="truth-label">Truth</div>Your body does not have a clock for the macros you ingest. Total daily intake drives composition. What matters is total kcal, total protein, and consistency — not whether dinner is 5 PM or 9 PM.</div>
+      </div>
+
+      <div class="myth-grid">
+        <div class="myth-cell"><div class="myth-label">Myth</div>"Detoxes, juice cleanses, and elimination diets are how you 'reset'."</div>
+        <div class="truth-cell"><div class="truth-label">Truth</div>Your liver and kidneys are the only detox organs you have ever needed. The water-weight whoosh from a juice cleanse is glycogen depletion. It returns the moment you eat normal food. Save your money.</div>
+      </div>
     </div>
 
     <div class="offer-card" style="margin-bottom:1.5rem">
@@ -95,7 +207,9 @@
         <div class="cert-meta-row"><span style="color:var(--gray)">Certificate Number</span><span style="color:#ccc;font-weight:600">1251629800</span></div>
         <div class="cert-meta-row"><span style="color:var(--gray)">Expiration Date</span><span style="color:var(--gold);font-weight:600">10/30/2027</span></div>
         <div class="cert-meta-row"><span style="color:var(--gray)">CEUs</span><span style="color:#555;font-size:0.75rem">NASM 1.9, AFAA 1.9, ACE 3.0-CEP220140</span></div>
+        <div class="cert-meta-row"><span style="color:var(--gray)">Scope</span><span style="color:#ccc;font-size:0.75rem">Coaching — not RD</span></div>
       </div>
+      <p style="margin-top:1rem;font-size:0.85rem;color:var(--gray)"><a href="https://www.nasm.org" target="_blank" style="color:var(--gold)">Verify at NASM.org →</a></p>
     </div>
 
     <div class="offer-card" style="margin-bottom:1.5rem">
@@ -110,17 +224,20 @@
       </div>
     </div>
 
-    <div style="text-align:center;margin:2rem 0">
-      <a href="https://www.nasm.org/products/certified-nutrition-coach" target="_blank" rel="noopener" class="btn btn-primary">View NASM CNC Official Page ↗</a>
+    <div style="text-align:center;margin:2.5rem 0 1rem">
+      <p style="font-size:1rem;line-height:1.6;margin-bottom:1.2rem">Ready to stop guessing about your eating and start running a system? The Fitness Intake is the first step — there is no charge and no obligation to sign up for ongoing coaching.</p>
+      <a href="fitness-intake.html" class="btn btn-primary" style="margin:0 6px 10px">Start the Fitness Intake →</a>
+      <a href="https://www.nasm.org/products/certified-nutrition-coach" target="_blank" rel="noopener" class="btn btn-gold-outline" style="margin:0 6px 10px">View NASM CNC Official Page ↗</a>
       <p style="color:#555;font-size:0.78rem;margin-top:8px">Opens nasm.org in a new tab</p>
     </div>
 
-    <div style="display:flex;gap:1rem;flex-wrap:wrap;justify-content:center;margin-top:2rem">
+    <div style="display:flex;gap:1rem;flex-wrap:wrap;justify-content:center;margin-top:2rem;border-top:1px solid var(--border);padding-top:1.5rem">
+      <span style="width:100%;text-align:center;color:var(--gray);font-size:0.78rem;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:6px">Other credentials</span>
       <a href="cert-cpt.html" class="btn btn-gold-outline" style="font-size:0.85rem">CPT</a>
       <a href="cert-wls.html" class="btn btn-gold-outline" style="font-size:0.85rem">WLS</a>
       <a href="cert-pes.html" class="btn btn-gold-outline" style="font-size:0.85rem">PES</a>
       <a href="cert-fit20.html" class="btn btn-gold-outline" style="font-size:0.85rem">fit20</a>
-      <a href="fitness.html" class="btn btn-gold-outline" style="font-size:0.85rem">← Fitness Intake</a>
+      <a href="../fitness/" class="btn btn-gold-outline" style="font-size:0.85rem">← Fitness Home</a>
     </div>
   </div>
 </section>
@@ -136,7 +253,7 @@
       <div class="footer-col">
         <h4>Fitness</h4>
         <ul>
-          <li><a href="fitness.html">Coaching Intake</a></li>
+          <li><a href="fitness-intake.html">Coaching Intake</a></li>
           <li><a href="trainer.html">About the Trainer</a></li>
           <li><a href="cert-cpt.html">NASM CPT</a></li>
           <li><a href="cert-fit20.html">fit20 Certified</a></li>
@@ -163,7 +280,7 @@
         <ul>
           <li><a href="../about.html">About Adam</a></li>
           <li><a href="https://usmcmin.org" target="_blank">usmcmin.org</a></li>
-          <li><a href="mailto:info@usmcmin.com">Contact</a></li>
+          <li><a href="mailto:usmcministries2022@gmail.com">Contact</a></li>
         </ul>
       </div>
     </div>

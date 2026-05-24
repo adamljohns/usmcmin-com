@@ -21,7 +21,7 @@
   <meta name="twitter:image" content="https://usmcmin.com/assets/og/og-citizen.jpg">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="stylesheet" href="assets/css/main.min.css">
-  <link rel="icon" href="assets/img/favicon.png" type="image/png">
+  <link rel="icon" href="assets/icons/favicon.svg" type="image/svg+xml">
   <style>
     .sc-container { max-width: 1200px; margin: 0 auto; padding: 20px; }
     /* Filter field: label stacked above control. */
@@ -542,18 +542,23 @@
       <div class="tag">Warriors Equipped</div>
     </div>
   </a>
+  <!-- Reverted 2026-05-23: Citizen ▾ dropdown removed per Adam's feedback —
+       scorecard/civic resources are reachable via the index hero card, the
+       footer Resources column, and direct URLs; they don't need to clutter
+       the top nav on every page. See unify-nav.py history for the dropdown
+       block if/when it makes sense to reintroduce in a different form. -->
   <ul class="nav-links">
     <li><a href="mission.html">Mission</a></li>
     <li><a href="shop.html">Shop</a></li>
     <li><a href="books.html">Books</a></li>
     <li><a href="coaching.html">Coaching</a></li>
-    <li><a href="fitness/fitness.html">Fitness</a></li>
+    <li><a href="fitness/">Fitness</a></li>
     <li><a href="finance/">Finance</a></li>
     <li><a href="about.html">About</a></li>
     <li><a href="https://usmcmin.org" target="_blank">Ministry Site</a></li>
   </ul>
   <a href="coaching.html" class="btn nav-cta">Book a Session</a>
-  <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme" title="Switch light/dark mode">🌙</button>
+  <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme" title="Switch light/dark mode">&#127769;</button>
   <button class="nav-toggle" aria-label="Menu"><span></span><span></span><span></span></button>
 </nav>
 
@@ -745,7 +750,7 @@
     <h3 style="font-size:1.25rem;color:var(--white);font-weight:800;margin-bottom:8px;">Want Deeper Coverage for <span style="color:var(--accent);">Your City or State</span>?</h3>
     <p style="font-size:0.92rem;color:var(--gray);margin-bottom:14px;line-height:1.6;max-width:560px;margin-left:auto;margin-right:auto;">RESOLUTE Citizen launched in Virginia &mdash; especially <strong style="color:var(--white);">Fredericksburg</strong>, where the directory has its deepest enrichment. Sponsor a directory build for your county, city, or state and get the same 10-category, 100-point audit applied to your local school board, sheriff, city council, and state legislators.</p>
     <div style="display:flex;flex-wrap:wrap;gap:10px;justify-content:center;align-items:center;">
-      <a href="mailto:info@usmcmin.com?subject=Sponsor%20RESOLUTE%20Citizen%20Directory&amp;body=I'd%20like%20to%20sponsor%20a%20RESOLUTE%20Citizen%20directory%20build%20for%3A%0A%0ACity%2FCounty%2FState%3A%20%0AApprox%20number%20of%20officials%20to%20cover%3A%20%0ATimeline%3A%20%0A%0AContact%20info%3A%0AName%3A%20%0AEmail%3A%20%0APhone%3A%20" style="display:inline-block;background:linear-gradient(90deg,var(--accent),var(--accent));color:#000;padding:11px 22px;border-radius:8px;font-weight:700;font-size:0.9rem;text-decoration:none;">Inquire About Sponsorship &rarr;</a>
+      <a href="mailto:usmcministries2022@gmail.com?subject=Sponsor%20RESOLUTE%20Citizen%20Directory&amp;body=I'd%20like%20to%20sponsor%20a%20RESOLUTE%20Citizen%20directory%20build%20for%3A%0A%0ACity%2FCounty%2FState%3A%20%0AApprox%20number%20of%20officials%20to%20cover%3A%20%0ATimeline%3A%20%0A%0AContact%20info%3A%0AName%3A%20%0AEmail%3A%20%0APhone%3A%20" style="display:inline-block;background:linear-gradient(90deg,var(--accent),var(--accent));color:#000;padding:11px 22px;border-radius:8px;font-weight:700;font-size:0.9rem;text-decoration:none;">Inquire About Sponsorship &rarr;</a>
       <a href="consulting.html" style="display:inline-block;color:var(--gray);padding:11px 16px;font-weight:600;font-size:0.85rem;text-decoration:none;border-bottom:1px dotted var(--gray);">See all consulting services</a>
     </div>
     <p style="font-size:0.72rem;color:var(--gray);margin-top:14px;font-style:italic;">All proceeds support U.S.M.C. Ministries.</p>
@@ -914,6 +919,41 @@ var MAX_PER_TOPIC = 10;
 var MAX_TOTAL = 100; // v2 rubric (10 categories × 10 pts = 100 pts; 60 God First + 40 America First)
 var MAX_GOD_FIRST = 60;
 var MAX_AMERICA_FIRST = 40;
+
+// v5.0 — tier-aware rubric helpers (mirror of tier_classify.py + generate-profiles.py
+// so home-page cards match profile pages: federal 60/40, state/local 70/30).
+function classifyOfficeTier(office) {
+  var o = (office || '').toLowerCase();
+  if (!o) return 'state';
+  if (/\b(president|vice president|u\.?s\.?\s+sen|u\.?s\.?\s+hous|u\.?s\.?\s+rep|united states sen|united states hous|united states rep|secretary of|acting attorney general|attorney general of the united states|director of|administrator of|ambassador|chief of staff|deputy chief of staff|homeland security advisor|chief justice|associate justice.+supreme court|special envoy)/.test(o)) {
+    if (/^attorney general$|state attorney general/.test(o) && o.indexOf('united states') === -1) return 'state';
+    return 'federal';
+  }
+  if (/\bgovernor\b|^lt\.?\s+governor|lieutenant governor|state senator|state senate|state representative|state hous|state assembl|^delegate$|delegate \(|house of delegates/.test(o)) return 'state';
+  if (/^attorney general$|secretary of state$|state treasurer|state auditor|state comptroller/.test(o)) return 'state';
+  if (o.indexOf('state supreme court') !== -1 || /(chief justice|justice).+state/.test(o)) return 'state';
+  if (/\bmayor\b|city council|town council|borough council|county (commissioner|supervisor|judge|board)|school board|board of education|district attorney|sheriff|city clerk|city attorney|commonwealth'?s attorney/.test(o)) return 'local';
+  return 'state';
+}
+// Pillar of a category at a tier: 'god_first' | 'america_first' | 'state_first' |
+// 'local_first', or null if not in that tier's rubric. Legacy categories without
+// `pillars` fall back to their flat `tier` field (federal-style).
+function pillarOf(cat, tier) {
+  var p = cat.pillars;
+  if (!p) return cat.tier || null;
+  return p[tier] || null;
+}
+// Match Python's round() (banker's rounding, ties-to-even) so home-page card
+// percentages are byte-identical to the profile pages + search index for scores
+// that land exactly on .5. (x assumed >= 0; pct is floored at 0 by the caller.)
+function pyRound(x) {
+  var fl = Math.floor(x), diff = x - fl;
+  if (diff < 0.5) return fl;
+  if (diff > 0.5) return fl + 1;
+  return (fl % 2 === 0) ? fl : fl + 1;
+}
+var GOV_PILLAR_LABEL = { federal: 'America First', state: 'State First', local: 'Local First' };
+var GOV_PILLAR_EMOJI = { federal: '🇺🇸', state: '🏛️', local: '🏛️' };
 
 var STATE_NAMES = {
   'AL':'Alabama','AK':'Alaska','AZ':'Arizona','AR':'Arkansas','CA':'California',
@@ -1185,15 +1225,22 @@ function calcCategoryScore(answers) {
            answered: answered, na: na };
 }
 
-function calcTotalScore(scores, profile) {
+function calcTotalScore(scores, profile, office) {
+  // v5.0 — tier-aware. Count ONLY categories in the candidate's tier rubric;
+  // split God First (Pillar A) vs the tier's Government pillar (Pillar B:
+  // America/State/Local First). Maxes derive from category counts (federal 60/40,
+  // state/local 70/30).
+  var tier = classifyOfficeTier(office);
   var total = 0, maxAnswered = 0;
-  var godFirst = 0, americaFirst = 0;
+  var godFirst = 0, govFirst = 0, godMax = 0, govMax = 0;
   DATA.categories.forEach(function(cat) {
+    var pill = pillarOf(cat, tier);
+    if (!pill) return; // category not in this tier's rubric
     var cs = calcCategoryScore(scores[cat.id]);
     total += cs.score;
     maxAnswered += cs.answered;
-    if (cat.tier === 'god_first') godFirst += cs.score;
-    else if (cat.tier === 'america_first') americaFirst += cs.score;
+    if (pill === 'god_first') { godFirst += cs.score; godMax += MAX_PER_TOPIC; }
+    else { govFirst += cs.score; govMax += MAX_PER_TOPIC; }
   });
   // Sum any score_adjustments (aipac, soros, etc.) into a single delta.
   var adj = (profile && profile.score_adjustments) || {};
@@ -1204,7 +1251,7 @@ function calcTotalScore(scores, profile) {
   var maxPossible = maxAnswered * POINTS_PER_TRUE;
   // Cap pct floor at 0 — when adjustments exceed max_possible (e.g. -50 Soros
   // on a small-max candidate), raw pct goes negative which displays nonsense.
-  var pct = maxPossible > 0 ? Math.max(0, Math.round(100 * adjusted / maxPossible)) : 0;
+  var pct = maxPossible > 0 ? Math.max(0, pyRound(100 * adjusted / maxPossible)) : 0;
   return {
     base: total,
     score: adjusted,    // adjusted score is the headline number
@@ -1213,10 +1260,13 @@ function calcTotalScore(scores, profile) {
     max_possible: maxPossible,   // dynamic max for this candidate
     pct: pct,                    // % of dynamic max earned
     answered: maxAnswered,
+    tier: tier,
     god_first: godFirst,
-    god_first_max: MAX_GOD_FIRST,
-    america_first: americaFirst,
-    america_first_max: MAX_AMERICA_FIRST,
+    god_first_max: godMax || MAX_GOD_FIRST,
+    america_first: govFirst,                       // Pillar B subtotal (any tier)
+    america_first_max: govMax || MAX_AMERICA_FIRST,
+    gov_label: GOV_PILLAR_LABEL[tier] || 'America First',
+    gov_emoji: GOV_PILLAR_EMOJI[tier] || '🇺🇸',
   };
 }
 
@@ -1304,7 +1354,7 @@ function fuzzyMatch(haystack, needle) {
 var LEVEL_RANK = { executive: 1, judicial: 2, federal: 3, state: 4, local: 5 };
 var PARTY_RANK = { R: 1, D: 2, I: 3 }; // Republican first, then Democrat, Independent, Unknown
 function makeComparator(sortKey) {
-  function totalOf(c) { return calcTotalScore(c.scores, c.profile).score; }
+  function totalOf(c) { return calcTotalScore(c.scores, c.profile, c.office).score; }
   function nameOf(c) { return (c.name || '').toLowerCase(); }
   function nameTiebreak(a, b) { return nameOf(a).localeCompare(nameOf(b)); }
   function levelRank(c) { return LEVEL_RANK[c.level] || 6; }
@@ -1466,7 +1516,7 @@ function renderCards() {
 
   var html = '';
   filtered.forEach(function(c, idx) {
-    var total = calcTotalScore(c.scores, c.profile);
+    var total = calcTotalScore(c.scores, c.profile, c.office);
     // Color based on percentage of dynamic max (matches letter grade)
     var totalColor = getScoreColor(total.pct, 100);
     var barWidth = total.max > 0 ? Math.round((Math.max(0, Math.min(total.max, total.score)) / total.max) * 100) : 0;
@@ -1483,6 +1533,7 @@ function renderCards() {
 
     html += '<div class="sc-scores" role="list" aria-label="Category subscores">';
     DATA.categories.forEach(function(cat) {
+      if (!pillarOf(cat, total.tier)) return; // v5.0 — skip categories not in this tier's rubric
       var cs = calcCategoryScore(c.scores[cat.id]);
       var color = cs.answered > 0 ? getScoreColor(cs.score, cs.max) : '#666';
       var label = cat.label.length > 10 ? cat.label.substring(0, 9) + '.' : cat.label;
@@ -1499,9 +1550,12 @@ function renderCards() {
     // v2 subtotal row — God First (60 max) + America First (40 max) breakdown
     var gfPct = total.god_first_max > 0 ? Math.round(100 * total.god_first / total.god_first_max) : 0;
     var afPct = total.america_first_max > 0 ? Math.round(100 * total.america_first / total.america_first_max) : 0;
-    html += '<div class="sc-subtotals" aria-label="Subtotals — God First ' + total.god_first + '/60, America First ' + total.america_first + '/40">';
-    html += '<div class="sc-sub gf"><span class="sc-sub-label">✝ God First</span><span class="sc-sub-val">' + total.god_first + '<span class="sc-sub-max">/60</span></span></div>';
-    html += '<div class="sc-sub af"><span class="sc-sub-label">🇺🇸 America First</span><span class="sc-sub-val">' + total.america_first + '<span class="sc-sub-max">/40</span></span></div>';
+    var tierPretty = total.tier.charAt(0).toUpperCase() + total.tier.slice(1);
+    var tierWeight = total.tier === 'federal' ? '60/40' : '70/30';
+    html += '<div class="sc-tier-chip" style="display:inline-block;font-size:0.62rem;text-transform:uppercase;letter-spacing:0.8px;font-weight:700;color:var(--gray);border:1px solid rgba(168,176,188,0.25);border-radius:4px;padding:2px 7px;margin-bottom:6px;" title="Scored on the ' + tierPretty + ' rubric — God First weighted ' + tierWeight.split("/")[0] + '%, ' + esc(total.gov_label) + ' ' + tierWeight.split("/")[1] + '%. Every official displays on the same /100 scale so tiers are comparable at a glance.">' + tierPretty + ' rubric · ' + tierWeight + '</div>';
+    html += '<div class="sc-subtotals" aria-label="Subtotals — God First ' + total.god_first + '/' + total.god_first_max + ', ' + total.gov_label + ' ' + total.america_first + '/' + total.america_first_max + '">';
+    html += '<div class="sc-sub gf"><span class="sc-sub-label">✝ God First</span><span class="sc-sub-val">' + total.god_first + '<span class="sc-sub-max">/' + total.god_first_max + '</span></span></div>';
+    html += '<div class="sc-sub af"><span class="sc-sub-label">' + total.gov_emoji + ' ' + esc(total.gov_label) + '</span><span class="sc-sub-val">' + total.america_first + '<span class="sc-sub-max">/' + total.america_first_max + '</span></span></div>';
     html += '</div>';
 
     var letter = letterGrade(total.pct);
@@ -1532,14 +1586,15 @@ function renderCards() {
         '</div>';
     } else {
       // No affiliation yet — surface a small "Suggest" link for crowdsourced enrichment.
-      // Routes to bowandarrowstudiollc@gmail.com via mailto with structured body.
+      // Routes to usmcministries2022@gmail.com via mailto with structured body
+      // (church directory is a USMC Ministries asset, not B&A).
       var mailBody = 'Hi Adam,%0A%0AI know where ' + encodeURIComponent(c.name) +
         ' (' + encodeURIComponent(c.office || '') +
         ') attends church.%0A%0AChurch name: %0ADenomination: %0ALocation (city, state): %0APublic-source URL: %0A%0AThanks.';
       html += '<div class="sc-affil" style="opacity:0.7;">' +
         '<span class="ca-icon" aria-hidden="true">&#9962;</span>' +
         '<span class="ca-meta">Know where ' + esc(c.name.split(' ').slice(-1)[0]) + ' attends? </span>' +
-        '<a href="mailto:bowandarrowstudiollc@gmail.com?subject=Church%20affiliation%20tip%20%E2%80%94%20' +
+        '<a href="mailto:usmcministries2022@gmail.com?subject=Church%20affiliation%20tip%20%E2%80%94%20' +
         encodeURIComponent(c.name) + '&body=' + mailBody +
         '" style="font-size:0.78rem;">Tip us &rarr;</a>' +
         '</div>';

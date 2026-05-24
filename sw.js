@@ -9,7 +9,7 @@
  * Bump SW_VERSION when shipping a major change so existing visitors
  * pick up the new shell on their next page navigation.
  */
-const SW_VERSION = 'v1-2026-04-30';
+const SW_VERSION = 'v2-2026-05-23';
 const CORE_CACHE = `usmcmin-core-${SW_VERSION}`;
 const RUNTIME_CACHE = `usmcmin-runtime-${SW_VERSION}`;
 
@@ -60,9 +60,15 @@ self.addEventListener('activate', (event) => {
 });
 
 // Fetch strategy:
-//   - HTML / navigation:   network-first, fall back to cache, then to /citizen.html
-//   - Static assets:       cache-first, populate runtime cache on miss
-//   - Same-origin only:    pass cross-origin straight through to the browser
+//   - HTML / navigation:    network-first, fall back to cache, then to /citizen.html
+//   - CSS / JS:             stale-while-revalidate — serve cached for speed, but
+//                           always re-fetch in the background so a new deploy
+//                           reaches returning visitors on the *next* navigation
+//                           (instead of being locked to the cached version until
+//                           the next SW_VERSION bump, as the cache-first
+//                           strategy did 2026-04-30 → 2026-05-23).
+//   - Other static assets:  cache-first (images, JSON, fonts — they're stable)
+//   - Same-origin only:     pass cross-origin straight through to the browser
 self.addEventListener('fetch', (event) => {
   const req = event.request;
   if (req.method !== 'GET') return;
@@ -94,7 +100,27 @@ self.addEventListener('fetch', (event) => {
     return;
   }
 
-  // Static assets: cache-first.
+  const isStyleOrScript = /\.(css|js)$/i.test(url.pathname);
+
+  if (isStyleOrScript) {
+    // Stale-while-revalidate: serve from cache if available, but always
+    // kick off a network fetch to refresh the cache for the next visit.
+    event.respondWith(
+      caches.match(req).then((cached) => {
+        const networkFetch = fetch(req).then((res) => {
+          if (res && res.ok && res.type === 'basic') {
+            const clone = res.clone();
+            caches.open(RUNTIME_CACHE).then((c) => c.put(req, clone)).catch(() => {});
+          }
+          return res;
+        }).catch(() => cached);
+        return cached || networkFetch;
+      })
+    );
+    return;
+  }
+
+  // Other static assets (images, JSON, fonts): cache-first.
   event.respondWith(
     caches.match(req).then((cached) => {
       if (cached) return cached;

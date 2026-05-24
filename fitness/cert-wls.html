@@ -11,7 +11,7 @@
   <meta property="og:url" content="https://usmcmin.com/fitness/cert-wls.html">
   <meta property="og:type" content="website">
   <link rel="stylesheet" href="../assets/css/main.min.css">
-  <link rel="icon" href="../assets/img/favicon.png" type="image/png">
+  <link rel="icon" href="../assets/icons/favicon.svg" type="image/svg+xml">
   <style>
     .cert-hero{text-align:center;padding:60px 20px 40px;background:linear-gradient(180deg,rgba(212,175,55,0.10) 0%,transparent 100%);border-bottom:1px solid var(--border);}
     .cert-abbr{font-size:3.5rem;font-weight:700;color:var(--gold);line-height:1;}
@@ -28,31 +28,57 @@
     .benefit-label{color:var(--gold);font-size:0.72rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;margin-bottom:8px;}
     .benefit-block p{font-style:italic;font-size:0.95rem;line-height:1.65;}
     .cert-meta-row{display:flex;justify-content:space-between;padding:6px 0;font-size:0.8rem;}
+    .domain-card{background:var(--bg,#0a0a0a);border:1px solid var(--border);border-left:3px solid var(--gold);border-radius:6px;padding:14px 16px;margin:10px 0;}
+    .domain-card h3{color:var(--gold);font-size:0.98rem;margin:0 0 6px;font-weight:700;letter-spacing:0.02em;}
+    .domain-card p{font-size:0.9rem;line-height:1.6;margin:0;}
+    .myth-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:14px 0;}
+    @media(max-width:600px){.myth-grid{grid-template-columns:1fr;}}
+    .myth-cell,.truth-cell{padding:12px 14px;border-radius:6px;font-size:0.88rem;line-height:1.55;}
+    .myth-cell{background:rgba(220,80,80,0.08);border:1px solid rgba(220,80,80,0.25);}
+    .truth-cell{background:rgba(80,160,90,0.08);border:1px solid rgba(80,160,90,0.25);}
+    .myth-label{color:#d96666;font-size:0.7rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;margin-bottom:4px;}
+    .truth-label{color:#6abf72;font-size:0.7rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;margin-bottom:4px;}
+    .sample-block{background:var(--bg-card,#111);border:1px solid var(--border);border-radius:8px;padding:18px 20px;margin:14px 0;}
+    .sample-block h3{color:var(--gold);font-size:1rem;margin:0 0 10px;}
+    .sample-block table{width:100%;border-collapse:collapse;font-size:0.86rem;margin-top:8px;}
+    .sample-block th,.sample-block td{text-align:left;padding:7px 10px;border-bottom:1px solid var(--border);}
+    .sample-block th{color:var(--gold);font-weight:600;font-size:0.78rem;text-transform:uppercase;letter-spacing:0.06em;}
+    .sample-block td{color:#ccc;}
+    .scripture{font-style:italic;color:#bbb;border-left:2px solid var(--gold);padding:8px 14px;margin:14px 0;font-size:0.92rem;line-height:1.6;}
+    .scripture cite{display:block;margin-top:4px;color:var(--gold);font-style:normal;font-size:0.78rem;letter-spacing:0.04em;}
   </style>
 </head>
 <body>
 <nav>
   <a href="/" class="nav-brand" style="text-decoration:none">
     <img src="../assets/img/logo.png" alt="U.S.M.C. Ministries" style="object-fit:contain">
-    <div class="nav-brand-text"><div class="name">U.S.M.C. Ministries</div><div class="tag">Warriors Equipped</div></div>
+    <div class="nav-brand-text">
+      <div class="name">U.S.M.C. Ministries</div>
+      <div class="tag">Warriors Equipped</div>
+    </div>
   </a>
+  <!-- Reverted 2026-05-23: Citizen ▾ dropdown removed per Adam's feedback —
+       scorecard/civic resources are reachable via the index hero card, the
+       footer Resources column, and direct URLs; they don't need to clutter
+       the top nav on every page. See unify-nav.py history for the dropdown
+       block if/when it makes sense to reintroduce in a different form. -->
   <ul class="nav-links">
     <li><a href="../mission.html">Mission</a></li>
     <li><a href="../shop.html">Shop</a></li>
     <li><a href="../books.html">Books</a></li>
     <li><a href="../coaching.html">Coaching</a></li>
-    <li><a href="fitness.html">Fitness</a></li>
-    <li><a href="../finance/financial-intake.html">Finance</a></li>
+    <li><a href="../fitness/">Fitness</a></li>
+    <li><a href="../finance/">Finance</a></li>
     <li><a href="../about.html">About</a></li>
     <li><a href="https://usmcmin.org" target="_blank">Ministry Site</a></li>
   </ul>
   <a href="../coaching.html" class="btn nav-cta">Book a Session</a>
-  <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">🌙</button>
+  <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme" title="Switch light/dark mode">&#127769;</button>
   <button class="nav-toggle" aria-label="Menu"><span></span><span></span><span></span></button>
 </nav>
 
 <div class="back-bar">
-  <a href="fitness.html">← Back to Fitness Intake</a>
+  <a href="fitness-intake.html">← Back to Fitness Intake</a>
   <span style="color:var(--gray);font-size:0.82rem;text-transform:uppercase;letter-spacing:0.06em">usmcmin.com</span>
   <div style="width:120px"></div>
 </div>
@@ -65,23 +91,104 @@
 </div>
 
 <section>
-  <div class="container" style="max-width:700px">
+  <div class="container" style="max-width:740px">
 
     <div class="offer-card" style="margin-bottom:1.5rem">
       <h2 style="color:var(--gold);font-size:1.25rem;margin-bottom:16px;display:flex;align-items:center;gap:10px"><img src="../assets/icons/shields/shield-star.png" alt="" width="22"> What This Certification Means For You</h2>
-      <p>Fat loss is one of the most misunderstood goals in fitness. The WLS specialization means Coach Adam understands what the scale doesn't tell you — and how to actually move the needle sustainably.</p>
+      <p>Fat loss is the most misunderstood goal in fitness. The scale lies — about half of what it tells you on a given morning is water, glycogen, and the salt on last night's dinner. Most men who hit a plateau respond the same way: they eat less, they cardio more, they get more frustrated, and then they quit. The NASM Weight Loss Specialization (WLS) exists because that loop is preventable, and because real sustainable fat loss is a systems problem, not a willpower problem.</p>
       <div class="benefit-block">
         <div class="benefit-label">Coach Adam — Direct to You</div>
-        <p>"Fat loss is a caloric equation, but sustainable weight loss is a systems problem. The WLS specialization equips Coach Adam to address the hormonal, behavioral, and programming factors that actually move the needle."</p>
+        <p>"Fat loss is a caloric equation, but sustainable fat loss is a systems problem. The WLS gives me the tools to address the hormonal, behavioral, programming, and lifestyle factors that actually move the needle — and the patience to walk you through them instead of slamming you into a 1,400 kcal protocol on day one."</p>
       </div>
-      <p>This isn't about crash diets or punishing cardio. WLS-trained coaches design programs that create fat loss while preserving muscle mass — the only kind of weight loss that actually improves body composition and long-term health.</p>
+      <p>This is not about crash diets, two-a-day cardio, or "discipline" as a substitute for strategy. WLS-trained coaches design programs that produce fat loss while <em>preserving</em> lean muscle — the only kind of weight loss that actually improves body composition, metabolic health, and the way you look in a t-shirt twelve months from now.</p>
+      <div class="scripture">
+        "Like a city whose walls are broken through is a person who lacks self-control."
+        <cite>— Proverbs 25:28</cite>
+      </div>
     </div>
 
     <div class="offer-card" style="margin-bottom:1.5rem">
-      <h2 style="color:var(--gold);font-size:1.25rem;margin-bottom:16px;display:flex;align-items:center;gap:10px"><img src="../assets/icons/shields/shield-bible.png" alt="" width="22"> About This Credential</h2>
-      <p>The NASM Weight Loss Specialization (WLS) is an advanced specialization built directly on the CPT foundation. WLS-certified coaches understand the full physiological picture of fat loss — it goes far beyond "eat less, move more."</p>
-      <p style="margin-top:0.75rem">Curriculum covers: energy balance and deficit calculation, hormonal factors (cortisol, insulin, leptin, ghrelin), behavioral psychology of eating, exercise programming for fat loss without muscle loss, and plateau-busting strategies.</p>
-      <p style="margin-top:0.75rem">The WLS gives Coach Adam the tools to address why fat loss stalls, why stress and sleep matter as much as diet, and why most people fail despite doing the "right" things.</p>
+      <h2 style="color:var(--gold);font-size:1.25rem;margin-bottom:16px;display:flex;align-items:center;gap:10px"><img src="../assets/icons/shields/shield-star.png" alt="" width="22"> What This Credential Covers</h2>
+      <p>The WLS sits on top of the CPT and goes deep on the physiology, psychology, and programming of fat loss in adults. Five core domains.</p>
+
+      <div class="domain-card">
+        <h3>1. Caloric Deficit Math (Done Right)</h3>
+        <p>How to calculate a realistic TDEE, what a "sustainable" deficit looks like (typically 15-25% under maintenance — not the 40% slash most online programs prescribe), and how to translate the deficit into a rate of weight loss that actually preserves lean mass (around 0.5-1% of body weight per week).</p>
+      </div>
+
+      <div class="domain-card">
+        <h3>2. The Hormonal Picture</h3>
+        <p>Insulin and blood-glucose response. Leptin (the satiety hormone that downregulates in a long deficit). Ghrelin (the hunger hormone that rises when you sleep poorly). Cortisol (chronic stress as a stalled-fat-loss culprit). Thyroid hormones (T3/T4) and the adaptive metabolic slowdown that NASM teaches us to plan around — not pretend doesn't exist.</p>
+      </div>
+
+      <div class="domain-card">
+        <h3>3. Plateau-Busting Strategies</h3>
+        <p>Why fat loss stalls at week six or eight even when the math should still work. Calorie cycling, diet breaks, refeeds, NEAT manipulation (steps as the most underrated lever in fat loss), and the science behind <em>strategic</em> deload weeks. When to push, when to pull back, and when to take a planned two-week maintenance window.</p>
+      </div>
+
+      <div class="domain-card">
+        <h3>4. Exercise Programming for Fat Loss Without Muscle Loss</h3>
+        <p>Why heavy resistance training is the single most important variable in a fat-loss program — protein-sparing, metabolic, and hormonal. Why cardio is a tool, not the strategy. The role of LISS (low-intensity steady-state) versus HIIT, and when to deploy each.</p>
+      </div>
+
+      <div class="domain-card">
+        <h3>5. Behavioral Psychology, Sleep, and Stress</h3>
+        <p>Why a man sleeping 5 hours a night with high job stress will not lose fat on a textbook 500-kcal deficit. The role of cortisol-driven water retention masking actual fat loss for weeks. Sleep hygiene, stress-reduction protocols, and habit-formation strategy as legitimate components of a fat-loss program — not "soft" extras.</p>
+      </div>
+    </div>
+
+    <div class="offer-card" style="margin-bottom:1.5rem">
+      <h2 style="color:var(--gold);font-size:1.25rem;margin-bottom:16px;display:flex;align-items:center;gap:10px"><img src="../assets/icons/shields/shield-swords.png" alt="" width="22"> How Adam Uses This In Your Program</h2>
+      <p>What changes when you hire a WLS-trained coach instead of just "a trainer who'll help me lose weight."</p>
+
+      <ul style="line-height:1.7;font-size:0.93rem;padding-left:1.2rem;margin-top:10px">
+        <li><strong style="color:var(--gold)">I run the deficit math before I prescribe.</strong> Your TDEE, your starting body composition, your training volume, your weekly rate-of-change target — all of it. Then I set the deficit at the smallest dose that produces results, not the largest you can tolerate.</li>
+        <li><strong style="color:var(--gold)">I refuse to take you below the floor.</strong> NASM gives floors below which you should not drop without medical supervision (~1,500 kcal for most men, ~1,200 for most women). I will not cross those lines no matter how impatient you are. That is how thyroid downregulation and metabolic adaptation happen.</li>
+        <li><strong style="color:var(--gold)">I track lean mass, not just scale weight.</strong> Body-fat percentage, waist circumference, tape measurements, and progress photos every two weeks. The scale is one data point in a panel, not the answer.</li>
+        <li><strong style="color:var(--gold)">I program in diet breaks.</strong> Every 6-12 weeks of deficit gets a 1-2 week maintenance window. This is hormonally protective and behaviorally sustainable. It is also the single biggest reason WLS-trained programs out-perform unsupervised dieting at the 12-month mark.</li>
+        <li><strong style="color:var(--gold)">I ask about your sleep and your stress at every check-in.</strong> Because if you slept four hours last night, the answer to your stalled fat loss is not "add another cardio session."</li>
+        <li><strong style="color:var(--gold)">I'll tell you when to be patient.</strong> A weight stall of 7-14 days with all other behaviors in check is biology, not failure. NASM teaches us to recognize the pattern and not panic. I'll save you from the impulse to slash 500 more calories every time the scale doesn't budge.</li>
+      </ul>
+    </div>
+
+    <div class="offer-card" style="margin-bottom:1.5rem">
+      <h2 style="color:var(--gold);font-size:1.25rem;margin-bottom:16px;display:flex;align-items:center;gap:10px"><img src="../assets/icons/shields/shield-bible.png" alt="" width="22"> Sample 12-Week Fat-Loss Framework</h2>
+      <p>Here is the skeleton of what a WLS-built program looks like over a real twelve-week window for a 220-lb man with ~30 lbs of fat to lose.</p>
+
+      <div class="sample-block">
+        <h3>Phase Map</h3>
+        <table>
+          <thead><tr><th>Weeks</th><th>Phase</th><th>Caloric Target</th><th>Training Focus</th></tr></thead>
+          <tbody>
+            <tr><td>1-2</td><td>Onboarding · Maintenance Baseline</td><td>~TDEE (2,800 kcal)</td><td>Movement assessment · habit logging · sleep audit</td></tr>
+            <tr><td>3-6</td><td>Initial Deficit</td><td>-400 kcal (2,400 kcal)</td><td>OPT Phase 1-2 · 3x lift + 8-10K steps/day</td></tr>
+            <tr><td>7</td><td>Diet Break</td><td>Maintenance (2,800 kcal)</td><td>Volume deload · sleep priority</td></tr>
+            <tr><td>8-11</td><td>Deficit Resumed</td><td>-500 kcal (2,300 kcal)</td><td>OPT Phase 2 · 4x lift + steps + 1 LISS cardio</td></tr>
+            <tr><td>12</td><td>Reverse / Reassess</td><td>Climbing back to TDEE</td><td>Reassess composition · plan next 12 weeks</td></tr>
+          </tbody>
+        </table>
+        <h3 style="margin-top:16px">Realistic Outcome</h3>
+        <p style="font-size:0.9rem;line-height:1.65;margin:0">At ~0.6% body-weight loss per week (compliant weeks only), this protocol typically yields 10-14 lbs of fat loss with minimal lean-mass cost, a measurable drop in waist circumference (often 1.5-2 inches), and — the part nobody else talks about — a body that is not crashed at week twelve. The diet break and the reverse window are why you don't rebound the moment we stop.</p>
+      </div>
+    </div>
+
+    <div class="offer-card" style="margin-bottom:1.5rem">
+      <h2 style="color:var(--gold);font-size:1.25rem;margin-bottom:16px;display:flex;align-items:center;gap:10px"><img src="../assets/icons/shields/shield-bible.png" alt="" width="22"> Common Myths This Credential Debunks</h2>
+
+      <div class="myth-grid">
+        <div class="myth-cell"><div class="myth-label">Myth</div>"More cardio means more fat loss."</div>
+        <div class="truth-cell"><div class="truth-label">Truth</div>Excessive cardio without sufficient calories and protein burns lean mass, drives cortisol, and crashes recovery. Strength training plus a modest deficit and daily steps beats high-volume cardio for body composition every time.</div>
+      </div>
+
+      <div class="myth-grid">
+        <div class="myth-cell"><div class="myth-label">Myth</div>"A pound of fat is 3,500 calories — so a -500/day deficit = 1 lb/week, every week."</div>
+        <div class="truth-cell"><div class="truth-label">Truth</div>The 3,500-kcal rule is a textbook approximation. Real metabolism adapts. TDEE drops as body mass drops, NEAT falls, and water/glycogen shifts mask the actual trend. Fat loss is non-linear — plan for it.</div>
+      </div>
+
+      <div class="myth-grid">
+        <div class="myth-cell"><div class="myth-label">Myth</div>"If I'm stalled, I just need to eat less."</div>
+        <div class="truth-cell"><div class="truth-label">Truth</div>A stall after weeks of compliance is more often a sign that NEAT has dropped, sleep is broken, or stress is up — not that calories are too high. The right move is often steps, sleep, and a planned diet break before another cut.</div>
+      </div>
     </div>
 
     <div class="offer-card" style="margin-bottom:1.5rem">
@@ -91,7 +198,9 @@
         <div class="cert-meta-row"><span style="color:var(--gray)">Certificate Number</span><span style="color:#ccc;font-weight:600">1261684587</span></div>
         <div class="cert-meta-row"><span style="color:var(--gray)">Completion Date</span><span style="color:var(--gold);font-weight:600">01/14/2026</span></div>
         <div class="cert-meta-row"><span style="color:var(--gray)">CEUs</span><span style="color:#555;font-size:0.75rem">NASM 1.9, AFAA 1.9, ACE 1.9-CEP220434</span></div>
+        <div class="cert-meta-row"><span style="color:var(--gray)">Prerequisite</span><span style="color:#ccc;font-size:0.75rem">NASM CPT (built on CPT foundation)</span></div>
       </div>
+      <p style="margin-top:1rem;font-size:0.85rem;color:var(--gray)"><a href="https://www.nasm.org" target="_blank" style="color:var(--gold)">Verify at NASM.org →</a></p>
     </div>
 
     <div class="offer-card" style="margin-bottom:1.5rem">
@@ -106,16 +215,19 @@
       </div>
     </div>
 
-    <div style="text-align:center;margin:2rem 0">
-      <a href="https://www.nasm.org/products/weight-loss-specialist" target="_blank" rel="noopener" class="btn btn-primary">View NASM WLS Official Page ↗</a>
+    <div style="text-align:center;margin:2.5rem 0 1rem">
+      <p style="font-size:1rem;line-height:1.6;margin-bottom:1.2rem">If you've been chasing fat loss in circles for a year (or ten), the next move is not another app — it's a coach with a system. Start with the Fitness Intake.</p>
+      <a href="fitness-intake.html" class="btn btn-primary" style="margin:0 6px 10px">Start the Fitness Intake →</a>
+      <a href="https://www.nasm.org/products/weight-loss-specialist" target="_blank" rel="noopener" class="btn btn-gold-outline" style="margin:0 6px 10px">View NASM WLS Official Page ↗</a>
     </div>
 
-    <div style="display:flex;gap:1rem;flex-wrap:wrap;justify-content:center;margin-top:2rem">
+    <div style="display:flex;gap:1rem;flex-wrap:wrap;justify-content:center;margin-top:2rem;border-top:1px solid var(--border);padding-top:1.5rem">
+      <span style="width:100%;text-align:center;color:var(--gray);font-size:0.78rem;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:6px">Other credentials</span>
       <a href="cert-cpt.html" class="btn btn-gold-outline" style="font-size:0.85rem">CPT</a>
       <a href="cert-cnc.html" class="btn btn-gold-outline" style="font-size:0.85rem">CNC</a>
       <a href="cert-pes.html" class="btn btn-gold-outline" style="font-size:0.85rem">PES</a>
       <a href="cert-fit20.html" class="btn btn-gold-outline" style="font-size:0.85rem">fit20</a>
-      <a href="fitness.html" class="btn btn-gold-outline" style="font-size:0.85rem">← Fitness Intake</a>
+      <a href="../fitness/" class="btn btn-gold-outline" style="font-size:0.85rem">← Fitness Home</a>
     </div>
   </div>
 </section>
@@ -131,7 +243,7 @@
       <div class="footer-col">
         <h4>Fitness</h4>
         <ul>
-          <li><a href="fitness.html">Coaching Intake</a></li>
+          <li><a href="fitness-intake.html">Coaching Intake</a></li>
           <li><a href="trainer.html">About the Trainer</a></li>
           <li><a href="cert-cpt.html">NASM CPT</a></li>
           <li><a href="cert-fit20.html">fit20 Certified</a></li>
@@ -158,7 +270,7 @@
         <ul>
           <li><a href="../about.html">About Adam</a></li>
           <li><a href="https://usmcmin.org" target="_blank">usmcmin.org</a></li>
-          <li><a href="mailto:info@usmcmin.com">Contact</a></li>
+          <li><a href="mailto:usmcministries2022@gmail.com">Contact</a></li>
         </ul>
       </div>
     </div>

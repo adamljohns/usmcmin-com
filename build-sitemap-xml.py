@@ -79,7 +79,8 @@ HIGH_PRIORITY = {
     "finance/financial-intake.html": (0.8, "monthly"),
     "finance/financial-onboarding.html": (0.6, "monthly"),
     "finance/consulting.html": (0.7, "monthly"),
-    "fitness/fitness.html": (0.8, "monthly"),
+    "fitness/index.html": (0.85, "monthly"),
+    "fitness/fitness-intake.html": (0.8, "monthly"),
     "fitness/trainer.html": (0.7, "monthly"),
     "melaleuca/index.html": (0.7, "monthly"),
 }

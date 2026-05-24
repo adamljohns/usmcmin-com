@@ -7,7 +7,7 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta property="og:title" content="Financial Coaching Intake — C5iSR LLC">
-    <meta property="og:description" content="Christ-Centered Crypto, Commerce, Investing, Stewarding & Resourcing. Biblical financial coaching from a Marine, minister, and investor.">
+    <meta property="og:description" content="Christ-Centered Crypto, Commerce, Consulting, Investing, Stewarding & Resourcing. Biblical financial coaching from a Marine, minister, and investor.">
     <meta property="og:image" content="https://usmcmin.com/assets/og/og-brain.jpg">
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="630">
@@ -19,7 +19,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
       <link rel="stylesheet" href="../assets/css/main.min.css">
-  <link rel="icon" href="../assets/img/favicon.png" type="image/png">
+  <link rel="icon" href="../assets/icons/favicon.svg" type="image/svg+xml">
   <style>
         :root {
             --gold: var(--accent);
@@ -293,20 +293,28 @@
 <nav>
   <a href="/" class="nav-brand" style="text-decoration:none">
     <img src="../assets/img/logo.png" alt="U.S.M.C. Ministries" style="object-fit:contain">
-    <div class="nav-brand-text"><div class="name">U.S.M.C. Ministries</div><div class="tag">Warriors Equipped</div></div>
+    <div class="nav-brand-text">
+      <div class="name">U.S.M.C. Ministries</div>
+      <div class="tag">Warriors Equipped</div>
+    </div>
   </a>
+  <!-- Reverted 2026-05-23: Citizen ▾ dropdown removed per Adam's feedback —
+       scorecard/civic resources are reachable via the index hero card, the
+       footer Resources column, and direct URLs; they don't need to clutter
+       the top nav on every page. See unify-nav.py history for the dropdown
+       block if/when it makes sense to reintroduce in a different form. -->
   <ul class="nav-links">
     <li><a href="../mission.html">Mission</a></li>
     <li><a href="../shop.html">Shop</a></li>
     <li><a href="../books.html">Books</a></li>
     <li><a href="../coaching.html">Coaching</a></li>
-    <li><a href="../fitness/fitness.html">Fitness</a></li>
-    <li><a href="index.html" class="active">Finance</a></li>
+    <li><a href="../fitness/">Fitness</a></li>
+    <li><a href="../finance/">Finance</a></li>
     <li><a href="../about.html">About</a></li>
     <li><a href="https://usmcmin.org" target="_blank">Ministry Site</a></li>
   </ul>
   <a href="../coaching.html" class="btn nav-cta">Book a Session</a>
-  <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">🌙</button>
+  <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme" title="Switch light/dark mode">&#127769;</button>
   <button class="nav-toggle" aria-label="Menu"><span></span><span></span><span></span></button>
 </nav>
 
@@ -314,7 +322,7 @@
 <div class="hero">
     <h1><img src="https://usmcmin.org/assets/icons/shield-finance.png" class="site-icon" alt="finance" width="20" height="20"> Financial Coaching Intake</h1>
     <p class="c5isr">C5iSR LLC · Christ-Centered Financial Stewardship</p>
-    <p class="tagline">Christ-Centered Crypto, Commerce, Investing, Stewarding & Resourcing</p>
+    <p class="tagline">Christ-Centered Crypto, Commerce, Consulting, Investing, Stewarding & Resourcing</p>
     <p class="subtitle">Biblical Stewardship · Crypto Strategy · Investment Planning · Debt Freedom</p>
     <div class="certs">
         <span class="cert-badge">USMC Veteran</span>
@@ -705,7 +713,7 @@
       <div class="footer-brand">
         <div class="name">U.S.M.C. Ministries</div>
         <div class="tag">Warriors Equipped. Kingdom Advancing.</div>
-        <p>Christ-Centered Crypto, Commerce, Investing, Stewarding &amp; Resourcing. Based in Fredericksburg, VA.</p>
+        <p>Christ-Centered Crypto, Commerce, Consulting, Investing, Stewarding &amp; Resourcing. Based in Fredericksburg, VA.</p>
       </div>
       <div class="footer-col">
         <h4>Finance</h4>
@@ -727,9 +735,9 @@
         <ul>
           <li><a href="../index.html">Home</a></li>
           <li><a href="../about.html">About Adam</a></li>
-          <li><a href="../fitness/fitness.html">Fitness</a></li>
+          <li><a href="../fitness/fitness-intake.html">Fitness</a></li>
           <li><a href="https://usmcmin.org" target="_blank">usmcmin.org</a></li>
-          <li><a href="mailto:info@usmcmin.com">Contact</a></li>
+          <li><a href="mailto:usmcministries2022@gmail.com">Contact</a></li>
         </ul>
       </div>
     </div>
@@ -829,7 +837,10 @@
     // testing from his Mac.
     var INTAKE_BACKEND_URL = 'https://intake.usmcmin.com/intake';   // ← flip when tunnel is live
     var INTAKE_BACKEND_DEV = 'http://127.0.0.1:3847/intake';
-    var FORMSUBMIT_FALLBACK = 'https://formsubmit.co/ajax/adam.l.johns@gmail.com';
+    // 2026-05-23: moved off Adam's personal Gmail onto the USMC business
+    // mailbox so finance intakes land in the same inbox as shop/citizen/
+    // council/profiles instead of his personal inbox.
+    var FORMSUBMIT_FALLBACK = 'https://formsubmit.co/ajax/usmcministries2022@gmail.com';
 
     function submitForm() {
         const allData = { ...formData, formType: 'financial-intake-c5isr' };

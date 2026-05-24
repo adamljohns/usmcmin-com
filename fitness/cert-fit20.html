@@ -11,7 +11,7 @@
   <meta property="og:url" content="https://usmcmin.com/fitness/cert-fit20.html">
   <meta property="og:type" content="website">
   <link rel="stylesheet" href="../assets/css/main.min.css">
-  <link rel="icon" href="../assets/img/favicon.png" type="image/png">
+  <link rel="icon" href="../assets/icons/favicon.svg" type="image/svg+xml">
   <style>
     .cert-hero{text-align:center;padding:60px 20px 40px;background:linear-gradient(180deg,rgba(212,175,55,0.10) 0%,transparent 100%);border-bottom:1px solid var(--border);}
     .cert-abbr{font-size:3.5rem;font-weight:700;color:var(--gold);line-height:1;}
@@ -31,31 +31,57 @@
     .headline-stat .stat-big{font-size:3rem;font-weight:700;color:#000;line-height:1;}
     .headline-stat .stat-sub{color:#000;font-size:0.9rem;font-weight:600;margin-top:6px;}
     .cert-meta-row{display:flex;justify-content:space-between;padding:6px 0;font-size:0.8rem;}
+    .domain-card{background:var(--bg,#0a0a0a);border:1px solid var(--border);border-left:3px solid var(--gold);border-radius:6px;padding:14px 16px;margin:10px 0;}
+    .domain-card h3{color:var(--gold);font-size:0.98rem;margin:0 0 6px;font-weight:700;letter-spacing:0.02em;}
+    .domain-card p{font-size:0.9rem;line-height:1.6;margin:0;}
+    .myth-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:14px 0;}
+    @media(max-width:600px){.myth-grid{grid-template-columns:1fr;}}
+    .myth-cell,.truth-cell{padding:12px 14px;border-radius:6px;font-size:0.88rem;line-height:1.55;}
+    .myth-cell{background:rgba(220,80,80,0.08);border:1px solid rgba(220,80,80,0.25);}
+    .truth-cell{background:rgba(80,160,90,0.08);border:1px solid rgba(80,160,90,0.25);}
+    .myth-label{color:#d96666;font-size:0.7rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;margin-bottom:4px;}
+    .truth-label{color:#6abf72;font-size:0.7rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;margin-bottom:4px;}
+    .sample-block{background:var(--bg-card,#111);border:1px solid var(--border);border-radius:8px;padding:18px 20px;margin:14px 0;}
+    .sample-block h3{color:var(--gold);font-size:1rem;margin:0 0 10px;}
+    .sample-block table{width:100%;border-collapse:collapse;font-size:0.86rem;margin-top:8px;}
+    .sample-block th,.sample-block td{text-align:left;padding:7px 10px;border-bottom:1px solid var(--border);}
+    .sample-block th{color:var(--gold);font-weight:600;font-size:0.78rem;text-transform:uppercase;letter-spacing:0.06em;}
+    .sample-block td{color:#ccc;}
+    .scripture{font-style:italic;color:#bbb;border-left:2px solid var(--gold);padding:8px 14px;margin:14px 0;font-size:0.92rem;line-height:1.6;}
+    .scripture cite{display:block;margin-top:4px;color:var(--gold);font-style:normal;font-size:0.78rem;letter-spacing:0.04em;}
   </style>
 </head>
 <body>
 <nav>
   <a href="/" class="nav-brand" style="text-decoration:none">
     <img src="../assets/img/logo.png" alt="U.S.M.C. Ministries" style="object-fit:contain">
-    <div class="nav-brand-text"><div class="name">U.S.M.C. Ministries</div><div class="tag">Warriors Equipped</div></div>
+    <div class="nav-brand-text">
+      <div class="name">U.S.M.C. Ministries</div>
+      <div class="tag">Warriors Equipped</div>
+    </div>
   </a>
+  <!-- Reverted 2026-05-23: Citizen ▾ dropdown removed per Adam's feedback —
+       scorecard/civic resources are reachable via the index hero card, the
+       footer Resources column, and direct URLs; they don't need to clutter
+       the top nav on every page. See unify-nav.py history for the dropdown
+       block if/when it makes sense to reintroduce in a different form. -->
   <ul class="nav-links">
     <li><a href="../mission.html">Mission</a></li>
     <li><a href="../shop.html">Shop</a></li>
     <li><a href="../books.html">Books</a></li>
     <li><a href="../coaching.html">Coaching</a></li>
-    <li><a href="fitness.html">Fitness</a></li>
-    <li><a href="../finance/financial-intake.html">Finance</a></li>
+    <li><a href="../fitness/">Fitness</a></li>
+    <li><a href="../finance/">Finance</a></li>
     <li><a href="../about.html">About</a></li>
     <li><a href="https://usmcmin.org" target="_blank">Ministry Site</a></li>
   </ul>
   <a href="../coaching.html" class="btn nav-cta">Book a Session</a>
-  <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">🌙</button>
+  <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme" title="Switch light/dark mode">&#127769;</button>
   <button class="nav-toggle" aria-label="Menu"><span></span><span></span><span></span></button>
 </nav>
 
 <div class="back-bar">
-  <a href="fitness.html">← Back to Fitness Intake</a>
+  <a href="fitness-intake.html">← Back to Fitness Intake</a>
   <span style="color:var(--gray);font-size:0.82rem;text-transform:uppercase;letter-spacing:0.06em">usmcmin.com</span>
   <div style="width:120px"></div>
 </div>
@@ -68,28 +94,110 @@
 </div>
 
 <section>
-  <div class="container" style="max-width:700px">
+  <div class="container" style="max-width:740px">
 
     <div class="offer-card" style="margin-bottom:1.5rem">
       <h2 style="color:var(--gold);font-size:1.25rem;margin-bottom:16px;display:flex;align-items:center;gap:10px"><img src="../assets/icons/shields/shield-gear.png" alt="" width="22"> What This Certification Means For You</h2>
-      <p>What if the most effective strength training you could do took only 20 minutes, once a week — with no warmup, no cooldown, and no need to change clothes? That's not a pitch. That's the science behind fit20.</p>
+      <p>What if the most effective strength training you could do took only 20 minutes — and you only had to do it once or twice a week, with no warm-up, no cool-down, no sweat, no change of clothes, and no fight for a barbell? That is not a pitch. That is the protocol behind fit20, born out of a Dutch research lab in the early 2000s and now operating in hundreds of studios across more than a dozen countries.</p>
       <div class="headline-stat">
         <div class="stat-big">20 Min</div>
-        <div class="stat-sub">Once per week · Measurable strength gains · Every age · Every level</div>
+        <div class="stat-sub">Once or twice per week · Measurable strength gains · Every age · Every level</div>
       </div>
       <div class="benefit-block">
         <div class="benefit-label">Coach Adam — Direct to You</div>
-        <p>"fit20 is the most efficient strength training method in existence. 20 minutes once a week with Coach Adam produces measurable, documented strength gains — for every age, every fitness level. It's not a shortcut. It's science."</p>
+        <p>"fit20 is the most time-efficient resistance training method I have personally tested. Twenty minutes with a fit20-certified trainer beside you, on a calibrated machine, taken to honest momentary failure with perfect form — that is a complete strength workout. The science backs it. I coach it because it works."</p>
       </div>
-      <p>Slow-Motion High Intensity Resistance Training (SMHIRT) maximizes time under tension, recruits deep muscle fibers, and produces documented strength improvements without joint stress. You leave the session having never broken a sweat — and the gains are real.</p>
+      <p>Slow-Motion High Intensity Resistance Training (SMHIRT) maximizes time-under-tension, recruits the full spectrum of muscle fibers in a single set, and produces documented strength gains without the joint stress of explosive lifting. The protocol is the rare combination of unforgiving and accessible — appropriate for a competitive cyclist or a seventy-five-year-old grandmother in the same week.</p>
+      <div class="scripture">
+        "Physical training is of some value, but godliness has value for all things, holding promise for both the present life and the life to come."
+        <cite>— 1 Timothy 4:8</cite>
+      </div>
     </div>
 
     <div class="offer-card" style="margin-bottom:1.5rem">
-      <h2 style="color:var(--gold);font-size:1.25rem;margin-bottom:16px;display:flex;align-items:center;gap:10px"><img src="../assets/icons/shields/shield-bible.png" alt="" width="22"> About This Credential</h2>
-      <p>fit20 is a science-backed training methodology built on Slow-Motion High Intensity Resistance Training (SMHIRT). Founded in the Netherlands and now operating in 160+ studios across 12 countries, fit20 has been validated by independent scientific research.</p>
-      <p style="margin-top:0.75rem">The methodology is built on super-slow repetition tempo (typically 10 seconds up / 10 seconds down) and time under tension — pushing muscles to momentary failure without explosive movement, minimizing injury risk while maximizing muscular stimulus.</p>
-      <p style="margin-top:0.75rem">fit20 is designed for everyone: busy professionals, seniors, athletes, and complete beginners. Because sessions are private and intensity is precisely calibrated, there is no "too old" or "too out of shape" to start.</p>
-      <p style="margin-top:0.75rem"><strong style="color:var(--gold)">The premise:</strong> <span style="color:var(--gray)">Less time. Maximum stimulus. Scientifically verified results. No excuses.</span></p>
+      <h2 style="color:var(--gold);font-size:1.25rem;margin-bottom:16px;display:flex;align-items:center;gap:10px"><img src="../assets/icons/shields/shield-star.png" alt="" width="22"> What This Credential Covers</h2>
+      <p>The fit20 certification is a protocol-specific credential — not a generalist personal-training one. It teaches a coach how to apply the SMHIRT method to a complete six-machine resistance program, in a private one-on-one studio setting, twice a week or less.</p>
+
+      <div class="domain-card">
+        <h3>1. The SMHIRT Protocol</h3>
+        <p>Single set. Slow cadence — typically 10 seconds on the concentric (lifting) phase and 10 seconds on the eccentric (lowering) phase. No pause, no momentum, no lockout. The set continues until you can no longer move the weight under control — typically 6 to 10 reps, or roughly 90 to 120 seconds of continuous time-under-tension. One set. To honest failure. Per machine.</p>
+      </div>
+
+      <div class="domain-card">
+        <h3>2. The Six-Machine Sequence</h3>
+        <p>fit20 standardizes around a sequence of six MedX or similar calibrated resistance machines covering the major movement patterns: chest press, pulldown (or row), leg press, overhead press, abdominal flexion, and lower-back extension. The order, the load progression rules, and the safety stops are part of the credential.</p>
+      </div>
+
+      <div class="domain-card">
+        <h3>3. The Coaching Cadence</h3>
+        <p>This is the part that distinguishes a fit20 trainer from a treadmill attendant. The trainer is beside you for every single rep — counting cadence aloud, cueing form, watching for joint compensation, recording load and time-under-tension, and deciding in real time when to progress weight. You are never alone with the machine. That is the whole point.</p>
+      </div>
+
+      <div class="domain-card">
+        <h3>4. Frequency, Recovery, and Progression</h3>
+        <p>fit20's premise is that one well-executed session to true failure produces enough stimulus to drive adaptation for the better part of a week. The standard recommendation is one to two sessions per week with full recovery between. Load is progressed when time-under-tension at the current weight exceeds the upper threshold (typically ~120 seconds), in small documented increments.</p>
+      </div>
+
+      <div class="domain-card">
+        <h3>5. The Research and the Studio Operating Model</h3>
+        <p>fit20's effect on strength has been studied in peer-reviewed clinical trials out of European universities, with documented improvements in muscular strength, body composition, and functional capacity across a 12-week window. The credential also covers studio operations — private appointments, no walk-ins, no music in the training room, controlled climate — all designed to keep stimulus high and distractions low.</p>
+      </div>
+    </div>
+
+    <div class="offer-card" style="margin-bottom:1.5rem">
+      <h2 style="color:var(--gold);font-size:1.25rem;margin-bottom:16px;display:flex;align-items:center;gap:10px"><img src="../assets/icons/shields/shield-swords.png" alt="" width="22"> How Adam Uses This In Your Program</h2>
+      <p>I am a Studio Coordinator at fit20 Cosner's Corner here in Fredericksburg, VA — meaning I coach the protocol several times a week with real members. Here is what training with a fit20-certified coach actually looks like.</p>
+
+      <ul style="line-height:1.7;font-size:0.93rem;padding-left:1.2rem;margin-top:10px">
+        <li><strong style="color:var(--gold)">I count the cadence out loud.</strong> Every rep. "One thousand one … one thousand two … one thousand three …" all the way to ten on the way up and ten on the way down. You will know exactly how fast you are moving because I will tell you.</li>
+        <li><strong style="color:var(--gold)">I do not let you "cheat" through a sticking point.</strong> No jerking, no momentum, no holding your breath and grinding past the failure point with bad form. The set ends when you can no longer move the weight under control. That is the data point.</li>
+        <li><strong style="color:var(--gold)">I log every variable.</strong> Time-under-tension, weight, machine position, perceived effort, and notes. Your file follows you week to week so we know exactly when to add a notch on the weight stack.</li>
+        <li><strong style="color:var(--gold)">I program your week around your recovery, not your motivation.</strong> One or two sessions, max. The rest of the week is for living — walking, working, family, ministry. fit20 is the resistance training pillar; daily steps, sleep, and protein do the rest of the heavy lifting.</li>
+        <li><strong style="color:var(--gold)">I stack it with the NASM framework when it serves you.</strong> Because I also hold the CPT, CNC, WLS, and PES — if your goals call for more than the protocol alone, we have the architecture to build out nutrition coaching and supplemental conditioning around your fit20 sessions.</li>
+        <li><strong style="color:var(--gold)">I coach with respect for the older trainee.</strong> Many of my fit20 clients are in their sixties, seventies, and eighties. The protocol is uniquely suited to maintaining muscle mass, bone density, and functional strength through every decade. Nobody is "too old" — and I have the proof in the room every week.</li>
+      </ul>
+    </div>
+
+    <div class="offer-card" style="margin-bottom:1.5rem">
+      <h2 style="color:var(--gold);font-size:1.25rem;margin-bottom:16px;display:flex;align-items:center;gap:10px"><img src="../assets/icons/shields/shield-bible.png" alt="" width="22"> Sample 20-Minute fit20 Session</h2>
+      <p>Here is what an honest fit20 session looks like, walked through machine by machine. This is the protocol I run with members several times a week.</p>
+
+      <div class="sample-block">
+        <h3>The Six-Machine Sequence</h3>
+        <table>
+          <thead><tr><th>#</th><th>Machine</th><th>Cadence</th><th>Target TUT</th></tr></thead>
+          <tbody>
+            <tr><td>1</td><td>Chest Press</td><td>10 sec up / 10 sec down</td><td>~90-120 sec to failure</td></tr>
+            <tr><td>2</td><td>Pulldown</td><td>10 sec up / 10 sec down</td><td>~90-120 sec to failure</td></tr>
+            <tr><td>3</td><td>Leg Press</td><td>10 sec up / 10 sec down</td><td>~90-120 sec to failure</td></tr>
+            <tr><td>4</td><td>Overhead Press</td><td>10 sec up / 10 sec down</td><td>~90-120 sec to failure</td></tr>
+            <tr><td>5</td><td>Abdominal Flexion</td><td>10 sec up / 10 sec down</td><td>~90-120 sec to failure</td></tr>
+            <tr><td>6</td><td>Lower-Back Extension</td><td>10 sec up / 10 sec down</td><td>~90-120 sec to failure</td></tr>
+          </tbody>
+        </table>
+        <h3 style="margin-top:16px">What the Twenty Minutes Actually Looks Like</h3>
+        <p style="font-size:0.9rem;line-height:1.65;margin:0">You arrive in street clothes. We walk straight to machine one. I have your weights pre-set and your seat position recorded from last visit. You start the rep on my count, you finish at failure roughly two minutes later, we transition to the next machine in under 60 seconds. Six machines, single set each, full body covered. We log the session at the desk. You leave dry — and you will feel the work the next morning.</p>
+        <p style="font-size:0.88rem;color:var(--gray);margin-top:10px;font-style:italic">A typical client adds load on at least one machine every 2-4 sessions. Progression is documented in the log, not estimated by feel.</p>
+      </div>
+    </div>
+
+    <div class="offer-card" style="margin-bottom:1.5rem">
+      <h2 style="color:var(--gold);font-size:1.25rem;margin-bottom:16px;display:flex;align-items:center;gap:10px"><img src="../assets/icons/shields/shield-bible.png" alt="" width="22"> Common Myths This Credential Debunks</h2>
+
+      <div class="myth-grid">
+        <div class="myth-cell"><div class="myth-label">Myth</div>"You need to work out 4-5 times a week to get stronger."</div>
+        <div class="truth-cell"><div class="truth-label">Truth</div>You need enough stimulus, recovery, and protein. The fit20 protocol demonstrates — in peer-reviewed research — that one well-executed weekly session to momentary failure produces meaningful strength and body-composition gains. Frequency is a tool, not a requirement.</div>
+      </div>
+
+      <div class="myth-grid">
+        <div class="myth-cell"><div class="myth-label">Myth</div>"Slow lifting isn't really 'hard.'"</div>
+        <div class="truth-cell"><div class="truth-label">Truth</div>By the end of a fit20 set, the weight will not move — not because you are tired, but because the muscle has been recruited to true momentary failure. Most members describe their first session as the hardest twenty minutes they have done in a year.</div>
+      </div>
+
+      <div class="myth-grid">
+        <div class="myth-cell"><div class="myth-label">Myth</div>"This is too intense for older adults or beginners."</div>
+        <div class="truth-cell"><div class="truth-label">Truth</div>The opposite. Because cadence is controlled, load is precisely calibrated, and movement velocity is zero acceleration — fit20 is one of the safest resistance protocols available. We routinely train members from teens through their eighties, with no two sessions identical because we adjust to the person, not the program.</div>
+      </div>
     </div>
 
     <div class="offer-card" style="margin-bottom:1.5rem">
@@ -104,6 +212,7 @@
         <div class="cert-meta-row"><span style="color:var(--gray)">Certification Date</span><span style="color:var(--gold);font-weight:600">05/15/2024</span></div>
         <div class="cert-meta-row"><span style="color:var(--gray)">Promoted to Studio Coord.</span><span style="color:var(--gold);font-weight:600">Summer 2025</span></div>
         <div class="cert-meta-row"><span style="color:var(--gray)">Issued by</span><span style="color:#555;font-size:0.75rem">fit20 Academy · Dr. Ben Litalien, CFE | President</span></div>
+        <div class="cert-meta-row"><span style="color:var(--gray)">Studio Location</span><span style="color:#ccc;font-size:0.75rem">Cosner's Corner, Fredericksburg, VA</span></div>
       </div>
     </div>
 
@@ -119,16 +228,19 @@
       </div>
     </div>
 
-    <div style="text-align:center;margin:2rem 0">
-      <a href="https://www.fit20.com/our-mission" target="_blank" rel="noopener" class="btn btn-primary">Visit the fit20 Website ↗</a>
+    <div style="text-align:center;margin:2.5rem 0 1rem">
+      <p style="font-size:1rem;line-height:1.6;margin-bottom:1.2rem">Curious whether fit20 is the right fit for you? Start with the Fitness Intake — I'll learn what you're after, then point you to the right path. If you're local to Fredericksburg, we can also schedule a trial session at the Cosner's Corner studio.</p>
+      <a href="fitness-intake.html" class="btn btn-primary" style="margin:0 6px 10px">Start the Fitness Intake →</a>
+      <a href="https://www.fit20.com/our-mission" target="_blank" rel="noopener" class="btn btn-gold-outline" style="margin:0 6px 10px">Visit the fit20 Website ↗</a>
     </div>
 
-    <div style="display:flex;gap:1rem;flex-wrap:wrap;justify-content:center;margin-top:2rem">
+    <div style="display:flex;gap:1rem;flex-wrap:wrap;justify-content:center;margin-top:2rem;border-top:1px solid var(--border);padding-top:1.5rem">
+      <span style="width:100%;text-align:center;color:var(--gray);font-size:0.78rem;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:6px">Other credentials</span>
       <a href="cert-cpt.html" class="btn btn-gold-outline" style="font-size:0.85rem">CPT</a>
       <a href="cert-cnc.html" class="btn btn-gold-outline" style="font-size:0.85rem">CNC</a>
       <a href="cert-wls.html" class="btn btn-gold-outline" style="font-size:0.85rem">WLS</a>
       <a href="cert-pes.html" class="btn btn-gold-outline" style="font-size:0.85rem">PES</a>
-      <a href="fitness.html" class="btn btn-gold-outline" style="font-size:0.85rem">← Fitness Intake</a>
+      <a href="../fitness/" class="btn btn-gold-outline" style="font-size:0.85rem">← Fitness Home</a>
     </div>
   </div>
 </section>
@@ -144,7 +256,7 @@
       <div class="footer-col">
         <h4>Fitness</h4>
         <ul>
-          <li><a href="fitness.html">Coaching Intake</a></li>
+          <li><a href="fitness-intake.html">Coaching Intake</a></li>
           <li><a href="trainer.html">About the Trainer</a></li>
           <li><a href="cert-cpt.html">NASM CPT</a></li>
           <li><a href="cert-fit20.html">fit20 Certified</a></li>
@@ -171,7 +283,7 @@
         <ul>
           <li><a href="../about.html">About Adam</a></li>
           <li><a href="https://usmcmin.org" target="_blank">usmcmin.org</a></li>
-          <li><a href="mailto:info@usmcmin.com">Contact</a></li>
+          <li><a href="mailto:usmcministries2022@gmail.com">Contact</a></li>
         </ul>
       </div>
     </div>

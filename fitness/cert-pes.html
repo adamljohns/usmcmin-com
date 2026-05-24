@@ -11,7 +11,7 @@
   <meta property="og:url" content="https://usmcmin.com/fitness/cert-pes.html">
   <meta property="og:type" content="website">
   <link rel="stylesheet" href="../assets/css/main.min.css">
-  <link rel="icon" href="../assets/img/favicon.png" type="image/png">
+  <link rel="icon" href="../assets/icons/favicon.svg" type="image/svg+xml">
   <style>
     .cert-hero{text-align:center;padding:60px 20px 40px;background:linear-gradient(180deg,rgba(212,175,55,0.10) 0%,transparent 100%);border-bottom:1px solid var(--border);}
     .cert-abbr{font-size:3.5rem;font-weight:700;color:var(--gold);line-height:1;}
@@ -28,31 +28,57 @@
     .benefit-label{color:var(--gold);font-size:0.72rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;margin-bottom:8px;}
     .benefit-block p{font-style:italic;font-size:0.95rem;line-height:1.65;}
     .cert-meta-row{display:flex;justify-content:space-between;padding:6px 0;font-size:0.8rem;}
+    .domain-card{background:var(--bg,#0a0a0a);border:1px solid var(--border);border-left:3px solid var(--gold);border-radius:6px;padding:14px 16px;margin:10px 0;}
+    .domain-card h3{color:var(--gold);font-size:0.98rem;margin:0 0 6px;font-weight:700;letter-spacing:0.02em;}
+    .domain-card p{font-size:0.9rem;line-height:1.6;margin:0;}
+    .myth-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:14px 0;}
+    @media(max-width:600px){.myth-grid{grid-template-columns:1fr;}}
+    .myth-cell,.truth-cell{padding:12px 14px;border-radius:6px;font-size:0.88rem;line-height:1.55;}
+    .myth-cell{background:rgba(220,80,80,0.08);border:1px solid rgba(220,80,80,0.25);}
+    .truth-cell{background:rgba(80,160,90,0.08);border:1px solid rgba(80,160,90,0.25);}
+    .myth-label{color:#d96666;font-size:0.7rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;margin-bottom:4px;}
+    .truth-label{color:#6abf72;font-size:0.7rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;margin-bottom:4px;}
+    .sample-block{background:var(--bg-card,#111);border:1px solid var(--border);border-radius:8px;padding:18px 20px;margin:14px 0;}
+    .sample-block h3{color:var(--gold);font-size:1rem;margin:0 0 10px;}
+    .sample-block table{width:100%;border-collapse:collapse;font-size:0.86rem;margin-top:8px;}
+    .sample-block th,.sample-block td{text-align:left;padding:7px 10px;border-bottom:1px solid var(--border);}
+    .sample-block th{color:var(--gold);font-weight:600;font-size:0.78rem;text-transform:uppercase;letter-spacing:0.06em;}
+    .sample-block td{color:#ccc;}
+    .scripture{font-style:italic;color:#bbb;border-left:2px solid var(--gold);padding:8px 14px;margin:14px 0;font-size:0.92rem;line-height:1.6;}
+    .scripture cite{display:block;margin-top:4px;color:var(--gold);font-style:normal;font-size:0.78rem;letter-spacing:0.04em;}
   </style>
 </head>
 <body>
 <nav>
   <a href="/" class="nav-brand" style="text-decoration:none">
     <img src="../assets/img/logo.png" alt="U.S.M.C. Ministries" style="object-fit:contain">
-    <div class="nav-brand-text"><div class="name">U.S.M.C. Ministries</div><div class="tag">Warriors Equipped</div></div>
+    <div class="nav-brand-text">
+      <div class="name">U.S.M.C. Ministries</div>
+      <div class="tag">Warriors Equipped</div>
+    </div>
   </a>
+  <!-- Reverted 2026-05-23: Citizen ▾ dropdown removed per Adam's feedback —
+       scorecard/civic resources are reachable via the index hero card, the
+       footer Resources column, and direct URLs; they don't need to clutter
+       the top nav on every page. See unify-nav.py history for the dropdown
+       block if/when it makes sense to reintroduce in a different form. -->
   <ul class="nav-links">
     <li><a href="../mission.html">Mission</a></li>
     <li><a href="../shop.html">Shop</a></li>
     <li><a href="../books.html">Books</a></li>
     <li><a href="../coaching.html">Coaching</a></li>
-    <li><a href="fitness.html">Fitness</a></li>
-    <li><a href="../finance/financial-intake.html">Finance</a></li>
+    <li><a href="../fitness/">Fitness</a></li>
+    <li><a href="../finance/">Finance</a></li>
     <li><a href="../about.html">About</a></li>
     <li><a href="https://usmcmin.org" target="_blank">Ministry Site</a></li>
   </ul>
   <a href="../coaching.html" class="btn nav-cta">Book a Session</a>
-  <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">🌙</button>
+  <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme" title="Switch light/dark mode">&#127769;</button>
   <button class="nav-toggle" aria-label="Menu"><span></span><span></span><span></span></button>
 </nav>
 
 <div class="back-bar">
-  <a href="fitness.html">← Back to Fitness Intake</a>
+  <a href="fitness-intake.html">← Back to Fitness Intake</a>
   <span style="color:var(--gray);font-size:0.82rem;text-transform:uppercase;letter-spacing:0.06em">usmcmin.com</span>
   <div style="width:120px"></div>
 </div>
@@ -65,23 +91,110 @@
 </div>
 
 <section>
-  <div class="container" style="max-width:700px">
+  <div class="container" style="max-width:740px">
 
     <div class="offer-card" style="margin-bottom:1.5rem">
       <h2 style="color:var(--gold);font-size:1.25rem;margin-bottom:16px;display:flex;align-items:center;gap:10px"><img src="../assets/icons/shields/shield-swords.png" alt="" width="22"> What This Certification Means For You</h2>
-      <p>Performance isn't just for professional athletes. Speed, power, agility, and resilience are trainable qualities — and the PES specialization gives Coach Adam the tools to develop them at every level.</p>
+      <p>Performance is not reserved for the pros. Speed, power, change-of-direction, reactive strength, and the resilience to absorb force without breaking — these are trainable qualities at every age. The NASM Performance Enhancement Specialization (PES) is the advanced credential that teaches a coach how to actually build them, with a periodized plan rather than a random Tuesday "leg day."</p>
       <div class="benefit-block">
         <div class="benefit-label">Coach Adam — Direct to You</div>
-        <p>"Whether you're a competitive athlete or just want to move like one — speed, power, agility, and resilience are trainable. The PES credential means Coach Adam can build programming that elevates performance, not just aesthetics."</p>
+        <p>"Whether you're a competitive athlete, a tactical professional, or a forty-year-old who just wants to be able to play with your kids until you're eighty — speed, power, and resilience are trainable. The PES is the framework that gets you there without breaking you in the process."</p>
       </div>
-      <p>The PES bridges personal training and athletic coaching. If you want to move better, be faster, jump higher, and perform under pressure — this is the framework Coach Adam uses.</p>
+      <p>The PES bridges general personal training and athletic strength-and-conditioning. If your goal is to move better, be faster, jump higher, change direction without your knee complaining, and perform under fatigue — this is the framework I use.</p>
+      <div class="scripture">
+        "Do you not know that in a race all the runners run, but only one gets the prize? Run in such a way as to get the prize. Everyone who competes in the games goes into strict training."
+        <cite>— 1 Corinthians 9:24-25</cite>
+      </div>
     </div>
 
     <div class="offer-card" style="margin-bottom:1.5rem">
-      <h2 style="color:var(--gold);font-size:1.25rem;margin-bottom:16px;display:flex;align-items:center;gap:10px"><img src="../assets/icons/shields/shield-bible.png" alt="" width="22"> About This Credential</h2>
-      <p>The NASM Performance Enhancement Specialization (PES) is an advanced athletic performance credential used by coaches across every major professional sport. 100% of NFL teams, 100% of NBA teams, and 100% of MLB teams employ coaches with NASM PES credentials.</p>
-      <p style="margin-top:0.75rem">The PES curriculum focuses on speed development, agility training, power output, sport-specific conditioning, plyometric progressions, and performance-focused program design.</p>
-      <p style="margin-top:0.75rem"><strong style="color:var(--gold)">Accreditation:</strong> <span style="color:var(--gray)">NCCA-accredited — the same standard applied to the CPT</span></p>
+      <h2 style="color:var(--gold);font-size:1.25rem;margin-bottom:16px;display:flex;align-items:center;gap:10px"><img src="../assets/icons/shields/shield-star.png" alt="" width="22"> What This Credential Covers</h2>
+      <p>The PES is an advanced specialization that sits on top of the CPT. It expands the OPT Model upward into the performance tiers (Phase 4 Maximal Strength, Phase 5 Power) and adds dedicated curriculum on the qualities that separate an athlete from a general fitness client.</p>
+
+      <div class="domain-card">
+        <h3>1. Performance Assessment</h3>
+        <p>Beyond the basic OHSA: vertical jump (Sargent), broad jump, 40-yard dash, pro-agility (5-10-5), L-drill, T-test, and YMCA step test. Movement screens specific to sport demands. Force-plate and timing-gate data interpretation where available.</p>
+      </div>
+
+      <div class="domain-card">
+        <h3>2. Speed, Agility, and Quickness (SAQ)</h3>
+        <p>Linear speed mechanics — first-step acceleration, top-end velocity, deceleration — plus lateral movement, cutting mechanics, ladder/cone progressions, and reactive agility (visual and auditory cue response). This is the part most "trainers" skip entirely.</p>
+      </div>
+
+      <div class="domain-card">
+        <h3>3. Plyometric and Reactive Training</h3>
+        <p>The stretch-shortening cycle (eccentric → amortization → concentric) and a structured progression from stabilization plyometrics (box jump-ups, holds) through strength plyometrics (squat jumps, tuck jumps) into power plyometrics (depth jumps, single-leg bounds, MB throws). Volume and contact-count guidelines per session.</p>
+      </div>
+
+      <div class="domain-card">
+        <h3>4. Periodization for Sport</h3>
+        <p>Macrocycle, mesocycle, microcycle planning. Off-season, pre-season, in-season, post-season organization. Block periodization vs. undulating models. Tapering for a competition window. Conjugate methods for advanced athletes.</p>
+      </div>
+
+      <div class="domain-card">
+        <h3>5. Olympic Lifts and Power Development</h3>
+        <p>The clean, the snatch, the push press, the jerk — taught from scratch with hang variants and high-pull progressions. Why these movements remain the gold standard for triple-extension power output. Kettlebell swings and ballistic medicine ball work as accessible substitutes.</p>
+      </div>
+
+      <div class="domain-card">
+        <h3>6. Recovery, Regeneration, and Athlete Monitoring</h3>
+        <p>Sleep architecture, HRV trends, RPE and session-RPE tracking, nutrition timing for recovery, soft-tissue work, contrast therapy, and the difference between functional overreaching and overtraining syndrome. The body adapts during recovery — not during the lift.</p>
+      </div>
+    </div>
+
+    <div class="offer-card" style="margin-bottom:1.5rem">
+      <h2 style="color:var(--gold);font-size:1.25rem;margin-bottom:16px;display:flex;align-items:center;gap:10px"><img src="../assets/icons/shields/shield-swords.png" alt="" width="22"> How Adam Uses This In Your Program</h2>
+      <p>Holding the PES means I do not treat every client like they showed up for general weight loss. Here is what changes when athletic performance is the goal — or when it should be, even if you did not realize it.</p>
+
+      <ul style="line-height:1.7;font-size:0.93rem;padding-left:1.2rem;margin-top:10px">
+        <li><strong style="color:var(--gold)">I add a performance assessment to the intake.</strong> Vertical, broad jump, 5-10-5, and movement screening on day one — so we have an objective baseline to measure against in twelve weeks, not just a feel-good guess.</li>
+        <li><strong style="color:var(--gold)">I program in true periodization.</strong> Your training is organized into 4-week mesocycles with intentional progression of volume and intensity, deload weeks built in, and a peaking window aligned to whatever you are training for — a tryout, a race, a hunting season, or a deployment.</li>
+        <li><strong style="color:var(--gold)">I teach you to absorb force, not just produce it.</strong> Most "athletic" training focuses on going fast. The injuries happen on the stopping side. Eccentric strength, deceleration drills, and proper landing mechanics get equal billing in every PES-driven program.</li>
+        <li><strong style="color:var(--gold)">I separate power day from grind day.</strong> Power work goes early, when the nervous system is fresh. Strength work follows. Conditioning closes. You will never see me pile depth jumps on top of a 45-minute squat session and call it productive.</li>
+        <li><strong style="color:var(--gold)">I respect the contact count.</strong> Plyometric volume is the most commonly abused variable in amateur strength and conditioning. PES gives explicit guidance on jumps-per-session by phase, and I follow it.</li>
+        <li><strong style="color:var(--gold)">I coach the warrior, not just the workout.</strong> Twenty-one years in uniform — naval aviator, no less — means I understand performance under load and under stress. If you need a coach who has actually had to perform when the consequences were real, you are in the right shop.</li>
+      </ul>
+    </div>
+
+    <div class="offer-card" style="margin-bottom:1.5rem">
+      <h2 style="color:var(--gold);font-size:1.25rem;margin-bottom:16px;display:flex;align-items:center;gap:10px"><img src="../assets/icons/shields/shield-bible.png" alt="" width="22"> Sample Drill — Power Day, Phase 5</h2>
+      <p>Here is what a Phase 5 (Power) lower-body session looks like — for an intermediate athlete or a general client who has earned the right to train explosively after a properly structured Phase 1-4 build-up.</p>
+
+      <div class="sample-block">
+        <h3>Power Day — 60 Minutes</h3>
+        <table>
+          <thead><tr><th>Block</th><th>Exercise</th><th>Sets × Reps</th><th>Tempo / Rest</th></tr></thead>
+          <tbody>
+            <tr><td>Warm-up</td><td>Dynamic mobility + glute activation</td><td>5 min</td><td>Continuous</td></tr>
+            <tr><td>Plyo (low contact)</td><td>Box jump (low box, max height)</td><td>4 × 3</td><td>Reset each rep · 90 sec rest</td></tr>
+            <tr><td>Power lift</td><td>Hang clean</td><td>5 × 3</td><td>Explosive · 2-3 min rest</td></tr>
+            <tr><td>Strength</td><td>Back squat @ 80-85% 1RM</td><td>4 × 5</td><td>2-0-X · 2 min rest</td></tr>
+            <tr><td>Accessory</td><td>Bulgarian split squat (DB)</td><td>3 × 8/leg</td><td>2-1-1 · 75 sec rest</td></tr>
+            <tr><td>Reactive</td><td>5-10-5 pro-agility shuttle</td><td>4 × 1</td><td>Full recovery · 60 sec rest</td></tr>
+            <tr><td>Core</td><td>Pallof press + dead bug</td><td>3 × 10 each</td><td>Continuous · 45 sec rest</td></tr>
+          </tbody>
+        </table>
+        <p style="font-size:0.88rem;color:var(--gray);margin-top:12px;font-style:italic">Notice the order: jumps and power work go first when the CNS is fresh. Strength follows. Reactive drills land near the end, on purpose — training change-of-direction under fatigue is what shows up in the fourth quarter, not the first.</p>
+      </div>
+    </div>
+
+    <div class="offer-card" style="margin-bottom:1.5rem">
+      <h2 style="color:var(--gold);font-size:1.25rem;margin-bottom:16px;display:flex;align-items:center;gap:10px"><img src="../assets/icons/shields/shield-bible.png" alt="" width="22"> Common Myths This Credential Debunks</h2>
+
+      <div class="myth-grid">
+        <div class="myth-cell"><div class="myth-label">Myth</div>"You're born fast — speed can't be coached."</div>
+        <div class="truth-cell"><div class="truth-label">Truth</div>Sprint mechanics, ground-contact time, stride length, and reactive strength are all trainable. Elite sprinters get coached. So can you.</div>
+      </div>
+
+      <div class="myth-grid">
+        <div class="myth-cell"><div class="myth-label">Myth</div>"Lifting heavy makes you slow and bulky."</div>
+        <div class="truth-cell"><div class="truth-label">Truth</div>Maximal strength is the foundation under which power is built. F = ma. A stronger athlete who can move the same load faster is a more powerful athlete. Every NFL, NBA, and MLB strength program is built on this premise.</div>
+      </div>
+
+      <div class="myth-grid">
+        <div class="myth-cell"><div class="myth-label">Myth</div>"Plyometrics are too dangerous for over-40s."</div>
+        <div class="truth-cell"><div class="truth-label">Truth</div>Reactive training preserves bone density, neuromuscular coordination, and fall-prevention reflexes through every decade of life. The trick is appropriate progression — pogos and skips before depth jumps.</div>
+      </div>
     </div>
 
     <div class="offer-card" style="margin-bottom:1.5rem">
@@ -91,7 +204,9 @@
         <div class="cert-meta-row"><span style="color:var(--gray)">Certificate Number</span><span style="color:#ccc;font-weight:600">1261695681</span></div>
         <div class="cert-meta-row"><span style="color:var(--gray)">Completion Date</span><span style="color:var(--gold);font-weight:600">01/27/2026</span></div>
         <div class="cert-meta-row"><span style="color:var(--gray)">CEUs</span><span style="color:#555;font-size:0.75rem">NASM 1.9, AFAA 1.9, BOC 30.75</span></div>
+        <div class="cert-meta-row"><span style="color:var(--gray)">Accreditation</span><span style="color:#ccc;font-size:0.75rem">NCCA</span></div>
       </div>
+      <p style="margin-top:1rem;font-size:0.85rem;color:var(--gray)"><a href="https://www.nasm.org" target="_blank" style="color:var(--gold)">Verify at NASM.org →</a></p>
     </div>
 
     <div class="offer-card" style="margin-bottom:1.5rem">
@@ -106,16 +221,19 @@
       </div>
     </div>
 
-    <div style="text-align:center;margin:2rem 0">
-      <a href="https://www.nasm.org/products/performance-enhancement-specialist" target="_blank" rel="noopener" class="btn btn-primary">View NASM PES Official Page ↗</a>
+    <div style="text-align:center;margin:2.5rem 0 1rem">
+      <p style="font-size:1rem;line-height:1.6;margin-bottom:1.2rem">If you want to train like an athlete — with periodization, performance assessment, and a real plan to peak at the right moment — start with the Fitness Intake. I'll learn enough about your sport, your timeline, and your starting point to build the right program.</p>
+      <a href="fitness-intake.html" class="btn btn-primary" style="margin:0 6px 10px">Start the Fitness Intake →</a>
+      <a href="https://www.nasm.org/products/performance-enhancement-specialist" target="_blank" rel="noopener" class="btn btn-gold-outline" style="margin:0 6px 10px">View NASM PES Official Page ↗</a>
     </div>
 
-    <div style="display:flex;gap:1rem;flex-wrap:wrap;justify-content:center;margin-top:2rem">
+    <div style="display:flex;gap:1rem;flex-wrap:wrap;justify-content:center;margin-top:2rem;border-top:1px solid var(--border);padding-top:1.5rem">
+      <span style="width:100%;text-align:center;color:var(--gray);font-size:0.78rem;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:6px">Other credentials</span>
       <a href="cert-cpt.html" class="btn btn-gold-outline" style="font-size:0.85rem">CPT</a>
       <a href="cert-cnc.html" class="btn btn-gold-outline" style="font-size:0.85rem">CNC</a>
       <a href="cert-wls.html" class="btn btn-gold-outline" style="font-size:0.85rem">WLS</a>
       <a href="cert-fit20.html" class="btn btn-gold-outline" style="font-size:0.85rem">fit20</a>
-      <a href="fitness.html" class="btn btn-gold-outline" style="font-size:0.85rem">← Fitness Intake</a>
+      <a href="../fitness/" class="btn btn-gold-outline" style="font-size:0.85rem">← Fitness Home</a>
     </div>
   </div>
 </section>
@@ -131,7 +249,7 @@
       <div class="footer-col">
         <h4>Fitness</h4>
         <ul>
-          <li><a href="fitness.html">Coaching Intake</a></li>
+          <li><a href="fitness-intake.html">Coaching Intake</a></li>
           <li><a href="trainer.html">About the Trainer</a></li>
           <li><a href="cert-cpt.html">NASM CPT</a></li>
           <li><a href="cert-fit20.html">fit20 Certified</a></li>
@@ -158,7 +276,7 @@
         <ul>
           <li><a href="../about.html">About Adam</a></li>
           <li><a href="https://usmcmin.org" target="_blank">usmcmin.org</a></li>
-          <li><a href="mailto:info@usmcmin.com">Contact</a></li>
+          <li><a href="mailto:usmcministries2022@gmail.com">Contact</a></li>
         </ul>
       </div>
     </div>

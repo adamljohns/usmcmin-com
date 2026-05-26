@@ -193,6 +193,29 @@
   .drill-cell.shipped { background:var(--gold-dim); border-color:var(--gold); }
   .drill-cell.shipped .drill-label::after { content:" ✓"; color:var(--gold); }
 
+  /* DRILL TIER LEFT-BORDER (2026-05-26) — color-codes each drill by tier.
+     Doesn't touch the rest of the border (so hover/shipped states still
+     animate normally). The legend block above the grid explains the colors. */
+  .drill-cell[data-tier="S"] { border-left: 3px solid #CE8E31; }
+  .drill-cell[data-tier="A"] { border-left: 3px solid #1E293B; }
+  .drill-cell[data-tier="B"] { border-left: 3px solid #6BA368; }
+  .drill-cell[data-tier="C"] { border-left: 3px solid #9CA3AF; }
+  .drill-cell[data-tier="R"] { border-left: 3px dashed #6B7280; opacity: 0.65; }
+
+  /* Compact drill tier legend (FC-only, sits above the drill grid) */
+  .drill-tier-legend { display:flex; flex-wrap:wrap; gap:14px 22px; align-items:center;
+    margin: 0 auto 14px; padding: 10px 14px; max-width: 1100px;
+    background: var(--bg-card-2); border: 1px solid var(--border); border-radius: var(--radius);
+    font-size: 0.78rem; color: var(--gray-light); }
+  .drill-tier-legend .dtl-row { display:inline-flex; align-items:center; gap:6px; white-space:nowrap; }
+  .drill-tier-legend .dtl-bar { display:inline-block; width:14px; height:14px; }
+  .drill-tier-legend .dtl-row[data-tier="S"] .dtl-bar { border-left: 3px solid #CE8E31; }
+  .drill-tier-legend .dtl-row[data-tier="A"] .dtl-bar { border-left: 3px solid #1E293B; }
+  .drill-tier-legend .dtl-row[data-tier="B"] .dtl-bar { border-left: 3px solid #6BA368; }
+  .drill-tier-legend .dtl-row[data-tier="C"] .dtl-bar { border-left: 3px solid #9CA3AF; }
+  .drill-tier-legend .dtl-row[data-tier="R"] .dtl-bar { border-left: 3px dashed #6B7280; }
+  .drill-tier-legend .dtl-label { font-weight: 800; letter-spacing: 1px; color: var(--white); }
+
   @media (max-width:640px){ .module-hero { padding:90px 18px 24px; } }
 </style>
 <style>
@@ -434,43 +457,44 @@
 
 <section class="drills-section">
   <h2>Watchman&rsquo;s Drills (optional)</h2>
-  <p class="lede">35 ninety-second drills. Tap one when you finish it. Skip without guilt &mdash; the drill is the rep, not the workout.</p>
+  <p class="lede">35 ninety-second drills. Tap one when you finish it. Skip without guilt &mdash; the drill is the rep, not the workout. Each drill carries a tier to help you pick where to start when time is short.</p>
+
   <div class="drills-grid">
-      <div class="drill-cell" data-drill="0" title="Ask Claude: &quot;What&#39;s the one assumption I&#39;m making about AI that&#39;s probably wrong?&quot;"><span class="drill-num">1</span><span class="drill-label">AI assumption you're getting wrong</span></div>
-      <div class="drill-cell" data-drill="1" title="Rewrite your worst prompt of last week — the one you&#39;re embarrassed about."><span class="drill-num">2</span><span class="drill-label">Rewrite your worst prompt</span></div>
-      <div class="drill-cell" data-drill="2" title="Read Proverbs 3:5–6 aloud. Ask Claude what it would do with that verse. Notice the difference."><span class="drill-num">3</span><span class="drill-label">Proverbs 3:5–6 with Claude</span></div>
-      <div class="drill-cell" data-drill="3" title="Open three models with the same question. Compare. Pick the one that earned its keep."><span class="drill-num">4</span><span class="drill-label">Compare three models</span></div>
-      <div class="drill-cell" data-drill="4" title="Time yourself: how long does it take you to get a useful answer? Cut it in half tomorrow."><span class="drill-num">5</span><span class="drill-label">Cut time-to-answer in half</span></div>
-      <div class="drill-cell" data-drill="5" title="Ask AI to roast your tool stack. Take the criticism that lands; ignore the rest."><span class="drill-num">6</span><span class="drill-label">Let AI roast your stack</span></div>
-      <div class="drill-cell" data-drill="6" title="Sabbath. Drill off."><span class="drill-num">7</span><span class="drill-label">Sabbath — drill off</span></div>
-      <div class="drill-cell" data-drill="7" title="Run your morning anchor prompt. Adjust one input."><span class="drill-num">8</span><span class="drill-label">Adjust your morning anchor</span></div>
-      <div class="drill-cell" data-drill="8" title="Voice-memo your evening review. Whisper it. Read it tomorrow."><span class="drill-num">9</span><span class="drill-label">Whisper your evening review</span></div>
-      <div class="drill-cell" data-drill="9" title="Triage one folder of email with Cowork. Draft only — you send."><span class="drill-num">10</span><span class="drill-label">Email triage (drafts only)</span></div>
-      <div class="drill-cell" data-drill="10" title="Block one calendar gap and label it &quot;Watchman&#39;s bridge time.&quot;"><span class="drill-num">11</span><span class="drill-label">Block watchman's bridge time</span></div>
-      <div class="drill-cell" data-drill="11" title="Write one note in your second-brain inbox. Just one. Habit beats volume."><span class="drill-num">12</span><span class="drill-label">One note to second brain</span></div>
-      <div class="drill-cell" data-drill="12" title="Re-tag one task that you mis-classified."><span class="drill-num">13</span><span class="drill-label">Re-tag a mis-classified task</span></div>
-      <div class="drill-cell" data-drill="13" title="Sabbath. Drill off."><span class="drill-num">14</span><span class="drill-label">Sabbath — drill off</span></div>
-      <div class="drill-cell" data-drill="14" title="Send your wife one sentence of appreciation, drafted by you, polished by AI."><span class="drill-num">15</span><span class="drill-label">One sentence to your wife</span></div>
-      <div class="drill-cell" data-drill="15" title="Ask Claude for 3 questions to ask your kid at dinner. Use one."><span class="drill-num">16</span><span class="drill-label">3 questions for the dinner table</span></div>
-      <div class="drill-cell" data-drill="16" title="Do a 10-minute Scripture study with Claude as a study partner — you lead."><span class="drill-num">17</span><span class="drill-label">10-min Scripture study</span></div>
-      <div class="drill-cell" data-drill="17" title="Pick a household chore. Automate the planning (not the doing)."><span class="drill-num">18</span><span class="drill-label">Automate a chore (plan, don't do)</span></div>
-      <div class="drill-cell" data-drill="18" title="Read your Family AI Policy aloud. Adjust one rule."><span class="drill-num">19</span><span class="drill-label">Read your Family AI Policy aloud</span></div>
-      <div class="drill-cell" data-drill="19" title="Tell your wife one thing you&#39;re learning in the mission. Listen."><span class="drill-num">20</span><span class="drill-label">Tell your wife what you're learning</span></div>
-      <div class="drill-cell" data-drill="20" title="Sabbath. Drill off."><span class="drill-num">21</span><span class="drill-label">Sabbath — drill off</span></div>
-      <div class="drill-cell" data-drill="21" title="Draft one customer/community email using your saved prompt. Send it yourself."><span class="drill-num">22</span><span class="drill-label">Draft + send a real email</span></div>
-      <div class="drill-cell" data-drill="22" title="Run your sermon-prep workflow on a passage you&#39;re not preaching."><span class="drill-num">23</span><span class="drill-label">Sermon-prep on an unpreached passage</span></div>
-      <div class="drill-cell" data-drill="23" title="List one task you&#39;ll never delegate to AI, and why."><span class="drill-num">24</span><span class="drill-label">List one never-delegate task</span></div>
-      <div class="drill-cell" data-drill="24" title="Strip three AI-fingerprint phrases from something you wrote yesterday."><span class="drill-num">25</span><span class="drill-label">Strip three AI-fingerprint phrases</span></div>
-      <div class="drill-cell" data-drill="25" title="Ask Cowork to summarize your last 7 days. See what it missed."><span class="drill-num">26</span><span class="drill-label">Cowork 7-day summary</span></div>
-      <div class="drill-cell" data-drill="26" title="Save one new prompt as a skill. Name it like a watchman."><span class="drill-num">27</span><span class="drill-label">Save a prompt as a skill</span></div>
-      <div class="drill-cell" data-drill="27" title="Sabbath. Drill off."><span class="drill-num">28</span><span class="drill-label">Sabbath — drill off</span></div>
-      <div class="drill-cell" data-drill="28" title="Audit one subscription. Decide: keep, kill, downgrade."><span class="drill-num">29</span><span class="drill-label">Audit one subscription</span></div>
-      <div class="drill-cell" data-drill="29" title="Run one workflow you built earlier. Has it drifted? Fix it."><span class="drill-num">30</span><span class="drill-label">Re-run an old workflow</span></div>
-      <div class="drill-cell" data-drill="30" title="Find one logging gap in your system. Close it."><span class="drill-num">31</span><span class="drill-label">Close one logging gap</span></div>
-      <div class="drill-cell" data-drill="31" title="Ask AI to argue against your charter. Strengthen the weak points."><span class="drill-num">32</span><span class="drill-label">Let AI attack your charter</span></div>
-      <div class="drill-cell" data-drill="32" title="Teach one new person one thing. Watch them do it once."><span class="drill-num">33</span><span class="drill-label">Teach one new person</span></div>
-      <div class="drill-cell" data-drill="33" title="Write the first sentence of your Watchman&#39;s Charter. Just the first."><span class="drill-num">34</span><span class="drill-label">First sentence of your Charter</span></div>
-      <div class="drill-cell" data-drill="34" title="Sign your charter. Post the screenshot."><span class="drill-num">35</span><span class="drill-label">Sign and post your Charter</span></div>
+      <div class="drill-cell" data-drill="0" data-tier="" title="Ask Claude: &quot;What&#39;s the one assumption I&#39;m making about AI that&#39;s probably wrong?&quot;"><span class="drill-num">1</span><span class="drill-label">AI assumption you're getting wrong</span></div>
+      <div class="drill-cell" data-drill="1" data-tier="" title="Rewrite your worst prompt of last week — the one you&#39;re embarrassed about."><span class="drill-num">2</span><span class="drill-label">Rewrite your worst prompt</span></div>
+      <div class="drill-cell" data-drill="2" data-tier="" title="Read Proverbs 3:5–6 aloud. Ask Claude what it would do with that verse. Notice the difference."><span class="drill-num">3</span><span class="drill-label">Proverbs 3:5–6 with Claude</span></div>
+      <div class="drill-cell" data-drill="3" data-tier="" title="Open three models with the same question. Compare. Pick the one that earned its keep."><span class="drill-num">4</span><span class="drill-label">Compare three models</span></div>
+      <div class="drill-cell" data-drill="4" data-tier="" title="Time yourself: how long does it take you to get a useful answer? Cut it in half tomorrow."><span class="drill-num">5</span><span class="drill-label">Cut time-to-answer in half</span></div>
+      <div class="drill-cell" data-drill="5" data-tier="" title="Ask AI to roast your tool stack. Take the criticism that lands; ignore the rest."><span class="drill-num">6</span><span class="drill-label">Let AI roast your stack</span></div>
+      <div class="drill-cell" data-drill="6" data-tier="" title="Sabbath. Drill off."><span class="drill-num">7</span><span class="drill-label">Sabbath — drill off</span></div>
+      <div class="drill-cell" data-drill="7" data-tier="" title="Run your morning anchor prompt. Adjust one input."><span class="drill-num">8</span><span class="drill-label">Adjust your morning anchor</span></div>
+      <div class="drill-cell" data-drill="8" data-tier="" title="Voice-memo your evening review. Whisper it. Read it tomorrow."><span class="drill-num">9</span><span class="drill-label">Whisper your evening review</span></div>
+      <div class="drill-cell" data-drill="9" data-tier="" title="Triage one folder of email with Cowork. Draft only — you send."><span class="drill-num">10</span><span class="drill-label">Email triage (drafts only)</span></div>
+      <div class="drill-cell" data-drill="10" data-tier="" title="Block one calendar gap and label it &quot;Watchman&#39;s bridge time.&quot;"><span class="drill-num">11</span><span class="drill-label">Block watchman's bridge time</span></div>
+      <div class="drill-cell" data-drill="11" data-tier="" title="Write one note in your second-brain inbox. Just one. Habit beats volume."><span class="drill-num">12</span><span class="drill-label">One note to second brain</span></div>
+      <div class="drill-cell" data-drill="12" data-tier="" title="Re-tag one task that you mis-classified."><span class="drill-num">13</span><span class="drill-label">Re-tag a mis-classified task</span></div>
+      <div class="drill-cell" data-drill="13" data-tier="" title="Sabbath. Drill off."><span class="drill-num">14</span><span class="drill-label">Sabbath — drill off</span></div>
+      <div class="drill-cell" data-drill="14" data-tier="" title="Send your wife one sentence of appreciation, drafted by you, polished by AI."><span class="drill-num">15</span><span class="drill-label">One sentence to your wife</span></div>
+      <div class="drill-cell" data-drill="15" data-tier="" title="Ask Claude for 3 questions to ask your kid at dinner. Use one."><span class="drill-num">16</span><span class="drill-label">3 questions for the dinner table</span></div>
+      <div class="drill-cell" data-drill="16" data-tier="" title="Do a 10-minute Scripture study with Claude as a study partner — you lead."><span class="drill-num">17</span><span class="drill-label">10-min Scripture study</span></div>
+      <div class="drill-cell" data-drill="17" data-tier="" title="Pick a household chore. Automate the planning (not the doing)."><span class="drill-num">18</span><span class="drill-label">Automate a chore (plan, don't do)</span></div>
+      <div class="drill-cell" data-drill="18" data-tier="" title="Read your Family AI Policy aloud. Adjust one rule."><span class="drill-num">19</span><span class="drill-label">Read your Family AI Policy aloud</span></div>
+      <div class="drill-cell" data-drill="19" data-tier="" title="Tell your wife one thing you&#39;re learning in the mission. Listen."><span class="drill-num">20</span><span class="drill-label">Tell your wife what you're learning</span></div>
+      <div class="drill-cell" data-drill="20" data-tier="" title="Sabbath. Drill off."><span class="drill-num">21</span><span class="drill-label">Sabbath — drill off</span></div>
+      <div class="drill-cell" data-drill="21" data-tier="" title="Draft one customer/community email using your saved prompt. Send it yourself."><span class="drill-num">22</span><span class="drill-label">Draft + send a real email</span></div>
+      <div class="drill-cell" data-drill="22" data-tier="" title="Run your sermon-prep workflow on a passage you&#39;re not preaching."><span class="drill-num">23</span><span class="drill-label">Sermon-prep on an unpreached passage</span></div>
+      <div class="drill-cell" data-drill="23" data-tier="" title="List one task you&#39;ll never delegate to AI, and why."><span class="drill-num">24</span><span class="drill-label">List one never-delegate task</span></div>
+      <div class="drill-cell" data-drill="24" data-tier="" title="Strip three AI-fingerprint phrases from something you wrote yesterday."><span class="drill-num">25</span><span class="drill-label">Strip three AI-fingerprint phrases</span></div>
+      <div class="drill-cell" data-drill="25" data-tier="" title="Ask Cowork to summarize your last 7 days. See what it missed."><span class="drill-num">26</span><span class="drill-label">Cowork 7-day summary</span></div>
+      <div class="drill-cell" data-drill="26" data-tier="" title="Save one new prompt as a skill. Name it like a watchman."><span class="drill-num">27</span><span class="drill-label">Save a prompt as a skill</span></div>
+      <div class="drill-cell" data-drill="27" data-tier="" title="Sabbath. Drill off."><span class="drill-num">28</span><span class="drill-label">Sabbath — drill off</span></div>
+      <div class="drill-cell" data-drill="28" data-tier="" title="Audit one subscription. Decide: keep, kill, downgrade."><span class="drill-num">29</span><span class="drill-label">Audit one subscription</span></div>
+      <div class="drill-cell" data-drill="29" data-tier="" title="Run one workflow you built earlier. Has it drifted? Fix it."><span class="drill-num">30</span><span class="drill-label">Re-run an old workflow</span></div>
+      <div class="drill-cell" data-drill="30" data-tier="" title="Find one logging gap in your system. Close it."><span class="drill-num">31</span><span class="drill-label">Close one logging gap</span></div>
+      <div class="drill-cell" data-drill="31" data-tier="" title="Ask AI to argue against your charter. Strengthen the weak points."><span class="drill-num">32</span><span class="drill-label">Let AI attack your charter</span></div>
+      <div class="drill-cell" data-drill="32" data-tier="" title="Teach one new person one thing. Watch them do it once."><span class="drill-num">33</span><span class="drill-label">Teach one new person</span></div>
+      <div class="drill-cell" data-drill="33" data-tier="" title="Write the first sentence of your Watchman&#39;s Charter. Just the first."><span class="drill-num">34</span><span class="drill-label">First sentence of your Charter</span></div>
+      <div class="drill-cell" data-drill="34" data-tier="" title="Sign your charter. Post the screenshot."><span class="drill-num">35</span><span class="drill-label">Sign and post your Charter</span></div>
   </div>
 </section>
 

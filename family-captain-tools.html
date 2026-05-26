@@ -1105,6 +1105,66 @@
     text-decoration: underline;
   }
 
+  /* Audio chapter index — collapsed by default; click summary to expand,
+     click a chapter button to seek the parent <audio> to that timestamp. */
+  body[data-track="family-captain"] .fc-audio-chapters {
+    margin-top: 10px;
+    border: 1px solid #D8D5C8;
+    border-radius: 6px;
+    background: #FAFAF7;
+  }
+  body[data-track="family-captain"] .fc-audio-chapters summary {
+    padding: 8px 14px;
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: #1E293B !important;
+    cursor: pointer;
+    list-style: none;
+    user-select: none;
+  }
+  body[data-track="family-captain"] .fc-audio-chapters summary::-webkit-details-marker { display: none; }
+  body[data-track="family-captain"] .fc-audio-chapters summary::before {
+    content: "▸ ";
+    color: #CE8E31;
+    font-weight: 900;
+  }
+  body[data-track="family-captain"] .fc-audio-chapters[open] summary::before { content: "▾ "; }
+  body[data-track="family-captain"] .fc-audio-chapters summary:hover { color: #CE8E31 !important; }
+  body[data-track="family-captain"] .fc-audio-chapters ul {
+    list-style: none;
+    margin: 0;
+    padding: 4px 0 10px;
+  }
+  body[data-track="family-captain"] .fc-audio-chapters li { margin: 0; padding: 0; }
+  body[data-track="family-captain"] .fc-audio-chapters .ch-jump {
+    display: block;
+    width: 100%;
+    text-align: left;
+    background: transparent;
+    border: 0;
+    padding: 5px 14px;
+    font-family: inherit;
+    font-size: 0.82rem;
+    color: #1E293B !important;
+    cursor: pointer;
+    border-left: 2px solid transparent;
+  }
+  body[data-track="family-captain"] .fc-audio-chapters .ch-jump:hover {
+    background: rgba(206,142,49,0.08);
+    border-left-color: #CE8E31;
+    color: #CE8E31 !important;
+  }
+  body[data-track="family-captain"] .fc-audio-chapters .ch-time {
+    display: inline-block;
+    font-family: ui-monospace, "SF Mono", monospace;
+    font-weight: 700;
+    color: #CE8E31 !important;
+    min-width: 50px;
+  }
+  body[data-track="family-captain"] .fc-audio-chapters .ch-label {
+    color: inherit !important;
+  }
+
   /* NotebookLM AUDIO podcast — same surface as video, full-width audio control */
   body[data-track="family-captain"] .fc-audio {
     max-width: 880px;
@@ -1263,6 +1323,25 @@
     font-weight: 600;
   }
 </style>
+<script>
+// Audio chapter jump handler (FC track 2026-05-26). Delegates one click
+// listener at document level so it works for any .ch-jump button on the
+// page, including those inside <details> that were collapsed at load time.
+document.addEventListener('click', function(e) {
+  var btn = e.target.closest('.fc-audio-chapters .ch-jump');
+  if (!btn) return;
+  var t = parseFloat(btn.dataset.time || '0');
+  var container = btn.closest('.fc-audio');
+  if (!container) return;
+  var audio = container.querySelector('audio');
+  if (!audio) return;
+  try {
+    audio.currentTime = t;
+    var p = audio.play();
+    if (p && typeof p.catch === 'function') { p.catch(function(){}); }
+  } catch(_) {}
+});
+</script>
 
 </head>
 <body data-track="family-captain">
@@ -1361,13 +1440,32 @@
   </div>
   <div class="fc-audio">
     <h3>The 2026 AI Armory and Redlines &middot; audio</h3>
-    <p class="lede">A long-form briefing on the AI tools landscape, the tier ladder, and the captain&rsquo;s redlines &mdash; what stays off cloud AI and why.</p>
+    <p class="lede">A 47-minute long-form briefing on the AI tools landscape, the tier ladder, and the captain&rsquo;s six redlines &mdash; what stays off cloud AI and why.</p>
     <audio controls preload="metadata" src="assets/audio/family-captain-tools.m4a">
       <a href="assets/audio/family-captain-tools.m4a">Download the audio</a> &mdash; your browser can&rsquo;t play it inline.
     </audio>
     <p class="fc-media-actions">
       <a href="assets/audio/family-captain-tools.m4a" download>&darr; Download audio (M4A)</a>
     </p>
+    <details class="fc-audio-chapters">
+      <summary>Chapters (14)</summary>
+      <ul>
+      <li><button type="button" class="ch-jump" data-time="0"><span class="ch-time">00:00</span> <span class="ch-label">The illusion of the private chat</span></button></li>
+      <li><button type="button" class="ch-jump" data-time="150"><span class="ch-time">02:30</span> <span class="ch-label">The four evaluation signals — Agentic level + MCP</span></button></li>
+      <li><button type="button" class="ch-jump" data-time="340"><span class="ch-time">05:40</span> <span class="ch-label">MCP — breaking the glass box</span></button></li>
+      <li><button type="button" class="ch-jump" data-time="450"><span class="ch-time">07:30</span> <span class="ch-label">S/A/B/C tier discipline — ruthless prioritization</span></button></li>
+      <li><button type="button" class="ch-jump" data-time="570"><span class="ch-time">09:30</span> <span class="ch-label">Claude — the S-tier anchor + Cowork mode</span></button></li>
+      <li><button type="button" class="ch-jump" data-time="720"><span class="ch-time">12:00</span> <span class="ch-label">ChatGPT redundancy + Perplexity for verifiable truth</span></button></li>
+      <li><button type="button" class="ch-jump" data-time="1020"><span class="ch-time">17:00</span> <span class="ch-label">Notes & Voice — frictionless capture on Apple</span></button></li>
+      <li><button type="button" class="ch-jump" data-time="1190"><span class="ch-time">19:50</span> <span class="ch-label">NotebookLM + Obsidian — the RAG layer</span></button></li>
+      <li><button type="button" class="ch-jump" data-time="1380"><span class="ch-time">23:00</span> <span class="ch-label">Image & Video — Midjourney, FLUX.1, and the HeyGen redline</span></button></li>
+      <li><button type="button" class="ch-jump" data-time="1620"><span class="ch-time">27:00</span> <span class="ch-label">Automation & Code — Cowork, Claude Code, Cursor</span></button></li>
+      <li><button type="button" class="ch-jump" data-time="1830"><span class="ch-time">30:30</span> <span class="ch-label">The agentic frontier — Comet, ChatGPT Agent, Manus, Lovable</span></button></li>
+      <li><button type="button" class="ch-jump" data-time="2070"><span class="ch-time">34:30</span> <span class="ch-label">The six captain's red lines — never paste</span></button></li>
+      <li><button type="button" class="ch-jump" data-time="2508"><span class="ch-time">41:48</span> <span class="ch-label">The three captain stacks — Minimum Viable / Solo Founder / Power</span></button></li>
+      <li><button type="button" class="ch-jump" data-time="2718"><span class="ch-time">45:18</span> <span class="ch-label">Horizon — the sovereign future</span></button></li>
+      </ul>
+    </details>
   </div>
 </div>
 

@@ -1091,6 +1091,66 @@
     text-decoration: underline;
   }
 
+  /* Audio chapter index — collapsed by default; click summary to expand,
+     click a chapter button to seek the parent <audio> to that timestamp. */
+  body[data-track="family-captain"] .fc-audio-chapters {
+    margin-top: 10px;
+    border: 1px solid #D8D5C8;
+    border-radius: 6px;
+    background: #FAFAF7;
+  }
+  body[data-track="family-captain"] .fc-audio-chapters summary {
+    padding: 8px 14px;
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: #1E293B !important;
+    cursor: pointer;
+    list-style: none;
+    user-select: none;
+  }
+  body[data-track="family-captain"] .fc-audio-chapters summary::-webkit-details-marker { display: none; }
+  body[data-track="family-captain"] .fc-audio-chapters summary::before {
+    content: "▸ ";
+    color: #CE8E31;
+    font-weight: 900;
+  }
+  body[data-track="family-captain"] .fc-audio-chapters[open] summary::before { content: "▾ "; }
+  body[data-track="family-captain"] .fc-audio-chapters summary:hover { color: #CE8E31 !important; }
+  body[data-track="family-captain"] .fc-audio-chapters ul {
+    list-style: none;
+    margin: 0;
+    padding: 4px 0 10px;
+  }
+  body[data-track="family-captain"] .fc-audio-chapters li { margin: 0; padding: 0; }
+  body[data-track="family-captain"] .fc-audio-chapters .ch-jump {
+    display: block;
+    width: 100%;
+    text-align: left;
+    background: transparent;
+    border: 0;
+    padding: 5px 14px;
+    font-family: inherit;
+    font-size: 0.82rem;
+    color: #1E293B !important;
+    cursor: pointer;
+    border-left: 2px solid transparent;
+  }
+  body[data-track="family-captain"] .fc-audio-chapters .ch-jump:hover {
+    background: rgba(206,142,49,0.08);
+    border-left-color: #CE8E31;
+    color: #CE8E31 !important;
+  }
+  body[data-track="family-captain"] .fc-audio-chapters .ch-time {
+    display: inline-block;
+    font-family: ui-monospace, "SF Mono", monospace;
+    font-weight: 700;
+    color: #CE8E31 !important;
+    min-width: 50px;
+  }
+  body[data-track="family-captain"] .fc-audio-chapters .ch-label {
+    color: inherit !important;
+  }
+
   /* NotebookLM AUDIO podcast — same surface as video, full-width audio control */
   body[data-track="family-captain"] .fc-audio {
     max-width: 880px;
@@ -1249,6 +1309,25 @@
     font-weight: 600;
   }
 </style>
+<script>
+// Audio chapter jump handler (FC track 2026-05-26). Delegates one click
+// listener at document level so it works for any .ch-jump button on the
+// page, including those inside <details> that were collapsed at load time.
+document.addEventListener('click', function(e) {
+  var btn = e.target.closest('.fc-audio-chapters .ch-jump');
+  if (!btn) return;
+  var t = parseFloat(btn.dataset.time || '0');
+  var container = btn.closest('.fc-audio');
+  if (!container) return;
+  var audio = container.querySelector('audio');
+  if (!audio) return;
+  try {
+    audio.currentTime = t;
+    var p = audio.play();
+    if (p && typeof p.catch === 'function') { p.catch(function(){}); }
+  } catch(_) {}
+});
+</script>
 
 </head>
 <body data-track="family-captain">
@@ -1400,6 +1479,29 @@
     <p class="fc-media-actions">
       <a href="assets/audio/family-captain-sovereign.m4a" download>&darr; Download audio (M4A)</a>
     </p>
+    <details class="fc-audio-chapters">
+      <summary>Chapters (18)</summary>
+      <ul>
+      <li><button type="button" class="ch-jump" data-time="0"><span class="ch-time">00:00</span> <span class="ch-label">The counselor's dilemma — cloud vs sovereign</span></button></li>
+      <li><button type="button" class="ch-jump" data-time="120"><span class="ch-time">02:00</span> <span class="ch-label">When to go local — three criteria</span></button></li>
+      <li><button type="button" class="ch-jump" data-time="280"><span class="ch-time">04:40</span> <span class="ch-label">The armored vehicle vs commercial rail analogy</span></button></li>
+      <li><button type="button" class="ch-jump" data-time="360"><span class="ch-time">06:00</span> <span class="ch-label">The $6,000 iron — hardware floor</span></button></li>
+      <li><button type="button" class="ch-jump" data-time="480"><span class="ch-time">08:00</span> <span class="ch-label">Unified memory vs VRAM bottleneck</span></button></li>
+      <li><button type="button" class="ch-jump" data-time="660"><span class="ch-time">11:00</span> <span class="ch-label">The 32 / 64 / 128 GB hardware tiers</span></button></li>
+      <li><button type="button" class="ch-jump" data-time="793"><span class="ch-time">13:13</span> <span class="ch-label">Quantization — Q4 compression explained</span></button></li>
+      <li><button type="button" class="ch-jump" data-time="870"><span class="ch-time">14:30</span> <span class="ch-label">Engines — llama.cpp, Ollama, LM Studio</span></button></li>
+      <li><button type="button" class="ch-jump" data-time="1100"><span class="ch-time">18:20</span> <span class="ch-label">MLX — Apple's tactical advantage</span></button></li>
+      <li><button type="button" class="ch-jump" data-time="1185"><span class="ch-time">19:45</span> <span class="ch-label">Open Web UI + Docker isolation</span></button></li>
+      <li><button type="button" class="ch-jump" data-time="1240"><span class="ch-time">20:40</span> <span class="ch-label">The frontier models — Llama 4, Qwen, DeepSeek, Gemma</span></button></li>
+      <li><button type="button" class="ch-jump" data-time="1580"><span class="ch-time">26:20</span> <span class="ch-label">Mixture of Experts — the routing architecture</span></button></li>
+      <li><button type="button" class="ch-jump" data-time="1768"><span class="ch-time">29:28</span> <span class="ch-label">Voice — Whisper.cpp, WhisperX, Kokoro</span></button></li>
+      <li><button type="button" class="ch-jump" data-time="1972"><span class="ch-time">32:52</span> <span class="ch-label">RAG — Anything LLM, Khoj, Obsidian</span></button></li>
+      <li><button type="button" class="ch-jump" data-time="2208"><span class="ch-time">36:48</span> <span class="ch-label">Proactive agents — Cline, Goose, and the autonomous-agent paradox</span></button></li>
+      <li><button type="button" class="ch-jump" data-time="2430"><span class="ch-time">40:30</span> <span class="ch-label">MCP — compartmentalized permissions</span></button></li>
+      <li><button type="button" class="ch-jump" data-time="2560"><span class="ch-time">42:40</span> <span class="ch-label">The full automated workflow with n8n</span></button></li>
+      <li><button type="button" class="ch-jump" data-time="2670"><span class="ch-time">44:30</span> <span class="ch-label">Wrap — the cloud as security liability</span></button></li>
+      </ul>
+    </details>
   </div>
 </div>
 

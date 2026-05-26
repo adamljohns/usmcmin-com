@@ -1073,6 +1073,66 @@
     text-decoration: underline;
   }
 
+  /* Audio chapter index — collapsed by default; click summary to expand,
+     click a chapter button to seek the parent <audio> to that timestamp. */
+  body[data-track="family-captain"] .fc-audio-chapters {
+    margin-top: 10px;
+    border: 1px solid #D8D5C8;
+    border-radius: 6px;
+    background: #FAFAF7;
+  }
+  body[data-track="family-captain"] .fc-audio-chapters summary {
+    padding: 8px 14px;
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: #1E293B !important;
+    cursor: pointer;
+    list-style: none;
+    user-select: none;
+  }
+  body[data-track="family-captain"] .fc-audio-chapters summary::-webkit-details-marker { display: none; }
+  body[data-track="family-captain"] .fc-audio-chapters summary::before {
+    content: "▸ ";
+    color: #CE8E31;
+    font-weight: 900;
+  }
+  body[data-track="family-captain"] .fc-audio-chapters[open] summary::before { content: "▾ "; }
+  body[data-track="family-captain"] .fc-audio-chapters summary:hover { color: #CE8E31 !important; }
+  body[data-track="family-captain"] .fc-audio-chapters ul {
+    list-style: none;
+    margin: 0;
+    padding: 4px 0 10px;
+  }
+  body[data-track="family-captain"] .fc-audio-chapters li { margin: 0; padding: 0; }
+  body[data-track="family-captain"] .fc-audio-chapters .ch-jump {
+    display: block;
+    width: 100%;
+    text-align: left;
+    background: transparent;
+    border: 0;
+    padding: 5px 14px;
+    font-family: inherit;
+    font-size: 0.82rem;
+    color: #1E293B !important;
+    cursor: pointer;
+    border-left: 2px solid transparent;
+  }
+  body[data-track="family-captain"] .fc-audio-chapters .ch-jump:hover {
+    background: rgba(206,142,49,0.08);
+    border-left-color: #CE8E31;
+    color: #CE8E31 !important;
+  }
+  body[data-track="family-captain"] .fc-audio-chapters .ch-time {
+    display: inline-block;
+    font-family: ui-monospace, "SF Mono", monospace;
+    font-weight: 700;
+    color: #CE8E31 !important;
+    min-width: 50px;
+  }
+  body[data-track="family-captain"] .fc-audio-chapters .ch-label {
+    color: inherit !important;
+  }
+
   /* NotebookLM AUDIO podcast — same surface as video, full-width audio control */
   body[data-track="family-captain"] .fc-audio {
     max-width: 880px;
@@ -1231,6 +1291,25 @@
     font-weight: 600;
   }
 </style>
+<script>
+// Audio chapter jump handler (FC track 2026-05-26). Delegates one click
+// listener at document level so it works for any .ch-jump button on the
+// page, including those inside <details> that were collapsed at load time.
+document.addEventListener('click', function(e) {
+  var btn = e.target.closest('.fc-audio-chapters .ch-jump');
+  if (!btn) return;
+  var t = parseFloat(btn.dataset.time || '0');
+  var container = btn.closest('.fc-audio');
+  if (!container) return;
+  var audio = container.querySelector('audio');
+  if (!audio) return;
+  try {
+    audio.currentTime = t;
+    var p = audio.play();
+    if (p && typeof p.catch === 'function') { p.catch(function(){}); }
+  } catch(_) {}
+});
+</script>
 
 </head>
 <body data-track="family-captain">
@@ -1315,13 +1394,30 @@
   </div>
   <div class="fc-audio">
     <h3>Is the 49-day Captain&rsquo;s Chart sustainable? &middot; debate</h3>
-    <p class="lede">A long-form debate format &mdash; two officers pressure-test the 7-week structure: is the rhythm realistic, where do captains burn out, and what makes the difference between captains who finish and those who don&rsquo;t.</p>
+    <p class="lede">A 23-minute debate format &mdash; Marcus and Elias pressure-test the 7-week structure: is the rhythm realistic, where do captains burn out, and what makes the difference between captains who finish and those who don&rsquo;t.</p>
     <audio controls preload="metadata" src="assets/audio/family-captain-voyage.m4a">
       <a href="assets/audio/family-captain-voyage.m4a">Download the audio</a> &mdash; your browser can&rsquo;t play it inline.
     </audio>
     <p class="fc-media-actions">
       <a href="assets/audio/family-captain-voyage.m4a" download>&darr; Download audio (M4A)</a>
     </p>
+    <details class="fc-audio-chapters">
+      <summary>Chapters (12)</summary>
+      <ul>
+      <li><button type="button" class="ch-jump" data-time="0"><span class="ch-time">00:00</span> <span class="ch-label">The debate begins — Marcus and Elias</span></button></li>
+      <li><button type="button" class="ch-jump" data-time="78"><span class="ch-time">01:18</span> <span class="ch-label">Opening positions — sustainable triage vs unsustainable sprint</span></button></li>
+      <li><button type="button" class="ch-jump" data-time="155"><span class="ch-time">02:35</span> <span class="ch-label">Tiered triage protocol — S/A/B/C as the cure for paralysis</span></button></li>
+      <li><button type="button" class="ch-jump" data-time="290"><span class="ch-time">04:50</span> <span class="ch-label">But all 21 must ship — is the triage real?</span></button></li>
+      <li><button type="button" class="ch-jump" data-time="360"><span class="ch-time">06:00</span> <span class="ch-label">Pre-flight checklist vs deep introspection</span></button></li>
+      <li><button type="button" class="ch-jump" data-time="480"><span class="ch-time">08:00</span> <span class="ch-label">The 49 drills + the 90-second boundary</span></button></li>
+      <li><button type="button" class="ch-jump" data-time="678"><span class="ch-time">11:18</span> <span class="ch-label">Sacred vs functional — should they integrate?</span></button></li>
+      <li><button type="button" class="ch-jump" data-time="738"><span class="ch-time">12:18</span> <span class="ch-label">Seven-day domain whiplash</span></button></li>
+      <li><button type="button" class="ch-jump" data-time="840"><span class="ch-time">14:00</span> <span class="ch-label">AI as force multiplier — the GPS effect</span></button></li>
+      <li><button type="button" class="ch-jump" data-time="1045"><span class="ch-time">17:25</span> <span class="ch-label">The Sabbath protocol — operationalizing rest</span></button></li>
+      <li><button type="button" class="ch-jump" data-time="1195"><span class="ch-time">19:55</span> <span class="ch-label">Closing arguments</span></button></li>
+      <li><button type="button" class="ch-jump" data-time="1338"><span class="ch-time">22:18</span> <span class="ch-label">The two Timothy 2:2 test — multiplication is the real proof</span></button></li>
+      </ul>
+    </details>
   </div>
 </div>
 

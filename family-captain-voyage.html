@@ -26,7 +26,8 @@
   /* Progress banner */
   .progress-banner { max-width:880px; margin:24px auto 0; padding:18px 22px;
     background:var(--bg-card); border:1px solid var(--border); border-radius:var(--radius);
-    display:flex; flex-direction:column; gap:10px; }
+    display:flex; flex-direction:column; gap:10px;
+    position:sticky; top:0; z-index:50; }
   .progress-stat { display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; }
   .progress-stat .stat-line { color:var(--white); font-weight:700; font-size:1rem; }
   .progress-stat .stat-line .pct { color:var(--gold); }
@@ -193,27 +194,30 @@
   .drill-cell.shipped { background:var(--gold-dim); border-color:var(--gold); }
   .drill-cell.shipped .drill-label::after { content:" ✓"; color:var(--gold); }
 
-  /* DRILL TIER LEFT-BORDER (2026-05-26) — color-codes each drill by tier.
-     Doesn't touch the rest of the border (so hover/shipped states still
-     animate normally). The legend block above the grid explains the colors. */
-  .drill-cell[data-tier="S"] { border-left: 3px solid #CE8E31; }
-  .drill-cell[data-tier="A"] { border-left: 3px solid #1E293B; }
-  .drill-cell[data-tier="B"] { border-left: 3px solid #6BA368; }
-  .drill-cell[data-tier="C"] { border-left: 3px solid #9CA3AF; }
-  .drill-cell[data-tier="R"] { border-left: 3px dashed #6B7280; opacity: 0.65; }
+  /* DRILL TIER LEFT-BORDER (2026-05-26, fixed 2026-05-27) — color-codes
+     each drill by tier with a thick visible left-bar. A-tier uses
+     slate-400 (#94A3B8) not slate-900 — the dark navy was invisible
+     against the dark drill-cell background. R = Sabbath (dashed). */
+  .drill-cell[data-tier="S"] { border-left: 5px solid #CE8E31; }
+  .drill-cell[data-tier="A"] { border-left: 5px solid #94A3B8; }
+  .drill-cell[data-tier="B"] { border-left: 5px solid #6BA368; }
+  .drill-cell[data-tier="C"] { border-left: 5px solid #E2E8F0; }
+  .drill-cell[data-tier="R"] { border-left: 5px dashed #94A3B8; opacity: 0.65; }
 
-  /* Compact drill tier legend (FC-only, sits above the drill grid) */
+  /* Compact drill tier legend (FC-only, sits above the drill grid).
+     Bars are solid filled chips so they're visible at a glance. */
   .drill-tier-legend { display:flex; flex-wrap:wrap; gap:14px 22px; align-items:center;
-    margin: 0 auto 14px; padding: 10px 14px; max-width: 1100px;
+    margin: 0 auto 14px; padding: 12px 16px; max-width: 1100px;
     background: var(--bg-card-2); border: 1px solid var(--border); border-radius: var(--radius);
-    font-size: 0.78rem; color: var(--gray-light); }
-  .drill-tier-legend .dtl-row { display:inline-flex; align-items:center; gap:6px; white-space:nowrap; }
-  .drill-tier-legend .dtl-bar { display:inline-block; width:14px; height:14px; }
-  .drill-tier-legend .dtl-row[data-tier="S"] .dtl-bar { border-left: 3px solid #CE8E31; }
-  .drill-tier-legend .dtl-row[data-tier="A"] .dtl-bar { border-left: 3px solid #1E293B; }
-  .drill-tier-legend .dtl-row[data-tier="B"] .dtl-bar { border-left: 3px solid #6BA368; }
-  .drill-tier-legend .dtl-row[data-tier="C"] .dtl-bar { border-left: 3px solid #9CA3AF; }
-  .drill-tier-legend .dtl-row[data-tier="R"] .dtl-bar { border-left: 3px dashed #6B7280; }
+    font-size: 0.82rem; color: var(--gray-light); }
+  .drill-tier-legend .dtl-row { display:inline-flex; align-items:center; gap:8px; white-space:nowrap; }
+  .drill-tier-legend .dtl-bar { display:inline-block; width:6px; height:18px; border-radius:2px; flex:0 0 6px; }
+  .drill-tier-legend .dtl-row[data-tier="S"] .dtl-bar { background: #CE8E31; }
+  .drill-tier-legend .dtl-row[data-tier="A"] .dtl-bar { background: #94A3B8; }
+  .drill-tier-legend .dtl-row[data-tier="B"] .dtl-bar { background: #6BA368; }
+  .drill-tier-legend .dtl-row[data-tier="C"] .dtl-bar { background: #E2E8F0; }
+  .drill-tier-legend .dtl-row[data-tier="R"] .dtl-bar { background: transparent;
+    border-left: 3px dashed #94A3B8; width: 10px; }
   .drill-tier-legend .dtl-label { font-weight: 800; letter-spacing: 1px; color: var(--white); }
 
   @media (max-width:640px){ .module-hero { padding:90px 18px 24px; } }
@@ -1039,6 +1043,22 @@
     color: #FFFFFF !important;
   }
 
+  /* (4b) DRILL TIER LEGEND override (2026-05-27): the legend bg is light
+     cream on FC light theme, so the default white labels become invisible.
+     Force dark slate text on FC. Solid colored bars remain unchanged
+     (they're hex-set in site_pages.py so they're theme-safe). */
+  body[data-track="family-captain"] .drill-tier-legend {
+    background: #F5F5F0 !important;
+    color: #4B5563 !important;
+    border-color: #D8D5C8 !important;
+  }
+  body[data-track="family-captain"] .drill-tier-legend .dtl-label {
+    color: #1E293B !important;
+  }
+  body[data-track="family-captain"] .drill-tier-legend .dtl-row {
+    color: #4B5563 !important;
+  }
+
   /* NotebookLM explainer video — Sovereign page (pilot feature) */
   body[data-track="family-captain"] .fc-video {
     max-width: 880px;
@@ -1391,62 +1411,6 @@ document.addEventListener('click', function(e) {
      shared style. Week color-stripes (red/orange/etc.) remain — they're
      week-1-through-7 markers, not tier indicators. -->
 
-
-<!-- ── NOTEBOOKLM CHART MEDIA (Watch · Listen) ── -->
-<div class="module-container" id="explainer" style="padding-top:0">
-  <div class="section-kicker">Watch &middot; Listen</div>
-  <h2 class="section-title">Charting the Course &mdash; overview.</h2>
-  <p class="section-sub">Walk through the 7-week framework as a video, or hear two officers debate whether a 49-day captain&rsquo;s chart is actually sustainable.</p>
-  <div class="fc-video">
-    <video controls preload="metadata" playsinline poster="assets/video/posters/family-captain-voyage.jpg">
-      <source src="assets/video/family-captain-voyage.mp4" type="video/mp4">
-      <a href="assets/video/family-captain-voyage.mp4">Open the explainer video</a> &mdash; your browser can&rsquo;t play it inline.
-    </video>
-    <p class="fc-media-actions">
-      <a href="assets/video/family-captain-voyage.mp4" download>&darr; Download video (MP4)</a>
-    </p>
-    <details class="fc-video-chapters">
-      <summary>Chapters (7)</summary>
-      <ul>
-      <li><button type="button" class="ch-jump" data-time="0"><span class="ch-time">00:00</span> <span class="ch-label">Welcome — captains build, not compare</span></button></li>
-      <li><button type="button" class="ch-jump" data-time="67"><span class="ch-time">01:07</span> <span class="ch-label">Section 1 — Charting a sustainable course</span></button></li>
-      <li><button type="button" class="ch-jump" data-time="103"><span class="ch-time">01:43</span> <span class="ch-label">Section 2 — Foundations of the captain (W1-3)</span></button></li>
-      <li><button type="button" class="ch-jump" data-time="169"><span class="ch-time">02:49</span> <span class="ch-label">Section 3 — Leading the crew (W4-5)</span></button></li>
-      <li><button type="button" class="ch-jump" data-time="224"><span class="ch-time">03:44</span> <span class="ch-label">Section 4 — The Sabbath rest</span></button></li>
-      <li><button type="button" class="ch-jump" data-time="273"><span class="ch-time">04:33</span> <span class="ch-label">Section 5 — Task and drill cadence</span></button></li>
-      <li><button type="button" class="ch-jump" data-time="366"><span class="ch-time">06:06</span> <span class="ch-label">Section 6 — The captain's commissioning</span></button></li>
-      </ul>
-    </details>
-  </div>
-  <div class="fc-audio">
-    <h3>Is the 49-day Captain&rsquo;s Chart sustainable? &middot; debate</h3>
-    <p class="lede">A 23-minute debate format &mdash; Marcus and Elias pressure-test the 7-week structure: is the rhythm realistic, where do captains burn out, and what makes the difference between captains who finish and those who don&rsquo;t.</p>
-    <audio controls preload="metadata" src="assets/audio/family-captain-voyage.m4a">
-      <a href="assets/audio/family-captain-voyage.m4a">Download the audio</a> &mdash; your browser can&rsquo;t play it inline.
-    </audio>
-    <p class="fc-media-actions">
-      <a href="assets/audio/family-captain-voyage.m4a" download>&darr; Download audio (M4A)</a>
-    </p>
-    <details class="fc-audio-chapters">
-      <summary>Chapters (12)</summary>
-      <ul>
-      <li><button type="button" class="ch-jump" data-time="0"><span class="ch-time">00:00</span> <span class="ch-label">The debate begins — Marcus and Elias</span></button></li>
-      <li><button type="button" class="ch-jump" data-time="78"><span class="ch-time">01:18</span> <span class="ch-label">Opening positions — sustainable triage vs unsustainable sprint</span></button></li>
-      <li><button type="button" class="ch-jump" data-time="155"><span class="ch-time">02:35</span> <span class="ch-label">Tiered triage protocol — S/A/B/C as the cure for paralysis</span></button></li>
-      <li><button type="button" class="ch-jump" data-time="290"><span class="ch-time">04:50</span> <span class="ch-label">But all 21 must ship — is the triage real?</span></button></li>
-      <li><button type="button" class="ch-jump" data-time="360"><span class="ch-time">06:00</span> <span class="ch-label">Pre-flight checklist vs deep introspection</span></button></li>
-      <li><button type="button" class="ch-jump" data-time="480"><span class="ch-time">08:00</span> <span class="ch-label">The 49 drills + the 90-second boundary</span></button></li>
-      <li><button type="button" class="ch-jump" data-time="678"><span class="ch-time">11:18</span> <span class="ch-label">Sacred vs functional — should they integrate?</span></button></li>
-      <li><button type="button" class="ch-jump" data-time="738"><span class="ch-time">12:18</span> <span class="ch-label">Seven-day domain whiplash</span></button></li>
-      <li><button type="button" class="ch-jump" data-time="840"><span class="ch-time">14:00</span> <span class="ch-label">AI as force multiplier — the GPS effect</span></button></li>
-      <li><button type="button" class="ch-jump" data-time="1045"><span class="ch-time">17:25</span> <span class="ch-label">The Sabbath protocol — operationalizing rest</span></button></li>
-      <li><button type="button" class="ch-jump" data-time="1195"><span class="ch-time">19:55</span> <span class="ch-label">Closing arguments</span></button></li>
-      <li><button type="button" class="ch-jump" data-time="1338"><span class="ch-time">22:18</span> <span class="ch-label">The two Timothy 2:2 test — multiplication is the real proof</span></button></li>
-      </ul>
-    </details>
-  </div>
-</div>
-
 <div class="voyage-chart" id="voyageChart">
       <div class="week-port" id="week1" data-week="1">
         <div class="week-num">Week 1</div>
@@ -1454,20 +1418,17 @@ document.addEventListener('click', function(e) {
         <h3>Vision</h3>
         <div class="week-tag">Write the vision plain. AI drafts; the captain decides where he's going.</div>
         <div class="task-circles">
-          <a class="task-circle" data-key="1.1" data-tier="S" data-pdf="downloads/family-captain/Family_Captain_Task_PDFs/W1_T1_Draft_Your_AI_Charter.pdf" href="downloads/family-captain/Family_Captain_Task_PDFs/W1_T1_Draft_Your_AI_Charter.pdf" target="_blank" rel="noopener" title="Open W1.T1 PDF — tier S (Essential)">
-            <span class="tier-badge" aria-label="Tier S: Essential">S</span>
+          <a class="task-circle" data-key="1.1" data-pdf="downloads/family-captain/Family_Captain_Task_PDFs/W1_T1_Draft_Your_AI_Charter.pdf" href="downloads/family-captain/Family_Captain_Task_PDFs/W1_T1_Draft_Your_AI_Charter.pdf" target="_blank" rel="noopener" title="Open W1.T1 PDF">
             <div class="task-num">T1</div>
             <div class="task-name">Draft Your AI Charter</div>
             <div class="task-actions"><button class="task-toggle" type="button" data-toggle="1.1" aria-label="Mark T1 shipped">●</button></div>
           </a>
-          <a class="task-circle" data-key="1.2" data-tier="A" data-pdf="downloads/family-captain/Family_Captain_Task_PDFs/W1_T2_Write_Your_5-Year_Captains_Vision.pdf" href="downloads/family-captain/Family_Captain_Task_PDFs/W1_T2_Write_Your_5-Year_Captains_Vision.pdf" target="_blank" rel="noopener" title="Open W1.T2 PDF — tier A (Recommended)">
-            <span class="tier-badge" aria-label="Tier A: Recommended">A</span>
+          <a class="task-circle" data-key="1.2" data-pdf="downloads/family-captain/Family_Captain_Task_PDFs/W1_T2_Write_Your_5-Year_Captains_Vision.pdf" href="downloads/family-captain/Family_Captain_Task_PDFs/W1_T2_Write_Your_5-Year_Captains_Vision.pdf" target="_blank" rel="noopener" title="Open W1.T2 PDF">
             <div class="task-num">T2</div>
             <div class="task-name">Write Your 5-Year Captain's Vision</div>
             <div class="task-actions"><button class="task-toggle" type="button" data-toggle="1.2" aria-label="Mark T2 shipped">●</button></div>
           </a>
-          <a class="task-circle" data-key="1.3" data-tier="A" data-pdf="downloads/family-captain/Family_Captain_Task_PDFs/W1_T3_Build_Your_Tool_Stack.pdf" href="downloads/family-captain/Family_Captain_Task_PDFs/W1_T3_Build_Your_Tool_Stack.pdf" target="_blank" rel="noopener" title="Open W1.T3 PDF — tier A (Recommended)">
-            <span class="tier-badge" aria-label="Tier A: Recommended">A</span>
+          <a class="task-circle" data-key="1.3" data-pdf="downloads/family-captain/Family_Captain_Task_PDFs/W1_T3_Build_Your_Tool_Stack.pdf" href="downloads/family-captain/Family_Captain_Task_PDFs/W1_T3_Build_Your_Tool_Stack.pdf" target="_blank" rel="noopener" title="Open W1.T3 PDF">
             <div class="task-num">T3</div>
             <div class="task-name">Build Your Tool Stack</div>
             <div class="task-actions"><button class="task-toggle" type="button" data-toggle="1.3" aria-label="Mark T3 shipped">●</button></div>
@@ -1481,20 +1442,17 @@ document.addEventListener('click', function(e) {
         <h3>Body</h3>
         <div class="week-tag">Steward the temple. The captain trains the body that carries the load.</div>
         <div class="task-circles">
-          <a class="task-circle" data-key="2.1" data-tier="A" data-pdf="downloads/family-captain/Family_Captain_Task_PDFs/W2_T1_Weekly_Movement_Practice.pdf" href="downloads/family-captain/Family_Captain_Task_PDFs/W2_T1_Weekly_Movement_Practice.pdf" target="_blank" rel="noopener" title="Open W2.T1 PDF — tier A (Recommended)">
-            <span class="tier-badge" aria-label="Tier A: Recommended">A</span>
+          <a class="task-circle" data-key="2.1" data-pdf="downloads/family-captain/Family_Captain_Task_PDFs/W2_T1_Weekly_Movement_Practice.pdf" href="downloads/family-captain/Family_Captain_Task_PDFs/W2_T1_Weekly_Movement_Practice.pdf" target="_blank" rel="noopener" title="Open W2.T1 PDF">
             <div class="task-num">T1</div>
             <div class="task-name">Weekly Movement Practice</div>
             <div class="task-actions"><button class="task-toggle" type="button" data-toggle="2.1" aria-label="Mark T1 shipped">●</button></div>
           </a>
-          <a class="task-circle" data-key="2.2" data-tier="B" data-pdf="downloads/family-captain/Family_Captain_Task_PDFs/W2_T2_Captains_Meal_Plan.pdf" href="downloads/family-captain/Family_Captain_Task_PDFs/W2_T2_Captains_Meal_Plan.pdf" target="_blank" rel="noopener" title="Open W2.T2 PDF — tier B (Deeper)">
-            <span class="tier-badge" aria-label="Tier B: Deeper">B</span>
+          <a class="task-circle" data-key="2.2" data-pdf="downloads/family-captain/Family_Captain_Task_PDFs/W2_T2_Captains_Meal_Plan.pdf" href="downloads/family-captain/Family_Captain_Task_PDFs/W2_T2_Captains_Meal_Plan.pdf" target="_blank" rel="noopener" title="Open W2.T2 PDF">
             <div class="task-num">T2</div>
             <div class="task-name">Captain's Meal Plan</div>
             <div class="task-actions"><button class="task-toggle" type="button" data-toggle="2.2" aria-label="Mark T2 shipped">●</button></div>
           </a>
-          <a class="task-circle" data-key="2.3" data-tier="C" data-pdf="downloads/family-captain/Family_Captain_Task_PDFs/W2_T3_5-Night_Sleep_Audit.pdf" href="downloads/family-captain/Family_Captain_Task_PDFs/W2_T3_5-Night_Sleep_Audit.pdf" target="_blank" rel="noopener" title="Open W2.T3 PDF — tier C (Specialty)">
-            <span class="tier-badge" aria-label="Tier C: Specialty">C</span>
+          <a class="task-circle" data-key="2.3" data-pdf="downloads/family-captain/Family_Captain_Task_PDFs/W2_T3_5-Night_Sleep_Audit.pdf" href="downloads/family-captain/Family_Captain_Task_PDFs/W2_T3_5-Night_Sleep_Audit.pdf" target="_blank" rel="noopener" title="Open W2.T3 PDF">
             <div class="task-num">T3</div>
             <div class="task-name">5-Night Sleep Audit</div>
             <div class="task-actions"><button class="task-toggle" type="button" data-toggle="2.3" aria-label="Mark T3 shipped">●</button></div>
@@ -1508,20 +1466,17 @@ document.addEventListener('click', function(e) {
         <h3>Spiritual</h3>
         <div class="week-tag">Walk with God. The captain's command flows from his communion.</div>
         <div class="task-circles">
-          <a class="task-circle" data-key="3.1" data-tier="A" data-pdf="downloads/family-captain/Family_Captain_Task_PDFs/W3_T1_Scripture_Study_You_Lead.pdf" href="downloads/family-captain/Family_Captain_Task_PDFs/W3_T1_Scripture_Study_You_Lead.pdf" target="_blank" rel="noopener" title="Open W3.T1 PDF — tier A (Recommended)">
-            <span class="tier-badge" aria-label="Tier A: Recommended">A</span>
+          <a class="task-circle" data-key="3.1" data-pdf="downloads/family-captain/Family_Captain_Task_PDFs/W3_T1_Scripture_Study_You_Lead.pdf" href="downloads/family-captain/Family_Captain_Task_PDFs/W3_T1_Scripture_Study_You_Lead.pdf" target="_blank" rel="noopener" title="Open W3.T1 PDF">
             <div class="task-num">T1</div>
             <div class="task-name">10-Min Scripture Study, You Lead</div>
             <div class="task-actions"><button class="task-toggle" type="button" data-toggle="3.1" aria-label="Mark T1 shipped">●</button></div>
           </a>
-          <a class="task-circle" data-key="3.2" data-tier="B" data-pdf="downloads/family-captain/Family_Captain_Task_PDFs/W3_T2_Family_Devotion_Generator.pdf" href="downloads/family-captain/Family_Captain_Task_PDFs/W3_T2_Family_Devotion_Generator.pdf" target="_blank" rel="noopener" title="Open W3.T2 PDF — tier B (Deeper)">
-            <span class="tier-badge" aria-label="Tier B: Deeper">B</span>
+          <a class="task-circle" data-key="3.2" data-pdf="downloads/family-captain/Family_Captain_Task_PDFs/W3_T2_Family_Devotion_Generator.pdf" href="downloads/family-captain/Family_Captain_Task_PDFs/W3_T2_Family_Devotion_Generator.pdf" target="_blank" rel="noopener" title="Open W3.T2 PDF">
             <div class="task-num">T2</div>
             <div class="task-name">Family Devotion Generator</div>
             <div class="task-actions"><button class="task-toggle" type="button" data-toggle="3.2" aria-label="Mark T2 shipped">●</button></div>
           </a>
-          <a class="task-circle" data-key="3.3" data-tier="C" data-pdf="downloads/family-captain/Family_Captain_Task_PDFs/W3_T3_Sermon_Notes_to_Captains_Actions.pdf" href="downloads/family-captain/Family_Captain_Task_PDFs/W3_T3_Sermon_Notes_to_Captains_Actions.pdf" target="_blank" rel="noopener" title="Open W3.T3 PDF — tier C (Specialty)">
-            <span class="tier-badge" aria-label="Tier C: Specialty">C</span>
+          <a class="task-circle" data-key="3.3" data-pdf="downloads/family-captain/Family_Captain_Task_PDFs/W3_T3_Sermon_Notes_to_Captains_Actions.pdf" href="downloads/family-captain/Family_Captain_Task_PDFs/W3_T3_Sermon_Notes_to_Captains_Actions.pdf" target="_blank" rel="noopener" title="Open W3.T3 PDF">
             <div class="task-num">T3</div>
             <div class="task-name">Sermon Notes → Captain's Actions</div>
             <div class="task-actions"><button class="task-toggle" type="button" data-toggle="3.3" aria-label="Mark T3 shipped">●</button></div>
@@ -1535,20 +1490,17 @@ document.addEventListener('click', function(e) {
         <h3>Husbanding</h3>
         <div class="week-tag">Lead with love. The captain's first crew is one woman.</div>
         <div class="task-circles">
-          <a class="task-circle" data-key="4.1" data-tier="A" data-pdf="downloads/family-captain/Family_Captain_Task_PDFs/W4_T1_The_5-Minute_Wife_Audit.pdf" href="downloads/family-captain/Family_Captain_Task_PDFs/W4_T1_The_5-Minute_Wife_Audit.pdf" target="_blank" rel="noopener" title="Open W4.T1 PDF — tier A (Recommended)">
-            <span class="tier-badge" aria-label="Tier A: Recommended">A</span>
+          <a class="task-circle" data-key="4.1" data-pdf="downloads/family-captain/Family_Captain_Task_PDFs/W4_T1_The_5-Minute_Wife_Audit.pdf" href="downloads/family-captain/Family_Captain_Task_PDFs/W4_T1_The_5-Minute_Wife_Audit.pdf" target="_blank" rel="noopener" title="Open W4.T1 PDF">
             <div class="task-num">T1</div>
             <div class="task-name">The 5-Minute Wife Audit</div>
             <div class="task-actions"><button class="task-toggle" type="button" data-toggle="4.1" aria-label="Mark T1 shipped">●</button></div>
           </a>
-          <a class="task-circle" data-key="4.2" data-tier="B" data-pdf="downloads/family-captain/Family_Captain_Task_PDFs/W4_T2_Prep_One_Hard_Conversation.pdf" href="downloads/family-captain/Family_Captain_Task_PDFs/W4_T2_Prep_One_Hard_Conversation.pdf" target="_blank" rel="noopener" title="Open W4.T2 PDF — tier B (Deeper)">
-            <span class="tier-badge" aria-label="Tier B: Deeper">B</span>
+          <a class="task-circle" data-key="4.2" data-pdf="downloads/family-captain/Family_Captain_Task_PDFs/W4_T2_Prep_One_Hard_Conversation.pdf" href="downloads/family-captain/Family_Captain_Task_PDFs/W4_T2_Prep_One_Hard_Conversation.pdf" target="_blank" rel="noopener" title="Open W4.T2 PDF">
             <div class="task-num">T2</div>
             <div class="task-name">Prep One Hard Conversation</div>
             <div class="task-actions"><button class="task-toggle" type="button" data-toggle="4.2" aria-label="Mark T2 shipped">●</button></div>
           </a>
-          <a class="task-circle" data-key="4.3" data-tier="C" data-pdf="downloads/family-captain/Family_Captain_Task_PDFs/W4_T3_Letter_to_Your_Wife.pdf" href="downloads/family-captain/Family_Captain_Task_PDFs/W4_T3_Letter_to_Your_Wife.pdf" target="_blank" rel="noopener" title="Open W4.T3 PDF — tier C (Specialty)">
-            <span class="tier-badge" aria-label="Tier C: Specialty">C</span>
+          <a class="task-circle" data-key="4.3" data-pdf="downloads/family-captain/Family_Captain_Task_PDFs/W4_T3_Letter_to_Your_Wife.pdf" href="downloads/family-captain/Family_Captain_Task_PDFs/W4_T3_Letter_to_Your_Wife.pdf" target="_blank" rel="noopener" title="Open W4.T3 PDF">
             <div class="task-num">T3</div>
             <div class="task-name">Letter to Your Wife</div>
             <div class="task-actions"><button class="task-toggle" type="button" data-toggle="4.3" aria-label="Mark T3 shipped">●</button></div>
@@ -1562,20 +1514,17 @@ document.addEventListener('click', function(e) {
         <h3>Fathering</h3>
         <div class="week-tag">Train up your children. AI assists; the captain disciples.</div>
         <div class="task-circles">
-          <a class="task-circle" data-key="5.1" data-tier="A" data-pdf="downloads/family-captain/Family_Captain_Task_PDFs/W5_T1_3_Questions_for_the_Dinner_Table.pdf" href="downloads/family-captain/Family_Captain_Task_PDFs/W5_T1_3_Questions_for_the_Dinner_Table.pdf" target="_blank" rel="noopener" title="Open W5.T1 PDF — tier A (Recommended)">
-            <span class="tier-badge" aria-label="Tier A: Recommended">A</span>
+          <a class="task-circle" data-key="5.1" data-pdf="downloads/family-captain/Family_Captain_Task_PDFs/W5_T1_3_Questions_for_the_Dinner_Table.pdf" href="downloads/family-captain/Family_Captain_Task_PDFs/W5_T1_3_Questions_for_the_Dinner_Table.pdf" target="_blank" rel="noopener" title="Open W5.T1 PDF">
             <div class="task-num">T1</div>
             <div class="task-name">3 Questions for the Dinner Table</div>
             <div class="task-actions"><button class="task-toggle" type="button" data-toggle="5.1" aria-label="Mark T1 shipped">●</button></div>
           </a>
-          <a class="task-circle" data-key="5.2" data-tier="B" data-pdf="downloads/family-captain/Family_Captain_Task_PDFs/W5_T2_Build_a_Family_Rhythm_Asset.pdf" href="downloads/family-captain/Family_Captain_Task_PDFs/W5_T2_Build_a_Family_Rhythm_Asset.pdf" target="_blank" rel="noopener" title="Open W5.T2 PDF — tier B (Deeper)">
-            <span class="tier-badge" aria-label="Tier B: Deeper">B</span>
+          <a class="task-circle" data-key="5.2" data-pdf="downloads/family-captain/Family_Captain_Task_PDFs/W5_T2_Build_a_Family_Rhythm_Asset.pdf" href="downloads/family-captain/Family_Captain_Task_PDFs/W5_T2_Build_a_Family_Rhythm_Asset.pdf" target="_blank" rel="noopener" title="Open W5.T2 PDF">
             <div class="task-num">T2</div>
             <div class="task-name">Build a Family Rhythm Asset</div>
             <div class="task-actions"><button class="task-toggle" type="button" data-toggle="5.2" aria-label="Mark T2 shipped">●</button></div>
           </a>
-          <a class="task-circle" data-key="5.3" data-tier="S" data-pdf="downloads/family-captain/Family_Captain_Task_PDFs/W5_T3_Write_Your_Family_AI_Policy.pdf" href="downloads/family-captain/Family_Captain_Task_PDFs/W5_T3_Write_Your_Family_AI_Policy.pdf" target="_blank" rel="noopener" title="Open W5.T3 PDF — tier S (Essential)">
-            <span class="tier-badge" aria-label="Tier S: Essential">S</span>
+          <a class="task-circle" data-key="5.3" data-pdf="downloads/family-captain/Family_Captain_Task_PDFs/W5_T3_Write_Your_Family_AI_Policy.pdf" href="downloads/family-captain/Family_Captain_Task_PDFs/W5_T3_Write_Your_Family_AI_Policy.pdf" target="_blank" rel="noopener" title="Open W5.T3 PDF">
             <div class="task-num">T3</div>
             <div class="task-name">Write Your Family AI Policy</div>
             <div class="task-actions"><button class="task-toggle" type="button" data-toggle="5.3" aria-label="Mark T3 shipped">●</button></div>
@@ -1589,20 +1538,17 @@ document.addEventListener('click', function(e) {
         <h3>Finance</h3>
         <div class="week-tag">Captain of the storehouse. Tithe first, then everything else.</div>
         <div class="task-circles">
-          <a class="task-circle" data-key="6.1" data-tier="A" data-pdf="downloads/family-captain/Family_Captain_Task_PDFs/W6_T1_Tithe-First_Budget.pdf" href="downloads/family-captain/Family_Captain_Task_PDFs/W6_T1_Tithe-First_Budget.pdf" target="_blank" rel="noopener" title="Open W6.T1 PDF — tier A (Recommended)">
-            <span class="tier-badge" aria-label="Tier A: Recommended">A</span>
+          <a class="task-circle" data-key="6.1" data-pdf="downloads/family-captain/Family_Captain_Task_PDFs/W6_T1_Tithe-First_Budget.pdf" href="downloads/family-captain/Family_Captain_Task_PDFs/W6_T1_Tithe-First_Budget.pdf" target="_blank" rel="noopener" title="Open W6.T1 PDF">
             <div class="task-num">T1</div>
             <div class="task-name">Tithe-First Budget</div>
             <div class="task-actions"><button class="task-toggle" type="button" data-toggle="6.1" aria-label="Mark T1 shipped">●</button></div>
           </a>
-          <a class="task-circle" data-key="6.2" data-tier="B" data-pdf="downloads/family-captain/Family_Captain_Task_PDFs/W6_T2_Subscription_Audit.pdf" href="downloads/family-captain/Family_Captain_Task_PDFs/W6_T2_Subscription_Audit.pdf" target="_blank" rel="noopener" title="Open W6.T2 PDF — tier B (Deeper)">
-            <span class="tier-badge" aria-label="Tier B: Deeper">B</span>
+          <a class="task-circle" data-key="6.2" data-pdf="downloads/family-captain/Family_Captain_Task_PDFs/W6_T2_Subscription_Audit.pdf" href="downloads/family-captain/Family_Captain_Task_PDFs/W6_T2_Subscription_Audit.pdf" target="_blank" rel="noopener" title="Open W6.T2 PDF">
             <div class="task-num">T2</div>
             <div class="task-name">Subscription Audit</div>
             <div class="task-actions"><button class="task-toggle" type="button" data-toggle="6.2" aria-label="Mark T2 shipped">●</button></div>
           </a>
-          <a class="task-circle" data-key="6.3" data-tier="B" data-pdf="downloads/family-captain/Family_Captain_Task_PDFs/W6_T3_Legacy_Plan_Starter.pdf" href="downloads/family-captain/Family_Captain_Task_PDFs/W6_T3_Legacy_Plan_Starter.pdf" target="_blank" rel="noopener" title="Open W6.T3 PDF — tier B (Deeper)">
-            <span class="tier-badge" aria-label="Tier B: Deeper">B</span>
+          <a class="task-circle" data-key="6.3" data-pdf="downloads/family-captain/Family_Captain_Task_PDFs/W6_T3_Legacy_Plan_Starter.pdf" href="downloads/family-captain/Family_Captain_Task_PDFs/W6_T3_Legacy_Plan_Starter.pdf" target="_blank" rel="noopener" title="Open W6.T3 PDF">
             <div class="task-num">T3</div>
             <div class="task-name">Legacy Plan Starter</div>
             <div class="task-actions"><button class="task-toggle" type="button" data-toggle="6.3" aria-label="Mark T3 shipped">●</button></div>
@@ -1616,20 +1562,17 @@ document.addEventListener('click', function(e) {
         <h3>Sabbath</h3>
         <div class="week-tag">The captain rests. The crew sees a man who isn't running on fumes.</div>
         <div class="task-circles">
-          <a class="task-circle" data-key="7.1" data-tier="A" data-pdf="downloads/family-captain/Family_Captain_Task_PDFs/W7_T1_Plan_Your_Sabbath.pdf" href="downloads/family-captain/Family_Captain_Task_PDFs/W7_T1_Plan_Your_Sabbath.pdf" target="_blank" rel="noopener" title="Open W7.T1 PDF — tier A (Recommended)">
-            <span class="tier-badge" aria-label="Tier A: Recommended">A</span>
+          <a class="task-circle" data-key="7.1" data-pdf="downloads/family-captain/Family_Captain_Task_PDFs/W7_T1_Plan_Your_Sabbath.pdf" href="downloads/family-captain/Family_Captain_Task_PDFs/W7_T1_Plan_Your_Sabbath.pdf" target="_blank" rel="noopener" title="Open W7.T1 PDF">
             <div class="task-num">T1</div>
             <div class="task-name">Plan Your Sabbath</div>
             <div class="task-actions"><button class="task-toggle" type="button" data-toggle="7.1" aria-label="Mark T1 shipped">●</button></div>
           </a>
-          <a class="task-circle" data-key="7.2" data-tier="B" data-pdf="downloads/family-captain/Family_Captain_Task_PDFs/W7_T2_Saturday_Captains_Audit.pdf" href="downloads/family-captain/Family_Captain_Task_PDFs/W7_T2_Saturday_Captains_Audit.pdf" target="_blank" rel="noopener" title="Open W7.T2 PDF — tier B (Deeper)">
-            <span class="tier-badge" aria-label="Tier B: Deeper">B</span>
+          <a class="task-circle" data-key="7.2" data-pdf="downloads/family-captain/Family_Captain_Task_PDFs/W7_T2_Saturday_Captains_Audit.pdf" href="downloads/family-captain/Family_Captain_Task_PDFs/W7_T2_Saturday_Captains_Audit.pdf" target="_blank" rel="noopener" title="Open W7.T2 PDF">
             <div class="task-num">T2</div>
             <div class="task-name">Saturday Captain's Audit</div>
             <div class="task-actions"><button class="task-toggle" type="button" data-toggle="7.2" aria-label="Mark T2 shipped">●</button></div>
           </a>
-          <a class="task-circle" data-key="7.3" data-tier="S" data-pdf="downloads/family-captain/Family_Captain_Task_PDFs/W7_T3_Teach_One_Person_One_Thing.pdf" href="downloads/family-captain/Family_Captain_Task_PDFs/W7_T3_Teach_One_Person_One_Thing.pdf" target="_blank" rel="noopener" title="Open W7.T3 PDF — tier S (Essential)">
-            <span class="tier-badge" aria-label="Tier S: Essential">S</span>
+          <a class="task-circle" data-key="7.3" data-pdf="downloads/family-captain/Family_Captain_Task_PDFs/W7_T3_Teach_One_Person_One_Thing.pdf" href="downloads/family-captain/Family_Captain_Task_PDFs/W7_T3_Teach_One_Person_One_Thing.pdf" target="_blank" rel="noopener" title="Open W7.T3 PDF">
             <div class="task-num">T3</div>
             <div class="task-name">Teach One Person One Thing</div>
             <div class="task-actions"><button class="task-toggle" type="button" data-toggle="7.3" aria-label="Mark T3 shipped">●</button></div>
@@ -1688,6 +1631,70 @@ document.addEventListener('click', function(e) {
         <div class="badge-name">Captain Sent</div>
         <div class="badge-desc">All 21 tasks shipped.</div>
       </div>
+  </div>
+</section>
+
+
+<!-- ── NOTEBOOKLM CHART MEDIA · VIDEO (below badges) ── -->
+<section class="module-container" id="explainer" style="padding-top:0; margin-top:32px;">
+  <div class="section-kicker">Watch</div>
+  <h2 class="section-title">Charting the Course &mdash; explainer.</h2>
+  <p class="section-sub">A short visual walkthrough of the 7-week framework &mdash; the rhythm, the weekly themes, and what commissioning looks like.</p>
+  <div class="fc-video">
+    <video controls preload="metadata" playsinline poster="assets/video/posters/family-captain-voyage.jpg">
+      <source src="assets/video/family-captain-voyage.mp4" type="video/mp4">
+      <a href="assets/video/family-captain-voyage.mp4">Open the explainer video</a> &mdash; your browser can&rsquo;t play it inline.
+    </video>
+    <p class="fc-media-actions">
+      <a href="assets/video/family-captain-voyage.mp4" download>&darr; Download video (MP4)</a>
+    </p>
+    <details class="fc-video-chapters">
+      <summary>Chapters (7)</summary>
+      <ul>
+      <li><button type="button" class="ch-jump" data-time="0"><span class="ch-time">00:00</span> <span class="ch-label">Welcome — captains build, not compare</span></button></li>
+      <li><button type="button" class="ch-jump" data-time="67"><span class="ch-time">01:07</span> <span class="ch-label">Section 1 — Charting a sustainable course</span></button></li>
+      <li><button type="button" class="ch-jump" data-time="103"><span class="ch-time">01:43</span> <span class="ch-label">Section 2 — Foundations of the captain (W1-3)</span></button></li>
+      <li><button type="button" class="ch-jump" data-time="169"><span class="ch-time">02:49</span> <span class="ch-label">Section 3 — Leading the crew (W4-5)</span></button></li>
+      <li><button type="button" class="ch-jump" data-time="224"><span class="ch-time">03:44</span> <span class="ch-label">Section 4 — The Sabbath rest</span></button></li>
+      <li><button type="button" class="ch-jump" data-time="273"><span class="ch-time">04:33</span> <span class="ch-label">Section 5 — Task and drill cadence</span></button></li>
+      <li><button type="button" class="ch-jump" data-time="366"><span class="ch-time">06:06</span> <span class="ch-label">Section 6 — The captain's commissioning</span></button></li>
+      </ul>
+    </details>
+  </div>
+</section>
+
+
+<!-- ── NOTEBOOKLM CHART MEDIA · DEBATE AUDIO (just above drills) ── -->
+<section class="module-container" id="debate" style="padding-top:0; margin-top:32px;">
+  <div class="section-kicker">Listen</div>
+  <h2 class="section-title">Is the 49-day chart sustainable?</h2>
+  <p class="section-sub">A 23-minute debate &mdash; Marcus and Elias pressure-test the 7-week structure. Is the rhythm realistic? Where do captains burn out? What separates the captains who finish from those who don&rsquo;t?</p>
+  <div class="fc-audio">
+    <h3>The Debate &middot; audio</h3>
+    <p class="lede">Two senior officers, opposing positions, one chart on the table.</p>
+    <audio controls preload="metadata" src="assets/audio/family-captain-voyage.m4a">
+      <a href="assets/audio/family-captain-voyage.m4a">Download the audio</a> &mdash; your browser can&rsquo;t play it inline.
+    </audio>
+    <p class="fc-media-actions">
+      <a href="assets/audio/family-captain-voyage.m4a" download>&darr; Download audio (M4A)</a>
+    </p>
+    <details class="fc-audio-chapters">
+      <summary>Chapters (12)</summary>
+      <ul>
+      <li><button type="button" class="ch-jump" data-time="0"><span class="ch-time">00:00</span> <span class="ch-label">The debate begins — Marcus and Elias</span></button></li>
+      <li><button type="button" class="ch-jump" data-time="78"><span class="ch-time">01:18</span> <span class="ch-label">Opening positions — sustainable triage vs unsustainable sprint</span></button></li>
+      <li><button type="button" class="ch-jump" data-time="155"><span class="ch-time">02:35</span> <span class="ch-label">Tiered triage protocol — S/A/B/C as the cure for paralysis</span></button></li>
+      <li><button type="button" class="ch-jump" data-time="290"><span class="ch-time">04:50</span> <span class="ch-label">But all 21 must ship — is the triage real?</span></button></li>
+      <li><button type="button" class="ch-jump" data-time="360"><span class="ch-time">06:00</span> <span class="ch-label">Pre-flight checklist vs deep introspection</span></button></li>
+      <li><button type="button" class="ch-jump" data-time="480"><span class="ch-time">08:00</span> <span class="ch-label">The 49 drills + the 90-second boundary</span></button></li>
+      <li><button type="button" class="ch-jump" data-time="678"><span class="ch-time">11:18</span> <span class="ch-label">Sacred vs functional — should they integrate?</span></button></li>
+      <li><button type="button" class="ch-jump" data-time="738"><span class="ch-time">12:18</span> <span class="ch-label">Seven-day domain whiplash</span></button></li>
+      <li><button type="button" class="ch-jump" data-time="840"><span class="ch-time">14:00</span> <span class="ch-label">AI as force multiplier — the GPS effect</span></button></li>
+      <li><button type="button" class="ch-jump" data-time="1045"><span class="ch-time">17:25</span> <span class="ch-label">The Sabbath protocol — operationalizing rest</span></button></li>
+      <li><button type="button" class="ch-jump" data-time="1195"><span class="ch-time">19:55</span> <span class="ch-label">Closing arguments</span></button></li>
+      <li><button type="button" class="ch-jump" data-time="1338"><span class="ch-time">22:18</span> <span class="ch-label">The two Timothy 2:2 test — multiplication is the real proof</span></button></li>
+      </ul>
+    </details>
   </div>
 </section>
 

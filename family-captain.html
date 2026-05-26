@@ -1006,15 +1006,18 @@
     text-decoration: underline;
   }
 
-  /* Audio chapter index — collapsed by default; click summary to expand,
-     click a chapter button to seek the parent <audio> to that timestamp. */
-  body[data-track="family-captain"] .fc-audio-chapters {
+  /* Media chapter index — collapsed by default; click summary to expand,
+     click a chapter button to seek the parent <audio>/<video> to that
+     timestamp. Audio uses bronze accent, video uses slate accent. */
+  body[data-track="family-captain"] .fc-audio-chapters,
+  body[data-track="family-captain"] .fc-video-chapters {
     margin-top: 10px;
     border: 1px solid #D8D5C8;
     border-radius: 6px;
     background: #FAFAF7;
   }
-  body[data-track="family-captain"] .fc-audio-chapters summary {
+  body[data-track="family-captain"] .fc-audio-chapters summary,
+  body[data-track="family-captain"] .fc-video-chapters summary {
     padding: 8px 14px;
     font-size: 0.78rem;
     font-weight: 700;
@@ -1023,21 +1026,24 @@
     list-style: none;
     user-select: none;
   }
-  body[data-track="family-captain"] .fc-audio-chapters summary::-webkit-details-marker { display: none; }
-  body[data-track="family-captain"] .fc-audio-chapters summary::before {
-    content: "▸ ";
-    color: #CE8E31;
-    font-weight: 900;
-  }
-  body[data-track="family-captain"] .fc-audio-chapters[open] summary::before { content: "▾ "; }
+  body[data-track="family-captain"] .fc-audio-chapters summary::-webkit-details-marker,
+  body[data-track="family-captain"] .fc-video-chapters summary::-webkit-details-marker { display: none; }
+  body[data-track="family-captain"] .fc-audio-chapters summary::before { content: "▸ "; color: #CE8E31; font-weight: 900; }
+  body[data-track="family-captain"] .fc-video-chapters summary::before { content: "▸ "; color: #1E293B; font-weight: 900; }
+  body[data-track="family-captain"] .fc-audio-chapters[open] summary::before,
+  body[data-track="family-captain"] .fc-video-chapters[open] summary::before { content: "▾ "; }
   body[data-track="family-captain"] .fc-audio-chapters summary:hover { color: #CE8E31 !important; }
-  body[data-track="family-captain"] .fc-audio-chapters ul {
+  body[data-track="family-captain"] .fc-video-chapters summary:hover { color: #1E293B !important; }
+  body[data-track="family-captain"] .fc-audio-chapters ul,
+  body[data-track="family-captain"] .fc-video-chapters ul {
     list-style: none;
     margin: 0;
     padding: 4px 0 10px;
   }
-  body[data-track="family-captain"] .fc-audio-chapters li { margin: 0; padding: 0; }
-  body[data-track="family-captain"] .fc-audio-chapters .ch-jump {
+  body[data-track="family-captain"] .fc-audio-chapters li,
+  body[data-track="family-captain"] .fc-video-chapters li { margin: 0; padding: 0; }
+  body[data-track="family-captain"] .fc-audio-chapters .ch-jump,
+  body[data-track="family-captain"] .fc-video-chapters .ch-jump {
     display: block;
     width: 100%;
     text-align: left;
@@ -1055,16 +1061,22 @@
     border-left-color: #CE8E31;
     color: #CE8E31 !important;
   }
-  body[data-track="family-captain"] .fc-audio-chapters .ch-time {
+  body[data-track="family-captain"] .fc-video-chapters .ch-jump:hover {
+    background: rgba(30,41,59,0.06);
+    border-left-color: #1E293B;
+    color: #1E293B !important;
+  }
+  body[data-track="family-captain"] .fc-audio-chapters .ch-time { color: #CE8E31 !important; }
+  body[data-track="family-captain"] .fc-video-chapters .ch-time { color: #1E293B !important; }
+  body[data-track="family-captain"] .fc-audio-chapters .ch-time,
+  body[data-track="family-captain"] .fc-video-chapters .ch-time {
     display: inline-block;
     font-family: ui-monospace, "SF Mono", monospace;
     font-weight: 700;
-    color: #CE8E31 !important;
     min-width: 50px;
   }
-  body[data-track="family-captain"] .fc-audio-chapters .ch-label {
-    color: inherit !important;
-  }
+  body[data-track="family-captain"] .fc-audio-chapters .ch-label,
+  body[data-track="family-captain"] .fc-video-chapters .ch-label { color: inherit !important; }
 
   /* NotebookLM AUDIO podcast — same surface as video, full-width audio control */
   body[data-track="family-captain"] .fc-audio {
@@ -1225,20 +1237,22 @@
   }
 </style>
 <script>
-// Audio chapter jump handler (FC track 2026-05-26). Delegates one click
+// Media chapter jump handler (FC track 2026-05-26). Delegates one click
 // listener at document level so it works for any .ch-jump button on the
 // page, including those inside <details> that were collapsed at load time.
+// Walks up to the parent .fc-audio OR .fc-video container, then seeks
+// the <audio>/<video> inside.
 document.addEventListener('click', function(e) {
-  var btn = e.target.closest('.fc-audio-chapters .ch-jump');
+  var btn = e.target.closest('.fc-audio-chapters .ch-jump, .fc-video-chapters .ch-jump');
   if (!btn) return;
   var t = parseFloat(btn.dataset.time || '0');
-  var container = btn.closest('.fc-audio');
+  var container = btn.closest('.fc-audio, .fc-video');
   if (!container) return;
-  var audio = container.querySelector('audio');
-  if (!audio) return;
+  var media = container.querySelector('audio, video');
+  if (!media) return;
   try {
-    audio.currentTime = t;
-    var p = audio.play();
+    media.currentTime = t;
+    var p = media.play();
     if (p && typeof p.catch === 'function') { p.catch(function(){}); }
   } catch(_) {}
 });
@@ -1350,6 +1364,17 @@ document.addEventListener('click', function(e) {
     <p class="fc-media-actions">
       <a href="assets/video/family-captain-bootcamp.mp4" download>&darr; Download video (MP4)</a>
     </p>
+    <details class="fc-video-chapters">
+      <summary>Chapters (6)</summary>
+      <ul>
+      <li><button type="button" class="ch-jump" data-time="0"><span class="ch-time">00:00</span> <span class="ch-label">Welcome — stepping onto the bridge</span></button></li>
+      <li><button type="button" class="ch-jump" data-time="43"><span class="ch-time">00:43</span> <span class="ch-label">Part 1 — Mission and the helm</span></button></li>
+      <li><button type="button" class="ch-jump" data-time="120"><span class="ch-time">02:00</span> <span class="ch-label">Part 2 — AI as a trusted aid</span></button></li>
+      <li><button type="button" class="ch-jump" data-time="158"><span class="ch-time">02:38</span> <span class="ch-label">Part 3 — The Heartbeat operating rhythm</span></button></li>
+      <li><button type="button" class="ch-jump" data-time="245"><span class="ch-time">04:05</span> <span class="ch-label">Part 4 — The 7-week shape</span></button></li>
+      <li><button type="button" class="ch-jump" data-time="308"><span class="ch-time">05:08</span> <span class="ch-label">Part 5 — Drafting your first charter</span></button></li>
+      </ul>
+    </details>
   </div>
   <div class="fc-audio">
     <h3>The Deep Dive &middot; framework overview</h3>

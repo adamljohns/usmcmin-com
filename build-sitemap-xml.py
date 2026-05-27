@@ -103,7 +103,7 @@ def collect():
         if rel.startswith(".") or rel in EXCLUDE:
             continue
         # Skip the redirect-only stubs — sitemap should point to canonical URLs
-        if rel in {"scorecard.html", "scorecard-table.html"}:
+        if rel in {"scorecard.html", "scorecard-table.html", "fitness/fitness.html"}:
             continue
         prio, freq = priority_for(rel)
         urls.append((rel, prio, freq))

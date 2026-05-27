@@ -23,6 +23,58 @@ MAX_AMERICA_FIRST = 40
 # RESOLUTE Local civic-tool links by jurisdiction. Local officials whose city
 # has a live RESOLUTE Local page get a banner linking to it (live agendas +
 # briefs + how-to-weigh-in). Add an entry per city as the tool expands.
+# --- Civic-tool cross-data (resolute-local) ----------------------------
+# Lazy-loaded once per generate-profiles.py run. Cross-references the
+# RESOLUTE Local civic-tool data (~/.openclaw/workspace/resolute-local/
+# data/fredericksburg.json) to enrich FXBG council member profiles with
+# their actual recorded voting record (votes participated, dissents,
+# specific motions they voted against the majority on). Added 2026-05-27
+# for Adam's "make it really really helpful to people who desire to know
+# what happens in their city" bidirectional-linkage ask.
+import os as _os
+_CIVIC_VOTING_CACHE = {}  # surname.lower() -> {participated, majority, dissents:[...]}
+_CIVIC_VOTING_LOADED = False
+
+def _load_civic_voting():
+    """Read resolute-local data once + build a surname→voting-stats map.
+    Silently returns empty if the cross-repo file doesn't exist (e.g.,
+    when generate-profiles.py runs in isolation)."""
+    global _CIVIC_VOTING_LOADED
+    if _CIVIC_VOTING_LOADED:
+        return _CIVIC_VOTING_CACHE
+    _CIVIC_VOTING_LOADED = True
+    path = _os.path.expanduser('~/.openclaw/workspace/resolute-local/data/fredericksburg.json')
+    if not _os.path.exists(path):
+        return _CIVIC_VOTING_CACHE
+    try:
+        import json as _j
+        data = _j.load(open(path))
+    except Exception:
+        return _CIVIC_VOTING_CACHE
+    for m in data.get('meetings', []):
+        for r in m.get('resolutions_voted', []) or []:
+            ayes_n = r.get('ayes_count', 0)
+            nays_n = r.get('nays_count', 0)
+            majority_is_ayes = ayes_n >= nays_n
+            for who in (r.get('ayes') or []):
+                s = _CIVIC_VOTING_CACHE.setdefault(who.lower(),
+                    {'participated':0,'ayes':0,'nays':0,'abstain':0,'majority':0,'dissents':[]})
+                s['participated'] += 1; s['ayes'] += 1
+                if majority_is_ayes: s['majority'] += 1
+                else: s['dissents'].append({'date': m.get('date'), 'tally': f'{ayes_n}-{nays_n}', 'title': (r.get('title') or '(motion)')[:100], 'side':'aye-in-minority'})
+            for who in (r.get('nays') or []):
+                s = _CIVIC_VOTING_CACHE.setdefault(who.lower(),
+                    {'participated':0,'ayes':0,'nays':0,'abstain':0,'majority':0,'dissents':[]})
+                s['participated'] += 1; s['nays'] += 1
+                if not majority_is_ayes: s['majority'] += 1
+                else: s['dissents'].append({'date': m.get('date'), 'tally': f'{ayes_n}-{nays_n}', 'title': (r.get('title') or '(motion)')[:100], 'side':'nay-in-minority'})
+            for who in (r.get('abstain') or []):
+                s = _CIVIC_VOTING_CACHE.setdefault(who.lower(),
+                    {'participated':0,'ayes':0,'nays':0,'abstain':0,'majority':0,'dissents':[]})
+                s['participated'] += 1; s['abstain'] += 1
+    return _CIVIC_VOTING_CACHE
+
+
 CIVIC_TOOL_MAP = {
     'City of Fredericksburg': 'https://adamljohns.github.io/resolute-local/city/fredericksburg.html',
 }
@@ -923,6 +975,69 @@ def generate_profile(candidate, categories, meta, nav=None):
             '</a>'
         )
 
+    # CIVIC VOTING RECORD — pulled from RESOLUTE Local minutes data
+    # (cross-repo). For FXBG council members (and similar local
+    # officials in cities where we have minutes-parsed data), surface
+    # their actual recorded voting record from official city minutes:
+    # how many votes they participated in, how often they were in the
+    # majority, and the specific motions where they dissented. Added
+    # 2026-05-27 as the inbound side of the bidirectional linkage.
+    civic_voting_html = ''
+    if _civic_url:  # only attempt for officials in cities with civic-tool data
+        _voting = _load_civic_voting()
+        _cand_name = (c.get('name') or '').strip()
+        _cand_parts = _cand_name.split()
+        _cand_last = ''
+        if _cand_parts:
+            _cand_last = _cand_parts[-1].rstrip('.,').strip()
+            if _cand_last.lower() in ('jr', 'sr', 'ii', 'iii', 'iv') and len(_cand_parts) >= 2:
+                _cand_last = _cand_parts[-2].rstrip('.,').strip()
+        _stats = _voting.get(_cand_last.lower(), {}) if _cand_last else {}
+        if _stats.get('participated', 0) > 0:
+            _participated = _stats['participated']
+            _maj = _stats.get('majority', 0)
+            _maj_pct = round(100 * _maj / _participated) if _participated else 0
+            _dissents = _stats.get('dissents', [])
+            _dissent_count = len(_dissents)
+            _accent_color = '#ffb84d' if _dissent_count > 0 else '#66bb6a'
+            _dissents_html = ''
+            if _dissents:
+                _dissents_html = (
+                    '<div style="margin-top:8px;font-size:0.82rem;color:var(--gray,#a8b0bc);">'
+                    '<strong style="color:#ffb84d;">Notable dissents (voted against the majority):</strong>'
+                    '<ul style="margin:4px 0 0;padding-left:18px;line-height:1.5;">'
+                )
+                for _d in _dissents[:5]:
+                    _dissents_html += (
+                        f'<li><span style="color:#ffb84d;font-weight:700;">{_d["tally"]}</span> · '
+                        f'<span style="font-size:0.78rem;color:var(--gray);">{_d["date"]}</span> — '
+                        f'{_d["title"]}</li>'
+                    )
+                if len(_dissents) > 5:
+                    _dissents_html += f'<li style="font-style:italic;">+{len(_dissents)-5} more in the city minutes →</li>'
+                _dissents_html += '</ul></div>'
+            else:
+                _dissents_html = (
+                    '<div style="margin-top:6px;font-size:0.82rem;color:#66bb6a;">'
+                    '✓ Voted with the majority on every recorded motion to date.'
+                    '</div>'
+                )
+            civic_voting_html = (
+                '<div style="margin-top:10px;padding:12px 14px;background:rgba(76,175,80,0.06);'
+                f'border-left:3px solid {_accent_color};border-radius:0 4px 4px 0;font-size:0.88rem;">'
+                '<div style="font-size:0.72rem;font-weight:700;letter-spacing:0.6px;text-transform:uppercase;'
+                f'color:{_accent_color};margin-bottom:6px;">📊 Live City Council Voting Record</div>'
+                f'<div>Recorded votes (from official city minutes): <strong>{_participated}</strong> · '
+                f'In majority: <strong>{_maj}</strong> ({_maj_pct}%) · '
+                f'Dissents: <strong style="color:{_accent_color};">{_dissent_count}</strong></div>'
+                f'{_dissents_html}'
+                f'<div style="margin-top:8px;font-size:0.74rem;color:var(--gray,#8a93a0);">'
+                f'Source: parsed official city minutes via the RESOLUTE Local civic tool. '
+                f'<a href="{_civic_url}#voting-record" target="_blank" rel="noopener" style="color:#D4AF37;">'
+                f'See the full per-member voting comparison ↗</a></div>'
+                '</div>'
+            )
+
     # FORMER / LOST banner: when c.status is non-active, render a clear
     # banner at the top of the profile so visitors immediately know this
     # person isn't currently in office. Profile remains live + searchable
@@ -1714,6 +1829,7 @@ def generate_profile(candidate, categories, meta, nav=None):
     {candidacy_banner_html}
     {map_link_html}
     {civic_tool_html}
+    {civic_voting_html}
   </div>
 
   <div id="prof-score" class="prof-total">

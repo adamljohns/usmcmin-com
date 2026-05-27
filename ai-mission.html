@@ -167,9 +167,21 @@
     .mission-hero::before {
       content: ""; position: absolute; inset: 0;
       background:
-        radial-gradient(circle at 20% 0%, rgba(206,142,49,0.18) 0%, rgba(206,142,49,0) 40%),
-        radial-gradient(circle at 80% 12%, rgba(59,89,152,0.16) 0%, rgba(59,89,152,0) 42%),
-        radial-gradient(circle at 50% 100%, rgba(184,49,47,0.10) 0%, rgba(184,49,47,0) 38%);
+        radial-gradient(circle at 20% 0%, rgba(206,142,49,0.28) 0%, rgba(206,142,49,0) 42%),
+        radial-gradient(circle at 80% 12%, rgba(59,89,152,0.22) 0%, rgba(59,89,152,0) 44%),
+        radial-gradient(circle at 50% 100%, rgba(184,49,47,0.16) 0%, rgba(184,49,47,0) 40%);
+      z-index: -1;
+      pointer-events: none;
+    }
+    /* Subtle brand-shield watermark behind hero text */
+    .mission-hero::after {
+      content: "";
+      position: absolute; inset: 0;
+      background-image: url('assets/icons/shield-leader.png');
+      background-repeat: no-repeat;
+      background-position: center 78px;
+      background-size: 240px 240px;
+      opacity: 0.04;
       z-index: -1;
       pointer-events: none;
     }
@@ -235,10 +247,16 @@
       max-width: 980px;
     }
     .cred-chip {
-      border: 1px solid var(--border);
+      border: 1px solid rgba(206,142,49,0.25);
       border-radius: 10px;
       padding: 12px 14px;
-      background: rgba(206,142,49,0.04);
+      background: linear-gradient(180deg, rgba(206,142,49,0.06) 0%, rgba(206,142,49,0.01) 100%);
+      border-left: 3px solid var(--gold);
+      transition: transform 0.18s ease, background 0.18s ease;
+    }
+    .cred-chip:hover {
+      background: linear-gradient(180deg, rgba(206,142,49,0.12) 0%, rgba(206,142,49,0.04) 100%);
+      transform: translateY(-1px);
     }
     .cred-chip .cc-tag {
       font-weight: 800; font-size: 0.92rem; color: var(--gold);
@@ -342,7 +360,12 @@
       position: relative;
       display: flex; flex-direction: column;
     }
-    .price-card.featured { border-color: var(--gold); background: rgba(206,142,49,0.06); }
+    .price-card.featured {
+      border-color: var(--gold);
+      background:
+        linear-gradient(180deg, rgba(206,142,49,0.14) 0%, rgba(206,142,49,0.04) 100%);
+      box-shadow: 0 4px 16px rgba(206,142,49,0.08);
+    }
     .price-card.featured::after {
       content: "INTRO COHORT";
       position: absolute; top: -10px; right: 18px;
@@ -445,6 +468,122 @@
     }
     .step-icon-brand { width: 56px; height: 56px; }
     .step-icon-brand img { width: 56px; height: 56px; }
+
+    /* Scripture pullquote — large italic serif framed in gold, mirrors FC's
+       .scripture pattern but centered + more visually prominent. */
+    .watchman-pullquote {
+      max-width: 820px; margin: 36px auto 8px;
+      padding: 24px 28px 22px;
+      border-left: 3px solid var(--gold);
+      border-right: 3px solid var(--gold);
+      background: linear-gradient(180deg, rgba(206,142,49,0.08) 0%, rgba(206,142,49,0.02) 100%);
+      border-radius: 6px;
+      position: relative;
+    }
+    .watchman-pullquote::before {
+      content: "\201C";
+      position: absolute; top: 4px; left: 18px;
+      font-family: Georgia, serif; font-size: 5rem;
+      color: var(--gold); opacity: 0.22;
+      line-height: 1;
+    }
+    .watchman-pullquote p {
+      font-family: Georgia, serif;
+      font-size: clamp(1.1rem, 2vw, 1.36rem);
+      line-height: 1.5;
+      font-style: italic;
+      color: var(--text);
+      margin: 0 0 10px;
+      text-align: center;
+    }
+    .watchman-pullquote cite {
+      display: block; text-align: center;
+      font-size: 0.86rem;
+      font-style: normal;
+    }
+    .watchman-pullquote cite a { color: var(--gold); text-decoration: underline; }
+
+    /* Block-bar — six colored chips above the syllabus, one per block (v6
+       upgrade: small brand-shield icon at left of each chip + stronger
+       saturation). */
+    .block-bar {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+      gap: 10px;
+      max-width: 1180px; margin: 0 auto 22px;
+    }
+    .block-pill {
+      display: flex; align-items: center; gap: 10px;
+      padding: 10px 14px;
+      border: 1px solid; border-radius: 10px;
+      font-size: 0.82rem;
+      text-align: left;
+    }
+    .block-pill .bp-icon {
+      width: 32px; height: 32px; flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .block-pill .bp-icon img {
+      width: 32px; height: 32px; object-fit: contain; display: block;
+      filter: drop-shadow(0 1px 2px rgba(0,0,0,0.3));
+    }
+    .block-pill .bp-text { display: flex; flex-direction: column; gap: 1px; }
+    .block-pill .bp-id { font-size: 0.62rem; letter-spacing: 0.16em; font-weight: 700; opacity: 0.9; }
+    .block-pill .bp-name { font-size: 0.92rem; font-weight: 800; line-height: 1.15; }
+    .block-pill .bp-range { font-size: 0.68rem; opacity: 0.75; }
+
+    /* Materials / Downloads section — mirrors FC's dl-card pattern.
+       Each card is a placeholder for a deliverable that comes with the
+       cohort (Workbook, Master doc, Drills PDF, NotebookLM media, etc.),
+       all marked "Coming with cohort kickoff" until authored. */
+    .materials-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 14px;
+      max-width: 1100px; margin: 0 auto;
+    }
+    .materials-card {
+      background: rgba(255,255,255,0.025);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 18px 18px 16px;
+      display: flex; flex-direction: column; gap: 8px;
+      position: relative;
+      transition: background 0.18s ease, transform 0.18s ease;
+    }
+    .materials-card:hover {
+      background: rgba(255,255,255,0.05);
+      transform: translateY(-2px);
+    }
+    .materials-card .mc-icon {
+      width: 44px; height: 44px;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .materials-card .mc-icon img {
+      width: 44px; height: 44px; object-fit: contain; display: block;
+    }
+    .materials-card h3 {
+      margin: 6px 0 2px;
+      font-size: 1.02rem; line-height: 1.25;
+      color: var(--text);
+    }
+    .materials-card .mc-body {
+      font-size: 0.84rem; color: var(--gray); line-height: 1.5;
+      flex: 1; margin: 0 0 10px;
+    }
+    .materials-card .mc-status {
+      font-size: 0.7rem; letter-spacing: 0.14em; text-transform: uppercase;
+      font-weight: 700;
+      color: var(--gold);
+      padding: 4px 10px;
+      border: 1px solid rgba(206,142,49,0.4);
+      border-radius: 999px;
+      align-self: flex-start;
+      background: rgba(206,142,49,0.08);
+    }
+    .materials-card .mc-status.is-live {
+      color: #6BA368; border-color: rgba(107,163,104,0.5); background: rgba(107,163,104,0.08);
+    }
 
     /* Section spacing + alternating background variation for visual rhythm */
     .mission-section { padding: 56px 24px; position: relative; }
@@ -569,6 +708,12 @@
         <p>Pastor, mentor, ministry leader, or veteran with a next mission &mdash; you&rsquo;re here because of 2 Timothy 2:2: what you have learned, you commit to faithful men who will be able to teach others also.</p>
       </div>
     </div>
+
+    <!-- Scripture pullquote — the watchman framing in Ezekiel's own words -->
+    <blockquote class="watchman-pullquote">
+      <p>&ldquo;So you, son of man, I have made a watchman for the house of Israel; therefore you shall hear a word from My mouth and warn them for Me.&rdquo;</p>
+      <cite><a href="https://usmcmin.org/bible.html?ref=Ezekiel%2033:7" target="_blank" rel="noopener">Ezekiel 33:7 &uarr;</a></cite>
+    </blockquote>
   </div>
 </section>
 
@@ -578,12 +723,54 @@
   <h2 class="section-title" style="text-align:center">Twelve weeks of structured work, one signed charter at the end.</h2>
   <p class="section-sub" style="text-align:center;max-width:860px;margin:0 auto 22px">Three tasks each week, twenty to thirty minutes per task &mdash; six blocks across the twelve weeks. The Business block runs the longest because that&rsquo;s where most men in this cohort are spending most of their hours. Click any week to open its page.</p>
   <div class="block-bar" aria-label="Six blocks across twelve weeks">
-      <div class="block-pill" style="background:#CE8E311A; border-color:#CE8E31; color:#CE8E31;"><span class="bp-id">BLOCK I</span><span class="bp-name">Foundation</span><span class="bp-range">W1–2</span></div>
-      <div class="block-pill" style="background:#B8966B1A; border-color:#B8966B; color:#B8966B;"><span class="bp-id">BLOCK II</span><span class="bp-name">Home Mastery</span><span class="bp-range">W3–4</span></div>
-      <div class="block-pill" style="background:#A8742A1A; border-color:#A8742A; color:#A8742A;"><span class="bp-id">BLOCK III</span><span class="bp-name">Business Layer</span><span class="bp-range">W5–8</span></div>
-      <div class="block-pill" style="background:#3B59981A; border-color:#3B5998; color:#3B5998;"><span class="bp-id">BLOCK IV</span><span class="bp-name">Ministry Layer</span><span class="bp-range">W9–10</span></div>
-      <div class="block-pill" style="background:#5A7A6B1A; border-color:#5A7A6B; color:#5A7A6B;"><span class="bp-id">BLOCK V</span><span class="bp-name">Sovereign Stack</span><span class="bp-range">W11</span></div>
-      <div class="block-pill" style="background:#B8312F1A; border-color:#B8312F; color:#B8312F;"><span class="bp-id">BLOCK VI</span><span class="bp-name">Watchman's Charter</span><span class="bp-range">W12</span></div>
+      <div class="block-pill" style="background:#CE8E311A; border-color:#CE8E31; color:#CE8E31;">
+        <div class="bp-icon"><img src="assets/icons/shield-cross-bible-48.png" alt=""></div>
+        <div class="bp-text">
+          <span class="bp-id">BLOCK I</span>
+          <span class="bp-name">Foundation</span>
+          <span class="bp-range">W1–2</span>
+        </div>
+      </div>
+      <div class="block-pill" style="background:#B8966B1A; border-color:#B8966B; color:#B8966B;">
+        <div class="bp-icon"><img src="assets/icons/shield-home-48.png" alt=""></div>
+        <div class="bp-text">
+          <span class="bp-id">BLOCK II</span>
+          <span class="bp-name">Home Mastery</span>
+          <span class="bp-range">W3–4</span>
+        </div>
+      </div>
+      <div class="block-pill" style="background:#A8742A1A; border-color:#A8742A; color:#A8742A;">
+        <div class="bp-icon"><img src="assets/icons/shield-finance.png" alt=""></div>
+        <div class="bp-text">
+          <span class="bp-id">BLOCK III</span>
+          <span class="bp-name">Business Layer</span>
+          <span class="bp-range">W5–8</span>
+        </div>
+      </div>
+      <div class="block-pill" style="background:#3B59981A; border-color:#3B5998; color:#3B5998;">
+        <div class="bp-icon"><img src="assets/icons/shield-bible.png" alt=""></div>
+        <div class="bp-text">
+          <span class="bp-id">BLOCK IV</span>
+          <span class="bp-name">Ministry Layer</span>
+          <span class="bp-range">W9–10</span>
+        </div>
+      </div>
+      <div class="block-pill" style="background:#5A7A6B1A; border-color:#5A7A6B; color:#5A7A6B;">
+        <div class="bp-icon"><img src="assets/icons/shield-lock-48.png" alt=""></div>
+        <div class="bp-text">
+          <span class="bp-id">BLOCK V</span>
+          <span class="bp-name">Sovereign Stack</span>
+          <span class="bp-range">W11</span>
+        </div>
+      </div>
+      <div class="block-pill" style="background:#B8312F1A; border-color:#B8312F; color:#B8312F;">
+        <div class="bp-icon"><img src="assets/icons/shield-crown.png" alt=""></div>
+        <div class="bp-text">
+          <span class="bp-id">BLOCK VI</span>
+          <span class="bp-name">Watchman's Charter</span>
+          <span class="bp-range">W12</span>
+        </div>
+      </div>
   </div>
   <div class="mission-weeks-grid">
         <a class="mission-week-card" data-week="1" href="ai-mission-week-1.html" style="--block-color: #CE8E31;">
@@ -872,6 +1059,65 @@
         <div class="cohort-pill"><span class="cd-name">Cohort 4 &mdash; Winter</span><span class="cd-window">Quarterly cadence, dates TBD</span></div>
       </div>
       <p style="margin-top:14px;font-size:0.86rem;color:var(--gray)">Dates lock ~4 weeks before each cohort kicks off &mdash; email Adam if you want first-notice on the next cohort opening.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ── MATERIALS & DOWNLOADS ── -->
+<section class="mission-section">
+  <div class="module-container">
+    <div class="section-kicker" style="text-align:center">Explore the Materials</div>
+    <h2 class="section-title" style="text-align:center">What ships with the cohort.</h2>
+    <p class="section-sub" style="text-align:center;max-width:820px;margin:0 auto 28px">Eight deliverables travel with the enrollment &mdash; some live the moment the cohort kicks off, some build out as the program runs. All of them stay yours for life after you&rsquo;re in.</p>
+    <div class="materials-grid">
+      <article class="materials-card">
+        <div class="mc-icon"><img src="assets/icons/shield-bible.png" alt=""></div>
+        <h3>Master Curriculum</h3>
+        <p class="mc-body">Source-of-truth Word document. Full block + week + task breakdown, watchman&rsquo;s drills, the cohort cadence overview, and the Charter template.</p>
+        <span class="mc-status ">Coming with cohort kickoff</span>
+      </article>
+      <article class="materials-card">
+        <div class="mc-icon"><img src="assets/icons/shield-checklist-48.png" alt=""></div>
+        <h3>Participant Workbook</h3>
+        <p class="mc-body">Print-friendly companion journal. One page per task, weekly reflection pages, the family AI policy template, and your signed Charter at the end.</p>
+        <span class="mc-status ">Coming with cohort kickoff</span>
+      </article>
+      <article class="materials-card">
+        <div class="mc-icon"><img src="assets/icons/shield-megaphone.png" alt=""></div>
+        <h3>Live-Teaching Deck</h3>
+        <p class="mc-body">Cohort-leader slide deck with speaker notes &mdash; built for the leader of a future cohort, an in-person teaching night, or a recorded video module.</p>
+        <span class="mc-status ">Coming with cohort kickoff</span>
+      </article>
+      <article class="materials-card">
+        <div class="mc-icon"><img src="assets/icons/shield-target.png" alt=""></div>
+        <h3>36 Task PDFs</h3>
+        <p class="mc-body">Every task as a single-page PDF. Print and hand to a brother who can&rsquo;t fit the full cohort, or run yourself through one task at a time off-platform.</p>
+        <span class="mc-status ">Coming with cohort kickoff</span>
+      </article>
+      <article class="materials-card">
+        <div class="mc-icon"><img src="assets/icons/shield-tools-48.png" alt=""></div>
+        <h3>Watchman&rsquo;s Drills (PDF)</h3>
+        <p class="mc-body">Optional depth track: 36 ninety-second micro-prompts, three per week, that turn AI into a daily rep alongside the main task work.</p>
+        <span class="mc-status ">Coming with cohort kickoff</span>
+      </article>
+      <article class="materials-card">
+        <div class="mc-icon"><img src="assets/icons/shield-comms.png" alt=""></div>
+        <h3>Cohort Telegram Channel</h3>
+        <p class="mc-body">Private channel where tasks drop Mon/Wed/Fri, watchmen react &check; on the ship, and the linked discussion thread is where iron sharpens iron.</p>
+        <span class="mc-status is-live">Live now</span>
+      </article>
+      <article class="materials-card">
+        <div class="mc-icon"><img src="assets/icons/shield-leader.png" alt=""></div>
+        <h3>NotebookLM Explainers</h3>
+        <p class="mc-body">Three- to four-minute Watch &middot; Listen overview for every page in the program &mdash; the same explainer-video + audio-podcast pattern USMC Ministries already uses.</p>
+        <span class="mc-status ">Coming with cohort kickoff</span>
+      </article>
+      <article class="materials-card">
+        <div class="mc-icon"><img src="assets/icons/shield-crown.png" alt=""></div>
+        <h3>Watchman&rsquo;s Charter (signed)</h3>
+        <p class="mc-body">The capstone document you fill out, sign, and ship publicly in Week 12 &mdash; what you&rsquo;ll use as your standing daily operating doctrine after the cohort ends.</p>
+        <span class="mc-status ">Coming with cohort kickoff</span>
+      </article>
     </div>
   </div>
 </section>

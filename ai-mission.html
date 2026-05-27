@@ -158,10 +158,20 @@
   <style>
     /* ── ai-mission.html sales-page extensions ─────────────────────── */
     .mission-hero {
-      padding: 110px 24px 56px;
+      padding: 110px 24px 64px;
       max-width: 980px;
       margin: 0 auto;
       text-align: center;
+      position: relative;
+    }
+    .mission-hero::before {
+      content: ""; position: absolute; inset: 0;
+      background:
+        radial-gradient(circle at 20% 0%, rgba(206,142,49,0.18) 0%, rgba(206,142,49,0) 40%),
+        radial-gradient(circle at 80% 12%, rgba(59,89,152,0.16) 0%, rgba(59,89,152,0) 42%),
+        radial-gradient(circle at 50% 100%, rgba(184,49,47,0.10) 0%, rgba(184,49,47,0) 38%);
+      z-index: -1;
+      pointer-events: none;
     }
     .mission-hero .module-badge { margin-bottom: 18px; }
     .mission-hero h1 {
@@ -236,6 +246,24 @@
     }
     .cred-chip .cc-desc { font-size: 0.82rem; color: var(--gray); margin-top: 2px; }
 
+    /* Block-bar — six colored chips above the syllabus, one per block */
+    .block-bar {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 10px;
+      max-width: 1180px; margin: 0 auto 22px;
+    }
+    .block-pill {
+      display: flex; flex-direction: column; gap: 2px;
+      padding: 10px 14px;
+      border: 1px solid; border-radius: 10px;
+      font-size: 0.82rem;
+      text-align: left;
+    }
+    .block-pill .bp-id { font-size: 0.66rem; letter-spacing: 0.16em; font-weight: 700; opacity: 0.85; }
+    .block-pill .bp-name { font-size: 0.96rem; font-weight: 800; line-height: 1.15; }
+    .block-pill .bp-range { font-size: 0.72rem; opacity: 0.75; }
+
     /* 12-week spine */
     .mission-weeks-grid {
       display: grid;
@@ -246,14 +274,31 @@
     .mission-week-card {
       background: rgba(255,255,255,0.025);
       border: 1px solid var(--border);
+      border-top: 4px solid var(--block-color, var(--gold));
       border-radius: 12px;
-      padding: 16px 18px 18px;
+      padding: 14px 18px 18px;
       display: flex; flex-direction: column; gap: 8px;
+      text-decoration: none;
+      color: inherit;
+      transition: background 0.18s ease, transform 0.18s ease, box-shadow 0.18s ease;
+      position: relative;
+    }
+    .mission-week-card:hover {
+      background: rgba(255,255,255,0.06);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(0,0,0,0.35);
+    }
+    .mwc-block-chip {
+      display: inline-block; align-self: flex-start;
+      padding: 3px 9px;
+      border: 1px solid; border-radius: 999px;
+      font-size: 0.62rem; letter-spacing: 0.12em; font-weight: 800; text-transform: uppercase;
+      margin-bottom: 2px;
     }
     .mwc-head { display: flex; justify-content: space-between; align-items: center; }
     .mwc-num {
       font-size: 0.72rem; letter-spacing: 0.12em; text-transform: uppercase;
-      color: var(--gold); font-weight: 700;
+      color: var(--block-color, var(--gold)); font-weight: 700;
     }
     .mwc-icon { width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; }
     .mwc-icon img { width: 44px; height: 44px; object-fit: contain; display: block; }
@@ -270,10 +315,17 @@
     .mwc-tasks li::before {
       content: "✓";
       position: absolute; left: 0; top: 4px;
-      color: var(--gold); font-size: 0.8rem; font-weight: 700;
+      color: var(--block-color, var(--gold)); font-size: 0.8rem; font-weight: 700;
     }
-    .mwc-scrip { margin-top: 6px; font-size: 0.78rem; }
-    .mwc-scrip a { color: var(--gray); text-decoration: underline; text-decoration-color: var(--gold); }
+    .mwc-foot {
+      display: flex; justify-content: space-between; align-items: center;
+      margin-top: 8px; padding-top: 8px;
+      border-top: 1px dashed rgba(255,255,255,0.08);
+      font-size: 0.74rem;
+    }
+    .mwc-scrip-tag a { color: var(--gray); text-decoration: underline; text-decoration-color: var(--block-color, var(--gold)); }
+    .mwc-open { color: var(--block-color, var(--gold)); font-weight: 700; opacity: 0.9; }
+    .mission-week-card:hover .mwc-open { opacity: 1; }
 
     /* Pricing block */
     .pricing-grid {
@@ -394,9 +446,16 @@
     .step-icon-brand { width: 56px; height: 56px; }
     .step-icon-brand img { width: 56px; height: 56px; }
 
-    /* Section spacing */
-    .mission-section { padding: 56px 24px; }
-    .mission-section:nth-of-type(even) { background: rgba(255,255,255,0.012); }
+    /* Section spacing + alternating background variation for visual rhythm */
+    .mission-section { padding: 56px 24px; position: relative; }
+    .mission-section:nth-of-type(even) {
+      background:
+        linear-gradient(180deg, rgba(206,142,49,0.025) 0%, rgba(206,142,49,0) 50%),
+        rgba(255,255,255,0.015);
+    }
+    .mission-section:nth-of-type(odd):not(.mission-hero) {
+      background: linear-gradient(180deg, rgba(59,89,152,0.02) 0%, rgba(59,89,152,0) 100%);
+    }
 
     @media (max-width: 720px) {
       .mission-hero { padding-top: 90px; }
@@ -517,9 +576,18 @@
 <section class="mission-section" id="syllabus">
   <div class="section-kicker" style="text-align:center">The Syllabus</div>
   <h2 class="section-title" style="text-align:center">Twelve weeks of structured work, one signed charter at the end.</h2>
-  <p class="section-sub" style="text-align:center;max-width:860px;margin:0 auto 28px">Three tasks each week, twenty to thirty minutes per task &mdash; six blocks across the twelve weeks: <b>Foundation</b> (W1&ndash;2), <b>Home Mastery</b> (W3&ndash;4), <b>Business Layer</b> (W5&ndash;8), <b>Ministry Layer</b> (W9&ndash;10), <b>Sovereign Stack</b> (W11), and the <b>Watchman&rsquo;s Charter</b> capstone in W12. The Business block runs the longest because that&rsquo;s where most men in this cohort are spending most of their hours.</p>
+  <p class="section-sub" style="text-align:center;max-width:860px;margin:0 auto 22px">Three tasks each week, twenty to thirty minutes per task &mdash; six blocks across the twelve weeks. The Business block runs the longest because that&rsquo;s where most men in this cohort are spending most of their hours. Click any week to open its page.</p>
+  <div class="block-bar" aria-label="Six blocks across twelve weeks">
+      <div class="block-pill" style="background:#CE8E311A; border-color:#CE8E31; color:#CE8E31;"><span class="bp-id">BLOCK I</span><span class="bp-name">Foundation</span><span class="bp-range">W1–2</span></div>
+      <div class="block-pill" style="background:#B8966B1A; border-color:#B8966B; color:#B8966B;"><span class="bp-id">BLOCK II</span><span class="bp-name">Home Mastery</span><span class="bp-range">W3–4</span></div>
+      <div class="block-pill" style="background:#A8742A1A; border-color:#A8742A; color:#A8742A;"><span class="bp-id">BLOCK III</span><span class="bp-name">Business Layer</span><span class="bp-range">W5–8</span></div>
+      <div class="block-pill" style="background:#3B59981A; border-color:#3B5998; color:#3B5998;"><span class="bp-id">BLOCK IV</span><span class="bp-name">Ministry Layer</span><span class="bp-range">W9–10</span></div>
+      <div class="block-pill" style="background:#5A7A6B1A; border-color:#5A7A6B; color:#5A7A6B;"><span class="bp-id">BLOCK V</span><span class="bp-name">Sovereign Stack</span><span class="bp-range">W11</span></div>
+      <div class="block-pill" style="background:#B8312F1A; border-color:#B8312F; color:#B8312F;"><span class="bp-id">BLOCK VI</span><span class="bp-name">Watchman's Charter</span><span class="bp-range">W12</span></div>
+  </div>
   <div class="mission-weeks-grid">
-        <article class="mission-week-card" data-week="1">
+        <a class="mission-week-card" data-week="1" href="ai-mission-week-1.html" style="--block-color: #CE8E31;">
+          <div class="mwc-block-chip" style="background:#CE8E311A; color:#CE8E31; border-color:#CE8E3140;">BLOCK I &middot; Foundation</div>
           <div class="mwc-head">
             <div class="mwc-num">WEEK 1</div>
             <div class="mwc-icon" aria-hidden="true"><img src="assets/icons/shield-cross-bible-48.png" alt=""></div>
@@ -529,9 +597,13 @@
           <ul class="mwc-tasks">
             <li>Write your Watchman's Charter</li><li>Apply the Tiered Autonomy framework</li><li>Build your watchman's tool stack</li>
           </ul>
-          <div class="mwc-scrip"><a href="https://usmcmin.org/bible.html?ref=Ezekiel%2033:1-7" target="_blank" rel="noopener">Ezekiel 33:1–7 ↗</a></div>
-        </article>
-        <article class="mission-week-card" data-week="2">
+          <div class="mwc-foot">
+            <span class="mwc-scrip-tag"><a href="https://usmcmin.org/bible.html?ref=Ezekiel%2033:1-7" target="_blank" rel="noopener" onclick="event.stopPropagation()">Ezekiel 33:1–7 ↗</a></span>
+            <span class="mwc-open">Open week 1 &rarr;</span>
+          </div>
+        </a>
+        <a class="mission-week-card" data-week="2" href="ai-mission-week-2.html" style="--block-color: #CE8E31;">
+          <div class="mwc-block-chip" style="background:#CE8E311A; color:#CE8E31; border-color:#CE8E3140;">BLOCK I &middot; Foundation</div>
           <div class="mwc-head">
             <div class="mwc-num">WEEK 2</div>
             <div class="mwc-icon" aria-hidden="true"><img src="assets/icons/shield-megaphone.png" alt=""></div>
@@ -541,9 +613,13 @@
           <ul class="mwc-tasks">
             <li>Anatomy of a watchman's prompt</li><li>Voice capture + Whisper workflow</li><li>Watchman's Audit (weekly rhythm)</li>
           </ul>
-          <div class="mwc-scrip"><a href="https://usmcmin.org/bible.html?ref=Proverbs%2018:13" target="_blank" rel="noopener">Proverbs 18:13 ↗</a></div>
-        </article>
-        <article class="mission-week-card" data-week="3">
+          <div class="mwc-foot">
+            <span class="mwc-scrip-tag"><a href="https://usmcmin.org/bible.html?ref=Proverbs%2018:13" target="_blank" rel="noopener" onclick="event.stopPropagation()">Proverbs 18:13 ↗</a></span>
+            <span class="mwc-open">Open week 2 &rarr;</span>
+          </div>
+        </a>
+        <a class="mission-week-card" data-week="3" href="ai-mission-week-3.html" style="--block-color: #B8966B;">
+          <div class="mwc-block-chip" style="background:#B8966B1A; color:#B8966B; border-color:#B8966B40;">BLOCK II &middot; Home Mastery</div>
           <div class="mwc-head">
             <div class="mwc-num">WEEK 3</div>
             <div class="mwc-icon" aria-hidden="true"><img src="assets/icons/shield-family.png" alt=""></div>
@@ -553,9 +629,13 @@
           <ul class="mwc-tasks">
             <li>5-minute Wife Audit</li><li>Write your 5-year Watchman's Vision</li><li>Prep one hard conversation</li>
           </ul>
-          <div class="mwc-scrip"><a href="https://usmcmin.org/bible.html?ref=Ephesians%205:25" target="_blank" rel="noopener">Ephesians 5:25 ↗</a></div>
-        </article>
-        <article class="mission-week-card" data-week="4">
+          <div class="mwc-foot">
+            <span class="mwc-scrip-tag"><a href="https://usmcmin.org/bible.html?ref=Ephesians%205:25" target="_blank" rel="noopener" onclick="event.stopPropagation()">Ephesians 5:25 ↗</a></span>
+            <span class="mwc-open">Open week 3 &rarr;</span>
+          </div>
+        </a>
+        <a class="mission-week-card" data-week="4" href="ai-mission-week-4.html" style="--block-color: #B8966B;">
+          <div class="mwc-block-chip" style="background:#B8966B1A; color:#B8966B; border-color:#B8966B40;">BLOCK II &middot; Home Mastery</div>
           <div class="mwc-head">
             <div class="mwc-num">WEEK 4</div>
             <div class="mwc-icon" aria-hidden="true"><img src="assets/icons/shield-home-property-48.png" alt=""></div>
@@ -565,9 +645,13 @@
           <ul class="mwc-tasks">
             <li>Family AI Policy + Friday devotion generator</li><li>Family rhythm asset</li><li>Legacy plan starter</li>
           </ul>
-          <div class="mwc-scrip"><a href="https://usmcmin.org/bible.html?ref=1%20Timothy%203:4-5" target="_blank" rel="noopener">1 Timothy 3:4–5 ↗</a></div>
-        </article>
-        <article class="mission-week-card" data-week="5">
+          <div class="mwc-foot">
+            <span class="mwc-scrip-tag"><a href="https://usmcmin.org/bible.html?ref=1%20Timothy%203:4-5" target="_blank" rel="noopener" onclick="event.stopPropagation()">1 Timothy 3:4–5 ↗</a></span>
+            <span class="mwc-open">Open week 4 &rarr;</span>
+          </div>
+        </a>
+        <a class="mission-week-card" data-week="5" href="ai-mission-week-5.html" style="--block-color: #A8742A;">
+          <div class="mwc-block-chip" style="background:#A8742A1A; color:#A8742A; border-color:#A8742A40;">BLOCK III &middot; Business Layer</div>
           <div class="mwc-head">
             <div class="mwc-num">WEEK 5</div>
             <div class="mwc-icon" aria-hidden="true"><img src="assets/icons/shield-tools-48.png" alt=""></div>
@@ -577,9 +661,13 @@
           <ul class="mwc-tasks">
             <li>Subscription audit</li><li>Body as platform (movement + sleep)</li><li>Ship one real Cowork workflow</li>
           </ul>
-          <div class="mwc-scrip"><a href="https://usmcmin.org/bible.html?ref=1%20Corinthians%206:19-20" target="_blank" rel="noopener">1 Corinthians 6:19–20 ↗</a></div>
-        </article>
-        <article class="mission-week-card" data-week="6">
+          <div class="mwc-foot">
+            <span class="mwc-scrip-tag"><a href="https://usmcmin.org/bible.html?ref=1%20Corinthians%206:19-20" target="_blank" rel="noopener" onclick="event.stopPropagation()">1 Corinthians 6:19–20 ↗</a></span>
+            <span class="mwc-open">Open week 5 &rarr;</span>
+          </div>
+        </a>
+        <a class="mission-week-card" data-week="6" href="ai-mission-week-6.html" style="--block-color: #A8742A;">
+          <div class="mwc-block-chip" style="background:#A8742A1A; color:#A8742A; border-color:#A8742A40;">BLOCK III &middot; Business Layer</div>
           <div class="mwc-head">
             <div class="mwc-num">WEEK 6</div>
             <div class="mwc-icon" aria-hidden="true"><img src="assets/icons/shield-finance.png" alt=""></div>
@@ -589,9 +677,13 @@
           <ul class="mwc-tasks">
             <li>Read your numbers (P&L review with AI)</li><li>Client-comms workflow (proposals, status reports, invoices)</li><li>Tithe-first budget</li>
           </ul>
-          <div class="mwc-scrip"><a href="https://usmcmin.org/bible.html?ref=Luke%2016:10-11" target="_blank" rel="noopener">Luke 16:10–11 ↗</a></div>
-        </article>
-        <article class="mission-week-card" data-week="7">
+          <div class="mwc-foot">
+            <span class="mwc-scrip-tag"><a href="https://usmcmin.org/bible.html?ref=Luke%2016:10-11" target="_blank" rel="noopener" onclick="event.stopPropagation()">Luke 16:10–11 ↗</a></span>
+            <span class="mwc-open">Open week 6 &rarr;</span>
+          </div>
+        </a>
+        <a class="mission-week-card" data-week="7" href="ai-mission-week-7.html" style="--block-color: #A8742A;">
+          <div class="mwc-block-chip" style="background:#A8742A1A; color:#A8742A; border-color:#A8742A40;">BLOCK III &middot; Business Layer</div>
           <div class="mwc-head">
             <div class="mwc-num">WEEK 7</div>
             <div class="mwc-icon" aria-hidden="true"><img src="assets/icons/shield-gear.png" alt=""></div>
@@ -601,9 +693,13 @@
           <ul class="mwc-tasks">
             <li>Cowork inventory + redlines</li><li>Build your Cowork prompt library</li><li>Multi-step research workflow</li>
           </ul>
-          <div class="mwc-scrip"><a href="https://usmcmin.org/bible.html?ref=Proverbs%2016:3" target="_blank" rel="noopener">Proverbs 16:3 ↗</a></div>
-        </article>
-        <article class="mission-week-card" data-week="8">
+          <div class="mwc-foot">
+            <span class="mwc-scrip-tag"><a href="https://usmcmin.org/bible.html?ref=Proverbs%2016:3" target="_blank" rel="noopener" onclick="event.stopPropagation()">Proverbs 16:3 ↗</a></span>
+            <span class="mwc-open">Open week 7 &rarr;</span>
+          </div>
+        </a>
+        <a class="mission-week-card" data-week="8" href="ai-mission-week-8.html" style="--block-color: #A8742A;">
+          <div class="mwc-block-chip" style="background:#A8742A1A; color:#A8742A; border-color:#A8742A40;">BLOCK III &middot; Business Layer</div>
           <div class="mwc-head">
             <div class="mwc-num">WEEK 8</div>
             <div class="mwc-icon" aria-hidden="true"><img src="assets/icons/shield-target.png" alt=""></div>
@@ -613,9 +709,13 @@
           <ul class="mwc-tasks">
             <li>Strip the AI fingerprint</li><li>Decision-support memo</li><li>Ship one piece in your voice</li>
           </ul>
-          <div class="mwc-scrip"><a href="https://usmcmin.org/bible.html?ref=Colossians%203:23" target="_blank" rel="noopener">Colossians 3:23 ↗</a></div>
-        </article>
-        <article class="mission-week-card" data-week="9">
+          <div class="mwc-foot">
+            <span class="mwc-scrip-tag"><a href="https://usmcmin.org/bible.html?ref=Colossians%203:23" target="_blank" rel="noopener" onclick="event.stopPropagation()">Colossians 3:23 ↗</a></span>
+            <span class="mwc-open">Open week 8 &rarr;</span>
+          </div>
+        </a>
+        <a class="mission-week-card" data-week="9" href="ai-mission-week-9.html" style="--block-color: #3B5998;">
+          <div class="mwc-block-chip" style="background:#3B59981A; color:#3B5998; border-color:#3B599840;">BLOCK IV &middot; Ministry Layer</div>
           <div class="mwc-head">
             <div class="mwc-num">WEEK 9</div>
             <div class="mwc-icon" aria-hidden="true"><img src="assets/icons/shield-bible.png" alt=""></div>
@@ -625,9 +725,13 @@
           <ul class="mwc-tasks">
             <li>Sermon → watchman's actions</li><li>10-minute Scripture study with AI</li><li>Build a teaching aid for one passage</li>
           </ul>
-          <div class="mwc-scrip"><a href="https://usmcmin.org/bible.html?ref=2%20Timothy%203:16-17" target="_blank" rel="noopener">2 Timothy 3:16–17 ↗</a></div>
-        </article>
-        <article class="mission-week-card" data-week="10">
+          <div class="mwc-foot">
+            <span class="mwc-scrip-tag"><a href="https://usmcmin.org/bible.html?ref=2%20Timothy%203:16-17" target="_blank" rel="noopener" onclick="event.stopPropagation()">2 Timothy 3:16–17 ↗</a></span>
+            <span class="mwc-open">Open week 9 &rarr;</span>
+          </div>
+        </a>
+        <a class="mission-week-card" data-week="10" href="ai-mission-week-10.html" style="--block-color: #3B5998;">
+          <div class="mwc-block-chip" style="background:#3B59981A; color:#3B5998; border-color:#3B599840;">BLOCK IV &middot; Ministry Layer</div>
           <div class="mwc-head">
             <div class="mwc-num">WEEK 10</div>
             <div class="mwc-icon" aria-hidden="true"><img src="assets/icons/shield-hands-joining.png" alt=""></div>
@@ -637,9 +741,13 @@
           <ul class="mwc-tasks">
             <li>Watchman's daily devotion (personal)</li><li>Pastoral counseling prep workflow (with redlines)</li><li>Build a discipleship cohort prompt-pack</li>
           </ul>
-          <div class="mwc-scrip"><a href="https://usmcmin.org/bible.html?ref=2%20Timothy%202:2" target="_blank" rel="noopener">2 Timothy 2:2 ↗</a></div>
-        </article>
-        <article class="mission-week-card" data-week="11">
+          <div class="mwc-foot">
+            <span class="mwc-scrip-tag"><a href="https://usmcmin.org/bible.html?ref=2%20Timothy%202:2" target="_blank" rel="noopener" onclick="event.stopPropagation()">2 Timothy 2:2 ↗</a></span>
+            <span class="mwc-open">Open week 10 &rarr;</span>
+          </div>
+        </a>
+        <a class="mission-week-card" data-week="11" href="ai-mission-week-11.html" style="--block-color: #5A7A6B;">
+          <div class="mwc-block-chip" style="background:#5A7A6B1A; color:#5A7A6B; border-color:#5A7A6B40;">BLOCK V &middot; Sovereign Stack</div>
           <div class="mwc-head">
             <div class="mwc-num">WEEK 11</div>
             <div class="mwc-icon" aria-hidden="true"><img src="assets/icons/shield-lock-48.png" alt=""></div>
@@ -649,9 +757,13 @@
           <ul class="mwc-tasks">
             <li>Local AI smoke test</li><li>Define your watchman's Redlines</li><li>MCP server setup</li>
           </ul>
-          <div class="mwc-scrip"><a href="https://usmcmin.org/bible.html?ref=Proverbs%2022:3" target="_blank" rel="noopener">Proverbs 22:3 ↗</a></div>
-        </article>
-        <article class="mission-week-card" data-week="12">
+          <div class="mwc-foot">
+            <span class="mwc-scrip-tag"><a href="https://usmcmin.org/bible.html?ref=Proverbs%2022:3" target="_blank" rel="noopener" onclick="event.stopPropagation()">Proverbs 22:3 ↗</a></span>
+            <span class="mwc-open">Open week 11 &rarr;</span>
+          </div>
+        </a>
+        <a class="mission-week-card" data-week="12" href="ai-mission-week-12.html" style="--block-color: #B8312F;">
+          <div class="mwc-block-chip" style="background:#B8312F1A; color:#B8312F; border-color:#B8312F40;">BLOCK VI &middot; Watchman's Charter</div>
           <div class="mwc-head">
             <div class="mwc-num">WEEK 12</div>
             <div class="mwc-icon" aria-hidden="true"><img src="assets/icons/shield-crown.png" alt=""></div>
@@ -661,8 +773,11 @@
           <ul class="mwc-tasks">
             <li>Build your personal AI adjutant</li><li>Teach one person one thing</li><li>Sign your Watchman's Charter (commissioning)</li>
           </ul>
-          <div class="mwc-scrip"><a href="https://usmcmin.org/bible.html?ref=Ezekiel%2033:7" target="_blank" rel="noopener">Ezekiel 33:7 ↗</a></div>
-        </article>
+          <div class="mwc-foot">
+            <span class="mwc-scrip-tag"><a href="https://usmcmin.org/bible.html?ref=Ezekiel%2033:7" target="_blank" rel="noopener" onclick="event.stopPropagation()">Ezekiel 33:7 ↗</a></span>
+            <span class="mwc-open">Open week 12 &rarr;</span>
+          </div>
+        </a>
   </div>
 </section>
 

@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Week 2 &middot; Prompting Discipline + Voice Mastery &mdash; The Watchman&rsquo;s Course</title>
+  <meta name="description" content="Week 2 of The Watchman's Course (U.S.M.C. Ministries AI Mission paid cohort): Prompting Discipline + Voice Mastery.">
+  <meta name="robots" content="noindex,nofollow">
+  <link rel="stylesheet" href="assets/css/main.css">
+  <link rel="icon" href="assets/img/favicon.png" type="image/png">
+<style>
+  .module-hero { text-align:center; padding:120px 20px 56px; border-bottom:2px solid var(--border);
+    background: linear-gradient(180deg, rgba(30,58,95,0.10) 0%, transparent 100%); }
+  [data-theme="dark"] .module-hero { background: linear-gradient(180deg, rgba(30,58,95,0.28) 0%, transparent 100%); }
+  .module-badge { display:inline-block; font-size:0.68rem; font-weight:700; text-transform:uppercase;
+    letter-spacing:3px; color:var(--gold); background:var(--gold-dim); border:1px solid var(--border);
+    padding:6px 18px; border-radius:20px; margin-bottom:18px; }
+  .module-hero h1 { font-family:var(--font-main); font-size:clamp(2.2rem,5.4vw,3.6rem);
+    color:var(--white); margin-bottom:10px; font-weight:800; letter-spacing:-0.01em; }
+  .module-hero h1 .gold { color:var(--gold); }
+  .module-hero h1 .accent { color:var(--navy); }
+  [data-theme="dark"] .module-hero h1 .accent { color:var(--silver-light); }
+  .module-hero .tagline { font-size:1.05rem; color:var(--gray); font-style:italic; margin:4px 0 18px; }
+  .module-hero .subtitle { color:var(--gray-light); font-size:0.98rem; max-width:700px; margin:0 auto; line-height:1.7; }
+  .module-hero .meta { display:flex; flex-wrap:wrap; justify-content:center; gap:28px; margin:28px auto 0;
+    max-width:820px; color:var(--gray); font-size:0.85rem; }
+  .module-hero .meta b { color:var(--white); font-weight:700; }
+  .module-hero .hero-cta { margin-top:24px; display:flex; gap:12px; justify-content:center; flex-wrap:wrap; }
+  /* Defensive: hero CTA buttons never carry layout margins (the nav-cta class
+     used to leak margin-left:auto here, shoving the row off-center). */
+  .module-hero .hero-cta .btn { margin:0; }
+
+  .module-container { max-width:1080px; margin:0 auto; padding:56px 20px; }
+  .section-title { font-family:var(--font-main); font-size:1.9rem; font-weight:700;
+    color:var(--white); margin-bottom:8px; letter-spacing:-0.005em; }
+  .section-kicker { text-transform:uppercase; letter-spacing:3px; font-size:0.72rem;
+    font-weight:700; color:var(--gold); margin-bottom:6px; }
+  .section-sub { color:var(--gray-light); font-size:1rem; max-width:760px; margin-bottom:28px; }
+
+  .pillars { display:grid; grid-template-columns:repeat(3,1fr); gap:16px; }
+  .pillar { background:var(--bg-card); border:1px solid var(--border); border-radius:var(--radius); padding:22px; }
+  .pillar-icon, .step-icon { width:36px; height:36px; display:inline-flex; align-items:center; justify-content:center;
+    background:var(--gold); color:#FFFFFF; border-radius:8px; margin-bottom:10px; }
+  .pillar-icon svg, .step-icon svg { width:22px; height:22px; }
+  .pillar h3 { color:var(--white); font-size:1.15rem; margin-bottom:6px; }
+  .pillar p { color:var(--gray-light); font-size:0.9rem; }
+
+  /* Week cards: track-aware grid (injected per-build via TRACK_GRID_CSS).
+     FC (7 weeks): 4 cards top + 3 cards bottom for visual symmetry.
+     USMC (5 weeks): single 5-column row. */
+  .week-card { background:var(--bg-card); border:1px solid var(--border); border-radius:var(--radius);
+    padding:18px 16px; display:flex; flex-direction:column; gap:8px; min-height:170px;
+    transition:all var(--transition); position:relative; overflow:hidden; }
+  .week-card::before { content:""; position:absolute; top:0; left:0; right:0; height:3px;
+    background:var(--week-color, var(--gold)); }
+  .week-card:hover { border-color:var(--week-color, var(--gold)); transform:translateY(-2px); }
+  .week-card[data-week="1"] { --week-color: #B85042; }
+  .week-card[data-week="2"] { --week-color: #E89B47; }
+  .week-card[data-week="3"] { --week-color: #6BA368; }
+  .week-card[data-week="4"] { --week-color: #4A7BA6; }
+  .week-card[data-week="5"] { --week-color: #8B5FBF; }
+  .week-card[data-week="6"] { --week-color: #D4A574; }  /* TFC: Finances — warm bronze */
+  .week-card[data-week="7"] { --week-color: #557C99; }  /* TFC: Sabbath — calm slate */
+  .week-card .num { font-size:0.7rem; letter-spacing:3px; color:var(--week-color, var(--gold)); font-weight:700; }
+  .week-card .week-icon { font-size:1.4rem; line-height:1; margin:2px 0; }
+  /* Default = charcoal so light-theme cards (which have a light --bg-card)
+     stay legible. Dark theme override below restores light text on dark cards. */
+  .week-card h3 { color:#1A1A1A; font-size:1.08rem; }
+  [data-theme="dark"] .week-card h3 { color:#F0F0F0; }
+  .week-card .tag { font-size:0.9rem; color:var(--gray-light); font-style:italic; line-height:1.5; }
+  .week-card .scrip { font-size:0.78rem; color:var(--gray); margin-top:auto; padding-top:10px; border-top:1px solid var(--border); }
+
+  .tasks-grid { display:grid; grid-template-columns:1fr 1fr 1fr; gap:8px; }
+  @media (max-width:700px){ .tasks-grid { grid-template-columns:1fr 1fr; } }
+  .task-tile { background:var(--bg-card); border:1px solid var(--border); border-radius:var(--radius);
+    padding:14px; transition:all var(--transition); display:block; text-decoration:none; color:inherit; }
+  .task-tile:hover { border-color:var(--gold); transform:translateY(-1px); text-decoration:none; }
+  .task-tile .wt { font-size:0.7rem; color:var(--gold); font-weight:700; letter-spacing:2px; }
+  .task-tile .ttl { font-size:0.85rem; color:#1A1A1A; font-weight:600; margin-top:4px; line-height:1.4; }
+  [data-theme="dark"] .task-tile .ttl { color:#F0F0F0; }
+  .task-tile .preview-link { font-size:0.7rem; color:var(--gold); margin-top:8px; font-weight:700; letter-spacing:1px; }
+
+  .info-card { background:var(--bg-card); border:1px solid var(--border); border-radius:var(--radius); padding:22px; }
+  .info-card h3 { color:var(--white); font-size:1.05rem; margin-bottom:6px; }
+  .info-card p { color:var(--gray-light); font-size:0.92rem; margin-bottom:8px; }
+  .info-card small { color:var(--gray); font-size:0.78rem; }
+
+  .progress-shell { display:grid; grid-template-columns:1.2fr 0.8fr; gap:32px; align-items:start; }
+  @media (max-width:900px){ .progress-shell { grid-template-columns:1fr; } }
+
+  .downloads { display:grid; grid-template-columns:repeat(3,1fr); gap:16px; }
+  @media (max-width:900px){ .downloads { grid-template-columns:1fr 1fr; } }
+  @media (max-width:600px){ .downloads { grid-template-columns:1fr; } }
+  .dl-card { background:var(--bg-card); border:1px solid var(--border); border-radius:var(--radius);
+    padding:20px; display:flex; flex-direction:column; gap:8px; min-height:180px;
+    transition:border-color var(--transition); }
+  .dl-card:hover { border-color:var(--gold); }
+  .dl-card .icon { width:38px; height:38px; border-radius:8px; background:var(--gold);
+    color:var(--bg-dark); display:flex; align-items:center; justify-content:center; font-weight:800; font-size:1rem; }
+  .dl-card h3 { color:var(--white); font-size:1rem; margin-top:4px; }
+  .dl-card p { color:var(--gray-light); font-size:0.86rem; flex:1; line-height:1.55; }
+  .dl-card a { display:inline-block; font-size:0.85rem; font-weight:700; color:var(--gold); margin-top:4px; }
+
+  .scripture { font-style:italic; color:var(--gray-light); border-left:3px solid var(--gold);
+    padding:10px 16px; margin:22px 0; font-size:0.95rem; }
+  .note { color:var(--gray); font-size:0.82rem; margin-top:10px; }
+
+  .cta-band { background:linear-gradient(180deg, rgba(30,58,95,0.18) 0%, rgba(30,58,95,0.04) 100%);
+    border-top:1px solid var(--border); border-bottom:1px solid var(--border); padding:64px 20px; text-align:center; }
+  [data-theme="dark"] .cta-band { background:linear-gradient(180deg, rgba(30,58,95,0.32) 0%, rgba(0,0,0,0.05) 100%); }
+  .cta-band h2 { font-family:var(--font-main); font-size:2rem; color:var(--white); margin-bottom:10px; }
+  .cta-band p { color:var(--gray-light); max-width:640px; margin:0 auto 22px; font-size:1rem; }
+  .cta-secondary { display:inline-block; margin-left:8px; color:var(--gray-light); font-size:0.9rem; padding:14px 0; }
+
+  .steps { display:grid; grid-template-columns:repeat(4,1fr); gap:14px; }
+  @media (max-width:900px){ .steps { grid-template-columns:1fr 1fr; } }
+  @media (max-width:600px){ .steps { grid-template-columns:1fr; } }
+  .step { background:var(--bg-card); border:1px solid var(--border); border-radius:var(--radius);
+    padding:18px; }
+  .step .num { font-size:0.7rem; color:var(--gold); font-weight:800; letter-spacing:3px; }
+  .step h3 { color:var(--white); font-size:1rem; margin:6px 0; }
+  .step p { color:var(--gray-light); font-size:0.9rem; }
+
+  @media (max-width:900px) { .pillars { grid-template-columns:1fr; } .weeks { grid-template-columns:1fr 1fr !important; } .weeks .week-card { grid-column: auto !important; } }
+  @media (max-width:600px) { .weeks { grid-template-columns:1fr !important; } .weeks .week-card { grid-column: auto !important; } }
+</style>
+  <style>
+    .aim-week-hero {
+      padding: 90px 24px 48px;
+      max-width: 980px; margin: 0 auto;
+      text-align: center;
+      position: relative;
+    }
+    .aim-week-hero::before {
+      content: ""; position: absolute; inset: 0;
+      background: radial-gradient(circle at 50% 0%, #CE8E3124 0%, transparent 55%);
+      z-index: -1; pointer-events: none;
+    }
+    .aim-week-hero .aim-week-block {
+      display: inline-block;
+      padding: 4px 14px;
+      border: 1px solid #CE8E3180;
+      background: #CE8E311A;
+      color: #CE8E31;
+      border-radius: 999px;
+      font-size: 0.7rem; letter-spacing: 0.14em; font-weight: 800; text-transform: uppercase;
+      margin-bottom: 12px;
+    }
+    .aim-week-hero .aim-week-kicker {
+      font-size: 0.78rem; letter-spacing: 0.18em; color: #CE8E31;
+      font-weight: 800; text-transform: uppercase;
+    }
+    .aim-week-hero h1 {
+      font-size: clamp(2.2rem, 5vw, 3.4rem);
+      line-height: 1.05;
+      margin: 8px 0 14px;
+      font-weight: 800;
+    }
+    .aim-week-hero .aim-week-tag {
+      font-size: 1.05rem; color: var(--gray);
+      max-width: 740px; margin: 0 auto 18px;
+      line-height: 1.55;
+    }
+    .aim-week-hero .aim-week-icon {
+      width: 80px; height: 80px; margin: 6px auto 12px;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .aim-week-hero .aim-week-icon img {
+      width: 80px; height: 80px; object-fit: contain; display: block;
+    }
+    .aim-week-hero .aim-week-scrip a { color: #CE8E31; text-decoration: underline; }
+
+    .aim-tasks-section {
+      max-width: 980px; margin: 0 auto; padding: 36px 24px 24px;
+    }
+    .aim-tasks-section h2 {
+      font-size: 1.45rem; margin: 0 0 6px;
+      color: var(--text);
+    }
+    .aim-tasks-section .aim-tasks-sub {
+      color: var(--gray); font-size: 0.94rem; margin-bottom: 22px;
+      max-width: 720px;
+    }
+    .aim-tasks-grid {
+      display: grid; gap: 16px;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    }
+    .aim-task {
+      background: rgba(255,255,255,0.025);
+      border: 1px solid var(--border);
+      border-left: 4px solid #CE8E31;
+      border-radius: 10px;
+      padding: 18px 20px 16px;
+      display: flex; flex-direction: column; gap: 6px;
+    }
+    .aim-task-kicker {
+      font-size: 0.72rem; letter-spacing: 0.14em; font-weight: 800; text-transform: uppercase;
+    }
+    .aim-task-title {
+      margin: 4px 0 6px; font-size: 1.08rem; line-height: 1.25;
+    }
+    .aim-task-body { font-size: 0.9rem; color: var(--gray); line-height: 1.55; flex: 1; }
+    .aim-task-foot {
+      border-top: 1px solid; margin-top: 12px; padding-top: 10px;
+      font-size: 0.78rem;
+    }
+    .aim-task-status { font-weight: 700; }
+
+    .aim-week-rhythm {
+      max-width: 980px; margin: 8px auto 0; padding: 24px 24px 12px;
+    }
+    .aim-rhythm-card {
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 22px 24px;
+      background: linear-gradient(180deg, #CE8E310F 0%, rgba(255,255,255,0.012) 100%);
+    }
+    .aim-rhythm-card h3 { margin: 0 0 8px; font-size: 1.08rem; }
+    .aim-rhythm-card p { font-size: 0.92rem; color: var(--gray); line-height: 1.6; margin: 0; }
+
+    .aim-week-nav {
+      max-width: 980px; margin: 36px auto 56px; padding: 18px 24px;
+      display: flex; justify-content: space-between; align-items: center;
+      border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);
+    }
+    .aim-week-nav a {
+      color: #CE8E31; text-decoration: none; font-weight: 700; font-size: 0.92rem;
+    }
+    .aim-week-nav a:hover { text-decoration: underline; }
+    .aim-back-syllabus {
+      text-align: center;
+      max-width: 980px; margin: 0 auto 60px; padding: 0 24px;
+    }
+    .aim-back-syllabus a {
+      color: var(--gold); font-size: 0.86rem;
+      text-decoration: underline; text-decoration-color: #CE8E3180;
+    }
+  </style>
+</head>
+<body>
+
+<!-- ── NAV ── -->
+<nav>
+  <a href="/" class="nav-brand" style="text-decoration:none">
+    <img src="assets/img/logo.png" alt="U.S.M.C. Ministries" style="object-fit:contain">
+    <div class="nav-brand-text">
+      <div class="name">U.S.M.C. Ministries</div>
+      <div class="tag">Warriors Equipped</div>
+    </div>
+  </a>
+  <ul class="nav-links">
+    <li><a href="mission.html">Mission</a></li>
+    <li><a href="shop.html">Shop</a></li>
+    <li><a href="books.html">Books</a></li>
+    <li><a href="coaching.html">Coaching</a></li>
+    <li><a href="fitness/fitness.html">Fitness</a></li>
+    <li><a href="finance/">Finance</a></li>
+    <li><a href="about.html">About</a></li>
+    <li><a href="https://usmcmin.org" target="_blank">Ministry Site</a></li>
+  </ul>
+  <a href="coaching.html" class="btn nav-cta">Book a Session</a>
+  <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme" title="Switch light/dark mode">&#9789;</button>
+  <button class="nav-toggle" aria-label="Menu"><span></span><span></span><span></span></button>
+</nav>
+
+
+<section class="aim-week-hero">
+  <span class="aim-week-block">BLOCK I &middot; Foundation &middot; W1–2</span>
+  <div class="aim-week-kicker">Week 2</div>
+  <h1>Prompting Discipline + Voice Mastery</h1>
+  <p class="aim-week-tag">The five-part prompt structure, and the dictation loop that turns a thirty-minute task into eight.</p>
+  <div class="aim-week-icon"><img src="assets/icons/shield-megaphone.png" alt=""></div>
+  <p class="aim-week-scrip"><a href="https://usmcmin.org/bible.html?ref=Proverbs%2018:13" target="_blank" rel="noopener">Proverbs 18:13 &uarr;</a></p>
+</section>
+
+<section class="aim-tasks-section">
+  <h2>The three tasks for this week</h2>
+  <p class="aim-tasks-sub">Each task is one twenty-to-thirty-minute action &mdash; the kind of work that ships before the day ends, not the kind that lingers on your todo list. Full task PDFs land here when the next paid cohort opens.</p>
+  <div class="aim-tasks-grid">
+      <article class="aim-task" data-task="1">
+        <div class="aim-task-kicker" style="color:#CE8E31;">WEEK 2 &middot; TASK 1</div>
+        <h3 class="aim-task-title">Anatomy of a watchman's prompt</h3>
+        <p class="aim-task-body">Full action plan, watchman&rsquo;s frame, and the PDF you&rsquo;ll print and walk into the week with &mdash; drops here when the next cohort opens.</p>
+        <div class="aim-task-foot" style="border-top-color:#CE8E3133;">
+          <span class="aim-task-status" style="color:#CE8E31;">Coming with cohort kickoff</span>
+        </div>
+      </article>
+      <article class="aim-task" data-task="2">
+        <div class="aim-task-kicker" style="color:#CE8E31;">WEEK 2 &middot; TASK 2</div>
+        <h3 class="aim-task-title">Voice capture + Whisper workflow</h3>
+        <p class="aim-task-body">Full action plan, watchman&rsquo;s frame, and the PDF you&rsquo;ll print and walk into the week with &mdash; drops here when the next cohort opens.</p>
+        <div class="aim-task-foot" style="border-top-color:#CE8E3133;">
+          <span class="aim-task-status" style="color:#CE8E31;">Coming with cohort kickoff</span>
+        </div>
+      </article>
+      <article class="aim-task" data-task="3">
+        <div class="aim-task-kicker" style="color:#CE8E31;">WEEK 2 &middot; TASK 3</div>
+        <h3 class="aim-task-title">Watchman's Audit (weekly rhythm)</h3>
+        <p class="aim-task-body">Full action plan, watchman&rsquo;s frame, and the PDF you&rsquo;ll print and walk into the week with &mdash; drops here when the next cohort opens.</p>
+        <div class="aim-task-foot" style="border-top-color:#CE8E3133;">
+          <span class="aim-task-status" style="color:#CE8E31;">Coming with cohort kickoff</span>
+        </div>
+      </article>
+  </div>
+</section>
+
+<section class="aim-week-rhythm">
+  <div class="aim-rhythm-card">
+    <h3>Weekly rhythm reminder</h3>
+    <p>Mon &mdash; Open the week, ship T1 (20&ndash;30 min). Wed &mdash; ship T2. Fri &mdash; ship T3 and post a one-line close-out in the cohort thread. Saturday is the Watchman&rsquo;s Audit and your reflection on the week. Sunday is rest &mdash; drill off, family first.</p>
+  </div>
+</section>
+
+<div class="aim-week-nav" role="navigation" aria-label="Week navigation">
+  <a class="aim-prev" href="ai-mission-week-1.html">&larr; Week 1</a>
+  <a class="aim-next" href="ai-mission-week-3.html">Week 3 &rarr;</a>
+</div>
+
+<div class="aim-back-syllabus">
+  <a href="ai-mission.html#syllabus">&larr; back to the full syllabus</a>
+</div>
+
+<!-- ── FOOTER ── -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-top">
+      <div class="footer-brand">
+        <div class="name">U.S.M.C. Ministries</div>
+        <div class="tag">Warriors Equipped. Kingdom Advancing.</div>
+        <p>Helping men become better husbands, fathers, and citizens as they follow Jesus. Based in Fredericksburg, VA.</p>
+      </div>
+      <div class="footer-col">
+        <h4>Resources</h4>
+        <ul>
+          <li><a href="shop.html">Ministry Shop</a></li>
+          <li><a href="books.html">Books &amp; Devos</a></li>
+          <li><a href="https://usmcmin.org" target="_blank">Bible Reading Plan</a></li>
+          <li><a href="coaching.html#membership">Warriors Circle</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>USMC Ministries</h4>
+        <ul>
+          <li><a href="husband.html">Husband (HAPPY)</a></li>
+          <li><a href="father.html">Father</a></li>
+          <li><a href="ai-boot-camp.html">AI Mission</a></li>
+          <li><a href="ai-boot-camp-tools.html">AI Tools Landscape</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Coaching</h4>
+        <ul>
+          <li><a href="https://cal.com/usmc-ministries-2022/uniting" target="_blank">Brotherhood Session</a></li>
+          <li><a href="https://cal.com/usmc-ministries-2022/counseling" target="_blank">Pastoral Counsel</a></li>
+          <li><a href="https://cal.com/usmc-ministries-2022/mentoring" target="_blank">Discipleship</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Ministry</h4>
+        <ul>
+          <li><a href="about.html">About Adam</a></li>
+          <li><a href="https://usmcmin.org" target="_blank">usmcmin.org</a></li>
+          <li><a href="mailto:usmcministries2022@gmail.com">Contact</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <div style="color:var(--gray);font-size:0.85rem;margin-bottom:0.5rem">Looking for ministry resources &amp; Bible study? Visit <a href="https://usmcmin.org" target="_blank" style="color:var(--gold)">usmcmin.org</a></div>
+      <div style="color:var(--gray);font-size:0.8rem">© 2026 U.S.M.C. Ministries. All rights reserved. &nbsp;|&nbsp; <a href="sitemap.html">Sitemap</a></div>
+    </div>
+  </div>
+</footer>
+
+
+<!-- Nav + Theme + Analytics -->
+<script>
+(function() {
+  var navToggle = document.querySelector('.nav-toggle');
+  var navLinks = document.querySelector('.nav-links');
+  if (navToggle && navLinks) navToggle.addEventListener('click', function() { navLinks.classList.toggle('open'); });
+})();
+(function() {
+  const toggle = document.getElementById('themeToggle');
+  const saved = localStorage.getItem('usmc-theme');
+  if (saved !== 'light') { document.documentElement.setAttribute('data-theme', 'dark'); toggle.textContent = '☀️'; }
+  toggle.addEventListener('click', function() {
+    const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+    if (isDark) { document.documentElement.removeAttribute('data-theme'); localStorage.setItem('usmc-theme', 'light'); toggle.textContent = '☽'; }
+    else { document.documentElement.setAttribute('data-theme', 'dark'); localStorage.setItem('usmc-theme', 'dark'); toggle.textContent = '☀️'; }
+  });
+})();
+</script>
+<script data-goatcounter="https://usmcmin.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
+
+</body>
+</html>

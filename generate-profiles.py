@@ -1648,7 +1648,10 @@ def generate_profile(candidate, categories, meta, nav=None):
   <script type="application/ld+json">{json_ld}</script>
 
   <link rel="stylesheet" href="../../assets/css/main.min.css">
-  <link rel="icon" href="../../assets/icons/favicon.svg" type="image/svg+xml">
+  <link rel="icon" type="image/svg+xml" href="../../assets/icons/favicon.svg">
+  <link rel="icon" type="image/png" sizes="32x32" href="../../assets/icons/favicon-32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="../../assets/icons/favicon-16.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="../../assets/icons/apple-touch-icon.png">
   <link rel="stylesheet" href="../../assets/css/profile.min.css">
 </head>
 <body>

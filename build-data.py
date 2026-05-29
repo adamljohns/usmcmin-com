@@ -32,6 +32,19 @@ DATA_DIR = os.path.join(BASE_DIR, 'data')
 SCORECARD_PATH = os.path.join(DATA_DIR, 'scorecard.json')
 INDEX_PATH = os.path.join(DATA_DIR, 'index.json')
 STATES_DIR = os.path.join(DATA_DIR, 'states')
+COMPACT_PATH = os.path.join(DATA_DIR, 'scorecard-compact.json')
+
+# Fields preserved on each candidate in scorecard-compact.json.
+# Anything outside this set (claims, footnotes, answer_footnotes,
+# sources, notes, full profile bios, etc.) is dropped.
+# compare.html is the only runtime consumer of the full scorecard;
+# this set covers exactly what it reads.
+COMPACT_CANDIDATE_FIELDS = (
+    'slug', 'name', 'party', 'office', 'state', 'photo',
+    'scores', 'is_incumbent', 'race_id',
+)
+# These two profile sub-fields are the only ones compare.html reads.
+COMPACT_PROFILE_FIELDS = ('candidacy', 'confidence')
 
 # Keys in scorecard.meta that should be copied into index.meta verbatim.
 # total_candidates, last_updated, and states are recomputed by the splitter.
@@ -143,6 +156,37 @@ def sanity_check_pre_write(scorecard, by_state):
         errors.append("scorecard.json is missing 'categories' — refusing to write")
 
     return errors
+
+
+def build_scorecard_compact(scorecard):
+    """Return the dict to write for data/scorecard-compact.json.
+
+    A slim version of scorecard.json that contains only the fields
+    compare.html actually reads — drops claims, footnotes, answer_footnotes,
+    sources, notes, and the heavy profile bio fields. Typical reduction
+    from 60+ MB → 7–8 MB (~88% smaller), so the page load stays snappy.
+
+    Source of truth remains data/scorecard.json. This file is a derived
+    runtime artifact, regenerated every time build-data.py runs.
+    """
+    def slim_candidate(c):
+        out = {k: c[k] for k in COMPACT_CANDIDATE_FIELDS if k in c}
+        prof = c.get('profile') or {}
+        slim_prof = {k: prof[k] for k in COMPACT_PROFILE_FIELDS if k in prof}
+        if slim_prof:
+            out['profile'] = slim_prof
+        # claims_count instead of the full claims[] (compare.html only
+        # checks (c.claims || []).length > 0 for a "has evidence" badge).
+        claims = c.get('claims') or []
+        if claims:
+            out['claims_count'] = len(claims)
+        return out
+
+    return {
+        'meta': scorecard.get('meta', {}),
+        'categories': scorecard.get('categories', []),
+        'candidates': [slim_candidate(c) for c in scorecard.get('candidates', [])],
+    }
 
 
 def build_state_file(state_code, candidates):
@@ -262,6 +306,21 @@ def main():
     index = build_index(scorecard, by_state, state_file_sizes)
     if not dry:
         atomic_write(INDEX_PATH, index)
+
+    # ---- Build + write scorecard-compact.json (runtime artifact for compare.html) ----
+    compact_data = build_scorecard_compact(scorecard)
+    if dry:
+        compact_size = len(json.dumps(compact_data, separators=(',', ':')))
+    else:
+        atomic_write(COMPACT_PATH, compact_data, compact=True)
+        compact_size = os.path.getsize(COMPACT_PATH)
+    full_size = os.path.getsize(SCORECARD_PATH) if os.path.exists(SCORECARD_PATH) else 0
+    if full_size:
+        log(
+            f"  scorecard-compact.json: {compact_size/1024/1024:.2f} MB "
+            f"({(1-compact_size/full_size)*100:.1f}% smaller than scorecard.json)",
+            quiet,
+        )
 
     # ---- Prune + optionally rewrite scorecard meta ----
     scorecard_changed = prune_scorecard_meta(scorecard, by_state)

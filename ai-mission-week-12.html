@@ -3,15 +3,11 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="canonical" href="https://usmcmin.com/ai-mission-week-12.html">
   <title>Week 12 &middot; Watchman's Charter &mdash; The Watchman&rsquo;s Course</title>
   <meta name="description" content="Week 12 of The Watchman's Course (U.S.M.C. Ministries AI Mission paid cohort): Watchman's Charter.">
   <meta name="robots" content="noindex,nofollow">
   <link rel="stylesheet" href="assets/css/main.css">
-  <link rel="icon" type="image/svg+xml" href="assets/icons/favicon.svg">
-  <link rel="icon" type="image/png" sizes="32x32" href="assets/icons/favicon-32.png">
-  <link rel="icon" type="image/png" sizes="16x16" href="assets/icons/favicon-16.png">
-  <link rel="apple-touch-icon" sizes="180x180" href="assets/icons/apple-touch-icon.png">
+  <link rel="icon" href="assets/img/favicon.png" type="image/png">
 <style>
   .module-hero { text-align:center; padding:120px 20px 56px; border-bottom:2px solid var(--border);
     background: linear-gradient(180deg, rgba(30,58,95,0.10) 0%, transparent 100%); }
@@ -185,30 +181,96 @@
       color: var(--gray); font-size: 0.94rem; margin-bottom: 22px;
       max-width: 720px;
     }
-    .aim-tasks-grid {
-      display: grid; gap: 16px;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    .aim-tasks-stack {
+      display: flex; flex-direction: column; gap: 18px;
     }
     .aim-task {
       background: rgba(255,255,255,0.025);
       border: 1px solid var(--border);
       border-left: 4px solid #B8312F;
       border-radius: 10px;
-      padding: 18px 20px 16px;
-      display: flex; flex-direction: column; gap: 6px;
+      padding: 22px 24px 20px;
     }
     .aim-task-kicker {
       font-size: 0.72rem; letter-spacing: 0.14em; font-weight: 800; text-transform: uppercase;
     }
     .aim-task-title {
-      margin: 4px 0 6px; font-size: 1.08rem; line-height: 1.25;
+      margin: 5px 0 4px; font-size: 1.32rem; line-height: 1.2;
     }
-    .aim-task-body { font-size: 0.9rem; color: var(--gray); line-height: 1.55; flex: 1; }
-    .aim-task-foot {
-      border-top: 1px solid; margin-top: 12px; padding-top: 10px;
-      font-size: 0.78rem;
+    .aim-task-tagline {
+      font-size: 1rem; font-style: italic; color: var(--gray); margin-bottom: 12px;
     }
-    .aim-task-status { font-weight: 700; }
+    .aim-task-setup { font-size: 0.96rem; color: var(--text); line-height: 1.65; margin: 0 0 14px; }
+    .aim-task-actions-label {
+      font-size: 0.72rem; letter-spacing: 0.14em; font-weight: 800; text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+    .aim-task-actions { margin: 0 0 4px; padding-left: 22px; }
+    .aim-task-actions > li {
+      font-size: 0.94rem; color: var(--text); line-height: 1.55; margin-bottom: 7px;
+    }
+    .aim-task-actions .aim-sublist { margin: 6px 0 4px; padding-left: 18px; list-style: none; }
+    .aim-task-actions .aim-sub {
+      font-size: 0.9rem; color: var(--gray); line-height: 1.5; margin-bottom: 4px;
+      position: relative; padding-left: 14px;
+    }
+    .aim-task-actions .aim-sub::before {
+      content: "\2013"; position: absolute; left: 0; color: #B8312F;
+    }
+    .aim-callout {
+      border-left: 3px solid #B8312F;
+      background: #B8312F0F;
+      border-radius: 0 6px 6px 0;
+      padding: 12px 16px;
+      margin: 14px 0;
+    }
+    .aim-callout-label {
+      font-size: 0.68rem; letter-spacing: 0.14em; font-weight: 800; text-transform: uppercase;
+      margin-bottom: 4px;
+    }
+    .aim-callout-body { font-size: 0.92rem; color: var(--text); line-height: 1.55; }
+    .aim-task-scripture {
+      border-left: 3px solid #B8312F;
+      padding: 4px 0 4px 14px;
+      margin-top: 14px;
+    }
+    .aim-ts-label {
+      display: block;
+      font-size: 0.66rem; letter-spacing: 0.16em; font-weight: 800; text-transform: uppercase;
+      margin-bottom: 4px;
+    }
+    .aim-task-scripture i { font-size: 0.9rem; color: var(--gray); line-height: 1.55; }
+
+    /* Watchman's Drills strip */
+    .aim-drills-section { max-width: 980px; margin: 0 auto; padding: 12px 24px 8px; }
+    .aim-drills-inner {
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 22px 24px 18px;
+      background: rgba(255,255,255,0.015);
+    }
+    .aim-drills-head { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; margin-bottom: 4px; }
+    .aim-drills-head h2 { font-size: 1.25rem; margin: 0; }
+    .aim-drills-tag {
+      font-size: 0.66rem; letter-spacing: 0.1em; font-weight: 800; text-transform: uppercase;
+      padding: 3px 10px; border: 1px solid; border-radius: 999px;
+    }
+    .aim-drills-sub { font-size: 0.9rem; color: var(--gray); line-height: 1.55; margin: 6px 0 16px; max-width: 720px; }
+    .aim-drills-list { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 10px; }
+    .aim-drill {
+      display: flex; gap: 14px; align-items: baseline;
+      padding: 10px 0; border-bottom: 1px dashed rgba(255,255,255,0.08);
+    }
+    .aim-drill:last-child { border-bottom: none; }
+    .aim-drill-label {
+      flex-shrink: 0; min-width: 130px;
+      font-size: 0.82rem; font-weight: 800; letter-spacing: 0.02em;
+    }
+    .aim-drill-text { font-size: 0.92rem; color: var(--text); line-height: 1.5; }
+    @media (max-width: 600px) {
+      .aim-drill { flex-direction: column; gap: 2px; }
+      .aim-drill-label { min-width: 0; }
+    }
 
     .aim-week-rhythm {
       max-width: 980px; margin: 8px auto 0; padding: 24px 24px 12px;
@@ -279,32 +341,71 @@
 
 <section class="aim-tasks-section">
   <h2>The three tasks for this week</h2>
-  <p class="aim-tasks-sub">Each task is one twenty-to-thirty-minute action &mdash; the kind of work that ships before the day ends, not the kind that lingers on your todo list. Full task PDFs land here when the next paid cohort opens.</p>
-  <div class="aim-tasks-grid">
-      <article class="aim-task" data-task="1">
+  <p class="aim-tasks-sub">Each task is one twenty-to-thirty-minute action &mdash; the kind of work that ships before the day ends, not the kind that lingers on your todo list. Open it, do it, react &check; in the cohort channel when it&rsquo;s shipped.</p>
+  <div class="aim-tasks-stack">
+      <article class="aim-task" data-task="1" style="border-left-color:#B8312F;">
         <div class="aim-task-kicker" style="color:#B8312F;">WEEK 12 &middot; TASK 1</div>
-        <h3 class="aim-task-title">Build your personal AI adjutant</h3>
-        <p class="aim-task-body">Full action plan, watchman&rsquo;s frame, and the PDF you&rsquo;ll print and walk into the week with &mdash; drops here when the next cohort opens.</p>
-        <div class="aim-task-foot" style="border-top-color:#B8312F33;">
-          <span class="aim-task-status" style="color:#B8312F;">Coming with cohort kickoff</span>
+        <h3 class="aim-task-title">Build Your Personal AI Adjutant</h3>
+        <div class="aim-task-tagline">Synthesize eleven weeks into one document and one daily workflow.</div>
+        <p class="aim-task-setup">An adjutant is the officer who carries the commander's intent so the command runs even when he steps away. This week you build yours — one document that synthesizes everything: your Charter, your tool stack, your voice workflow, your Cowork library, your business rhythms, your local-AI setup, your family policy, your Redlines. One document, one standing daily workflow. It's what you'd hand your replacement if you walked away tomorrow.</p>
+        <div class="aim-task-actions-label" style="color:#B8312F;">Action checklist</div>
+        <ul class="aim-task-actions"><li>Pull eleven weeks into one document:<ul class="aim-sublist"><li class="aim-sub">Charter + Tiered Autonomy (W1).</li><li class="aim-sub">Prompt library + voice workflow (W2, W7).</li><li class="aim-sub">Business rhythms — numbers, comms, budget (W6).</li><li class="aim-sub">Local AI + Redlines + MCP (W11).</li><li class="aim-sub">Family policy + rhythm (W4).</li></ul></li><li>Define your one standing daily workflow — the morning and evening rhythm you'll actually run.</li><li>Have AI help you format it cleanly; you write the substance.</li><li>Save it where you'll use it. This is your operating doctrine going forward.</li></ul>
+        <div class="aim-callout" style="border-left-color:#B8312F;"><div class="aim-callout-label" style="color:#B8312F;">THE HANDOFF TEST</div><div class="aim-callout-body">If you were called away tomorrow, could a capable man pick up this document and run your AI-supported life and work? That's the bar. Build to it.</div></div>
+        <div class="aim-task-scripture" style="border-left-color:#B8312F;">
+          <span class="aim-ts-label" style="color:#B8312F;">SCRIPTURE</span>
+          <i>2 Timothy 1:14 — "That good thing which was committed to you, keep by the Holy Spirit." The Adjutant is how you keep what you've been given — ordered, written, and ready to pass on.</i>
         </div>
       </article>
-      <article class="aim-task" data-task="2">
+      <article class="aim-task" data-task="2" style="border-left-color:#B8312F;">
         <div class="aim-task-kicker" style="color:#B8312F;">WEEK 12 &middot; TASK 2</div>
-        <h3 class="aim-task-title">Teach one person one thing</h3>
-        <p class="aim-task-body">Full action plan, watchman&rsquo;s frame, and the PDF you&rsquo;ll print and walk into the week with &mdash; drops here when the next cohort opens.</p>
-        <div class="aim-task-foot" style="border-top-color:#B8312F33;">
-          <span class="aim-task-status" style="color:#B8312F;">Coming with cohort kickoff</span>
+        <h3 class="aim-task-title">Teach One Person One Thing</h3>
+        <div class="aim-task-tagline">Pick one brother. Walk him through one thing. Watch him do it once.</div>
+        <p class="aim-task-setup">This is the task the whole course has been driving toward. Pick one man — your wife, an older kid, a peer, a mentee, your pastor — and walk him through one thing you learned in these twelve weeks. Not a lecture. One thing, taught well, watched until he can do it once himself. What you've been given, you now give.</p>
+        <div class="aim-task-actions-label" style="color:#B8312F;">Action checklist</div>
+        <ul class="aim-task-actions"><li>Pick one person and the one thing you'll teach them — make it concrete and useful to them.</li><li>Walk them through it in person or on a call. Keep it to one thing, taught clearly.</li><li>Watch them do it once themselves. Resist doing it for them.</li><li>Report in the channel: who you taught and what they learned to do.</li></ul>
+        <div class="aim-callout" style="border-left-color:#B8312F;"><div class="aim-callout-label" style="color:#B8312F;">ONE MAN, ONE THING</div><div class="aim-callout-body">Multiplication never starts with a crowd or a curriculum — it starts with one brother and one transferable skill. Teach it well enough that he could teach it to a third.</div></div>
+        <div class="aim-task-scripture" style="border-left-color:#B8312F;">
+          <span class="aim-ts-label" style="color:#B8312F;">SCRIPTURE</span>
+          <i>2 Timothy 2:2 — "Commit these to faithful men who will be able to teach others also." You are the "faithful men" of someone's verse. Now be the Paul of someone else's.</i>
         </div>
       </article>
-      <article class="aim-task" data-task="3">
+      <article class="aim-task" data-task="3" style="border-left-color:#B8312F;">
         <div class="aim-task-kicker" style="color:#B8312F;">WEEK 12 &middot; TASK 3</div>
-        <h3 class="aim-task-title">Sign your Watchman's Charter (commissioning)</h3>
-        <p class="aim-task-body">Full action plan, watchman&rsquo;s frame, and the PDF you&rsquo;ll print and walk into the week with &mdash; drops here when the next cohort opens.</p>
-        <div class="aim-task-foot" style="border-top-color:#B8312F33;">
-          <span class="aim-task-status" style="color:#B8312F;">Coming with cohort kickoff</span>
+        <h3 class="aim-task-title">Sign Your Watchman's Charter (Commissioning)</h3>
+        <div class="aim-task-tagline">Sign it. Name the one tool you'll keep. Say what changed in you.</div>
+        <p class="aim-task-setup">You started this Mission as a man with AI. You finish it as a watchman with a charter, a system, and a person you've trained. This is the commissioning: you sign the Charter you wrote in Week 1 — refined by everything since — name the one tool you'll keep using, and say in one sentence what changed in you over twelve weeks. Posted publicly in the cohort, you're commissioned.</p>
+        <div class="aim-task-actions-label" style="color:#B8312F;">Action checklist</div>
+        <ul class="aim-task-actions"><li>Pull up your Week 1 Charter and revise it with twelve weeks of hindsight.</li><li>Sign it — date it, your name on it, a real commitment.</li><li>Post your commissioning in the cohort channel:<ul class="aim-sublist"><li class="aim-sub">A screenshot of your signed Charter.</li><li class="aim-sub">The one tool you'll keep using past this course.</li><li class="aim-sub">One sentence on what changed in you.</li></ul></li><li>Then go live it. The course ends; the watch continues.</li></ul>
+        <div class="aim-callout" style="border-left-color:#B8312F;"><div class="aim-callout-label" style="color:#B8312F;">COMMISSIONED, NOT GRADUATED</div><div class="aim-callout-body">Graduation is the end of a class; commissioning is the start of a duty. You don't leave this course finished — you leave it posted. Stand your watch.</div></div>
+        <div class="aim-task-scripture" style="border-left-color:#B8312F;">
+          <span class="aim-ts-label" style="color:#B8312F;">SCRIPTURE</span>
+          <i>Ezekiel 33:7 — "So you, son of man, I have made a watchman for the house of Israel." The same verse you started with — but now it's yours, signed, and standing. Hear the word, and give the warning.</i>
         </div>
       </article>
+  </div>
+</section>
+
+<section class="aim-drills-section">
+  <div class="aim-drills-inner">
+    <div class="aim-drills-head">
+      <h2>Watchman&rsquo;s Drills</h2>
+      <span class="aim-drills-tag" style="background:#B8312F1A;color:#B8312F;border-color:#B8312F55;">Optional depth &middot; 90 seconds each</span>
+    </div>
+    <p class="aim-drills-sub">Three micro-reps for the week, one a day if it serves you. Skip without guilt &mdash; the drill is the rep, not the workout. Sundays off.</p>
+    <ul class="aim-drills-list">
+        <li class="aim-drill">
+          <span class="aim-drill-label" style="color:#B8312F;">Adjutant line</span>
+          <span class="aim-drill-text">Write the one sentence that captures your AI operating doctrine. It goes at the top of your Adjutant.</span>
+        </li>
+        <li class="aim-drill">
+          <span class="aim-drill-label" style="color:#B8312F;">Pick the one</span>
+          <span class="aim-drill-text">Name the single tool you'll keep using after this course. Say why in one sentence.</span>
+        </li>
+        <li class="aim-drill">
+          <span class="aim-drill-label" style="color:#B8312F;">Name the change</span>
+          <span class="aim-drill-text">In one sentence: what changed in you over these twelve weeks? Write it before you forget it.</span>
+        </li>
+    </ul>
   </div>
 </section>
 

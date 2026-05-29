@@ -3,15 +3,11 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="canonical" href="https://usmcmin.com/ai-mission-week-8.html">
   <title>Week 8 &middot; Operator Output &mdash; The Watchman&rsquo;s Course</title>
   <meta name="description" content="Week 8 of The Watchman's Course (U.S.M.C. Ministries AI Mission paid cohort): Operator Output.">
   <meta name="robots" content="noindex,nofollow">
   <link rel="stylesheet" href="assets/css/main.css">
-  <link rel="icon" type="image/svg+xml" href="assets/icons/favicon.svg">
-  <link rel="icon" type="image/png" sizes="32x32" href="assets/icons/favicon-32.png">
-  <link rel="icon" type="image/png" sizes="16x16" href="assets/icons/favicon-16.png">
-  <link rel="apple-touch-icon" sizes="180x180" href="assets/icons/apple-touch-icon.png">
+  <link rel="icon" href="assets/img/favicon.png" type="image/png">
 <style>
   .module-hero { text-align:center; padding:120px 20px 56px; border-bottom:2px solid var(--border);
     background: linear-gradient(180deg, rgba(30,58,95,0.10) 0%, transparent 100%); }
@@ -185,30 +181,96 @@
       color: var(--gray); font-size: 0.94rem; margin-bottom: 22px;
       max-width: 720px;
     }
-    .aim-tasks-grid {
-      display: grid; gap: 16px;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    .aim-tasks-stack {
+      display: flex; flex-direction: column; gap: 18px;
     }
     .aim-task {
       background: rgba(255,255,255,0.025);
       border: 1px solid var(--border);
       border-left: 4px solid #A8742A;
       border-radius: 10px;
-      padding: 18px 20px 16px;
-      display: flex; flex-direction: column; gap: 6px;
+      padding: 22px 24px 20px;
     }
     .aim-task-kicker {
       font-size: 0.72rem; letter-spacing: 0.14em; font-weight: 800; text-transform: uppercase;
     }
     .aim-task-title {
-      margin: 4px 0 6px; font-size: 1.08rem; line-height: 1.25;
+      margin: 5px 0 4px; font-size: 1.32rem; line-height: 1.2;
     }
-    .aim-task-body { font-size: 0.9rem; color: var(--gray); line-height: 1.55; flex: 1; }
-    .aim-task-foot {
-      border-top: 1px solid; margin-top: 12px; padding-top: 10px;
-      font-size: 0.78rem;
+    .aim-task-tagline {
+      font-size: 1rem; font-style: italic; color: var(--gray); margin-bottom: 12px;
     }
-    .aim-task-status { font-weight: 700; }
+    .aim-task-setup { font-size: 0.96rem; color: var(--text); line-height: 1.65; margin: 0 0 14px; }
+    .aim-task-actions-label {
+      font-size: 0.72rem; letter-spacing: 0.14em; font-weight: 800; text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+    .aim-task-actions { margin: 0 0 4px; padding-left: 22px; }
+    .aim-task-actions > li {
+      font-size: 0.94rem; color: var(--text); line-height: 1.55; margin-bottom: 7px;
+    }
+    .aim-task-actions .aim-sublist { margin: 6px 0 4px; padding-left: 18px; list-style: none; }
+    .aim-task-actions .aim-sub {
+      font-size: 0.9rem; color: var(--gray); line-height: 1.5; margin-bottom: 4px;
+      position: relative; padding-left: 14px;
+    }
+    .aim-task-actions .aim-sub::before {
+      content: "\2013"; position: absolute; left: 0; color: #A8742A;
+    }
+    .aim-callout {
+      border-left: 3px solid #A8742A;
+      background: #A8742A0F;
+      border-radius: 0 6px 6px 0;
+      padding: 12px 16px;
+      margin: 14px 0;
+    }
+    .aim-callout-label {
+      font-size: 0.68rem; letter-spacing: 0.14em; font-weight: 800; text-transform: uppercase;
+      margin-bottom: 4px;
+    }
+    .aim-callout-body { font-size: 0.92rem; color: var(--text); line-height: 1.55; }
+    .aim-task-scripture {
+      border-left: 3px solid #A8742A;
+      padding: 4px 0 4px 14px;
+      margin-top: 14px;
+    }
+    .aim-ts-label {
+      display: block;
+      font-size: 0.66rem; letter-spacing: 0.16em; font-weight: 800; text-transform: uppercase;
+      margin-bottom: 4px;
+    }
+    .aim-task-scripture i { font-size: 0.9rem; color: var(--gray); line-height: 1.55; }
+
+    /* Watchman's Drills strip */
+    .aim-drills-section { max-width: 980px; margin: 0 auto; padding: 12px 24px 8px; }
+    .aim-drills-inner {
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 22px 24px 18px;
+      background: rgba(255,255,255,0.015);
+    }
+    .aim-drills-head { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; margin-bottom: 4px; }
+    .aim-drills-head h2 { font-size: 1.25rem; margin: 0; }
+    .aim-drills-tag {
+      font-size: 0.66rem; letter-spacing: 0.1em; font-weight: 800; text-transform: uppercase;
+      padding: 3px 10px; border: 1px solid; border-radius: 999px;
+    }
+    .aim-drills-sub { font-size: 0.9rem; color: var(--gray); line-height: 1.55; margin: 6px 0 16px; max-width: 720px; }
+    .aim-drills-list { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 10px; }
+    .aim-drill {
+      display: flex; gap: 14px; align-items: baseline;
+      padding: 10px 0; border-bottom: 1px dashed rgba(255,255,255,0.08);
+    }
+    .aim-drill:last-child { border-bottom: none; }
+    .aim-drill-label {
+      flex-shrink: 0; min-width: 130px;
+      font-size: 0.82rem; font-weight: 800; letter-spacing: 0.02em;
+    }
+    .aim-drill-text { font-size: 0.92rem; color: var(--text); line-height: 1.5; }
+    @media (max-width: 600px) {
+      .aim-drill { flex-direction: column; gap: 2px; }
+      .aim-drill-label { min-width: 0; }
+    }
 
     .aim-week-rhythm {
       max-width: 980px; margin: 8px auto 0; padding: 24px 24px 12px;
@@ -279,32 +341,71 @@
 
 <section class="aim-tasks-section">
   <h2>The three tasks for this week</h2>
-  <p class="aim-tasks-sub">Each task is one twenty-to-thirty-minute action &mdash; the kind of work that ships before the day ends, not the kind that lingers on your todo list. Full task PDFs land here when the next paid cohort opens.</p>
-  <div class="aim-tasks-grid">
-      <article class="aim-task" data-task="1">
+  <p class="aim-tasks-sub">Each task is one twenty-to-thirty-minute action &mdash; the kind of work that ships before the day ends, not the kind that lingers on your todo list. Open it, do it, react &check; in the cohort channel when it&rsquo;s shipped.</p>
+  <div class="aim-tasks-stack">
+      <article class="aim-task" data-task="1" style="border-left-color:#A8742A;">
         <div class="aim-task-kicker" style="color:#A8742A;">WEEK 8 &middot; TASK 1</div>
-        <h3 class="aim-task-title">Strip the AI fingerprint</h3>
-        <p class="aim-task-body">Full action plan, watchman&rsquo;s frame, and the PDF you&rsquo;ll print and walk into the week with &mdash; drops here when the next cohort opens.</p>
-        <div class="aim-task-foot" style="border-top-color:#A8742A33;">
-          <span class="aim-task-status" style="color:#A8742A;">Coming with cohort kickoff</span>
+        <h3 class="aim-task-title">Strip the AI Fingerprint</h3>
+        <div class="aim-task-tagline">Read it aloud. Cut what you wouldn't say. Ship the rewrite.</div>
+        <p class="aim-task-setup">AI writes in a register that isn't yours, and people can feel it even when they can't name it. This week you take one AI-drafted message, read it out loud, and cut every line you wouldn't actually say. Watchmen write as themselves. AI never sends in your voice without your edit — that's a standing order from here on.</p>
+        <div class="aim-task-actions-label" style="color:#A8742A;">Action checklist</div>
+        <ul class="aim-task-actions"><li>Take one AI-drafted email or message from this week.</li><li>Read it out loud, start to finish.</li><li>Cut or rewrite every line that doesn't sound like you — the throat-clearing, the "delve," the hollow enthusiasm.</li><li>Ship the rewrite. Notice how much shorter and truer it got.</li></ul>
+        <div class="aim-callout" style="border-left-color:#A8742A;"><div class="aim-callout-label" style="color:#A8742A;">YOUR VOICE IS THE ASSET</div><div class="aim-callout-body">People do business with you because you're you. The moment your words sound machine-made, you've quietly handed away the one thing AI can't replace. Guard the voice.</div></div>
+        <div class="aim-task-scripture" style="border-left-color:#A8742A;">
+          <span class="aim-ts-label" style="color:#A8742A;">SCRIPTURE</span>
+          <i>Colossians 3:23 — "And whatever you do, do it heartily, as to the Lord and not to men." Heartily means from your heart, in your voice — not outsourced wholesale to a machine.</i>
         </div>
       </article>
-      <article class="aim-task" data-task="2">
+      <article class="aim-task" data-task="2" style="border-left-color:#A8742A;">
         <div class="aim-task-kicker" style="color:#A8742A;">WEEK 8 &middot; TASK 2</div>
-        <h3 class="aim-task-title">Decision-support memo</h3>
-        <p class="aim-task-body">Full action plan, watchman&rsquo;s frame, and the PDF you&rsquo;ll print and walk into the week with &mdash; drops here when the next cohort opens.</p>
-        <div class="aim-task-foot" style="border-top-color:#A8742A33;">
-          <span class="aim-task-status" style="color:#A8742A;">Coming with cohort kickoff</span>
+        <h3 class="aim-task-title">Decision-Support Memo</h3>
+        <div class="aim-task-tagline">One decision you've avoided. AI builds the case. You sign.</div>
+        <p class="aim-task-setup">There's a real business or ministry decision you've been circling for weeks. This week AI writes the decision-support memo — the pros, the cons, the risks, the costs, the timeline laid out cold — and then you decide. You sign it. The memo is the staff work; the call is the command.</p>
+        <div class="aim-task-actions-label" style="color:#A8742A;">Action checklist</div>
+        <ul class="aim-task-actions"><li>Name one real decision you've been avoiding.</li><li>Have AI build the memo: pro / con / risk / cost / timeline, each section honest.</li><li>Add what the AI couldn't know — the gut read, the relationships, the conviction.</li><li>Make the decision and sign it (literally write "decided: ___ on ___"). Then move.</li></ul>
+        <div class="aim-callout" style="border-left-color:#A8742A;"><div class="aim-callout-label" style="color:#A8742A;">THE MEMO SERVES THE DECISION</div><div class="aim-callout-body">A perfect memo with no decision attached is just a sophisticated way to keep avoiding the thing. Build it to decide, not to delay.</div></div>
+        <div class="aim-task-scripture" style="border-left-color:#A8742A;">
+          <span class="aim-ts-label" style="color:#A8742A;">SCRIPTURE</span>
+          <i>James 1:8 — "A double-minded man is unstable in all his ways." The memo exists to get you single-minded — clear-eyed about the trade, then committed to the call.</i>
         </div>
       </article>
-      <article class="aim-task" data-task="3">
+      <article class="aim-task" data-task="3" style="border-left-color:#A8742A;">
         <div class="aim-task-kicker" style="color:#A8742A;">WEEK 8 &middot; TASK 3</div>
-        <h3 class="aim-task-title">Ship one piece in your voice</h3>
-        <p class="aim-task-body">Full action plan, watchman&rsquo;s frame, and the PDF you&rsquo;ll print and walk into the week with &mdash; drops here when the next cohort opens.</p>
-        <div class="aim-task-foot" style="border-top-color:#A8742A33;">
-          <span class="aim-task-status" style="color:#A8742A;">Coming with cohort kickoff</span>
+        <h3 class="aim-task-title">Ship One Piece in Your Voice</h3>
+        <div class="aim-task-tagline">Public writing under your name. AI-assisted, you-edited, you-signed.</div>
+        <p class="aim-task-setup">The watchman warns the city out loud. This week you ship one piece of public-facing writing under your own name — a blog post, a social post, sermon notes, a newsletter, a devotional. AI assists the draft, you do the editing pass, and your name goes on it. You write for the people you've been set on the wall to warn.</p>
+        <div class="aim-task-actions-label" style="color:#A8742A;">Action checklist</div>
+        <ul class="aim-task-actions"><li>Pick the piece and the audience — the people you're actually trying to reach.</li><li>Draft with AI, then run it through your W8.T1 fingerprint-strip discipline.</li><li>Add the one thing only you can say — your story, your conviction, your scar.</li><li>Publish it under your name this week. Shipped beats perfect.</li></ul>
+        <div class="aim-callout" style="border-left-color:#A8742A;"><div class="aim-callout-label" style="color:#A8742A;">PUT YOUR NAME ON IT</div><div class="aim-callout-body">Anonymous polish is worthless; named conviction moves people. The point isn't to produce content — it's to say the true thing to the people who need to hear it from you.</div></div>
+        <div class="aim-task-scripture" style="border-left-color:#A8742A;">
+          <span class="aim-ts-label" style="color:#A8742A;">SCRIPTURE</span>
+          <i>Ezekiel 33:6 — "But if the watchman... does not blow the trumpet, and the people are not warned... his blood I will require at the watchman's hand." The warning unspoken is the warning failed. Ship the piece.</i>
         </div>
       </article>
+  </div>
+</section>
+
+<section class="aim-drills-section">
+  <div class="aim-drills-inner">
+    <div class="aim-drills-head">
+      <h2>Watchman&rsquo;s Drills</h2>
+      <span class="aim-drills-tag" style="background:#A8742A1A;color:#A8742A;border-color:#A8742A55;">Optional depth &middot; 90 seconds each</span>
+    </div>
+    <p class="aim-drills-sub">Three micro-reps for the week, one a day if it serves you. Skip without guilt &mdash; the drill is the rep, not the workout. Sundays off.</p>
+    <ul class="aim-drills-list">
+        <li class="aim-drill">
+          <span class="aim-drill-label" style="color:#A8742A;">Read it aloud</span>
+          <span class="aim-drill-text">Take one AI-drafted sentence. Read it out loud. If you wouldn't say it, rewrite it now.</span>
+        </li>
+        <li class="aim-drill">
+          <span class="aim-drill-label" style="color:#A8742A;">Sign the call</span>
+          <span class="aim-drill-text">Name one decision you've delayed. Write 'decided: ___' and a date. Then tell one person.</span>
+        </li>
+        <li class="aim-drill">
+          <span class="aim-drill-label" style="color:#A8742A;">Your voice</span>
+          <span class="aim-drill-text">Write one sentence about your work that only you could write — your scar, your conviction. Keep it.</span>
+        </li>
+    </ul>
   </div>
 </section>
 

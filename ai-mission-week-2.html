@@ -3,15 +3,11 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="canonical" href="https://usmcmin.com/ai-mission-week-2.html">
   <title>Week 2 &middot; Prompting Discipline + Voice Mastery &mdash; The Watchman&rsquo;s Course</title>
   <meta name="description" content="Week 2 of The Watchman's Course (U.S.M.C. Ministries AI Mission paid cohort): Prompting Discipline + Voice Mastery.">
   <meta name="robots" content="noindex,nofollow">
   <link rel="stylesheet" href="assets/css/main.css">
-  <link rel="icon" type="image/svg+xml" href="assets/icons/favicon.svg">
-  <link rel="icon" type="image/png" sizes="32x32" href="assets/icons/favicon-32.png">
-  <link rel="icon" type="image/png" sizes="16x16" href="assets/icons/favicon-16.png">
-  <link rel="apple-touch-icon" sizes="180x180" href="assets/icons/apple-touch-icon.png">
+  <link rel="icon" href="assets/img/favicon.png" type="image/png">
 <style>
   .module-hero { text-align:center; padding:120px 20px 56px; border-bottom:2px solid var(--border);
     background: linear-gradient(180deg, rgba(30,58,95,0.10) 0%, transparent 100%); }
@@ -185,30 +181,96 @@
       color: var(--gray); font-size: 0.94rem; margin-bottom: 22px;
       max-width: 720px;
     }
-    .aim-tasks-grid {
-      display: grid; gap: 16px;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    .aim-tasks-stack {
+      display: flex; flex-direction: column; gap: 18px;
     }
     .aim-task {
       background: rgba(255,255,255,0.025);
       border: 1px solid var(--border);
       border-left: 4px solid #CE8E31;
       border-radius: 10px;
-      padding: 18px 20px 16px;
-      display: flex; flex-direction: column; gap: 6px;
+      padding: 22px 24px 20px;
     }
     .aim-task-kicker {
       font-size: 0.72rem; letter-spacing: 0.14em; font-weight: 800; text-transform: uppercase;
     }
     .aim-task-title {
-      margin: 4px 0 6px; font-size: 1.08rem; line-height: 1.25;
+      margin: 5px 0 4px; font-size: 1.32rem; line-height: 1.2;
     }
-    .aim-task-body { font-size: 0.9rem; color: var(--gray); line-height: 1.55; flex: 1; }
-    .aim-task-foot {
-      border-top: 1px solid; margin-top: 12px; padding-top: 10px;
-      font-size: 0.78rem;
+    .aim-task-tagline {
+      font-size: 1rem; font-style: italic; color: var(--gray); margin-bottom: 12px;
     }
-    .aim-task-status { font-weight: 700; }
+    .aim-task-setup { font-size: 0.96rem; color: var(--text); line-height: 1.65; margin: 0 0 14px; }
+    .aim-task-actions-label {
+      font-size: 0.72rem; letter-spacing: 0.14em; font-weight: 800; text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+    .aim-task-actions { margin: 0 0 4px; padding-left: 22px; }
+    .aim-task-actions > li {
+      font-size: 0.94rem; color: var(--text); line-height: 1.55; margin-bottom: 7px;
+    }
+    .aim-task-actions .aim-sublist { margin: 6px 0 4px; padding-left: 18px; list-style: none; }
+    .aim-task-actions .aim-sub {
+      font-size: 0.9rem; color: var(--gray); line-height: 1.5; margin-bottom: 4px;
+      position: relative; padding-left: 14px;
+    }
+    .aim-task-actions .aim-sub::before {
+      content: "\2013"; position: absolute; left: 0; color: #CE8E31;
+    }
+    .aim-callout {
+      border-left: 3px solid #CE8E31;
+      background: #CE8E310F;
+      border-radius: 0 6px 6px 0;
+      padding: 12px 16px;
+      margin: 14px 0;
+    }
+    .aim-callout-label {
+      font-size: 0.68rem; letter-spacing: 0.14em; font-weight: 800; text-transform: uppercase;
+      margin-bottom: 4px;
+    }
+    .aim-callout-body { font-size: 0.92rem; color: var(--text); line-height: 1.55; }
+    .aim-task-scripture {
+      border-left: 3px solid #CE8E31;
+      padding: 4px 0 4px 14px;
+      margin-top: 14px;
+    }
+    .aim-ts-label {
+      display: block;
+      font-size: 0.66rem; letter-spacing: 0.16em; font-weight: 800; text-transform: uppercase;
+      margin-bottom: 4px;
+    }
+    .aim-task-scripture i { font-size: 0.9rem; color: var(--gray); line-height: 1.55; }
+
+    /* Watchman's Drills strip */
+    .aim-drills-section { max-width: 980px; margin: 0 auto; padding: 12px 24px 8px; }
+    .aim-drills-inner {
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 22px 24px 18px;
+      background: rgba(255,255,255,0.015);
+    }
+    .aim-drills-head { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; margin-bottom: 4px; }
+    .aim-drills-head h2 { font-size: 1.25rem; margin: 0; }
+    .aim-drills-tag {
+      font-size: 0.66rem; letter-spacing: 0.1em; font-weight: 800; text-transform: uppercase;
+      padding: 3px 10px; border: 1px solid; border-radius: 999px;
+    }
+    .aim-drills-sub { font-size: 0.9rem; color: var(--gray); line-height: 1.55; margin: 6px 0 16px; max-width: 720px; }
+    .aim-drills-list { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 10px; }
+    .aim-drill {
+      display: flex; gap: 14px; align-items: baseline;
+      padding: 10px 0; border-bottom: 1px dashed rgba(255,255,255,0.08);
+    }
+    .aim-drill:last-child { border-bottom: none; }
+    .aim-drill-label {
+      flex-shrink: 0; min-width: 130px;
+      font-size: 0.82rem; font-weight: 800; letter-spacing: 0.02em;
+    }
+    .aim-drill-text { font-size: 0.92rem; color: var(--text); line-height: 1.5; }
+    @media (max-width: 600px) {
+      .aim-drill { flex-direction: column; gap: 2px; }
+      .aim-drill-label { min-width: 0; }
+    }
 
     .aim-week-rhythm {
       max-width: 980px; margin: 8px auto 0; padding: 24px 24px 12px;
@@ -279,32 +341,71 @@
 
 <section class="aim-tasks-section">
   <h2>The three tasks for this week</h2>
-  <p class="aim-tasks-sub">Each task is one twenty-to-thirty-minute action &mdash; the kind of work that ships before the day ends, not the kind that lingers on your todo list. Full task PDFs land here when the next paid cohort opens.</p>
-  <div class="aim-tasks-grid">
-      <article class="aim-task" data-task="1">
+  <p class="aim-tasks-sub">Each task is one twenty-to-thirty-minute action &mdash; the kind of work that ships before the day ends, not the kind that lingers on your todo list. Open it, do it, react &check; in the cohort channel when it&rsquo;s shipped.</p>
+  <div class="aim-tasks-stack">
+      <article class="aim-task" data-task="1" style="border-left-color:#CE8E31;">
         <div class="aim-task-kicker" style="color:#CE8E31;">WEEK 2 &middot; TASK 1</div>
-        <h3 class="aim-task-title">Anatomy of a watchman's prompt</h3>
-        <p class="aim-task-body">Full action plan, watchman&rsquo;s frame, and the PDF you&rsquo;ll print and walk into the week with &mdash; drops here when the next cohort opens.</p>
-        <div class="aim-task-foot" style="border-top-color:#CE8E3133;">
-          <span class="aim-task-status" style="color:#CE8E31;">Coming with cohort kickoff</span>
+        <h3 class="aim-task-title">Anatomy of a Watchman's Prompt</h3>
+        <div class="aim-task-tagline">The five-part structure that turns a vague ask into a sharp answer.</div>
+        <p class="aim-task-setup">Most men get mush out of AI because they put mush in. The fix is structure, and there are five parts to it. Learn them once, and the same thirty-minute task starts taking eight — because you're not re-rolling the dice on every prompt, you're giving an order a competent subordinate could actually execute.</p>
+        <div class="aim-task-actions-label" style="color:#CE8E31;">Action checklist</div>
+        <ul class="aim-task-actions"><li>Learn the five parts of a complete prompt:<ul class="aim-sublist"><li class="aim-sub">Role — who you want the AI to be ("a CPA reviewing a small-business P&L").</li><li class="aim-sub">Context — what it needs to know that it can't guess.</li><li class="aim-sub">Intent — the actual outcome you want.</li><li class="aim-sub">Constraints — length, tone, what to avoid, what's off-limits.</li><li class="aim-sub">Format — bullets, table, draft email, outline.</li></ul></li><li>Take three of your real prompts from this week and rewrite each one using all five parts.</li><li>Run the old version and the new version side by side. Read the difference out loud.</li><li>Save your three best rewrites as templates — that's the start of your prompt library.</li></ul>
+        <div class="aim-callout" style="border-left-color:#CE8E31;"><div class="aim-callout-label" style="color:#CE8E31;">WATCHMAN'S NOTE</div><div class="aim-callout-body">A sloppy prompt isn't a small thing. It's the difference between a tool that serves you and a slot machine you keep feeding. Give the order clearly the first time.</div></div>
+        <div class="aim-task-scripture" style="border-left-color:#CE8E31;">
+          <span class="aim-ts-label" style="color:#CE8E31;">SCRIPTURE</span>
+          <i>Proverbs 18:13 — "He who answers a matter before he hears it, it is folly and shame to him." The same is true in reverse: ask before you've thought it through and you'll get folly back. Structure is how you think before you ask.</i>
         </div>
       </article>
-      <article class="aim-task" data-task="2">
+      <article class="aim-task" data-task="2" style="border-left-color:#CE8E31;">
         <div class="aim-task-kicker" style="color:#CE8E31;">WEEK 2 &middot; TASK 2</div>
-        <h3 class="aim-task-title">Voice capture + Whisper workflow</h3>
-        <p class="aim-task-body">Full action plan, watchman&rsquo;s frame, and the PDF you&rsquo;ll print and walk into the week with &mdash; drops here when the next cohort opens.</p>
-        <div class="aim-task-foot" style="border-top-color:#CE8E3133;">
-          <span class="aim-task-status" style="color:#CE8E31;">Coming with cohort kickoff</span>
+        <h3 class="aim-task-title">Voice Capture + Whisper Workflow</h3>
+        <div class="aim-task-tagline">Talk faster than you type. Build the dictation loop.</div>
+        <p class="aim-task-setup">You think faster than you type, and you talk faster than you think on a keyboard. The operators who pull real leverage out of AI are the ones who built a voice-to-text pipeline so their best thinking — in the truck, on a walk, between meetings — gets captured instead of lost. Build the loop this week and run it daily.</p>
+        <div class="aim-task-actions-label" style="color:#CE8E31;">Action checklist</div>
+        <ul class="aim-task-actions"><li>Set up your capture path: Apple Voice Memos, a Whisper-based app, or your phone's built-in dictation — whatever you'll actually open.</li><li>Dictate one real watchman's log per day this week: what you're wrestling with, what you decided, what's next.</li><li>Feed the day's dictation to AI and ask it to pull out the decisions and the open loops.</li><li>By Friday, refine the loop — what's the friction, and how do you remove it?</li></ul>
+        <div class="aim-callout" style="border-left-color:#CE8E31;"><div class="aim-callout-label" style="color:#CE8E31;">WHY THIS MATTERS</div><div class="aim-callout-body">Your best thinking rarely happens at a desk. It happens with your hands busy and your guard down. Capture it, or lose it — a man's clearest counsel to himself is usually unrecorded.</div></div>
+        <div class="aim-task-scripture" style="border-left-color:#CE8E31;">
+          <span class="aim-ts-label" style="color:#CE8E31;">SCRIPTURE</span>
+          <i>Habakkuk 2:2 — "Write the vision, and make it plain." Dictation is how a busy man makes it plain without stopping the work. Capture the thought before the day buries it.</i>
         </div>
       </article>
-      <article class="aim-task" data-task="3">
+      <article class="aim-task" data-task="3" style="border-left-color:#CE8E31;">
         <div class="aim-task-kicker" style="color:#CE8E31;">WEEK 2 &middot; TASK 3</div>
-        <h3 class="aim-task-title">Watchman's Audit (weekly rhythm)</h3>
-        <p class="aim-task-body">Full action plan, watchman&rsquo;s frame, and the PDF you&rsquo;ll print and walk into the week with &mdash; drops here when the next cohort opens.</p>
-        <div class="aim-task-foot" style="border-top-color:#CE8E3133;">
-          <span class="aim-task-status" style="color:#CE8E31;">Coming with cohort kickoff</span>
+        <h3 class="aim-task-title">The Watchman's Audit (Weekly Rhythm)</h3>
+        <div class="aim-task-tagline">Saturday afternoon. AI summarizes the week. You set one anchor.</div>
+        <p class="aim-task-setup">A watch that never reports is a watch nobody trusts. Build the weekly rhythm now and don't break it for the rest of the course: every Saturday, AI summarizes the week's prompts and your captured logs, you read the summary, and you set one anchor for the week ahead. One. The discipline isn't in the summary — it's in choosing the single thing.</p>
+        <div class="aim-task-actions-label" style="color:#CE8E31;">Action checklist</div>
+        <ul class="aim-task-actions"><li>Pick your Saturday window — same time each week, fifteen minutes, non-negotiable.</li><li>Feed AI your week's logs and prompts; ask for a one-page summary of what you shipped and what slipped.</li><li>Read it honestly. Resist the urge to explain away the slips.</li><li>Set ONE anchor for next week and write it where you'll see it Monday morning.</li></ul>
+        <div class="aim-callout" style="border-left-color:#CE8E31;"><div class="aim-callout-label" style="color:#CE8E31;">OPERATOR'S DISCIPLINE</div><div class="aim-callout-body">Ten priorities is no priorities. The audit's whole job is to force you down to one anchor — the thing that, if you only did it, the week would still count.</div></div>
+        <div class="aim-task-scripture" style="border-left-color:#CE8E31;">
+          <span class="aim-ts-label" style="color:#CE8E31;">SCRIPTURE</span>
+          <i>Lamentations 3:22–23 — "His mercies... are new every morning." The audit closes the old week clean so you can receive the new one. Don't drag last week's failures into Monday; name them, set the anchor, move.</i>
         </div>
       </article>
+  </div>
+</section>
+
+<section class="aim-drills-section">
+  <div class="aim-drills-inner">
+    <div class="aim-drills-head">
+      <h2>Watchman&rsquo;s Drills</h2>
+      <span class="aim-drills-tag" style="background:#CE8E311A;color:#CE8E31;border-color:#CE8E3155;">Optional depth &middot; 90 seconds each</span>
+    </div>
+    <p class="aim-drills-sub">Three micro-reps for the week, one a day if it serves you. Skip without guilt &mdash; the drill is the rep, not the workout. Sundays off.</p>
+    <ul class="aim-drills-list">
+        <li class="aim-drill">
+          <span class="aim-drill-label" style="color:#CE8E31;">Five-part rep</span>
+          <span class="aim-drill-text">Rewrite one lazy prompt from today using all five parts: role, context, intent, constraints, format.</span>
+        </li>
+        <li class="aim-drill">
+          <span class="aim-drill-label" style="color:#CE8E31;">Dictate it</span>
+          <span class="aim-drill-text">Dictate a 90-second voice memo on the hardest decision you're carrying. Let AI pull out the real question.</span>
+        </li>
+        <li class="aim-drill">
+          <span class="aim-drill-label" style="color:#CE8E31;">Evening close-out</span>
+          <span class="aim-drill-text">Tonight, tell AI what shipped and what slipped today. Write one note to tomorrow's self.</span>
+        </li>
+    </ul>
   </div>
 </section>
 

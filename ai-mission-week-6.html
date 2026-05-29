@@ -3,15 +3,11 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="canonical" href="https://usmcmin.com/ai-mission-week-6.html">
   <title>Week 6 &middot; Business Operations & Stewardship &mdash; The Watchman&rsquo;s Course</title>
   <meta name="description" content="Week 6 of The Watchman's Course (U.S.M.C. Ministries AI Mission paid cohort): Business Operations & Stewardship.">
   <meta name="robots" content="noindex,nofollow">
   <link rel="stylesheet" href="assets/css/main.css">
-  <link rel="icon" type="image/svg+xml" href="assets/icons/favicon.svg">
-  <link rel="icon" type="image/png" sizes="32x32" href="assets/icons/favicon-32.png">
-  <link rel="icon" type="image/png" sizes="16x16" href="assets/icons/favicon-16.png">
-  <link rel="apple-touch-icon" sizes="180x180" href="assets/icons/apple-touch-icon.png">
+  <link rel="icon" href="assets/img/favicon.png" type="image/png">
 <style>
   .module-hero { text-align:center; padding:120px 20px 56px; border-bottom:2px solid var(--border);
     background: linear-gradient(180deg, rgba(30,58,95,0.10) 0%, transparent 100%); }
@@ -185,30 +181,96 @@
       color: var(--gray); font-size: 0.94rem; margin-bottom: 22px;
       max-width: 720px;
     }
-    .aim-tasks-grid {
-      display: grid; gap: 16px;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    .aim-tasks-stack {
+      display: flex; flex-direction: column; gap: 18px;
     }
     .aim-task {
       background: rgba(255,255,255,0.025);
       border: 1px solid var(--border);
       border-left: 4px solid #A8742A;
       border-radius: 10px;
-      padding: 18px 20px 16px;
-      display: flex; flex-direction: column; gap: 6px;
+      padding: 22px 24px 20px;
     }
     .aim-task-kicker {
       font-size: 0.72rem; letter-spacing: 0.14em; font-weight: 800; text-transform: uppercase;
     }
     .aim-task-title {
-      margin: 4px 0 6px; font-size: 1.08rem; line-height: 1.25;
+      margin: 5px 0 4px; font-size: 1.32rem; line-height: 1.2;
     }
-    .aim-task-body { font-size: 0.9rem; color: var(--gray); line-height: 1.55; flex: 1; }
-    .aim-task-foot {
-      border-top: 1px solid; margin-top: 12px; padding-top: 10px;
-      font-size: 0.78rem;
+    .aim-task-tagline {
+      font-size: 1rem; font-style: italic; color: var(--gray); margin-bottom: 12px;
     }
-    .aim-task-status { font-weight: 700; }
+    .aim-task-setup { font-size: 0.96rem; color: var(--text); line-height: 1.65; margin: 0 0 14px; }
+    .aim-task-actions-label {
+      font-size: 0.72rem; letter-spacing: 0.14em; font-weight: 800; text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+    .aim-task-actions { margin: 0 0 4px; padding-left: 22px; }
+    .aim-task-actions > li {
+      font-size: 0.94rem; color: var(--text); line-height: 1.55; margin-bottom: 7px;
+    }
+    .aim-task-actions .aim-sublist { margin: 6px 0 4px; padding-left: 18px; list-style: none; }
+    .aim-task-actions .aim-sub {
+      font-size: 0.9rem; color: var(--gray); line-height: 1.5; margin-bottom: 4px;
+      position: relative; padding-left: 14px;
+    }
+    .aim-task-actions .aim-sub::before {
+      content: "\2013"; position: absolute; left: 0; color: #A8742A;
+    }
+    .aim-callout {
+      border-left: 3px solid #A8742A;
+      background: #A8742A0F;
+      border-radius: 0 6px 6px 0;
+      padding: 12px 16px;
+      margin: 14px 0;
+    }
+    .aim-callout-label {
+      font-size: 0.68rem; letter-spacing: 0.14em; font-weight: 800; text-transform: uppercase;
+      margin-bottom: 4px;
+    }
+    .aim-callout-body { font-size: 0.92rem; color: var(--text); line-height: 1.55; }
+    .aim-task-scripture {
+      border-left: 3px solid #A8742A;
+      padding: 4px 0 4px 14px;
+      margin-top: 14px;
+    }
+    .aim-ts-label {
+      display: block;
+      font-size: 0.66rem; letter-spacing: 0.16em; font-weight: 800; text-transform: uppercase;
+      margin-bottom: 4px;
+    }
+    .aim-task-scripture i { font-size: 0.9rem; color: var(--gray); line-height: 1.55; }
+
+    /* Watchman's Drills strip */
+    .aim-drills-section { max-width: 980px; margin: 0 auto; padding: 12px 24px 8px; }
+    .aim-drills-inner {
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 22px 24px 18px;
+      background: rgba(255,255,255,0.015);
+    }
+    .aim-drills-head { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; margin-bottom: 4px; }
+    .aim-drills-head h2 { font-size: 1.25rem; margin: 0; }
+    .aim-drills-tag {
+      font-size: 0.66rem; letter-spacing: 0.1em; font-weight: 800; text-transform: uppercase;
+      padding: 3px 10px; border: 1px solid; border-radius: 999px;
+    }
+    .aim-drills-sub { font-size: 0.9rem; color: var(--gray); line-height: 1.55; margin: 6px 0 16px; max-width: 720px; }
+    .aim-drills-list { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 10px; }
+    .aim-drill {
+      display: flex; gap: 14px; align-items: baseline;
+      padding: 10px 0; border-bottom: 1px dashed rgba(255,255,255,0.08);
+    }
+    .aim-drill:last-child { border-bottom: none; }
+    .aim-drill-label {
+      flex-shrink: 0; min-width: 130px;
+      font-size: 0.82rem; font-weight: 800; letter-spacing: 0.02em;
+    }
+    .aim-drill-text { font-size: 0.92rem; color: var(--text); line-height: 1.5; }
+    @media (max-width: 600px) {
+      .aim-drill { flex-direction: column; gap: 2px; }
+      .aim-drill-label { min-width: 0; }
+    }
 
     .aim-week-rhythm {
       max-width: 980px; margin: 8px auto 0; padding: 24px 24px 12px;
@@ -279,32 +341,71 @@
 
 <section class="aim-tasks-section">
   <h2>The three tasks for this week</h2>
-  <p class="aim-tasks-sub">Each task is one twenty-to-thirty-minute action &mdash; the kind of work that ships before the day ends, not the kind that lingers on your todo list. Full task PDFs land here when the next paid cohort opens.</p>
-  <div class="aim-tasks-grid">
-      <article class="aim-task" data-task="1">
+  <p class="aim-tasks-sub">Each task is one twenty-to-thirty-minute action &mdash; the kind of work that ships before the day ends, not the kind that lingers on your todo list. Open it, do it, react &check; in the cohort channel when it&rsquo;s shipped.</p>
+  <div class="aim-tasks-stack">
+      <article class="aim-task" data-task="1" style="border-left-color:#A8742A;">
         <div class="aim-task-kicker" style="color:#A8742A;">WEEK 6 &middot; TASK 1</div>
-        <h3 class="aim-task-title">Read your numbers (P&L review with AI)</h3>
-        <p class="aim-task-body">Full action plan, watchman&rsquo;s frame, and the PDF you&rsquo;ll print and walk into the week with &mdash; drops here when the next cohort opens.</p>
-        <div class="aim-task-foot" style="border-top-color:#A8742A33;">
-          <span class="aim-task-status" style="color:#A8742A;">Coming with cohort kickoff</span>
+        <h3 class="aim-task-title">Read Your Numbers (P&L Review with AI)</h3>
+        <div class="aim-task-tagline">Pull three months. AI digests. You face the numbers you've avoided.</div>
+        <p class="aim-task-setup">The owner who doesn't read his own numbers is renting his business back from his bookkeeper. This week you pull your last three months of income and expenses, let AI digest them into plain language, and you face the two or three numbers you've been avoiding. Then you decide one thing to fix this month.</p>
+        <div class="aim-task-actions-label" style="color:#A8742A;">Action checklist</div>
+        <ul class="aim-task-actions"><li>Export your last three months of P&L or income/expense data (strip anything you don't want in the AI — totals and categories are enough).</li><li>Ask AI to summarize in plain English: where the money came from, where it went, and the trends.</li><li>Find the 2–3 numbers you've been avoiding. Sit with them.</li><li>Decide one thing to fix this month and write it down. Numbers you don't act on are just trivia.</li></ul>
+        <div class="aim-callout" style="border-left-color:#A8742A;"><div class="aim-callout-label" style="color:#A8742A;">OWNER'S DISCIPLINE</div><div class="aim-callout-body">A business you don't measure is a business that's happening to you. You don't need to love spreadsheets — you need to look at them on purpose, once a month, on a schedule.</div></div>
+        <div class="aim-task-scripture" style="border-left-color:#A8742A;">
+          <span class="aim-ts-label" style="color:#A8742A;">SCRIPTURE</span>
+          <i>Luke 16:11 — "If you have not been faithful in the unrighteous mammon, who will commit to your trust the true riches?" Faithfulness with the money you can see is the proving ground for what God trusts you with next.</i>
         </div>
       </article>
-      <article class="aim-task" data-task="2">
+      <article class="aim-task" data-task="2" style="border-left-color:#A8742A;">
         <div class="aim-task-kicker" style="color:#A8742A;">WEEK 6 &middot; TASK 2</div>
-        <h3 class="aim-task-title">Client-comms workflow (proposals, status reports, invoices)</h3>
-        <p class="aim-task-body">Full action plan, watchman&rsquo;s frame, and the PDF you&rsquo;ll print and walk into the week with &mdash; drops here when the next cohort opens.</p>
-        <div class="aim-task-foot" style="border-top-color:#A8742A33;">
-          <span class="aim-task-status" style="color:#A8742A;">Coming with cohort kickoff</span>
+        <h3 class="aim-task-title">Client-Comms Workflow</h3>
+        <div class="aim-task-tagline">Your highest-frequency outbound message, systematized once.</div>
+        <p class="aim-task-setup">Every operator has one outbound message he writes over and over — the proposal, the status update, the invoice cover note. This week you build a reusable AI workflow for the highest-frequency one, ship a real one through the system, and never write it cold again. Build it once; run it weekly.</p>
+        <div class="aim-task-actions-label" style="color:#A8742A;">Action checklist</div>
+        <ul class="aim-task-actions"><li>Identify your highest-frequency outbound message — proposal, status report, or invoice note.</li><li>Build the prompt and a template: your voice, your structure, your standard terms.</li><li>Run a real one through it this week. Edit the output so it sounds like you, then send it.</li><li>Save the workflow where you'll find it. That's two prompts in your library now.</li></ul>
+        <div class="aim-callout" style="border-left-color:#A8742A;"><div class="aim-callout-label" style="color:#A8742A;">SYSTEMATIZE THE REPEATABLE</div><div class="aim-callout-body">The goal isn't to sound like a robot — it's to never start from a blank page on the things you send every week. Build the rail; keep your hands on the wheel.</div></div>
+        <div class="aim-task-scripture" style="border-left-color:#A8742A;">
+          <span class="aim-ts-label" style="color:#A8742A;">SCRIPTURE</span>
+          <i>Proverbs 22:29 — "Do you see a man who excels in his work? He will stand before kings." Excellence is partly speed at the routine so you have room for the exceptional.</i>
         </div>
       </article>
-      <article class="aim-task" data-task="3">
+      <article class="aim-task" data-task="3" style="border-left-color:#A8742A;">
         <div class="aim-task-kicker" style="color:#A8742A;">WEEK 6 &middot; TASK 3</div>
-        <h3 class="aim-task-title">Tithe-first budget</h3>
-        <p class="aim-task-body">Full action plan, watchman&rsquo;s frame, and the PDF you&rsquo;ll print and walk into the week with &mdash; drops here when the next cohort opens.</p>
-        <div class="aim-task-foot" style="border-top-color:#A8742A33;">
-          <span class="aim-task-status" style="color:#A8742A;">Coming with cohort kickoff</span>
+        <h3 class="aim-task-title">Tithe-First Budget</h3>
+        <div class="aim-task-tagline">Giving comes off the top. AI drafts; you commit.</div>
+        <p class="aim-task-setup">A man's budget is his theology in numbers. This week you build — or rebuild — a budget that puts giving first, off the top, before anything else gets allocated. AI helps you draft the categories and run the math; you make the commitment. This is the financial watchman's foundation, and it belongs in the Business block because operators run the household budget and the business budget both.</p>
+        <div class="aim-task-actions-label" style="color:#A8742A;">Action checklist</div>
+        <ul class="aim-task-actions"><li>Have AI help you draft a budget with giving as the first line — 10%+ off the top, before any other category.</li><li>Allocate the rest: fixed costs, savings, business reinvestment, margin.</li><li>Stress-test it — ask AI where it's unrealistic given your actual spending.</li><li>Commit to it for one month. Re-run it at next month's number review (W6.T1 rhythm).</li></ul>
+        <div class="aim-callout" style="border-left-color:#A8742A;"><div class="aim-callout-label" style="color:#A8742A;">OFF THE TOP, NOT THE LEFTOVERS</div><div class="aim-callout-body">Giving from what's left over is how you discover there's never anything left over. Put it first and build the rest underneath it — that's the whole discipline.</div></div>
+        <div class="aim-task-scripture" style="border-left-color:#A8742A;">
+          <span class="aim-ts-label" style="color:#A8742A;">SCRIPTURE</span>
+          <i>Proverbs 3:9–10 — "Honor the Lord with your possessions, and with the firstfruits of all your increase." Firstfruits, not last. The order is the point.</i>
         </div>
       </article>
+  </div>
+</section>
+
+<section class="aim-drills-section">
+  <div class="aim-drills-inner">
+    <div class="aim-drills-head">
+      <h2>Watchman&rsquo;s Drills</h2>
+      <span class="aim-drills-tag" style="background:#A8742A1A;color:#A8742A;border-color:#A8742A55;">Optional depth &middot; 90 seconds each</span>
+    </div>
+    <p class="aim-drills-sub">Three micro-reps for the week, one a day if it serves you. Skip without guilt &mdash; the drill is the rep, not the workout. Sundays off.</p>
+    <ul class="aim-drills-list">
+        <li class="aim-drill">
+          <span class="aim-drill-label" style="color:#A8742A;">Number you avoid</span>
+          <span class="aim-drill-text">Name the one business number you've been avoiding. Ask AI what it likely means. Look at the real one.</span>
+        </li>
+        <li class="aim-drill">
+          <span class="aim-drill-label" style="color:#A8742A;">Comms template</span>
+          <span class="aim-drill-text">Take a message you send weekly. Draft a reusable prompt for it in 90 seconds.</span>
+        </li>
+        <li class="aim-drill">
+          <span class="aim-drill-label" style="color:#A8742A;">Firstfruits</span>
+          <span class="aim-drill-text">Calculate 10% of this week's income. Decide where it goes before anything else gets allocated.</span>
+        </li>
+    </ul>
   </div>
 </section>
 

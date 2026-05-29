@@ -3,15 +3,11 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="canonical" href="https://usmcmin.com/ai-mission-week-3.html">
   <title>Week 3 &middot; Home Foundations &mdash; The Watchman&rsquo;s Course</title>
   <meta name="description" content="Week 3 of The Watchman's Course (U.S.M.C. Ministries AI Mission paid cohort): Home Foundations.">
   <meta name="robots" content="noindex,nofollow">
   <link rel="stylesheet" href="assets/css/main.css">
-  <link rel="icon" type="image/svg+xml" href="assets/icons/favicon.svg">
-  <link rel="icon" type="image/png" sizes="32x32" href="assets/icons/favicon-32.png">
-  <link rel="icon" type="image/png" sizes="16x16" href="assets/icons/favicon-16.png">
-  <link rel="apple-touch-icon" sizes="180x180" href="assets/icons/apple-touch-icon.png">
+  <link rel="icon" href="assets/img/favicon.png" type="image/png">
 <style>
   .module-hero { text-align:center; padding:120px 20px 56px; border-bottom:2px solid var(--border);
     background: linear-gradient(180deg, rgba(30,58,95,0.10) 0%, transparent 100%); }
@@ -185,30 +181,96 @@
       color: var(--gray); font-size: 0.94rem; margin-bottom: 22px;
       max-width: 720px;
     }
-    .aim-tasks-grid {
-      display: grid; gap: 16px;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    .aim-tasks-stack {
+      display: flex; flex-direction: column; gap: 18px;
     }
     .aim-task {
       background: rgba(255,255,255,0.025);
       border: 1px solid var(--border);
       border-left: 4px solid #B8966B;
       border-radius: 10px;
-      padding: 18px 20px 16px;
-      display: flex; flex-direction: column; gap: 6px;
+      padding: 22px 24px 20px;
     }
     .aim-task-kicker {
       font-size: 0.72rem; letter-spacing: 0.14em; font-weight: 800; text-transform: uppercase;
     }
     .aim-task-title {
-      margin: 4px 0 6px; font-size: 1.08rem; line-height: 1.25;
+      margin: 5px 0 4px; font-size: 1.32rem; line-height: 1.2;
     }
-    .aim-task-body { font-size: 0.9rem; color: var(--gray); line-height: 1.55; flex: 1; }
-    .aim-task-foot {
-      border-top: 1px solid; margin-top: 12px; padding-top: 10px;
-      font-size: 0.78rem;
+    .aim-task-tagline {
+      font-size: 1rem; font-style: italic; color: var(--gray); margin-bottom: 12px;
     }
-    .aim-task-status { font-weight: 700; }
+    .aim-task-setup { font-size: 0.96rem; color: var(--text); line-height: 1.65; margin: 0 0 14px; }
+    .aim-task-actions-label {
+      font-size: 0.72rem; letter-spacing: 0.14em; font-weight: 800; text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+    .aim-task-actions { margin: 0 0 4px; padding-left: 22px; }
+    .aim-task-actions > li {
+      font-size: 0.94rem; color: var(--text); line-height: 1.55; margin-bottom: 7px;
+    }
+    .aim-task-actions .aim-sublist { margin: 6px 0 4px; padding-left: 18px; list-style: none; }
+    .aim-task-actions .aim-sub {
+      font-size: 0.9rem; color: var(--gray); line-height: 1.5; margin-bottom: 4px;
+      position: relative; padding-left: 14px;
+    }
+    .aim-task-actions .aim-sub::before {
+      content: "\2013"; position: absolute; left: 0; color: #B8966B;
+    }
+    .aim-callout {
+      border-left: 3px solid #B8966B;
+      background: #B8966B0F;
+      border-radius: 0 6px 6px 0;
+      padding: 12px 16px;
+      margin: 14px 0;
+    }
+    .aim-callout-label {
+      font-size: 0.68rem; letter-spacing: 0.14em; font-weight: 800; text-transform: uppercase;
+      margin-bottom: 4px;
+    }
+    .aim-callout-body { font-size: 0.92rem; color: var(--text); line-height: 1.55; }
+    .aim-task-scripture {
+      border-left: 3px solid #B8966B;
+      padding: 4px 0 4px 14px;
+      margin-top: 14px;
+    }
+    .aim-ts-label {
+      display: block;
+      font-size: 0.66rem; letter-spacing: 0.16em; font-weight: 800; text-transform: uppercase;
+      margin-bottom: 4px;
+    }
+    .aim-task-scripture i { font-size: 0.9rem; color: var(--gray); line-height: 1.55; }
+
+    /* Watchman's Drills strip */
+    .aim-drills-section { max-width: 980px; margin: 0 auto; padding: 12px 24px 8px; }
+    .aim-drills-inner {
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 22px 24px 18px;
+      background: rgba(255,255,255,0.015);
+    }
+    .aim-drills-head { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; margin-bottom: 4px; }
+    .aim-drills-head h2 { font-size: 1.25rem; margin: 0; }
+    .aim-drills-tag {
+      font-size: 0.66rem; letter-spacing: 0.1em; font-weight: 800; text-transform: uppercase;
+      padding: 3px 10px; border: 1px solid; border-radius: 999px;
+    }
+    .aim-drills-sub { font-size: 0.9rem; color: var(--gray); line-height: 1.55; margin: 6px 0 16px; max-width: 720px; }
+    .aim-drills-list { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 10px; }
+    .aim-drill {
+      display: flex; gap: 14px; align-items: baseline;
+      padding: 10px 0; border-bottom: 1px dashed rgba(255,255,255,0.08);
+    }
+    .aim-drill:last-child { border-bottom: none; }
+    .aim-drill-label {
+      flex-shrink: 0; min-width: 130px;
+      font-size: 0.82rem; font-weight: 800; letter-spacing: 0.02em;
+    }
+    .aim-drill-text { font-size: 0.92rem; color: var(--text); line-height: 1.5; }
+    @media (max-width: 600px) {
+      .aim-drill { flex-direction: column; gap: 2px; }
+      .aim-drill-label { min-width: 0; }
+    }
 
     .aim-week-rhythm {
       max-width: 980px; margin: 8px auto 0; padding: 24px 24px 12px;
@@ -279,32 +341,71 @@
 
 <section class="aim-tasks-section">
   <h2>The three tasks for this week</h2>
-  <p class="aim-tasks-sub">Each task is one twenty-to-thirty-minute action &mdash; the kind of work that ships before the day ends, not the kind that lingers on your todo list. Full task PDFs land here when the next paid cohort opens.</p>
-  <div class="aim-tasks-grid">
-      <article class="aim-task" data-task="1">
+  <p class="aim-tasks-sub">Each task is one twenty-to-thirty-minute action &mdash; the kind of work that ships before the day ends, not the kind that lingers on your todo list. Open it, do it, react &check; in the cohort channel when it&rsquo;s shipped.</p>
+  <div class="aim-tasks-stack">
+      <article class="aim-task" data-task="1" style="border-left-color:#B8966B;">
         <div class="aim-task-kicker" style="color:#B8966B;">WEEK 3 &middot; TASK 1</div>
-        <h3 class="aim-task-title">5-minute Wife Audit</h3>
-        <p class="aim-task-body">Full action plan, watchman&rsquo;s frame, and the PDF you&rsquo;ll print and walk into the week with &mdash; drops here when the next cohort opens.</p>
-        <div class="aim-task-foot" style="border-top-color:#B8966B33;">
-          <span class="aim-task-status" style="color:#B8966B;">Coming with cohort kickoff</span>
+        <h3 class="aim-task-title">The 5-Minute Wife Audit</h3>
+        <div class="aim-task-tagline">A clean look at how you've actually been showing up.</div>
+        <p class="aim-task-setup">Most men believe their own press. This week you'll ask AI to play your wife describing the last month from her chair — not to put words in her mouth, but to break the spell of your own PR. Then you'll sit with what you read, and you'll go ask her directly.</p>
+        <div class="aim-task-actions-label" style="color:#B8966B;">Action checklist</div>
+        <ul class="aim-task-actions"><li>Open Claude. Brief it on your marriage stage and this month's stressors — no specific names or private details.</li><li>Ask: "If my wife described how I'm showing up this month — my presence, my words, my follow-through — what would she likely say?"</li><li>Read the answer twice. Notice the line that stings; that's the signal, not the noise.</li><li>Pray over it. Then ask her in person this week: does the audit match her experience?</li></ul>
+        <div class="aim-callout" style="border-left-color:#B8966B;"><div class="aim-callout-label" style="color:#B8966B;">DON'T HAND HER THE AI'S ANSWER</div><div class="aim-callout-body">This is a mirror for you, not a script for her. The AI guess is a starting point to get you honest — her actual words are the only ones that count. Go get them.</div></div>
+        <div class="aim-task-scripture" style="border-left-color:#B8966B;">
+          <span class="aim-ts-label" style="color:#B8966B;">SCRIPTURE</span>
+          <i>Ephesians 5:25 — "Husbands, love your wives, as Christ also loved the church." Christ knew His bride intimately. AI is a tool to break your self-deception; knowing her is still your work.</i>
         </div>
       </article>
-      <article class="aim-task" data-task="2">
+      <article class="aim-task" data-task="2" style="border-left-color:#B8966B;">
         <div class="aim-task-kicker" style="color:#B8966B;">WEEK 3 &middot; TASK 2</div>
-        <h3 class="aim-task-title">Write your 5-year Watchman's Vision</h3>
-        <p class="aim-task-body">Full action plan, watchman&rsquo;s frame, and the PDF you&rsquo;ll print and walk into the week with &mdash; drops here when the next cohort opens.</p>
-        <div class="aim-task-foot" style="border-top-color:#B8966B33;">
-          <span class="aim-task-status" style="color:#B8966B;">Coming with cohort kickoff</span>
+        <h3 class="aim-task-title">Write Your 5-Year Watchman's Vision</h3>
+        <div class="aim-task-tagline">One paragraph each: marriage, fathering, body, money, spirit.</div>
+        <p class="aim-task-setup">A watchman who can't say where the city is headed won't notice when it drifts. Use AI to draft a five-year vision across the five domains of your life, then cut it down to what you'll actually decide — not what you wish. AI drafts; you sign; you re-read it every Monday for five years.</p>
+        <div class="aim-task-actions-label" style="color:#B8966B;">Action checklist</div>
+        <ul class="aim-task-actions"><li>Ask Claude to draft one paragraph for each domain:<ul class="aim-sublist"><li class="aim-sub">Marriage — what does it look like five years from now?</li><li class="aim-sub">Fathering — what would your kids say about you?</li><li class="aim-sub">Body — what physical state are you stewarding toward?</li><li class="aim-sub">Money — what's your financial position and what's it for?</li><li class="aim-sub">Spirit — where is your walk with God?</li></ul></li><li>Read each paragraph aloud. Cut every line that's a wish but not a decision.</li><li>Rewrite the survivors in your own words until it sounds like you, not the machine.</li><li>Print it. Read it the first Monday of every month.</li></ul>
+        <div class="aim-callout" style="border-left-color:#B8966B;"><div class="aim-callout-label" style="color:#B8966B;">WHY THIS MATTERS</div><div class="aim-callout-body">A man without a written vision is steered by the most recent email and the loudest crisis. Write it down so the urgent can't keep beating the important.</div></div>
+        <div class="aim-task-scripture" style="border-left-color:#B8966B;">
+          <span class="aim-ts-label" style="color:#B8966B;">SCRIPTURE</span>
+          <i>Proverbs 29:18 — "Where there is no vision, the people perish." The people in your house included — and so does the watchman himself.</i>
         </div>
       </article>
-      <article class="aim-task" data-task="3">
+      <article class="aim-task" data-task="3" style="border-left-color:#B8966B;">
         <div class="aim-task-kicker" style="color:#B8966B;">WEEK 3 &middot; TASK 3</div>
-        <h3 class="aim-task-title">Prep one hard conversation</h3>
-        <p class="aim-task-body">Full action plan, watchman&rsquo;s frame, and the PDF you&rsquo;ll print and walk into the week with &mdash; drops here when the next cohort opens.</p>
-        <div class="aim-task-foot" style="border-top-color:#B8966B33;">
-          <span class="aim-task-status" style="color:#B8966B;">Coming with cohort kickoff</span>
+        <h3 class="aim-task-title">Prep One Hard Conversation</h3>
+        <div class="aim-task-tagline">AI prepares the watchman. The watchman shows up.</div>
+        <p class="aim-task-setup">There's a conversation you've been avoiding — with your wife, a kid, a partner, an elder. This is the rep. AI is the prep room where you find the kindest true words and anticipate the response. It is not the pulpit. You'll have the conversation by Friday, with no screen in the room.</p>
+        <div class="aim-task-actions-label" style="color:#B8966B;">Action checklist</div>
+        <ul class="aim-task-actions"><li>Use Claude to prepare: clarify what you actually want to say, anticipate their response, find words that are both kind and true.</li><li>Then have the conversation — without AI in the room.<ul class="aim-sublist"><li class="aim-sub">The prep is for your nerve and your clarity, not for a script.</li><li class="aim-sub">If you catch yourself reading off your phone, you've missed the point.</li></ul></li><li>Have it by Friday. Report in the channel that it shipped — not the contents, just that you showed up.</li><li>Afterward, log two sentences: what landed, what you'd do differently.</li></ul>
+        <div class="aim-callout" style="border-left-color:#B8966B;"><div class="aim-callout-label" style="color:#B8966B;">SHOW UP SOBER AND PRESENT</div><div class="aim-callout-body">They don't need a polished speech. They need you — clear, unhurried, and not hiding behind a screen. The prep is so you can be fully there, not partly performing.</div></div>
+        <div class="aim-task-scripture" style="border-left-color:#B8966B;">
+          <span class="aim-ts-label" style="color:#B8966B;">SCRIPTURE</span>
+          <i>Ephesians 4:15 — "Speaking the truth in love." AI can help you find the words; only the Spirit gives the courage to say them face to face.</i>
         </div>
       </article>
+  </div>
+</section>
+
+<section class="aim-drills-section">
+  <div class="aim-drills-inner">
+    <div class="aim-drills-head">
+      <h2>Watchman&rsquo;s Drills</h2>
+      <span class="aim-drills-tag" style="background:#B8966B1A;color:#B8966B;border-color:#B8966B55;">Optional depth &middot; 90 seconds each</span>
+    </div>
+    <p class="aim-drills-sub">Three micro-reps for the week, one a day if it serves you. Skip without guilt &mdash; the drill is the rep, not the workout. Sundays off.</p>
+    <ul class="aim-drills-list">
+        <li class="aim-drill">
+          <span class="aim-drill-label" style="color:#B8966B;">One question</span>
+          <span class="aim-drill-text">Ask AI for one good question to ask your wife tonight that isn't about logistics. Ask it for real.</span>
+        </li>
+        <li class="aim-drill">
+          <span class="aim-drill-label" style="color:#B8966B;">Kid prompt</span>
+          <span class="aim-drill-text">Have AI suggest one conversation starter for each of your kids' ages. Use one at dinner.</span>
+        </li>
+        <li class="aim-drill">
+          <span class="aim-drill-label" style="color:#B8966B;">Drift check</span>
+          <span class="aim-drill-text">Ask AI: 'What's one way I might be drifting as a husband this month?' Sit with the answer before defending.</span>
+        </li>
+    </ul>
   </div>
 </section>
 

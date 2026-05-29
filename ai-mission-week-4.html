@@ -3,15 +3,11 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="canonical" href="https://usmcmin.com/ai-mission-week-4.html">
   <title>Week 4 &middot; Home Systems & Stewardship &mdash; The Watchman&rsquo;s Course</title>
   <meta name="description" content="Week 4 of The Watchman's Course (U.S.M.C. Ministries AI Mission paid cohort): Home Systems & Stewardship.">
   <meta name="robots" content="noindex,nofollow">
   <link rel="stylesheet" href="assets/css/main.css">
-  <link rel="icon" type="image/svg+xml" href="assets/icons/favicon.svg">
-  <link rel="icon" type="image/png" sizes="32x32" href="assets/icons/favicon-32.png">
-  <link rel="icon" type="image/png" sizes="16x16" href="assets/icons/favicon-16.png">
-  <link rel="apple-touch-icon" sizes="180x180" href="assets/icons/apple-touch-icon.png">
+  <link rel="icon" href="assets/img/favicon.png" type="image/png">
 <style>
   .module-hero { text-align:center; padding:120px 20px 56px; border-bottom:2px solid var(--border);
     background: linear-gradient(180deg, rgba(30,58,95,0.10) 0%, transparent 100%); }
@@ -185,30 +181,96 @@
       color: var(--gray); font-size: 0.94rem; margin-bottom: 22px;
       max-width: 720px;
     }
-    .aim-tasks-grid {
-      display: grid; gap: 16px;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    .aim-tasks-stack {
+      display: flex; flex-direction: column; gap: 18px;
     }
     .aim-task {
       background: rgba(255,255,255,0.025);
       border: 1px solid var(--border);
       border-left: 4px solid #B8966B;
       border-radius: 10px;
-      padding: 18px 20px 16px;
-      display: flex; flex-direction: column; gap: 6px;
+      padding: 22px 24px 20px;
     }
     .aim-task-kicker {
       font-size: 0.72rem; letter-spacing: 0.14em; font-weight: 800; text-transform: uppercase;
     }
     .aim-task-title {
-      margin: 4px 0 6px; font-size: 1.08rem; line-height: 1.25;
+      margin: 5px 0 4px; font-size: 1.32rem; line-height: 1.2;
     }
-    .aim-task-body { font-size: 0.9rem; color: var(--gray); line-height: 1.55; flex: 1; }
-    .aim-task-foot {
-      border-top: 1px solid; margin-top: 12px; padding-top: 10px;
-      font-size: 0.78rem;
+    .aim-task-tagline {
+      font-size: 1rem; font-style: italic; color: var(--gray); margin-bottom: 12px;
     }
-    .aim-task-status { font-weight: 700; }
+    .aim-task-setup { font-size: 0.96rem; color: var(--text); line-height: 1.65; margin: 0 0 14px; }
+    .aim-task-actions-label {
+      font-size: 0.72rem; letter-spacing: 0.14em; font-weight: 800; text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+    .aim-task-actions { margin: 0 0 4px; padding-left: 22px; }
+    .aim-task-actions > li {
+      font-size: 0.94rem; color: var(--text); line-height: 1.55; margin-bottom: 7px;
+    }
+    .aim-task-actions .aim-sublist { margin: 6px 0 4px; padding-left: 18px; list-style: none; }
+    .aim-task-actions .aim-sub {
+      font-size: 0.9rem; color: var(--gray); line-height: 1.5; margin-bottom: 4px;
+      position: relative; padding-left: 14px;
+    }
+    .aim-task-actions .aim-sub::before {
+      content: "\2013"; position: absolute; left: 0; color: #B8966B;
+    }
+    .aim-callout {
+      border-left: 3px solid #B8966B;
+      background: #B8966B0F;
+      border-radius: 0 6px 6px 0;
+      padding: 12px 16px;
+      margin: 14px 0;
+    }
+    .aim-callout-label {
+      font-size: 0.68rem; letter-spacing: 0.14em; font-weight: 800; text-transform: uppercase;
+      margin-bottom: 4px;
+    }
+    .aim-callout-body { font-size: 0.92rem; color: var(--text); line-height: 1.55; }
+    .aim-task-scripture {
+      border-left: 3px solid #B8966B;
+      padding: 4px 0 4px 14px;
+      margin-top: 14px;
+    }
+    .aim-ts-label {
+      display: block;
+      font-size: 0.66rem; letter-spacing: 0.16em; font-weight: 800; text-transform: uppercase;
+      margin-bottom: 4px;
+    }
+    .aim-task-scripture i { font-size: 0.9rem; color: var(--gray); line-height: 1.55; }
+
+    /* Watchman's Drills strip */
+    .aim-drills-section { max-width: 980px; margin: 0 auto; padding: 12px 24px 8px; }
+    .aim-drills-inner {
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 22px 24px 18px;
+      background: rgba(255,255,255,0.015);
+    }
+    .aim-drills-head { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; margin-bottom: 4px; }
+    .aim-drills-head h2 { font-size: 1.25rem; margin: 0; }
+    .aim-drills-tag {
+      font-size: 0.66rem; letter-spacing: 0.1em; font-weight: 800; text-transform: uppercase;
+      padding: 3px 10px; border: 1px solid; border-radius: 999px;
+    }
+    .aim-drills-sub { font-size: 0.9rem; color: var(--gray); line-height: 1.55; margin: 6px 0 16px; max-width: 720px; }
+    .aim-drills-list { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 10px; }
+    .aim-drill {
+      display: flex; gap: 14px; align-items: baseline;
+      padding: 10px 0; border-bottom: 1px dashed rgba(255,255,255,0.08);
+    }
+    .aim-drill:last-child { border-bottom: none; }
+    .aim-drill-label {
+      flex-shrink: 0; min-width: 130px;
+      font-size: 0.82rem; font-weight: 800; letter-spacing: 0.02em;
+    }
+    .aim-drill-text { font-size: 0.92rem; color: var(--text); line-height: 1.5; }
+    @media (max-width: 600px) {
+      .aim-drill { flex-direction: column; gap: 2px; }
+      .aim-drill-label { min-width: 0; }
+    }
 
     .aim-week-rhythm {
       max-width: 980px; margin: 8px auto 0; padding: 24px 24px 12px;
@@ -279,32 +341,71 @@
 
 <section class="aim-tasks-section">
   <h2>The three tasks for this week</h2>
-  <p class="aim-tasks-sub">Each task is one twenty-to-thirty-minute action &mdash; the kind of work that ships before the day ends, not the kind that lingers on your todo list. Full task PDFs land here when the next paid cohort opens.</p>
-  <div class="aim-tasks-grid">
-      <article class="aim-task" data-task="1">
+  <p class="aim-tasks-sub">Each task is one twenty-to-thirty-minute action &mdash; the kind of work that ships before the day ends, not the kind that lingers on your todo list. Open it, do it, react &check; in the cohort channel when it&rsquo;s shipped.</p>
+  <div class="aim-tasks-stack">
+      <article class="aim-task" data-task="1" style="border-left-color:#B8966B;">
         <div class="aim-task-kicker" style="color:#B8966B;">WEEK 4 &middot; TASK 1</div>
-        <h3 class="aim-task-title">Family AI Policy + Friday devotion generator</h3>
-        <p class="aim-task-body">Full action plan, watchman&rsquo;s frame, and the PDF you&rsquo;ll print and walk into the week with &mdash; drops here when the next cohort opens.</p>
-        <div class="aim-task-foot" style="border-top-color:#B8966B33;">
-          <span class="aim-task-status" style="color:#B8966B;">Coming with cohort kickoff</span>
+        <h3 class="aim-task-title">Family AI Policy + Friday Devotion Generator</h3>
+        <div class="aim-task-tagline">Write the policy WITH your kids. Then generate this Friday's devo.</div>
+        <p class="aim-task-setup">Your kids are going to grow up with AI whether you lead on it or not. This week you write the family AI policy with them at the table — what it's for, what it never replaces — and you put it on the fridge. Then you use AI for the thing it's genuinely good at in a home: turning last Sunday's sermon into a Friday-night family devotion with a question for each child.</p>
+        <div class="aim-task-actions-label" style="color:#B8966B;">Action checklist</div>
+        <ul class="aim-task-actions"><li>Sit down with your kids. Ask them what they think AI is good for and what it should never do. Write the policy together.</li><li>Post the policy where the family sees it — the fridge, not a folder.</li><li>Feed AI last Sunday's sermon (notes or the passage) and ask for a short family devo with one age-appropriate question per child.</li><li>Run the devo this Friday. Tune it next week based on what landed.</li></ul>
+        <div class="aim-callout" style="border-left-color:#B8966B;"><div class="aim-callout-label" style="color:#B8966B;">LEAD, DON'T BAN</div><div class="aim-callout-body">A policy your kids helped write is one they'll keep. A ban you impose is one they'll route around the moment you're not looking. Disciple them through the tool, don't pretend it isn't there.</div></div>
+        <div class="aim-task-scripture" style="border-left-color:#B8966B;">
+          <span class="aim-ts-label" style="color:#B8966B;">SCRIPTURE</span>
+          <i>1 Timothy 3:4–5 — "One who rules his own house well... for if a man does not know how to rule his own house, how will he take care of the church of God?" The home is the first command. Lead it on this too.</i>
         </div>
       </article>
-      <article class="aim-task" data-task="2">
+      <article class="aim-task" data-task="2" style="border-left-color:#B8966B;">
         <div class="aim-task-kicker" style="color:#B8966B;">WEEK 4 &middot; TASK 2</div>
-        <h3 class="aim-task-title">Family rhythm asset</h3>
-        <p class="aim-task-body">Full action plan, watchman&rsquo;s frame, and the PDF you&rsquo;ll print and walk into the week with &mdash; drops here when the next cohort opens.</p>
-        <div class="aim-task-foot" style="border-top-color:#B8966B33;">
-          <span class="aim-task-status" style="color:#B8966B;">Coming with cohort kickoff</span>
+        <h3 class="aim-task-title">Family Rhythm Asset</h3>
+        <div class="aim-task-tagline">A cadence map for the household. AI drafts; you iterate; you post it.</div>
+        <p class="aim-task-setup">A house without a rhythm runs on whoever's most anxious that day. Build a daily and weekly cadence map for your household — meals, devotions, screens, sabbath, the recurring one-on-ones with each kid and your wife — and post it where everyone can see it. AI is the drafting partner; the family is the editor.</p>
+        <div class="aim-task-actions-label" style="color:#B8966B;">Action checklist</div>
+        <ul class="aim-task-actions"><li>Ask AI to draft a weekly household cadence from your inputs: work hours, school, church, meals, bedtimes.</li><li>Build in the non-negotiables — a weekly sabbath block, a one-on-one with each child, a date with your wife.</li><li>Sit with the family and edit it together; let them push back.</li><li>Post it where everyone sees it. Run it for a week and adjust.</li></ul>
+        <div class="aim-callout" style="border-left-color:#B8966B;"><div class="aim-callout-label" style="color:#B8966B;">THE RHYTHM PROTECTS THE RELATIONSHIPS</div><div class="aim-callout-body">You don't rise to your intentions; you fall to your systems. A posted rhythm is how the important recurring things survive the week's chaos.</div></div>
+        <div class="aim-task-scripture" style="border-left-color:#B8966B;">
+          <span class="aim-ts-label" style="color:#B8966B;">SCRIPTURE</span>
+          <i>1 Corinthians 14:40 — "Let all things be done decently and in order." Order in the home isn't rigidity — it's the trellis the relationships grow on.</i>
         </div>
       </article>
-      <article class="aim-task" data-task="3">
+      <article class="aim-task" data-task="3" style="border-left-color:#B8966B;">
         <div class="aim-task-kicker" style="color:#B8966B;">WEEK 4 &middot; TASK 3</div>
-        <h3 class="aim-task-title">Legacy plan starter</h3>
-        <p class="aim-task-body">Full action plan, watchman&rsquo;s frame, and the PDF you&rsquo;ll print and walk into the week with &mdash; drops here when the next cohort opens.</p>
-        <div class="aim-task-foot" style="border-top-color:#B8966B33;">
-          <span class="aim-task-status" style="color:#B8966B;">Coming with cohort kickoff</span>
+        <h3 class="aim-task-title">Legacy Plan Starter</h3>
+        <div class="aim-task-tagline">Will, beneficiaries, the letter your family opens if you're gone.</div>
+        <p class="aim-task-setup">A watchman thinks about what happens if he falls. Most men avoid this until it's an emergency for someone else. This week, AI helps you draft the framework — the will outline, the beneficiary list, the instructions to your family about accounts, passwords, and where the important things are. AI drafts the skeleton; you take it to a lawyer; you don't die without it.</p>
+        <div class="aim-task-actions-label" style="color:#B8966B;">Action checklist</div>
+        <ul class="aim-task-actions"><li>Ask AI to generate a legacy-plan framework: will outline, beneficiary checklist, an "if I'm gone" instructions document.</li><li>Fill in the framework — accounts, key contacts, where documents live, who to call. Keep sensitive specifics off the AI; just build the structure.</li><li>Write the short letter: what you'd want your wife and kids to know and do in the first week.</li><li>Book the lawyer appointment to make the will real. AI drafts the framework; a professional makes it binding.</li></ul>
+        <div class="aim-callout" style="border-left-color:#B8966B;"><div class="aim-callout-label" style="color:#B8966B;">THIS IS LOVE, NOT MORBIDITY</div><div class="aim-callout-body">Leaving your family a clear plan is one of the kindest things you'll ever do for them — and one of the most-avoided. Do the avoided thing this week.</div></div>
+        <div class="aim-task-scripture" style="border-left-color:#B8966B;">
+          <span class="aim-ts-label" style="color:#B8966B;">SCRIPTURE</span>
+          <i>Proverbs 13:22 — "A good man leaves an inheritance to his children's children." An inheritance isn't only money — it's a family that isn't left scrambling. Plan it.</i>
         </div>
       </article>
+  </div>
+</section>
+
+<section class="aim-drills-section">
+  <div class="aim-drills-inner">
+    <div class="aim-drills-head">
+      <h2>Watchman&rsquo;s Drills</h2>
+      <span class="aim-drills-tag" style="background:#B8966B1A;color:#B8966B;border-color:#B8966B55;">Optional depth &middot; 90 seconds each</span>
+    </div>
+    <p class="aim-drills-sub">Three micro-reps for the week, one a day if it serves you. Skip without guilt &mdash; the drill is the rep, not the workout. Sundays off.</p>
+    <ul class="aim-drills-list">
+        <li class="aim-drill">
+          <span class="aim-drill-label" style="color:#B8966B;">Devo seed</span>
+          <span class="aim-drill-text">Turn one verse from Sunday into a single dinner-table question for the family. Keep it under 20 words.</span>
+        </li>
+        <li class="aim-drill">
+          <span class="aim-drill-label" style="color:#B8966B;">Rhythm gap</span>
+          <span class="aim-drill-text">Ask AI to spot the one recurring relationship that has no time blocked for it this week. Block it.</span>
+        </li>
+        <li class="aim-drill">
+          <span class="aim-drill-label" style="color:#B8966B;">Legacy line</span>
+          <span class="aim-drill-text">Write one sentence you'd want your kids to read if you were gone. Save it. Add to it weekly.</span>
+        </li>
+    </ul>
   </div>
 </section>
 

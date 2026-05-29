@@ -3,15 +3,11 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="canonical" href="https://usmcmin.com/ai-mission-week-7.html">
   <title>Week 7 &middot; Cowork as Operator Infra &mdash; The Watchman&rsquo;s Course</title>
   <meta name="description" content="Week 7 of The Watchman's Course (U.S.M.C. Ministries AI Mission paid cohort): Cowork as Operator Infra.">
   <meta name="robots" content="noindex,nofollow">
   <link rel="stylesheet" href="assets/css/main.css">
-  <link rel="icon" type="image/svg+xml" href="assets/icons/favicon.svg">
-  <link rel="icon" type="image/png" sizes="32x32" href="assets/icons/favicon-32.png">
-  <link rel="icon" type="image/png" sizes="16x16" href="assets/icons/favicon-16.png">
-  <link rel="apple-touch-icon" sizes="180x180" href="assets/icons/apple-touch-icon.png">
+  <link rel="icon" href="assets/img/favicon.png" type="image/png">
 <style>
   .module-hero { text-align:center; padding:120px 20px 56px; border-bottom:2px solid var(--border);
     background: linear-gradient(180deg, rgba(30,58,95,0.10) 0%, transparent 100%); }
@@ -185,30 +181,96 @@
       color: var(--gray); font-size: 0.94rem; margin-bottom: 22px;
       max-width: 720px;
     }
-    .aim-tasks-grid {
-      display: grid; gap: 16px;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    .aim-tasks-stack {
+      display: flex; flex-direction: column; gap: 18px;
     }
     .aim-task {
       background: rgba(255,255,255,0.025);
       border: 1px solid var(--border);
       border-left: 4px solid #A8742A;
       border-radius: 10px;
-      padding: 18px 20px 16px;
-      display: flex; flex-direction: column; gap: 6px;
+      padding: 22px 24px 20px;
     }
     .aim-task-kicker {
       font-size: 0.72rem; letter-spacing: 0.14em; font-weight: 800; text-transform: uppercase;
     }
     .aim-task-title {
-      margin: 4px 0 6px; font-size: 1.08rem; line-height: 1.25;
+      margin: 5px 0 4px; font-size: 1.32rem; line-height: 1.2;
     }
-    .aim-task-body { font-size: 0.9rem; color: var(--gray); line-height: 1.55; flex: 1; }
-    .aim-task-foot {
-      border-top: 1px solid; margin-top: 12px; padding-top: 10px;
-      font-size: 0.78rem;
+    .aim-task-tagline {
+      font-size: 1rem; font-style: italic; color: var(--gray); margin-bottom: 12px;
     }
-    .aim-task-status { font-weight: 700; }
+    .aim-task-setup { font-size: 0.96rem; color: var(--text); line-height: 1.65; margin: 0 0 14px; }
+    .aim-task-actions-label {
+      font-size: 0.72rem; letter-spacing: 0.14em; font-weight: 800; text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+    .aim-task-actions { margin: 0 0 4px; padding-left: 22px; }
+    .aim-task-actions > li {
+      font-size: 0.94rem; color: var(--text); line-height: 1.55; margin-bottom: 7px;
+    }
+    .aim-task-actions .aim-sublist { margin: 6px 0 4px; padding-left: 18px; list-style: none; }
+    .aim-task-actions .aim-sub {
+      font-size: 0.9rem; color: var(--gray); line-height: 1.5; margin-bottom: 4px;
+      position: relative; padding-left: 14px;
+    }
+    .aim-task-actions .aim-sub::before {
+      content: "\2013"; position: absolute; left: 0; color: #A8742A;
+    }
+    .aim-callout {
+      border-left: 3px solid #A8742A;
+      background: #A8742A0F;
+      border-radius: 0 6px 6px 0;
+      padding: 12px 16px;
+      margin: 14px 0;
+    }
+    .aim-callout-label {
+      font-size: 0.68rem; letter-spacing: 0.14em; font-weight: 800; text-transform: uppercase;
+      margin-bottom: 4px;
+    }
+    .aim-callout-body { font-size: 0.92rem; color: var(--text); line-height: 1.55; }
+    .aim-task-scripture {
+      border-left: 3px solid #A8742A;
+      padding: 4px 0 4px 14px;
+      margin-top: 14px;
+    }
+    .aim-ts-label {
+      display: block;
+      font-size: 0.66rem; letter-spacing: 0.16em; font-weight: 800; text-transform: uppercase;
+      margin-bottom: 4px;
+    }
+    .aim-task-scripture i { font-size: 0.9rem; color: var(--gray); line-height: 1.55; }
+
+    /* Watchman's Drills strip */
+    .aim-drills-section { max-width: 980px; margin: 0 auto; padding: 12px 24px 8px; }
+    .aim-drills-inner {
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 22px 24px 18px;
+      background: rgba(255,255,255,0.015);
+    }
+    .aim-drills-head { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; margin-bottom: 4px; }
+    .aim-drills-head h2 { font-size: 1.25rem; margin: 0; }
+    .aim-drills-tag {
+      font-size: 0.66rem; letter-spacing: 0.1em; font-weight: 800; text-transform: uppercase;
+      padding: 3px 10px; border: 1px solid; border-radius: 999px;
+    }
+    .aim-drills-sub { font-size: 0.9rem; color: var(--gray); line-height: 1.55; margin: 6px 0 16px; max-width: 720px; }
+    .aim-drills-list { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 10px; }
+    .aim-drill {
+      display: flex; gap: 14px; align-items: baseline;
+      padding: 10px 0; border-bottom: 1px dashed rgba(255,255,255,0.08);
+    }
+    .aim-drill:last-child { border-bottom: none; }
+    .aim-drill-label {
+      flex-shrink: 0; min-width: 130px;
+      font-size: 0.82rem; font-weight: 800; letter-spacing: 0.02em;
+    }
+    .aim-drill-text { font-size: 0.92rem; color: var(--text); line-height: 1.5; }
+    @media (max-width: 600px) {
+      .aim-drill { flex-direction: column; gap: 2px; }
+      .aim-drill-label { min-width: 0; }
+    }
 
     .aim-week-rhythm {
       max-width: 980px; margin: 8px auto 0; padding: 24px 24px 12px;
@@ -279,32 +341,71 @@
 
 <section class="aim-tasks-section">
   <h2>The three tasks for this week</h2>
-  <p class="aim-tasks-sub">Each task is one twenty-to-thirty-minute action &mdash; the kind of work that ships before the day ends, not the kind that lingers on your todo list. Full task PDFs land here when the next paid cohort opens.</p>
-  <div class="aim-tasks-grid">
-      <article class="aim-task" data-task="1">
+  <p class="aim-tasks-sub">Each task is one twenty-to-thirty-minute action &mdash; the kind of work that ships before the day ends, not the kind that lingers on your todo list. Open it, do it, react &check; in the cohort channel when it&rsquo;s shipped.</p>
+  <div class="aim-tasks-stack">
+      <article class="aim-task" data-task="1" style="border-left-color:#A8742A;">
         <div class="aim-task-kicker" style="color:#A8742A;">WEEK 7 &middot; TASK 1</div>
-        <h3 class="aim-task-title">Cowork inventory + redlines</h3>
-        <p class="aim-task-body">Full action plan, watchman&rsquo;s frame, and the PDF you&rsquo;ll print and walk into the week with &mdash; drops here when the next cohort opens.</p>
-        <div class="aim-task-foot" style="border-top-color:#A8742A33;">
-          <span class="aim-task-status" style="color:#A8742A;">Coming with cohort kickoff</span>
+        <h3 class="aim-task-title">Cowork Inventory + Redlines</h3>
+        <div class="aim-task-tagline">Five things to automate end to end. Five things you never will.</div>
+        <p class="aim-task-setup">Now that you've shipped one Cowork workflow, you build the map. List the five categories of your work Cowork could genuinely run end to end — and, just as important, the five where it's the wrong tool: anything pastoral, anything irreversible, anything that has to carry your voice. Draw the boundary before you build, not after something goes wrong.</p>
+        <div class="aim-task-actions-label" style="color:#A8742A;">Action checklist</div>
+        <ul class="aim-task-actions"><li>Read the Cowork docs enough to know what it can actually do.</li><li>List five categories of YOUR work it could automate end to end.</li><li>List five where Cowork is the wrong tool — pastoral, irreversible, voice-critical, relationship-critical.</li><li>Make the boundary explicit and write it down. This is the operator's half of your Redlines.</li></ul>
+        <div class="aim-callout" style="border-left-color:#A8742A;"><div class="aim-callout-label" style="color:#A8742A;">THE BOUNDARY IS THE POINT</div><div class="aim-callout-body">The men who get burned by agentic AI are the ones who never decided what it shouldn't touch. Drawing the line is not fear of the tool — it's command of it.</div></div>
+        <div class="aim-task-scripture" style="border-left-color:#A8742A;">
+          <span class="aim-ts-label" style="color:#A8742A;">SCRIPTURE</span>
+          <i>Proverbs 22:3 — "A prudent man foresees evil and hides himself, but the simple pass on and are punished." Foreseeing where a tool shouldn't go is prudence, not paranoia.</i>
         </div>
       </article>
-      <article class="aim-task" data-task="2">
+      <article class="aim-task" data-task="2" style="border-left-color:#A8742A;">
         <div class="aim-task-kicker" style="color:#A8742A;">WEEK 7 &middot; TASK 2</div>
-        <h3 class="aim-task-title">Build your Cowork prompt library</h3>
-        <p class="aim-task-body">Full action plan, watchman&rsquo;s frame, and the PDF you&rsquo;ll print and walk into the week with &mdash; drops here when the next cohort opens.</p>
-        <div class="aim-task-foot" style="border-top-color:#A8742A33;">
-          <span class="aim-task-status" style="color:#A8742A;">Coming with cohort kickoff</span>
+        <h3 class="aim-task-title">Build Your Cowork Prompt Library</h3>
+        <div class="aim-task-tagline">Five reusable workflows you'll run every week. Use two now.</div>
+        <p class="aim-task-setup">An operator's leverage compounds when his best prompts stop living in his head. This week you build a library of five reusable Cowork workflows — the recurring jobs of your week — and you put two of them to work immediately. Build the arsenal; then actually fire it.</p>
+        <div class="aim-task-actions-label" style="color:#A8742A;">Action checklist</div>
+        <ul class="aim-task-actions"><li>Draft five reusable Cowork prompts for recurring work, such as:<ul class="aim-sublist"><li class="aim-sub">The weekly status report.</li><li class="aim-sub">The content brief or first draft.</li><li class="aim-sub">Meeting prep from an agenda.</li><li class="aim-sub">Weekly family or household planning.</li><li class="aim-sub">A research summary on a recurring question.</li></ul></li><li>Save them somewhere you'll actually find them — a note, a doc, a folder.</li><li>Run two of them this week on real work.</li><li>Refine the two you ran based on what the output got wrong.</li></ul>
+        <div class="aim-callout" style="border-left-color:#A8742A;"><div class="aim-callout-label" style="color:#A8742A;">A LIBRARY YOU USE, NOT ONE YOU BUILD</div><div class="aim-callout-body">The trap is spending the week building a beautiful library and running none of it. Build five, run two. The running is what teaches you.</div></div>
+        <div class="aim-task-scripture" style="border-left-color:#A8742A;">
+          <span class="aim-ts-label" style="color:#A8742A;">SCRIPTURE</span>
+          <i>Proverbs 21:5 — "The plans of the diligent lead surely to plenty." A prompt library is diligence stored up — plans you don't have to re-make every week.</i>
         </div>
       </article>
-      <article class="aim-task" data-task="3">
+      <article class="aim-task" data-task="3" style="border-left-color:#A8742A;">
         <div class="aim-task-kicker" style="color:#A8742A;">WEEK 7 &middot; TASK 3</div>
-        <h3 class="aim-task-title">Multi-step research workflow</h3>
-        <p class="aim-task-body">Full action plan, watchman&rsquo;s frame, and the PDF you&rsquo;ll print and walk into the week with &mdash; drops here when the next cohort opens.</p>
-        <div class="aim-task-foot" style="border-top-color:#A8742A33;">
-          <span class="aim-task-status" style="color:#A8742A;">Coming with cohort kickoff</span>
+        <h3 class="aim-task-title">Multi-Step Research Workflow</h3>
+        <div class="aim-task-tagline">Cowork researches across sources. You decide.</div>
+        <p class="aim-task-setup">Some decisions need more than a single answer — they need a brief. This week you have Cowork research a real topic across three or more sources, synthesize it into one document, and surface the tensions and the uncertainties instead of pretending there's one clean answer. Then you read it and you decide. The tool gathers; the watchman judges.</p>
+        <div class="aim-task-actions-label" style="color:#A8742A;">Action checklist</div>
+        <ul class="aim-task-actions"><li>Pick a real topic you owe a decision on this week — a purchase, a strategy, a position.</li><li>Have Cowork research it across 3+ sources and synthesize into one brief.</li><li>Require it to surface the disagreements and what's uncertain — not just a tidy summary.</li><li>Read the brief, make the call, and write one line on why. Decide by Friday.</li></ul>
+        <div class="aim-callout" style="border-left-color:#A8742A;"><div class="aim-callout-label" style="color:#A8742A;">SYNTHESIS IS NOT A VERDICT</div><div class="aim-callout-body">AI can gather and arrange, but it can't bear the weight of the decision — that's yours, and it always will be. Read the brief, then own the call.</div></div>
+        <div class="aim-task-scripture" style="border-left-color:#A8742A;">
+          <span class="aim-ts-label" style="color:#A8742A;">SCRIPTURE</span>
+          <i>Proverbs 18:17 — "The first one to plead his cause seems right, until his neighbor comes and examines him." A good research brief brings the neighbor — the other side — before you decide.</i>
         </div>
       </article>
+  </div>
+</section>
+
+<section class="aim-drills-section">
+  <div class="aim-drills-inner">
+    <div class="aim-drills-head">
+      <h2>Watchman&rsquo;s Drills</h2>
+      <span class="aim-drills-tag" style="background:#A8742A1A;color:#A8742A;border-color:#A8742A55;">Optional depth &middot; 90 seconds each</span>
+    </div>
+    <p class="aim-drills-sub">Three micro-reps for the week, one a day if it serves you. Skip without guilt &mdash; the drill is the rep, not the workout. Sundays off.</p>
+    <ul class="aim-drills-list">
+        <li class="aim-drill">
+          <span class="aim-drill-label" style="color:#A8742A;">Redline rep</span>
+          <span class="aim-drill-text">Name one task Cowork should NEVER do for you. Add it to your written redlines.</span>
+        </li>
+        <li class="aim-drill">
+          <span class="aim-drill-label" style="color:#A8742A;">Library add</span>
+          <span class="aim-drill-text">Save one prompt you used today to your reusable library. You're building an arsenal one rep at a time.</span>
+        </li>
+        <li class="aim-drill">
+          <span class="aim-drill-label" style="color:#A8742A;">Bring the neighbor</span>
+          <span class="aim-drill-text">On one decision you're leaning toward, ask AI to argue the opposite case hard. Read it before you commit.</span>
+        </li>
+    </ul>
   </div>
 </section>
 

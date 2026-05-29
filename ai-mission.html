@@ -588,8 +588,26 @@
     @media (max-width: 820px) { .leadmag-grid { grid-template-columns: 1fr; } }
     .leadmag-lede { font-size: 1rem; color: var(--gray); line-height: 1.65; margin: 0 0 20px; }
     .leadmag-lede strong { color: var(--text); }
-    .leadmag-cta { display: flex; gap: 12px; flex-wrap: wrap; }
-    .leadmag-fine { font-size: 0.8rem; color: var(--gray); margin: 14px 0 0; }
+    .leadmag-cta { display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 14px; }
+    .leadmag-form { display: flex; gap: 10px; flex-wrap: wrap; align-items: stretch; }
+    .leadmag-form input[type="email"] {
+      flex: 1 1 260px; min-width: 0;
+      padding: 12px 16px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius, 8px);
+      background: rgba(255,255,255,0.04);
+      color: var(--text);
+      font-size: 0.95rem;
+      font-family: inherit;
+    }
+    .leadmag-form input[type="email"]:focus {
+      outline: none; border-color: var(--gold);
+      box-shadow: 0 0 0 2px rgba(206,142,49,0.25);
+    }
+    .leadmag-form input[type="email"]::placeholder { color: var(--gray); }
+    .leadmag-form .btn { white-space: nowrap; }
+    .leadmag-status { font-size: 0.86rem; margin: 10px 0 0; min-height: 1.1em; color: var(--gold); }
+    .leadmag-fine { font-size: 0.8rem; color: var(--gray); margin: 10px 0 0; }
     .leadmag-card {
       border: 1px solid var(--gold);
       border-radius: 14px;
@@ -1392,9 +1410,13 @@
         <p class="leadmag-lede">Grab <strong>The 5-Part Watchman&rsquo;s Prompt</strong> &mdash; the one-page guide that stops you getting mush out of AI. It&rsquo;s a single rep from the full course: learn the five-part structure, and the same thirty-minute task starts taking eight. Free, no strings &mdash; if it helps, the cohort is where it goes deep.</p>
         <div class="leadmag-cta">
           <a class="btn btn-gold-outline" href="downloads/ai-mission/The_5-Part_Watchmans_Prompt.pdf" target="_blank" rel="noopener" download>Download the free guide (PDF) &darr;</a>
-          <a class="btn btn-secondary" href="mailto:usmcministries2022@gmail.com?subject=Watchman%27s%20Course%20%E2%80%94%20add%20me%20to%20the%20next%20cohort%20waitlist&amp;body=Adam%20%E2%80%94%20add%20me%20to%20the%20waitlist%20for%20the%20next%20cohort%20of%20The%20Watchman%27s%20Course.%20Here%27s%20a%20line%20about%20where%20I%27m%20at%3A">Join the cohort waitlist &rarr;</a>
         </div>
-        <p class="leadmag-fine">No spam, no funnel. The guide downloads now; the waitlist note goes straight to Adam.</p>
+        <form class="leadmag-form" data-newsletter data-source="ai-mission-waitlist">
+          <input type="email" name="email" placeholder="Your email &mdash; join the next cohort waitlist" aria-label="Email address" required>
+          <button type="submit" class="btn btn-secondary">Join the waitlist &rarr;</button>
+        </form>
+        <p class="email-status leadmag-status" role="status" aria-live="polite"></p>
+        <p class="leadmag-fine">No spam, unsubscribe any time. The free guide downloads instantly; the waitlist note goes straight to Adam&rsquo;s inbox.</p>
       </div>
       <div class="leadmag-visual" aria-hidden="true">
         <div class="leadmag-card">
@@ -1518,5 +1540,6 @@
 </script>
 <script data-goatcounter="https://usmcmin.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
 
+<script src="assets/js/newsletter.js" defer></script>
 </body>
 </html>

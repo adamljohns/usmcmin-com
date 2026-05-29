@@ -38,8 +38,8 @@ TARGETS = [
      BASE / 'assets' / 'css' / 'main.min.css', 'css'),
     (BASE / 'assets' / 'js' / 'profile.js',
      BASE / 'assets' / 'js' / 'profile.min.js', 'js'),
-    # main.js is also a minify candidate but is used in many places —
-    # add when we audit it.
+    (BASE / 'assets' / 'js' / 'main.js',
+     BASE / 'assets' / 'js' / 'main.min.js', 'js'),
 ]
 
 

@@ -16,15 +16,19 @@
   }
 
   // ── Theme toggle (dark default, light opt-in, persisted) ─────────
+  // Reads BOTH 'usmc-theme' and legacy 'theme' so pages migrated from
+  // older inline scripts don't lose the user's saved preference.
   var themeToggle = document.getElementById('themeToggle');
   if (themeToggle) {
-    var saved = localStorage.getItem('usmc-theme');
+    var saved = localStorage.getItem('usmc-theme') || localStorage.getItem('theme');
     var startDark = saved !== 'light';
     applyTheme(startDark);
     themeToggle.addEventListener('click', function () {
       var isDark = document.documentElement.getAttribute('data-theme') === 'dark';
       applyTheme(!isDark);
       localStorage.setItem('usmc-theme', isDark ? 'light' : 'dark');
+      // One-time migration: drop the legacy key so we don't read stale values.
+      if (localStorage.getItem('theme')) localStorage.removeItem('theme');
     });
   }
 

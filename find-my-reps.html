@@ -1028,36 +1028,10 @@
     } catch(e) {}
   })();
 
-  // Nav helpers (theme toggle + mobile menu — lifted from citizen.html)
-  (function(){
-    var toggle = document.getElementById('themeToggle');
-    var saved = localStorage.getItem('usmc-theme');
-    if (saved !== 'light') {
-      document.documentElement.setAttribute('data-theme', 'dark');
-      toggle.textContent = '\u2600\uFE0F';
-    }
-    toggle.addEventListener('click', function(){
-      var isDark = document.documentElement.getAttribute('data-theme') === 'dark';
-      if (isDark) {
-        document.documentElement.removeAttribute('data-theme');
-        localStorage.setItem('usmc-theme', 'light');
-        toggle.textContent = '\uD83C\uDF19';
-      } else {
-        document.documentElement.setAttribute('data-theme', 'dark');
-        localStorage.setItem('usmc-theme', 'dark');
-        toggle.textContent = '\u2600\uFE0F';
-      }
-    });
-  })();
-  (function(){
-    var navToggle = document.querySelector('.nav-toggle');
-    var navLinks = document.querySelector('.nav-links');
-    if (navToggle && navLinks) {
-      navToggle.addEventListener('click', function(){ navLinks.classList.toggle('open'); });
-    }
-  })();
+  // Nav + theme toggle moved to shared assets/js/main.min.js
 })();
 </script>
+<script src="assets/js/main.min.js" defer></script>
 <script data-goatcounter="https://usmcmin.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
 <script>
 // Service worker registration — offline shell + cache-first repeat visits.

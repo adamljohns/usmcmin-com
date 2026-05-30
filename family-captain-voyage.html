@@ -221,6 +221,44 @@
   .drill-tier-legend .dtl-label { font-weight: 800; letter-spacing: 1px; color: var(--white); }
 
   @media (max-width:640px){ .module-hero { padding:90px 18px 24px; } }
+
+  /* ── Field notes + export (FC voyage) ── */
+  .fc-notes-section { max-width:1100px; margin:48px auto 0; padding:0 16px; }
+  .fc-notes-section h2 { font-family:var(--font-main); font-size:1.4rem; color:var(--white); margin:0 0 4px; }
+  .fc-notes-section .lede { color:var(--gray-light); font-size:0.9rem; margin-bottom:14px; max-width:680px; }
+  .fc-note-week { background:var(--bg-card); border:1px solid var(--border); border-radius:var(--radius);
+    margin-bottom:10px; overflow:hidden; }
+  .fc-note-week > summary { cursor:pointer; padding:12px 16px; font-weight:700; color:#1A1A1A;
+    list-style:none; user-select:none; display:flex; align-items:center; gap:10px; }
+  [data-theme="dark"] .fc-note-week > summary { color:#F0F0F0; }
+  .fc-note-week > summary::-webkit-details-marker { display:none; }
+  .fc-note-week > summary::before { content:"+"; color:var(--gold); font-weight:900; font-size:1.1rem; }
+  .fc-note-week[open] > summary::before { content:"\2013"; }
+  .fc-note-week .fc-note-body { padding:0 16px 14px; display:flex; flex-direction:column; gap:10px; }
+  .fc-note-row { display:flex; flex-direction:column; gap:3px; }
+  .fc-note-row .fc-note-task { font-size:0.72rem; font-weight:700; color:var(--gray); }
+  .fc-note { width:100%; box-sizing:border-box; resize:vertical; font-family:inherit;
+    font-size:0.88rem; line-height:1.45; color:#1A1A1A; background:var(--white);
+    border:1px solid var(--border); border-radius:var(--rsm,6px); padding:8px 10px; min-height:40px; }
+  [data-theme="dark"] .fc-note { color:#F0F0F0; background:var(--bg-card-2); }
+  .fc-note:focus { outline:none; border-color:var(--gold); }
+
+  .fc-export-card { max-width:1100px; margin:18px auto 0; padding:20px 22px;
+    background:var(--bg-card); border:1px solid var(--border); border-radius:var(--radius); }
+  .fc-export-card h3 { font-family:var(--font-main); color:var(--white); font-size:1.15rem; margin:0 0 4px; }
+  .fc-export-card p { color:var(--gray-light); font-size:0.88rem; margin:0 0 14px; line-height:1.55; }
+  .fc-export-btns { display:flex; flex-wrap:wrap; gap:8px; }
+  .fc-xbtn { padding:9px 15px; border-radius:99px; border:1px solid var(--border);
+    background:transparent; color:var(--gray-light); font-size:0.8rem; font-weight:700;
+    cursor:pointer; font-family:inherit; }
+  .fc-xbtn:hover { border-color:var(--gold); color:var(--gold); }
+  .fc-xbtn.primary { background:var(--gold); color:var(--bg-dark); border-color:var(--gold); }
+  .fc-xbtn.primary:hover { background:transparent; color:var(--gold); }
+  .fc-xnote { margin-top:10px; font-size:0.82rem; color:var(--gold); min-height:1.1em; }
+  .fc-workbook-row { max-width:1100px; margin:14px auto 0; padding:0 16px; }
+  .fc-workbook-row a { display:inline-flex; align-items:center; gap:8px; font-size:0.86rem;
+    font-weight:700; color:var(--gold); text-decoration:none; }
+  .fc-workbook-row a:hover { text-decoration:underline; }
 </style>
 <style>
   /* FC 7-week voyage chart — 4 top + 3 bottom */
@@ -1772,6 +1810,28 @@ document.addEventListener('click', function(e) {
   </div>
 </section>
 
+
+<section class="fc-notes-section">
+  <h2>Captain&rsquo;s Field Notes</h2>
+  <p class="lede">Capture what you did and what shipped, week by week &mdash; saved on this device. Pull it all out any time with Export to keep in Apple Notes, Evernote, or your files. Prefer pen and paper, or want it in Notability? <a href="downloads/family-captain/Family_Captain_FIELD_WORKBOOK.pdf" download>Download the fillable Field Workbook</a>.</p>
+  <details class="fc-note-week"><summary>Week 1 &mdash; Vision</summary><div class="fc-note-body"><label class="fc-note-row"><span class="fc-note-task">T1 &middot; Draft Your AI Charter</span><textarea class="fc-note" data-note="1.1" rows="2" placeholder="What I did, what shipped, what I learned&hellip;" aria-label="Field note for Draft Your AI Charter"></textarea></label><label class="fc-note-row"><span class="fc-note-task">T2 &middot; Write Your 5-Year Captain's Vision</span><textarea class="fc-note" data-note="1.2" rows="2" placeholder="What I did, what shipped, what I learned&hellip;" aria-label="Field note for Write Your 5-Year Captain's Vision"></textarea></label><label class="fc-note-row"><span class="fc-note-task">T3 &middot; Build Your Tool Stack</span><textarea class="fc-note" data-note="1.3" rows="2" placeholder="What I did, what shipped, what I learned&hellip;" aria-label="Field note for Build Your Tool Stack"></textarea></label></div></details><details class="fc-note-week"><summary>Week 2 &mdash; Body</summary><div class="fc-note-body"><label class="fc-note-row"><span class="fc-note-task">T1 &middot; Weekly Movement Practice</span><textarea class="fc-note" data-note="2.1" rows="2" placeholder="What I did, what shipped, what I learned&hellip;" aria-label="Field note for Weekly Movement Practice"></textarea></label><label class="fc-note-row"><span class="fc-note-task">T2 &middot; Captain's Meal Plan</span><textarea class="fc-note" data-note="2.2" rows="2" placeholder="What I did, what shipped, what I learned&hellip;" aria-label="Field note for Captain's Meal Plan"></textarea></label><label class="fc-note-row"><span class="fc-note-task">T3 &middot; 5-Night Sleep Audit</span><textarea class="fc-note" data-note="2.3" rows="2" placeholder="What I did, what shipped, what I learned&hellip;" aria-label="Field note for 5-Night Sleep Audit"></textarea></label></div></details><details class="fc-note-week"><summary>Week 3 &mdash; Spiritual</summary><div class="fc-note-body"><label class="fc-note-row"><span class="fc-note-task">T1 &middot; 10-Min Scripture Study, You Lead</span><textarea class="fc-note" data-note="3.1" rows="2" placeholder="What I did, what shipped, what I learned&hellip;" aria-label="Field note for 10-Min Scripture Study, You Lead"></textarea></label><label class="fc-note-row"><span class="fc-note-task">T2 &middot; Family Devotion Generator</span><textarea class="fc-note" data-note="3.2" rows="2" placeholder="What I did, what shipped, what I learned&hellip;" aria-label="Field note for Family Devotion Generator"></textarea></label><label class="fc-note-row"><span class="fc-note-task">T3 &middot; Sermon Notes → Captain's Actions</span><textarea class="fc-note" data-note="3.3" rows="2" placeholder="What I did, what shipped, what I learned&hellip;" aria-label="Field note for Sermon Notes → Captain's Actions"></textarea></label></div></details><details class="fc-note-week"><summary>Week 4 &mdash; Husbanding</summary><div class="fc-note-body"><label class="fc-note-row"><span class="fc-note-task">T1 &middot; The 5-Minute Wife Audit</span><textarea class="fc-note" data-note="4.1" rows="2" placeholder="What I did, what shipped, what I learned&hellip;" aria-label="Field note for The 5-Minute Wife Audit"></textarea></label><label class="fc-note-row"><span class="fc-note-task">T2 &middot; Prep One Hard Conversation</span><textarea class="fc-note" data-note="4.2" rows="2" placeholder="What I did, what shipped, what I learned&hellip;" aria-label="Field note for Prep One Hard Conversation"></textarea></label><label class="fc-note-row"><span class="fc-note-task">T3 &middot; Letter to Your Wife</span><textarea class="fc-note" data-note="4.3" rows="2" placeholder="What I did, what shipped, what I learned&hellip;" aria-label="Field note for Letter to Your Wife"></textarea></label></div></details><details class="fc-note-week"><summary>Week 5 &mdash; Fathering</summary><div class="fc-note-body"><label class="fc-note-row"><span class="fc-note-task">T1 &middot; 3 Questions for the Dinner Table</span><textarea class="fc-note" data-note="5.1" rows="2" placeholder="What I did, what shipped, what I learned&hellip;" aria-label="Field note for 3 Questions for the Dinner Table"></textarea></label><label class="fc-note-row"><span class="fc-note-task">T2 &middot; Build a Family Rhythm Asset</span><textarea class="fc-note" data-note="5.2" rows="2" placeholder="What I did, what shipped, what I learned&hellip;" aria-label="Field note for Build a Family Rhythm Asset"></textarea></label><label class="fc-note-row"><span class="fc-note-task">T3 &middot; Write Your Family AI Policy</span><textarea class="fc-note" data-note="5.3" rows="2" placeholder="What I did, what shipped, what I learned&hellip;" aria-label="Field note for Write Your Family AI Policy"></textarea></label></div></details><details class="fc-note-week"><summary>Week 6 &mdash; Finance</summary><div class="fc-note-body"><label class="fc-note-row"><span class="fc-note-task">T1 &middot; Tithe-First Budget</span><textarea class="fc-note" data-note="6.1" rows="2" placeholder="What I did, what shipped, what I learned&hellip;" aria-label="Field note for Tithe-First Budget"></textarea></label><label class="fc-note-row"><span class="fc-note-task">T2 &middot; Subscription Audit</span><textarea class="fc-note" data-note="6.2" rows="2" placeholder="What I did, what shipped, what I learned&hellip;" aria-label="Field note for Subscription Audit"></textarea></label><label class="fc-note-row"><span class="fc-note-task">T3 &middot; Legacy Plan Starter</span><textarea class="fc-note" data-note="6.3" rows="2" placeholder="What I did, what shipped, what I learned&hellip;" aria-label="Field note for Legacy Plan Starter"></textarea></label></div></details><details class="fc-note-week"><summary>Week 7 &mdash; Sabbath</summary><div class="fc-note-body"><label class="fc-note-row"><span class="fc-note-task">T1 &middot; Plan Your Sabbath</span><textarea class="fc-note" data-note="7.1" rows="2" placeholder="What I did, what shipped, what I learned&hellip;" aria-label="Field note for Plan Your Sabbath"></textarea></label><label class="fc-note-row"><span class="fc-note-task">T2 &middot; Saturday Captain's Audit</span><textarea class="fc-note" data-note="7.2" rows="2" placeholder="What I did, what shipped, what I learned&hellip;" aria-label="Field note for Saturday Captain's Audit"></textarea></label><label class="fc-note-row"><span class="fc-note-task">T3 &middot; Teach One Person One Thing</span><textarea class="fc-note" data-note="7.3" rows="2" placeholder="What I did, what shipped, what I learned&hellip;" aria-label="Field note for Teach One Person One Thing"></textarea></label></div></details>
+</section>
+
+<section class="fc-export-card-wrap">
+  <div class="fc-export-card">
+    <h3>Export your work</h3>
+    <p>Your task check-offs and field notes live on this device. Copy them, download a Markdown or Evernote file, or use your phone&rsquo;s Share sheet to send them to Notes, Evernote, or email.</p>
+    <div class="fc-export-btns">
+      <button class="fc-xbtn primary" id="fcShare" type="button" hidden>Share&hellip;</button>
+      <button class="fc-xbtn" id="fcCopy" type="button">Copy to clipboard</button>
+      <button class="fc-xbtn" id="fcMd" type="button">Download .md</button>
+      <button class="fc-xbtn" id="fcEnex" type="button">Evernote (.enex)</button>
+      <button class="fc-xbtn" id="fcClearNotes" type="button">Clear notes</button>
+    </div>
+    <div class="fc-xnote" id="fcXnote" role="status"></div>
+  </div>
+</section>
+
 <section class="commission">
   <div class="commission-card" id="commissionCard">
     <div class="seal">⚜️</div>
@@ -2020,6 +2080,80 @@ document.addEventListener('click', function(e) {
     });
   }
   window.addEventListener('appinstalled', () => { if (installBtn) installBtn.hidden = true; });
+
+  // ── Field notes + export (FC voyage; no-ops if the section isn't present) ──
+  const NOTES_KEY = "fc_voyage_notes_v1";
+  function loadNotes(){ try { return JSON.parse(localStorage.getItem(NOTES_KEY)) || {}; } catch(e){ return {}; } }
+  function saveNotes(o){ try { localStorage.setItem(NOTES_KEY, JSON.stringify(o)); } catch(e){} }
+  const fcNotes = document.querySelectorAll('.fc-note');
+  if (fcNotes.length) {
+    const stored = loadNotes();
+    fcNotes.forEach(function(ta){
+      if (stored[ta.dataset.note]) ta.value = stored[ta.dataset.note];
+      ta.addEventListener('input', function(){
+        const o = loadNotes();
+        if (ta.value.trim()) o[ta.dataset.note] = ta.value; else delete o[ta.dataset.note];
+        saveNotes(o);
+      });
+    });
+
+    const esc = function(t){ return (t||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); };
+    const pad = function(x){ return (''+x).length<2 ? '0'+x : ''+x; };
+    const stamp = function(){ var d=new Date(); return d.getUTCFullYear()+pad(d.getUTCMonth()+1)+pad(d.getUTCDate())+'T'+pad(d.getUTCHours())+pad(d.getUTCMinutes())+pad(d.getUTCSeconds())+'Z'; };
+    const gather = function(){
+      const s = loadState(), notes = loadNotes(), done = countCompleted(s);
+      const md = [], html = [];
+      md.push("# Family Captain Boot Camp \u2014 My Field Notes");
+      md.push(""); md.push("_" + done + " of " + TOTAL + " tasks shipped._"); md.push("");
+      html.push("<h1>Family Captain Boot Camp \u2014 My Field Notes</h1>");
+      html.push("<p><i>" + done + " of " + TOTAL + " tasks shipped.</i></p>");
+      document.querySelectorAll('.fc-note-week').forEach(function(wk){
+        const title = (wk.querySelector('summary')||{}).textContent || 'Week';
+        md.push("## " + title);
+        html.push("<h2>" + esc(title) + "</h2><ul>");
+        wk.querySelectorAll('.fc-note-row').forEach(function(row){
+          const ta = row.querySelector('.fc-note'); const key = ta.dataset.note;
+          const label = (row.querySelector('.fc-note-task')||{}).textContent.trim();
+          const note = (notes[key]||'').trim().replace(/\s*\n\s*/g,' ');
+          const shipped = !!s[key];
+          md.push("- " + (shipped ? "[x]" : "[ ]") + " " + label + (note ? " \u2014 " + note : ""));
+          html.push("<li>" + (shipped ? "\u2713 " : "\u25A1 ") + esc(label) + (note ? " \u2014 " + esc(note) : "") + "</li>");
+        });
+        md.push(""); html.push("</ul>");
+      });
+      return { md: md.join("\n"), html: html.join("") };
+    };
+    const flash = function(m){ var n=document.getElementById('fcXnote'); if(n){ n.textContent=m; setTimeout(function(){ if(n.textContent===m) n.textContent=''; },4000); } };
+    const dl = function(name, text, mime){
+      try { var b=new Blob([text],{type:mime}); var a=document.createElement('a');
+        a.href=URL.createObjectURL(b); a.download=name; document.body.appendChild(a); a.click();
+        setTimeout(function(){ URL.revokeObjectURL(a.href); a.remove(); },1000); return true; } catch(e){ return false; }
+    };
+    const enex = function(html){ var d=stamp();
+      return '<?xml version="1.0" encoding="UTF-8"?>\n<!DOCTYPE en-export SYSTEM "http://xml.evernote.com/pub/evernote-export4.dtd">\n'
+        + '<en-export export-date="'+d+'" application="Family Captain" version="1.0">\n'
+        + '<note><title>Family Captain Boot Camp \u2014 My Field Notes</title>'
+        + '<content><![CDATA[<?xml version="1.0" encoding="UTF-8"?>'
+        + '<!DOCTYPE en-note SYSTEM "http://xml.evernote.com/pub/enml2.dtd"><en-note>'+html+'</en-note>]]></content>'
+        + '<created>'+d+'</created><updated>'+d+'</updated>'
+        + '<note-attributes><source>web.app</source></note-attributes></note>\n</en-export>\n'; };
+    const legacyCopy = function(t){ var ta=document.createElement('textarea'); ta.value=t;
+      ta.style.position='fixed'; ta.style.opacity='0'; document.body.appendChild(ta); ta.select();
+      try { document.execCommand('copy'); flash('Copied to clipboard.'); } catch(e){ flash('Could not copy \u2014 try Download.'); } ta.remove(); };
+    var b;
+    if ((b=document.getElementById('fcCopy'))) b.addEventListener('click', function(){
+      var t=gather().md;
+      if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(t).then(function(){ flash('Copied \u2014 paste it into Notes, Evernote, anywhere.'); }, function(){ legacyCopy(t); });
+      else legacyCopy(t);
+    });
+    if ((b=document.getElementById('fcMd'))) b.addEventListener('click', function(){ dl('family-captain-field-notes.md', gather().md, 'text/markdown') ? flash('Markdown downloaded.') : flash('Download failed.'); });
+    if ((b=document.getElementById('fcEnex'))) b.addEventListener('click', function(){ dl('family-captain-field-notes.enex', enex(gather().html), 'application/xml') ? flash('Evernote file downloaded \u2014 in Evernote: File \u203a Import.') : flash('Download failed.'); });
+    if (navigator.share && (b=document.getElementById('fcShare'))) { b.hidden=false; b.addEventListener('click', function(){ navigator.share({ title:"Family Captain Boot Camp \u2014 My Field Notes", text: gather().md }).catch(function(){}); }); }
+    if ((b=document.getElementById('fcClearNotes'))) b.addEventListener('click', function(){
+      if (!confirm('Clear all your field notes on this device? Your task check-offs stay.')) return;
+      localStorage.removeItem(NOTES_KEY); document.querySelectorAll('.fc-note').forEach(function(t){ t.value=''; }); flash('Field notes cleared.');
+    });
+  }
 
   updateUI();
 })();

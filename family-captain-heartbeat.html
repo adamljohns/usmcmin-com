@@ -3,15 +3,11 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="canonical" href="https://usmcmin.com/family-captain-heartbeat.html">
   <title>Pacing Prompts — Family Captain Boot Camp · USMC Ministries</title>
   <meta name="description" content="Cohort feed preview — 21 posts that drop in our Heartbeat circle.">
   <meta name="robots" content="noindex,nofollow">
   <link rel="stylesheet" href="assets/css/main.css">
-  <link rel="icon" type="image/svg+xml" href="assets/icons/favicon.svg">
-  <link rel="icon" type="image/png" sizes="32x32" href="assets/icons/favicon-32.png">
-  <link rel="icon" type="image/png" sizes="16x16" href="assets/icons/favicon-16.png">
-  <link rel="apple-touch-icon" sizes="180x180" href="assets/icons/apple-touch-icon.png">
+  <link rel="icon" href="assets/img/favicon.png" type="image/png">
 <style>
   .module-hero { padding:120px 20px 40px; border-bottom:1px solid var(--border);
     background: linear-gradient(180deg, rgba(30,58,95,0.10) 0%, transparent 100%); }
@@ -1199,17 +1195,16 @@ document.addEventListener('click', function(e) {
     if (p && typeof p.catch === 'function') { p.catch(function(){}); }
   } catch(_) {}
 });
-</script>  <meta property="og:title" content="Pacing Prompts — Family Captain Boot Camp · USMC Ministries">
-  <meta property="og:description" content="Daily heartbeat tasks for The Family Captain Boot Camp.">
-  <meta property="og:url" content="https://usmcmin.com/family-captain-heartbeat.html">
-  <meta property="og:type" content="website">
-  <meta property="og:image" content="https://usmcmin.com/assets/og/og-family-captain.png">
-  <meta property="og:image:width" content="1200">
-  <meta property="og:image:height" content="630">
-  <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:image" content="https://usmcmin.com/assets/og/og-family-captain.png">
+</script>
 
 
+<!-- PWA: installable Family Captain course app -->
+<link rel="manifest" href="family-captain.webmanifest">
+<meta name="theme-color" content="#B8763E">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Family Captain">
 </head>
 <body data-track="family-captain">
 
@@ -1848,5 +1843,14 @@ document.addEventListener('click', function(e) {
 </script>
 <script data-goatcounter="https://usmcmin.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
 
+
+<!-- PWA: register The Family Captain service worker (scope: /family-captain) -->
+<script>
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', function () {
+      navigator.serviceWorker.register('/family-captain-sw.js', { scope: '/family-captain' }).catch(function(){});
+    });
+  }
+</script>
 </body>
 </html>

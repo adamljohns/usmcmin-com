@@ -3,7 +3,6 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="canonical" href="https://usmcmin.com/family-captain-tools.html">
   <title>AI Tools Landscape — Family Captain Boot Camp · USMC Ministries</title>
   <meta name="description" content="The captain's compass — an honest landscape of AI tools across five combined categories: Chat, Notes &amp; Voice, Image &amp; Video, Automation &amp; Code, and Agentic Frontier. With AI/Agentic Level, Model Context Protocol (MCP) support, and Best For Captain on every card.">
   <meta property="og:title" content="AI Tools Landscape — Family Captain Boot Camp">
@@ -12,10 +11,7 @@
   <meta property="og:type" content="article">
   <meta property="og:image" content="https://usmcmin.com/assets/og/og-family-captain.png">
   <link rel="stylesheet" href="assets/css/main.css">
-  <link rel="icon" type="image/svg+xml" href="assets/icons/favicon.svg">
-  <link rel="icon" type="image/png" sizes="32x32" href="assets/icons/favicon-32.png">
-  <link rel="icon" type="image/png" sizes="16x16" href="assets/icons/favicon-16.png">
-  <link rel="apple-touch-icon" sizes="180x180" href="assets/icons/apple-touch-icon.png">
+  <link rel="icon" href="assets/img/favicon.png" type="image/png">
 <style>
   .module-hero { text-align:left; padding:120px 20px 40px 30px; border-bottom:1px solid var(--border);
     background: linear-gradient(180deg, rgba(30,58,95,0.10) 0%, transparent 100%); }
@@ -1377,6 +1373,14 @@ document.addEventListener('click', function(e) {
 });
 </script>
 
+
+<!-- PWA: installable Family Captain course app -->
+<link rel="manifest" href="family-captain.webmanifest">
+<meta name="theme-color" content="#B8763E">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Family Captain">
 </head>
 <body data-track="family-captain">
 
@@ -2325,5 +2329,14 @@ document.addEventListener('click', function(e) {
 </script>
 <script data-goatcounter="https://usmcmin.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
 
+
+<!-- PWA: register The Family Captain service worker (scope: /family-captain) -->
+<script>
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', function () {
+      navigator.serviceWorker.register('/family-captain-sw.js', { scope: '/family-captain' }).catch(function(){});
+    });
+  }
+</script>
 </body>
 </html>

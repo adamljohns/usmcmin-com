@@ -3,15 +3,11 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="canonical" href="https://usmcmin.com/family-captain-week-3.html">
   <title>Week 3 · Spiritual — The Family Captain AI Boot Camp</title>
   <meta name="description" content="Week 3 of the The Family Captain AI Boot Camp: Spiritual. Walk with God. The captain's command flows from his communion.">
   <meta name="robots" content="noindex,nofollow">
   <link rel="stylesheet" href="assets/css/main.css">
-  <link rel="icon" type="image/svg+xml" href="assets/icons/favicon.svg">
-  <link rel="icon" type="image/png" sizes="32x32" href="assets/icons/favicon-32.png">
-  <link rel="icon" type="image/png" sizes="16x16" href="assets/icons/favicon-16.png">
-  <link rel="apple-touch-icon" sizes="180x180" href="assets/icons/apple-touch-icon.png">
+  <link rel="icon" href="assets/img/favicon.png" type="image/png">
   <style>
     .week-hero {
       background: #1E293B; color: #FFFFFF;
@@ -906,6 +902,22 @@
     color: #FFFFFF !important;
   }
 
+  /* (4b) DRILL TIER LEGEND override (2026-05-27): the legend bg is light
+     cream on FC light theme, so the default white labels become invisible.
+     Force dark slate text on FC. Solid colored bars remain unchanged
+     (they're hex-set in site_pages.py so they're theme-safe). */
+  body[data-track="family-captain"] .drill-tier-legend {
+    background: #F5F5F0 !important;
+    color: #4B5563 !important;
+    border-color: #D8D5C8 !important;
+  }
+  body[data-track="family-captain"] .drill-tier-legend .dtl-label {
+    color: #1E293B !important;
+  }
+  body[data-track="family-captain"] .drill-tier-legend .dtl-row {
+    color: #4B5563 !important;
+  }
+
   /* NotebookLM explainer video — Sovereign page (pilot feature) */
   body[data-track="family-captain"] .fc-video {
     max-width: 880px;
@@ -939,6 +951,78 @@
   body[data-track="family-captain"] .fc-media-actions a:hover {
     text-decoration: underline;
   }
+
+  /* Media chapter index — collapsed by default; click summary to expand,
+     click a chapter button to seek the parent <audio>/<video> to that
+     timestamp. Audio uses bronze accent, video uses slate accent. */
+  body[data-track="family-captain"] .fc-audio-chapters,
+  body[data-track="family-captain"] .fc-video-chapters {
+    margin-top: 10px;
+    border: 1px solid #D8D5C8;
+    border-radius: 6px;
+    background: #FAFAF7;
+  }
+  body[data-track="family-captain"] .fc-audio-chapters summary,
+  body[data-track="family-captain"] .fc-video-chapters summary {
+    padding: 8px 14px;
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: #1E293B !important;
+    cursor: pointer;
+    list-style: none;
+    user-select: none;
+  }
+  body[data-track="family-captain"] .fc-audio-chapters summary::-webkit-details-marker,
+  body[data-track="family-captain"] .fc-video-chapters summary::-webkit-details-marker { display: none; }
+  body[data-track="family-captain"] .fc-audio-chapters summary::before { content: "▸ "; color: #CE8E31; font-weight: 900; }
+  body[data-track="family-captain"] .fc-video-chapters summary::before { content: "▸ "; color: #1E293B; font-weight: 900; }
+  body[data-track="family-captain"] .fc-audio-chapters[open] summary::before,
+  body[data-track="family-captain"] .fc-video-chapters[open] summary::before { content: "▾ "; }
+  body[data-track="family-captain"] .fc-audio-chapters summary:hover { color: #CE8E31 !important; }
+  body[data-track="family-captain"] .fc-video-chapters summary:hover { color: #1E293B !important; }
+  body[data-track="family-captain"] .fc-audio-chapters ul,
+  body[data-track="family-captain"] .fc-video-chapters ul {
+    list-style: none;
+    margin: 0;
+    padding: 4px 0 10px;
+  }
+  body[data-track="family-captain"] .fc-audio-chapters li,
+  body[data-track="family-captain"] .fc-video-chapters li { margin: 0; padding: 0; }
+  body[data-track="family-captain"] .fc-audio-chapters .ch-jump,
+  body[data-track="family-captain"] .fc-video-chapters .ch-jump {
+    display: block;
+    width: 100%;
+    text-align: left;
+    background: transparent;
+    border: 0;
+    padding: 5px 14px;
+    font-family: inherit;
+    font-size: 0.82rem;
+    color: #1E293B !important;
+    cursor: pointer;
+    border-left: 2px solid transparent;
+  }
+  body[data-track="family-captain"] .fc-audio-chapters .ch-jump:hover {
+    background: rgba(206,142,49,0.08);
+    border-left-color: #CE8E31;
+    color: #CE8E31 !important;
+  }
+  body[data-track="family-captain"] .fc-video-chapters .ch-jump:hover {
+    background: rgba(30,41,59,0.06);
+    border-left-color: #1E293B;
+    color: #1E293B !important;
+  }
+  body[data-track="family-captain"] .fc-audio-chapters .ch-time { color: #CE8E31 !important; }
+  body[data-track="family-captain"] .fc-video-chapters .ch-time { color: #1E293B !important; }
+  body[data-track="family-captain"] .fc-audio-chapters .ch-time,
+  body[data-track="family-captain"] .fc-video-chapters .ch-time {
+    display: inline-block;
+    font-family: ui-monospace, "SF Mono", monospace;
+    font-weight: 700;
+    min-width: 50px;
+  }
+  body[data-track="family-captain"] .fc-audio-chapters .ch-label,
+  body[data-track="family-captain"] .fc-video-chapters .ch-label { color: inherit !important; }
 
   /* NotebookLM AUDIO podcast — same surface as video, full-width audio control */
   body[data-track="family-captain"] .fc-audio {
@@ -1097,17 +1181,37 @@
     color: #4B5563 !important;
     font-weight: 600;
   }
-</style>  <meta property="og:title" content="Week 3 · Spiritual — The Family Captain AI Boot Camp">
-  <meta property="og:description" content="Week 3 · Marriage — the captain serves the first lieutenant.">
-  <meta property="og:url" content="https://usmcmin.com/family-captain-week-3.html">
-  <meta property="og:type" content="website">
-  <meta property="og:image" content="https://usmcmin.com/assets/og/og-family-captain.png">
-  <meta property="og:image:width" content="1200">
-  <meta property="og:image:height" content="630">
-  <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:image" content="https://usmcmin.com/assets/og/og-family-captain.png">
+</style>
+<script>
+// Media chapter jump handler (FC track 2026-05-26). Delegates one click
+// listener at document level so it works for any .ch-jump button on the
+// page, including those inside <details> that were collapsed at load time.
+// Walks up to the parent .fc-audio OR .fc-video container, then seeks
+// the <audio>/<video> inside.
+document.addEventListener('click', function(e) {
+  var btn = e.target.closest('.fc-audio-chapters .ch-jump, .fc-video-chapters .ch-jump');
+  if (!btn) return;
+  var t = parseFloat(btn.dataset.time || '0');
+  var container = btn.closest('.fc-audio, .fc-video');
+  if (!container) return;
+  var media = container.querySelector('audio, video');
+  if (!media) return;
+  try {
+    media.currentTime = t;
+    var p = media.play();
+    if (p && typeof p.catch === 'function') { p.catch(function(){}); }
+  } catch(_) {}
+});
+</script>
 
 
+<!-- PWA: installable Family Captain course app -->
+<link rel="manifest" href="family-captain.webmanifest">
+<meta name="theme-color" content="#B8763E">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Family Captain">
 </head>
 <body data-track="family-captain">
 
@@ -1339,5 +1443,14 @@
 </script>
 <script data-goatcounter="https://usmcmin.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
 
+
+<!-- PWA: register The Family Captain service worker (scope: /family-captain) -->
+<script>
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', function () {
+      navigator.serviceWorker.register('/family-captain-sw.js', { scope: '/family-captain' }).catch(function(){});
+    });
+  }
+</script>
 </body>
 </html>

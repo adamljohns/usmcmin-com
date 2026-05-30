@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex">
+  <link rel="canonical" href="https://usmcmin.com/personal-outreach.html">
+  <title>Personal Outreach — Family &amp; Friends</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box}
+    :root{--bg:#0a0a0a;--card:#121212;--card2:#1a1a1a;--gold:#D4AF37;--gold-dim:rgba(212,175,55,.15);
+          --white:#fff;--gray:#8a8a8a;--gray2:#aaa;--border:#2a2a2a;--green:#4CAF50;--red:#f44336;--amber:#FFC107}
+    body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--white);line-height:1.6;min-height:100vh}
+    h1,h2,h3{font-family:'Playfair Display',serif}
+    /* PIN */
+    #pin{position:fixed;inset:0;background:#000;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;z-index:999}
+    #pin.hidden{display:none}
+    .pin-box{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:38px 44px;text-align:center;max-width:340px;width:90%}
+    .pin-box .ic{font-size:2.4rem;margin-bottom:10px}
+    .pin-box h2{font-size:1.3rem;color:var(--gold);margin-bottom:6px}
+    .pin-box p{color:var(--gray);font-size:.85rem;margin-bottom:20px}
+    #pin-input{width:100%;padding:12px;background:#1a1a1a;border:1px solid var(--border);border-radius:8px;color:#fff;font-size:1.1rem;text-align:center;letter-spacing:.3em}
+    #pin-err{color:var(--red);font-size:.82rem;margin-top:10px;min-height:18px}
+    /* layout */
+    .wrap{max-width:980px;margin:0 auto;padding:0 16px 60px}
+    header.pg{text-align:center;padding:30px 16px 18px;border-bottom:1px solid var(--border)}
+    header.pg h1{font-size:1.8rem}
+    header.pg .sub{color:var(--gold);font-size:.9rem;margin-top:2px}
+    .stats{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;margin-top:14px}
+    .pill{background:var(--card);border:1px solid var(--border);border-radius:20px;padding:5px 14px;font-size:.8rem;color:var(--gray2)}
+    .pill b{color:var(--gold)}
+    .nav{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;padding:12px;border-bottom:1px solid var(--border)}
+    .nav a{color:var(--gray2);text-decoration:none;font-size:.8rem;border:1px solid var(--border);border-radius:18px;padding:4px 12px}
+    .nav a:hover{color:var(--gold);border-color:var(--gold)}
+    .section-h{display:flex;align-items:center;justify-content:space-between;margin:26px 0 12px}
+    .section-h h2{font-size:1.15rem;color:#fff}
+    .btn{background:var(--gold);color:#000;border:none;border-radius:8px;padding:8px 16px;font-weight:600;cursor:pointer;font-family:'Inter';font-size:.85rem}
+    .btn.ghost{background:transparent;border:1px solid var(--border);color:var(--gray2)}
+    .btn.ghost:hover{border-color:var(--gold);color:var(--gold)}
+    /* cards */
+    .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:12px}
+    .person{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:16px 18px;position:relative}
+    .person.due{border-color:rgba(255,193,7,.5)}
+    .person.over{border-color:rgba(244,67,54,.55)}
+    .person .name{font-family:'Playfair Display',serif;font-size:1.12rem;font-weight:600}
+    .person .rel{font-size:.78rem;color:var(--gold);margin-bottom:8px}
+    .person .meta{font-size:.8rem;color:var(--gray2);margin-bottom:4px}
+    .badge{display:inline-block;font-size:.68rem;font-weight:600;padding:2px 8px;border-radius:10px;margin-bottom:8px}
+    .b-over{background:rgba(244,67,54,.15);color:#ff9b91}
+    .b-due{background:rgba(255,193,7,.15);color:#ffd86b}
+    .b-ok{background:rgba(76,175,80,.15);color:#9fe0a2}
+    .person .actions{display:flex;gap:8px;margin-top:12px;flex-wrap:wrap}
+    .person .actions button{font-size:.76rem;padding:5px 10px;border-radius:6px;cursor:pointer;font-family:'Inter';border:1px solid var(--border);background:transparent;color:var(--gray2)}
+    .person .actions .log{border-color:var(--green);color:#9fe0a2}
+    .person .actions .log:hover{background:rgba(76,175,80,.15)}
+    .person .note{font-size:.76rem;color:var(--gray);margin-top:8px;font-style:italic}
+    .empty{color:var(--gray);text-align:center;padding:30px;font-size:.9rem}
+    /* modal */
+    #modal{position:fixed;inset:0;background:rgba(0,0,0,.7);display:none;align-items:center;justify-content:center;z-index:500;padding:16px}
+    #modal.show{display:flex}
+    .mbox{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:24px;max-width:440px;width:100%}
+    .mbox h3{color:var(--gold);margin-bottom:14px}
+    .mbox label{display:block;font-size:.74rem;text-transform:uppercase;letter-spacing:.05em;color:var(--gray);margin:10px 0 4px}
+    .mbox input,.mbox select,.mbox textarea{width:100%;padding:9px;background:#1a1a1a;border:1px solid var(--border);border-radius:7px;color:#fff;font-family:'Inter';font-size:.9rem}
+    .mbox .row{display:flex;gap:10px}.mbox .row>div{flex:1}
+    .mbox .mact{display:flex;gap:10px;margin-top:18px}
+    .foot{text-align:center;color:#555;font-size:.78rem;padding:30px 16px;border-top:1px solid var(--border);margin-top:30px}
+  </style>
+</head>
+<body>
+
+<div id="pin">
+  <div class="pin-box">
+    <div class="ic">&#128106;</div>
+    <h2>Personal Outreach</h2>
+    <p>Enter the PIN to continue.</p>
+    <input type="password" id="pin-input" placeholder="PIN" autocomplete="off" inputmode="numeric">
+    <div id="pin-err"></div>
+  </div>
+</div>
+
+<div id="app" style="display:none">
+  <header class="pg">
+    <h1>&#128106; Personal Outreach</h1>
+    <div class="sub">Family &amp; friends &mdash; who's due for a touch</div>
+    <div class="stats" id="stats"></div>
+  </header>
+  <nav class="nav">
+    <a href="/index.html">&#127968; Home</a>
+    <a href="/coaching.html">&#129309; Coaching</a>
+    <a href="https://usmcmin.org/contacts.html">&#128231; Ministry Outreach (.org)</a>
+    <a href="#" onclick="exportData();return false;">&#128190; Export</a>
+  </nav>
+  <div class="wrap">
+    <div class="section-h">
+      <h2>&#128276; Reach Out Soon</h2>
+      <button class="btn" onclick="openAdd()">+ Add Person</button>
+    </div>
+    <div class="grid" id="due-grid"></div>
+
+    <div class="section-h"><h2>&#128101; Everyone</h2><span style="font-size:.78rem;color:var(--gray)" id="all-count"></span></div>
+    <div class="grid" id="all-grid"></div>
+  </div>
+  <div class="foot">Private personal tracker &middot; data stays in this browser (use Export to back up) &middot; <span id="seed-note"></span></div>
+</div>
+
+<!-- add/edit modal -->
+<div id="modal">
+  <div class="mbox">
+    <h3 id="m-title">Add Person</h3>
+    <input type="hidden" id="m-id">
+    <label>Name</label><input id="m-name" placeholder="e.g. Mom">
+    <div class="row">
+      <div><label>Relationship</label><input id="m-rel" placeholder="e.g. Family, Friend, Mentor"></div>
+      <div><label>Cadence</label><select id="m-cad">
+        <option value="7">Weekly</option><option value="14">Every 2 weeks</option>
+        <option value="30" selected>Monthly</option><option value="90">Quarterly</option>
+        <option value="180">Twice a year</option><option value="365">Yearly</option>
+      </select></div>
+    </div>
+    <div class="row">
+      <div><label>Last contacted</label><input type="date" id="m-last"></div>
+      <div><label>How</label><input id="m-method" placeholder="call / text / visit"></div>
+    </div>
+    <label>Note</label><textarea id="m-note" rows="2" placeholder="what to follow up on..."></textarea>
+    <div class="mact">
+      <button class="btn" onclick="saveModal()">Save</button>
+      <button class="btn ghost" onclick="closeModal()">Cancel</button>
+      <button class="btn ghost" id="m-del" style="margin-left:auto;border-color:var(--red);color:#ff9b91" onclick="delModal()">Delete</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ── PIN ──
+const PIN='5683', SK='po_unlocked';
+(function(){ if(sessionStorage.getItem(SK)==='1') unlock(); })();
+function unlock(){ document.getElementById('pin').classList.add('hidden'); document.getElementById('app').style.display=''; render(); }
+document.getElementById('pin-input').addEventListener('keyup',e=>{
+  const v=e.target.value;
+  if(v.length>=4){ if(v===PIN){ sessionStorage.setItem(SK,'1'); unlock(); } else { document.getElementById('pin-err').textContent='Wrong PIN.'; } }
+});
+
+// ── DATA (localStorage; seeded with examples on first run) ──
+const STORE='personal-outreach-v1';
+const SEED=[
+  {id:'ex1',name:'Example — Mom',rel:'Family',cadenceDays:7,last:'',method:'call',note:'Sample entry — edit or delete me, then add your real people.'},
+  {id:'ex2',name:'Example — Old college friend',rel:'Friend',cadenceDays:90,last:'',method:'text',note:'Quarterly check-in example.'},
+  {id:'ex3',name:'Example — Mentor',rel:'Mentor',cadenceDays:30,last:'',method:'coffee',note:'Monthly example.'}
+];
+let people=load();
+function load(){ try{ const r=localStorage.getItem(STORE); if(r) return JSON.parse(r); }catch(e){} return SEED.map(p=>({...p})); }
+function save(){ try{ localStorage.setItem(STORE,JSON.stringify(people)); }catch(e){ alert('Could not save — this browser may be blocking storage (private mode?).'); } }
+function exportData(){ try{ navigator.clipboard.writeText(JSON.stringify(people,null,2)).then(()=>alert('Copied your list to the clipboard as backup.')); }catch(e){ alert('Export failed: '+e); } }
+
+function daysSince(d){ if(!d) return null; const ms=new Date()-new Date(d+'T00:00:00'); return Math.floor(ms/86400000); }
+function statusOf(p){ const ds=daysSince(p.last); if(ds===null) return {k:'over',label:'Never contacted',cls:'b-over'};
+  const due=p.cadenceDays-ds;
+  if(due<0) return {k:'over',label:Math.abs(due)+'d overdue',cls:'b-over'};
+  if(due<=3) return {k:'due',label:'Due in '+due+'d',cls:'b-due'};
+  return {k:'ok',label:'Next in '+due+'d',cls:'b-ok'}; }
+
+function card(p){
+  const s=statusOf(p);
+  const cls=s.k==='over'?'over':s.k==='due'?'due':'';
+  const ds=daysSince(p.last);
+  return `<div class="person ${cls}">
+    <div class="name">${esc(p.name)}</div>
+    <div class="rel">${esc(p.rel||'')}</div>
+    <span class="badge ${s.cls}">${s.label}</span>
+    <div class="meta">Cadence: ${cadName(p.cadenceDays)}${p.last?` &middot; last ${p.last}${p.method?' ('+esc(p.method)+')':''}`:''}${ds!==null?` &middot; ${ds}d ago`:''}</div>
+    ${p.note?`<div class="note">${esc(p.note)}</div>`:''}
+    <div class="actions">
+      <button class="log" onclick="logToday('${p.id}')">&#10003; Contacted today</button>
+      <button onclick="openEdit('${p.id}')">Edit</button>
+    </div>
+  </div>`;
+}
+function render(){
+  const due=people.filter(p=>{const k=statusOf(p).k;return k==='over'||k==='due';})
+                  .sort((a,b)=>(daysSince(a.last)===null?1e9:daysSince(a.last)-a.cadenceDays*-1) - 0);
+  const dg=document.getElementById('due-grid');
+  dg.innerHTML = due.length?due.map(card).join(''):'<div class="empty">Nobody&rsquo;s overdue right now. 🎉</div>';
+  document.getElementById('all-grid').innerHTML = people.length?people.slice().sort((a,b)=>a.name.localeCompare(b.name)).map(card).join(''):'<div class="empty">No one yet — tap “+ Add Person”.</div>';
+  document.getElementById('all-count').textContent = people.length+' people';
+  const over=people.filter(p=>statusOf(p).k==='over').length, dueN=people.filter(p=>statusOf(p).k==='due').length;
+  document.getElementById('stats').innerHTML =
+    `<div class="pill">Total <b>${people.length}</b></div><div class="pill">🔴 Overdue <b>${over}</b></div><div class="pill">🟡 Due soon <b>${dueN}</b></div>`;
+  const seeded = people.some(p=>p.id&&p.id.startsWith('ex'));
+  document.getElementById('seed-note').textContent = seeded?'showing example entries — replace with your own':'';
+}
+function logToday(id){ const p=people.find(x=>x.id===id); if(!p)return; p.last=new Date().toISOString().slice(0,10); save(); render(); }
+
+// modal
+function openAdd(){ fill({}); document.getElementById('m-title').textContent='Add Person'; document.getElementById('m-del').style.display='none'; show(); }
+function openEdit(id){ const p=people.find(x=>x.id===id); if(!p)return; fill(p); document.getElementById('m-title').textContent='Edit Person'; document.getElementById('m-del').style.display=''; show(); }
+function fill(p){ document.getElementById('m-id').value=p.id||''; document.getElementById('m-name').value=p.name||''; document.getElementById('m-rel').value=p.rel||''; document.getElementById('m-cad').value=p.cadenceDays||30; document.getElementById('m-last').value=p.last||''; document.getElementById('m-method').value=p.method||''; document.getElementById('m-note').value=p.note||''; }
+function show(){ document.getElementById('modal').classList.add('show'); }
+function closeModal(){ document.getElementById('modal').classList.remove('show'); }
+function saveModal(){
+  const id=document.getElementById('m-id').value;
+  const name=document.getElementById('m-name').value.trim(); if(!name){ alert('Name required.'); return; }
+  const rec={ name, rel:document.getElementById('m-rel').value.trim(), cadenceDays:+document.getElementById('m-cad').value,
+    last:document.getElementById('m-last').value, method:document.getElementById('m-method').value.trim(), note:document.getElementById('m-note').value.trim() };
+  if(id){ const p=people.find(x=>x.id===id); Object.assign(p,rec); }
+  else { rec.id='p'+Date.now().toString(36); people.push(rec); }
+  save(); closeModal(); render();
+}
+function delModal(){ const id=document.getElementById('m-id').value; if(!id)return; if(!confirm('Delete this person?'))return; people=people.filter(x=>x.id!==id); save(); closeModal(); render(); }
+
+function cadName(d){ return ({7:'Weekly',14:'Every 2 weeks',30:'Monthly',90:'Quarterly',180:'Twice a year',365:'Yearly'})[d]||d+'d'; }
+function esc(s){ return String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
+</script>
+</body>
+</html>

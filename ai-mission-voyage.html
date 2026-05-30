@@ -194,6 +194,48 @@
   .ml-commission-card .seal { font-size: 2.6rem; }
   .ml-commission-card h2 { margin: 6px 0; font-size: 1.4rem; }
   .ml-commission-card p { color: var(--gray); font-size: 0.92rem; line-height: 1.6; max-width: 540px; margin: 0 auto; }
+
+  /* Field notes (per-week, collapsed) */
+  .ml-notes { margin-top: 2px; border-top: 1px dashed var(--border); padding-top: 6px; }
+  .ml-notes > summary { cursor: pointer; font-size: 0.78rem; font-weight: 700; color: var(--blk);
+    list-style: none; padding: 4px 0; user-select: none; }
+  .ml-notes > summary::-webkit-details-marker { display: none; }
+  .ml-notes[open] > summary { margin-bottom: 6px; }
+  .ml-note-fields { display: flex; flex-direction: column; gap: 10px; }
+  .ml-note-row { display: flex; flex-direction: column; gap: 3px; }
+  .ml-note-task { font-size: 0.7rem; font-weight: 700; color: var(--gray); }
+  .ml-note { width: 100%; box-sizing: border-box; resize: vertical;
+    font-family: inherit; font-size: 0.85rem; line-height: 1.4; color: var(--text);
+    background: rgba(255,255,255,0.03); border: 1px solid var(--border); border-radius: 6px;
+    padding: 7px 9px; min-height: 38px; }
+  .ml-note:focus { outline: none; border-color: var(--blk); }
+
+  /* Export-your-work panel */
+  .ml-export { max-width: 980px; margin: 6px auto 0; padding: 0 18px; }
+  .ml-export-card { border: 1px solid var(--border); border-radius: 12px; padding: 20px 22px;
+    background: linear-gradient(90deg, rgba(206,142,49,0.08) 0%, rgba(27,42,74,0.05) 100%); }
+  .ml-export-card h2 { margin: 0 0 4px; font-size: 1.15rem; }
+  .ml-export-card p { margin: 0 0 14px; font-size: 0.9rem; color: var(--gray); line-height: 1.55; }
+  .ml-export-btns { display: flex; flex-wrap: wrap; gap: 8px; }
+  .ml-xbtn { padding: 9px 15px; border-radius: 999px; border: 1px solid var(--border);
+    background: transparent; color: var(--text); font-size: 0.82rem; font-weight: 700;
+    cursor: pointer; font-family: inherit; }
+  .ml-xbtn:hover { border-color: var(--gold); color: var(--gold); }
+  .ml-xbtn.primary { background: var(--gold); color: #1a1a1a; border-color: var(--gold); }
+  .ml-xbtn.primary:hover { background: transparent; color: var(--gold); }
+  .ml-xnote { margin-top: 10px; font-size: 0.8rem; color: var(--gold); min-height: 1.1em; }
+
+  /* Materials downloads */
+  .ml-materials { max-width: 980px; margin: 30px auto 0; padding: 0 18px; }
+  .ml-materials h2 { font-size: 1.15rem; margin: 0 0 4px; }
+  .ml-materials p.sub { font-size: 0.9rem; color: var(--gray); margin: 0 0 14px; }
+  .ml-dl-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; }
+  .ml-dl { display: block; border: 1px solid var(--border); border-radius: 10px; padding: 14px 16px;
+    text-decoration: none; background: rgba(255,255,255,0.012); transition: border-color .15s, transform .15s; }
+  .ml-dl:hover { border-color: var(--gold); transform: translateY(-1px); }
+  .ml-dl .dl-name { display: block; font-weight: 700; color: var(--text); font-size: 0.92rem; }
+  .ml-dl .dl-meta { display: block; font-size: 0.76rem; color: var(--gray); margin-top: 3px; }
+  .ml-dl .dl-name .tag { color: var(--gold); font-weight: 800; }
   </style>
   <link rel="manifest" href="ai-mission.webmanifest">
   <meta name="theme-color" content="#1B2A4A">
@@ -266,6 +308,10 @@
           </div>
           <p class="ml-week-tag">Why a man uses AI matters more than which model he picks; the posture sits above the tooling.</p>
           <div class="ml-tasks"><button class="ml-task" type="button" data-key="1.1" title="Mark shipped: Write your Watchman's Charter" aria-label="Mark shipped: Write your Watchman's Charter"><span class="ml-task-num">T1</span><span class="ml-task-name">Write your Watchman's Charter</span></button><button class="ml-task" type="button" data-key="1.2" title="Mark shipped: Apply the Tiered Autonomy framework" aria-label="Mark shipped: Apply the Tiered Autonomy framework"><span class="ml-task-num">T2</span><span class="ml-task-name">Apply the Tiered Autonomy framework</span></button><button class="ml-task" type="button" data-key="1.3" title="Mark shipped: Build your watchman's tool stack" aria-label="Mark shipped: Build your watchman's tool stack"><span class="ml-task-num">T3</span><span class="ml-task-name">Build your watchman's tool stack</span></button></div>
+          <details class="ml-notes">
+            <summary>&#9998; Field notes</summary>
+            <div class="ml-note-fields"><label class="ml-note-row"><span class="ml-note-task">T1 &middot; Write your Watchman's Charter</span><textarea class="ml-note" data-note="1.1" rows="2" placeholder="What I did, what shipped, what I learned&hellip;" aria-label="Field note for Write your Watchman's Charter"></textarea></label><label class="ml-note-row"><span class="ml-note-task">T2 &middot; Apply the Tiered Autonomy framework</span><textarea class="ml-note" data-note="1.2" rows="2" placeholder="What I did, what shipped, what I learned&hellip;" aria-label="Field note for Apply the Tiered Autonomy framework"></textarea></label><label class="ml-note-row"><span class="ml-note-task">T3 &middot; Build your watchman's tool stack</span><textarea class="ml-note" data-note="1.3" rows="2" placeholder="What I did, what shipped, what I learned&hellip;" aria-label="Field note for Build your watchman's tool stack"></textarea></label></div>
+          </details>
           <div class="ml-week-foot">
             <a class="ml-week-scrip" href="https://usmcmin.org/bible.html?ref=Ezekiel%2033:1-7" target="_blank" rel="noopener">Ezekiel 33:1–7 &uarr;</a>
             <a class="ml-week-open" href="ai-mission-week-1.html">Open week &rarr;</a>
@@ -281,6 +327,10 @@
           </div>
           <p class="ml-week-tag">The five-part prompt structure, and the dictation loop that turns a thirty-minute task into eight.</p>
           <div class="ml-tasks"><button class="ml-task" type="button" data-key="2.1" title="Mark shipped: Anatomy of a watchman's prompt" aria-label="Mark shipped: Anatomy of a watchman's prompt"><span class="ml-task-num">T1</span><span class="ml-task-name">Anatomy of a watchman's prompt</span></button><button class="ml-task" type="button" data-key="2.2" title="Mark shipped: Voice capture + Whisper workflow" aria-label="Mark shipped: Voice capture + Whisper workflow"><span class="ml-task-num">T2</span><span class="ml-task-name">Voice capture + Whisper workflow</span></button><button class="ml-task" type="button" data-key="2.3" title="Mark shipped: Watchman's Audit (weekly rhythm)" aria-label="Mark shipped: Watchman's Audit (weekly rhythm)"><span class="ml-task-num">T3</span><span class="ml-task-name">Watchman's Audit (weekly rhythm)</span></button></div>
+          <details class="ml-notes">
+            <summary>&#9998; Field notes</summary>
+            <div class="ml-note-fields"><label class="ml-note-row"><span class="ml-note-task">T1 &middot; Anatomy of a watchman's prompt</span><textarea class="ml-note" data-note="2.1" rows="2" placeholder="What I did, what shipped, what I learned&hellip;" aria-label="Field note for Anatomy of a watchman's prompt"></textarea></label><label class="ml-note-row"><span class="ml-note-task">T2 &middot; Voice capture + Whisper workflow</span><textarea class="ml-note" data-note="2.2" rows="2" placeholder="What I did, what shipped, what I learned&hellip;" aria-label="Field note for Voice capture + Whisper workflow"></textarea></label><label class="ml-note-row"><span class="ml-note-task">T3 &middot; Watchman's Audit (weekly rhythm)</span><textarea class="ml-note" data-note="2.3" rows="2" placeholder="What I did, what shipped, what I learned&hellip;" aria-label="Field note for Watchman's Audit (weekly rhythm)"></textarea></label></div>
+          </details>
           <div class="ml-week-foot">
             <a class="ml-week-scrip" href="https://usmcmin.org/bible.html?ref=Proverbs%2018:13" target="_blank" rel="noopener">Proverbs 18:13 &uarr;</a>
             <a class="ml-week-open" href="ai-mission-week-2.html">Open week &rarr;</a>
@@ -307,6 +357,10 @@
           </div>
           <p class="ml-week-tag">A short wife audit, a five-year vision rewritten in your own words, and one hard conversation actually shipped.</p>
           <div class="ml-tasks"><button class="ml-task" type="button" data-key="3.1" title="Mark shipped: 5-minute Wife Audit" aria-label="Mark shipped: 5-minute Wife Audit"><span class="ml-task-num">T1</span><span class="ml-task-name">5-minute Wife Audit</span></button><button class="ml-task" type="button" data-key="3.2" title="Mark shipped: Write your 5-year Watchman's Vision" aria-label="Mark shipped: Write your 5-year Watchman's Vision"><span class="ml-task-num">T2</span><span class="ml-task-name">Write your 5-year Watchman's Vision</span></button><button class="ml-task" type="button" data-key="3.3" title="Mark shipped: Prep one hard conversation" aria-label="Mark shipped: Prep one hard conversation"><span class="ml-task-num">T3</span><span class="ml-task-name">Prep one hard conversation</span></button></div>
+          <details class="ml-notes">
+            <summary>&#9998; Field notes</summary>
+            <div class="ml-note-fields"><label class="ml-note-row"><span class="ml-note-task">T1 &middot; 5-minute Wife Audit</span><textarea class="ml-note" data-note="3.1" rows="2" placeholder="What I did, what shipped, what I learned&hellip;" aria-label="Field note for 5-minute Wife Audit"></textarea></label><label class="ml-note-row"><span class="ml-note-task">T2 &middot; Write your 5-year Watchman's Vision</span><textarea class="ml-note" data-note="3.2" rows="2" placeholder="What I did, what shipped, what I learned&hellip;" aria-label="Field note for Write your 5-year Watchman's Vision"></textarea></label><label class="ml-note-row"><span class="ml-note-task">T3 &middot; Prep one hard conversation</span><textarea class="ml-note" data-note="3.3" rows="2" placeholder="What I did, what shipped, what I learned&hellip;" aria-label="Field note for Prep one hard conversation"></textarea></label></div>
+          </details>
           <div class="ml-week-foot">
             <a class="ml-week-scrip" href="https://usmcmin.org/bible.html?ref=Ephesians%205:25" target="_blank" rel="noopener">Ephesians 5:25 &uarr;</a>
             <a class="ml-week-open" href="ai-mission-week-3.html">Open week &rarr;</a>
@@ -322,6 +376,10 @@
           </div>
           <p class="ml-week-tag">A family AI policy your kids help write, a household rhythm posted where everyone can see it, and a legacy plan started.</p>
           <div class="ml-tasks"><button class="ml-task" type="button" data-key="4.1" title="Mark shipped: Family AI Policy + Friday devotion generator" aria-label="Mark shipped: Family AI Policy + Friday devotion generator"><span class="ml-task-num">T1</span><span class="ml-task-name">Family AI Policy + Friday devotion generator</span></button><button class="ml-task" type="button" data-key="4.2" title="Mark shipped: Family rhythm asset" aria-label="Mark shipped: Family rhythm asset"><span class="ml-task-num">T2</span><span class="ml-task-name">Family rhythm asset</span></button><button class="ml-task" type="button" data-key="4.3" title="Mark shipped: Legacy plan starter" aria-label="Mark shipped: Legacy plan starter"><span class="ml-task-num">T3</span><span class="ml-task-name">Legacy plan starter</span></button></div>
+          <details class="ml-notes">
+            <summary>&#9998; Field notes</summary>
+            <div class="ml-note-fields"><label class="ml-note-row"><span class="ml-note-task">T1 &middot; Family AI Policy + Friday devotion generator</span><textarea class="ml-note" data-note="4.1" rows="2" placeholder="What I did, what shipped, what I learned&hellip;" aria-label="Field note for Family AI Policy + Friday devotion generator"></textarea></label><label class="ml-note-row"><span class="ml-note-task">T2 &middot; Family rhythm asset</span><textarea class="ml-note" data-note="4.2" rows="2" placeholder="What I did, what shipped, what I learned&hellip;" aria-label="Field note for Family rhythm asset"></textarea></label><label class="ml-note-row"><span class="ml-note-task">T3 &middot; Legacy plan starter</span><textarea class="ml-note" data-note="4.3" rows="2" placeholder="What I did, what shipped, what I learned&hellip;" aria-label="Field note for Legacy plan starter"></textarea></label></div>
+          </details>
           <div class="ml-week-foot">
             <a class="ml-week-scrip" href="https://usmcmin.org/bible.html?ref=1%20Timothy%203:4-5" target="_blank" rel="noopener">1 Timothy 3:4–5 &uarr;</a>
             <a class="ml-week-open" href="ai-mission-week-4.html">Open week &rarr;</a>
@@ -348,6 +406,10 @@
           </div>
           <p class="ml-week-tag">Subscriptions audited, body wired as platform, and the first real Cowork workflow shipped.</p>
           <div class="ml-tasks"><button class="ml-task" type="button" data-key="5.1" title="Mark shipped: Subscription audit" aria-label="Mark shipped: Subscription audit"><span class="ml-task-num">T1</span><span class="ml-task-name">Subscription audit</span></button><button class="ml-task" type="button" data-key="5.2" title="Mark shipped: Body as platform (movement + sleep)" aria-label="Mark shipped: Body as platform (movement + sleep)"><span class="ml-task-num">T2</span><span class="ml-task-name">Body as platform (movement + sleep)</span></button><button class="ml-task" type="button" data-key="5.3" title="Mark shipped: Ship one real Cowork workflow" aria-label="Mark shipped: Ship one real Cowork workflow"><span class="ml-task-num">T3</span><span class="ml-task-name">Ship one real Cowork workflow</span></button></div>
+          <details class="ml-notes">
+            <summary>&#9998; Field notes</summary>
+            <div class="ml-note-fields"><label class="ml-note-row"><span class="ml-note-task">T1 &middot; Subscription audit</span><textarea class="ml-note" data-note="5.1" rows="2" placeholder="What I did, what shipped, what I learned&hellip;" aria-label="Field note for Subscription audit"></textarea></label><label class="ml-note-row"><span class="ml-note-task">T2 &middot; Body as platform (movement + sleep)</span><textarea class="ml-note" data-note="5.2" rows="2" placeholder="What I did, what shipped, what I learned&hellip;" aria-label="Field note for Body as platform (movement + sleep)"></textarea></label><label class="ml-note-row"><span class="ml-note-task">T3 &middot; Ship one real Cowork workflow</span><textarea class="ml-note" data-note="5.3" rows="2" placeholder="What I did, what shipped, what I learned&hellip;" aria-label="Field note for Ship one real Cowork workflow"></textarea></label></div>
+          </details>
           <div class="ml-week-foot">
             <a class="ml-week-scrip" href="https://usmcmin.org/bible.html?ref=1%20Corinthians%206:19-20" target="_blank" rel="noopener">1 Corinthians 6:19–20 &uarr;</a>
             <a class="ml-week-open" href="ai-mission-week-5.html">Open week &rarr;</a>
@@ -363,6 +425,10 @@
           </div>
           <p class="ml-week-tag">Read your numbers; build the recurring-comms workflow; lock in a tithe-first budget.</p>
           <div class="ml-tasks"><button class="ml-task" type="button" data-key="6.1" title="Mark shipped: Read your numbers (P&L review with AI)" aria-label="Mark shipped: Read your numbers (P&L review with AI)"><span class="ml-task-num">T1</span><span class="ml-task-name">Read your numbers (P&L review with AI)</span></button><button class="ml-task" type="button" data-key="6.2" title="Mark shipped: Client-comms workflow (proposals, status reports, invoices)" aria-label="Mark shipped: Client-comms workflow (proposals, status reports, invoices)"><span class="ml-task-num">T2</span><span class="ml-task-name">Client-comms workflow (proposals, status reports, invoices)</span></button><button class="ml-task" type="button" data-key="6.3" title="Mark shipped: Tithe-first budget" aria-label="Mark shipped: Tithe-first budget"><span class="ml-task-num">T3</span><span class="ml-task-name">Tithe-first budget</span></button></div>
+          <details class="ml-notes">
+            <summary>&#9998; Field notes</summary>
+            <div class="ml-note-fields"><label class="ml-note-row"><span class="ml-note-task">T1 &middot; Read your numbers (P&L review with AI)</span><textarea class="ml-note" data-note="6.1" rows="2" placeholder="What I did, what shipped, what I learned&hellip;" aria-label="Field note for Read your numbers (P&L review with AI)"></textarea></label><label class="ml-note-row"><span class="ml-note-task">T2 &middot; Client-comms workflow (proposals, status reports, invoices)</span><textarea class="ml-note" data-note="6.2" rows="2" placeholder="What I did, what shipped, what I learned&hellip;" aria-label="Field note for Client-comms workflow (proposals, status reports, invoices)"></textarea></label><label class="ml-note-row"><span class="ml-note-task">T3 &middot; Tithe-first budget</span><textarea class="ml-note" data-note="6.3" rows="2" placeholder="What I did, what shipped, what I learned&hellip;" aria-label="Field note for Tithe-first budget"></textarea></label></div>
+          </details>
           <div class="ml-week-foot">
             <a class="ml-week-scrip" href="https://usmcmin.org/bible.html?ref=Luke%2016:10-11" target="_blank" rel="noopener">Luke 16:10–11 &uarr;</a>
             <a class="ml-week-open" href="ai-mission-week-6.html">Open week &rarr;</a>
@@ -378,6 +444,10 @@
           </div>
           <p class="ml-week-tag">Cowork's inventory + redlines mapped, a reusable prompt library you'll actually use, and a multi-step research workflow shipped on something real.</p>
           <div class="ml-tasks"><button class="ml-task" type="button" data-key="7.1" title="Mark shipped: Cowork inventory + redlines" aria-label="Mark shipped: Cowork inventory + redlines"><span class="ml-task-num">T1</span><span class="ml-task-name">Cowork inventory + redlines</span></button><button class="ml-task" type="button" data-key="7.2" title="Mark shipped: Build your Cowork prompt library" aria-label="Mark shipped: Build your Cowork prompt library"><span class="ml-task-num">T2</span><span class="ml-task-name">Build your Cowork prompt library</span></button><button class="ml-task" type="button" data-key="7.3" title="Mark shipped: Multi-step research workflow" aria-label="Mark shipped: Multi-step research workflow"><span class="ml-task-num">T3</span><span class="ml-task-name">Multi-step research workflow</span></button></div>
+          <details class="ml-notes">
+            <summary>&#9998; Field notes</summary>
+            <div class="ml-note-fields"><label class="ml-note-row"><span class="ml-note-task">T1 &middot; Cowork inventory + redlines</span><textarea class="ml-note" data-note="7.1" rows="2" placeholder="What I did, what shipped, what I learned&hellip;" aria-label="Field note for Cowork inventory + redlines"></textarea></label><label class="ml-note-row"><span class="ml-note-task">T2 &middot; Build your Cowork prompt library</span><textarea class="ml-note" data-note="7.2" rows="2" placeholder="What I did, what shipped, what I learned&hellip;" aria-label="Field note for Build your Cowork prompt library"></textarea></label><label class="ml-note-row"><span class="ml-note-task">T3 &middot; Multi-step research workflow</span><textarea class="ml-note" data-note="7.3" rows="2" placeholder="What I did, what shipped, what I learned&hellip;" aria-label="Field note for Multi-step research workflow"></textarea></label></div>
+          </details>
           <div class="ml-week-foot">
             <a class="ml-week-scrip" href="https://usmcmin.org/bible.html?ref=Proverbs%2016:3" target="_blank" rel="noopener">Proverbs 16:3 &uarr;</a>
             <a class="ml-week-open" href="ai-mission-week-7.html">Open week &rarr;</a>
@@ -393,6 +463,10 @@
           </div>
           <p class="ml-week-tag">Strip the AI fingerprint out of your drafts; sign a real decision; ship a public piece in your voice.</p>
           <div class="ml-tasks"><button class="ml-task" type="button" data-key="8.1" title="Mark shipped: Strip the AI fingerprint" aria-label="Mark shipped: Strip the AI fingerprint"><span class="ml-task-num">T1</span><span class="ml-task-name">Strip the AI fingerprint</span></button><button class="ml-task" type="button" data-key="8.2" title="Mark shipped: Decision-support memo" aria-label="Mark shipped: Decision-support memo"><span class="ml-task-num">T2</span><span class="ml-task-name">Decision-support memo</span></button><button class="ml-task" type="button" data-key="8.3" title="Mark shipped: Ship one piece in your voice" aria-label="Mark shipped: Ship one piece in your voice"><span class="ml-task-num">T3</span><span class="ml-task-name">Ship one piece in your voice</span></button></div>
+          <details class="ml-notes">
+            <summary>&#9998; Field notes</summary>
+            <div class="ml-note-fields"><label class="ml-note-row"><span class="ml-note-task">T1 &middot; Strip the AI fingerprint</span><textarea class="ml-note" data-note="8.1" rows="2" placeholder="What I did, what shipped, what I learned&hellip;" aria-label="Field note for Strip the AI fingerprint"></textarea></label><label class="ml-note-row"><span class="ml-note-task">T2 &middot; Decision-support memo</span><textarea class="ml-note" data-note="8.2" rows="2" placeholder="What I did, what shipped, what I learned&hellip;" aria-label="Field note for Decision-support memo"></textarea></label><label class="ml-note-row"><span class="ml-note-task">T3 &middot; Ship one piece in your voice</span><textarea class="ml-note" data-note="8.3" rows="2" placeholder="What I did, what shipped, what I learned&hellip;" aria-label="Field note for Ship one piece in your voice"></textarea></label></div>
+          </details>
           <div class="ml-week-foot">
             <a class="ml-week-scrip" href="https://usmcmin.org/bible.html?ref=Colossians%203:23" target="_blank" rel="noopener">Colossians 3:23 &uarr;</a>
             <a class="ml-week-open" href="ai-mission-week-8.html">Open week &rarr;</a>
@@ -419,6 +493,10 @@
           </div>
           <p class="ml-week-tag">Sermon to weekly actions; a ten-minute Scripture-study loop with AI as partner; a teaching aid you'll actually use Sunday.</p>
           <div class="ml-tasks"><button class="ml-task" type="button" data-key="9.1" title="Mark shipped: Sermon → watchman's actions" aria-label="Mark shipped: Sermon → watchman's actions"><span class="ml-task-num">T1</span><span class="ml-task-name">Sermon → watchman's actions</span></button><button class="ml-task" type="button" data-key="9.2" title="Mark shipped: 10-minute Scripture study with AI" aria-label="Mark shipped: 10-minute Scripture study with AI"><span class="ml-task-num">T2</span><span class="ml-task-name">10-minute Scripture study with AI</span></button><button class="ml-task" type="button" data-key="9.3" title="Mark shipped: Build a teaching aid for one passage" aria-label="Mark shipped: Build a teaching aid for one passage"><span class="ml-task-num">T3</span><span class="ml-task-name">Build a teaching aid for one passage</span></button></div>
+          <details class="ml-notes">
+            <summary>&#9998; Field notes</summary>
+            <div class="ml-note-fields"><label class="ml-note-row"><span class="ml-note-task">T1 &middot; Sermon → watchman's actions</span><textarea class="ml-note" data-note="9.1" rows="2" placeholder="What I did, what shipped, what I learned&hellip;" aria-label="Field note for Sermon → watchman's actions"></textarea></label><label class="ml-note-row"><span class="ml-note-task">T2 &middot; 10-minute Scripture study with AI</span><textarea class="ml-note" data-note="9.2" rows="2" placeholder="What I did, what shipped, what I learned&hellip;" aria-label="Field note for 10-minute Scripture study with AI"></textarea></label><label class="ml-note-row"><span class="ml-note-task">T3 &middot; Build a teaching aid for one passage</span><textarea class="ml-note" data-note="9.3" rows="2" placeholder="What I did, what shipped, what I learned&hellip;" aria-label="Field note for Build a teaching aid for one passage"></textarea></label></div>
+          </details>
           <div class="ml-week-foot">
             <a class="ml-week-scrip" href="https://usmcmin.org/bible.html?ref=2%20Timothy%203:16-17" target="_blank" rel="noopener">2 Timothy 3:16–17 &uarr;</a>
             <a class="ml-week-open" href="ai-mission-week-9.html">Open week &rarr;</a>
@@ -434,6 +512,10 @@
           </div>
           <p class="ml-week-tag">A personal daily-devotion loop you tune to your own walk, a pastoral-counseling prep workflow with hard redlines, and a cohort prompt-pack you test on one man.</p>
           <div class="ml-tasks"><button class="ml-task" type="button" data-key="10.1" title="Mark shipped: Watchman's daily devotion (personal)" aria-label="Mark shipped: Watchman's daily devotion (personal)"><span class="ml-task-num">T1</span><span class="ml-task-name">Watchman's daily devotion (personal)</span></button><button class="ml-task" type="button" data-key="10.2" title="Mark shipped: Pastoral counseling prep workflow (with redlines)" aria-label="Mark shipped: Pastoral counseling prep workflow (with redlines)"><span class="ml-task-num">T2</span><span class="ml-task-name">Pastoral counseling prep workflow (with redlines)</span></button><button class="ml-task" type="button" data-key="10.3" title="Mark shipped: Build a discipleship cohort prompt-pack" aria-label="Mark shipped: Build a discipleship cohort prompt-pack"><span class="ml-task-num">T3</span><span class="ml-task-name">Build a discipleship cohort prompt-pack</span></button></div>
+          <details class="ml-notes">
+            <summary>&#9998; Field notes</summary>
+            <div class="ml-note-fields"><label class="ml-note-row"><span class="ml-note-task">T1 &middot; Watchman's daily devotion (personal)</span><textarea class="ml-note" data-note="10.1" rows="2" placeholder="What I did, what shipped, what I learned&hellip;" aria-label="Field note for Watchman's daily devotion (personal)"></textarea></label><label class="ml-note-row"><span class="ml-note-task">T2 &middot; Pastoral counseling prep workflow (with redlines)</span><textarea class="ml-note" data-note="10.2" rows="2" placeholder="What I did, what shipped, what I learned&hellip;" aria-label="Field note for Pastoral counseling prep workflow (with redlines)"></textarea></label><label class="ml-note-row"><span class="ml-note-task">T3 &middot; Build a discipleship cohort prompt-pack</span><textarea class="ml-note" data-note="10.3" rows="2" placeholder="What I did, what shipped, what I learned&hellip;" aria-label="Field note for Build a discipleship cohort prompt-pack"></textarea></label></div>
+          </details>
           <div class="ml-week-foot">
             <a class="ml-week-scrip" href="https://usmcmin.org/bible.html?ref=2%20Timothy%202:2" target="_blank" rel="noopener">2 Timothy 2:2 &uarr;</a>
             <a class="ml-week-open" href="ai-mission-week-10.html">Open week &rarr;</a>
@@ -460,6 +542,10 @@
           </div>
           <p class="ml-week-tag">A local-AI smoke test on your own hardware, your watchman's redlines wired architecturally, and one MCP server scoped and tested.</p>
           <div class="ml-tasks"><button class="ml-task" type="button" data-key="11.1" title="Mark shipped: Local AI smoke test" aria-label="Mark shipped: Local AI smoke test"><span class="ml-task-num">T1</span><span class="ml-task-name">Local AI smoke test</span></button><button class="ml-task" type="button" data-key="11.2" title="Mark shipped: Define your watchman's Redlines" aria-label="Mark shipped: Define your watchman's Redlines"><span class="ml-task-num">T2</span><span class="ml-task-name">Define your watchman's Redlines</span></button><button class="ml-task" type="button" data-key="11.3" title="Mark shipped: MCP server setup" aria-label="Mark shipped: MCP server setup"><span class="ml-task-num">T3</span><span class="ml-task-name">MCP server setup</span></button></div>
+          <details class="ml-notes">
+            <summary>&#9998; Field notes</summary>
+            <div class="ml-note-fields"><label class="ml-note-row"><span class="ml-note-task">T1 &middot; Local AI smoke test</span><textarea class="ml-note" data-note="11.1" rows="2" placeholder="What I did, what shipped, what I learned&hellip;" aria-label="Field note for Local AI smoke test"></textarea></label><label class="ml-note-row"><span class="ml-note-task">T2 &middot; Define your watchman's Redlines</span><textarea class="ml-note" data-note="11.2" rows="2" placeholder="What I did, what shipped, what I learned&hellip;" aria-label="Field note for Define your watchman's Redlines"></textarea></label><label class="ml-note-row"><span class="ml-note-task">T3 &middot; MCP server setup</span><textarea class="ml-note" data-note="11.3" rows="2" placeholder="What I did, what shipped, what I learned&hellip;" aria-label="Field note for MCP server setup"></textarea></label></div>
+          </details>
           <div class="ml-week-foot">
             <a class="ml-week-scrip" href="https://usmcmin.org/bible.html?ref=Proverbs%2022:3" target="_blank" rel="noopener">Proverbs 22:3 &uarr;</a>
             <a class="ml-week-open" href="ai-mission-week-11.html">Open week &rarr;</a>
@@ -486,6 +572,10 @@
           </div>
           <p class="ml-week-tag">Synthesize the eleven weeks into one document; teach one person one thing; sign your charter and ship the commissioning log.</p>
           <div class="ml-tasks"><button class="ml-task" type="button" data-key="12.1" title="Mark shipped: Build your personal AI adjutant" aria-label="Mark shipped: Build your personal AI adjutant"><span class="ml-task-num">T1</span><span class="ml-task-name">Build your personal AI adjutant</span></button><button class="ml-task" type="button" data-key="12.2" title="Mark shipped: Teach one person one thing" aria-label="Mark shipped: Teach one person one thing"><span class="ml-task-num">T2</span><span class="ml-task-name">Teach one person one thing</span></button><button class="ml-task" type="button" data-key="12.3" title="Mark shipped: Sign your Watchman's Charter (commissioning)" aria-label="Mark shipped: Sign your Watchman's Charter (commissioning)"><span class="ml-task-num">T3</span><span class="ml-task-name">Sign your Watchman's Charter (commissioning)</span></button></div>
+          <details class="ml-notes">
+            <summary>&#9998; Field notes</summary>
+            <div class="ml-note-fields"><label class="ml-note-row"><span class="ml-note-task">T1 &middot; Build your personal AI adjutant</span><textarea class="ml-note" data-note="12.1" rows="2" placeholder="What I did, what shipped, what I learned&hellip;" aria-label="Field note for Build your personal AI adjutant"></textarea></label><label class="ml-note-row"><span class="ml-note-task">T2 &middot; Teach one person one thing</span><textarea class="ml-note" data-note="12.2" rows="2" placeholder="What I did, what shipped, what I learned&hellip;" aria-label="Field note for Teach one person one thing"></textarea></label><label class="ml-note-row"><span class="ml-note-task">T3 &middot; Sign your Watchman's Charter (commissioning)</span><textarea class="ml-note" data-note="12.3" rows="2" placeholder="What I did, what shipped, what I learned&hellip;" aria-label="Field note for Sign your Watchman's Charter (commissioning)"></textarea></label></div>
+          </details>
           <div class="ml-week-foot">
             <a class="ml-week-scrip" href="https://usmcmin.org/bible.html?ref=Ezekiel%2033:7" target="_blank" rel="noopener">Ezekiel 33:7 &uarr;</a>
             <a class="ml-week-open" href="ai-mission-week-12.html">Open week &rarr;</a>
@@ -494,6 +584,43 @@
         </div>
       </section>
 </div>
+
+<section class="ml-export">
+  <div class="ml-export-card">
+    <h2>Export your work</h2>
+    <p>Your check-offs and field notes live on this device. Pull them out any time to keep in Apple Notes, Evernote, or your files &mdash; copy them, download a Markdown or Evernote file, or use your phone&rsquo;s Share sheet.</p>
+    <div class="ml-export-btns">
+      <button class="ml-xbtn primary" id="mlShare" type="button" hidden>Share&hellip;</button>
+      <button class="ml-xbtn" id="mlCopy" type="button">Copy to clipboard</button>
+      <button class="ml-xbtn" id="mlMd" type="button">Download .md</button>
+      <button class="ml-xbtn" id="mlEnex" type="button">Evernote (.enex)</button>
+      <button class="ml-xbtn" id="mlClearNotes" type="button">Clear notes</button>
+    </div>
+    <div class="ml-xnote" id="mlXnote" role="status"></div>
+  </div>
+</section>
+
+<section class="ml-materials">
+  <h2>Your materials</h2>
+  <p class="sub">Everything for the course, yours to keep. The Field Workbook is <strong>fillable</strong> &mdash; type or handwrite your answers in Notability, GoodNotes, Apple Books, or Acrobat, and it saves with the file.</p>
+  <div class="ml-dl-grid">
+    <a class="ml-dl" href="downloads/ai-mission/The_Watchmans_Course_FIELD_WORKBOOK.pdf" download>
+      <span class="dl-name">Field Workbook <span class="tag">&middot; fillable PDF</span></span>
+      <span class="dl-meta">84 write-in fields &mdash; one per task, plus a weekly audit</span></a>
+    <a class="ml-dl" href="downloads/ai-mission/The_Watchmans_Course_WORKBOOK.docx" download>
+      <span class="dl-name">Participant Workbook <span class="tag">&middot; Word</span></span>
+      <span class="dl-meta">Print-and-fill, one page per task</span></a>
+    <a class="ml-dl" href="downloads/ai-mission/The_Watchmans_Course_MASTER.docx" download>
+      <span class="dl-name">Master Curriculum <span class="tag">&middot; Word</span></span>
+      <span class="dl-meta">Full reference &mdash; every task, drill, and scripture</span></a>
+    <a class="ml-dl" href="downloads/ai-mission/Watchmans_Course_Task_PDFs.zip" download>
+      <span class="dl-name">All 36 Task Cards <span class="tag">&middot; PDF zip</span></span>
+      <span class="dl-meta">One printable card per task</span></a>
+    <a class="ml-dl" href="downloads/ai-mission/Watchmans_Drills_36.pdf" download>
+      <span class="dl-name">Watchman&rsquo;s Drills <span class="tag">&middot; PDF</span></span>
+      <span class="dl-meta">36 ninety-second reps</span></a>
+  </div>
+</section>
 
 <section class="ml-commission">
   <div class="ml-commission-card" id="mlCommission">
@@ -611,6 +738,119 @@
     window.addEventListener('beforeinstallprompt', function(e){ e.preventDefault(); deferred = e; if (installBtn) installBtn.hidden = false; });
     if (installBtn) installBtn.addEventListener('click', function(){ if (!deferred) return; deferred.prompt(); deferred = null; installBtn.hidden = true; });
     window.addEventListener('appinstalled', function(){ if (installBtn) installBtn.hidden = true; });
+
+    // ── Field notes (per task) ──────────────────────────────────────────
+    var NOTES_KEY = "watchman_mission_notes_v1";
+    function loadNotes(){ try { return JSON.parse(localStorage.getItem(NOTES_KEY)) || {}; } catch(e){ return {}; } }
+    function saveNotes(o){ try { localStorage.setItem(NOTES_KEY, JSON.stringify(o)); } catch(e){} }
+    (function hydrateNotes(){
+      var notes = loadNotes();
+      document.querySelectorAll('.ml-note').forEach(function(ta){
+        if (notes[ta.dataset.note]) ta.value = notes[ta.dataset.note];
+        ta.addEventListener('input', function(){
+          var o = loadNotes();
+          if (ta.value.trim()) o[ta.dataset.note] = ta.value; else delete o[ta.dataset.note];
+          saveNotes(o);
+        });
+      });
+    })();
+
+    // ── Export ──────────────────────────────────────────────────────────
+    function esc(t){ return (t||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+    function pad(x){ return (''+x).length<2 ? '0'+x : ''+x; }
+    function stamp(){ var d=new Date(); return d.getUTCFullYear()+pad(d.getUTCMonth()+1)+pad(d.getUTCDate())+'T'+pad(d.getUTCHours())+pad(d.getUTCMinutes())+pad(d.getUTCSeconds())+'Z'; }
+    function gather(){
+      var s = load(), notes = loadNotes();
+      var weeks = Array.prototype.slice.call(document.querySelectorAll('.ml-week'))
+        .sort(function(a,b){ return (+a.dataset.week) - (+b.dataset.week); });
+      var md = [], html = [], done = count(s);
+      md.push('# The Watchman\'s Course \u2014 My Field Notes');
+      md.push('');
+      md.push('_' + done + ' of ' + TOTAL + ' tasks stood._');
+      md.push('');
+      html.push('<h1>The Watchman\'s Course \u2014 My Field Notes</h1>');
+      html.push('<p><i>' + done + ' of ' + TOTAL + ' tasks stood.</i></p>');
+      weeks.forEach(function(wk){
+        var n = wk.dataset.week;
+        var title = (wk.querySelector('.ml-week-title') || {}).textContent || ('Week ' + n);
+        md.push('## Week ' + n + ' \u2014 ' + title);
+        html.push('<h2>Week ' + n + ' \u2014 ' + esc(title) + '</h2><ul>');
+        wk.querySelectorAll('.ml-note-row').forEach(function(row){
+          var ta = row.querySelector('.ml-note');
+          var key = ta.dataset.note;
+          var label = (row.querySelector('.ml-note-task') || {}).textContent.trim();
+          var note = (notes[key] || '').trim().replace(/\s*\n\s*/g, ' ');
+          var box = s[key] ? '[x]' : '[ ]';
+          md.push('- ' + box + ' ' + label + (note ? ' \u2014 ' + note : ''));
+          html.push('<li>' + (s[key] ? '\u2713 ' : '\u25A1 ') + esc(label) + (note ? ' \u2014 ' + esc(note) : '') + '</li>');
+        });
+        md.push('');
+        html.push('</ul>');
+      });
+      return { md: md.join('\n'), html: html.join('') };
+    }
+    function flash(msg){ var n = document.getElementById('mlXnote'); if (n){ n.textContent = msg; setTimeout(function(){ if (n.textContent === msg) n.textContent = ''; }, 4000); } }
+    function download(name, text, mime){
+      try {
+        var blob = new Blob([text], { type: mime });
+        var a = document.createElement('a');
+        a.href = URL.createObjectURL(blob); a.download = name;
+        document.body.appendChild(a); a.click();
+        setTimeout(function(){ URL.revokeObjectURL(a.href); a.remove(); }, 1000);
+        return true;
+      } catch(e){ return false; }
+    }
+    function enex(html){
+      var d = stamp();
+      return '<?xml version="1.0" encoding="UTF-8"?>\n' +
+        '<!DOCTYPE en-export SYSTEM "http://xml.evernote.com/pub/evernote-export4.dtd">\n' +
+        '<en-export export-date="' + d + '" application="Watchman\'s Course" version="1.0">\n' +
+        '<note><title>The Watchman\'s Course \u2014 My Field Notes</title>' +
+        '<content><![CDATA[<?xml version="1.0" encoding="UTF-8"?>' +
+        '<!DOCTYPE en-note SYSTEM "http://xml.evernote.com/pub/enml2.dtd">' +
+        '<en-note>' + html + '</en-note>]]></content>' +
+        '<created>' + d + '</created><updated>' + d + '</updated>' +
+        '<note-attributes><source>web.app</source></note-attributes>' +
+        '</note>\n</en-export>\n';
+    }
+    var bCopy = document.getElementById('mlCopy');
+    if (bCopy) bCopy.addEventListener('click', function(){
+      var t = gather().md;
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(t).then(function(){ flash('Copied \u2014 paste it into Notes, Evernote, anywhere.'); },
+          function(){ legacyCopy(t); });
+      } else { legacyCopy(t); }
+    });
+    function legacyCopy(t){
+      var ta = document.createElement('textarea'); ta.value = t;
+      ta.style.position = 'fixed'; ta.style.opacity = '0'; document.body.appendChild(ta);
+      ta.select(); try { document.execCommand('copy'); flash('Copied to clipboard.'); } catch(e){ flash('Could not copy \u2014 try Download instead.'); }
+      ta.remove();
+    }
+    var bMd = document.getElementById('mlMd');
+    if (bMd) bMd.addEventListener('click', function(){
+      download('watchmans-course-field-notes.md', gather().md, 'text/markdown') ? flash('Markdown downloaded.') : flash('Download failed.');
+    });
+    var bEnex = document.getElementById('mlEnex');
+    if (bEnex) bEnex.addEventListener('click', function(){
+      download('watchmans-course-field-notes.enex', enex(gather().html), 'application/xml')
+        ? flash('Evernote file downloaded \u2014 in Evernote: File \u203a Import.') : flash('Download failed.');
+    });
+    var bShare = document.getElementById('mlShare');
+    if (navigator.share && bShare) {
+      bShare.hidden = false;
+      bShare.addEventListener('click', function(){
+        navigator.share({ title: "The Watchman's Course \u2014 My Field Notes", text: gather().md }).catch(function(){});
+      });
+    }
+    var bClear = document.getElementById('mlClearNotes');
+    if (bClear) bClear.addEventListener('click', function(){
+      if (!confirm('Clear all your field notes on this device? Your task check-offs stay.')) return;
+      localStorage.removeItem(NOTES_KEY);
+      document.querySelectorAll('.ml-note').forEach(function(ta){ ta.value = ''; });
+      flash('Field notes cleared.');
+    });
+
     update();
   })();
   </script>

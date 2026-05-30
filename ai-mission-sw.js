@@ -13,7 +13,7 @@
  *
  * Bump SW_VERSION when the shell changes so installs refresh on next launch.
  */
-const SW_VERSION = 'v1-2026-05-30';
+const SW_VERSION = 'v2-2026-05-30';
 const CORE_CACHE = 'fc-core-ai-mission-' + SW_VERSION;
 const RUNTIME_CACHE = 'fc-runtime-ai-mission-' + SW_VERSION;
 const OFFLINE_FALLBACK = '/ai-mission-voyage.html';

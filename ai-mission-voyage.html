@@ -603,6 +603,70 @@
 <section class="ml-materials">
   <h2>Your materials</h2>
   <p class="sub">Everything for the course, yours to keep. The Field Workbook is <strong>fillable</strong> &mdash; type or handwrite your answers in Notability, GoodNotes, Apple Books, or Acrobat, and it saves with the file.</p>
+<!-- workon: device-aware notes-app helper (Task #67) -->
+<section class="workon workon--usmc" data-pdf="downloads/ai-mission/The_Watchmans_Course_FIELD_WORKBOOK.pdf" data-pdfname="The_Watchmans_Course_FIELD_WORKBOOK.pdf">
+  <div class="workon-inner">
+    <div class="workon-head">
+      <span class="workon-icon" aria-hidden="true">&#9998;</span>
+      <div>
+        <h3 class="workon-title">Work on it in your notes app</h3>
+        <p class="workon-lede">The Field Workbook is <strong>fillable</strong>. Take it into a notes app and type or handwrite your answers right on the page &mdash; it saves in the file, so your work stays with you.</p>
+      </div>
+    </div>
+    <div class="workon-actions">
+      <a class="workon-btn" id="wkUPrimary" href="downloads/ai-mission/The_Watchmans_Course_FIELD_WORKBOOK.pdf" download>&darr; Download the Field Workbook (PDF)</a>
+    </div>
+    <p class="workon-hint" id="wkUHint">On a Mac or PC, open it in <strong>GoodNotes, Notability, PDF Expert, Preview, Books, or Acrobat</strong> to type or handwrite &mdash; your work saves in the app.</p>
+  </div>
+</section>
+<style>
+.workon{margin:18px 0 6px;}
+.workon-inner{background:#22345c;border:1px solid rgba(255,255,255,.14);border-radius:14px;padding:18px 20px;}
+.workon-head{display:flex;gap:14px;align-items:flex-start;}
+.workon-icon{flex:0 0 auto;width:40px;height:40px;border-radius:10px;background:rgba(200,162,75,.16);color:#c8a24b;display:flex;align-items:center;justify-content:center;font-size:20px;line-height:1;}
+.workon-title{margin:2px 0 4px;font-size:1.08rem;color:#f4f7fc;}
+.workon-lede{margin:0;font-size:.94rem;line-height:1.5;color:#c6d2e8;}
+.workon-lede strong{color:#f4f7fc;}
+.workon-actions{margin:14px 0 0;}
+.workon-btn{display:inline-block;background:#c8a24b;color:#15233f;font-weight:800;font-size:.96rem;text-decoration:none;padding:11px 18px;border-radius:10px;border:none;cursor:pointer;-webkit-appearance:none;transition:background .15s ease,transform .05s ease;}
+.workon-btn:hover{background:#d8b969;}
+.workon-btn:active{transform:translateY(1px);}
+.workon-btn.is-busy{opacity:.7;cursor:progress;}
+.workon-hint{margin:10px 0 0;font-size:.82rem;line-height:1.5;color:#9fb0c9;}
+.workon-hint strong{color:#c6d2e8;}
+@media (max-width:520px){.workon-inner{padding:16px;}.workon-btn{display:block;text-align:center;}}
+</style>
+<script>
+(function(){
+  var sec=document.querySelector('.workon[data-pdf="downloads/ai-mission/The_Watchmans_Course_FIELD_WORKBOOK.pdf"]');
+  if(!sec) return;
+  var pdf=sec.getAttribute('data-pdf'), pdfname=sec.getAttribute('data-pdfname');
+  var btn=document.getElementById('wkUPrimary'), hint=document.getElementById('wkUHint');
+  if(!btn||!hint) return;
+  var touch=false; try{ touch=(window.matchMedia&&matchMedia('(pointer:coarse)').matches)||((navigator.maxTouchPoints||0)>1); }catch(e){}
+  var canFiles=false;
+  try{ var probe=new File([new Blob(['%PDF-1.4'],{type:'application/pdf'})],pdfname,{type:'application/pdf'}); canFiles=!!(navigator.canShare&&navigator.canShare({files:[probe]})); }catch(e){ canFiles=false; }
+  if(canFiles&&touch){
+    btn.textContent='Send to your notes app →';
+    hint.innerHTML='Pick <strong>Notability<\/strong>, <strong>GoodNotes<\/strong>, or <strong>Books<\/strong> to type or handwrite — or <strong>Files<\/strong> to keep it. Long‑press the button if you just want to download.';
+    btn.addEventListener('click',function(ev){
+      ev.preventDefault();
+      var orig=btn.textContent; btn.textContent='Preparing…'; btn.classList.add('is-busy');
+      fetch(pdf).then(function(r){ if(!r.ok) throw new Error('http'); return r.blob(); }).then(function(blob){
+        var file=new File([blob],pdfname,{type:'application/pdf'});
+        if(navigator.canShare&&navigator.canShare({files:[file]})){ return navigator.share({files:[file],title:'The Field Workbook'}); }
+        throw new Error('nofiles');
+      }).then(function(){ btn.textContent=orig; btn.classList.remove('is-busy'); }).catch(function(err){
+        btn.textContent=orig; btn.classList.remove('is-busy');
+        if(err&&err.name==='AbortError') return;
+        var a=document.createElement('a'); a.href=pdf; a.setAttribute('download',pdfname); document.body.appendChild(a); a.click(); a.remove();
+      });
+    });
+  } else if(touch){
+    hint.innerHTML='After it downloads, tap <strong>Open in…<\/strong> and choose <strong>Notability<\/strong>, <strong>GoodNotes<\/strong>, or <strong>Books<\/strong> to type or handwrite.';
+  }
+})();
+</script>
   <div class="ml-dl-grid">
     <a class="ml-dl" href="downloads/ai-mission/The_Watchmans_Course_FIELD_WORKBOOK.pdf" download>
       <span class="dl-name">Field Workbook <span class="tag">&middot; fillable PDF</span></span>

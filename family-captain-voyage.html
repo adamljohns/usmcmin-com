@@ -1814,6 +1814,70 @@ document.addEventListener('click', function(e) {
 <section class="fc-notes-section">
   <h2>Captain&rsquo;s Field Notes</h2>
   <p class="lede">Capture what you did and what shipped, week by week &mdash; saved on this device. Pull it all out any time with Export to keep in Apple Notes, Evernote, or your files. Prefer pen and paper, or want it in Notability? <a href="downloads/family-captain/Family_Captain_FIELD_WORKBOOK.pdf" download>Download the fillable Field Workbook</a>.</p>
+<!-- workon: device-aware notes-app helper (Task #67) -->
+<section class="workon workon--fc" data-pdf="downloads/family-captain/Family_Captain_FIELD_WORKBOOK.pdf" data-pdfname="Family_Captain_FIELD_WORKBOOK.pdf">
+  <div class="workon-inner">
+    <div class="workon-head">
+      <span class="workon-icon" aria-hidden="true">&#9998;</span>
+      <div>
+        <h3 class="workon-title">Work on it in your notes app</h3>
+        <p class="workon-lede">The Field Workbook is <strong>fillable</strong>. Take it into a notes app and type or handwrite your answers right on the page &mdash; it saves in the file, so your work stays with you.</p>
+      </div>
+    </div>
+    <div class="workon-actions">
+      <a class="workon-btn" id="wkFPrimary" href="downloads/family-captain/Family_Captain_FIELD_WORKBOOK.pdf" download>&darr; Download the Field Workbook (PDF)</a>
+    </div>
+    <p class="workon-hint" id="wkFHint">On a Mac or PC, open it in <strong>GoodNotes, Notability, PDF Expert, Preview, Books, or Acrobat</strong> to type or handwrite &mdash; your work saves in the app.</p>
+  </div>
+</section>
+<style>
+.workon{margin:18px 0 6px;}
+.workon-inner{background:#ffffff;border:1px solid #e9ded0;border-radius:14px;padding:18px 20px;}
+.workon-head{display:flex;gap:14px;align-items:flex-start;}
+.workon-icon{flex:0 0 auto;width:40px;height:40px;border-radius:10px;background:rgba(206,142,49,.14);color:#ce8e31;display:flex;align-items:center;justify-content:center;font-size:20px;line-height:1;}
+.workon-title{margin:2px 0 4px;font-size:1.08rem;color:#1e293b;}
+.workon-lede{margin:0;font-size:.94rem;line-height:1.5;color:#3f4757;}
+.workon-lede strong{color:#1e293b;}
+.workon-actions{margin:14px 0 0;}
+.workon-btn{display:inline-block;background:#ce8e31;color:#ffffff;font-weight:800;font-size:.96rem;text-decoration:none;padding:11px 18px;border-radius:10px;border:none;cursor:pointer;-webkit-appearance:none;transition:background .15s ease,transform .05s ease;}
+.workon-btn:hover{background:#b97a1f;}
+.workon-btn:active{transform:translateY(1px);}
+.workon-btn.is-busy{opacity:.7;cursor:progress;}
+.workon-hint{margin:10px 0 0;font-size:.82rem;line-height:1.5;color:#6b7280;}
+.workon-hint strong{color:#3f4757;}
+@media (max-width:520px){.workon-inner{padding:16px;}.workon-btn{display:block;text-align:center;}}
+</style>
+<script>
+(function(){
+  var sec=document.querySelector('.workon[data-pdf="downloads/family-captain/Family_Captain_FIELD_WORKBOOK.pdf"]');
+  if(!sec) return;
+  var pdf=sec.getAttribute('data-pdf'), pdfname=sec.getAttribute('data-pdfname');
+  var btn=document.getElementById('wkFPrimary'), hint=document.getElementById('wkFHint');
+  if(!btn||!hint) return;
+  var touch=false; try{ touch=(window.matchMedia&&matchMedia('(pointer:coarse)').matches)||((navigator.maxTouchPoints||0)>1); }catch(e){}
+  var canFiles=false;
+  try{ var probe=new File([new Blob(['%PDF-1.4'],{type:'application/pdf'})],pdfname,{type:'application/pdf'}); canFiles=!!(navigator.canShare&&navigator.canShare({files:[probe]})); }catch(e){ canFiles=false; }
+  if(canFiles&&touch){
+    btn.textContent='Send to your notes app →';
+    hint.innerHTML='Pick <strong>Notability<\/strong>, <strong>GoodNotes<\/strong>, or <strong>Books<\/strong> to type or handwrite — or <strong>Files<\/strong> to keep it. Long‑press the button if you just want to download.';
+    btn.addEventListener('click',function(ev){
+      ev.preventDefault();
+      var orig=btn.textContent; btn.textContent='Preparing…'; btn.classList.add('is-busy');
+      fetch(pdf).then(function(r){ if(!r.ok) throw new Error('http'); return r.blob(); }).then(function(blob){
+        var file=new File([blob],pdfname,{type:'application/pdf'});
+        if(navigator.canShare&&navigator.canShare({files:[file]})){ return navigator.share({files:[file],title:'The Field Workbook'}); }
+        throw new Error('nofiles');
+      }).then(function(){ btn.textContent=orig; btn.classList.remove('is-busy'); }).catch(function(err){
+        btn.textContent=orig; btn.classList.remove('is-busy');
+        if(err&&err.name==='AbortError') return;
+        var a=document.createElement('a'); a.href=pdf; a.setAttribute('download',pdfname); document.body.appendChild(a); a.click(); a.remove();
+      });
+    });
+  } else if(touch){
+    hint.innerHTML='After it downloads, tap <strong>Open in…<\/strong> and choose <strong>Notability<\/strong>, <strong>GoodNotes<\/strong>, or <strong>Books<\/strong> to type or handwrite.';
+  }
+})();
+</script>
   <details class="fc-note-week"><summary>Week 1 &mdash; Vision</summary><div class="fc-note-body"><label class="fc-note-row"><span class="fc-note-task">T1 &middot; Draft Your AI Charter</span><textarea class="fc-note" data-note="1.1" rows="2" placeholder="What I did, what shipped, what I learned&hellip;" aria-label="Field note for Draft Your AI Charter"></textarea></label><label class="fc-note-row"><span class="fc-note-task">T2 &middot; Write Your 5-Year Captain's Vision</span><textarea class="fc-note" data-note="1.2" rows="2" placeholder="What I did, what shipped, what I learned&hellip;" aria-label="Field note for Write Your 5-Year Captain's Vision"></textarea></label><label class="fc-note-row"><span class="fc-note-task">T3 &middot; Build Your Tool Stack</span><textarea class="fc-note" data-note="1.3" rows="2" placeholder="What I did, what shipped, what I learned&hellip;" aria-label="Field note for Build Your Tool Stack"></textarea></label></div></details><details class="fc-note-week"><summary>Week 2 &mdash; Body</summary><div class="fc-note-body"><label class="fc-note-row"><span class="fc-note-task">T1 &middot; Weekly Movement Practice</span><textarea class="fc-note" data-note="2.1" rows="2" placeholder="What I did, what shipped, what I learned&hellip;" aria-label="Field note for Weekly Movement Practice"></textarea></label><label class="fc-note-row"><span class="fc-note-task">T2 &middot; Captain's Meal Plan</span><textarea class="fc-note" data-note="2.2" rows="2" placeholder="What I did, what shipped, what I learned&hellip;" aria-label="Field note for Captain's Meal Plan"></textarea></label><label class="fc-note-row"><span class="fc-note-task">T3 &middot; 5-Night Sleep Audit</span><textarea class="fc-note" data-note="2.3" rows="2" placeholder="What I did, what shipped, what I learned&hellip;" aria-label="Field note for 5-Night Sleep Audit"></textarea></label></div></details><details class="fc-note-week"><summary>Week 3 &mdash; Spiritual</summary><div class="fc-note-body"><label class="fc-note-row"><span class="fc-note-task">T1 &middot; 10-Min Scripture Study, You Lead</span><textarea class="fc-note" data-note="3.1" rows="2" placeholder="What I did, what shipped, what I learned&hellip;" aria-label="Field note for 10-Min Scripture Study, You Lead"></textarea></label><label class="fc-note-row"><span class="fc-note-task">T2 &middot; Family Devotion Generator</span><textarea class="fc-note" data-note="3.2" rows="2" placeholder="What I did, what shipped, what I learned&hellip;" aria-label="Field note for Family Devotion Generator"></textarea></label><label class="fc-note-row"><span class="fc-note-task">T3 &middot; Sermon Notes → Captain's Actions</span><textarea class="fc-note" data-note="3.3" rows="2" placeholder="What I did, what shipped, what I learned&hellip;" aria-label="Field note for Sermon Notes → Captain's Actions"></textarea></label></div></details><details class="fc-note-week"><summary>Week 4 &mdash; Husbanding</summary><div class="fc-note-body"><label class="fc-note-row"><span class="fc-note-task">T1 &middot; The 5-Minute Wife Audit</span><textarea class="fc-note" data-note="4.1" rows="2" placeholder="What I did, what shipped, what I learned&hellip;" aria-label="Field note for The 5-Minute Wife Audit"></textarea></label><label class="fc-note-row"><span class="fc-note-task">T2 &middot; Prep One Hard Conversation</span><textarea class="fc-note" data-note="4.2" rows="2" placeholder="What I did, what shipped, what I learned&hellip;" aria-label="Field note for Prep One Hard Conversation"></textarea></label><label class="fc-note-row"><span class="fc-note-task">T3 &middot; Letter to Your Wife</span><textarea class="fc-note" data-note="4.3" rows="2" placeholder="What I did, what shipped, what I learned&hellip;" aria-label="Field note for Letter to Your Wife"></textarea></label></div></details><details class="fc-note-week"><summary>Week 5 &mdash; Fathering</summary><div class="fc-note-body"><label class="fc-note-row"><span class="fc-note-task">T1 &middot; 3 Questions for the Dinner Table</span><textarea class="fc-note" data-note="5.1" rows="2" placeholder="What I did, what shipped, what I learned&hellip;" aria-label="Field note for 3 Questions for the Dinner Table"></textarea></label><label class="fc-note-row"><span class="fc-note-task">T2 &middot; Build a Family Rhythm Asset</span><textarea class="fc-note" data-note="5.2" rows="2" placeholder="What I did, what shipped, what I learned&hellip;" aria-label="Field note for Build a Family Rhythm Asset"></textarea></label><label class="fc-note-row"><span class="fc-note-task">T3 &middot; Write Your Family AI Policy</span><textarea class="fc-note" data-note="5.3" rows="2" placeholder="What I did, what shipped, what I learned&hellip;" aria-label="Field note for Write Your Family AI Policy"></textarea></label></div></details><details class="fc-note-week"><summary>Week 6 &mdash; Finance</summary><div class="fc-note-body"><label class="fc-note-row"><span class="fc-note-task">T1 &middot; Tithe-First Budget</span><textarea class="fc-note" data-note="6.1" rows="2" placeholder="What I did, what shipped, what I learned&hellip;" aria-label="Field note for Tithe-First Budget"></textarea></label><label class="fc-note-row"><span class="fc-note-task">T2 &middot; Subscription Audit</span><textarea class="fc-note" data-note="6.2" rows="2" placeholder="What I did, what shipped, what I learned&hellip;" aria-label="Field note for Subscription Audit"></textarea></label><label class="fc-note-row"><span class="fc-note-task">T3 &middot; Legacy Plan Starter</span><textarea class="fc-note" data-note="6.3" rows="2" placeholder="What I did, what shipped, what I learned&hellip;" aria-label="Field note for Legacy Plan Starter"></textarea></label></div></details><details class="fc-note-week"><summary>Week 7 &mdash; Sabbath</summary><div class="fc-note-body"><label class="fc-note-row"><span class="fc-note-task">T1 &middot; Plan Your Sabbath</span><textarea class="fc-note" data-note="7.1" rows="2" placeholder="What I did, what shipped, what I learned&hellip;" aria-label="Field note for Plan Your Sabbath"></textarea></label><label class="fc-note-row"><span class="fc-note-task">T2 &middot; Saturday Captain's Audit</span><textarea class="fc-note" data-note="7.2" rows="2" placeholder="What I did, what shipped, what I learned&hellip;" aria-label="Field note for Saturday Captain's Audit"></textarea></label><label class="fc-note-row"><span class="fc-note-task">T3 &middot; Teach One Person One Thing</span><textarea class="fc-note" data-note="7.3" rows="2" placeholder="What I did, what shipped, what I learned&hellip;" aria-label="Field note for Teach One Person One Thing"></textarea></label></div></details>
 </section>
 

@@ -13,7 +13,7 @@
  *
  * Bump SW_VERSION when the shell changes so installs refresh on next launch.
  */
-const SW_VERSION = 'v3-2026-05-31';
+const SW_VERSION = 'v4-2026-05-31';
 const CORE_CACHE = 'fc-core-family-captain-' + SW_VERSION;
 const RUNTIME_CACHE = 'fc-runtime-family-captain-' + SW_VERSION;
 const OFFLINE_FALLBACK = '/family-captain-voyage.html';

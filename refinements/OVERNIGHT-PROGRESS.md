@@ -171,3 +171,8 @@
 - patrick-mosolf · VA-02 · D · null · active challenger (primary Aug 4 2026); only off-rubric positions (ACA/min-wage/AI) — all 50 cells null, evidence_federal
 - darius-mayfield · VA-07 · R · 100/100 · active challenger; thin — wall + school-choice foundation + documented pro-life (3 cells); silent on marriage/2A/elections
 - douglas-ollivant · VA-07 · R · 100/100 · active challenger; thin — girls'-sports + fiscal-responsibility + small-farm ag (3 cells); DEVIATION FLAG: establishment-hawk foreign policy vs restraint rubric
+- parisa-dehghani-tafti · VA · D · 0/100 · Arlington Commonwealth's Attorney — Soros-funded progressive prosecutor archetype; declined-prosecution on abortion + marijuana, ended cash bail, no-death-penalty pledge, FAFO anti-ICE coalition (9 cited FALSE)
+- amanda-newins · VA · R · 100/100 · Chesapeake CC (At-Large) — invocation 5/13/2025 + FY24 4-cent rate cut + explicit pro-LE pledge (3 cells); cultural cells null
+- daniel-whitaker · VA · I · 100/100 · Chesapeake CC (At-Large) — invocations 10/22/2024 + 9/9/2025 + lone NO on recycling-fee referendum + "public safety first" pay pledge (3 cells)
+- debbie-ritter · VA · R · 78→100 · Chesapeake Vice Mayor (since Sept 2025) — 20+ yr no-tax-rate-hike record + pro-LE advocacy + repeal-LE-state-restrictions + VA Coalition of High Growth Localities Exec Board + unanimous 2A Constitutional City vote (6 cells)
+- ella-ward · VA · D · 100/100 · Chesapeake CC (At-Large) — sparse-data outcome (only the FY24 4-cent rate cut + 2023 toll NO scored TRUE); D affiliation + ward-system support documented in notes, cultural cells null

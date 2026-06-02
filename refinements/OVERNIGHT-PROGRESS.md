@@ -129,3 +129,10 @@
 - marcia-price · D · HD-85 · 0/100 — P&E Chair; lead voting-rights legislator; chief patron VRA of Virginia + HB968.
 - virgil-thornton-sr · D · HD-86 · 0/100 — freshman; scored from cited public statements + HB773 (ballot-curing expansion).
 - jeion-ward · D · HD-87 · 8/100 — long-tenure progressive; one genuine CREDIT: YES on HB131 religious-accommodation (94-2).
+
+## Batch 2026-06-02 07:10 EDT — VA House HD-88..92
+- don-scott (D, Speaker HD-88) · 0/100 — championed repro + marriage amendments, ended ICE cooperation, Giffords gun-control record.
+- kacey-carnegie (D, HD-89) · 0/100 — freshman 2026: YES repro amendment + contraception, PP/EMILY's List funded, HJ3 co-patron, gun-control + leniency slate.
+- jay-leftwich (R, HD-90) · 100/100 — NO on both SSM + repro amendments (committee+floor, not a crossover), pro-school-choice/parental-rights, kept voter ID, NO on all 2020 gun-control.
+- cliff-hayes-jr (D, HD-91) · 0/100 — 99% caucus unity: YES repro (A+ ReproRising) + HJ3 marriage, sanctuary-type HB650, leniency votes, Giffords-endorsed.
+- bonita-anthony (D, HD-92) · 0/100 — THIN (roll calls unfetchable): scored only named signals — ReproRising A+ Champion + PP endorsement (life), Giffords champion (2A); marriage/others left null.

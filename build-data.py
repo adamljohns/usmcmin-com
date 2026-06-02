@@ -162,7 +162,7 @@ def build_state_file(state_code, candidates):
 def build_index(scorecard, by_state, state_file_sizes):
     """Construct the new index.json structure. State list excludes orphans
     like '_metadata' by sourcing only from actual candidates."""
-    today = datetime.date.today().isoformat()
+    today = datetime.datetime.now(datetime.timezone.utc).date().isoformat()  # UTC: keeps local + cloud enrichment builds on the same freshness date (no ping-pong)
     state_codes = sorted(by_state.keys())
 
     meta = {}
@@ -196,7 +196,7 @@ def prune_scorecard_meta(scorecard, by_state):
     and refresh total_candidates + last_updated. Returns True if anything
     was changed."""
     changed = False
-    today = datetime.date.today().isoformat()
+    today = datetime.datetime.now(datetime.timezone.utc).date().isoformat()  # UTC: keeps local + cloud enrichment builds on the same freshness date (no ping-pong)
 
     actual_states = sorted(by_state.keys())
     existing_states = scorecard['meta'].get('states', [])

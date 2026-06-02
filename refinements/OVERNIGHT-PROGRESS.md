@@ -143,3 +143,10 @@
 - alex-askew (D, HD-95) · 0/100 — co-patron HJ1, all-Dem YES bloc on HJ3 marriage, HB1993 DEI mandate, voted 2026 gun-control package; Giffords + PP. Religion: New Jerusalem Ministries.
 - kelly-convirs-fowler (D, HD-96 VA Beach) · 0/100 — YES HJ1 + HJ9, Giffords red-flag record. ⚠ FLAGGED: unverified 2022 Freedom Index cross-party votes (CRT-ban HB787, FLE-transparency HB789, religious-freedom HB775) + 2020 qualified-immunity abstention — left NULL pending human LIS confirmation (could upgrade family/christian-liberty cells).
 - michael-feggans (D, HD-97 VA Beach) · 0/100 — patron HJ1 ("Bros for Repro") + HJ9 marriage, YES $15 min wage, Giffords-endorsed. AF MSgt (ret.); "Buy-American"/veteran-business procurement bills don't map to a cell. Non-culture cells null.
+
+## natl-VA-2026-06-02-0842 (VA-02 federal cluster)
+- jen-kiggans · VA · 67 · moderate R; FALSE on IVF-coverage mandate + DIGNIDAD legalization deviations, TRUE on QALY/sports/Parents-Bill/SAVE/border-wall+E-Verify
+- elaine-luria · VA · 0 · former VA-02 Rep; progressive roll-call record (NARAL 100%, Giffords, AWB, RFMA, H.R.1) + hawkish foreign-policy FALSEs (only Dem to keep Iraq AUMF)
+- nila-devanath · VA · 29 · certified D challenger; abortion/Abolish-ICE/gun-control FALSE, anti-war + reject-AIPAC TRUE
+- john-stringfellow · VA · 25 · NOT on certified ballot → lost; pro-choice + anti-voucher FALSE, MAHA Big-Ag TRUE
+- nicolaus-sleister · VA · 0 · NOT on certified ballot → lost; thin, pro-choice only

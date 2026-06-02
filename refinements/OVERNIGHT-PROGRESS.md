@@ -150,3 +150,10 @@
 - nila-devanath · VA · 29 · certified D challenger; abortion/Abolish-ICE/gun-control FALSE, anti-war + reject-AIPAC TRUE
 - john-stringfellow · VA · 25 · NOT on certified ballot → lost; pro-choice + anti-voucher FALSE, MAHA Big-Ag TRUE
 - nicolaus-sleister · VA · 0 · NOT on certified ballot → lost; thin, pro-choice only
+
+## 2026-06-02 08:5x — natl VA federal House batch (federal tier)
+- jennifer-mcclellan · VA-04 · D · 0/100 · uniformly progressive; NARAL/HRC endorsed, AWB cosponsor, anti-Laken-Riley, John Lewis VRAA — 12 cited FALSE, no deviation
+- john-mcguire · VA-05 · R · 100/100 · Heritage 100 / SBA A+ / NRA-endorsed; Born-Alive, H.R.28, SAVE Act, Laken Riley, anti-CBDC, vax-mandate opponent (flagged FISA-702 + state child-marriage votes, no clean cell)
+- patrick-mosolf · VA-02 · D · null · active challenger (primary Aug 4 2026); only off-rubric positions (ACA/min-wage/AI) — all 50 cells null, evidence_federal
+- darius-mayfield · VA-07 · R · 100/100 · active challenger; thin — wall + school-choice foundation + documented pro-life (3 cells); silent on marriage/2A/elections
+- douglas-ollivant · VA-07 · R · 100/100 · active challenger; thin — girls'-sports + fiscal-responsibility + small-farm ag (3 cells); DEVIATION FLAG: establishment-hawk foreign policy vs restraint rubric

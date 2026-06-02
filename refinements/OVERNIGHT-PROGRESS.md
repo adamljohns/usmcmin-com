@@ -136,3 +136,10 @@
 - jay-leftwich (R, HD-90) · 100/100 — NO on both SSM + repro amendments (committee+floor, not a crossover), pro-school-choice/parental-rights, kept voter ID, NO on all 2020 gun-control.
 - cliff-hayes-jr (D, HD-91) · 0/100 — 99% caucus unity: YES repro (A+ ReproRising) + HJ3 marriage, sanctuary-type HB650, leniency votes, Giffords-endorsed.
 - bonita-anthony (D, HD-92) · 0/100 — THIN (roll calls unfetchable): scored only named signals — ReproRising A+ Champion + PP endorsement (life), Giffords champion (2A); marriage/others left null.
+
+## Batch 2026-06-02 07:34 EDT — VA House HD-93..97 (Hampton Roads)
+- jackie-glass (D, HD-93 Norfolk) · 0/100 — co-patron HJ1 repro + HJ9/HJ3 marriage amendments, sanctuary-style HB1265 (limits ICE), voted 2026 assault-weapons ban; PP-endorsed, iVoterGuide "Verified Liberal."
+- phil-hernandez (D, HD-94 Norfolk) · 0/100 — chief co-patron repro amend + wall of abortion-access bills, supported HJ9 marriage, co-patron AWB (HB217), Giffords-endorsed; non-culture cells null (no record).
+- alex-askew (D, HD-95) · 0/100 — co-patron HJ1, all-Dem YES bloc on HJ3 marriage, HB1993 DEI mandate, voted 2026 gun-control package; Giffords + PP. Religion: New Jerusalem Ministries.
+- kelly-convirs-fowler (D, HD-96 VA Beach) · 0/100 — YES HJ1 + HJ9, Giffords red-flag record. ⚠ FLAGGED: unverified 2022 Freedom Index cross-party votes (CRT-ban HB787, FLE-transparency HB789, religious-freedom HB775) + 2020 qualified-immunity abstention — left NULL pending human LIS confirmation (could upgrade family/christian-liberty cells).
+- michael-feggans (D, HD-97 VA Beach) · 0/100 — patron HJ1 ("Bros for Repro") + HJ9 marriage, YES $15 min wage, Giffords-endorsed. AF MSgt (ret.); "Buy-American"/veteran-business procurement bills don't map to a cell. Non-culture cells null.

@@ -43,8 +43,12 @@ auditable, and reversible.
    `profile.confidence` (`archetype_curated` vs `low_evidence` vs `medium`).
 5. **Commit messages are public.** `changelog.html` renders `scorecard.json`'s
    git history. Keep messages clean, accurate, non-sensational.
-6. **Never compact `scorecard.json`.** Always `json.dump(..., indent=2)` + a
-   trailing newline. It is ~57 MB; keep it diff-friendly.
+6. **Keep `scorecard.json` minified.** `build-data.py` writes the master
+   single-line (`json.dump(..., separators=(',',':'))`, ~37 MB) to stay under
+   GitHub's 50 MB warning — `indent=2` renders ~60 MB. The `refine-records.py`
+   engine writes `indent=2` transiently, but the next `build-data.py` re-compacts
+   it, so the COMMITTED master is always minified. Do NOT hand-expand it.
+   (Supersedes the older "never compact / always indent=2" guidance.)
 
 ---
 
@@ -80,15 +84,16 @@ For each state with a recent or upcoming primary/general:
 
 ```bash
 cd ~/.openclaw/workspace/usmcmin-com
-python3 build-data.py            # refresh meta + per-state slices
+python3 build-data.py            # refresh meta + per-state slices (re-minifies master)
 python3 build-search-index.py    # regenerate client search payload
 python3 generate-profiles.py     # write candidates/<state>/<slug>.html
 python3 build-category-pages.py  # deep-dive category pages (tier toggles)
-python3 build-sitemap-xml.py     # sitemap
 ```
 
-Then **prune orphaned profile pages** (generate-profiles writes but never
-deletes — a dropped/renamed slug leaves a stale HTML):
+Then **prune orphaned profile pages — BEFORE the sitemap** (generate-profiles
+writes but never deletes, so a dropped/renamed slug leaves a stale HTML; and
+`build-sitemap-xml.py` walks the `candidates/` filesystem, so any leftover orphan
+would put a dead URL into `sitemap.xml`):
 ```bash
 python3 - <<'PY'
 import json, os
@@ -102,6 +107,11 @@ orphans=[os.path.join(r,f).replace(os.sep,'/')
 print(f'{len(orphans)} orphans'); [print(' ',o) for o in orphans]
 PY
 # review the list, then: git rm <each orphan>
+```
+
+**Then build the sitemap LAST**, after the prune:
+```bash
+python3 build-sitemap-xml.py     # sitemap — MUST run after the orphan prune
 ```
 
 ---
@@ -143,6 +153,17 @@ print(f'{flagged}/{len(c)} flagged ({flagged*100//len(c)}%)')
   committing, because it's the highest-credibility-risk surface and is publicly
   auditable. (This is the dispatch guardrail, and it's the right instinct for
   result data.)
+
+**Commit AND push, immediately — a local commit is not durable here.** A
+background sync periodically runs `git reset --hard origin/main`, which silently
+discards uncommitted changes AND unpushed local commits (untracked files
+survive). `git push` is also the deploy. So once cleared to commit: build, then
+`git add -A && git commit && git push origin main`, back-to-back. If the push is
+rejected (a racing fleet push), `git pull --rebase origin main && git push`
+(rebases are usually clean — different files). Verify `git rev-parse HEAD` ==
+`git rev-parse origin/main`. Keep dossiers/dedup scripts as UNTRACKED files until
+committed — they survive a reset, so a wiped build is cheap to reproduce.
+(`data/.backups/` is gitignored, so `git add -A` won't sweep in the 60 MB backups.)
 
 Commit message convention (mirrors existing history):
 ```

@@ -16,7 +16,7 @@
 - **VA legislature (~138 of 140 seats) still archetype/party-default** — only the FXBG delegation + statewide execs are individually evidenced. Next pass; the `refine-scorecard` skill + engine make it systematic.
 - **✅ RESOLVED 2026-06-01 — Stacy Garrity (PA) dup.** Two records (`stacy-garrity-2026` Treasurer + `stacy-garrity-gov` Governor nominee) violated the one-record rule. Merged to one per the dual-office rule (Tara Durant precedent): kept the sitting-office record `stacy-garrity-2026`, extended `office` + `candidacy_status` → `running_higher_office` (2026 R gubernatorial nominee), merged in the gov-race sources (NBC primary results, Spotlight PA, Wikipedia); deleted `stacy-garrity-gov` + pruned its orphan profile. Web-verified: won the uncontested R primary 05/19/2026, faces D incumbent Gov. Josh Shapiro in the Nov general. Engine auto-upgraded the stale v4 score keys to the v5.0 state rubric (65→68 — scores still establishment_r archetype, evidence-based refinement pending). Dedup script `dedup-garrity-2026-06.py` + dossier `refinements/pa-garrity-dedup-2026-06.json`.
 - **FXBG school board possible 7th/Ward-3 seat** — confirm board size (6 confirmed sitting members).
-- **NOTE:** master `scorecard.json` is now minified by `build-data.py` (~36MB, under GitHub's 50MB warn) — this supersedes the older "always indent=2" note in MAINTENANCE.md §2/§5; reconcile the two.
+- **✅ NOTE (reconciled 2026-06-02):** master `scorecard.json` is minified by `build-data.py` (~37MB, under GitHub's 50MB warn). DATABASE-LAYOUT §5 + MAINTENANCE §2 rule 6 now both document this; the old "always indent=2 / never compact" guidance is superseded.
 
 ---
 

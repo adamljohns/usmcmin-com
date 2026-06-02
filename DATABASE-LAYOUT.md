@@ -215,8 +215,11 @@ Mayes (D) 0/100.
 ## 5. File & build architecture
 
 **Data (`data/`)**
-- `scorecard.json` (~57 MB, indent=2 — **never compact**) — master: `meta`,
-  `categories`, `candidates`
+- `scorecard.json` (~37 MB, **minified single-line** by `build-data.py`,
+  `separators=(',',':')`) — master: `meta`, `categories`, `candidates`. Kept
+  minified to stay under GitHub's 50 MB warning (`indent=2` ≈ 60 MB); the
+  `refine-records.py` engine writes `indent=2` transiently and the next
+  `build-data.py` re-compacts. Don't hand-expand it.
 - `search-index.json` (~1.8 MB) — client search payload
 - `index.json`, `states/*.json` — per-state slices
 - Adjustment tables: `aipac_adjustments.json`, `aipac_full.json`,

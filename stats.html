@@ -271,6 +271,20 @@
           '<a href="https://github.com/adamljohns/usmcmin-com/tags" target="_blank" rel="noopener" style="font-size:0.78rem;color:var(--accent);">release history &rarr;</a>' +
           '</div>';
       }
+      // Evidence-scored headline (B2). One calm line that surfaces the
+      // share of candidates carrying at least one verified, cited claim —
+      // the fairest top-line measure of audit depth. Links into the
+      // fuller "Scoring confidence" breakdown further down the page.
+      var evN = (s.scoring_confidence && s.scoring_confidence.evidence_reviewed) || 0;
+      var evTot = t.candidates || 0;
+      if (evTot > 0) {
+        var evPct = (100 * evN / evTot).toFixed(1);
+        html += '<div class="st-evidence" style="margin-bottom:18px;padding:12px 16px;background:rgba(168,176,188,0.06);border-left:3px solid var(--accent);border-radius:4px;font-size:0.92rem;color:var(--gray);line-height:1.55;">' +
+          '<strong style="color:var(--white);font-variant-numeric:tabular-nums;">' + fmt(evN) + '</strong> of ' +
+          '<strong style="color:var(--white);font-variant-numeric:tabular-nums;">' + fmt(evTot) + '</strong> candidates carry at least one verified, cited claim ' +
+          '(<strong style="color:var(--accent);">' + evPct + '%</strong>). The rest still rely on legacy review or party-default scaffolding — see <a href="#scoring-confidence" style="color:var(--accent);">Scoring confidence</a> below.' +
+          '</div>';
+      }
       // Headline grid.
       html += '<div class="st-grid">';
       html += card('Candidates', fmt(t.candidates), esc(t.states_covered + ' states · ' + t.distinct_offices + ' distinct offices'));
@@ -321,7 +335,7 @@
       var sConf = s.scoring_confidence || {};
       var confTotal = (sConf.evidence_reviewed||0) + (sConf.legacy_reviewed||0) + (sConf.party_default||0) + (sConf.unreviewed||0);
       if (confTotal > 0) {
-        html += '<section class="st-section"><h2>Scoring confidence</h2>' +
+        html += '<section class="st-section" id="scoring-confidence"><h2>Scoring confidence</h2>' +
           '<p class="lead">Every record in the scorecard carries one of four confidence tiers. ' +
           'Evidence-reviewed records have at least one verified claim cited on their profile. ' +
           'Legacy-reviewed records pre-date the confidence-tagging system (imported before the ' +

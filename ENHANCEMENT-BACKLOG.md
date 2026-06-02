@@ -14,7 +14,7 @@ Pick the FIRST `[ ]` item, do ONLY that item, conservatively. If it turns risky/
 
 ## B. Coverage stats + freshness (regenerate, don't hand-edit)
 - [x] (2026-06-02) **B1. Refresh stats** — ran `python3 build-stats.py`, regenerated `data/stats.json` (8970 candidates / 53 states / 964 distinct offices / 293 claims / 118 evidence_reviewed / 88.0% bias-citation coverage; generated 2026-06-02T22:06:11Z). stats.html is runtime-fetch (not generated) — no HTML rebuild needed; the page reads the new JSON on next load. JSON parses clean; totals + scoring_confidence keys intact.
-- [ ] **B2. Evidence-coverage badge** — on stats.html (or citizen.html header), surface a simple "N of M candidates individually evidence-scored (X%)" line computed from how many records have `profile.confidence` starting with `evidence`. Read-only compute + a small additive render.
+- [x] (2026-06-02) **B2. Evidence-coverage badge** — added a one-line headline on stats.html, rendered just above the headline grid, that reads "118 of 8,970 candidates carry at least one verified, cited claim (1.3%). The rest still rely on legacy review or party-default scaffolding — see [Scoring confidence](#scoring-confidence) below." Computed from `stats.json` `scoring_confidence.evidence_reviewed` / `totals.candidates` (no new fetch, no data work). Linked to the existing deeper "Scoring confidence" section via a new `id="scoring-confidence"` anchor. Validated: badge markers + anchor present in HTML, JS parses with `node --check`, page + JSON serve 200 locally, math matches stats.json (118/8970 = 1.3%).
 - [ ] **B3. Sitemap freshness** — run `python3 build-sitemap-xml.py`, confirm URL count is sane, push if changed.
 
 ## C. OG / share images + photos (additive media, separate files)

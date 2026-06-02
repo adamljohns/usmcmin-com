@@ -14,7 +14,7 @@
 
 **Backlog opened by this sweep:**
 - **VA legislature (~138 of 140 seats) still archetype/party-default** — only the FXBG delegation + statewide execs are individually evidenced. Next pass; the `refine-scorecard` skill + engine make it systematic.
-- **✅ RESOLVED 2026-06-01 — Stacy Garrity (PA) dup.** Two records (`stacy-garrity-2026` Treasurer + `stacy-garrity-gov` Governor nominee) violated the one-record rule. Merged to one per the dual-office rule (Tara Durant precedent): kept the sitting-office record `stacy-garrity-2026`, extended `office` + `candidacy_status` → `running_higher_office` (2026 R gubernatorial nominee), merged in the gov-race sources (NBC primary results, Spotlight PA, Wikipedia); deleted `stacy-garrity-gov` + pruned its orphan profile. Web-verified: won the uncontested R primary 05/19/2026, faces D incumbent Gov. Josh Shapiro in the Nov general. Engine auto-upgraded the stale v4 score keys to the v5.0 state rubric (65→68 — scores still establishment_r archetype, evidence-based refinement pending). Dedup script `dedup-garrity-2026-06.py` + dossier `refinements/pa-garrity-dedup-2026-06.json`.
+- **✅ RESOLVED 2026-06-01 — Stacy Garrity (PA) dup.** Two records (`stacy-garrity-2026` Treasurer + `stacy-garrity-gov` Governor nominee) violated the one-record rule. Merged to one per the dual-office rule (Tara Durant precedent): kept the sitting-office record `stacy-garrity-2026`, extended `office` + `candidacy_status` → `running_higher_office` (2026 R gubernatorial nominee), merged in the gov-race sources (NBC primary results, Spotlight PA, Wikipedia); deleted `stacy-garrity-gov` + pruned its orphan profile. Web-verified: won the uncontested R primary 05/19/2026, faces D incumbent Gov. Josh Shapiro in the Nov general. Engine auto-upgraded the stale v4 score keys to the v5.0 state rubric (65→68 — scores still establishment_r archetype, evidence-based refinement pending). Dedup script `dedup-garrity-2026-06.py` + dossier `refinements/pa-garrity-dedup-2026-06.json`. **Evidence refinement DONE 2026-06-02 (68→88/100 B):** cited state-rubric scoring — pro-life, school choice, fiscal discipline, voter ID, ICE cooperation, GOA-endorsed guns; documented marriage non-affirmation (dodged when asked); honest nulls on religious liberty / public justice / refuse-federal-overreach / ESG. Dossier `refinements/garrity-klobuchar-2026-06.json`.
 - **FXBG school board possible 7th/Ward-3 seat** — confirm board size (6 confirmed sitting members).
 - **✅ NOTE (reconciled 2026-06-02):** master `scorecard.json` is minified by `build-data.py` (~37MB, under GitHub's 50MB warn). DATABASE-LAYOUT §5 + MAINTENANCE §2 rule 6 now both document this; the old "always indent=2 / never compact" guidance is superseded.
 
@@ -117,14 +117,13 @@ in 2026. Their lame-duck status should be reflected in their records.
 
 Source: https://ballotpedia.org/List_of_U.S._Senate_incumbents_who_are_not_running_for_re-election_in_2026
 
-### Senators running for governor instead
+### ✅ Senators running for governor — RESOLVED 2026-06-02
 
-- **Marsha Blackburn** (R-TN) — running for TN Gov 2026
-- **Michael Bennet** (D-CO) — running for CO Gov 2026
-- **Amy Klobuchar** (D-MN) — running for MN Gov 2026
+- **Marsha Blackburn** (R-TN) — already a clean single state-tier gov record (`marsha-blackburn-gov`, `primary_candidate`, office notes "sitting U.S. Senator · seat not up till 2030"). Verified current — TN GOP primary Aug 6, 2026 (not yet held). No change.
+- **Michael Bennet** (D-CO) — already a clean single state-tier gov record (`michael-bennet-gov`, `primary_candidate`, "sitting U.S. Senator"). Verified current — CO Dem primary Jun 30, 2026 (not yet held). No change.
+- **Amy Klobuchar** (D-MN) — was stale (still a federal "US Senator" record, no candidacy_status). Converted to the gov race to match the Blackburn/Bennet pattern: office "Governor of Minnesota (2026 DFL Candidate · sitting U.S. Senator · DFL convention endorsee · Senate seat not up till 2030)", level state, `primary_candidate`. Web-verified: announced Jan 29 2026 after Walz dropped out; won the DFL convention endorsement May 29 2026; primary Aug 11. Dossier `refinements/garrity-klobuchar-2026-06.json`.
 
-If any of them WIN November 2026, they'll resign Senate seat. Add note
-to each record.
+None were duplicates (no dedup needed). If any WIN Nov 2026, flip to `won` + mark the Senate seat resigned/open. All three scored on their federal Senate records (archetype) pending evidence refinement.
 
 ### State governor 2025 outcomes not validated
 

@@ -3,7 +3,6 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="canonical" href="https://usmcmin.com/ai-boot-camp-voyage.html">
   <title>The Watchman's Mission — USMC Ministries AI Mission</title>
   <meta name="description" content="Track your 5-week journey through the USMC Ministries AI Mission. Tap each task to open its PDF; mark complete; earn badges as you progress; commissioned when all 15 ship.">
   <meta name="robots" content="noindex,nofollow">
@@ -11,7 +10,6 @@
   <link rel="icon" type="image/svg+xml" href="assets/icons/favicon.svg">
   <link rel="icon" type="image/png" sizes="32x32" href="assets/icons/favicon-32.png">
   <link rel="icon" type="image/png" sizes="16x16" href="assets/icons/favicon-16.png">
-  <link rel="apple-touch-icon" sizes="180x180" href="assets/icons/apple-touch-icon.png">
 <style>
   .module-hero { text-align:center; padding:120px 20px 30px; border-bottom:1px solid var(--border);
     background: radial-gradient(ellipse at center top, rgba(30,58,95,0.30) 0%, transparent 60%); }
@@ -208,6 +206,18 @@
   .drill-cell[data-tier="C"] { border-left: 5px solid #E2E8F0; }
   .drill-cell[data-tier="R"] { border-left: 5px dashed #94A3B8; opacity: 0.65; }
 
+  /* Drill tier LETTER badge (top-right of each cell) — pairs with the
+     colored left-border so the tier is unmistakable, not just a color. */
+  .drill-cell .drill-tier-badge { position:absolute; top:8px; right:8px; min-width:20px; height:18px;
+    padding:0 6px; border-radius:9px; font-size:0.64rem; font-weight:800; letter-spacing:0.5px;
+    display:inline-flex; align-items:center; justify-content:center; line-height:1; }
+  .drill-cell .drill-tier-badge[data-tier="S"] { background:#CE8E31; color:#15233f; }
+  .drill-cell .drill-tier-badge[data-tier="A"] { background:#94A3B8; color:#15233f; }
+  .drill-cell .drill-tier-badge[data-tier="B"] { background:#6BA368; color:#ffffff; }
+  .drill-cell .drill-tier-badge[data-tier="C"] { background:#E2E8F0; color:#15233f; }
+  .drill-cell .drill-tier-badge[data-tier="R"] { background:transparent; border:1px dashed #94A3B8;
+    color:#94A3B8; font-size:0.56rem; }
+
   /* Compact drill tier legend (FC-only, sits above the drill grid).
      Bars are solid filled chips so they're visible at a glance. */
   .drill-tier-legend { display:flex; flex-wrap:wrap; gap:14px 22px; align-items:center;
@@ -225,20 +235,55 @@
   .drill-tier-legend .dtl-label { font-weight: 800; letter-spacing: 1px; color: var(--white); }
 
   @media (max-width:640px){ .module-hero { padding:90px 18px 24px; } }
+
+  /* ── Field notes + export (FC voyage) ── */
+  .fc-notes-section { max-width:1100px; margin:48px auto 0; padding:0 16px; }
+  .fc-notes-section h2 { font-family:var(--font-main); font-size:1.4rem; color:var(--white); margin:0 0 4px; }
+  .fc-notes-section .lede { color:var(--gray-light); font-size:0.9rem; margin-bottom:14px; max-width:680px; }
+  .fc-note-week { background:var(--bg-card); border:1px solid var(--border); border-radius:var(--radius);
+    margin-bottom:10px; overflow:hidden; }
+  .fc-note-week > summary { cursor:pointer; padding:12px 16px; font-weight:700; color:#1A1A1A;
+    list-style:none; user-select:none; display:flex; align-items:center; gap:10px; }
+  [data-theme="dark"] .fc-note-week > summary { color:#F0F0F0; }
+  .fc-note-week > summary::-webkit-details-marker { display:none; }
+  .fc-note-week > summary::before { content:"+"; color:var(--gold); font-weight:900; font-size:1.1rem; }
+  .fc-note-week[open] > summary::before { content:"\2013"; }
+  .fc-note-week .fc-note-body { padding:0 16px 14px; display:flex; flex-direction:column; gap:10px; }
+  .fc-note-row { display:flex; flex-direction:column; gap:3px; }
+  .fc-note-row .fc-note-task { font-size:0.72rem; font-weight:700; color:var(--gray); }
+  .fc-note { width:100%; box-sizing:border-box; resize:vertical; font-family:inherit;
+    font-size:0.88rem; line-height:1.45; color:#1A1A1A; background:var(--white);
+    border:1px solid var(--border); border-radius:var(--rsm,6px); padding:8px 10px; min-height:40px; }
+  [data-theme="dark"] .fc-note { color:#F0F0F0; background:var(--bg-card-2); }
+  .fc-note:focus { outline:none; border-color:var(--gold); }
+  .fc-note-task-group { padding:8px 0 4px; border-bottom:1px solid var(--border); }
+  .fc-note-task-group:last-of-type { border-bottom:none; }
+  .fc-note-field { display:flex; flex-direction:column; gap:3px; margin-top:6px; }
+  .fc-note-flabel { font-size:0.68rem; font-weight:800; color:var(--gray); text-transform:uppercase; letter-spacing:0.5px; }
+  .fc-note-weekly { margin-top:10px; padding-top:10px; border-top:2px solid var(--gold); }
+  .fc-note-weekly .fc-note-flabel { color:var(--gold); }
+
+  .fc-export-card { max-width:1100px; margin:18px auto 0; padding:20px 22px;
+    background:var(--bg-card); border:1px solid var(--border); border-radius:var(--radius); }
+  .fc-export-card h3 { font-family:var(--font-main); color:var(--white); font-size:1.15rem; margin:0 0 4px; }
+  .fc-export-card p { color:var(--gray-light); font-size:0.88rem; margin:0 0 14px; line-height:1.55; }
+  .fc-export-btns { display:flex; flex-wrap:wrap; gap:8px; }
+  .fc-xbtn { padding:9px 15px; border-radius:99px; border:1px solid var(--border);
+    background:transparent; color:var(--gray-light); font-size:0.8rem; font-weight:700;
+    cursor:pointer; font-family:inherit; }
+  .fc-xbtn:hover { border-color:var(--gold); color:var(--gold); }
+  .fc-xbtn.primary { background:var(--gold); color:var(--bg-dark); border-color:var(--gold); }
+  .fc-xbtn.primary:hover { background:transparent; color:var(--gold); }
+  .fc-xnote { margin-top:10px; font-size:0.82rem; color:var(--gold); min-height:1.1em; }
+  .fc-workbook-row { max-width:1100px; margin:14px auto 0; padding:0 16px; }
+  .fc-workbook-row a { display:inline-flex; align-items:center; gap:8px; font-size:0.86rem;
+    font-weight:700; color:var(--gold); text-decoration:none; }
+  .fc-workbook-row a:hover { text-decoration:underline; }
 </style>
 <style>
   /* USMC 5-week voyage chart — single row of 5 */
   .voyage-chart { grid-template-columns: repeat(5, 1fr); }
-</style>  <meta property="og:title" content="The Watchman's Mission — USMC Ministries AI Mission">
-  <meta property="og:description" content="The Watchman's Voyage — the 5-week guided AI mission walk.">
-  <meta property="og:url" content="https://usmcmin.com/ai-boot-camp-voyage.html">
-  <meta property="og:type" content="website">
-  <meta property="og:image" content="https://usmcmin.com/assets/og/og-brain.jpg">
-  <meta property="og:image:width" content="1200">
-  <meta property="og:image:height" content="630">
-  <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:image" content="https://usmcmin.com/assets/og/og-brain.jpg">
-
+</style>
 </head>
 <body>
 
@@ -281,6 +326,8 @@
   <div class="progress-stat">
     <div class="stat-line" id="statLine">0 of 15 tasks shipped &middot; <span class="pct">0%</span> &middot; watchman on the bridge.</div>
     <div class="stat-actions">
+      <button class="voyage-btn primary" id="continueBtn" type="button" hidden>▶ Continue</button>
+      <button class="voyage-btn" id="installBtn" type="button" hidden>⤓ Install app</button>
       <button class="voyage-btn" id="resetBtn" type="button">Reset progress</button>
     </div>
   </div>
@@ -500,6 +547,8 @@
   </div>
 </section>
 
+
+
 <section class="commission">
   <div class="commission-card" id="commissionCard">
     <div class="seal">⚜️</div>
@@ -620,6 +669,8 @@
 
     // Commission card
     document.getElementById('commissionCard').classList.toggle('unlocked', done >= TOTAL);
+
+    refreshContinue();
   }
 
   function toggleTask(key){
@@ -685,6 +736,158 @@
     localStorage.removeItem(STORAGE_KEY);
     updateUI();
   });
+
+  // ── Resume where you left off ──────────────────────────────────────
+  // Lowest-numbered week that still has an unshipped task.
+  const isFC = document.body.dataset.track === 'family-captain';
+  const continueBtn = document.getElementById('continueBtn');
+  function nextIncomplete(){
+    const state = loadState();
+    const ports = Array.from(document.querySelectorAll('.week-port'))
+      .sort((a,b) => (+a.dataset.week) - (+b.dataset.week));
+    for (const port of ports){
+      const n = port.dataset.week;
+      for (let i=1; i<=TASKS_PER_WEEK; i++){
+        if (!state[`${n}.${i}`]) return { week:n, task:i, port };
+      }
+    }
+    return null;
+  }
+  function refreshContinue(){
+    if (!continueBtn) return;
+    const nx = nextIncomplete();
+    if (!nx){ continueBtn.hidden = true; return; }   // all shipped
+    continueBtn.hidden = false;
+    continueBtn.textContent = `▶ Continue — Week ${nx.week}`;
+    continueBtn.onclick = function(){
+      if (isFC){ location.href = `family-captain-week-${nx.week}.html`; return; }
+      nx.port.scrollIntoView({ behavior:'smooth', block:'center' });
+      try {
+        nx.port.animate(
+          [{ boxShadow:'0 0 0 2px var(--week-color, #B8763E)' },
+           { boxShadow:'0 0 0 7px transparent' }],
+          { duration:1100, iterations:2 });
+      } catch(e){}
+    };
+  }
+
+  // ── Install app (Add to Home Screen) ──────────────────────────────
+  const installBtn = document.getElementById('installBtn');
+  let deferredPrompt = null;
+  window.addEventListener('beforeinstallprompt', (e) => {
+    e.preventDefault();
+    deferredPrompt = e;
+    if (installBtn) installBtn.hidden = false;
+  });
+  if (installBtn){
+    installBtn.addEventListener('click', async () => {
+      if (!deferredPrompt) return;
+      deferredPrompt.prompt();
+      try { await deferredPrompt.userChoice; } catch(e){}
+      deferredPrompt = null;
+      installBtn.hidden = true;
+    });
+  }
+  window.addEventListener('appinstalled', () => { if (installBtn) installBtn.hidden = true; });
+
+  // ── Field notes + export (FC voyage; no-ops if the section isn't present) ──
+  const NOTES_KEY = "fc_voyage_notes_v1";
+  function loadNotes(){ try { return JSON.parse(localStorage.getItem(NOTES_KEY)) || {}; } catch(e){ return {}; } }
+  function saveNotes(o){ try { localStorage.setItem(NOTES_KEY, JSON.stringify(o)); } catch(e){} }
+  // schema migration: old single-note key "<w>.<t>" -> "<w>.<t>::did" (no work lost)
+  (function migrateNotesV2(){
+    if (!document.querySelector('.fc-note')) return;
+    var o = loadNotes(); if (o && o.__schema === 'v2') return; o = o || {};
+    Object.keys(o).forEach(function(k){
+      if (k === '__schema') return;
+      if (k.indexOf('::') === -1) { var nk = k + '::did'; if (o[nk] === undefined && o[k]) o[nk] = o[k]; delete o[k]; }
+    });
+    o.__schema = 'v2'; saveNotes(o);
+  })();
+  const fcNotes = document.querySelectorAll('.fc-note');
+  if (fcNotes.length) {
+    const stored = loadNotes();
+    fcNotes.forEach(function(ta){
+      if (stored[ta.dataset.note]) ta.value = stored[ta.dataset.note];
+      ta.addEventListener('input', function(){
+        const o = loadNotes();
+        if (ta.value.trim()) o[ta.dataset.note] = ta.value; else delete o[ta.dataset.note];
+        saveNotes(o);
+      });
+    });
+
+    const esc = function(t){ return (t||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); };
+    const pad = function(x){ return (''+x).length<2 ? '0'+x : ''+x; };
+    const stamp = function(){ var d=new Date(); return d.getUTCFullYear()+pad(d.getUTCMonth()+1)+pad(d.getUTCDate())+'T'+pad(d.getUTCHours())+pad(d.getUTCMinutes())+pad(d.getUTCSeconds())+'Z'; };
+    const gather = function(){
+      const s = loadState(), notes = loadNotes(), done = countCompleted(s);
+      const md = [], html = [];
+      const clean = function(v){ return (v||'').trim().replace(/\s*\n\s*/g,' '); };
+      md.push("# USMC Ministries Mission — My Field Workbook");
+      md.push(""); md.push("_" + done + " of " + TOTAL + " tasks shipped._"); md.push("");
+      html.push("<h1>USMC Ministries Mission — My Field Workbook</h1>");
+      html.push("<p><i>" + done + " of " + TOTAL + " tasks shipped.</i></p>");
+      document.querySelectorAll('.fc-note-week').forEach(function(wk){
+        const title = (wk.querySelector('summary')||{}).textContent || 'Week';
+        md.push(""); md.push("## " + title);
+        html.push("<h2>" + esc(title) + "</h2>");
+        wk.querySelectorAll('.fc-note-task-group').forEach(function(g){
+          const tlabel = (g.querySelector('.fc-note-task')||{}).textContent.trim();
+          const ta0 = g.querySelector('.fc-note');
+          const tkey = ta0 ? ta0.dataset.note.split('::')[0] : '';
+          const shipped = !!s[tkey];
+          md.push("### " + (shipped ? "[x] " : "[ ] ") + tlabel);
+          html.push("<h3>" + (shipped ? "✓ " : "□ ") + esc(tlabel) + "</h3><ul>");
+          g.querySelectorAll('.fc-note-field').forEach(function(f){
+            const fl = (f.querySelector('.fc-note-flabel')||{}).textContent.trim();
+            const ta = f.querySelector('.fc-note');
+            const v = clean(ta ? notes[ta.dataset.note] : '');
+            md.push("- **" + fl + ":** " + v);
+            html.push("<li><b>" + esc(fl) + ":</b> " + esc(v) + "</li>");
+          });
+          html.push("</ul>");
+        });
+        wk.querySelectorAll('.fc-note-weekly').forEach(function(f){
+          const fl = (f.querySelector('.fc-note-flabel')||{}).textContent.trim();
+          const ta = f.querySelector('.fc-note');
+          const v = clean(ta ? notes[ta.dataset.note] : '');
+          md.push("**" + fl + ":** " + v);
+          html.push("<p><b>" + esc(fl) + ":</b> " + esc(v) + "</p>");
+        });
+      });
+      return { md: md.join("\n"), html: html.join("") };
+    };
+        const flash = function(m){ var n=document.getElementById('fcXnote'); if(n){ n.textContent=m; setTimeout(function(){ if(n.textContent===m) n.textContent=''; },4000); } };
+    const dl = function(name, text, mime){
+      try { var b=new Blob([text],{type:mime}); var a=document.createElement('a');
+        a.href=URL.createObjectURL(b); a.download=name; document.body.appendChild(a); a.click();
+        setTimeout(function(){ URL.revokeObjectURL(a.href); a.remove(); },1000); return true; } catch(e){ return false; }
+    };
+    const enex = function(html){ var d=stamp();
+      return '<?xml version="1.0" encoding="UTF-8"?>\n<!DOCTYPE en-export SYSTEM "http://xml.evernote.com/pub/evernote-export4.dtd">\n'
+        + '<en-export export-date="'+d+'" application="USMC Ministries" version="1.0">\n'
+        + '<note><title>USMC Ministries Mission \u2014 My Field Notes</title>'
+        + '<content><![CDATA[<?xml version="1.0" encoding="UTF-8"?>'
+        + '<!DOCTYPE en-note SYSTEM "http://xml.evernote.com/pub/enml2.dtd"><en-note>'+html+'</en-note>]]></content>'
+        + '<created>'+d+'</created><updated>'+d+'</updated>'
+        + '<note-attributes><source>web.app</source></note-attributes></note>\n</en-export>\n'; };
+    const legacyCopy = function(t){ var ta=document.createElement('textarea'); ta.value=t;
+      ta.style.position='fixed'; ta.style.opacity='0'; document.body.appendChild(ta); ta.select();
+      try { document.execCommand('copy'); flash('Copied to clipboard.'); } catch(e){ flash('Could not copy \u2014 try Download.'); } ta.remove(); };
+    var b;
+    if ((b=document.getElementById('fcCopy'))) b.addEventListener('click', function(){
+      var t=gather().md;
+      if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(t).then(function(){ flash('Copied \u2014 paste it into Notes, Evernote, anywhere.'); }, function(){ legacyCopy(t); });
+      else legacyCopy(t);
+    });
+    if ((b=document.getElementById('fcMd'))) b.addEventListener('click', function(){ dl('family-captain-field-notes.md', gather().md, 'text/markdown') ? flash('Markdown downloaded.') : flash('Download failed.'); });
+    if ((b=document.getElementById('fcEnex'))) b.addEventListener('click', function(){ dl('family-captain-field-notes.enex', enex(gather().html), 'application/xml') ? flash('Evernote file downloaded \u2014 in Evernote: File \u203a Import.') : flash('Download failed.'); });
+    if (navigator.share && (b=document.getElementById('fcShare'))) { b.hidden=false; b.addEventListener('click', function(){ navigator.share({ title:"USMC Ministries Mission \u2014 My Field Notes", text: gather().md }).catch(function(){}); }); }
+    if ((b=document.getElementById('fcClearNotes'))) b.addEventListener('click', function(){
+      if (!confirm('Clear all your field notes on this device? Your task check-offs stay.')) return;
+      localStorage.removeItem(NOTES_KEY); document.querySelectorAll('.fc-note').forEach(function(t){ t.value=''; }); flash('Field notes cleared.');
+    });
+  }
 
   updateUI();
 })();

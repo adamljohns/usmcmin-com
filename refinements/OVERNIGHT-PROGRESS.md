@@ -122,3 +122,10 @@
 - destiny-levere-bolling · 0/100 · D, HD-80 (Henrico) — Baptist; ex-VA AFL-CIO comms dir; in House since 2024, 96-97% unity. HARD: ReproRising A+ Champion + co-patron repro amendment + PP-Advocates endorsed (sanctity q0/q1/q4 FALSE); SSM amendment party-line passage HJR9/HJ3 (marriage q0/q1 FALSE). 5 cited FALSE, 0 aligned; 2A only SOFT 'gun-violence-prevention' framing → null; HJ2 green-flag noted but not mapped.
 - delores-mcquinn · 0/100 · D, HD-81 (Richmond area) — Baptist, Associate Minister New Bridge Baptist (DOME record); in House since 2009, 98-100% unity. DEVIATION CHECK: NONE despite ordained ministry — named co-patron of BOTH abortion (HJ1) and SSM (HJ3/HJ9) amendments + ReproRising A+ (sanctity q0/q1 FALSE; marriage q0/q1 FALSE). 4 cited FALSE, 0 aligned; $15 min-wage co-patron + HJ2 felon-restoration co-patron noted but unmapped to state cells.
 - kimberly-pope-adams · 29/100 · D, HD-82 (Petersburg) — Baptist; CPA/auditor; FRESHMAN sworn Jan 2026. STANDOUT MIXED: co-patron HJ1/HJ3/HJ2 + EMILY's List/PPAV endorsed (sanctity q0/q1/q4 FALSE; marriage q0/q1 FALSE). PRO-2A DEVIATION (HARD LIS roll calls): NAY on HB1524/SB727 (assault-firearm carry ban) + HB871 (safe-storage), siding w/ GOP vs own caucus despite Giffords endorsement (self_defense q1 TRUE); pro-police-funding platform (public_justice q0 TRUE). 5 cited FALSE / 2 TRUE.
+
+## 2026-06-02 ~06:50 EDT — VA House batch HD 83-87
+- otto-wachsmann · R · HD-83 · 89/100 — conservative record; KEY DEVIATION: YES on 2025 marriage-equality amend (HJ9), reversed to NO in 2026.
+- nadarius-clark · D · HD-84 · 0/100 — uniformly progressive; chief patron of the 2026 assault-weapons ban (HB217).
+- marcia-price · D · HD-85 · 0/100 — P&E Chair; lead voting-rights legislator; chief patron VRA of Virginia + HB968.
+- virgil-thornton-sr · D · HD-86 · 0/100 — freshman; scored from cited public statements + HB773 (ballot-curing expansion).
+- jeion-ward · D · HD-87 · 8/100 — long-tenure progressive; one genuine CREDIT: YES on HB131 religious-accommodation (94-2).

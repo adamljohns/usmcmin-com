@@ -68,10 +68,36 @@
     .drill-day { font-size: 0.72rem; letter-spacing: 2px; color: #8B5A1F; font-weight: 700; flex-shrink: 0; min-width: 60px; }
     .drill-text { font-size: 0.96rem; color: #334155; line-height: 1.5; }
 
-    .placeholder-section { max-width: 880px; margin: 32px auto 0; padding: 24px; background: #F4F5F7; border: 1px dashed #CE8E31; }
-    .placeholder-section h3 { font-family: var(--font-main); font-size: 1.3rem; color: #1E293B; margin: 0 0 6px; }
-    .placeholder-section .ph-kicker { font-size: 0.72rem; letter-spacing: 3px; color: #8B5A1F; font-weight: 700; }
-    .placeholder-section .ph-body { font-size: 0.95rem; color: #475569; font-style: italic; }
+    /* Captain's Note — finished interim section (was a dashed placeholder) */
+    .captains-note-section { max-width: 880px; margin: 48px auto 0; padding: 28px 32px;
+      background: #1E293B; border-radius: 12px; color: #E2E8F0; }
+    .captains-note-section .cn-kicker { font-size: 0.72rem; letter-spacing: 3px; color: #CE8E31; font-weight: 700; }
+    .captains-note-section h3 { font-family: var(--font-main); font-size: 1.5rem; color: #FFFFFF; margin: 6px 0 14px; }
+    .captains-note-section .cn-body { font-size: 1.05rem; line-height: 1.7; color: #E2E8F0; }
+    .captains-note-section .cn-tag { font-size: 0.85rem; color: #94A3B8; font-style: italic; margin-top: 14px;
+      padding-top: 12px; border-top: 1px solid rgba(255,255,255,0.12); }
+
+    /* Resources — real per-week list */
+    .resources-section { max-width: 880px; margin: 40px auto 0; padding: 0 24px; }
+    .resources-section .res-kicker { font-size: 0.72rem; letter-spacing: 3px; color: #8B5A1F; font-weight: 700; }
+    .resources-section h3 { font-family: var(--font-main); font-size: 1.6rem; color: #1E293B; margin: 6px 0 16px; }
+    .resources-section .res-list { list-style: none; padding: 0; margin: 0; }
+    .resources-section .res-item { display: flex; gap: 14px; align-items: flex-start;
+      padding: 14px 18px; background: #F4F5F7; border-left: 3px solid #CE8E31; margin-bottom: 8px; border-radius: 0 6px 6px 0; }
+    .resources-section .res-emoji { font-size: 1.15rem; flex-shrink: 0; line-height: 1.5; }
+    .resources-section .res-body { font-size: 0.98rem; line-height: 1.6; color: #334155; }
+    .resources-section .res-body strong { color: #1E293B; }
+    .resources-section .res-body a { color: #B07320; font-weight: 700; text-decoration: none; }
+    .resources-section .res-body a:hover { text-decoration: underline; }
+    .resources-section .res-note { font-size: 0.85rem; color: #64748B; font-style: italic; margin-top: 12px; }
+
+    /* Coming-soon cards (Q&A + testimonies) — styled, not dashed */
+    .comingsoon-grid { max-width: 880px; margin: 32px auto 0; padding: 0 24px;
+      display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .comingsoon-card { padding: 20px 22px; background: #FAFAF7; border: 1px solid #E5E0D6; border-radius: 10px; }
+    .comingsoon-card .cs-kicker { font-size: 0.68rem; letter-spacing: 2.5px; color: #8B5A1F; font-weight: 700; margin-bottom: 8px; }
+    .comingsoon-card p { font-size: 0.92rem; line-height: 1.55; color: #475569; margin: 0; }
+    @media (max-width: 600px) { .comingsoon-grid { grid-template-columns: 1fr; } }
 
     .week-nav {
       max-width: 880px; margin: 56px auto 40px; padding: 0 24px;
@@ -81,17 +107,22 @@
     .week-nav a:hover { color: #CE8E31; }
     .week-nav .back-chart { font-size: 0.85rem; color: #8B5A1F; letter-spacing: 2px; }
     .week-nav .nav-spacer { flex: 1; }
-    /* Top copy of the nav — sits on the cream body just under the dark hero;
-       a thin rule + tighter top margin set it apart from the foot nav. */
+    /* Top copy of the nav — sits INSIDE the dark hero, above the Armada image,
+       so prev/next is the first thing a captain sees. Light-on-dark styling. */
     .week-nav--top {
-      margin: 28px auto 0; padding-bottom: 16px; border-bottom: 1px solid #E5E0D6;
+      max-width: 640px; margin: 26px auto 4px; padding: 0;
     }
+    .week-nav--top a { color: #FFFFFF; }
     .week-nav--top .prev-week, .week-nav--top .next-week {
-      padding: 8px 16px; background: #F4F5F7; border: 1px solid #D1D5DB; border-radius: 8px;
+      padding: 9px 16px; background: rgba(206,142,49,0.16);
+      border: 1px solid rgba(206,142,49,0.55); border-radius: 8px;
+      color: #F5C77E; font-weight: 700;
     }
     .week-nav--top .prev-week:hover, .week-nav--top .next-week:hover {
-      border-color: #CE8E31; background: #FBF3E6;
+      background: #CE8E31; color: #1E293B;
     }
+    .week-nav--top .back-chart { color: #CBD5E1; }
+    .week-nav--top .back-chart:hover { color: #CE8E31; }
 
     @media (max-width: 600px) {
       .week-hero { padding: 60px 18px 36px; }
@@ -1219,11 +1250,13 @@ document.addEventListener('click', function(e) {
 
 <!-- PWA: installable Family Captain course app -->
 <link rel="manifest" href="family-captain.webmanifest">
+<link rel="apple-touch-icon" href="assets/icons/fc-apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="192x192" href="assets/icons/fc-icon-192.png">
 <meta name="theme-color" content="#B8763E">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
-<meta name="apple-mobile-web-app-title" content="Chart">
+<meta name="apple-mobile-web-app-title" content="TFC AI BtCmp">
 </head>
 <body data-track="family-captain">
 
@@ -1271,17 +1304,19 @@ document.addEventListener('click', function(e) {
   <h1>Husbanding</h1>
   <p class="week-tag">Lead with love. The captain's first crew is one woman.</p>
   <p class="week-scrip">📖 <a href="https://usmcmin.org/bible.html?ref=Ephesians%205:25-28" target="_blank" rel="noopener">Ephesians 5:25–28 ↗</a></p>
-  <div class="armada-frame">
-    <img src="assets/img/family-captain/armada-husbanding.jpg" alt="Armada Theme — Week 4 Husbanding centered" />
-  </div>
-</header>
 
-<!-- ── TOP WEEK NAV (mirrors the foot nav so you never have to scroll to move) ── -->
-<nav class="week-nav week-nav--top" aria-label="Week navigation">
+  <!-- ── TOP WEEK NAV — inside the hero, ABOVE the Armada image, so prev/next is
+       visible the instant the page loads (no scrolling past the artwork) ── -->
+  <nav class="week-nav week-nav--top" aria-label="Week navigation">
   <a href="family-captain-week-3.html" class="prev-week">← Week 3</a>
   <a href="family-captain-voyage.html" class="back-chart">↑ THE CAPTAIN'S CHART</a>
   <a href="family-captain-week-5.html" class="next-week">Week 5 →</a>
 </nav>
+
+  <div class="armada-frame">
+    <img src="assets/img/family-captain/armada-husbanding.jpg" alt="Armada Theme — Week 4 Husbanding centered" />
+  </div>
+</header>
 
 <!-- ── OPENING ── -->
 <section class="week-opening">
@@ -1353,27 +1388,37 @@ document.addEventListener('click', function(e) {
   </ol>
 </section>
 
-<!-- ── PLACEHOLDERS (build-out targets) ── -->
-<section class="placeholder-section">
-  <div class="ph-kicker">CAPTAIN'S NOTES</div>
-  <h3>What Adam wants you to know about this week.</h3>
-  <p class="ph-body">Long-form captain's notes coming. Personal stories, what to watch for, what trips most men up.</p>
+<!-- ── CAPTAIN'S NOTE (interim — Adam's fuller story drops later) ── -->
+<section class="captains-note-section">
+  <div class="cn-kicker">CAPTAIN'S NOTE</div>
+  <h3>What I want you to know about this week.</h3>
+  <p class="cn-body">This isn&rsquo;t romance week &mdash; it&rsquo;s leadership in the home the world never sees but the next generation feels for forty years. The tool can prepare you for the hard conversation; it can&rsquo;t walk through the door for you. And don&rsquo;t show her the AI&rsquo;s answer about her &mdash; that&rsquo;s a mirror for you, not a script for her. The hand-off is the point, not the polish.</p>
+  <p class="cn-tag">More from Adam — a personal story and what trips most men up — drops here as the cohort runs.</p>
 </section>
-<section class="placeholder-section">
-  <div class="ph-kicker">COHORT Q&amp;A</div>
-  <h3>Questions captains asked during last cohort.</h3>
-  <p class="ph-body">Anonymized Q&amp;A pulled from the Heartbeat circle — being built out as cohorts run.</p>
+
+<!-- ── RESOURCES (real interim picks; tools link into the live Compass) ── -->
+<section class="resources-section">
+  <div class="res-kicker">RESOURCES FOR THIS WEEK</div>
+  <h3>Scripture, a book, and the tools that fit.</h3>
+  <ul class="res-list">
+      <li class="res-item"><span class="res-emoji" aria-hidden="true">&#9990;</span><span class="res-body"><strong>Scripture.</strong> Ephesians 5:25&ndash;28 (love as Christ loved the church) &middot; Ephesians 4:15 (truth in love) &middot; 1 Peter 3:7.</span></li>
+      <li class="res-item"><span class="res-emoji" aria-hidden="true">&#128214;</span><span class="res-body"><strong>Read.</strong> Dave Harvey, <em>When Sinners Say &ldquo;I Do&rdquo;</em> &mdash; gospel-centered, readable. (Classic option: William Gouge, <em>Of Domestical Duties</em>.)</span></li>
+      <li class="res-item"><span class="res-emoji" aria-hidden="true">&#128295;</span><span class="res-body"><strong>AI tools.</strong> Use <a href="family-captain-tools.html#chat">Chat</a> (Claude) to <em>prepare</em> the hard conversation and polish the letter&rsquo;s grammar &mdash; you keep the words; <a href="family-captain-tools.html#notes-voice">Notes &amp; Voice</a> for a listen-log after she talks.</span></li>
+  </ul>
+  <p class="res-note">📖 A sermon link and Adam's full reading list are being added per week.</p>
 </section>
-<section class="placeholder-section">
-  <div class="ph-kicker">RESOURCES</div>
-  <h3>Books, sermons, and tools for this week.</h3>
-  <p class="ph-body">Curated list per theme. Coming.</p>
-</section>
-<section class="placeholder-section">
-  <div class="ph-kicker">TESTIMONIES</div>
-  <h3>What captains shipped during this week.</h3>
-  <p class="ph-body">Story-form testimonies from cohort participants. Permission required; coming.</p>
-</section>
+
+<!-- ── COHORT Q&A + TESTIMONIES (fill in as cohorts run — styled, not dashed) ── -->
+<div class="comingsoon-grid">
+  <section class="comingsoon-card">
+    <div class="cs-kicker">COHORT Q&amp;A</div>
+    <p>The real questions captains ask working <strong>this</strong> week — answered in the cohort circle and collected here as each group runs.</p>
+  </section>
+  <section class="comingsoon-card">
+    <div class="cs-kicker">FROM THE FLEET</div>
+    <p>What captains actually shipped this week — short, real, shared with permission. The first stories land after the opening cohort.</p>
+  </section>
+</div>
 
 <!-- ── WEEK NAV ── -->
 <nav class="week-nav">

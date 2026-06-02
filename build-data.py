@@ -54,17 +54,20 @@ def atomic_write(path, data, compact=False):
     """Write JSON to path via temp + rename so a crash mid-write can't
     leave the site serving half a file.
 
-    compact=True produces a single-line minified JSON file — used for the
-    per-state data/states/*.json files to minimize browser download size.
-    compact=False (default) produces indent=2 with a trailing newline —
-    used for scorecard.json and index.json since humans occasionally inspect
-    those and the extra bytes don't matter (scorecard is local-only, index is
-    tiny).
+    compact=True produces a single-line, fully-minified JSON file (no spaces
+    after separators) — used for the per-state data/states/*.json files to
+    minimize browser download size, AND for the master scorecard.json, which
+    at ~8970 candidates renders to ~60MB under indent=2 (>50MB GitHub warns,
+    >100MB GitHub rejects). Minified it is ~36MB, leaving headroom as the
+    enrichment passes keep appending claims. All real content is preserved;
+    only pretty-print whitespace is dropped.
+    compact=False (default) produces indent=2 with a trailing newline — used
+    only for index.json, which is tiny (~42KB) and occasionally eyeballed.
     """
     tmp = path + '.tmp'
     with open(tmp, 'w') as f:
         if compact:
-            json.dump(data, f, separators=(', ', ': '))
+            json.dump(data, f, separators=(',', ':'))
         else:
             json.dump(data, f, indent=2)
             f.write('\n')
@@ -250,8 +253,8 @@ def main():
         state_data = build_state_file(state_code, members)
         fpath = os.path.join(STATES_DIR, f"{state_code.lower()}.json")
         if dry:
-            # measure what the file would be
-            raw = json.dumps(state_data, indent=2) + '\n'
+            # measure what the file would be (matches the compact write below)
+            raw = json.dumps(state_data, separators=(',', ':'))
             state_file_sizes[state_code] = len(raw)
             continue
         atomic_write(fpath, state_data, compact=True)
@@ -266,7 +269,7 @@ def main():
     # ---- Prune + optionally rewrite scorecard meta ----
     scorecard_changed = prune_scorecard_meta(scorecard, by_state)
     if scorecard_changed and not dry:
-        atomic_write(SCORECARD_PATH, scorecard)
+        atomic_write(SCORECARD_PATH, scorecard, compact=True)
 
     # ---- Remove stale per-state files for states that no longer exist ----
     removed = []

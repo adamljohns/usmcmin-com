@@ -1733,6 +1733,15 @@ def generate_profile(candidate, categories, meta, nav=None):
     else:
         tier_callout_html = ''
 
+    _adj_sign = '+' if adj_total > 0 else ''
+    _adj_dir = 'plus' if adj_total > 0 else 'minus'
+    _adj_section_html = (
+        f'&middot; <span class="prof-total-adj prof-total-adj-{_adj_dir}">\n'
+        f'          {_adj_sign}{adj_total}\n'
+        f'        </span>\n'
+        f'        foreign-influence adjustment'
+    ) if adj_total != 0 else ''
+
     return f'''<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -1843,10 +1852,7 @@ def generate_profile(candidate, categories, meta, nav=None):
       <div class="prof-total-detail">
         <span class="prof-raw" title="Raw dynamic-max number: 2 points × {answered_count} answered questions. Federal officials max out at /100 when all 50 questions are scored. State officials max out at /86 (43 applicable × 2). Local officials max out at /44 (22 applicable × 2). The headline above normalizes all of these to a uniform /100 visual; this caption keeps the raw integer for transparency.">Raw: <strong>{adjusted_score}</strong> of <strong>{max_possible}</strong> dynamic max</span>
         &middot; <span class="prof-answered" title="Number of questions with researched public-record evidence. Out of {applicable_total} applicable at this office tier (or 50 total if federal). The remaining are unanswered — see scoring-system.html for methodology.">{answered_count} of {applicable_total} answered</span>
-        {f'''&middot; <span class="prof-total-adj prof-total-adj-{('plus' if adj_total > 0 else 'minus')}">
-          {('+' if adj_total > 0 else '')}{adj_total}
-        </span>
-        foreign-influence adjustment''' if adj_total != 0 else ''}
+        {_adj_section_html}
       </div>
       {tier_callout_html}
       {f'<div class="prof-freshness" title="Data freshness source: {freshness_source}">Last verified: <time datetime="{freshness_date}">{freshness_date}</time>{" · from claim evidence" if freshness_source == "claim" else " · scorecard-level timestamp"}</div>' if freshness_date else ''}

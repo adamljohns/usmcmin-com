@@ -38,6 +38,12 @@ STATES_DIR = os.path.join(DATA_DIR, 'states')
 META_COPY_KEYS = [
     'title', 'version', 'description', 'methodology',
     'scoring_rules', 'survey', 'author',
+    # Methodology / rubric metadata added after the original allowlist.
+    # These were previously scorecard.json-only, which made index.json a
+    # lossy subset and prevented a round-trip from per-state files. Adding
+    # them here keeps index.json as a complete picture of scorecard.meta.
+    'rubric_version', 'rubrics',
+    'aipac_adjustment', 'china_adjustment', 'soros_adjustment',
 ]
 
 

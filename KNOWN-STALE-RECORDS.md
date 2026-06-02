@@ -1,7 +1,24 @@
 # Known stale records — RESOLUTE Citizen v4.0
 
-**Last updated: 2026-05-18**
+**Last updated: 2026-06-01**
 **Maintainer: regenerate this on every web-validation sweep.**
+
+---
+
+## SWEEP 2026-06-01 — Fredericksburg + VA delegation finalization (via refine-records.py engine)
+
+**Done (evidence-based, cited, applied + rebuilt):**
+- **All 16 City of Fredericksburg records finalized.** Roster verified current (7 council, CA Humphries, 6 school board, 2 formers). Added the v5.0 local categories (`public_justice`, `refuse_state_overreach`) that every local record was missing; cleared speculative party-default FALSEs to null. Scores: Frye 25 (documented police-partnership credit, docked for gun give-back + taxes), all other council 0, Humphries 0 (self-described reform prosecutor), school-board incumbents 0 (one documented board-posture FALSE), new board members + formers = roster-verified scaffolding. Dossiers: `refinements/fxbg-2026-06.json`, `refinements/fxbg-schoolboard-2026-06.json`.
+- **VA roster currency fixed:** Senate now 40/40 (added the missing **SD-27 = Tara Durant**, converted from a stray federal-only record per the dual-office rule), House 100/100. **Deduped Joshua Cole** (two HD-65 records → one). **Miyares** → `lost` (lost AG 2025 to Jay Jones); **Jay Jones** → `won`/sitting AG.
+- **VA Fredericksburg delegation finalized (state tier):** **Tara Durant (SD-27, R) = 82** — conservative record, docked for her VERIFIED same-sex-marriage YES vote (HJ3, 01/16/2026). **Joshua Cole (HD-65, D) = 0** — chief sponsor of the abortion-rights AND same-sex-marriage amendments, Giffords-endorsed. Dossier: `refinements/va-fxbg-delegation-2026-06.json`.
+
+**Backlog opened by this sweep:**
+- **VA legislature (~138 of 140 seats) still archetype/party-default** — only the FXBG delegation + statewide execs are individually evidenced. Next pass; the `refine-scorecard` skill + engine make it systematic.
+- **NEW DUP: Stacy Garrity (PA)** — two records (`stacy-garrity-2026` Treasurer + `stacy-garrity-gov` Governor nominee) violate the one-record rule. Needs a merge (flagged separately).
+- **FXBG school board possible 7th/Ward-3 seat** — confirm board size (6 confirmed sitting members).
+- **NOTE:** master `scorecard.json` is now minified by `build-data.py` (~36MB, under GitHub's 50MB warn) — this supersedes the older "always indent=2" note in MAINTENANCE.md §2/§5; reconcile the two.
+
+---
 
 This document tracks records in `data/scorecard.json` that are KNOWN to
 need evidence review or have CONFIRMED stale information. Use it as the

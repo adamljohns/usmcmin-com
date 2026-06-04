@@ -26,8 +26,8 @@ Pick the FIRST `[ ]` item, do ONLY that item, conservatively. If it turns risky/
 - [ ] **D2. Issues page cross-link** — ensure citizen-issues.html links each measure to the relevant category deep-dive page where applicable.
 
 ## E. Methodology / transparency pages (content polish)
-- [ ] **E1. Confidence-levels doc** — on scoring-system.html, add a short section documenting the evidence-confidence levels now in use (`evidence_federal/state/local`, `roster_verified`, `archetype_party_default`) and what each means for a reader. Accurate to how the engine sets them.
-- [ ] **E2. Social-media-evidence note** — add a brief methodology note that for candidates without a voting record, scores derive from the candidate's own public statements + telling endorsements, each cited (matches the new protocol). Transparency win.
+- [x] (2026-06-04) **E1. Confidence-levels doc** — added a "How We Know — Evidence & Confidence" section to scoring-system.html (new `id="evidence-confidence"`) with a table documenting the three reader-facing confidence levels (Evidence-reviewed federal/state/local · Roster-verified · Party-default/archetype) + the "no position found → blank, never guessed" cardinal rule. Accurate to what the UI shows (source-link footnotes on evidence answers; amber banner on party-default). + v5.7 version-history entry.
+- [x] (2026-06-04) **E2. Social-media-evidence note** — same section's "Candidates Without a Voting Record" subsection documents scoring no-record challengers from their own campaign-site/FB/X/IG/LinkedIn/YouTube statements + accepted endorsements (SBA/NRA vs PP/HRC as hard evidence), vague slogans left blank. Plus a "We Keep It Current" subsection on candidacy-currency (mark dropouts/losses).
 - [ ] **E3. Changelog page** — verify changelog.html renders the recent refinement commits cleanly; fix rendering only if clearly broken.
 
 ## F. RESOLUTE Local (the demo product)

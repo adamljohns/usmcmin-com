@@ -1624,8 +1624,14 @@ function renderWeeks() {
   // NOTE: outer wrapper is <div> not <a> — HTML disallows nested anchors and the
   // browser auto-closes the outer <a> when it sees the inner scripture <a>, which
   // produced phantom empty trailing cards (the bug Ron caught in the screenshot).
+  // Track-aware destination: The Family Captain track has real per-week pages, so
+  // a card click goes STRAIGHT there in one click (no hop to the chart anchor +
+  // second click). The public USMC track has no per-week pages, so it keeps the
+  // voyage-anchor behavior (jump to that week on the chart).
+  var _fc = document.body.dataset.track === 'family-captain';
+  var _dest = function(n){ return _fc ? ('family-captain-week-' + n + '.html') : ('ai-boot-camp-voyage.html#week' + n); };
   document.getElementById("weeks-grid").innerHTML = WEEKS.map(w => `
-    <div class="week-card" data-week="${w.n}" role="link" tabindex="0" aria-label="Open Week ${w.n} in the Captain's Chart" title="Open Week ${w.n} in the Captain's Chart" onclick="if(!event.target.closest('a')) location.href='family-captain-voyage.html#week${w.n}';" onkeydown="if((event.key==='Enter'||event.key===' ')&&!event.target.closest('a')){event.preventDefault();location.href='family-captain-voyage.html#week${w.n}';}" style="cursor:pointer;">
+    <div class="week-card" data-week="${w.n}" data-dest="${_dest(w.n)}" role="link" tabindex="0" aria-label="Open Week ${w.n}" title="Open Week ${w.n}" onclick="if(!event.target.closest('a')) location.href=this.dataset.dest;" onkeydown="if((event.key==='Enter'||event.key===' ')&&!event.target.closest('a')){event.preventDefault();location.href=this.dataset.dest;}" style="cursor:pointer;">
       <div class="num">WEEK ${w.n}</div>
       <div class="week-icon">${w.icon}</div>
       <h3>${w.title}</h3>

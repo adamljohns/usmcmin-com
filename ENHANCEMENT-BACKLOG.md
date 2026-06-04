@@ -35,7 +35,7 @@ Pick the FIRST `[ ]` item, do ONLY that item, conservatively. If it turns risky/
 - [ ] **F2. Second-city scaffold (research only)** — pick the next EXPANSION-PLAN target city with a Granicus/CivicPlus agenda center + YouTube/Vimeo stream; write a short `cities/<city>-READINESS.md` documenting its broadcaster + agenda-center URLs + roster source (NO code yet). Sets up a future deploy.
 
 ## G. Data hygiene (NON-scorecard.json only)
-- [ ] **G1. Orphan-profile sweep** — confirm 0 orphaned `candidates/<state>/*.html` (generate-profiles writes but doesn't delete); remove any orphans. (Read scorecard, delete stale HTML — safe.)
+- [x] (2026-06-04) **G1. Orphan-profile sweep** — checked all `candidates/<state>/*.html` against the live slug set in scorecard.json: **8,970 live profiles, 0 orphans.** The refinement crons' prune step has kept it clean through every dedup (Cole, Garrity, etc.). No action needed.
 - [ ] **G2. KNOWN-STALE punch-list triage** — read KNOWN-STALE-RECORDS.md §B/§D; pick ONE item that does NOT require editing scorecard.json (e.g., updating the doc itself with current findings, or flagging via notify-adam) and progress it. Anything that needs a scorecard.json edit → leave for the refinement crons; just note it.
 
 ---

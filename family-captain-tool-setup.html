@@ -3,138 +3,39 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Week 7 · Sabbath — The Family Captain AI Boot Camp</title>
-  <meta name="description" content="Week 7 of the The Family Captain AI Boot Camp: Sabbath. The captain rests. The crew sees a man who isn't running on fumes.">
+  <title>Tool Setup &amp; Walkthroughs — The Family Captain AI Boot Camp</title>
+  <meta name="description" content="Step-by-step setup walkthroughs for the AI tools The Family Captain Boot Camp leans on — Claude, ChatGPT, Whisper, NotebookLM, Viktor, and more.">
   <meta name="robots" content="noindex,nofollow">
   <link rel="stylesheet" href="assets/css/main.css">
   <link rel="icon" type="image/svg+xml" href="assets/icons/favicon.svg">
   <link rel="icon" type="image/png" sizes="32x32" href="assets/icons/favicon-32.png">
   <link rel="icon" type="image/png" sizes="16x16" href="assets/icons/favicon-16.png">
-  <style>
-    .week-hero {
-      background: #1E293B; color: #FFFFFF;
-      padding: 80px 24px 48px; text-align: center;
-    }
-    .week-hero .week-kicker { font-size: 0.85rem; letter-spacing: 4px; color: #CE8E31; font-weight: 700; }
-    .week-hero h1 { font-size: clamp(2.4rem, 6vw, 4rem); margin: 8px 0 12px; color: #FFFFFF; font-family: var(--font-main); }
-    .week-hero .week-tag { font-size: 1.15rem; font-style: italic; color: #CBD5E1; max-width: 680px; margin: 0 auto 24px; }
-    .week-hero .week-scrip a { color: #CE8E31; text-decoration: underline; }
-    .week-hero .armada-frame { max-width: 460px; margin: 28px auto 0; }
-    .week-hero .armada-frame img { width: 100%; height: auto; display: block; }
-
-    .week-opening { max-width: 720px; margin: 48px auto 0; padding: 0 24px; }
-    .week-opening .opening-kicker { font-size: 0.75rem; letter-spacing: 3px; color: #8B5A1F; font-weight: 700; }
-    .week-opening p { font-size: 1.1rem; line-height: 1.7; color: #334155; margin-top: 12px; }
-
-    .tasks-section { max-width: 880px; margin: 56px auto 0; padding: 0 24px; }
-    .tasks-section h2 { font-family: var(--font-main); font-size: 1.8rem; color: #1E293B; }
-    .tasks-section h2 + p { color: #475569; margin-bottom: 24px; }
-    .task-block {
-      background: #F4F5F7; border-left: 4px solid #1E293B;
-      padding: 24px 28px; margin-bottom: 24px;
-    }
-    .task-block .task-kicker { font-size: 0.72rem; letter-spacing: 3px; color: #8B5A1F; font-weight: 700; }
-    .task-block .task-title { font-family: var(--font-main); font-size: 1.5rem; color: #1E293B; margin: 6px 0 6px; }
-    .task-block .task-tagline { font-size: 1rem; font-style: italic; color: #475569; margin-bottom: 14px; }
-    .task-block .task-setup { font-size: 0.98rem; line-height: 1.65; color: #334155; }
-    .task-block .task-actions-label { font-size: 0.72rem; letter-spacing: 3px; color: #1E293B; font-weight: 700; margin: 16px 0 8px; }
-    .task-block .task-actions { padding-left: 22px; }
-    .task-block .task-actions li { font-size: 0.96rem; line-height: 1.55; color: #334155; margin-bottom: 6px; }
-    .task-block .task-actions li.sub { font-size: 0.92rem; color: #475569; }
-    .task-block .callout {
-      background: #FFFFFF; border: 1px solid #D1D5DB; border-left: 3px solid #1E293B;
-      padding: 14px 18px; margin: 16px 0;
-    }
-    .task-block .callout-label { font-size: 0.72rem; letter-spacing: 2px; color: #8B5A1F; font-weight: 700; margin-bottom: 6px; }
-    .task-block .callout-body { font-size: 0.96rem; color: #334155; }
-    .task-block .task-scripture {
-      margin-top: 16px; padding: 12px 16px; background: rgba(206,142,49,0.08); border-left: 3px solid #CE8E31;
-      font-size: 0.96rem; color: #334155;
-    }
-    .task-block .ts-label { display: block; font-size: 0.7rem; letter-spacing: 2px; color: #8B5A1F; font-weight: 700; margin-bottom: 4px; }
-    .task-block .task-pdf-link {
-      display: inline-block; margin-top: 14px; padding: 10px 18px;
-      background: #B07320; color: #FFFFFF !important; font-weight: 700;
-      text-decoration: none; font-size: 0.92rem; letter-spacing: 1px;
-    }
-    .task-block .task-pdf-link:hover { background: #8B5A1F; }
-
-    .drills-section { max-width: 880px; margin: 56px auto 0; padding: 0 24px; }
-    .drills-section h2 { font-family: var(--font-main); font-size: 1.8rem; color: #1E293B; }
-    .drills-section .drills-list { list-style: none; padding: 0; margin-top: 16px; }
-    .drill-item {
-      display: flex; align-items: baseline; gap: 14px;
-      padding: 12px 16px; background: #F4F5F7; margin-bottom: 6px;
-      border-left: 2px solid #CE8E31;
-    }
-    .drill-day { font-size: 0.72rem; letter-spacing: 2px; color: #8B5A1F; font-weight: 700; flex-shrink: 0; min-width: 60px; }
-    .drill-text { font-size: 0.96rem; color: #334155; line-height: 1.5; }
-
-    /* Captain's Note — finished interim section (was a dashed placeholder) */
-    .captains-note-section { max-width: 880px; margin: 48px auto 0; padding: 28px 32px;
-      background: #1E293B; border-radius: 12px; color: #E2E8F0; }
-    .captains-note-section .cn-kicker { font-size: 0.72rem; letter-spacing: 3px; color: #CE8E31; font-weight: 700; }
-    .captains-note-section h3 { font-family: var(--font-main); font-size: 1.5rem; color: #FFFFFF; margin: 6px 0 14px; }
-    .captains-note-section .cn-body { font-size: 1.05rem; line-height: 1.7; color: #E2E8F0; }
-    .captains-note-section .cn-tag { font-size: 0.85rem; color: #94A3B8; font-style: italic; margin-top: 14px;
-      padding-top: 12px; border-top: 1px solid rgba(255,255,255,0.12); }
-
-    /* Resources — real per-week list */
-    .resources-section { max-width: 880px; margin: 40px auto 0; padding: 0 24px; }
-    .resources-section .res-kicker { font-size: 0.72rem; letter-spacing: 3px; color: #8B5A1F; font-weight: 700; }
-    .resources-section h3 { font-family: var(--font-main); font-size: 1.6rem; color: #1E293B; margin: 6px 0 16px; }
-    .resources-section .res-list { list-style: none; padding: 0; margin: 0; }
-    .resources-section .res-item { display: flex; gap: 14px; align-items: flex-start;
-      padding: 14px 18px; background: #F4F5F7; border-left: 3px solid #CE8E31; margin-bottom: 8px; border-radius: 0 6px 6px 0; }
-    .resources-section .res-emoji { font-size: 1.15rem; flex-shrink: 0; line-height: 1.5; }
-    .resources-section .res-body { font-size: 0.98rem; line-height: 1.6; color: #334155; }
-    .resources-section .res-body strong { color: #1E293B; }
-    .resources-section .res-body a { color: #B07320; font-weight: 700; text-decoration: none; }
-    .resources-section .res-body a:hover { text-decoration: underline; }
-    .resources-section .res-note { font-size: 0.85rem; color: #64748B; font-style: italic; margin-top: 12px; }
-    .resources-section .rec-flag { font-size: 0.72rem; color: #94794A; font-style: italic; }
-
-    /* Coming-soon cards (Q&A + testimonies) — styled, not dashed */
-    .comingsoon-grid { max-width: 880px; margin: 32px auto 0; padding: 0 24px;
-      display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
-    .comingsoon-card { padding: 20px 22px; background: #FAFAF7; border: 1px solid #E5E0D6; border-radius: 10px; }
-    .comingsoon-card .cs-kicker { font-size: 0.68rem; letter-spacing: 2.5px; color: #8B5A1F; font-weight: 700; margin-bottom: 8px; }
-    .comingsoon-card p { font-size: 0.92rem; line-height: 1.55; color: #475569; margin: 0; }
-    @media (max-width: 600px) { .comingsoon-grid { grid-template-columns: 1fr; } }
-
-    .week-nav {
-      max-width: 880px; margin: 56px auto 40px; padding: 0 24px;
-      display: flex; justify-content: space-between; align-items: center;
-    }
-    .week-nav a { color: #1E293B; text-decoration: none; font-weight: 600; font-size: 0.95rem; }
-    .week-nav a:hover { color: #CE8E31; }
-    .week-nav .back-chart { font-size: 0.85rem; color: #8B5A1F; letter-spacing: 2px; }
-    .week-nav .nav-spacer { flex: 1; }
-    /* Top copy of the nav — sits INSIDE the dark hero, above the Armada image,
-       so prev/next is the first thing a captain sees. Light-on-dark styling.
-       Wider container + explicit gap so the three items breathe (the chart
-       link no longer butts against the Week-N button). */
-    .week-nav--top {
-      max-width: 760px; margin: 26px auto 4px; padding: 0 8px;
-      gap: 18px; flex-wrap: wrap;
-    }
-    .week-nav--top a { color: #FFFFFF; }
-    .week-nav--top .prev-week, .week-nav--top .next-week {
-      padding: 10px 18px; background: rgba(206,142,49,0.16);
-      border: 1px solid rgba(206,142,49,0.55); border-radius: 8px;
-      color: #F5C77E; font-weight: 700; white-space: nowrap;
-    }
-    .week-nav--top .prev-week:hover, .week-nav--top .next-week:hover {
-      background: #CE8E31; color: #1E293B;
-    }
-    .week-nav--top .back-chart { color: #CBD5E1; white-space: nowrap; padding: 0 6px; }
-    .week-nav--top .back-chart:hover { color: #CE8E31; }
-
-    @media (max-width: 600px) {
-      .week-hero { padding: 60px 18px 36px; }
-      .task-block { padding: 18px 20px; }
-      .week-nav { flex-direction: column; gap: 12px; }
-    }
+<style>
+    .setup-hero { background:#1E293B; color:#FFFFFF; padding:80px 24px 44px; text-align:center; }
+    .setup-hero .kicker { font-size:0.8rem; letter-spacing:4px; color:#CE8E31; font-weight:700; }
+    .setup-hero h1 { font-size:clamp(2.2rem,5.5vw,3.6rem); margin:8px 0 12px; color:#FFFFFF; font-family:var(--font-main); }
+    .setup-hero p { font-size:1.12rem; color:#CBD5E1; max-width:700px; margin:0 auto; line-height:1.6; }
+    .setup-back { display:inline-block; margin-top:18px; color:#F5C77E; text-decoration:none; font-weight:700; font-size:0.9rem; }
+    .setup-toc { max-width:880px; margin:28px auto 0; padding:0 24px; text-align:center; font-size:0.95rem; line-height:2; }
+    .setup-toc a { color:#8B5A1F; text-decoration:none; font-weight:600; border-bottom:1px dotted #B07320; }
+    .setup-toc a:hover { color:#B07320; }
+    .setup-intro { max-width:760px; margin:24px auto 0; padding:0 24px; }
+    .setup-intro p { font-size:1.02rem; line-height:1.7; color:#334155; }
+    .setup-list { max-width:880px; margin:36px auto 64px; padding:0 24px; display:flex; flex-direction:column; gap:20px; }
+    .setup-card { background:#F4F5F7; border-left:4px solid #1E293B; border-radius:0 8px 8px 0; padding:24px 28px; scroll-margin-top:80px; }
+    .setup-head { display:flex; justify-content:space-between; align-items:baseline; flex-wrap:wrap; gap:8px; }
+    .setup-card h2 { font-family:var(--font-main); font-size:1.5rem; color:#1E293B; margin:0; }
+    .setup-cost { font-size:0.82rem; color:#475569; font-weight:600; }
+    .setup-what { font-size:1rem; line-height:1.6; color:#334155; margin:10px 0 14px; }
+    .setup-visit { display:inline-block; margin-bottom:8px; padding:8px 16px; background:#B07320; color:#FFFFFF !important; font-weight:700; font-size:0.88rem; text-decoration:none; border-radius:6px; }
+    .setup-visit:hover { background:#8B5A1F; }
+    .setup-steps-label { font-size:0.72rem; letter-spacing:3px; color:#8B5A1F; font-weight:700; margin:16px 0 8px; }
+    .setup-steps { margin:0; padding-left:22px; }
+    .setup-steps li { font-size:0.96rem; line-height:1.55; color:#334155; margin-bottom:7px; }
+    .setup-extra { font-size:0.88rem; line-height:1.5; color:#475569; font-style:italic; margin:12px 0 0; padding:10px 14px; background:#FFFFFF; border:1px solid #E5E0D6; border-radius:6px; }
+    .setup-first { margin-top:16px; padding:12px 16px; background:rgba(206,142,49,0.10); border-left:3px solid #CE8E31; font-size:0.96rem; color:#334155; line-height:1.55; }
+    .setup-first .sf-label { display:block; font-size:0.68rem; letter-spacing:2px; color:#8B5A1F; font-weight:700; margin-bottom:4px; }
+    @media (max-width:600px){ .setup-hero{ padding:60px 18px 32px; } .setup-card{ padding:18px 20px; } }
   </style>
 
 <!-- ── FAMILY CAPTAIN TRACK — TFC VISUAL IDENTITY (Phase B 2026-05-11) ── -->
@@ -1304,135 +1205,178 @@ document.addEventListener('click', function(e) {
 </nav>
 
 
-<!-- ── HERO ── -->
-<header class="week-hero">
-  <div class="week-kicker">WEEK 7 OF 7</div>
-  <h1>Sabbath</h1>
-  <p class="week-tag">The captain rests. The crew sees a man who isn't running on fumes.</p>
-  <p class="week-scrip">📖 <a href="https://usmcmin.org/bible.html?ref=Exodus%2020:8" target="_blank" rel="noopener">Exodus 20:8 ↗</a></p>
-
-  <!-- ── TOP WEEK NAV — inside the hero, ABOVE the Armada image, so prev/next is
-       visible the instant the page loads (no scrolling past the artwork) ── -->
-  <nav class="week-nav week-nav--top" aria-label="Week navigation">
-  <a href="family-captain-week-6.html" class="prev-week">← Week 6</a>
-  <a href="family-captain-voyage.html" class="back-chart">↑ THE CAPTAIN'S CHART</a>
-  <a href="family-captain-voyage.html" class="next-week">Commissioning →</a>
-</nav>
-
-  <div class="armada-frame">
-    <img src="assets/img/family-captain/armada-sabbath.jpg" alt="Armada Theme — Week 7 Sabbath centered" />
-  </div>
+<header class="setup-hero">
+  <div class="kicker">FAMILY CAPTAIN &middot; TOOL SETUP</div>
+  <h1>Set up your tools.</h1>
+  <p>Plain, step-by-step walkthroughs for the tools this bootcamp leans on. Set one up, run the first captain move, then move on &mdash; you don&rsquo;t need all of them at once.</p>
+  <a class="setup-back" href="family-captain-tools.html">&larr; Back to the Captain&rsquo;s Compass</a>
 </header>
 
-<!-- ── OPENING ── -->
-<section class="week-opening">
-  <div class="opening-kicker">THIS WEEK</div>
-  <p>The captain who can't stop will not lead long. Sabbath isn't earned by a productive week — it's commanded so the captain doesn't become his own god. This week, you build the protocol, you take the day, and you teach what you learned. That's the commission.</p>
+<nav class="setup-toc" aria-label="Jump to a tool"><a href="#claude">Claude</a> &middot; <a href="#chatgpt">ChatGPT</a> &middot; <a href="#perplexity">Perplexity</a> &middot; <a href="#voice-memos">Apple Voice Memos</a> &middot; <a href="#whisper">Whisper (voice &rarr; text)</a> &middot; <a href="#notebooklm">NotebookLM</a> &middot; <a href="#cowork">Anthropic Cowork</a> &middot; <a href="#viktor">Viktor</a> &middot; <a href="#midjourney">Midjourney</a> &middot; <a href="#zapier">Zapier</a></nav>
+
+<section class="setup-intro">
+  <p>Most captains need two or three of these, not all ten. Start with <a href="#claude" style="color:#8B5A1F;font-weight:600">Claude</a> and a way to <a href="#voice-memos" style="color:#8B5A1F;font-weight:600">capture your voice</a>; add the rest as a week calls for them. Prices and screens reflect 2026 and change often &mdash; the steps are the shape, not the gospel. We&rsquo;ll add more tools here over time.</p>
 </section>
 
-<!-- ── TASKS ── -->
-<section class="tasks-section">
-  <h2>The week&rsquo;s task &mdash; three SACAs.</h2>
-  <p>Each SACA takes 20&ndash;30 minutes. <strong>Any one</strong> completes the week &mdash; do all three if you want to go deeper. Open the PDF for the print version; the full text lives here too.</p>
-  
-      <article class="task-block">
-        <div class="task-kicker">WEEK 7 · SACA 1</div>
-        <h3 class="task-title">Plan Your Sabbath</h3>
-        <div class="task-tagline">A 24-hour disconnect protocol. What's in. What's out. Commit on paper.</div>
-        <p class="task-setup">Sabbath without a plan becomes Saturday plus guilt. Today: build the protocol so the day can actually deliver what it's for.</p>
-        <div class="task-actions-label">Action checklist</div>
-        <ul class="task-actions"><li>Decide and write down:<ul><li class="sub">Start time (e.g., Saturday 6pm)</li><li class="sub">End time (e.g., Sunday 6pm)</li><li class="sub">What's IN — worship, family meals, walks, naps, rest</li><li class="sub">What's OUT — work email, side projects, AI tools</li><li class="sub">Emergency exception — what counts, what doesn't</li></ul></li><li>Tell your wife and kids the plan. Make it visible.</li><li>First Sabbath this week. Imperfect. Show up anyway.</li></ul>
-        <div class="callout"><div class="callout-label">CAPTAIN'S NOTE</div><div class="callout-body">Sabbath isn't earned by a productive week. It's commanded so the captain doesn't become his own god.</div></div>
-        <div class="task-scripture">
-          <span class="ts-label">SCRIPTURE SIT</span>
-          <i>Exodus 20:8 — "Remember the Sabbath day, to keep it holy."</i>
+<div class="setup-list">
+      <section class="setup-card" id="claude">
+        <div class="setup-head">
+          <h2>Claude</h2>
+          <span class="setup-cost">Free tier &middot; Pro $20/mo &middot; Max from $100/mo</span>
         </div>
-        <a class="task-pdf-link" href="downloads/family-captain/Family_Captain_Task_PDFs/W7_T1_Plan_Your_Sabbath.pdf" target="_blank" rel="noopener">Open task PDF →</a>
-      </article>
-      <article class="task-block">
-        <div class="task-kicker">WEEK 7 · SACA 2</div>
-        <h3 class="task-title">Saturday Captain's Audit</h3>
-        <div class="task-tagline">Review the week with AI. Pick ONE anchor for next week.</div>
-        <p class="task-setup">A captain who can't audit his own week can't lead anyone else's. Today: a structured weekly review, AI as scribe, you as decider.</p>
-        <div class="task-actions-label">Action checklist</div>
-        <ul class="task-actions"><li>Open Claude. Paste any notes, captures, and journal entries from the week (no PII).</li><li>Ask for a 5-point summary:<ul><li class="sub">What did I actually ship?</li><li class="sub">What did I avoid?</li><li class="sub">Where did I show up as captain?</li><li class="sub">Where did I drift?</li><li class="sub">What's the ONE anchor for next week?</li></ul></li><li>Cut the AI's read. Keep yours.</li><li>Write the ONE anchor on paper. Put it where you see it Monday morning.</li></ul>
-        
-        <div class="task-scripture">
-          <span class="ts-label">SCRIPTURE SIT</span>
-          <i>Lamentations 3:40 — "Let us test and examine our ways, and return to the LORD!"</i>
+        <p class="setup-what">Your primary AI &mdash; writing, thinking, planning, and (in Cowork mode) doing multi-step work on your computer. If you set up one tool, make it this one.</p>
+        <a class="setup-visit" href="https://claude.ai" target="_blank" rel="noopener">Open claude.ai &rarr;</a>
+        <div class="setup-steps-label">Set it up</div>
+        <ol class="setup-steps">
+            <li>Go to claude.ai and create a free account (email or Google sign-in).</li>
+            <li>On your phone, install the Claude app and sign in with the same account.</li>
+            <li>Start a chat. Tell it who you are and what you&rsquo;re working on &mdash; context makes every answer sharper.</li>
+            <li>When the free limits start pinching and you&rsquo;re using it daily, upgrade to Pro ($20).</li>
+        </ol>
+        <div class="setup-first"><span class="sf-label">YOUR FIRST CAPTAIN MOVE</span> Paste your rough Captain&rsquo;s Charter and ask: &lsquo;Where is this vague? What would a wiser man add?&rsquo;</div>
+      </section>
+      <section class="setup-card" id="chatgpt">
+        <div class="setup-head">
+          <h2>ChatGPT</h2>
+          <span class="setup-cost">Free tier &middot; Plus $20/mo</span>
         </div>
-        <a class="task-pdf-link" href="downloads/family-captain/Family_Captain_Task_PDFs/W7_T2_Saturday_Captains_Audit.pdf" target="_blank" rel="noopener">Open task PDF →</a>
-      </article>
-      <article class="task-block">
-        <div class="task-kicker">WEEK 7 · SACA 3</div>
-        <h3 class="task-title">Teach One Person One Thing</h3>
-        <div class="task-tagline">Walk one brother through one thing you learned. Watch him do it once.</div>
-        <p class="task-setup">The bootcamp doesn't end until you've handed it off. Multiplication is the test of mastery. Today: pick the brother, pick the thing, do the rep.</p>
-        <div class="task-actions-label">Action checklist</div>
-        <ul class="task-actions"><li>Pick ONE brother — a friend, a man at church, a colleague — who needs this.</li><li>Pick ONE thing you learned in this bootcamp that he can use.</li><li>Schedule a 30-minute walk-through (in person if possible).</li><li>Walk him through it. Watch him do it once. Don't take the keyboard.</li><li>Send him the link to family-captain.html. He starts where you started.</li></ul>
-        <div class="callout"><div class="callout-label">THE GRADUATION</div><div class="callout-body">A captain who hoards the playbook isn't a captain. He's a hobbyist. Multiplication is the commission.</div></div>
-        <div class="task-scripture">
-          <span class="ts-label">SCRIPTURE SIT</span>
-          <i>2 Timothy 2:2 — "What you have heard from me… entrust to faithful men, who will be able to teach others also."</i>
+        <p class="setup-what">The other big general assistant &mdash; strong image generation (GPT Image 2) and a hands-off Agent for computer tasks. A solid #2 and sanity-check next to Claude.</p>
+        <a class="setup-visit" href="https://chatgpt.com" target="_blank" rel="noopener">Open chatgpt.com &rarr;</a>
+        <div class="setup-steps-label">Set it up</div>
+        <ol class="setup-steps">
+            <li>Go to chatgpt.com and sign up free.</li>
+            <li>Install the mobile app; try voice mode if you&rsquo;d rather talk it through.</li>
+            <li>Generate an image by typing &lsquo;make an image of &hellip;&rsquo; right in the chat.</li>
+            <li>Plus ($20) unlocks the better models, image gen, and ChatGPT Agent.</li>
+        </ol>
+        <div class="setup-first"><span class="sf-label">YOUR FIRST CAPTAIN MOVE</span> Ask it to generate a simple one-page weekly family rhythm as an image you can print for the fridge.</div>
+      </section>
+      <section class="setup-card" id="perplexity">
+        <div class="setup-head">
+          <h2>Perplexity</h2>
+          <span class="setup-cost">Free tier covers most captains &middot; Pro $20/mo</span>
         </div>
-        <a class="task-pdf-link" href="downloads/family-captain/Family_Captain_Task_PDFs/W7_T3_Teach_One_Person_One_Thing.pdf" target="_blank" rel="noopener">Open task PDF →</a>
-      </article>
-</section>
-
-<!-- ── DRILLS ── -->
-<section class="drills-section">
-  <h2>This week's Captain's Drills.</h2>
-  <p>90 seconds each. Optional depth track — the drill is the rep, not the workout. Sunday is Sabbath; drill off.</p>
-  <ol class="drills-list">
-        <li class="drill-item"><span class="drill-day">Day 1</span><span class="drill-text">AI drafts your 24-hour Sabbath protocol. Cut what's optional. Commit on paper.</span></li>
-        <li class="drill-item"><span class="drill-day">Day 2</span><span class="drill-text">Pick where the phone sleeps on Sabbath. Voice-memo the ritual you'll follow.</span></li>
-        <li class="drill-item"><span class="drill-day">Day 3</span><span class="drill-text">Read Exodus 20:8. Ask Claude: "When did I last truly remember the Sabbath?" Don't soften.</span></li>
-        <li class="drill-item"><span class="drill-day">Day 4</span><span class="drill-text">Run your week through AI: prompts used, actions taken. ONE anchor for next week.</span></li>
-        <li class="drill-item"><span class="drill-day">Day 5</span><span class="drill-text">Walk one brother through one thing you learned this bootcamp. Watch him do it once.</span></li>
-        <li class="drill-item"><span class="drill-day">Day 6</span><span class="drill-text">Have AI help draft a blessing for 3 specific people. Send one. Hand-write the second. Pray the third.</span></li>
-        <li class="drill-item"><span class="drill-day">Day 7</span><span class="drill-text">Sabbath. Drill off.</span></li>
-  </ol>
-</section>
-
-<!-- ── CAPTAIN'S NOTE (interim — Adam's fuller story drops later) ── -->
-<section class="captains-note-section">
-  <div class="cn-kicker">CAPTAIN'S NOTE</div>
-  <h3>What I want you to know about this week.</h3>
-  <p class="cn-body">The captain who can&rsquo;t stop will not lead long. Sabbath isn&rsquo;t earned by a productive week &mdash; it&rsquo;s commanded so the captain doesn&rsquo;t quietly become his own god. Build the protocol on paper, decide where the phone sleeps, and keep it. Then multiply: walk one brother through one thing you learned. A captain who hoards the playbook isn&rsquo;t a captain &mdash; he&rsquo;s a hobbyist.</p>
-  <p class="cn-tag">More from Adam — a personal story and what trips most men up — drops here as the cohort runs.</p>
-</section>
-
-<!-- ── RESOURCES (real interim picks; tools link into the live Compass) ── -->
-<section class="resources-section">
-  <div class="res-kicker">RESOURCES FOR THIS WEEK</div>
-  <h3>Scripture, a book, and the tools that fit.</h3>
-  <ul class="res-list">
-      <li class="res-item"><span class="res-emoji" aria-hidden="true">&#9990;</span><span class="res-body"><strong>Scripture.</strong> Exodus 20:8 (remember the Sabbath) &middot; Lamentations 3:40 (test and examine our ways) &middot; 2 Timothy 2:2 (entrust to faithful men).</span></li>
-      <li class="res-item"><span class="res-emoji" aria-hidden="true">&#128214;</span><span class="res-body"><strong>Read.</strong> Joseph Pipa, <em>The Lord&rsquo;s Day</em> (Christian Focus / Mentor) &mdash; a confessional defense of the Fourth Commandment as fulfilled-but-perpetual, with practical Lord&rsquo;s-Day keeping. Classic: John Bunyan, <em>The Pilgrim&rsquo;s Progress</em>. <span class="rec-flag">(MOOP-clone-bot pick &mdash; pending Adam&rsquo;s OK)</span></span></li>
-      <li class="res-item"><span class="res-emoji" aria-hidden="true">&#127911;</span><span class="res-body"><strong>Listen.</strong> R.C. Sproul, &ldquo;<a href="https://learn.ligonier.org/series/themes-from-genesis/sabbath-rest" target="_blank" rel="noopener">Sabbath Rest</a>&rdquo; (Ligonier). <span class="rec-flag">(MOOP-clone-bot pick &mdash; pending Adam&rsquo;s OK)</span></span></li>
-      <li class="res-item"><span class="res-emoji" aria-hidden="true">&#128295;</span><span class="res-body"><strong>AI tools.</strong> Draft the 24-hour Sabbath protocol and run the Saturday audit in <a href="family-captain-tools.html#chat">Chat</a> (Claude) &mdash; then keep the day itself screen-free. The tool plans the rest; it isn&rsquo;t the rest.</span></li>
-  </ul>
-  <p class="res-note">📖 A sermon link and Adam's full reading list are being added per week.</p>
-</section>
-
-<!-- ── COHORT Q&A + TESTIMONIES (fill in as cohorts run — styled, not dashed) ── -->
-<div class="comingsoon-grid">
-  <section class="comingsoon-card">
-    <div class="cs-kicker">COHORT Q&amp;A</div>
-    <p>The real questions captains ask working <strong>this</strong> week — answered in the cohort circle and collected here as each group runs.</p>
-  </section>
-  <section class="comingsoon-card">
-    <div class="cs-kicker">FROM THE FLEET</div>
-    <p>What captains actually shipped this week — short, real, shared with permission. The first stories land after the opening cohort.</p>
-  </section>
+        <p class="setup-what">Search-first AI that answers with real, cited sources &mdash; your replacement for ten open Google tabs.</p>
+        <a class="setup-visit" href="https://perplexity.ai" target="_blank" rel="noopener">Open perplexity.ai &rarr;</a>
+        <div class="setup-steps-label">Set it up</div>
+        <ol class="setup-steps">
+            <li>Go to perplexity.ai (no account needed to try; sign up to save threads).</li>
+            <li>Ask a real question &mdash; it answers and shows the sources it used.</li>
+            <li>Click a source to verify before you trust it. Always verify.</li>
+        </ol>
+        <div class="setup-first"><span class="sf-label">YOUR FIRST CAPTAIN MOVE</span> Research one decision you&rsquo;re weighing this month: ask for the strongest case on each side, with sources.</div>
+      </section>
+      <section class="setup-card" id="voice-memos">
+        <div class="setup-head">
+          <h2>Apple Voice Memos</h2>
+          <span class="setup-cost">Free (iOS 18+ on a recent iPhone)</span>
+        </div>
+        <p class="setup-what">The recorder already on your iPhone. On iOS 18+ it transcribes your voice to text on-device &mdash; the simplest &lsquo;talk instead of type&rsquo; on-ramp.</p>
+        <a class="setup-visit" href="https://www.apple.com/apple-intelligence/" target="_blank" rel="noopener">About Apple Intelligence &rarr;</a>
+        <div class="setup-steps-label">Set it up</div>
+        <ol class="setup-steps">
+            <li>Open Voice Memos (already installed). Tap the red button, talk, tap stop.</li>
+            <li>Tap the recording, then the transcript icon, to read it as text.</li>
+            <li>Use Share to copy the transcript into Claude or ChatGPT to clean up or summarize.</li>
+        </ol>
+        <div class="setup-first"><span class="sf-label">YOUR FIRST CAPTAIN MOVE</span> On your next drive, voice-memo your thoughts on one hard decision; tonight, paste the transcript into Claude and ask it to organize them.</div>
+      </section>
+      <section class="setup-card" id="whisper">
+        <div class="setup-head">
+          <h2>Whisper (voice &rarr; text)</h2>
+          <span class="setup-cost">Free (Voice Memos / local) &middot; MacWhisper: free tier + one-time upgrade</span>
+        </div>
+        <p class="setup-what">Whisper is the open-source engine behind most great transcription &mdash; you don&rsquo;t install it from a code repo, you use an app built on it. On iPhone, Apple Voice Memos already is Whisper-class. On a Mac, MacWhisper is the friendly way to transcribe long files.</p>
+        <a class="setup-visit" href="https://goodsnooze.gumroad.com/l/macwhisper" target="_blank" rel="noopener">Get MacWhisper (Mac) &rarr;</a>
+        <div class="setup-steps-label">Set it up</div>
+        <ol class="setup-steps">
+            <li>On iPhone: just use Apple Voice Memos (above) &mdash; same quality, zero setup.</li>
+            <li>On a Mac, for interviews or long recordings: install MacWhisper, drag in an audio file, get a clean transcript.</li>
+            <li>Paste the transcript into Claude and ask it to summarize or pull action items.</li>
+        </ol>
+          <p class="setup-extra">The raw open-source model lives at github.com/openai/whisper &mdash; that&rsquo;s for developers. Most captains never need to touch it; use Voice Memos or MacWhisper instead.</p>
+        <div class="setup-first"><span class="sf-label">YOUR FIRST CAPTAIN MOVE</span> Record a 5-minute talk or sermon note, transcribe it, and ask Claude: &lsquo;Pull the 3 action items for me.&rsquo;</div>
+      </section>
+      <section class="setup-card" id="notebooklm">
+        <div class="setup-head">
+          <h2>NotebookLM</h2>
+          <span class="setup-cost">Free (Google account)</span>
+        </div>
+        <p class="setup-what">Google&rsquo;s free research notebook. Drop in PDFs, docs, even your bootcamp materials; ask questions across them; generate a shockingly-natural audio overview for your commute.</p>
+        <a class="setup-visit" href="https://notebooklm.google.com" target="_blank" rel="noopener">Open notebooklm.google.com &rarr;</a>
+        <div class="setup-steps-label">Set it up</div>
+        <ol class="setup-steps">
+            <li>Go to notebooklm.google.com and sign in with a Google account.</li>
+            <li>Create a notebook, click Add, and upload PDFs/docs or paste links.</li>
+            <li>Ask questions in the chat &mdash; answers cite the exact source page.</li>
+            <li>Click &lsquo;Audio Overview&rsquo; to generate a podcast-style summary.</li>
+        </ol>
+        <div class="setup-first"><span class="sf-label">YOUR FIRST CAPTAIN MOVE</span> Upload this week&rsquo;s task PDFs and ask: &lsquo;What is the captain&rsquo;s one job this week, in plain words?&rsquo;</div>
+      </section>
+      <section class="setup-card" id="cowork">
+        <div class="setup-head">
+          <h2>Anthropic Cowork</h2>
+          <span class="setup-cost">Included with Claude paid plans (Pro / Max)</span>
+        </div>
+        <p class="setup-what">Claude that doesn&rsquo;t just answer &mdash; it does. Cowork runs multi-step work on your desktop or phone (research, drafting, organizing files) with you approving each step.</p>
+        <a class="setup-visit" href="https://claude.com/cowork" target="_blank" rel="noopener">About Cowork &rarr;</a>
+        <div class="setup-steps-label">Set it up</div>
+        <ol class="setup-steps">
+            <li>Make sure you have a Claude account on a paid plan (Pro or Max) for full Cowork.</li>
+            <li>Open Cowork from Claude and describe the outcome you want &mdash; not the steps.</li>
+            <li>Watch it work and approve actions. Start small to build trust before you hand it bigger jobs.</li>
+        </ol>
+        <div class="setup-first"><span class="sf-label">YOUR FIRST CAPTAIN MOVE</span> Ask Cowork to turn your messy notes file into a clean one-page weekly plan.</div>
+      </section>
+      <section class="setup-card" id="viktor">
+        <div class="setup-head">
+          <h2>Viktor</h2>
+          <span class="setup-cost">Paid team plans &middot; free trial &mdash; pricing at viktor.com</span>
+        </div>
+        <p class="setup-what">An AI &lsquo;coworker&rsquo; that lives in Slack or Microsoft Teams and actually executes work across your business tools &mdash; reports, CRM updates, recurring automations. Built for a team, not a solo desktop.</p>
+        <a class="setup-visit" href="https://viktor.com" target="_blank" rel="noopener">Open viktor.com &rarr;</a>
+        <div class="setup-steps-label">Set it up</div>
+        <ol class="setup-steps">
+            <li>Go to viktor.com and start a trial &mdash; you&rsquo;ll connect it to Slack or Teams.</li>
+            <li>Connect the business tools your team already uses.</li>
+            <li>Ask Viktor to do a real recurring job &mdash; e.g. a Monday status summary &mdash; and let it run.</li>
+            <li>Solo family captain? Try Claude&rsquo;s Cowork or ChatGPT Agent first; Viktor shines for teams.</li>
+        </ol>
+          <p class="setup-extra">Added after John Michael Clark started using it &mdash; pending Adam&rsquo;s hands-on review of fit and pricing.</p>
+        <div class="setup-first"><span class="sf-label">YOUR FIRST CAPTAIN MOVE</span> If your ministry or business runs in Slack/Teams, have Viktor draft your weekly status update from the channel.</div>
+      </section>
+      <section class="setup-card" id="midjourney">
+        <div class="setup-head">
+          <h2>Midjourney</h2>
+          <span class="setup-cost">Basic $10/mo &middot; Standard $30/mo</span>
+        </div>
+        <p class="setup-what">The best-looking AI image generator &mdash; sermon graphics, social posts, blog images, flyers, anything that needs to look good.</p>
+        <a class="setup-visit" href="https://midjourney.com" target="_blank" rel="noopener">Open midjourney.com &rarr;</a>
+        <div class="setup-steps-label">Set it up</div>
+        <ol class="setup-steps">
+            <li>Go to midjourney.com and sign in (Google or Discord).</li>
+            <li>Use the web &lsquo;Create&rsquo; box; type a clear description (subject, style, mood).</li>
+            <li>Refine with variations and upscales until one&rsquo;s right, then download it.</li>
+        </ol>
+        <div class="setup-first"><span class="sf-label">YOUR FIRST CAPTAIN MOVE</span> Generate a clean banner image for your family&rsquo;s verse of the month.</div>
+      </section>
+      <section class="setup-card" id="zapier">
+        <div class="setup-head">
+          <h2>Zapier</h2>
+          <span class="setup-cost">Free tier &middot; paid plans scale with volume</span>
+        </div>
+        <p class="setup-what">The wiring between your apps: &lsquo;when X happens, do Y&rsquo; &mdash; no code. Add an AI step to summarize, draft, or sort automatically.</p>
+        <a class="setup-visit" href="https://zapier.com" target="_blank" rel="noopener">Open zapier.com &rarr;</a>
+        <div class="setup-steps-label">Set it up</div>
+        <ol class="setup-steps">
+            <li>Sign up at zapier.com (free).</li>
+            <li>Create a Zap: pick a trigger (e.g. a new email labeled &lsquo;Giving&rsquo;) and an action (add a row to a sheet).</li>
+            <li>Add an AI step if you want it to summarize or categorize along the way.</li>
+            <li>Turn it on; it runs quietly in the background.</li>
+        </ol>
+        <div class="setup-first"><span class="sf-label">YOUR FIRST CAPTAIN MOVE</span> Automate one nagging weekly copy-paste chore &mdash; let it run while you&rsquo;re with your family.</div>
+      </section>
 </div>
-
-<!-- ── WEEK NAV ── -->
-<nav class="week-nav">
-  <a href="family-captain-week-6.html" class="prev-week">← Week 6</a>
-  <a href="family-captain-voyage.html" class="back-chart">↑ BACK TO THE CHART</a>
-  <a href="family-captain-voyage.html" class="next-week">Commissioning →</a>
-</nav>
 
 <!-- ── FOOTER ── -->
 <!-- ── FOOTER (FC track) ── -->

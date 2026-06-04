@@ -84,6 +84,16 @@
   .task-circle .task-name { font-size:0.7rem; line-height:1.2; text-align:center; }
   .task-circle.shipped .task-name { color:var(--bg-dark); font-weight:700; }
   .task-circle .task-actions { display:flex; gap:4px; margin-top:3px; }
+  /* "Skip the rest" — FC pick-one: a shipped SACA completes the week; the other
+     two can be dimmed so they don't nag. */
+  .task-circle.skipped { opacity:0.4; }
+  .task-circle.skipped .task-name { text-decoration:line-through; }
+  .skip-rest { display:block; width:100%; margin-top:8px; padding:6px 8px;
+    font-size:0.68rem; font-weight:700; letter-spacing:0.3px; line-height:1.25;
+    background:transparent; border:1px dashed var(--border); color:var(--gray);
+    border-radius:8px; cursor:pointer; font-family:inherit; }
+  .skip-rest:hover { border-color:var(--week-color); color:var(--week-color); }
+  .skip-rest.is-on { background:rgba(0,0,0,0.05); border-style:solid; border-color:var(--week-color); color:var(--week-color); }
 
   /* ── TIER OVERLAY (S/A/B/C) ── */
   /* Task-circle gets a 2px tier-colored border + a 24px badge top-left.
@@ -1460,7 +1470,7 @@ document.addEventListener('click', function(e) {
     <a href="family-captain.html" class="back-link">← Family Captain Boot Camp</a>
     <span class="module-badge" style="margin-top:14px">The Captain&rsquo;s Chart · USMC Ministries</span>
     <h1><span class="gold">Captain&rsquo;s</span> Chart</h1>
-    <p class="subtitle">Track your journey through 7 weeks &times; 3 tasks. Tap any task to open its PDF. Tap the dot to mark it shipped. Earn badges. Commissioned when all 21 land.</p>
+    <p class="subtitle">Seven weeks, three SACAs each. Finish a week with <strong>any one</strong> of its SACAs &mdash; do all three if you want. Tap a dot to mark it shipped, earn badges, and you&rsquo;re commissioned when all 7 weeks land.</p>
   </div>
 </div>
 
@@ -1488,22 +1498,23 @@ document.addEventListener('click', function(e) {
         <h3>Vision</h3>
         <div class="week-tag">Write the vision plain. AI drafts; the captain decides where he's going.</div>
         <div class="task-circles">
-          <a class="task-circle" data-key="1.1" data-pdf="downloads/family-captain/Family_Captain_Task_PDFs/W1_T1_Draft_Your_AI_Charter.pdf" href="downloads/family-captain/Family_Captain_Task_PDFs/W1_T1_Draft_Your_AI_Charter.pdf" target="_blank" rel="noopener" title="Open W1.T1 PDF">
-            <div class="task-num">T1</div>
+          <a class="task-circle" data-key="1.1" data-pdf="downloads/family-captain/Family_Captain_Task_PDFs/W1_T1_Draft_Your_AI_Charter.pdf" href="downloads/family-captain/Family_Captain_Task_PDFs/W1_T1_Draft_Your_AI_Charter.pdf" target="_blank" rel="noopener" title="Open SACA 1 PDF">
+            <div class="task-num">SACA 1</div>
             <div class="task-name">Draft Your AI Charter</div>
-            <div class="task-actions"><button class="task-toggle" type="button" data-toggle="1.1" aria-label="Mark T1 shipped">●</button></div>
+            <div class="task-actions"><button class="task-toggle" type="button" data-toggle="1.1" aria-label="Mark SACA 1 shipped">●</button></div>
           </a>
-          <a class="task-circle" data-key="1.2" data-pdf="downloads/family-captain/Family_Captain_Task_PDFs/W1_T2_Write_Your_5-Year_Captains_Vision.pdf" href="downloads/family-captain/Family_Captain_Task_PDFs/W1_T2_Write_Your_5-Year_Captains_Vision.pdf" target="_blank" rel="noopener" title="Open W1.T2 PDF">
-            <div class="task-num">T2</div>
+          <a class="task-circle" data-key="1.2" data-pdf="downloads/family-captain/Family_Captain_Task_PDFs/W1_T2_Write_Your_5-Year_Captains_Vision.pdf" href="downloads/family-captain/Family_Captain_Task_PDFs/W1_T2_Write_Your_5-Year_Captains_Vision.pdf" target="_blank" rel="noopener" title="Open SACA 2 PDF">
+            <div class="task-num">SACA 2</div>
             <div class="task-name">Write Your 5-Year Captain's Vision</div>
-            <div class="task-actions"><button class="task-toggle" type="button" data-toggle="1.2" aria-label="Mark T2 shipped">●</button></div>
+            <div class="task-actions"><button class="task-toggle" type="button" data-toggle="1.2" aria-label="Mark SACA 2 shipped">●</button></div>
           </a>
-          <a class="task-circle" data-key="1.3" data-pdf="downloads/family-captain/Family_Captain_Task_PDFs/W1_T3_Build_Your_Tool_Stack.pdf" href="downloads/family-captain/Family_Captain_Task_PDFs/W1_T3_Build_Your_Tool_Stack.pdf" target="_blank" rel="noopener" title="Open W1.T3 PDF">
-            <div class="task-num">T3</div>
+          <a class="task-circle" data-key="1.3" data-pdf="downloads/family-captain/Family_Captain_Task_PDFs/W1_T3_Build_Your_Tool_Stack.pdf" href="downloads/family-captain/Family_Captain_Task_PDFs/W1_T3_Build_Your_Tool_Stack.pdf" target="_blank" rel="noopener" title="Open SACA 3 PDF">
+            <div class="task-num">SACA 3</div>
             <div class="task-name">Build Your Tool Stack</div>
-            <div class="task-actions"><button class="task-toggle" type="button" data-toggle="1.3" aria-label="Mark T3 shipped">●</button></div>
+            <div class="task-actions"><button class="task-toggle" type="button" data-toggle="1.3" aria-label="Mark SACA 3 shipped">●</button></div>
           </a>
         </div>
+        <button class="skip-rest" type="button" data-skipweek="1" aria-pressed="false">One SACA is enough &mdash; skip the rest</button>
         <div class="scrip"><a href="https://usmcmin.org/bible.html?ref=Habakkuk%202:2" target="_blank" rel="noopener" style="color:var(--gray); text-decoration:underline;">Habakkuk 2:2 ↗</a></div>
       </div>
       <div class="week-port" id="week2" data-week="2">
@@ -1512,22 +1523,23 @@ document.addEventListener('click', function(e) {
         <h3>Body</h3>
         <div class="week-tag">Steward the temple. The captain trains the body that carries the load.</div>
         <div class="task-circles">
-          <a class="task-circle" data-key="2.1" data-pdf="downloads/family-captain/Family_Captain_Task_PDFs/W2_T1_Weekly_Movement_Practice.pdf" href="downloads/family-captain/Family_Captain_Task_PDFs/W2_T1_Weekly_Movement_Practice.pdf" target="_blank" rel="noopener" title="Open W2.T1 PDF">
-            <div class="task-num">T1</div>
+          <a class="task-circle" data-key="2.1" data-pdf="downloads/family-captain/Family_Captain_Task_PDFs/W2_T1_Weekly_Movement_Practice.pdf" href="downloads/family-captain/Family_Captain_Task_PDFs/W2_T1_Weekly_Movement_Practice.pdf" target="_blank" rel="noopener" title="Open SACA 1 PDF">
+            <div class="task-num">SACA 1</div>
             <div class="task-name">Weekly Movement Practice</div>
-            <div class="task-actions"><button class="task-toggle" type="button" data-toggle="2.1" aria-label="Mark T1 shipped">●</button></div>
+            <div class="task-actions"><button class="task-toggle" type="button" data-toggle="2.1" aria-label="Mark SACA 1 shipped">●</button></div>
           </a>
-          <a class="task-circle" data-key="2.2" data-pdf="downloads/family-captain/Family_Captain_Task_PDFs/W2_T2_Captains_Meal_Plan.pdf" href="downloads/family-captain/Family_Captain_Task_PDFs/W2_T2_Captains_Meal_Plan.pdf" target="_blank" rel="noopener" title="Open W2.T2 PDF">
-            <div class="task-num">T2</div>
+          <a class="task-circle" data-key="2.2" data-pdf="downloads/family-captain/Family_Captain_Task_PDFs/W2_T2_Captains_Meal_Plan.pdf" href="downloads/family-captain/Family_Captain_Task_PDFs/W2_T2_Captains_Meal_Plan.pdf" target="_blank" rel="noopener" title="Open SACA 2 PDF">
+            <div class="task-num">SACA 2</div>
             <div class="task-name">Captain's Meal Plan</div>
-            <div class="task-actions"><button class="task-toggle" type="button" data-toggle="2.2" aria-label="Mark T2 shipped">●</button></div>
+            <div class="task-actions"><button class="task-toggle" type="button" data-toggle="2.2" aria-label="Mark SACA 2 shipped">●</button></div>
           </a>
-          <a class="task-circle" data-key="2.3" data-pdf="downloads/family-captain/Family_Captain_Task_PDFs/W2_T3_5-Night_Sleep_Audit.pdf" href="downloads/family-captain/Family_Captain_Task_PDFs/W2_T3_5-Night_Sleep_Audit.pdf" target="_blank" rel="noopener" title="Open W2.T3 PDF">
-            <div class="task-num">T3</div>
+          <a class="task-circle" data-key="2.3" data-pdf="downloads/family-captain/Family_Captain_Task_PDFs/W2_T3_5-Night_Sleep_Audit.pdf" href="downloads/family-captain/Family_Captain_Task_PDFs/W2_T3_5-Night_Sleep_Audit.pdf" target="_blank" rel="noopener" title="Open SACA 3 PDF">
+            <div class="task-num">SACA 3</div>
             <div class="task-name">5-Night Sleep Audit</div>
-            <div class="task-actions"><button class="task-toggle" type="button" data-toggle="2.3" aria-label="Mark T3 shipped">●</button></div>
+            <div class="task-actions"><button class="task-toggle" type="button" data-toggle="2.3" aria-label="Mark SACA 3 shipped">●</button></div>
           </a>
         </div>
+        <button class="skip-rest" type="button" data-skipweek="2" aria-pressed="false">One SACA is enough &mdash; skip the rest</button>
         <div class="scrip"><a href="https://usmcmin.org/bible.html?ref=1%20Corinthians%206:19-20" target="_blank" rel="noopener" style="color:var(--gray); text-decoration:underline;">1 Corinthians 6:19–20 ↗</a></div>
       </div>
       <div class="week-port" id="week3" data-week="3">
@@ -1536,22 +1548,23 @@ document.addEventListener('click', function(e) {
         <h3>Spiritual</h3>
         <div class="week-tag">Walk with God. The captain's command flows from his communion.</div>
         <div class="task-circles">
-          <a class="task-circle" data-key="3.1" data-pdf="downloads/family-captain/Family_Captain_Task_PDFs/W3_T1_Scripture_Study_You_Lead.pdf" href="downloads/family-captain/Family_Captain_Task_PDFs/W3_T1_Scripture_Study_You_Lead.pdf" target="_blank" rel="noopener" title="Open W3.T1 PDF">
-            <div class="task-num">T1</div>
+          <a class="task-circle" data-key="3.1" data-pdf="downloads/family-captain/Family_Captain_Task_PDFs/W3_T1_Scripture_Study_You_Lead.pdf" href="downloads/family-captain/Family_Captain_Task_PDFs/W3_T1_Scripture_Study_You_Lead.pdf" target="_blank" rel="noopener" title="Open SACA 1 PDF">
+            <div class="task-num">SACA 1</div>
             <div class="task-name">10-Min Scripture Study, You Lead</div>
-            <div class="task-actions"><button class="task-toggle" type="button" data-toggle="3.1" aria-label="Mark T1 shipped">●</button></div>
+            <div class="task-actions"><button class="task-toggle" type="button" data-toggle="3.1" aria-label="Mark SACA 1 shipped">●</button></div>
           </a>
-          <a class="task-circle" data-key="3.2" data-pdf="downloads/family-captain/Family_Captain_Task_PDFs/W3_T2_Family_Devotion_Generator.pdf" href="downloads/family-captain/Family_Captain_Task_PDFs/W3_T2_Family_Devotion_Generator.pdf" target="_blank" rel="noopener" title="Open W3.T2 PDF">
-            <div class="task-num">T2</div>
+          <a class="task-circle" data-key="3.2" data-pdf="downloads/family-captain/Family_Captain_Task_PDFs/W3_T2_Family_Devotion_Generator.pdf" href="downloads/family-captain/Family_Captain_Task_PDFs/W3_T2_Family_Devotion_Generator.pdf" target="_blank" rel="noopener" title="Open SACA 2 PDF">
+            <div class="task-num">SACA 2</div>
             <div class="task-name">Family Devotion Generator</div>
-            <div class="task-actions"><button class="task-toggle" type="button" data-toggle="3.2" aria-label="Mark T2 shipped">●</button></div>
+            <div class="task-actions"><button class="task-toggle" type="button" data-toggle="3.2" aria-label="Mark SACA 2 shipped">●</button></div>
           </a>
-          <a class="task-circle" data-key="3.3" data-pdf="downloads/family-captain/Family_Captain_Task_PDFs/W3_T3_Sermon_Notes_to_Captains_Actions.pdf" href="downloads/family-captain/Family_Captain_Task_PDFs/W3_T3_Sermon_Notes_to_Captains_Actions.pdf" target="_blank" rel="noopener" title="Open W3.T3 PDF">
-            <div class="task-num">T3</div>
+          <a class="task-circle" data-key="3.3" data-pdf="downloads/family-captain/Family_Captain_Task_PDFs/W3_T3_Sermon_Notes_to_Captains_Actions.pdf" href="downloads/family-captain/Family_Captain_Task_PDFs/W3_T3_Sermon_Notes_to_Captains_Actions.pdf" target="_blank" rel="noopener" title="Open SACA 3 PDF">
+            <div class="task-num">SACA 3</div>
             <div class="task-name">Sermon Notes → Captain's Actions</div>
-            <div class="task-actions"><button class="task-toggle" type="button" data-toggle="3.3" aria-label="Mark T3 shipped">●</button></div>
+            <div class="task-actions"><button class="task-toggle" type="button" data-toggle="3.3" aria-label="Mark SACA 3 shipped">●</button></div>
           </a>
         </div>
+        <button class="skip-rest" type="button" data-skipweek="3" aria-pressed="false">One SACA is enough &mdash; skip the rest</button>
         <div class="scrip"><a href="https://usmcmin.org/bible.html?ref=Joshua%201:8" target="_blank" rel="noopener" style="color:var(--gray); text-decoration:underline;">Joshua 1:8 ↗</a></div>
       </div>
       <div class="week-port" id="week4" data-week="4">
@@ -1560,22 +1573,23 @@ document.addEventListener('click', function(e) {
         <h3>Husbanding</h3>
         <div class="week-tag">Lead with love. The captain's first crew is one woman.</div>
         <div class="task-circles">
-          <a class="task-circle" data-key="4.1" data-pdf="downloads/family-captain/Family_Captain_Task_PDFs/W4_T1_The_5-Minute_Wife_Audit.pdf" href="downloads/family-captain/Family_Captain_Task_PDFs/W4_T1_The_5-Minute_Wife_Audit.pdf" target="_blank" rel="noopener" title="Open W4.T1 PDF">
-            <div class="task-num">T1</div>
+          <a class="task-circle" data-key="4.1" data-pdf="downloads/family-captain/Family_Captain_Task_PDFs/W4_T1_The_5-Minute_Wife_Audit.pdf" href="downloads/family-captain/Family_Captain_Task_PDFs/W4_T1_The_5-Minute_Wife_Audit.pdf" target="_blank" rel="noopener" title="Open SACA 1 PDF">
+            <div class="task-num">SACA 1</div>
             <div class="task-name">The 5-Minute Wife Audit</div>
-            <div class="task-actions"><button class="task-toggle" type="button" data-toggle="4.1" aria-label="Mark T1 shipped">●</button></div>
+            <div class="task-actions"><button class="task-toggle" type="button" data-toggle="4.1" aria-label="Mark SACA 1 shipped">●</button></div>
           </a>
-          <a class="task-circle" data-key="4.2" data-pdf="downloads/family-captain/Family_Captain_Task_PDFs/W4_T2_Prep_One_Hard_Conversation.pdf" href="downloads/family-captain/Family_Captain_Task_PDFs/W4_T2_Prep_One_Hard_Conversation.pdf" target="_blank" rel="noopener" title="Open W4.T2 PDF">
-            <div class="task-num">T2</div>
+          <a class="task-circle" data-key="4.2" data-pdf="downloads/family-captain/Family_Captain_Task_PDFs/W4_T2_Prep_One_Hard_Conversation.pdf" href="downloads/family-captain/Family_Captain_Task_PDFs/W4_T2_Prep_One_Hard_Conversation.pdf" target="_blank" rel="noopener" title="Open SACA 2 PDF">
+            <div class="task-num">SACA 2</div>
             <div class="task-name">Prep One Hard Conversation</div>
-            <div class="task-actions"><button class="task-toggle" type="button" data-toggle="4.2" aria-label="Mark T2 shipped">●</button></div>
+            <div class="task-actions"><button class="task-toggle" type="button" data-toggle="4.2" aria-label="Mark SACA 2 shipped">●</button></div>
           </a>
-          <a class="task-circle" data-key="4.3" data-pdf="downloads/family-captain/Family_Captain_Task_PDFs/W4_T3_Letter_to_Your_Wife.pdf" href="downloads/family-captain/Family_Captain_Task_PDFs/W4_T3_Letter_to_Your_Wife.pdf" target="_blank" rel="noopener" title="Open W4.T3 PDF">
-            <div class="task-num">T3</div>
+          <a class="task-circle" data-key="4.3" data-pdf="downloads/family-captain/Family_Captain_Task_PDFs/W4_T3_Letter_to_Your_Wife.pdf" href="downloads/family-captain/Family_Captain_Task_PDFs/W4_T3_Letter_to_Your_Wife.pdf" target="_blank" rel="noopener" title="Open SACA 3 PDF">
+            <div class="task-num">SACA 3</div>
             <div class="task-name">Letter to Your Wife</div>
-            <div class="task-actions"><button class="task-toggle" type="button" data-toggle="4.3" aria-label="Mark T3 shipped">●</button></div>
+            <div class="task-actions"><button class="task-toggle" type="button" data-toggle="4.3" aria-label="Mark SACA 3 shipped">●</button></div>
           </a>
         </div>
+        <button class="skip-rest" type="button" data-skipweek="4" aria-pressed="false">One SACA is enough &mdash; skip the rest</button>
         <div class="scrip"><a href="https://usmcmin.org/bible.html?ref=Ephesians%205:25-28" target="_blank" rel="noopener" style="color:var(--gray); text-decoration:underline;">Ephesians 5:25–28 ↗</a></div>
       </div>
       <div class="week-port" id="week5" data-week="5">
@@ -1584,22 +1598,23 @@ document.addEventListener('click', function(e) {
         <h3>Fathering</h3>
         <div class="week-tag">Train up your children. AI assists; the captain disciples.</div>
         <div class="task-circles">
-          <a class="task-circle" data-key="5.1" data-pdf="downloads/family-captain/Family_Captain_Task_PDFs/W5_T1_3_Questions_for_the_Dinner_Table.pdf" href="downloads/family-captain/Family_Captain_Task_PDFs/W5_T1_3_Questions_for_the_Dinner_Table.pdf" target="_blank" rel="noopener" title="Open W5.T1 PDF">
-            <div class="task-num">T1</div>
+          <a class="task-circle" data-key="5.1" data-pdf="downloads/family-captain/Family_Captain_Task_PDFs/W5_T1_3_Questions_for_the_Dinner_Table.pdf" href="downloads/family-captain/Family_Captain_Task_PDFs/W5_T1_3_Questions_for_the_Dinner_Table.pdf" target="_blank" rel="noopener" title="Open SACA 1 PDF">
+            <div class="task-num">SACA 1</div>
             <div class="task-name">3 Questions for the Dinner Table</div>
-            <div class="task-actions"><button class="task-toggle" type="button" data-toggle="5.1" aria-label="Mark T1 shipped">●</button></div>
+            <div class="task-actions"><button class="task-toggle" type="button" data-toggle="5.1" aria-label="Mark SACA 1 shipped">●</button></div>
           </a>
-          <a class="task-circle" data-key="5.2" data-pdf="downloads/family-captain/Family_Captain_Task_PDFs/W5_T2_Build_a_Family_Rhythm_Asset.pdf" href="downloads/family-captain/Family_Captain_Task_PDFs/W5_T2_Build_a_Family_Rhythm_Asset.pdf" target="_blank" rel="noopener" title="Open W5.T2 PDF">
-            <div class="task-num">T2</div>
+          <a class="task-circle" data-key="5.2" data-pdf="downloads/family-captain/Family_Captain_Task_PDFs/W5_T2_Build_a_Family_Rhythm_Asset.pdf" href="downloads/family-captain/Family_Captain_Task_PDFs/W5_T2_Build_a_Family_Rhythm_Asset.pdf" target="_blank" rel="noopener" title="Open SACA 2 PDF">
+            <div class="task-num">SACA 2</div>
             <div class="task-name">Build a Family Rhythm Asset</div>
-            <div class="task-actions"><button class="task-toggle" type="button" data-toggle="5.2" aria-label="Mark T2 shipped">●</button></div>
+            <div class="task-actions"><button class="task-toggle" type="button" data-toggle="5.2" aria-label="Mark SACA 2 shipped">●</button></div>
           </a>
-          <a class="task-circle" data-key="5.3" data-pdf="downloads/family-captain/Family_Captain_Task_PDFs/W5_T3_Write_Your_Family_AI_Policy.pdf" href="downloads/family-captain/Family_Captain_Task_PDFs/W5_T3_Write_Your_Family_AI_Policy.pdf" target="_blank" rel="noopener" title="Open W5.T3 PDF">
-            <div class="task-num">T3</div>
+          <a class="task-circle" data-key="5.3" data-pdf="downloads/family-captain/Family_Captain_Task_PDFs/W5_T3_Write_Your_Family_AI_Policy.pdf" href="downloads/family-captain/Family_Captain_Task_PDFs/W5_T3_Write_Your_Family_AI_Policy.pdf" target="_blank" rel="noopener" title="Open SACA 3 PDF">
+            <div class="task-num">SACA 3</div>
             <div class="task-name">Write Your Family AI Policy</div>
-            <div class="task-actions"><button class="task-toggle" type="button" data-toggle="5.3" aria-label="Mark T3 shipped">●</button></div>
+            <div class="task-actions"><button class="task-toggle" type="button" data-toggle="5.3" aria-label="Mark SACA 3 shipped">●</button></div>
           </a>
         </div>
+        <button class="skip-rest" type="button" data-skipweek="5" aria-pressed="false">One SACA is enough &mdash; skip the rest</button>
         <div class="scrip"><a href="https://usmcmin.org/bible.html?ref=Deuteronomy%206:6-7" target="_blank" rel="noopener" style="color:var(--gray); text-decoration:underline;">Deuteronomy 6:6–7 ↗</a></div>
       </div>
       <div class="week-port" id="week6" data-week="6">
@@ -1608,22 +1623,23 @@ document.addEventListener('click', function(e) {
         <h3>Finance</h3>
         <div class="week-tag">Captain of the storehouse. Tithe first, then everything else.</div>
         <div class="task-circles">
-          <a class="task-circle" data-key="6.1" data-pdf="downloads/family-captain/Family_Captain_Task_PDFs/W6_T1_Tithe-First_Budget.pdf" href="downloads/family-captain/Family_Captain_Task_PDFs/W6_T1_Tithe-First_Budget.pdf" target="_blank" rel="noopener" title="Open W6.T1 PDF">
-            <div class="task-num">T1</div>
+          <a class="task-circle" data-key="6.1" data-pdf="downloads/family-captain/Family_Captain_Task_PDFs/W6_T1_Tithe-First_Budget.pdf" href="downloads/family-captain/Family_Captain_Task_PDFs/W6_T1_Tithe-First_Budget.pdf" target="_blank" rel="noopener" title="Open SACA 1 PDF">
+            <div class="task-num">SACA 1</div>
             <div class="task-name">Tithe-First Budget</div>
-            <div class="task-actions"><button class="task-toggle" type="button" data-toggle="6.1" aria-label="Mark T1 shipped">●</button></div>
+            <div class="task-actions"><button class="task-toggle" type="button" data-toggle="6.1" aria-label="Mark SACA 1 shipped">●</button></div>
           </a>
-          <a class="task-circle" data-key="6.2" data-pdf="downloads/family-captain/Family_Captain_Task_PDFs/W6_T2_Subscription_Audit.pdf" href="downloads/family-captain/Family_Captain_Task_PDFs/W6_T2_Subscription_Audit.pdf" target="_blank" rel="noopener" title="Open W6.T2 PDF">
-            <div class="task-num">T2</div>
+          <a class="task-circle" data-key="6.2" data-pdf="downloads/family-captain/Family_Captain_Task_PDFs/W6_T2_Subscription_Audit.pdf" href="downloads/family-captain/Family_Captain_Task_PDFs/W6_T2_Subscription_Audit.pdf" target="_blank" rel="noopener" title="Open SACA 2 PDF">
+            <div class="task-num">SACA 2</div>
             <div class="task-name">Subscription Audit</div>
-            <div class="task-actions"><button class="task-toggle" type="button" data-toggle="6.2" aria-label="Mark T2 shipped">●</button></div>
+            <div class="task-actions"><button class="task-toggle" type="button" data-toggle="6.2" aria-label="Mark SACA 2 shipped">●</button></div>
           </a>
-          <a class="task-circle" data-key="6.3" data-pdf="downloads/family-captain/Family_Captain_Task_PDFs/W6_T3_Legacy_Plan_Starter.pdf" href="downloads/family-captain/Family_Captain_Task_PDFs/W6_T3_Legacy_Plan_Starter.pdf" target="_blank" rel="noopener" title="Open W6.T3 PDF">
-            <div class="task-num">T3</div>
+          <a class="task-circle" data-key="6.3" data-pdf="downloads/family-captain/Family_Captain_Task_PDFs/W6_T3_Legacy_Plan_Starter.pdf" href="downloads/family-captain/Family_Captain_Task_PDFs/W6_T3_Legacy_Plan_Starter.pdf" target="_blank" rel="noopener" title="Open SACA 3 PDF">
+            <div class="task-num">SACA 3</div>
             <div class="task-name">Legacy Plan Starter</div>
-            <div class="task-actions"><button class="task-toggle" type="button" data-toggle="6.3" aria-label="Mark T3 shipped">●</button></div>
+            <div class="task-actions"><button class="task-toggle" type="button" data-toggle="6.3" aria-label="Mark SACA 3 shipped">●</button></div>
           </a>
         </div>
+        <button class="skip-rest" type="button" data-skipweek="6" aria-pressed="false">One SACA is enough &mdash; skip the rest</button>
         <div class="scrip"><a href="https://usmcmin.org/bible.html?ref=Malachi%203:10" target="_blank" rel="noopener" style="color:var(--gray); text-decoration:underline;">Malachi 3:10 ↗</a></div>
       </div>
       <div class="week-port" id="week7" data-week="7">
@@ -1632,22 +1648,23 @@ document.addEventListener('click', function(e) {
         <h3>Sabbath</h3>
         <div class="week-tag">The captain rests. The crew sees a man who isn't running on fumes.</div>
         <div class="task-circles">
-          <a class="task-circle" data-key="7.1" data-pdf="downloads/family-captain/Family_Captain_Task_PDFs/W7_T1_Plan_Your_Sabbath.pdf" href="downloads/family-captain/Family_Captain_Task_PDFs/W7_T1_Plan_Your_Sabbath.pdf" target="_blank" rel="noopener" title="Open W7.T1 PDF">
-            <div class="task-num">T1</div>
+          <a class="task-circle" data-key="7.1" data-pdf="downloads/family-captain/Family_Captain_Task_PDFs/W7_T1_Plan_Your_Sabbath.pdf" href="downloads/family-captain/Family_Captain_Task_PDFs/W7_T1_Plan_Your_Sabbath.pdf" target="_blank" rel="noopener" title="Open SACA 1 PDF">
+            <div class="task-num">SACA 1</div>
             <div class="task-name">Plan Your Sabbath</div>
-            <div class="task-actions"><button class="task-toggle" type="button" data-toggle="7.1" aria-label="Mark T1 shipped">●</button></div>
+            <div class="task-actions"><button class="task-toggle" type="button" data-toggle="7.1" aria-label="Mark SACA 1 shipped">●</button></div>
           </a>
-          <a class="task-circle" data-key="7.2" data-pdf="downloads/family-captain/Family_Captain_Task_PDFs/W7_T2_Saturday_Captains_Audit.pdf" href="downloads/family-captain/Family_Captain_Task_PDFs/W7_T2_Saturday_Captains_Audit.pdf" target="_blank" rel="noopener" title="Open W7.T2 PDF">
-            <div class="task-num">T2</div>
+          <a class="task-circle" data-key="7.2" data-pdf="downloads/family-captain/Family_Captain_Task_PDFs/W7_T2_Saturday_Captains_Audit.pdf" href="downloads/family-captain/Family_Captain_Task_PDFs/W7_T2_Saturday_Captains_Audit.pdf" target="_blank" rel="noopener" title="Open SACA 2 PDF">
+            <div class="task-num">SACA 2</div>
             <div class="task-name">Saturday Captain's Audit</div>
-            <div class="task-actions"><button class="task-toggle" type="button" data-toggle="7.2" aria-label="Mark T2 shipped">●</button></div>
+            <div class="task-actions"><button class="task-toggle" type="button" data-toggle="7.2" aria-label="Mark SACA 2 shipped">●</button></div>
           </a>
-          <a class="task-circle" data-key="7.3" data-pdf="downloads/family-captain/Family_Captain_Task_PDFs/W7_T3_Teach_One_Person_One_Thing.pdf" href="downloads/family-captain/Family_Captain_Task_PDFs/W7_T3_Teach_One_Person_One_Thing.pdf" target="_blank" rel="noopener" title="Open W7.T3 PDF">
-            <div class="task-num">T3</div>
+          <a class="task-circle" data-key="7.3" data-pdf="downloads/family-captain/Family_Captain_Task_PDFs/W7_T3_Teach_One_Person_One_Thing.pdf" href="downloads/family-captain/Family_Captain_Task_PDFs/W7_T3_Teach_One_Person_One_Thing.pdf" target="_blank" rel="noopener" title="Open SACA 3 PDF">
+            <div class="task-num">SACA 3</div>
             <div class="task-name">Teach One Person One Thing</div>
-            <div class="task-actions"><button class="task-toggle" type="button" data-toggle="7.3" aria-label="Mark T3 shipped">●</button></div>
+            <div class="task-actions"><button class="task-toggle" type="button" data-toggle="7.3" aria-label="Mark SACA 3 shipped">●</button></div>
           </a>
         </div>
+        <button class="skip-rest" type="button" data-skipweek="7" aria-pressed="false">One SACA is enough &mdash; skip the rest</button>
         <div class="scrip"><a href="https://usmcmin.org/bible.html?ref=Exodus%2020:8" target="_blank" rel="noopener" style="color:var(--gray); text-decoration:underline;">Exodus 20:8 ↗</a></div>
       </div>
 </div>
@@ -1922,7 +1939,7 @@ document.addEventListener('click', function(e) {
   <div class="commission-card" id="commissionCard">
     <div class="seal">⚜️</div>
     <h2>Captain&rsquo;s Commissioning</h2>
-    <p>Unlocks when all 21 tasks ship. Sign your Captain&rsquo;s Charter, post the screenshot in the channel, and walk one brother through one thing you learned. <i>"And the things you have heard from me, entrust to faithful men."</i> &mdash; 2 Timothy 2:2</p>
+    <p>Unlocks when all 7 weeks land &mdash; finish each week with any one of its SACAs. Sign your Captain&rsquo;s Charter, post the screenshot in the channel, and walk one brother through one thing you learned. <i>"And the things you have heard from me, entrust to faithful men."</i> &mdash; 2 Timothy 2:2</p>
   </div>
 </section>
 
@@ -1993,6 +2010,8 @@ document.addEventListener('click', function(e) {
   const DRILL_KEY = "usmc_voyage_drills_v1";
   const TOTAL = 21;
   const TASKS_PER_WEEK = 3;
+  const PICK_ONE = true;   // FC: any one SACA completes a week; progress is week-based
+  const NUM_WEEKS = 7;
 
   function loadState(){ try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || {}; } catch(e){ return {}; } }
   function saveState(s){ localStorage.setItem(STORAGE_KEY, JSON.stringify(s)); }
@@ -2000,32 +2019,55 @@ document.addEventListener('click', function(e) {
   function saveDrills(s){ localStorage.setItem(DRILL_KEY, JSON.stringify(s)); }
 
   function countCompleted(state){
-    return Object.values(state).filter(v => v).length;
+    // shipped SACAs only — ignore the skip:* flags stored in the same object
+    return Object.keys(state).filter(k => k.indexOf('skip:') !== 0 && state[k]).length;
   }
   function weekComplete(state, n){
-    return [1,2,3].every(i => state[`${n}.${i}`]);
+    return PICK_ONE ? [1,2,3].some(i => state[`${n}.${i}`])
+                    : [1,2,3].every(i => state[`${n}.${i}`]);
+  }
+  function weeksComplete(state){
+    let c = 0;
+    document.querySelectorAll('.week-port').forEach(el => { if (weekComplete(state, el.dataset.week)) c++; });
+    return c;
   }
 
   function updateUI(){
     const state = loadState();
-    const done = countCompleted(state);
-    const pct = Math.round((done/TOTAL)*100);
+    const tasksDone = countCompleted(state);
+    const wkDone = weeksComplete(state);
+    const done = PICK_ONE ? wkDone : tasksDone;
+    const denom = PICK_ONE ? NUM_WEEKS : TOTAL;
+    const pct = Math.round((done/denom)*100);
+    const allDone = done >= denom;
 
     document.getElementById('barFill').style.width = pct + '%';
-    let line = `${done} of ${TOTAL} tasks shipped — ${pct}%`;
-    const lo = Math.ceil(TOTAL * 0.34);
-    const mid = Math.ceil(TOTAL * 0.67);
-    if (done === 0) line = `${done} of ${TOTAL} tasks shipped · <span class="pct">${pct}%</span> · captain on the bridge.`;
-    else if (done < lo) line = `${done} of ${TOTAL} tasks shipped · <span class="pct">${pct}%</span> · imperfect actions stacking.`;
-    else if (done < mid) line = `${done} of ${TOTAL} tasks shipped · <span class="pct">${pct}%</span> · steady steaming.`;
-    else if (done < TOTAL) line = `${done} of ${TOTAL} tasks shipped · <span class="pct">${pct}%</span> · captain's charter in sight.`;
-    else line = `<b>${done} of ${TOTAL} tasks shipped · <span class="pct">${pct}%</span> · captain commissioned.</b>`;
+    let line;
+    if (PICK_ONE){
+      const n = `${done} of ${NUM_WEEKS} weeks complete`;
+      if (done === 0) line = `${n} · <span class="pct">${pct}%</span> · captain on the bridge.`;
+      else if (done < 3) line = `${n} · <span class="pct">${pct}%</span> · imperfect actions stacking.`;
+      else if (done < 5) line = `${n} · <span class="pct">${pct}%</span> · steady steaming.`;
+      else if (done < NUM_WEEKS) line = `${n} · <span class="pct">${pct}%</span> · captain's charter in sight.`;
+      else line = `<b>${n} · <span class="pct">${pct}%</span> · captain commissioned.</b>`;
+    } else {
+      const lo = Math.ceil(TOTAL * 0.34);
+      const mid = Math.ceil(TOTAL * 0.67);
+      if (done === 0) line = `${done} of ${TOTAL} tasks shipped · <span class="pct">${pct}%</span> · captain on the bridge.`;
+      else if (done < lo) line = `${done} of ${TOTAL} tasks shipped · <span class="pct">${pct}%</span> · imperfect actions stacking.`;
+      else if (done < mid) line = `${done} of ${TOTAL} tasks shipped · <span class="pct">${pct}%</span> · steady steaming.`;
+      else if (done < TOTAL) line = `${done} of ${TOTAL} tasks shipped · <span class="pct">${pct}%</span> · captain's charter in sight.`;
+      else line = `<b>${done} of ${TOTAL} tasks shipped · <span class="pct">${pct}%</span> · captain commissioned.</b>`;
+    }
     document.getElementById('statLine').innerHTML = line;
 
-    // Update task circles
+    // Update task circles (shipped + skipped-dim)
     document.querySelectorAll('.task-circle').forEach(el => {
       const k = el.dataset.key;
-      el.classList.toggle('shipped', !!state[k]);
+      const shipped = !!state[k];
+      el.classList.toggle('shipped', shipped);
+      const wk = k.split('.')[0];
+      el.classList.toggle('skipped', !shipped && !!state['skip:' + wk]);
     });
 
     // Update week-port "complete" status
@@ -2038,14 +2080,14 @@ document.addEventListener('click', function(e) {
     document.querySelectorAll('.badge').forEach(el => {
       const trigger = el.dataset.trigger;
       let earned = false;
-      if (trigger === 'any') earned = done > 0;
-      else if (trigger === 'all') earned = done >= TOTAL;
+      if (trigger === 'any') earned = tasksDone > 0;
+      else if (trigger === 'all') earned = allDone;
       else if (trigger.startsWith('week:')) earned = weekComplete(state, trigger.split(':')[1]);
       el.classList.toggle('earned', earned);
     });
 
     // Commission card
-    document.getElementById('commissionCard').classList.toggle('unlocked', done >= TOTAL);
+    document.getElementById('commissionCard').classList.toggle('unlocked', allDone);
 
     refreshContinue();
   }
@@ -2064,6 +2106,28 @@ document.addEventListener('click', function(e) {
       e.stopPropagation();
       toggleTask(btn.dataset.toggle);
     });
+  });
+
+  // Skip-the-rest (FC pick-one): toggle a per-week skip flag. Cosmetic — the
+  // week is already complete once any one SACA is shipped; this just dims the
+  // other two so they stop nagging. Persisted in the same progress object.
+  function syncSkipBtn(btn, on){
+    btn.setAttribute('aria-pressed', on ? 'true' : 'false');
+    btn.classList.toggle('is-on', on);
+    btn.innerHTML = on ? 'Skipped the rest &mdash; undo' : 'One SACA is enough &mdash; skip the rest';
+  }
+  document.querySelectorAll('.skip-rest').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      const state = loadState();
+      const key = 'skip:' + btn.dataset.skipweek;
+      state[key] = !state[key];
+      saveState(state);
+      syncSkipBtn(btn, !!state[key]);
+      updateUI();
+    });
+    syncSkipBtn(btn, !!loadState()['skip:' + btn.dataset.skipweek]);
   });
 
   // Make the whole week-port clickable → open the per-week page.
@@ -2124,8 +2188,12 @@ document.addEventListener('click', function(e) {
       .sort((a,b) => (+a.dataset.week) - (+b.dataset.week));
     for (const port of ports){
       const n = port.dataset.week;
-      for (let i=1; i<=TASKS_PER_WEEK; i++){
-        if (!state[`${n}.${i}`]) return { week:n, task:i, port };
+      if (PICK_ONE){
+        if (!weekComplete(state, n)) return { week:n, task:1, port };
+      } else {
+        for (let i=1; i<=TASKS_PER_WEEK; i++){
+          if (!state[`${n}.${i}`]) return { week:n, task:i, port };
+        }
       }
     }
     return null;

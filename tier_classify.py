@@ -20,6 +20,9 @@ def classify_office_tier(c):
             return 'federal'
         return 'state'
     o = office.lower()
+    if re.search(r'\bcity council\b|\btown council\b|\bborough council\b|'
+                 r'\bschool board\b|\bboard of education\b', o):
+        return 'local'
     if re.search(r'\b(president|vice president|u\.?s\.?\s+sen|u\.?s\.?\s+hous|u\.?s\.?\s+rep|'
                  r'united states sen|united states hous|united states rep|secretary of|'
                  r'acting attorney general|attorney general of the united states|'

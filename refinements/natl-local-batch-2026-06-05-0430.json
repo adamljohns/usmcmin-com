@@ -1,0 +1,203 @@
+{
+  "_meta": {
+    "author": "Claude (scorecard-refine-local autopilot)",
+    "date": "2026-06-05",
+    "note": "LOCAL evidence finalization batch — 4 records committed: Atlanta GA, Cape Canaveral FL (x2), Cocoa FL. **rick-west SKIPPED THIS BATCH — SLUG COLLISION**: there are TWO records with slug 'rick-west' in data/scorecard.json — (1) Mayor of Chesapeake VA, index 7745-ish, the intended target; (2) Oklahoma State Representative, index 8993-ish. refine-records.py's by_slug dict-comp keeps the LAST one, which is the OK State Rep — applying my Chesapeake-Mayor dossier evidence to him would corrupt his record. Skipping until slug-dedup is in place (cf. existing 'mike-thompson slug-collision still blocking notes' from the federal cron). Broader audit found 29 total slug collisions in data/scorecard.json (full list available; this batch only blocks on rick-west). andre-dickens: HEADLINE STATE FIX FL→GA (repo bug — Atlanta is in Georgia) + fresh evidence pass overriding archetype_curated party-default. Note: andre-dickens also has a duplicate record (FL stale + GA correct), but by_slug correctly resolves to the GA record due to ordering, so this batch hits the right target — the stale FL dupe at index 7663 should still be removed in a future cleanup pass. kay-jackson: second-pass evidence sweep on 2026-06-05 confirms zero rubric findings — bumped roster_verified→evidence_local to exit the unrefined queue. kim-davis: STATUS FIX active→former — Kim Davis's term expired Nov 2024 and the City of Cape Canaveral's authoritative Elected Officials page (capecanaveral.gov/community_/elected_officials.php) no longer lists her among the 5 current councilmembers (Morrison, Jackson, King, Shoriak, Willis). She was succeeded by Andrea King + Tom Shoriak in Nov 2024; mechanism of departure (lost vs did-not-file) not surfaced in public sources → status 'former' rather than 'lost'. Status-fix only, reset_unspecified=false for this record. alex-goins: ONE HARD TRUE on public_justice q0 (Sep 2025 Cocoa CRA debate, opposed private-security contract and on-record advocating raises for current CPD officers — meets HIGH-BAR rubric for affirmative pro-LE advocacy). Sparse-data trap flag in notes — 1 TRUE / 0 FALSE will produce a 100/100 headline on dynamic-max denominator, which is the documented rubric working as designed. All TRUE/FALSE cells cite a source URL; NULL where no evidence; never inferred from party; never fabricated. Deviation-direction flags applied where local-control or pro-police actions are rubric-aligned on the action but anti-rubric in substantive direction."
+  },
+  "reset_unspecified": true,
+  "records": {
+    "andre-dickens": {
+      "set": {
+        "state": "GA",
+        "status": "active"
+      },
+      "profile": {
+        "confidence": "evidence_local",
+        "religion": "Christian — biographical sources describe him as a person of Christian faith with longtime ties to Atlanta's Black-Baptist community; specific congregation not directly cited from a primary source in this pass.",
+        "background": "61st Mayor of Atlanta, GA. Re-elected Nov 4, 2025 with ~85% over Helmut Domagalski, Kalema Jackson, and Eddie Andrew Meredith; sworn in for 2nd term Jan 5, 2026 at GSU Convocation Center with Andrew Young, Bill Campbell, Shirley Franklin, and Kasim Reed in attendance; term ends Jan 2030. Born 1974 in Atlanta; raised in Southwest Atlanta; Benjamin E. Mays HS; BS Chemical Engineering Georgia Tech (1998); MPA Georgia State; honorary doctorate of humane letters from Interdenominational Theological Center. Atlanta City Council 2013–2022 (Post 3 At-Large; chaired Public Safety Committee). Migrated public presence from X/Twitter to Bluesky."
+      },
+      "notes_set": "[2026-06 RESOLUTE LOCAL refinement] **HEADLINE DATA FIX**: state corrected FL → GA (repo bug — Atlanta is in Georgia). Confidence upgraded from archetype_curated party-default to evidence_local. Re-elected Nov 4, 2025 ~85% over 3 challengers; 2nd-term swearing-in Jan 5, 2026; term ends Jan 2030. HARD evidence — public_justice q0 TRUE (DEVIATION FLAG, D mayor backing police affirmatively): champions Atlanta Public Safety Training Center over 2+ years of organized 'defund'-aligned opposition; FY27 $16.5M APD budget increase ($994.6M general fund — 85% of $19.2M general-fund increase going to police); $10M for police salaries; 9% police raise + bonuses; goal to hire 250 officers/yr for 3 yrs; chaired Public Safety Committee on council 2013–2022. Meets HIGH-BAR affirmative-pro-LE-advocacy standard (AJC; Capital B; andreforatlanta.com; citycouncil.atlantaga.gov; Gov1). refuse_state_overreach q0 TRUE with DEVIATION DIRECTION FLAG: pushed GA legislature to revise statewide prohibition on local fair-housing laws — asserts local-control / subsidiarity (rubric-aligned action), but motive is expansion of progressive regulation (anti-rubric substance); scored TRUE on the action per skill discipline, flagged in notes (AJC 'Kemp-Dickens reset' coverage). Documented FALSEs: sanctity_of_life q0 — signed Aug 2022 legislation donating $300K city funds to Access Reproductive Care–Southeast; said 'Atlanta is standing firmly behind reproductive justice for our residents'; on Dobbs: 'I am sickened by this decision' (AJC, WABE, Rough Draft Atlanta). biblical_marriage q0 — hosts annual Mayor's Pride Reception at City Hall (7th annual Oct 9, 2025); unveiled Progressive Pride flag rainbow crosswalk Oct 2024 at 10th & Piedmont with trans/POC stripes (Hoodline; POPOUT Mag). biblical_marriage q2 — $55K trans-community funding; Mayor's Division of LGBTQ Affairs hosted Trans Day of Visibility summit at City Hall Mar 31, 2025 with city proclamation; LGBTQ Affairs distributed ~1,000 'banned LGBTQ+ books' to children (Fox5 Atlanta; Rough Draft Atlanta). biblical_marriage q4 — annual Mayor's Pride Receptions; spoke about importance of Atlanta Pride Parade Oct 2024 (Atlanta News First). economic_stewardship q2 — $400M bonds as part of $750M 'Moving Atlanta Forward'; $175M housing-bond debt since FY24; admin used Affordable Housing Trust Fund to service $8.8M bond debt + $4M salaries in FY25 (75%+ of trust); FY26 $33M deficit required 5% cuts; publicly said property tax hike 'will happen' — 'I can't see a scenario where four more years go by without a millage rate increase' (Atlanta Civic Circle; AJC). border_immigration q2 — Atlanta on Center for Immigration Studies sanctuary list; said publicly he hoped ICE's 'presence will be small, unnoticeable, negligible, invisible and maybe nonexistent' re World Cup; April 2026 city council passed resolutions barring ICE detention facilities and constraining APD documentation of ICE activity — Dickens admin did not oppose (Center Square; Atlanta News First). self_defense q1 — One Safe City gun-buyback program Oct 2022 (302 guns at $50 handgun / $100 long gun); C-SPAN 'Gun Violence Prevention' appearance with restriction framing (AJC; atlantaga.gov; C-SPAN). NULL on christian_liberty (Faith-Based Development Initiative is administrative church-partnership funding — does NOT clear high-bar 'public-square Christian symbols / prayer in public bodies / Sabbath protections' specifically — leave null per discipline), family_child_sovereignty (APS independent of city; banned-LGBTQ-books distribution already counted under marriage q2 — avoid double-scoring), election_integrity (no city-driven action surfaced), industry_capture (Cop City + Atlanta Police Foundation partnership is municipal CRA/Police-Foundation territory not a clean match for the rubric's pharma/Big-Ag/defense-contractor questions), foreign_policy_restraint (N/A for mayors).",
+      "sources_add": [
+        "https://www.ajc.com/news/2025/11/atlanta-voters-overwhelmingly-back-mayor-andre-dickens-for-second-term/",
+        "https://en.wikipedia.org/wiki/Andre_Dickens",
+        "https://www.fox5atlanta.com/news/watch-mayor-andre-dickens-be-sworn-2nd-term-atlanta-mayor",
+        "https://www.atlantaga.gov/government/mayor-s-office/meet-the-mayor",
+        "https://www.ajc.com/news/atlanta-news/city-of-atlanta-to-amp-up-support-for-abortion-access-with-300k-donation/PKXE4Z5OUFFBVLXADWGNGN2I5I/",
+        "https://www.wabe.org/mayor-dickens-expresses-support-for-resolution-de-prioritizing-enforcement-of-anti-abortion-laws/",
+        "https://roughdraftatlanta.com/2022/06/22/atlanta-says-no-city-funds-will-be-used-to-investigate-abortion-care/",
+        "https://hoodline.com/2025/10/mayor-andre-dickens-hosts-7th-annual-pride-reception-at-atlanta-city-hall-celebrating-diversity-and-supporting-lgbtq-youth/",
+        "https://www.popoutmagazine.com/post/mayor-andre-dickens-unveils-updated-inclusive-rainbow-crosswalk-in-atlanta",
+        "https://www.fox5atlanta.com/news/atlanta-mayor-dickens-transgender-community-funding",
+        "https://roughdraftatlanta.com/2025/04/02/atlanta-trans-leaders-summit/",
+        "https://www.atlantanewsfirst.com/video/2024/10/13/atlanta-mayor-andre-dickens-speaks-about-importance-atlanta-pride-parade/",
+        "https://andreforatlanta.com/public-safety-progress/",
+        "https://atlanta.capitalbnews.org/atlanta-police-budget-increase-2027/",
+        "https://citycouncil.atlantaga.gov/Home/Components/News/News/530/",
+        "https://www.gov1.com/public-safety/articles/atlanta-mayor-aims-to-hire-250-officers-per-year-for-three-years-COYkoAC2bRHn9NGY/",
+        "https://www.ajc.com/news/how-atlanta-police-aim-to-curb-crime-accidental-shootings-by-buying-back-guns/7NL5KFEZFFBWBA2QKDEED346IY/",
+        "https://www.atlantaga.gov/Home/Components/News/News/15188/672",
+        "https://www.c-span.org/program/public-affairs-event/atlanta-mayor-andre-dickens-d-discusses-gun-violence-prevention/678659",
+        "https://www.thecentersquare.com/georgia/article_754c68f1-4751-4e32-a305-29c7147fec48.html",
+        "https://www.atlantanewsfirst.com/2026/04/21/atlanta-council-passes-resolutions-opposing-ice-detention-facilities-setting-police-guidelines/",
+        "https://atlantaciviccircle.org/2025/05/26/investigation-affordable-housing-trust-fund-pays-bonds-payroll/",
+        "https://www.ajc.com/news/2025/06/atlanta-mayor-property-tax-hike-needed-to-keep-up-with-population-growth/",
+        "https://www.ajc.com/politics/politically-georgia/how-andre-dickens-and-brian-kemp-reset-city-state-relations/GUT2TL6JLBEH7JFOBPKQHDJXUQ/"
+      ],
+      "evidence": {
+        "sanctity_of_life": {
+          "0": {
+            "v": false,
+            "src": [
+              "https://www.ajc.com/news/atlanta-news/city-of-atlanta-to-amp-up-support-for-abortion-access-with-300k-donation/PKXE4Z5OUFFBVLXADWGNGN2I5I/",
+              "https://www.wabe.org/mayor-dickens-expresses-support-for-resolution-de-prioritizing-enforcement-of-anti-abortion-laws/",
+              "https://roughdraftatlanta.com/2022/06/22/atlanta-says-no-city-funds-will-be-used-to-investigate-abortion-care/"
+            ],
+            "note": "Signed Aug 2022 legislation donating $300K city funds to Access Reproductive Care–Southeast (abortion fund). Said: 'Atlanta is standing firmly behind reproductive justice for our residents.' Statement on Dobbs: 'I am sickened by this decision that wrongly and immorally tells women that their bodies are not their own.' Supported June 2022 resolution barring city funds for abortion investigations and de-prioritizing enforcement of Georgia anti-abortion laws."
+          }
+        },
+        "biblical_marriage": {
+          "0": {
+            "v": false,
+            "src": [
+              "https://hoodline.com/2025/10/mayor-andre-dickens-hosts-7th-annual-pride-reception-at-atlanta-city-hall-celebrating-diversity-and-supporting-lgbtq-youth/",
+              "https://www.popoutmagazine.com/post/mayor-andre-dickens-unveils-updated-inclusive-rainbow-crosswalk-in-atlanta"
+            ],
+            "note": "Hosts annual Mayor's Pride Reception at City Hall (7th annual Oct 9, 2025); unveiled Progressive Pride flag rainbow crosswalk Oct 2024 at 10th & Piedmont with trans/POC stripes."
+          },
+          "2": {
+            "v": false,
+            "src": [
+              "https://www.fox5atlanta.com/news/atlanta-mayor-dickens-transgender-community-funding",
+              "https://roughdraftatlanta.com/2025/04/02/atlanta-trans-leaders-summit/"
+            ],
+            "note": "$55K funding proposal for Atlanta's transgender community; Mayor's Division of LGBTQ Affairs hosted Trans Day of Visibility summit at City Hall Mar 31, 2025 with city proclamation; LGBTQ Affairs distributed ~1,000 'banned LGBTQ+ books' to children."
+          },
+          "4": {
+            "v": false,
+            "src": [
+              "https://www.atlantanewsfirst.com/video/2024/10/13/atlanta-mayor-andre-dickens-speaks-about-importance-atlanta-pride-parade/",
+              "https://hoodline.com/2025/10/mayor-andre-dickens-hosts-7th-annual-pride-reception-at-atlanta-city-hall-celebrating-diversity-and-supporting-lgbtq-youth/"
+            ],
+            "note": "7 annual Mayor's Pride Receptions at City Hall; spoke about importance of Atlanta Pride Parade Oct 2024 — affirmative promotion of LGBTQ+ identity through city policy and city-owned platform."
+          }
+        },
+        "economic_stewardship": {
+          "2": {
+            "v": false,
+            "src": [
+              "https://atlantaciviccircle.org/2025/05/26/investigation-affordable-housing-trust-fund-pays-bonds-payroll/",
+              "https://www.ajc.com/news/2025/06/atlanta-mayor-property-tax-hike-needed-to-keep-up-with-population-growth/"
+            ],
+            "note": "Issued $400M in bonds as part of $750M 'Moving Atlanta Forward'; $175M additional housing-bond debt since FY24; admin used Affordable Housing Trust Fund to service $8.8M bond debt + $4M salaries in FY25 (75%+ of trust); FY26 deficit $33M required 5% cuts; publicly stated property-tax hike 'will happen' — 'I can't see a scenario where four more years go by without a millage rate increase.'"
+          }
+        },
+        "border_immigration": {
+          "2": {
+            "v": false,
+            "src": [
+              "https://www.thecentersquare.com/georgia/article_754c68f1-4751-4e32-a305-29c7147fec48.html",
+              "https://www.atlantanewsfirst.com/2026/04/21/atlanta-council-passes-resolutions-opposing-ice-detention-facilities-setting-police-guidelines/"
+            ],
+            "note": "Atlanta listed by Center for Immigration Studies as non-cooperating / sanctuary city. Dickens said publicly he hoped ICE's 'presence will be small, unnoticeable, negligible, invisible and maybe nonexistent' re World Cup. April 2026 city council passed resolutions barring ICE detention facilities within city limits and requiring APD to document ICE activity — Dickens admin did not oppose."
+          }
+        },
+        "self_defense": {
+          "1": {
+            "v": false,
+            "src": [
+              "https://www.ajc.com/news/how-atlanta-police-aim-to-curb-crime-accidental-shootings-by-buying-back-guns/7NL5KFEZFFBWBA2QKDEED346IY/",
+              "https://www.atlantaga.gov/Home/Components/News/News/15188/672",
+              "https://www.c-span.org/program/public-affairs-event/atlanta-mayor-andre-dickens-d-discusses-gun-violence-prevention/678659"
+            ],
+            "note": "One Safe City gun-buyback program Oct 2022 (collected 302 guns at $50/handgun, $100/long gun); publicly framed firearm prevalence as the problem. C-SPAN 'Gun Violence Prevention' appearance with restriction framing."
+          }
+        },
+        "public_justice": {
+          "0": {
+            "v": true,
+            "src": [
+              "https://andreforatlanta.com/public-safety-progress/",
+              "https://atlanta.capitalbnews.org/atlanta-police-budget-increase-2027/",
+              "https://citycouncil.atlantaga.gov/Home/Components/News/News/530/",
+              "https://www.gov1.com/public-safety/articles/atlanta-mayor-aims-to-hire-250-officers-per-year-for-three-years-COYkoAC2bRHn9NGY/"
+            ],
+            "note": "Champions Atlanta Public Safety Training Center over 2+ years of organized 'defund'-aligned opposition; FY27 $16.5M APD budget increase (85% of $19.2M general-fund increase to police); $10M for police-salary increases; 9% raise + bonuses; goal to hire 250 officers/yr for 3 yrs; chaired Public Safety Committee on city council 2013–2022. DEVIATION FLAG: D mayor of a major U.S. city affirmatively expanding sworn headcount and pay over organized opposition — clears HIGH-BAR rubric."
+          }
+        },
+        "refuse_state_overreach": {
+          "0": {
+            "v": true,
+            "src": [
+              "https://www.ajc.com/politics/politically-georgia/how-andre-dickens-and-brian-kemp-reset-city-state-relations/GUT2TL6JLBEH7JFOBPKQHDJXUQ/"
+            ],
+            "note": "Pushed Georgia legislature to revise statewide prohibition on local fair-housing laws — asserts local control / subsidiarity vs state preemption. DEVIATION DIRECTION FLAG: action is local-control assertion (rubric-aligned) but motive is expansion of progressive regulatory authority at the local level (anti-rubric substance) — scored TRUE on the action per skill discipline, flagged in notes."
+          }
+        }
+      }
+    },
+    "kay-jackson": {
+      "set": {
+        "status": "active",
+        "candidacy_status": "incumbent"
+      },
+      "profile": {
+        "confidence": "evidence_local"
+      },
+      "notes_set": "[2026-06 RESOLUTE LOCAL refinement — SECOND-PASS EVIDENCE SWEEP] Confidence bumped roster_verified → evidence_local. Re-verified via city's authoritative Elected Officials page (capecanaveral.gov/community_/elected_officials.php) — Jackson still seated as Council Member, 3-yr term Nov 2023 → Nov 2026. Elected Nov 7, 2023 with 774 votes / 34.93% in a 3-way race (Don Willis 38.81%, Steven Stroud 26.26%) — both Willis and Jackson took the two open seats. Note: her own Facebook bio says 'Mayor Pro Tem – Cape Canaveral / Vice Chair – Community Redevelopment Agency' but city's authoritative page currently shows Mickie Kellum as Mayor Pro Tem; her FB self-description is likely stale or reflects a prior 1-year rotation (Mayor Pro Tem is a rotating role). CRA Vice Chair role is plausible (councilmembers serve on CRA Board ex officio). Re-checked rubric sweep this pass — campaign site (votekayjackson.com) platform is fiscal/Lagoon/tourism/quality-of-life only, ZERO mentions of faith/church/life/abortion/marriage/family/gun/police/sheriff/immigration/border/sanctuary/library/SOGI; vague 'Fiscal Responsibility' slogan is NOT scoreable per high-bar discipline. Jan 2025 vote (3-2 with Morrison + Kellum) terminating City Manager Todd Morley 'with cause' (denying ~$61K severance) is managerial accountability, not ideological evidence on any of the 30 rubric cells. Personal FB activity in 2026 is reposts of Cocoa Utilities water-disinfection notices — no rubric content. Brevard Public Library HB-1467 fights, short-term-rental ordinance, cruise terminal expansion, stormwater/dune issues — no Jackson-specific votes or statements surface. Religion: not publicly stated; null. Personal voter-registration party: not in surfaced public sources (not on Brevard County Democratic Executive Committee endorsed roster). 0 TRUE / 0 FALSE — every applicable rubric cell remains honestly NULL after a second documented sweep. Defensible to a hostile reader: each blank is honest, none are speculative-FALSE.",
+      "sources_add": [
+        "https://www.capecanaveral.gov/community_/elected_officials.php",
+        "https://www.capecanaveral.gov/government/your_elected_officials.php",
+        "https://votekayjackson.com/",
+        "https://enr.electionsfl.org/BRE/3453/Summary/",
+        "https://brevardballot.com/official/kay-jackson-city-council",
+        "https://spacecoastdaily.com/2025/01/cape-canaveral-city-manager-todd-morley-fired-in-contentious-3-2-city-council-vote-on-tuesday/"
+      ]
+    },
+    "kim-davis": {
+      "reset_unspecified": false,
+      "set": {
+        "status": "former",
+        "candidacy_status": "not_running"
+      },
+      "profile": {
+        "confidence": "evidence_local"
+      },
+      "notes_set": "[2026-06 RESOLUTE LOCAL refinement — STATUS FIX] Kim Davis is NO LONGER on the Cape Canaveral City Council. Elected Nov 2021 to a 3-year term alongside Mayor Wes Morrison and Don Willis; term ran Nov 2021 — Nov 2024. The City of Cape Canaveral's authoritative Elected Officials page (capecanaveral.gov/community_/elected_officials.php) currently lists 5 members — Morrison, Jackson, King, Shoriak, Willis — and Davis is NOT among them; she was succeeded Nov 2024 by Andrea King + Tom Shoriak (the two seats up that cycle). Mechanism of departure (lost vs did-not-file) is NOT documented in surfaced public sources, so status set to 'former' rather than 'lost'. Vote-USA still lists her as 'Currently Elected' but that profile is stale; the city's own page is authoritative. NAME-COLLISION NOTE: confirmed throughout — the Cape Canaveral Kim Davis (retired BCSO deputy, FL) is distinct from the Rowan County KY Clerk Kim Davis; no contamination. Cells preserved as previously recorded (reset_unspecified=false on this record — status fix only, not a re-score). 2022 'good steward of taxpayers' money' campaign rhetoric is generic; not scoreable. Jan 2025 3-2 dissent (with Don Willis) AGAINST firing CM Todd Morley is a management dispute, not rubric evidence. Retired BCSO deputy is biographical, not affirmative pro-LE advocacy → public_justice q0 remains NULL per HIGH-BAR discipline. NOT on FLC 2025 Home Rule Heroes list (contrast Willis). No church/faith affiliation located. Confidence: evidence_local (status-fix is the high-value deliverable).",
+      "sources_add": [
+        "https://www.capecanaveral.gov/community_/elected_officials.php",
+        "https://www.capecanaveral.gov/government/your_elected_officials.php",
+        "https://spacecoastdaily.com/2025/06/city-of-cape-canaveral-announces-qualifying-information-for-upcoming-city-council-election/",
+        "https://nextdoor.com/agency-post/fl/cape-canaveral/city-of-cape-canaveral/cape-canaveral-election-206681792/",
+        "https://spacecoastdaily.com/2025/01/cape-canaveral-city-manager-todd-morley-fired-in-contentious-3-2-city-council-vote-on-tuesday/"
+      ]
+    },
+    "alex-goins": {
+      "set": {
+        "status": "active",
+        "candidacy_status": "incumbent",
+        "party": "D"
+      },
+      "profile": {
+        "confidence": "evidence_local",
+        "background": "James 'Alex' Goins — City Council District 1, City of Cocoa, Florida; Deputy Mayor (originally named Deputy Mayor by colleagues Nov 2019; still designated Deputy Mayor on city website and in Jan 2026 Space Coast Daily coverage of the Michael C. Blake Subdivision groundbreaking). First elected Nov 2018; re-elected Nov 2022 with 51.06% over Ed Green (38.44%) and Demetrius Thomas (10.50%); 4-year term ending Nov 2026. Prior 2 years on City of Cocoa Board of Adjustment. Rockledge HS graduate; attended Bethune-Cookman University (HBCU, Daytona Beach) for Business Education (football). Professional: 14+ years at ABC Land Clearing and Development; Business Manager for Mid Florida Football and Cheer Corporation. Civic memberships include Tourism Development Council of Brevard, Brevard County Youth Football and Cheerleading, NAACP. Listed on Brevard County Democratic Executive Committee Elected Officials roster."
+      },
+      "notes_set": "[2026-06 RESOLUTE LOCAL refinement] Roster verified — choosecocoa.org Councilmember–District 1 page shows him as Deputy Mayor; Jan 2026 Space Coast Daily article on the Michael C. Blake Subdivision workforce-housing groundbreaking quotes him as 'Deputy Mayor Goins.' HARD evidence — public_justice q0 TRUE: Sep 2025 Cocoa CRA debated a six-figure annual private-security contract for Cocoa Village (in response to business-district safety concerns); Goins on record OPPOSING the private-security contract and arguing the budget should instead fund RAISES for current Cocoa PD officers. Direct quote (ClickOrlando, 2025-09-11): 'I trust our officers better than I trust any security guard. I wanna pay our guys.' Affirmative pro-CPD advocacy at a contested decision point — meets HIGH-BAR rubric (deviation flag: D councilmember actively preferring sworn CPD over private security and pushing for police pay raises). SPARSE-DATA TRAP FLAG: with 1 TRUE / 0 FALSE, the dynamic-max denominator produces a 100/100 headline — this is the documented rubric working as designed (he genuinely earned the credit on the one cited cell), but readers may want to weigh his score in light of the thin denominator until more cells fill in. All 29 other applicable cells remain honest NULL: no on-record statement located on sanctity/marriage/family/Christian liberty/economic stewardship/election integrity/state overreach/border/self-defense. No record of Cocoa issuing a Pride proclamation under his tenure or of a 2A sanctuary resolution. Construction-industry employment + youth-football work is biographical, not rubric advocacy. Religion / church affiliation NOT FOUND.",
+      "sources_add": [
+        "https://www.clickorlando.com/news/local/2025/09/11/cocoa-village-businesses-call-on-city-to-address-security-concerns/",
+        "https://spacecoastdaily.com/2026/01/city-of-cocoa-breaks-ground-on-workforce-housing-development-in-michael-c-blake-subdivision/",
+        "https://www.choosecocoa.org/90/Councilmember---District-1"
+      ],
+      "evidence": {
+        "public_justice": {
+          "0": {
+            "v": true,
+            "src": [
+              "https://www.clickorlando.com/news/local/2025/09/11/cocoa-village-businesses-call-on-city-to-address-security-concerns/"
+            ],
+            "note": "Sep 2025 Cocoa CRA debate on hiring private security for Cocoa Village: Goins on record OPPOSING private security and arguing the six-figure budget should instead fund raises for current Cocoa Police Department officers. Quote: 'I trust our officers better than I trust any security guard. I wanna pay our guys.' Affirmative pro-CPD advocacy at a contested vote — meets HIGH-BAR rubric."
+          }
+        }
+      }
+    }
+  }
+}

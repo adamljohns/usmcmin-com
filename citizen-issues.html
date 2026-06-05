@@ -112,10 +112,18 @@
 
     .issue-summary { padding: 0 24px 16px; color: var(--gray); font-size: 0.9rem; line-height: 1.7; }
 
-    .issue-footer { padding: 12px 24px; border-top: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
+    .issue-footer { padding: 12px 24px; border-top: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; }
     .issue-footer a { color: var(--accent); text-decoration: none; font-size: 0.85rem; font-weight: 500; }
     .issue-footer a:hover { text-decoration: underline; }
     .issue-footer .source-count { font-size: 0.75rem; color: var(--gray); }
+    .issue-category {
+      display: inline-block; font-size: 0.72rem; font-weight: 600;
+      color: var(--gray); text-decoration: none;
+      padding: 3px 10px; border-radius: 12px;
+      border: 1px solid var(--border); background: rgba(168,176,188,0.06);
+      transition: border-color 0.2s, color 0.2s;
+    }
+    .issue-category:hover { border-color: var(--accent); color: var(--accent); text-decoration: none; }
 
     .sc-scripture {
       text-align: center; padding: 24px; margin: 32px 0;
@@ -224,6 +232,23 @@
 
 <script>
 var ISSUES = [];
+// Maps an issue's `category` slug to its RESOLUTE Citizen deep-dive page
+// (under citizen/) and the reader-facing label. Null categories render no chip.
+var CATEGORY_LABELS = {
+  'sanctity-of-life': 'Sanctity of Life',
+  'biblical-marriage': 'Biblical Marriage',
+  'family-child-sovereignty': 'Family & Child Sovereignty',
+  'christian-liberty': 'Christian Liberty',
+  'economic-stewardship': 'Economic Stewardship',
+  'election-integrity': 'Election Integrity',
+  'self-defense-2a': 'Self-Defense (2A)',
+  'border-immigration': 'Border & Immigration',
+  'foreign-policy-restraint': 'Foreign Policy Restraint',
+  'industry-capture': 'Industry Capture',
+  'public-justice': 'Public Justice & Law/Order',
+  'refuse-federal-overreach': 'Refuse Federal Overreach',
+  'refuse-state-overreach': 'Refuse State Overreach'
+};
 var STATE_NAMES = {
   'ALL':'National','VA':'Virginia','TX':'Texas','DC':'Washington D.C.','FL':'Florida',
   'NC':'North Carolina','SC':'South Carolina','GA':'Georgia','TN':'Tennessee',
@@ -298,6 +323,9 @@ function renderIssues() {
     html += '<div class="issue-summary">' + (issue.summary || '') + '</div>';
     html += '<div class="issue-footer">';
     html += '<a href="issues/' + issue.slug + '.html">Read Full Analysis &rarr;</a>';
+    if (issue.category && CATEGORY_LABELS[issue.category]) {
+      html += '<a class="issue-category" href="citizen/' + issue.category + '.html" title="See how RESOLUTE Citizen scores this category">' + CATEGORY_LABELS[issue.category] + '</a>';
+    }
     html += '<span class="source-count">' + sourceCount + ' source' + (sourceCount !== 1 ? 's' : '') + '</span>';
     html += '</div>';
     html += '</div>';

@@ -18,7 +18,7 @@ Pick the FIRST `[ ]` item, do ONLY that item, conservatively. If it turns risky/
 - [x] (2026-06-04) **B3. Sitemap freshness** — ran `python3 build-sitemap-xml.py`. URL count: 9,135 (= 8,970 live candidate profiles + ~165 navigational/state/jurisdiction pages — sane vs the stats.json totals). Output byte-identical to existing sitemap.xml (same MD5: 94cbfd8a88f7a50bc7826c0e9dcc4f45), so no asset diff to push. Refinement crons' prune step has been keeping the slug set in lockstep with the sitemap builder's source — clean.
 
 ## C. OG / share images + photos (additive media, separate files)
-- [ ] **C1. OG images** — run `python3 build-og-images.py` to (re)generate social-share cards; commit only the new/changed images. (Reads scorecard, writes images — no scorecard.json write.)
+- [x] (2026-06-05) **C1. OG images** — ran `python3 build-og-images.py`. Regenerated all 10 per-category social-share cards (assets/og/og-citizen-<slug>.jpg) at 1200×630 in the silver/gold brand palette; sizes 38–52 KB. All 10 verified as valid JPEGs (JFIF baseline, 1200×630, 3 components). No scorecard.json or HTML touched — images only.
 - [ ] **C2. Candidate photos** — run `python3 fetch-bioguide-photos.py` (federal) to fill official photos for members lacking one; commit the images. Skip if it needs network creds it doesn't have.
 
 ## D. Issues module (issues.json — separate from scorecard.json)

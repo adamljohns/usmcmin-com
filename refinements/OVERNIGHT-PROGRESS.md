@@ -1269,3 +1269,11 @@ National batch counter=24 (HEARTBEAT THRESHOLD HIT — multiple-of-12 per runboo
 - mario-diaz-balart · FL · 80 · solid life/guns/elections; deviations: RFMA July-yea flip, Dream & Promise Act yea (1 of 9 Rs), Heritage lifetime 51% not 75-85
 - maria-elvira-salazar · FL · 73 · SBA A+ but exceptions; deviations: NRA 'D' 2022, DIGNIDAD Act lead sponsor + TPS-deportation pushback, RFMA July-yea flip
 - brian-montgomery-ga-01 · GA · 100(3 cells) · STATUS FIX: lost GA-01 R primary 5/19/26 (4th, 10.0%; Kingston won outright) — exits active pool
+
+## 2026-06-10 ~05:30 — LOCAL batch 58 (Raleigh NC batch-1) — natl-local-nc-2026-06-10-0515.json
+- janet-cowell · NC · 33 · Mayor; PBA/RPPA endorsements + officer-pay advocacy (pj q0 TRUE); Equality NC endorsement + Pride proclamation + 2016 trans-coverage board vote (marriage FALSE x2); FY26 flat rate, econ null
+- corey-branch · NC · 33 · Dist C; would increase police budget (pj q0 TRUE); FY27 tax-increase yea + 2020 mask mandate (FALSE x2); Baptist Grove Church member; 2026 general vs Ollison
+- christina-jones · NC · 33 · Dist E; bio fix — CAC chair, not PTA; platform 'invest in law-enforcement retention' (pj q0 TRUE); Equality NC + FY27 tax increase (FALSE x2); 2026 vs Scruggs
+- jane-harrison · NC · 25 · Dist D, Mayor Pro Tem since Dec 2025; police-pay/hotspot touting (pj q0 TRUE); Equality NC + FY27 tax/$203M bond + 'gun control legislation' quote (FALSE x3)
+- jonathan-melton · NC · 17 · NAME/STATUS FIX: now Jonathan Lambert-Melton, lame duck (lost Wake commissioner Dem primary 3/3/26 ~18%, term ends Dec 2026); married to husband + 2021 NDO + Victory Fund (marriage FALSE x3); Dillon Rule quote (rso q3 TRUE)
+Local remaining: 97 (NC: 5)

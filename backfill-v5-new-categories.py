@@ -76,7 +76,8 @@ def classify_office_tier(c):
         return 'state'
     if re.search(r"\bmayor\b|city council|town council|borough council|"
                  r"county (commissioner|supervisor|judge|board)|school board|board of education|"
-                 r"district attorney|sheriff|city clerk|city attorney|commonwealth'?s attorney", o):
+                 r"district attorney|county attorney|state'?s attorney|circuit attorney|"
+                 r"sheriff|city clerk|city attorney|commonwealth'?s attorney", o):
         return 'local'
     return 'state'
 

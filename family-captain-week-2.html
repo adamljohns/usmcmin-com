@@ -19,6 +19,12 @@
     .week-hero h1 { font-size: clamp(2.4rem, 6vw, 4rem); margin: 8px 0 12px; color: #FFFFFF; font-family: var(--font-main); }
     .week-hero .week-tag { font-size: 1.15rem; font-style: italic; color: #CBD5E1; max-width: 680px; margin: 0 auto 24px; }
     .week-hero .week-scrip a { color: #CE8E31; text-decoration: underline; }
+    .week-hero .sail-chip { display: inline-block; margin-top: 16px; padding: 8px 16px;
+      background: rgba(206,142,49,0.14); border: 1px solid rgba(206,142,49,0.5);
+      border-radius: 999px; font-size: 0.85rem; color: #E2E8F0; }
+    .week-hero .sail-chip .sc-kicker { font-size: 0.66rem; letter-spacing: 2.5px; color: #F5C77E; font-weight: 800; margin-right: 6px; }
+    .week-hero .sail-chip strong { color: #FFFFFF; }
+    .week-hero .sail-chip .sc-sub { color: #CBD5E1; font-style: italic; }
     .week-hero .armada-frame { max-width: 460px; margin: 28px auto 0; }
     .week-hero .armada-frame img { width: 100%; height: auto; display: block; }
 
@@ -103,6 +109,18 @@
     .going-further .gf-list { list-style: none; padding: 0; margin: 0; }
     .going-further .gf-item { font-size: 0.95rem; line-height: 1.55; color: #334155; padding: 8px 0; border-top: 1px solid #ECE8DD; }
     .going-further .gf-item strong { color: #1E293B; }
+
+    /* Optional Depth — collapsed zone holding Going Further + the daily drills,
+       so the first screen of the page is just: pick your SACA. */
+    .optional-depth { max-width: 880px; margin: 40px auto 0; padding: 0 24px; }
+    .optional-depth > summary { cursor: pointer; list-style: none; padding: 14px 18px;
+      background: #F4F5F7; border: 1px solid #D1D5DB; border-radius: 10px;
+      font-weight: 700; color: #1E293B; font-size: 0.98rem; }
+    .optional-depth > summary::-webkit-details-marker { display: none; }
+    .optional-depth > summary::before { content: "▸ "; color: #8B5A1F; }
+    .optional-depth[open] > summary::before { content: "▾ "; }
+    .optional-depth .going-further { margin: 18px auto 0; }
+    .optional-depth .drills-section { margin: 24px auto 0; padding: 0; }
 
     /* Coming-soon cards (Q&A + testimonies) — styled, not dashed */
     .comingsoon-grid { max-width: 880px; margin: 32px auto 0; padding: 0 24px;
@@ -1320,6 +1338,7 @@ document.addEventListener('click', function(e) {
   <h1>Body</h1>
   <p class="week-tag">Steward the temple. The captain trains the body that carries the load.</p>
   <p class="week-scrip">📖 <a href="https://usmcmin.org/bible.html?ref=1%20Corinthians%206:19-20" target="_blank" rel="noopener">1 Corinthians 6:19–20 ↗</a></p>
+  <div class="sail-chip" title="The seven sails are the standing practices of The Family Captain — this week raises this one."><span class="sc-kicker">SAIL OF THE WEEK</span> &#128214; <strong>The Captain&rsquo;s Log</strong> <span class="sc-sub">&mdash; one line a day on the temple</span></div>
 
   <!-- ── TOP WEEK NAV — inside the hero, ABOVE the Armada image, so prev/next is
        visible the instant the page loads (no scrolling past the artwork) ── -->
@@ -1343,7 +1362,7 @@ document.addEventListener('click', function(e) {
 <!-- ── TASKS ── -->
 <section class="tasks-section">
   <h2>The week&rsquo;s task &mdash; three SACAs.</h2>
-  <p>Each SACA takes 20&ndash;30 minutes. <strong>Any one</strong> completes the week &mdash; do all three if you want to go deeper. Open the PDF for the print version; the full text lives here too.</p>
+  <p>A SACA is a <strong>Self-Assigned Captain&rsquo;s Action</strong> &mdash; you pick it, you own it, you ship it. Each takes 20&ndash;30 minutes, and <strong>any one</strong> completes the week &mdash; do all three if you want to go deeper. Open the PDF for the print version; the full text lives here too.</p>
   
       <article class="task-block">
         <div class="task-kicker">WEEK 2 · SACA 1</div>
@@ -1376,11 +1395,11 @@ document.addEventListener('click', function(e) {
       <article class="task-block">
         <div class="task-kicker">WEEK 2 · SACA 3</div>
         <h3 class="task-title">Automate Your Weekly Body Review</h3>
-        <div class="task-tagline">A standing Sunday check on the temple that carries the load.</div>
-        <p class="task-setup">You won't audit your body on willpower. Build the rhythm once and let it run: a weekly prompt that pulls your week — movement, sleep, food — and hands you one adjustment, not ten.</p>
+        <div class="task-tagline">One body line a day in the Captain's Log. Sunday reads it back.</div>
+        <p class="task-setup">The Log you raised in Week 1 is the instrument — this week it earns its keep. One line a day about the temple (sleep, training, fuel), then a standing Sunday rhythm that reads the week and hands you ONE change, not ten.</p>
         <div class="task-actions-label">Action checklist</div>
-        <ul class="task-actions"><li>Set a recurring Sunday-evening trigger (Calendar event, or a 'Body review' Habitify habit).</li><li>Save a Claude prompt: "Here's my week — flag the ONE change with the highest return."</li><li>Feed it whatever you tracked (steps, sleep, meals — even rough notes).</li><li>Log the one change as a Habitify habit for the coming week. Next week, review and repeat.</li></ul>
-        <div class="callout"><div class="callout-label">ONE CHANGE, NOT TEN</div><div class="callout-body">A captain who fixes one thing a week is unrecognizable in a year. Ten at once is how men quit by Wednesday.</div></div>
+        <ul class="task-actions"><li>Add a daily body line to your Captain's Log — one sentence: sleep, training, fuel, energy.</li><li>Set a recurring Sunday-evening trigger (Calendar event, or a 'Body review' Habitify habit).</li><li>Sunday: paste the week's Log lines into Claude: "Flag the ONE change with the highest return."</li><li>Log that change as the coming week's Habitify habit. Next Sunday, read the Log and repeat.</li></ul>
+        <div class="callout"><div class="callout-label">THE LOG IS THE SAIL</div><div class="callout-body">Week 1 raised the Captain's Log; this week it starts pulling. A captain who logs the temple daily never has to guess why he's tired — and one change a week is unrecognizable in a year.</div></div>
         <div class="task-scripture">
           <span class="ts-label">SCRIPTURE SIT</span>
           <i>1 Corinthians 6:19–20 — "Your body is a temple… glorify God in your body." Stewardship is a rhythm, not a sprint.</i>
@@ -1389,6 +1408,10 @@ document.addEventListener('click', function(e) {
       </article>
 </section>
 
+<!-- ── OPTIONAL DEPTH (folded): Going Further + the 7 daily drills ── -->
+<details class="optional-depth">
+  <summary>Optional depth &mdash; extra reps &amp; this week&rsquo;s 7 daily drills</summary>
+  
 <section class="going-further">
   <div class="gf-kicker">GOING FURTHER &middot; OPTIONAL</div>
   <h3>Take it up a notch.</h3>
@@ -1397,11 +1420,10 @@ document.addEventListener('click', function(e) {
       <li class="gf-item"><strong>5-Night Sleep Audit.</strong> Log 5 nights; let AI find the one sleep variable worth changing.</li>
   </ul>
 </section>
-<!-- ── DRILLS ── -->
-<section class="drills-section">
-  <h2>This week's Captain's Drills.</h2>
-  <p>90 seconds each. Optional depth track — the drill is the rep, not the workout. Sunday is Sabbath; drill off.</p>
-  <ol class="drills-list">
+  <section class="drills-section">
+    <h2>This week's Captain's Drills.</h2>
+    <p>90 seconds each &mdash; the drill is the rep, not the workout. Sunday is Sabbath; drill off.</p>
+    <ol class="drills-list">
         <li class="drill-item"><span class="drill-day">Day 1</span><span class="drill-text">Ask AI for 3× strength + 2× walking schedule. Put it on the calendar.</span></li>
         <li class="drill-item"><span class="drill-day">Day 2</span><span class="drill-text">List yesterday's food. AI calculates protein. Adjust today by one meal.</span></li>
         <li class="drill-item"><span class="drill-day">Day 3</span><span class="drill-text">Read 1 Cor 6:19–20. Ask Claude: "What does temple stewardship look like Monday morning?"</span></li>
@@ -1409,8 +1431,9 @@ document.addEventListener('click', function(e) {
         <li class="drill-item"><span class="drill-day">Day 5</span><span class="drill-text">Take one call walking instead of sitting. Voice-memo what changed.</span></li>
         <li class="drill-item"><span class="drill-day">Day 6</span><span class="drill-text">Voice-memo: "How am I treating my body this week?" Whisper. Read it. Adjust one thing.</span></li>
         <li class="drill-item"><span class="drill-day">Day 7</span><span class="drill-text">Sabbath. Drill off.</span></li>
-  </ol>
-</section>
+    </ol>
+  </section>
+</details>
 
 <!-- ── CAPTAIN'S NOTE (interim — Adam's fuller story drops later) ── -->
 <section class="captains-note-section">
@@ -1428,7 +1451,7 @@ document.addEventListener('click', function(e) {
       <li class="res-item"><span class="res-emoji" aria-hidden="true">&#9990;</span><span class="res-body"><strong>Scripture.</strong> 1 Corinthians 6:19&ndash;20 &middot; 1 Corinthians 9:24&ndash;27 &middot; Psalm 127:2 (He gives His beloved sleep).</span></li>
       <li class="res-item"><span class="res-emoji" aria-hidden="true">&#128214;</span><span class="res-body"><strong>Read.</strong> Sam Allberry, <em>What God Has to Say About Our Bodies</em> &mdash; the best in-lane theology of the body (created, fallen, redeemed). Note: there&rsquo;s no classic-Reformed book specifically on the body, so this is the closest strong fit. <span class="rec-flag">(MOOP-clone-bot pick &mdash; pending Adam&rsquo;s OK)</span></span></li>
       <li class="res-item"><span class="res-emoji" aria-hidden="true">&#127911;</span><span class="res-body"><strong>Listen.</strong> Charles Spurgeon, &ldquo;<a href="https://www.spurgeon.org/resource-library/sermons/bought-with-a-price/" target="_blank" rel="noopener">Bought with a Price</a>&rdquo; (spurgeon.org). <span class="rec-flag">(MOOP-clone-bot pick &mdash; pending Adam&rsquo;s OK)</span></span></li>
-      <li class="res-item"><span class="res-emoji" aria-hidden="true">&#128295;</span><span class="res-body"><strong>AI tools.</strong> Use <a href="family-captain-tools.html#notes-voice">Notes &amp; Voice</a> (Whisper / Voice Memos) for the 5-night sleep audit and steward report; <a href="family-captain-tools.html#chat">Chat</a> (Claude) for the protein-forward meal plan and a 3&times; strength / 2&times; walking schedule.</span></li>
+      <li class="res-item"><span class="res-emoji" aria-hidden="true">&#128295;</span><span class="res-body"><strong>AI tools.</strong> Use <a href="family-captain-tools.html#notes-voice">Notes &amp; Voice</a> (Whisper / Voice Memos) to capture the daily body line for your Captain&rsquo;s Log; <a href="family-captain-tools.html#chat">Chat</a> (Claude) for the protein-forward meal plan and the Sunday body review.</span></li>
   </ul>
   <p class="res-note">📖 A sermon link and Adam's full reading list are being added per week.</p>
 </section>

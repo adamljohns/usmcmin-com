@@ -19,6 +19,12 @@
     .week-hero h1 { font-size: clamp(2.4rem, 6vw, 4rem); margin: 8px 0 12px; color: #FFFFFF; font-family: var(--font-main); }
     .week-hero .week-tag { font-size: 1.15rem; font-style: italic; color: #CBD5E1; max-width: 680px; margin: 0 auto 24px; }
     .week-hero .week-scrip a { color: #CE8E31; text-decoration: underline; }
+    .week-hero .sail-chip { display: inline-block; margin-top: 16px; padding: 8px 16px;
+      background: rgba(206,142,49,0.14); border: 1px solid rgba(206,142,49,0.5);
+      border-radius: 999px; font-size: 0.85rem; color: #E2E8F0; }
+    .week-hero .sail-chip .sc-kicker { font-size: 0.66rem; letter-spacing: 2.5px; color: #F5C77E; font-weight: 800; margin-right: 6px; }
+    .week-hero .sail-chip strong { color: #FFFFFF; }
+    .week-hero .sail-chip .sc-sub { color: #CBD5E1; font-style: italic; }
     .week-hero .armada-frame { max-width: 460px; margin: 28px auto 0; }
     .week-hero .armada-frame img { width: 100%; height: auto; display: block; }
 
@@ -103,6 +109,18 @@
     .going-further .gf-list { list-style: none; padding: 0; margin: 0; }
     .going-further .gf-item { font-size: 0.95rem; line-height: 1.55; color: #334155; padding: 8px 0; border-top: 1px solid #ECE8DD; }
     .going-further .gf-item strong { color: #1E293B; }
+
+    /* Optional Depth — collapsed zone holding Going Further + the daily drills,
+       so the first screen of the page is just: pick your SACA. */
+    .optional-depth { max-width: 880px; margin: 40px auto 0; padding: 0 24px; }
+    .optional-depth > summary { cursor: pointer; list-style: none; padding: 14px 18px;
+      background: #F4F5F7; border: 1px solid #D1D5DB; border-radius: 10px;
+      font-weight: 700; color: #1E293B; font-size: 0.98rem; }
+    .optional-depth > summary::-webkit-details-marker { display: none; }
+    .optional-depth > summary::before { content: "▸ "; color: #8B5A1F; }
+    .optional-depth[open] > summary::before { content: "▾ "; }
+    .optional-depth .going-further { margin: 18px auto 0; }
+    .optional-depth .drills-section { margin: 24px auto 0; padding: 0; }
 
     /* Coming-soon cards (Q&A + testimonies) — styled, not dashed */
     .comingsoon-grid { max-width: 880px; margin: 32px auto 0; padding: 0 24px;
@@ -1320,6 +1338,7 @@ document.addEventListener('click', function(e) {
   <h1>Husbanding</h1>
   <p class="week-tag">Lead with love. The captain's first crew is one woman.</p>
   <p class="week-scrip">📖 <a href="https://usmcmin.org/bible.html?ref=Ephesians%205:25-28" target="_blank" rel="noopener">Ephesians 5:25–28 ↗</a></p>
+  <div class="sail-chip" title="The seven sails are the standing practices of The Family Captain — this week raises this one."><span class="sc-kicker">SAIL OF THE WEEK</span> &#129309; <strong>The Weekly Family Meeting</strong> <span class="sc-sub">&mdash; the standing huddle</span></div>
 
   <!-- ── TOP WEEK NAV — inside the hero, ABOVE the Armada image, so prev/next is
        visible the instant the page loads (no scrolling past the artwork) ── -->
@@ -1343,7 +1362,7 @@ document.addEventListener('click', function(e) {
 <!-- ── TASKS ── -->
 <section class="tasks-section">
   <h2>The week&rsquo;s task &mdash; three SACAs.</h2>
-  <p>Each SACA takes 20&ndash;30 minutes. <strong>Any one</strong> completes the week &mdash; do all three if you want to go deeper. Open the PDF for the print version; the full text lives here too.</p>
+  <p>A SACA is a <strong>Self-Assigned Captain&rsquo;s Action</strong> &mdash; you pick it, you own it, you ship it. Each takes 20&ndash;30 minutes, and <strong>any one</strong> completes the week &mdash; do all three if you want to go deeper. Open the PDF for the print version; the full text lives here too.</p>
   
       <article class="task-block">
         <div class="task-kicker">WEEK 4 · SACA 1</div>
@@ -1389,6 +1408,10 @@ document.addEventListener('click', function(e) {
       </article>
 </section>
 
+<!-- ── OPTIONAL DEPTH (folded): Going Further + the 7 daily drills ── -->
+<details class="optional-depth">
+  <summary>Optional depth &mdash; extra reps &amp; this week&rsquo;s 7 daily drills</summary>
+  
 <section class="going-further">
   <div class="gf-kicker">GOING FURTHER &middot; OPTIONAL</div>
   <h3>Take it up a notch.</h3>
@@ -1397,11 +1420,10 @@ document.addEventListener('click', function(e) {
       <li class="gf-item"><strong>Letter to Your Wife.</strong> Write her a one-page letter; AI polishes the grammar, you keep the words.</li>
   </ul>
 </section>
-<!-- ── DRILLS ── -->
-<section class="drills-section">
-  <h2>This week's Captain's Drills.</h2>
-  <p>90 seconds each. Optional depth track — the drill is the rep, not the workout. Sunday is Sabbath; drill off.</p>
-  <ol class="drills-list">
+  <section class="drills-section">
+    <h2>This week's Captain's Drills.</h2>
+    <p>90 seconds each &mdash; the drill is the rep, not the workout. Sunday is Sabbath; drill off.</p>
+    <ol class="drills-list">
         <li class="drill-item"><span class="drill-day">Day 1</span><span class="drill-text">Send your wife one sentence of appreciation, drafted by you, polished by AI.</span></li>
         <li class="drill-item"><span class="drill-day">Day 2</span><span class="drill-text">After the next time she talks, voice-memo what she said. Whisper it. Re-read it tomorrow.</span></li>
         <li class="drill-item"><span class="drill-day">Day 3</span><span class="drill-text">Read Ephesians 5:25–28 aloud. Ask Claude to roast your week against it. Sit with it.</span></li>
@@ -1409,14 +1431,15 @@ document.addEventListener('click', function(e) {
         <li class="drill-item"><span class="drill-day">Day 5</span><span class="drill-text">Pick one hour with your wife this week. Phone out of sight. AI captures highlights after.</span></li>
         <li class="drill-item"><span class="drill-day">Day 6</span><span class="drill-text">Have AI help you remember 5 specific moments from your marriage. Tell her one.</span></li>
         <li class="drill-item"><span class="drill-day">Day 7</span><span class="drill-text">Sabbath. Drill off.</span></li>
-  </ol>
-</section>
+    </ol>
+  </section>
+</details>
 
 <!-- ── CAPTAIN'S NOTE (interim — Adam's fuller story drops later) ── -->
 <section class="captains-note-section">
   <div class="cn-kicker">CAPTAIN'S NOTE</div>
   <h3>What I want you to know about this week.</h3>
-  <p class="cn-body">This isn&rsquo;t romance week &mdash; it&rsquo;s leadership in the home the world never sees but the next generation feels for forty years. The tool can prepare you for the hard conversation; it can&rsquo;t walk through the door for you. And don&rsquo;t show her the AI&rsquo;s answer about her &mdash; that&rsquo;s a mirror for you, not a script for her. The hand-off is the point, not the polish.</p>
+  <p class="cn-body">This isn&rsquo;t romance week &mdash; it&rsquo;s leadership in the home the world never sees but the next generation feels for forty years. The tool can prepare you for the hard conversation; it can&rsquo;t walk through the door for you. And don&rsquo;t show her the AI&rsquo;s answer about her &mdash; that&rsquo;s a mirror for you, not a script for her. The hand-off is the point, not the polish. And lead her with all three legs under you &mdash; compassion first, responsibility always, authority gently.</p>
   <p class="cn-tag">More from Adam — a personal story and what trips most men up — drops here as the cohort runs.</p>
 </section>
 
@@ -1428,7 +1451,7 @@ document.addEventListener('click', function(e) {
       <li class="res-item"><span class="res-emoji" aria-hidden="true">&#9990;</span><span class="res-body"><strong>Scripture.</strong> Ephesians 5:25&ndash;28 (love as Christ loved the church) &middot; Ephesians 4:15 (truth in love) &middot; 1 Peter 3:7.</span></li>
       <li class="res-item"><span class="res-emoji" aria-hidden="true">&#128214;</span><span class="res-body"><strong>Read.</strong> Daniel Rogers, <em>Matrimonial Honour</em> (Soli Deo Gloria / Reformation Heritage; orig. 1642) &mdash; a rare Puritan treatise on the husband&rsquo;s duty to understand and honour his wife. Classic alt: William Gouge, <em>Of Domestical Duties</em> (public domain). <span class="rec-flag">(MOOP-clone-bot pick &mdash; pending Adam&rsquo;s OK)</span></span></li>
       <li class="res-item"><span class="res-emoji" aria-hidden="true">&#127911;</span><span class="res-body"><strong>Listen.</strong> John MacArthur, &ldquo;<a href="https://www.gty.org/sermons/80-383/husbands-love-your-wives" target="_blank" rel="noopener">Husbands, Love Your Wives</a>&rdquo; (Grace to You). <span class="rec-flag">(MOOP-clone-bot pick &mdash; pending Adam&rsquo;s OK)</span></span></li>
-      <li class="res-item"><span class="res-emoji" aria-hidden="true">&#128295;</span><span class="res-body"><strong>AI tools.</strong> Use <a href="family-captain-tools.html#chat">Chat</a> (Claude) to <em>prepare</em> the hard conversation and polish the letter&rsquo;s grammar &mdash; you keep the words; <a href="family-captain-tools.html#notes-voice">Notes &amp; Voice</a> for a listen-log after she talks.</span></li>
+      <li class="res-item"><span class="res-emoji" aria-hidden="true">&#128295;</span><span class="res-body"><strong>AI tools.</strong> Use <a href="family-captain-tools.html#chat">Chat</a> (Claude) to <em>prepare</em> the hard conversation and draft the family-meeting agenda &mdash; you lead the table; <a href="family-captain-tools.html#notes-voice">Notes &amp; Voice</a> for a listen-log after she talks.</span></li>
   </ul>
   <p class="res-note">📖 A sermon link and Adam's full reading list are being added per week.</p>
 </section>

@@ -21,10 +21,10 @@
 >
 > 📜 *"Write the vision; make it plain on tablets, so that he may run who reads it."* — [Habakkuk 2:2](https://usmcmin.org/bible.html)
 >
-> **This week's tasks:**
-> · T1 — Draft Your AI Charter (5 lines)
-> · T2 — Write Your 5-Year Captain's Vision
-> · T3 — Build Your Tool Stack (2–4 from the Compass)
+> **This week’s SACAs:**
+> · SACA 1 — Draft Your AI Charter (5 lines)
+> · SACA 2 — Write Your 5-Year Captain's Vision
+> · SACA 3 — Build Your Wheelhouse (Creed + Log + the 0600 send)
 >
 > Open the index. Open W1.T1. Ship it today. React ✓ when you do.
 
@@ -59,10 +59,10 @@
 >
 > 📜 *"Your body is a temple of the Holy Spirit. Glorify God in your body."* — [1 Corinthians 6:19–20](https://usmcmin.org/bible.html)
 >
-> **This week's tasks:**
-> · T1 — Weekly Movement Practice (3× strength + 2× walking, calendared)
-> · T2 — Captain's Meal Plan (protein-forward, one week)
-> · T3 — 5-Night Sleep Audit (data, then ONE variable fix)
+> **This week’s SACAs:**
+> · SACA 1 — Weekly Movement Practice (3× strength + 2× walking, calendared)
+> · SACA 2 — Captain's Meal Plan (protein-forward, one week)
+> · SACA 3 — Automate Your Weekly Body Review (one Log line a day; Sunday reads it)
 >
 > If you can't carry your wife's groceries up two flights at 50, the family will know. Show up imperfectly. Start lower than you think.
 
@@ -96,9 +96,9 @@
 > 📜 *"This Book of the Law shall not depart from your mouth, but you shall meditate on it day and night."* — [Joshua 1:8](https://usmcmin.org/bible.html)
 >
 > **This week's tasks (note: you lead, AI assists):**
-> · T1 — 10-Min Scripture Study, You Lead
-> · T2 — Family Devotion Generator (Friday-night devo)
-> · T3 — Sermon Notes → Captain's Actions (5 actions from a sermon you sat under)
+> · SACA 1 — 10-Min Scripture Study, You Lead
+> · SACA 2 — Family Devotion Generator (Friday-night devo)
+> · SACA 3 — The 5:25 Prayer Loop (daily alarm; weekly answered-prayer review)
 >
 > AI is a research partner. The Spirit is the teacher. Don't confuse them.
 
@@ -131,10 +131,10 @@
 >
 > 📜 *"Husbands, love your wives, as Christ loved the church and gave himself up for her."* — [Ephesians 5:25–28](https://usmcmin.org/bible.html)
 >
-> **This week's tasks:**
-> · T1 — The 5-Minute Wife Audit (mirror, not script)
-> · T2 — Prep One Hard Conversation (AI preps; you show up)
-> · T3 — Letter to Your Wife (one page, hand-delivered)
+> **This week’s SACAs:**
+> · SACA 1 — The 5-Minute Wife Audit (mirror, not script)
+> · SACA 2 — Prep One Hard Conversation (AI preps; you show up)
+> · SACA 3 — Stand Up the Weekly Family Meeting (a standing 20-minute huddle)
 >
 > She doesn't need the polished speech. She needs you — sober, present, with the phone face-down.
 
@@ -165,10 +165,10 @@
 >
 > 📜 *"You shall teach them diligently to your children, and shall talk of them when you sit in your house."* — [Deuteronomy 6:6–7](https://usmcmin.org/bible.html)
 >
-> **This week's tasks:**
-> · T1 — 3 Questions for the Dinner Table (ask one tonight)
-> · T2 — Build a Family Rhythm Asset (on the fridge by Friday)
-> · T3 — Write Your Family AI Policy (with the kids)
+> **This week’s SACAs:**
+> · SACA 1 — 3 Questions for the Dinner Table (ask one tonight)
+> · SACA 2 — Run the Monthly Family Survey (hear the crew, monthly)
+> · SACA 3 — Write Your Family AI Policy (with the kids)
 >
 > A father who only asks about grades and chores is the manager of his home, not the dad of his children.
 
@@ -201,10 +201,10 @@
 >
 > 📜 *"Bring the full tithe into the storehouse… and thereby put me to the test, says the LORD."* — [Malachi 3:10](https://usmcmin.org/bible.html)
 >
-> **This week's tasks:**
-> · T1 — Tithe-First Budget (giving is line 1)
-> · T2 — Subscription Audit (keep / kill / downgrade)
-> · T3 — Legacy Plan Starter (will, beneficiaries, letter to family)
+> **This week’s SACAs:**
+> · SACA 1 — Tithe-First Budget (giving is line 1)
+> · SACA 2 — The Values-Run Storehouse (write the values; the money obeys)
+> · SACA 3 — Legacy Plan Starter (will, beneficiaries, letter to family)
 >
 > Never paste account numbers into AI. Totals only. The lawyer makes the will real.
 
@@ -235,10 +235,10 @@
 >
 > 📜 *"Remember the Sabbath day, to keep it holy."* — [Exodus 20:8](https://usmcmin.org/bible.html)
 >
-> **This week's tasks:**
-> · T1 — Plan Your Sabbath (24-hour disconnect protocol, on paper)
-> · T2 — Saturday Captain's Audit (review week, set ONE anchor for next)
-> · T3 — Teach One Person One Thing (the multiplication test)
+> **This week’s SACAs:**
+> · SACA 1 — Plan Your Sabbath (24-hour disconnect protocol, on paper)
+> · SACA 2 — The Nightly Gratitude Journal (one line of thanks at 9:00 PM)
+> · SACA 3 — Teach One Person One Thing (the multiplication test)
 >
 > The bootcamp doesn't end when you finish Week 7. It ends when the next captain starts.
 

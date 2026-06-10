@@ -1277,3 +1277,11 @@ National batch counter=24 (HEARTBEAT THRESHOLD HIT — multiple-of-12 per runboo
 - jane-harrison · NC · 25 · Dist D, Mayor Pro Tem since Dec 2025; police-pay/hotspot touting (pj q0 TRUE); Equality NC + FY27 tax/$203M bond + 'gun control legislation' quote (FALSE x3)
 - jonathan-melton · NC · 17 · NAME/STATUS FIX: now Jonathan Lambert-Melton, lame duck (lost Wake commissioner Dem primary 3/3/26 ~18%, term ends Dec 2026); married to husband + 2021 NDO + Victory Fund (marriage FALSE x3); Dillon Rule quote (rso q3 TRUE)
 Local remaining: 97 (NC: 5)
+
+## Batch 59 — 2026-06-10 ~05:58 (local cron) — Raleigh NC batch-2 + NC DAs
+- megan-patton · NC · 0 · Dist B, unopposed Nov 2026; Vote Pro Choice + Equality NC endorsements, Moms Demand member 'petitioned senators' (FALSE x5: life x2, bm q4, econ, sd q1); alt-response platform → pj q0 null
+- mitchell-silver · NC · 50 · Dist A (ex-NYC Parks Comm'r); DEVIATION: Dem who unseated police-critic Mary Black on 'increase pay and benefits for law enforcement' (pj q0 TRUE); FY27 tax-increase yea after 'last resort' (econ FALSE); rest null
+- stormie-forte · NC · 25 · At-Large, Mayor Pro Tem; openly LGBTQ + Victory Fund 2026 + Equality NC (bm q0/q4 FALSE); 3-cycle pro-police record, ACORNS 'vital part of RPD' (pj q0 TRUE); FY27 tax yea (econ FALSE); led 3/3/26 primary 32.7%
+- spencer-merriweather · NC · 25 · Mecklenburg DA, effectively unopposed 2026; Violent Crimes Team (pj q2 TRUE); cash-bail abolition call + drug declination (pj q1 FALSE); won't-enforce-abortion pledge (sol q1 FALSE); Equality NC/MeckPAC (bm q4 FALSE); Catholic catechist
+- lorrin-freeman · NC · 100 · Wake DA, RETIRING Dec 2026 (Nickel won primary, unopposed) — candidacy_status not_running; DEVIATION: traditional-prosecutor Dem — most death-seeking NC county (pj q2/q4 TRUE), RPD-DOJ partnership (pj q0 TRUE), criticized sheriff's ICE non-cooperation (border q2 TRUE); only Triangle DA to decline post-Dobbs pledge; prosecuted Dowless fraud + investigated AG Stein; sparse-data caveat noted
+Local remaining: 92 (NC: 0 — NC LOCALS COMPLETE)

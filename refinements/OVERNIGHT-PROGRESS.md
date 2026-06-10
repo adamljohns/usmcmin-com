@@ -1258,3 +1258,8 @@ National batch counter=24 (HEARTBEAT THRESHOLD HIT — multiple-of-12 per runboo
 - greg-steube · FL · 100 · federal House (R-17): Heritage 95 lifetime, LACA cosponsor x3, sponsor of women's-sports act, SCREEN+Audit-Fed+WHO-treaty cosponsor, Nay Ukraine; AUMF-repeal Yea
 - scott-franklin · FL · 87 · federal House (R-18): solid party-line; on-record openness to civil unions (q1 FALSE), Aye FRA debt deal (Heritage 118th 70%), dropped LACA in 119th
 - dale-holness · FL · 0 · federal (D-20 primary candidate, VERIFIED ACTIVE; CCM resigned 4/21/26, no special called): mask/vaccine mandates + court-packing + TPS advocacy FALSE-cited; pro-sheriff deviation noted; 47 cells null (own materials silent on abortion/LGBTQ/guns)
+- brian-mast · FL · 83 · Evidence-finalized (federal): Heritage 84%/77%, SBA cosponsorships; deviations: 2018 AWB op-ed (NRA D), July-2022 RFMA Yea (flipped Dec), AIPAC ~$881K, holds rape/incest exceptions.
+- lois-frankel · FL · 9 · Evidence-finalized (federal): WHPA lead sponsor, Equality Act, AWB Yea, SAVE Nay ×2; credit: Yemen war-powers + 2002 AUMF-repeal Yea; AIPAC $820K.
+- jared-moskowitz · FL · 17 · Evidence-finalized (federal): deviations Laken Riley Yea ×2, H.R. 30 Yea, ICC sanctions ×2, Tlaib censure, first Dem in DOGE Caucus; else progressive (Heritage 6%, NRA F-); running in redrawn FL-25.
+- elijah-manley · FL · 14 · Evidence-finalized (federal, social-media protocol): FL-20 D primary frontrunner (seat vacant, no special called); credit: anti-CBDC + anti-AIPAC; else progressive platform.
+- mark-douglas-fl-20 · FL · unscored · Roster/FEC-verified paper candidate ($0 raised); NOT on FL DOS qualified list as of 6/10 — re-verify after the 6/12 qualifying deadline.

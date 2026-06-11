@@ -14,7 +14,7 @@ const data   = JSON.parse(fs.readFileSync(path.join(__dirname,'data/supplements.
 const outDir = path.join(__dirname,'fitness','supplements');
 if (!fs.existsSync(outDir)) fs.mkdirSync(outDir, { recursive: true });
 
-const AMAZON_TAG = ''; // Set your Amazon Associates tag here when you have one, e.g. 'usmcmin-20'
+const AMAZON_TAG = 'usmcministrie-20'; // Amazon Associates tracking ID — live 2026-06-10
 
 function escHtml(s) {
   if (s == null) return '';
@@ -29,6 +29,14 @@ function amazonUrl(asin) {
   if (!asin) return null;
   const base = `https://www.amazon.com/dp/${asin}`;
   return AMAZON_TAG ? `${base}?tag=${AMAZON_TAG}` : base;
+}
+
+// Tagged Amazon SEARCH link for a specific product. Robust: never 404s, always
+// lands the reader on the exact product, and the tag earns commission on any
+// qualifying purchase in the session. Preferred over /dp/ASIN links (ASINs rot).
+function amazonSearchUrl(query) {
+  const u = `https://www.amazon.com/s?k=${encodeURIComponent(query)}`;
+  return AMAZON_TAG ? `${u}&tag=${AMAZON_TAG}` : u;
 }
 
 function tierColor(tier) {
@@ -341,8 +349,8 @@ for (const s of data.supplements) {
     if (b.type === 'melaleuca' && s.melaleuca_link) {
       link = s.melaleuca_link;
       icon = `<span style="background:rgba(0,140,120,0.18);color:#4ecdc4;font-size:0.68rem;font-weight:600;padding:2px 6px;border-radius:8px;">Melaleuca</span>`;
-    } else if (b.type === 'amazon' && amzUrl) {
-      link = amzUrl;
+    } else if (b.type === 'amazon') {
+      link = amazonSearchUrl(b.search || b.name);
       icon = `<span style="background:rgba(255,153,0,0.15);color:#ffa500;font-size:0.68rem;font-weight:600;padding:2px 6px;border-radius:8px;">Amazon</span>`;
     }
     return `

@@ -84,6 +84,16 @@
   .task-circle .task-name { font-size:0.7rem; line-height:1.2; text-align:center; }
   .task-circle.shipped .task-name { color:var(--bg-dark); font-weight:700; }
   .task-circle .task-actions { display:flex; gap:4px; margin-top:3px; }
+  /* "Skip the rest" — FC pick-one: a shipped SACA completes the week; the other
+     two can be dimmed so they don't nag. */
+  .task-circle.skipped { opacity:0.4; }
+  .task-circle.skipped .task-name { text-decoration:line-through; }
+  .skip-rest { display:block; width:100%; margin-top:8px; padding:6px 8px;
+    font-size:0.68rem; font-weight:700; letter-spacing:0.3px; line-height:1.25;
+    background:transparent; border:1px dashed var(--border); color:var(--gray);
+    border-radius:8px; cursor:pointer; font-family:inherit; }
+  .skip-rest:hover { border-color:var(--week-color); color:var(--week-color); }
+  .skip-rest.is-on { background:rgba(0,0,0,0.05); border-style:solid; border-color:var(--week-color); color:var(--week-color); }
 
   /* ── TIER OVERLAY (S/A/B/C) ── */
   /* Task-circle gets a 2px tier-colored border + a 24px badge top-left.
@@ -346,17 +356,17 @@
         <h3>Foundations</h3>
         <div class="week-tag">Why a man uses AI matters more than which model he picks.</div>
         <div class="task-circles">
-          <a class="task-circle" data-key="1.1" data-pdf="downloads/family-captain/Family_Captain_Task_PDFs/W1_T1_Write_Your_AI_Charter.pdf" href="downloads/family-captain/Family_Captain_Task_PDFs/W1_T1_Write_Your_AI_Charter.pdf" target="_blank" rel="noopener" title="Open W1.T1 PDF">
+          <a class="task-circle" data-key="1.1" data-pdf="downloads/family-captain/Family_Captain_Task_PDFs/W1_T1_Write_Your_AI_Charter.pdf" href="downloads/family-captain/Family_Captain_Task_PDFs/W1_T1_Write_Your_AI_Charter.pdf" target="_blank" rel="noopener" title="Open T1 PDF">
             <div class="task-num">T1</div>
             <div class="task-name">Write Your AI Charter</div>
             <div class="task-actions"><button class="task-toggle" type="button" data-toggle="1.1" aria-label="Mark T1 shipped">●</button></div>
           </a>
-          <a class="task-circle" data-key="1.2" data-pdf="downloads/family-captain/Family_Captain_Task_PDFs/W1_T2_Draw_the_Line_-_Stewardship_vs._Dependence.pdf" href="downloads/family-captain/Family_Captain_Task_PDFs/W1_T2_Draw_the_Line_-_Stewardship_vs._Dependence.pdf" target="_blank" rel="noopener" title="Open W1.T2 PDF">
+          <a class="task-circle" data-key="1.2" data-pdf="downloads/family-captain/Family_Captain_Task_PDFs/W1_T2_Draw_the_Line_-_Stewardship_vs._Dependence.pdf" href="downloads/family-captain/Family_Captain_Task_PDFs/W1_T2_Draw_the_Line_-_Stewardship_vs._Dependence.pdf" target="_blank" rel="noopener" title="Open T2 PDF">
             <div class="task-num">T2</div>
             <div class="task-name">Stewardship vs. Dependence</div>
             <div class="task-actions"><button class="task-toggle" type="button" data-toggle="1.2" aria-label="Mark T2 shipped">●</button></div>
           </a>
-          <a class="task-circle" data-key="1.3" data-pdf="downloads/family-captain/Family_Captain_Task_PDFs/W1_T3_Build_Your_One-Page_Tool_Stack.pdf" href="downloads/family-captain/Family_Captain_Task_PDFs/W1_T3_Build_Your_One-Page_Tool_Stack.pdf" target="_blank" rel="noopener" title="Open W1.T3 PDF">
+          <a class="task-circle" data-key="1.3" data-pdf="downloads/family-captain/Family_Captain_Task_PDFs/W1_T3_Build_Your_One-Page_Tool_Stack.pdf" href="downloads/family-captain/Family_Captain_Task_PDFs/W1_T3_Build_Your_One-Page_Tool_Stack.pdf" target="_blank" rel="noopener" title="Open T3 PDF">
             <div class="task-num">T3</div>
             <div class="task-name">Build Your Tool Stack</div>
             <div class="task-actions"><button class="task-toggle" type="button" data-toggle="1.3" aria-label="Mark T3 shipped">●</button></div>
@@ -370,17 +380,17 @@
         <h3>Personal OS</h3>
         <div class="week-tag">The watchman has a daily rhythm. AI runs alongside it, not over it.</div>
         <div class="task-circles">
-          <a class="task-circle" data-key="2.1" data-pdf="downloads/family-captain/Family_Captain_Task_PDFs/W2_T1_Build_a_5-Minute_Morning_Anchor.pdf" href="downloads/family-captain/Family_Captain_Task_PDFs/W2_T1_Build_a_5-Minute_Morning_Anchor.pdf" target="_blank" rel="noopener" title="Open W2.T1 PDF">
+          <a class="task-circle" data-key="2.1" data-pdf="downloads/family-captain/Family_Captain_Task_PDFs/W2_T1_Build_a_5-Minute_Morning_Anchor.pdf" href="downloads/family-captain/Family_Captain_Task_PDFs/W2_T1_Build_a_5-Minute_Morning_Anchor.pdf" target="_blank" rel="noopener" title="Open T1 PDF">
             <div class="task-num">T1</div>
             <div class="task-name">5-Minute Morning Anchor</div>
             <div class="task-actions"><button class="task-toggle" type="button" data-toggle="2.1" aria-label="Mark T1 shipped">●</button></div>
           </a>
-          <a class="task-circle" data-key="2.2" data-pdf="downloads/family-captain/Family_Captain_Task_PDFs/W2_T2_Capture_with_Voice_-_Whisper_Workflow.pdf" href="downloads/family-captain/Family_Captain_Task_PDFs/W2_T2_Capture_with_Voice_-_Whisper_Workflow.pdf" target="_blank" rel="noopener" title="Open W2.T2 PDF">
+          <a class="task-circle" data-key="2.2" data-pdf="downloads/family-captain/Family_Captain_Task_PDFs/W2_T2_Capture_with_Voice_-_Whisper_Workflow.pdf" href="downloads/family-captain/Family_Captain_Task_PDFs/W2_T2_Capture_with_Voice_-_Whisper_Workflow.pdf" target="_blank" rel="noopener" title="Open T2 PDF">
             <div class="task-num">T2</div>
             <div class="task-name">Whisper Voice Capture</div>
             <div class="task-actions"><button class="task-toggle" type="button" data-toggle="2.2" aria-label="Mark T2 shipped">●</button></div>
           </a>
-          <a class="task-circle" data-key="2.3" data-pdf="downloads/family-captain/Family_Captain_Task_PDFs/W2_T3_Tag_Your_Tasks_-_Tiered_Autonomy_in_Practice.pdf" href="downloads/family-captain/Family_Captain_Task_PDFs/W2_T3_Tag_Your_Tasks_-_Tiered_Autonomy_in_Practice.pdf" target="_blank" rel="noopener" title="Open W2.T3 PDF">
+          <a class="task-circle" data-key="2.3" data-pdf="downloads/family-captain/Family_Captain_Task_PDFs/W2_T3_Tag_Your_Tasks_-_Tiered_Autonomy_in_Practice.pdf" href="downloads/family-captain/Family_Captain_Task_PDFs/W2_T3_Tag_Your_Tasks_-_Tiered_Autonomy_in_Practice.pdf" target="_blank" rel="noopener" title="Open T3 PDF">
             <div class="task-num">T3</div>
             <div class="task-name">Tag Your Tasks (Tiered Autonomy)</div>
             <div class="task-actions"><button class="task-toggle" type="button" data-toggle="2.3" aria-label="Mark T3 shipped">●</button></div>
@@ -394,17 +404,17 @@
         <h3>At Home</h3>
         <div class="week-tag">Tools serve the home. They never compete with it.</div>
         <div class="task-circles">
-          <a class="task-circle" data-key="3.1" data-pdf="downloads/family-captain/Family_Captain_Task_PDFs/W3_T1_Prep_One_Hard_Conversation_(Dont_Hide_Behind_AI).pdf" href="downloads/family-captain/Family_Captain_Task_PDFs/W3_T1_Prep_One_Hard_Conversation_(Dont_Hide_Behind_AI).pdf" target="_blank" rel="noopener" title="Open W3.T1 PDF">
+          <a class="task-circle" data-key="3.1" data-pdf="downloads/family-captain/Family_Captain_Task_PDFs/W3_T1_Prep_One_Hard_Conversation_(Dont_Hide_Behind_AI).pdf" href="downloads/family-captain/Family_Captain_Task_PDFs/W3_T1_Prep_One_Hard_Conversation_(Dont_Hide_Behind_AI).pdf" target="_blank" rel="noopener" title="Open T1 PDF">
             <div class="task-num">T1</div>
             <div class="task-name">Prep One Hard Conversation</div>
             <div class="task-actions"><button class="task-toggle" type="button" data-toggle="3.1" aria-label="Mark T1 shipped">●</button></div>
           </a>
-          <a class="task-circle" data-key="3.2" data-pdf="downloads/family-captain/Family_Captain_Task_PDFs/W3_T2_Build_a_Family_Rhythm_Asset.pdf" href="downloads/family-captain/Family_Captain_Task_PDFs/W3_T2_Build_a_Family_Rhythm_Asset.pdf" target="_blank" rel="noopener" title="Open W3.T2 PDF">
+          <a class="task-circle" data-key="3.2" data-pdf="downloads/family-captain/Family_Captain_Task_PDFs/W3_T2_Build_a_Family_Rhythm_Asset.pdf" href="downloads/family-captain/Family_Captain_Task_PDFs/W3_T2_Build_a_Family_Rhythm_Asset.pdf" target="_blank" rel="noopener" title="Open T2 PDF">
             <div class="task-num">T2</div>
             <div class="task-name">Build a Family Rhythm Asset</div>
             <div class="task-actions"><button class="task-toggle" type="button" data-toggle="3.2" aria-label="Mark T2 shipped">●</button></div>
           </a>
-          <a class="task-circle" data-key="3.3" data-pdf="downloads/family-captain/Family_Captain_Task_PDFs/W3_T3_Write_Your_Family_AI_Policy_(Together).pdf" href="downloads/family-captain/Family_Captain_Task_PDFs/W3_T3_Write_Your_Family_AI_Policy_(Together).pdf" target="_blank" rel="noopener" title="Open W3.T3 PDF">
+          <a class="task-circle" data-key="3.3" data-pdf="downloads/family-captain/Family_Captain_Task_PDFs/W3_T3_Write_Your_Family_AI_Policy_(Together).pdf" href="downloads/family-captain/Family_Captain_Task_PDFs/W3_T3_Write_Your_Family_AI_Policy_(Together).pdf" target="_blank" rel="noopener" title="Open T3 PDF">
             <div class="task-num">T3</div>
             <div class="task-name">Write Your Family AI Policy</div>
             <div class="task-actions"><button class="task-toggle" type="button" data-toggle="3.3" aria-label="Mark T3 shipped">●</button></div>
@@ -418,17 +428,17 @@
         <h3>Business / Ministry</h3>
         <div class="week-tag">Cowork mode is where leverage lives. Use it carefully.</div>
         <div class="task-circles">
-          <a class="task-circle" data-key="4.1" data-pdf="downloads/family-captain/Family_Captain_Task_PDFs/W4_T1_Buy_Back_5_Hours_This_Month.pdf" href="downloads/family-captain/Family_Captain_Task_PDFs/W4_T1_Buy_Back_5_Hours_This_Month.pdf" target="_blank" rel="noopener" title="Open W4.T1 PDF">
+          <a class="task-circle" data-key="4.1" data-pdf="downloads/family-captain/Family_Captain_Task_PDFs/W4_T1_Buy_Back_5_Hours_This_Month.pdf" href="downloads/family-captain/Family_Captain_Task_PDFs/W4_T1_Buy_Back_5_Hours_This_Month.pdf" target="_blank" rel="noopener" title="Open T1 PDF">
             <div class="task-num">T1</div>
             <div class="task-name">Buy Back 5 Hours</div>
             <div class="task-actions"><button class="task-toggle" type="button" data-toggle="4.1" aria-label="Mark T1 shipped">●</button></div>
           </a>
-          <a class="task-circle" data-key="4.2" data-pdf="downloads/family-captain/Family_Captain_Task_PDFs/W4_T2_Build_One_Ministry_Workflow.pdf" href="downloads/family-captain/Family_Captain_Task_PDFs/W4_T2_Build_One_Ministry_Workflow.pdf" target="_blank" rel="noopener" title="Open W4.T2 PDF">
+          <a class="task-circle" data-key="4.2" data-pdf="downloads/family-captain/Family_Captain_Task_PDFs/W4_T2_Build_One_Ministry_Workflow.pdf" href="downloads/family-captain/Family_Captain_Task_PDFs/W4_T2_Build_One_Ministry_Workflow.pdf" target="_blank" rel="noopener" title="Open T2 PDF">
             <div class="task-num">T2</div>
             <div class="task-name">Build a Ministry Workflow</div>
             <div class="task-actions"><button class="task-toggle" type="button" data-toggle="4.2" aria-label="Mark T2 shipped">●</button></div>
           </a>
-          <a class="task-circle" data-key="4.3" data-pdf="downloads/family-captain/Family_Captain_Task_PDFs/W4_T3_Save_Your_3_Best_Prompts_as_Skills.pdf" href="downloads/family-captain/Family_Captain_Task_PDFs/W4_T3_Save_Your_3_Best_Prompts_as_Skills.pdf" target="_blank" rel="noopener" title="Open W4.T3 PDF">
+          <a class="task-circle" data-key="4.3" data-pdf="downloads/family-captain/Family_Captain_Task_PDFs/W4_T3_Save_Your_3_Best_Prompts_as_Skills.pdf" href="downloads/family-captain/Family_Captain_Task_PDFs/W4_T3_Save_Your_3_Best_Prompts_as_Skills.pdf" target="_blank" rel="noopener" title="Open T3 PDF">
             <div class="task-num">T3</div>
             <div class="task-name">Save 3 Best Prompts as Skills</div>
             <div class="task-actions"><button class="task-toggle" type="button" data-toggle="4.3" aria-label="Mark T3 shipped">●</button></div>
@@ -442,17 +452,17 @@
         <h3>Mastery & Multiplication</h3>
         <div class="week-tag">Build durable systems. Train the next watchman.</div>
         <div class="task-circles">
-          <a class="task-circle" data-key="5.1" data-pdf="downloads/family-captain/Family_Captain_Task_PDFs/W5_T1_Run_a_Cost_%26_Trap_Audit.pdf" href="downloads/family-captain/Family_Captain_Task_PDFs/W5_T1_Run_a_Cost_%26_Trap_Audit.pdf" target="_blank" rel="noopener" title="Open W5.T1 PDF">
+          <a class="task-circle" data-key="5.1" data-pdf="downloads/family-captain/Family_Captain_Task_PDFs/W5_T1_Run_a_Cost_%26_Trap_Audit.pdf" href="downloads/family-captain/Family_Captain_Task_PDFs/W5_T1_Run_a_Cost_%26_Trap_Audit.pdf" target="_blank" rel="noopener" title="Open T1 PDF">
             <div class="task-num">T1</div>
             <div class="task-name">Cost & Trap Audit</div>
             <div class="task-actions"><button class="task-toggle" type="button" data-toggle="5.1" aria-label="Mark T1 shipped">●</button></div>
           </a>
-          <a class="task-circle" data-key="5.2" data-pdf="downloads/family-captain/Family_Captain_Task_PDFs/W5_T2_Teach_One_Person%2C_This_Week.pdf" href="downloads/family-captain/Family_Captain_Task_PDFs/W5_T2_Teach_One_Person%2C_This_Week.pdf" target="_blank" rel="noopener" title="Open W5.T2 PDF">
+          <a class="task-circle" data-key="5.2" data-pdf="downloads/family-captain/Family_Captain_Task_PDFs/W5_T2_Teach_One_Person%2C_This_Week.pdf" href="downloads/family-captain/Family_Captain_Task_PDFs/W5_T2_Teach_One_Person%2C_This_Week.pdf" target="_blank" rel="noopener" title="Open T2 PDF">
             <div class="task-num">T2</div>
             <div class="task-name">Teach One Person</div>
             <div class="task-actions"><button class="task-toggle" type="button" data-toggle="5.2" aria-label="Mark T2 shipped">●</button></div>
           </a>
-          <a class="task-circle" data-key="5.3" data-pdf="downloads/family-captain/Family_Captain_Task_PDFs/W5_T3_Write_Your_Captains_Charter.pdf" href="downloads/family-captain/Family_Captain_Task_PDFs/W5_T3_Write_Your_Captains_Charter.pdf" target="_blank" rel="noopener" title="Open W5.T3 PDF">
+          <a class="task-circle" data-key="5.3" data-pdf="downloads/family-captain/Family_Captain_Task_PDFs/W5_T3_Write_Your_Captains_Charter.pdf" href="downloads/family-captain/Family_Captain_Task_PDFs/W5_T3_Write_Your_Captains_Charter.pdf" target="_blank" rel="noopener" title="Open T3 PDF">
             <div class="task-num">T3</div>
             <div class="task-name">Write Your Watchman's Briefer</div>
             <div class="task-actions"><button class="task-toggle" type="button" data-toggle="5.3" aria-label="Mark T3 shipped">●</button></div>
@@ -616,6 +626,8 @@
   const DRILL_KEY = "usmc_voyage_drills_v1";
   const TOTAL = 15;
   const TASKS_PER_WEEK = 3;
+  const PICK_ONE = false;   // FC: any one SACA completes a week; progress is week-based
+  const NUM_WEEKS = 5;
 
   function loadState(){ try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || {}; } catch(e){ return {}; } }
   function saveState(s){ localStorage.setItem(STORAGE_KEY, JSON.stringify(s)); }
@@ -623,32 +635,55 @@
   function saveDrills(s){ localStorage.setItem(DRILL_KEY, JSON.stringify(s)); }
 
   function countCompleted(state){
-    return Object.values(state).filter(v => v).length;
+    // shipped SACAs only — ignore the skip:* flags stored in the same object
+    return Object.keys(state).filter(k => k.indexOf('skip:') !== 0 && state[k]).length;
   }
   function weekComplete(state, n){
-    return [1,2,3].every(i => state[`${n}.${i}`]);
+    return PICK_ONE ? [1,2,3].some(i => state[`${n}.${i}`])
+                    : [1,2,3].every(i => state[`${n}.${i}`]);
+  }
+  function weeksComplete(state){
+    let c = 0;
+    document.querySelectorAll('.week-port').forEach(el => { if (weekComplete(state, el.dataset.week)) c++; });
+    return c;
   }
 
   function updateUI(){
     const state = loadState();
-    const done = countCompleted(state);
-    const pct = Math.round((done/TOTAL)*100);
+    const tasksDone = countCompleted(state);
+    const wkDone = weeksComplete(state);
+    const done = PICK_ONE ? wkDone : tasksDone;
+    const denom = PICK_ONE ? NUM_WEEKS : TOTAL;
+    const pct = Math.round((done/denom)*100);
+    const allDone = done >= denom;
 
     document.getElementById('barFill').style.width = pct + '%';
-    let line = `${done} of ${TOTAL} tasks shipped — ${pct}%`;
-    const lo = Math.ceil(TOTAL * 0.34);
-    const mid = Math.ceil(TOTAL * 0.67);
-    if (done === 0) line = `${done} of ${TOTAL} tasks shipped · <span class="pct">${pct}%</span> · watchman on the bridge.`;
-    else if (done < lo) line = `${done} of ${TOTAL} tasks shipped · <span class="pct">${pct}%</span> · imperfect actions stacking.`;
-    else if (done < mid) line = `${done} of ${TOTAL} tasks shipped · <span class="pct">${pct}%</span> · steady steaming.`;
-    else if (done < TOTAL) line = `${done} of ${TOTAL} tasks shipped · <span class="pct">${pct}%</span> · watchman's charter in sight.`;
-    else line = `<b>${done} of ${TOTAL} tasks shipped · <span class="pct">${pct}%</span> · watchman commissioned.</b>`;
+    let line;
+    if (PICK_ONE){
+      const n = `${done} of ${NUM_WEEKS} weeks complete`;
+      if (done === 0) line = `${n} · <span class="pct">${pct}%</span> · watchman on the bridge.`;
+      else if (done < 3) line = `${n} · <span class="pct">${pct}%</span> · imperfect actions stacking.`;
+      else if (done < 5) line = `${n} · <span class="pct">${pct}%</span> · steady steaming.`;
+      else if (done < NUM_WEEKS) line = `${n} · <span class="pct">${pct}%</span> · watchman's charter in sight.`;
+      else line = `<b>${n} · <span class="pct">${pct}%</span> · watchman commissioned.</b>`;
+    } else {
+      const lo = Math.ceil(TOTAL * 0.34);
+      const mid = Math.ceil(TOTAL * 0.67);
+      if (done === 0) line = `${done} of ${TOTAL} tasks shipped · <span class="pct">${pct}%</span> · watchman on the bridge.`;
+      else if (done < lo) line = `${done} of ${TOTAL} tasks shipped · <span class="pct">${pct}%</span> · imperfect actions stacking.`;
+      else if (done < mid) line = `${done} of ${TOTAL} tasks shipped · <span class="pct">${pct}%</span> · steady steaming.`;
+      else if (done < TOTAL) line = `${done} of ${TOTAL} tasks shipped · <span class="pct">${pct}%</span> · watchman's charter in sight.`;
+      else line = `<b>${done} of ${TOTAL} tasks shipped · <span class="pct">${pct}%</span> · watchman commissioned.</b>`;
+    }
     document.getElementById('statLine').innerHTML = line;
 
-    // Update task circles
+    // Update task circles (shipped + skipped-dim)
     document.querySelectorAll('.task-circle').forEach(el => {
       const k = el.dataset.key;
-      el.classList.toggle('shipped', !!state[k]);
+      const shipped = !!state[k];
+      el.classList.toggle('shipped', shipped);
+      const wk = k.split('.')[0];
+      el.classList.toggle('skipped', !shipped && !!state['skip:' + wk]);
     });
 
     // Update week-port "complete" status
@@ -661,14 +696,14 @@
     document.querySelectorAll('.badge').forEach(el => {
       const trigger = el.dataset.trigger;
       let earned = false;
-      if (trigger === 'any') earned = done > 0;
-      else if (trigger === 'all') earned = done >= TOTAL;
+      if (trigger === 'any') earned = tasksDone > 0;
+      else if (trigger === 'all') earned = allDone;
       else if (trigger.startsWith('week:')) earned = weekComplete(state, trigger.split(':')[1]);
       el.classList.toggle('earned', earned);
     });
 
     // Commission card
-    document.getElementById('commissionCard').classList.toggle('unlocked', done >= TOTAL);
+    document.getElementById('commissionCard').classList.toggle('unlocked', allDone);
 
     refreshContinue();
   }
@@ -687,6 +722,28 @@
       e.stopPropagation();
       toggleTask(btn.dataset.toggle);
     });
+  });
+
+  // Skip-the-rest (FC pick-one): toggle a per-week skip flag. Cosmetic — the
+  // week is already complete once any one SACA is shipped; this just dims the
+  // other two so they stop nagging. Persisted in the same progress object.
+  function syncSkipBtn(btn, on){
+    btn.setAttribute('aria-pressed', on ? 'true' : 'false');
+    btn.classList.toggle('is-on', on);
+    btn.innerHTML = on ? 'Skipped the rest &mdash; undo' : 'One SACA is enough &mdash; skip the rest';
+  }
+  document.querySelectorAll('.skip-rest').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      const state = loadState();
+      const key = 'skip:' + btn.dataset.skipweek;
+      state[key] = !state[key];
+      saveState(state);
+      syncSkipBtn(btn, !!state[key]);
+      updateUI();
+    });
+    syncSkipBtn(btn, !!loadState()['skip:' + btn.dataset.skipweek]);
   });
 
   // Make the whole week-port clickable → open the per-week page.
@@ -747,8 +804,12 @@
       .sort((a,b) => (+a.dataset.week) - (+b.dataset.week));
     for (const port of ports){
       const n = port.dataset.week;
-      for (let i=1; i<=TASKS_PER_WEEK; i++){
-        if (!state[`${n}.${i}`]) return { week:n, task:i, port };
+      if (PICK_ONE){
+        if (!weekComplete(state, n)) return { week:n, task:1, port };
+      } else {
+        for (let i=1; i<=TASKS_PER_WEEK; i++){
+          if (!state[`${n}.${i}`]) return { week:n, task:i, port };
+        }
       }
     }
     return null;

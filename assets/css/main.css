@@ -553,14 +553,46 @@ footer {
 .coming-soon p { color: var(--gray); }
 
 /* ── THEME TOGGLE ── */
+/* Theme toggle — sliding switch: silver-cross shield (dark) <-> silver empty-tomb
+   shield (bright), with a Dark/Bright Mode label. Markup-agnostic: restyles the
+   button entirely via the host + ::before label + ::after shield thumb, hiding
+   the legacy emoji text. Driven by [data-theme] (set by main.js / the pre-paint
+   guard), so no per-page markup change is needed. */
 .theme-toggle {
-  background: none; border: 1px solid var(--border);
-  cursor: pointer; font-size: 1.15rem; padding: 0.4rem 0.6rem;
-  border-radius: var(--radius); transition: all var(--transition);
-  line-height: 1; display: flex; align-items: center;
-  margin-left: 0.5rem; flex-shrink: 0;
+  position: relative; box-sizing: border-box;
+  width: 118px; min-width: 118px; height: 28px;
+  margin-left: 0.5rem; padding: 0; flex-shrink: 0;
+  border: 1px solid var(--border); border-radius: 14px;
+  background: var(--bg-card-2);
+  cursor: pointer; overflow: hidden; vertical-align: middle;
+  font-size: 0; color: transparent; line-height: 1;
+  transition: border-color var(--transition);
 }
 .theme-toggle:hover { border-color: var(--gold); }
+.theme-toggle > * { display: none; }
+/* label sits opposite the thumb. Default (light/bright): label left, tomb thumb right */
+.theme-toggle::before {
+  content: "Bright Mode";
+  position: absolute; top: 0; bottom: 0; left: 11px; right: 32px;
+  display: flex; align-items: center; justify-content: flex-start;
+  font-family: var(--font-sans); font-size: 8.5px; font-weight: 700;
+  letter-spacing: 0.06em; text-transform: uppercase; color: var(--gold);
+  white-space: nowrap; pointer-events: none;
+}
+.theme-toggle::after {
+  content: ""; position: absolute; top: 50%; left: calc(100% - 25px);
+  transform: translateY(-50%); width: 22px; height: 22px;
+  background: no-repeat center / contain;
+  background-image: url("/assets/icons/shield-toggle-tomb-96.png");
+  transition: left var(--transition); pointer-events: none;
+}
+/* dark mode: cross thumb slides left, label flips right */
+[data-theme="dark"] .theme-toggle::before {
+  content: "Dark Mode"; left: 32px; right: 11px; justify-content: flex-end;
+}
+[data-theme="dark"] .theme-toggle::after {
+  left: 3px; background-image: url("/assets/icons/shield-toggle-cross-96.png");
+}
 
 /* Light mode hero */
 :root .hero {

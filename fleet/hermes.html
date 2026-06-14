@@ -78,7 +78,7 @@
   <div class="footer-inner">
     <div class="footer-bottom">
       <div style="color:var(--gray);font-size:0.85rem;margin-bottom:0.4rem">
-        Fleet Command Center — auto-generated from live OpenClaw + Hermes state. Last updated: <strong>2026-06-14 03:45 UTC</strong></div>
+        Fleet Command Center — auto-generated from live OpenClaw + Hermes state. Last updated: <strong>2026-06-14 04:20 UTC</strong></div>
       <div style="color:var(--gray);font-size:0.8rem">© 2026 U.S.M.C. Ministries &nbsp;|&nbsp;
         <a href="../fleet/index.html">Dashboard</a> &nbsp;|&nbsp;
         <a href="../sitemap.html">Sitemap</a> &nbsp;|&nbsp;
@@ -87,5 +87,21 @@
   </div>
 </footer>
 <script src="../assets/js/main.js" defer></script>
+<script>
+(function(){
+  var GEN="2026-06-14T04:20:28.375695+00:00";
+  function rel(ms){ms=+ms;if(!ms)return"—";var s=(Date.now()-ms)/1000;
+    if(s<0)return"scheduled";if(s<3600)return Math.max(0,Math.floor(s/60))+"m ago";
+    if(s<86400)return Math.floor(s/3600)+"h ago";return Math.floor(s/86400)+"d ago";}
+  function tick(){document.querySelectorAll(".rel").forEach(function(e){
+    var t=e.getAttribute("data-ts");if(t&&t!=="0")e.textContent=rel(t);});}
+  tick();setInterval(tick,60000);
+  setInterval(function(){
+    if(document.visibilityState!=="visible")return;
+    fetch("fleet-data.json?_="+Date.now()).then(function(r){return r.json();}).then(function(d){
+      if(d&&d.generated&&d.generated!==GEN)location.reload();}).catch(function(){});
+  },180000);
+})();
+</script>
 </body>
 </html>

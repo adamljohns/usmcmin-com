@@ -1,0 +1,1447 @@
+{
+  "generated": "2026-06-14T03:30:43.071580+00:00",
+  "totals": {
+    "agents": 14,
+    "operational": 11,
+    "degraded": 3,
+    "jobs": 75,
+    "enabled": 43,
+    "accomplishments": 23,
+    "cowork": 28
+  },
+  "agents": [
+    {
+      "id": "main",
+      "primary": "google/gemini-2.5-flash",
+      "fallback": null,
+      "tools": [],
+      "n_jobs": 4,
+      "n_enabled": 4,
+      "err": 2,
+      "last_ms": 1781346600035,
+      "status": "degraded",
+      "accomplishments": [
+        {
+          "date": "2026-05-27",
+          "title": "Wired failure alerts across all 41 crons",
+          "detail": "Every enabled cron now Telegram-alerts Adam on failure \u2014 went from 0/41 to 41/41 coverage."
+        },
+        {
+          "date": "2026-05-22",
+          "title": "Tier-1/Tier-2 model routing",
+          "detail": "Split the fleet onto two resident Gemmas + lazy-loaded Qwen, ending the multi-model swap-death stalls."
+        },
+        {
+          "date": "2026-05-29",
+          "title": "Pipeline freshness watchdog",
+          "detail": "Added a daily watchdog that alerts on any stale agent data feed after a silent 3-day outage went unnoticed."
+        }
+      ],
+      "name": "Max Pemberton",
+      "callsign": "ADJUTANT",
+      "role": "Fleet Orchestrator",
+      "domain": "Command",
+      "tg": "@MiniMOOP_on_TG",
+      "accent": "#C9A227",
+      "blurb": "The adjutant. Routes work across the fleet, runs the morning standup and evening pulse, keeps memory and model-routing healthy, and answers \"who owns this?\"",
+      "jobs": [
+        {
+          "name": "Morning Adjutant Standup (6:30 AM) \u2014 Max",
+          "enabled": true,
+          "expr": "30 6 * * *",
+          "tz": "America/New_York",
+          "channel": "telegram",
+          "to": "454000856",
+          "last_ms": 1781346600035,
+          "status": "ok",
+          "errors": 0,
+          "dur_ms": 183003
+        },
+        {
+          "name": "Weekly Self-Audit (Sunday 2AM)",
+          "enabled": true,
+          "expr": "57 5 * * 6",
+          "tz": "America/New_York",
+          "channel": "telegram",
+          "to": "454000856",
+          "last_ms": 1781344620022,
+          "status": "error",
+          "errors": 5,
+          "dur_ms": 302431
+        },
+        {
+          "name": "Adjutant Evening Pulse (Weekday)",
+          "enabled": true,
+          "expr": "0 21,23 * * 1-5",
+          "tz": "America/New_York",
+          "channel": "telegram",
+          "to": "telegram:454000856",
+          "last_ms": 1781319600026,
+          "status": "ok",
+          "errors": 0,
+          "dur_ms": 202172
+        },
+        {
+          "name": "SimpleFIN Balance Pull (Finance Friday 6AM)",
+          "enabled": true,
+          "expr": "15 6 * * 5",
+          "tz": "",
+          "channel": "",
+          "to": "",
+          "last_ms": 1781259300028,
+          "status": "error",
+          "errors": 7,
+          "dur_ms": 182245
+        }
+      ]
+    },
+    {
+      "id": "hermes",
+      "primary": null,
+      "fallback": null,
+      "tools": [],
+      "n_jobs": 0,
+      "n_enabled": 0,
+      "err": 0,
+      "last_ms": null,
+      "status": "operational",
+      "accomplishments": [
+        {
+          "date": "2026-05-14",
+          "title": "Migrated brain to Qwen3.6-35B-A3B",
+          "detail": "Native vision + 256K context on llama-server :1235, replacing the prior stack."
+        },
+        {
+          "date": "2026-05-16",
+          "title": "Built notify-adam.sh + comms routing",
+          "detail": "A universal Telegram notifier any script can call, plus a routing card for Hermes / Max / PSA / Claude Code."
+        },
+        {
+          "date": "2026-06-13",
+          "title": "Fleet health watchdog",
+          "detail": "New :1235 soft-hang + RAG embed watchdog closes two silent-failure points found in the infra audit."
+        }
+      ],
+      "name": "Hermes",
+      "callsign": "STAFF-6",
+      "role": "Private Staff Officer",
+      "domain": "Command",
+      "tg": "@MOOPbotPro",
+      "accent": "#C9A227",
+      "blurb": "Adam's private, no-persona staff officer. Runs locally on Qwen3.6-35B-A3B (:1235), has full filesystem reach, and shells out to Claude Code for heavy edits. Peer to Max, not under his command.",
+      "jobs": []
+    },
+    {
+      "id": "preacher-john",
+      "primary": "lmstudio/mlx-community/gemma-4-31b-it",
+      "fallback": null,
+      "tools": [
+        "browser",
+        "exec",
+        "rag__agent_self_introspect",
+        "read",
+        "sessions_history",
+        "sessions_send",
+        "web_fetch",
+        "web_search",
+        "message"
+      ],
+      "n_jobs": 10,
+      "n_enabled": 10,
+      "err": 0,
+      "last_ms": 1781399220024,
+      "status": "operational",
+      "accomplishments": [
+        {
+          "date": "2026-06-02",
+          "title": "Scripture-lookup skill + BTE wireup",
+          "detail": "Pulls Bible Through the Experience chapter JSON across 12 translations (NKJV primary, 66 book IDs)."
+        },
+        {
+          "date": "2026-05-24",
+          "title": "10 daily Watch readings live",
+          "detail": "Five readings to the SDG-4 brotherhood and five to Adam's DM, every day, on schedule."
+        }
+      ],
+      "name": "Preacher John",
+      "callsign": "CHAPLAIN-1",
+      "role": "Scripture & Theology",
+      "domain": "Scripture",
+      "tg": "bot",
+      "accent": "#7E57C2",
+      "blurb": "John Wesley Graves, ThD. Delivers the daily Watch readings (10/day) to the SDG-4 brotherhood and Adam's DM, and handles theology and devotional work off the Bible Through the Experience corpus.",
+      "jobs": [
+        {
+          "name": "Personal Evening Peace (2107) \u2014 MOOP DM",
+          "enabled": true,
+          "expr": "7 21 * * *",
+          "tz": "",
+          "channel": "last",
+          "to": "",
+          "last_ms": 1781399220024,
+          "status": "ok",
+          "errors": 0,
+          "dur_ms": 200992
+        },
+        {
+          "name": "Evening Peace (2100) \u2014 SDG-4",
+          "enabled": true,
+          "expr": "0 21 * * *",
+          "tz": "America/New_York",
+          "channel": "last",
+          "to": "",
+          "last_ms": 1781398800022,
+          "status": "ok",
+          "errors": 0,
+          "dur_ms": 198195
+        },
+        {
+          "name": "Personal Citizen's Stand (1507) \u2014 MOOP DM",
+          "enabled": true,
+          "expr": "7 15 * * *",
+          "tz": "",
+          "channel": "last",
+          "to": "",
+          "last_ms": 1781377620024,
+          "status": "ok",
+          "errors": 0,
+          "dur_ms": 203891
+        },
+        {
+          "name": "Citizen's Stand (1500) \u2014 SDG-4",
+          "enabled": true,
+          "expr": "0 15 * * *",
+          "tz": "America/New_York",
+          "channel": "last",
+          "to": "",
+          "last_ms": 1781377200021,
+          "status": "ok",
+          "errors": 0,
+          "dur_ms": 202458
+        },
+        {
+          "name": "Personal Father's Charge (1107) \u2014 MOOP DM",
+          "enabled": true,
+          "expr": "7 11 * * *",
+          "tz": "",
+          "channel": "last",
+          "to": "",
+          "last_ms": 1781363220023,
+          "status": "ok",
+          "errors": 0,
+          "dur_ms": 220136
+        },
+        {
+          "name": "Father's Charge (1100) \u2014 SDG-4",
+          "enabled": true,
+          "expr": "0 11 * * *",
+          "tz": "America/New_York",
+          "channel": "last",
+          "to": "",
+          "last_ms": 1781362800024,
+          "status": "ok",
+          "errors": 0,
+          "dur_ms": 275334
+        },
+        {
+          "name": "Personal Husband's Post (0707) \u2014 MOOP DM",
+          "enabled": true,
+          "expr": "7 7 * * *",
+          "tz": "",
+          "channel": "last",
+          "to": "",
+          "last_ms": 1781348820018,
+          "status": "ok",
+          "errors": 0,
+          "dur_ms": 211185
+        },
+        {
+          "name": "Husband's Post (0700) \u2014 SDG-4",
+          "enabled": true,
+          "expr": "0 7 * * *",
+          "tz": "America/New_York",
+          "channel": "last",
+          "to": "",
+          "last_ms": 1781348400016,
+          "status": "ok",
+          "errors": 0,
+          "dur_ms": 225634
+        },
+        {
+          "name": "Personal Morning Wisdom (0607) \u2014 MOOP DM",
+          "enabled": true,
+          "expr": "7 6 * * *",
+          "tz": "",
+          "channel": "last",
+          "to": "",
+          "last_ms": 1781345220027,
+          "status": "ok",
+          "errors": 0,
+          "dur_ms": 377930
+        },
+        {
+          "name": "Morning Wisdom (0600) \u2014 SDG-4",
+          "enabled": true,
+          "expr": "0 6 * * *",
+          "tz": "America/New_York",
+          "channel": "last",
+          "to": "",
+          "last_ms": 1781344924905,
+          "status": "ok",
+          "errors": 0,
+          "dur_ms": 250740
+        }
+      ]
+    },
+    {
+      "id": "chaps",
+      "primary": "lmstudio/mlx-community/gemma-4-31b-it",
+      "fallback": null,
+      "tools": [
+        "browser",
+        "exec",
+        "rag__agent_self_introspect",
+        "read",
+        "sessions_history",
+        "sessions_send",
+        "web_fetch",
+        "web_search"
+      ],
+      "n_jobs": 6,
+      "n_enabled": 2,
+      "err": 1,
+      "last_ms": 1781211600017,
+      "status": "degraded",
+      "accomplishments": [
+        {
+          "date": "2026-06-11",
+          "title": "Church directory to 28,517 churches",
+          "detail": "Shattered the 7,777 target; added dedup guard, virtual rendering, and substantiation workflow."
+        },
+        {
+          "date": "2026-05-29",
+          "title": "usmcmin.org shipped as an offline PWA",
+          "detail": "Service worker app-shell precache across 84 top-level pages, installable + offline."
+        }
+      ],
+      "name": "Chaplain Chuck",
+      "callsign": "MINISTRY-6",
+      "role": "Ministry Operations",
+      "domain": "Ministry",
+      "tg": "bot",
+      "accent": "#5C9EAD",
+      "blurb": "Runs U.S.M.C. Ministries operations: pastoral intake, the 28k+ church directory, and the weekly usmcmin.org site backup.",
+      "jobs": [
+        {
+          "name": "Chaps Weekly Counseling Sweep (Thu 5PM)",
+          "enabled": true,
+          "expr": "0 17 * * 4",
+          "tz": "America/New_York",
+          "channel": "telegram",
+          "to": "454000856",
+          "last_ms": 1781211600017,
+          "status": "ok",
+          "errors": 0,
+          "dur_ms": 107518
+        },
+        {
+          "name": "Weekly usmcmin.org Site Backup",
+          "enabled": true,
+          "expr": "0 3 * * 1",
+          "tz": "America/New_York",
+          "channel": "telegram",
+          "to": "454000856",
+          "last_ms": 1780902000028,
+          "status": "error",
+          "errors": 2,
+          "dur_ms": 182237
+        },
+        {
+          "name": "ChatGPT Mine \u2014 C-1 Vision & C-5 Credentialing",
+          "enabled": false,
+          "expr": "",
+          "tz": "",
+          "channel": "telegram",
+          "to": "454000856",
+          "last_ms": null,
+          "status": "\u2014",
+          "errors": 0,
+          "dur_ms": null
+        },
+        {
+          "name": "ChatGPT Mine \u2014 C-4 Brotherhood Deep Dive",
+          "enabled": false,
+          "expr": "",
+          "tz": "",
+          "channel": "telegram",
+          "to": "454000856",
+          "last_ms": null,
+          "status": "\u2014",
+          "errors": 0,
+          "dur_ms": null
+        },
+        {
+          "name": "ChatGPT Mine \u2014 E-2c Finance & C-10/C-11/C-12",
+          "enabled": false,
+          "expr": "",
+          "tz": "",
+          "channel": "telegram",
+          "to": "454000856",
+          "last_ms": null,
+          "status": "\u2014",
+          "errors": 0,
+          "dur_ms": null
+        },
+        {
+          "name": "ChatGPT Mine \u2014 Bible Deck & Cross-Desk Scan",
+          "enabled": false,
+          "expr": "",
+          "tz": "",
+          "channel": "telegram",
+          "to": "454000856",
+          "last_ms": null,
+          "status": "\u2014",
+          "errors": 0,
+          "dur_ms": null
+        }
+      ]
+    },
+    {
+      "id": "carnegie",
+      "primary": "lmstudio/qwen2.5-32b-instruct",
+      "fallback": null,
+      "tools": [
+        "browser",
+        "rag__agent_self_introspect",
+        "read",
+        "sessions_history",
+        "sessions_send",
+        "web_fetch",
+        "web_search"
+      ],
+      "n_jobs": 10,
+      "n_enabled": 9,
+      "err": 1,
+      "last_ms": 1781350200030,
+      "status": "degraded",
+      "accomplishments": [
+        {
+          "date": "2026-05-26",
+          "title": "Qwen-32B pre-warmup cron",
+          "detail": "Forces a JIT model load before the 7:30 daily post, ending the 'model not loaded' race on tight schedules."
+        },
+        {
+          "date": "2026-05-09",
+          "title": "Six themed daily-post crons",
+          "detail": "Baked the weekday theme into each cron so the model never has to guess the day; fixed the silver=gold price bug."
+        }
+      ],
+      "name": "Andrew Carnegie III",
+      "callsign": "CAPITAL-1",
+      "role": "Capital Steward",
+      "domain": "Capital",
+      "tg": "bot",
+      "accent": "#C9A227",
+      "blurb": "CFA/JD on Qwen-32B. Publishes the C5iSR daily market post (Mon\u2013Sat), tracks crypto and metals, and frames capital allocation as stewardship.",
+      "jobs": [
+        {
+          "name": "C5iSR SATURDAY \u2014 RESOURCE SHARE",
+          "enabled": true,
+          "expr": "30 7 * * 6",
+          "tz": "America/New_York",
+          "channel": "telegram",
+          "to": "-1001923969923",
+          "last_ms": 1781350200030,
+          "status": "ok",
+          "errors": 0,
+          "dur_ms": 109113
+        },
+        {
+          "name": "C5iSR PRE-WARMUP (Qwen 32B before daily post)",
+          "enabled": true,
+          "expr": "25 7 * * 1-6",
+          "tz": "America/New_York",
+          "channel": "last",
+          "to": "",
+          "last_ms": 1781349900015,
+          "status": "ok",
+          "errors": 0,
+          "dur_ms": 34810
+        },
+        {
+          "name": "C5iSR Price Pre-Fetch (7:23AM Mon-Sat)",
+          "enabled": true,
+          "expr": "23 7 * * 1-6",
+          "tz": "",
+          "channel": "",
+          "to": "",
+          "last_ms": 1781349780011,
+          "status": "ok",
+          "errors": 0,
+          "dur_ms": 6981
+        },
+        {
+          "name": "C5iSR FRIDAY \u2014 WEEKLY REPORT + PREDICTION",
+          "enabled": true,
+          "expr": "30 7 * * 5",
+          "tz": "America/New_York",
+          "channel": "telegram",
+          "to": "-1001923969923",
+          "last_ms": 1781263800018,
+          "status": "ok",
+          "errors": 0,
+          "dur_ms": 111163
+        },
+        {
+          "name": "C5iSR THURSDAY \u2014 KINGDOM FINANCE",
+          "enabled": true,
+          "expr": "30 7 * * 4",
+          "tz": "America/New_York",
+          "channel": "telegram",
+          "to": "-1001923969923",
+          "last_ms": 1781177400013,
+          "status": "ok",
+          "errors": 0,
+          "dur_ms": 103962
+        },
+        {
+          "name": "C5iSR WEDNESDAY \u2014 WISDOM",
+          "enabled": true,
+          "expr": "30 7 * * 3",
+          "tz": "America/New_York",
+          "channel": "telegram",
+          "to": "-1001923969923",
+          "last_ms": 1781091000017,
+          "status": "ok",
+          "errors": 0,
+          "dur_ms": 129282
+        },
+        {
+          "name": "C5iSR TUESDAY \u2014 STEWARDSHIP",
+          "enabled": true,
+          "expr": "30 7 * * 2",
+          "tz": "America/New_York",
+          "channel": "telegram",
+          "to": "-1001923969923",
+          "last_ms": 1781004600011,
+          "status": "ok",
+          "errors": 0,
+          "dur_ms": 101610
+        },
+        {
+          "name": "Melaleuca Monday Briefing",
+          "enabled": true,
+          "expr": "0 11 * * 1",
+          "tz": "America/New_York",
+          "channel": "telegram",
+          "to": "telegram:454000856",
+          "last_ms": 1780930800023,
+          "status": "error",
+          "errors": 1,
+          "dur_ms": 302323
+        },
+        {
+          "name": "C5iSR MONDAY \u2014 MARKET INTEL",
+          "enabled": true,
+          "expr": "30 7 * * 1",
+          "tz": "America/New_York",
+          "channel": "telegram",
+          "to": "-1001923969923",
+          "last_ms": 1780918200012,
+          "status": "ok",
+          "errors": 0,
+          "dur_ms": 108614
+        },
+        {
+          "name": "C5iSR Daily Post \u2014 Carnegie (Mon-Sat 7:30AM)",
+          "enabled": false,
+          "expr": "30 7 * * 1-6",
+          "tz": "America/New_York",
+          "channel": "telegram",
+          "to": "-1001923969923",
+          "last_ms": 1778326200014,
+          "status": "ok",
+          "errors": 0,
+          "dur_ms": 138869
+        }
+      ]
+    },
+    {
+      "id": "sally",
+      "primary": "lmstudio/mlx-community/gemma-4-31b-it",
+      "fallback": null,
+      "tools": [
+        "browser",
+        "exec",
+        "read",
+        "sessions_history",
+        "sessions_send",
+        "web_fetch",
+        "web_search"
+      ],
+      "n_jobs": 3,
+      "n_enabled": 1,
+      "err": 0,
+      "last_ms": 1781182800020,
+      "status": "operational",
+      "accomplishments": [
+        {
+          "date": "2026-05-27",
+          "title": "Hospitality-finance reasoning block",
+          "detail": "Added a CPA register that fires during analysis and switches back to hospitality voice for the guest-facing reply."
+        },
+        {
+          "date": "2026-05-05",
+          "title": "Airbnb autopilot live",
+          "detail": "Twice-daily dashboard pull feeding the occupancy/payout digest, with cookie-expiry handling."
+        }
+      ],
+      "name": "Sally Mae Thornton",
+      "callsign": "HOSPITALITY-1",
+      "role": "Hospitality & Finance",
+      "domain": "Hospitality",
+      "tg": "bot",
+      "accent": "#E8743B",
+      "blurb": "MBA/CPA. Runs Bow & Arrow's Airbnb operations \u2014 guest comms, direct bookings, daily occupancy digest \u2014 and the B&A books.",
+      "jobs": [
+        {
+          "name": "Monthly Suzanne Check-in Reminder",
+          "enabled": true,
+          "expr": "0 9 1 * *",
+          "tz": "America/New_York",
+          "channel": "telegram",
+          "to": "454000856",
+          "last_ms": 1780318800008,
+          "status": "ok",
+          "errors": 0,
+          "dur_ms": 25403
+        },
+        {
+          "name": "Airbnb Daily Digest (9AM) \u2014 Sally Mae",
+          "enabled": false,
+          "expr": "0 9 * * *",
+          "tz": "America/New_York",
+          "channel": "telegram",
+          "to": "454000856",
+          "last_ms": 1781182800020,
+          "status": "error",
+          "errors": 9,
+          "dur_ms": 602390
+        },
+        {
+          "name": "Remind Adam: Apt 7 smartlock batteries",
+          "enabled": false,
+          "expr": "",
+          "tz": "",
+          "channel": "telegram",
+          "to": "454000856",
+          "last_ms": 1775218986414,
+          "status": "error",
+          "errors": 1,
+          "dur_ms": 5056
+        }
+      ]
+    },
+    {
+      "id": "coach-arnie",
+      "primary": "lmstudio/mlx-community/gemma-4-31b-it",
+      "fallback": null,
+      "tools": [
+        "browser",
+        "rag__agent_self_introspect",
+        "read",
+        "sessions_history",
+        "sessions_send",
+        "web_fetch",
+        "web_search"
+      ],
+      "n_jobs": 4,
+      "n_enabled": 2,
+      "err": 0,
+      "last_ms": 1781366400028,
+      "status": "operational",
+      "accomplishments": [
+        {
+          "date": "2026-05-10",
+          "title": "Garmin autopilot",
+          "detail": "Browser-based Garmin Connect pull with 1Password re-auth on cookie expiry, feeding the morning fitness brief."
+        }
+      ],
+      "name": "Coach Arnold Briggs",
+      "callsign": "FITNESS-1",
+      "role": "Fitness Coach",
+      "domain": "Fitness",
+      "tg": "bot",
+      "accent": "#2E9E5B",
+      "blurb": "Tracks Garmin metrics and fit20 training, builds the morning fitness brief, and keeps the calorie/recovery picture honest.",
+      "jobs": [
+        {
+          "name": "Coach Midday Garmin Read (12:00 EDT)",
+          "enabled": true,
+          "expr": "0 12 * * *",
+          "tz": "America/New_York",
+          "channel": "telegram",
+          "to": "454000856",
+          "last_ms": 1781366400028,
+          "status": "ok",
+          "errors": 0,
+          "dur_ms": 82889
+        },
+        {
+          "name": "Coach Arnie Monday Weekly Audit (Mon 6AM)",
+          "enabled": true,
+          "expr": "15 6 * * 1",
+          "tz": "",
+          "channel": "",
+          "to": "",
+          "last_ms": 1780913700017,
+          "status": "ok",
+          "errors": 0,
+          "dur_ms": 99414
+        },
+        {
+          "name": "Garmin API Auth Retry #2",
+          "enabled": false,
+          "expr": "",
+          "tz": "",
+          "channel": "telegram",
+          "to": "454000856",
+          "last_ms": 1775181600142,
+          "status": "error",
+          "errors": 1,
+          "dur_ms": 120131
+        },
+        {
+          "name": "Garmin Connect Auth Retry",
+          "enabled": false,
+          "expr": "",
+          "tz": "",
+          "channel": "telegram",
+          "to": "454000856",
+          "last_ms": 1775096400012,
+          "status": "error",
+          "errors": 1,
+          "dur_ms": 120282
+        }
+      ]
+    },
+    {
+      "id": "doc",
+      "primary": "lmstudio/mlx-community/gemma-4-31b-it",
+      "fallback": null,
+      "tools": [
+        "browser",
+        "rag__agent_self_introspect",
+        "read",
+        "sessions_history",
+        "sessions_send",
+        "web_fetch",
+        "web_search"
+      ],
+      "n_jobs": 6,
+      "n_enabled": 1,
+      "err": 0,
+      "last_ms": 1781352000024,
+      "status": "operational",
+      "accomplishments": [
+        {
+          "date": "2026-06-01",
+          "title": "Midday Garmin clinical pull",
+          "detail": "Owns the health/vitals lane, turning Garmin data into medically-literate context."
+        }
+      ],
+      "name": "Doc Hartley",
+      "callsign": "MEDICAL-1",
+      "role": "Health & Medical",
+      "domain": "Health",
+      "tg": "bot",
+      "accent": "#2E9E5B",
+      "blurb": "MD. Owns the clinical/health lane \u2014 vitals context, the midday Garmin pull, and turning fitness data into medically-literate guidance.",
+      "jobs": [
+        {
+          "name": "Doc Morning Clinical Read (0800 EDT)",
+          "enabled": true,
+          "expr": "0 8 * * *",
+          "tz": "",
+          "channel": "telegram",
+          "to": "454000856",
+          "last_ms": 1781352000024,
+          "status": "ok",
+          "errors": 0,
+          "dur_ms": 91740
+        },
+        {
+          "name": "Doc datamine batch 1 \u2014 G-9 Doctors Orders + G-2 Biomarkers",
+          "enabled": false,
+          "expr": "",
+          "tz": "",
+          "channel": "",
+          "to": "",
+          "last_ms": 1775301594539,
+          "status": "error",
+          "errors": 1,
+          "dur_ms": 274193
+        },
+        {
+          "name": "Garmin first-login retry",
+          "enabled": false,
+          "expr": "",
+          "tz": "",
+          "channel": "telegram",
+          "to": "454000856",
+          "last_ms": 1775012100141,
+          "status": "error",
+          "errors": 1,
+          "dur_ms": 57384
+        },
+        {
+          "name": "Doc datamine batch 2 \u2014 G-5 Sleep + G-3 Supplements",
+          "enabled": false,
+          "expr": "",
+          "tz": "",
+          "channel": "",
+          "to": "",
+          "last_ms": null,
+          "status": "\u2014",
+          "errors": 0,
+          "dur_ms": null
+        },
+        {
+          "name": "Doc datamine batch 4 \u2014 G-7 Family Health + G-4 Recovery + Health Summary",
+          "enabled": false,
+          "expr": "",
+          "tz": "",
+          "channel": "",
+          "to": "",
+          "last_ms": null,
+          "status": "\u2014",
+          "errors": 0,
+          "dur_ms": null
+        },
+        {
+          "name": "Doc datamine batch 5 \u2014 G-8 Melaleuca + G-1 Nutrition Log + Final Compile",
+          "enabled": false,
+          "expr": "",
+          "tz": "",
+          "channel": "telegram",
+          "to": "454000856",
+          "last_ms": null,
+          "status": "\u2014",
+          "errors": 0,
+          "dur_ms": null
+        }
+      ]
+    },
+    {
+      "id": "sheriff-roy",
+      "primary": "lmstudio/mlx-community/gemma-4-31b-it",
+      "fallback": null,
+      "tools": [
+        "web_search",
+        "web_fetch",
+        "sessions_send",
+        "sessions_history",
+        "read"
+      ],
+      "n_jobs": 6,
+      "n_enabled": 2,
+      "err": 0,
+      "last_ms": 1781389800027,
+      "status": "operational",
+      "accomplishments": [
+        {
+          "date": "2026-05-26",
+          "title": "FXBG civic intel rounds",
+          "detail": "Twice-daily Fredericksburg civic monitoring feeding the RESOLUTE Citizen scorecard and RESOLUTE Local."
+        }
+      ],
+      "name": "Sheriff Roy Caldwell",
+      "callsign": "CIVIC-1",
+      "role": "Civic Watch",
+      "domain": "Civic",
+      "tg": "bot",
+      "accent": "#3F7CAC",
+      "blurb": "Monitors Fredericksburg civic life \u2014 council, governance, the RESOLUTE Citizen scorecard \u2014 and feeds the RESOLUTE Local civic pipeline.",
+      "jobs": [
+        {
+          "name": "Evening Civic Watch (6:30 PM) \u2014 Sheriff Roy",
+          "enabled": true,
+          "expr": "30 18 * * *",
+          "tz": "America/New_York",
+          "channel": "last",
+          "to": "",
+          "last_ms": 1781389800027,
+          "status": "ok",
+          "errors": 0,
+          "dur_ms": 161387
+        },
+        {
+          "name": "Sheriff Roy Fxbg Council Brief (Tue 6PM)",
+          "enabled": true,
+          "expr": "0 18 * * 2",
+          "tz": "America/New_York",
+          "channel": "",
+          "to": "",
+          "last_ms": 1781042400024,
+          "status": "ok",
+          "errors": 0,
+          "dur_ms": 137771
+        },
+        {
+          "name": "chatgpt-mine-batch-3-community",
+          "enabled": false,
+          "expr": "",
+          "tz": "",
+          "channel": "telegram",
+          "to": "454000856",
+          "last_ms": 1775303048223,
+          "status": "error",
+          "errors": 1,
+          "dur_ms": 300033
+        },
+        {
+          "name": "chatgpt-mine-batch-2-churches",
+          "enabled": false,
+          "expr": "",
+          "tz": "",
+          "channel": "telegram",
+          "to": "454000856",
+          "last_ms": null,
+          "status": "\u2014",
+          "errors": 0,
+          "dur_ms": null
+        },
+        {
+          "name": "chatgpt-mine-batch-4-property",
+          "enabled": false,
+          "expr": "",
+          "tz": "",
+          "channel": "telegram",
+          "to": "454000856",
+          "last_ms": null,
+          "status": "\u2014",
+          "errors": 0,
+          "dur_ms": null
+        },
+        {
+          "name": "chatgpt-mine-batch-5-amanda-vehicle",
+          "enabled": false,
+          "expr": "",
+          "tz": "",
+          "channel": "telegram",
+          "to": "454000856",
+          "last_ms": null,
+          "status": "\u2014",
+          "errors": 0,
+          "dur_ms": null
+        }
+      ]
+    },
+    {
+      "id": "prof-x",
+      "primary": "lmstudio/qwen2.5-32b-instruct",
+      "fallback": null,
+      "tools": [
+        "read",
+        "write",
+        "exec",
+        "sessions_send"
+      ],
+      "n_jobs": 10,
+      "n_enabled": 2,
+      "err": 0,
+      "last_ms": 1781343000021,
+      "status": "operational",
+      "accomplishments": [
+        {
+          "date": "2026-05-27",
+          "title": "Newsletter synthesis + day counter",
+          "detail": "Dynamic day-N header computed at runtime, replacing a hardcoded date; tightened persona + capability honesty."
+        }
+      ],
+      "name": "Professor Xavier Archimedes",
+      "callsign": "RESEARCH-1",
+      "role": "Research & Synthesis",
+      "domain": "Research",
+      "tg": "bot",
+      "accent": "#8E6FB0",
+      "blurb": "PhD on Qwen-32B. Synthesizes research, builds reading lists, and writes the daily newsletter synthesis with a running day counter.",
+      "jobs": [
+        {
+          "name": "Newsletter Synthesis (5:30 AM) \u2014 Prof X",
+          "enabled": true,
+          "expr": "30 5 * * *",
+          "tz": "America/New_York",
+          "channel": "last",
+          "to": "",
+          "last_ms": 1781343000021,
+          "status": "ok",
+          "errors": 0,
+          "dur_ms": 91292
+        },
+        {
+          "name": "Prof X Weekly Synthesis (Fri 4PM)",
+          "enabled": true,
+          "expr": "0 16 * * 5",
+          "tz": "America/New_York",
+          "channel": "",
+          "to": "",
+          "last_ms": 1781294400018,
+          "status": "ok",
+          "errors": 0,
+          "dur_ms": 185970
+        },
+        {
+          "name": "profx-mine-batch-8",
+          "enabled": false,
+          "expr": "",
+          "tz": "",
+          "channel": "telegram",
+          "to": "454000856",
+          "last_ms": 1775307122827,
+          "status": "error",
+          "errors": 1,
+          "dur_ms": 251729
+        },
+        {
+          "name": "profx-mine-batch-1",
+          "enabled": false,
+          "expr": "",
+          "tz": "",
+          "channel": "telegram",
+          "to": "454000856",
+          "last_ms": 1775301164919,
+          "status": "error",
+          "errors": 1,
+          "dur_ms": 429620
+        },
+        {
+          "name": "profx-mine-batch-2",
+          "enabled": false,
+          "expr": "",
+          "tz": "",
+          "channel": "telegram",
+          "to": "454000856",
+          "last_ms": null,
+          "status": "\u2014",
+          "errors": 0,
+          "dur_ms": null
+        },
+        {
+          "name": "profx-mine-batch-4",
+          "enabled": false,
+          "expr": "",
+          "tz": "",
+          "channel": "telegram",
+          "to": "454000856",
+          "last_ms": null,
+          "status": "\u2014",
+          "errors": 0,
+          "dur_ms": null
+        },
+        {
+          "name": "profx-mine-batch-5",
+          "enabled": false,
+          "expr": "",
+          "tz": "",
+          "channel": "telegram",
+          "to": "454000856",
+          "last_ms": null,
+          "status": "\u2014",
+          "errors": 0,
+          "dur_ms": null
+        },
+        {
+          "name": "profx-mine-batch-6",
+          "enabled": false,
+          "expr": "",
+          "tz": "",
+          "channel": "telegram",
+          "to": "454000856",
+          "last_ms": null,
+          "status": "\u2014",
+          "errors": 0,
+          "dur_ms": null
+        },
+        {
+          "name": "profx-mine-batch-7",
+          "enabled": false,
+          "expr": "",
+          "tz": "",
+          "channel": "telegram",
+          "to": "454000856",
+          "last_ms": null,
+          "status": "\u2014",
+          "errors": 0,
+          "dur_ms": null
+        },
+        {
+          "name": "profx-mine-batch-9-final",
+          "enabled": false,
+          "expr": "",
+          "tz": "",
+          "channel": "telegram",
+          "to": "454000856",
+          "last_ms": null,
+          "status": "\u2014",
+          "errors": 0,
+          "dur_ms": null
+        }
+      ]
+    },
+    {
+      "id": "rush",
+      "primary": "lmstudio/mlx-community/gemma-4-31b-it",
+      "fallback": null,
+      "tools": [
+        "web_search",
+        "web_fetch",
+        "sessions_send",
+        "sessions_history",
+        "read"
+      ],
+      "n_jobs": 1,
+      "n_enabled": 1,
+      "err": 0,
+      "last_ms": 1781370000021,
+      "status": "operational",
+      "accomplishments": [
+        {
+          "date": "2026-05-26",
+          "title": "8-feed news desk",
+          "detail": "Restored full RSS coverage (8/8 feeds, ~40 items) with an Atom fallback parser and browser-UA workaround."
+        }
+      ],
+      "name": "Rush Sullivan",
+      "callsign": "NEWSDESK-1",
+      "role": "News Correspondent",
+      "domain": "News",
+      "tg": "bot",
+      "accent": "#3F7CAC",
+      "blurb": "AP-style correspondent. Aggregates the daily news brief across 8 RSS feeds and the finance wire \u2014 sharp, fast, factual.",
+      "jobs": [
+        {
+          "name": "Daily News Brief (1:00 PM) \u2014 Rush",
+          "enabled": true,
+          "expr": "0 13 * * *",
+          "tz": "America/New_York",
+          "channel": "last",
+          "to": "",
+          "last_ms": 1781370000021,
+          "status": "ok",
+          "errors": 0,
+          "dur_ms": 83973
+        }
+      ]
+    },
+    {
+      "id": "pops",
+      "primary": "lmstudio/mlx-community/gemma-4-31b-it",
+      "fallback": null,
+      "tools": [
+        "browser",
+        "memory_search",
+        "read",
+        "sessions_send",
+        "write"
+      ],
+      "n_jobs": 11,
+      "n_enabled": 5,
+      "err": 0,
+      "last_ms": 1781397000014,
+      "status": "operational",
+      "accomplishments": [
+        {
+          "date": "2026-05-26",
+          "title": "Inbox autopilot live with real mutations",
+          "detail": "First PSA email autopilot acting for real \u2014 fixed a 38-day-silent Gmail-trash bug; first run trashed 7, archived 1."
+        },
+        {
+          "date": "2026-05-26",
+          "title": "Daily wheelhouse + Spirit Front",
+          "detail": "Morning check-in, evening reflection capture, and weekly SITREP."
+        }
+      ],
+      "name": "Pops Henderson",
+      "callsign": "HOMEFRONT-1",
+      "role": "Family & Inbox",
+      "domain": "Family",
+      "tg": "bot",
+      "accent": "#E8743B",
+      "blurb": "The home-front agent. Runs the daily wheelhouse check-in, the evening Spirit Front capture, and the personal Gmail inbox autopilot.",
+      "jobs": [
+        {
+          "name": "Pops Spirit Front Evening Capture (2030)",
+          "enabled": true,
+          "expr": "30 20 * * *",
+          "tz": "America/New_York",
+          "channel": "telegram",
+          "to": "454000856",
+          "last_ms": 1781397000014,
+          "status": "ok",
+          "errors": 0,
+          "dur_ms": 86584
+        },
+        {
+          "name": "Pops Daily Wheelhouse Check-in (6:36 AM)",
+          "enabled": true,
+          "expr": "36 6 * * *",
+          "tz": "America/New_York",
+          "channel": "telegram",
+          "to": "454000856",
+          "last_ms": 1781346960022,
+          "status": "ok",
+          "errors": 0,
+          "dur_ms": 111877
+        },
+        {
+          "name": "Pops Spirit Front Weekly SITREP (Sun 1900)",
+          "enabled": true,
+          "expr": "0 19 * * 0",
+          "tz": "America/New_York",
+          "channel": "telegram",
+          "to": "454000856",
+          "last_ms": 1780873200016,
+          "status": "ok",
+          "errors": 0,
+          "dur_ms": 110231
+        },
+        {
+          "name": "Pops Sunday Family Huddle Agenda Draft (Sun 4 PM)",
+          "enabled": true,
+          "expr": "0 16 * * 0",
+          "tz": "America/New_York",
+          "channel": "telegram",
+          "to": "454000856",
+          "last_ms": 1780862400024,
+          "status": "ok",
+          "errors": 0,
+          "dur_ms": 128529
+        },
+        {
+          "name": "Pops Spirit Front Monthly Pulse + Vision-Read (1st 0700)",
+          "enabled": true,
+          "expr": "20 7 1 * *",
+          "tz": "",
+          "channel": "telegram",
+          "to": "454000856",
+          "last_ms": 1780412128633,
+          "status": "ok",
+          "errors": 0,
+          "dur_ms": 93148
+        },
+        {
+          "name": "Pops Family-Captain Weekly Prep (Wed 8AM)",
+          "enabled": false,
+          "expr": "0 8 * * 3",
+          "tz": "America/New_York",
+          "channel": "",
+          "to": "",
+          "last_ms": 1778068800020,
+          "status": "error",
+          "errors": 2,
+          "dur_ms": 15565
+        },
+        {
+          "name": "B-Deck Mine: Batch 3 \u2014 Kids Formation & Parenting",
+          "enabled": false,
+          "expr": "",
+          "tz": "",
+          "channel": "",
+          "to": "",
+          "last_ms": 1775323651630,
+          "status": "error",
+          "errors": 1,
+          "dur_ms": 300008
+        },
+        {
+          "name": "B-Deck Mine: Batch 2 \u2014 Marriage & Romance",
+          "enabled": false,
+          "expr": "",
+          "tz": "",
+          "channel": "",
+          "to": "",
+          "last_ms": 1775322174294,
+          "status": "error",
+          "errors": 1,
+          "dur_ms": 300071
+        },
+        {
+          "name": "B-Deck Mine: Batch 1 \u2014 Wheelhouse Threads",
+          "enabled": false,
+          "expr": "",
+          "tz": "",
+          "channel": "",
+          "to": "",
+          "last_ms": null,
+          "status": "\u2014",
+          "errors": 0,
+          "dur_ms": null
+        },
+        {
+          "name": "B-Deck Mine: Batch 4 \u2014 Brotherhood & Coaching",
+          "enabled": false,
+          "expr": "",
+          "tz": "",
+          "channel": "",
+          "to": "",
+          "last_ms": null,
+          "status": "\u2014",
+          "errors": 0,
+          "dur_ms": null
+        },
+        {
+          "name": "B-Deck Mine: Batch 5 \u2014 Household Ops & Creative",
+          "enabled": false,
+          "expr": "",
+          "tz": "",
+          "channel": "",
+          "to": "",
+          "last_ms": null,
+          "status": "\u2014",
+          "errors": 0,
+          "dur_ms": null
+        }
+      ]
+    },
+    {
+      "id": "sgt-maj-mac",
+      "primary": "lmstudio/mlx-community/gemma-4-31b-it",
+      "fallback": null,
+      "tools": [
+        "read",
+        "sessions_send"
+      ],
+      "n_jobs": 2,
+      "n_enabled": 2,
+      "err": 0,
+      "last_ms": 1781357400040,
+      "status": "operational",
+      "accomplishments": [
+        {
+          "date": "2026-05-10",
+          "title": "Distinctive voice on plain Gemma",
+          "detail": "Passes the voice probe telling real NCO stories \u2014 no LoRA needed; SOUL.md carries the persona."
+        }
+      ],
+      "name": "SgtMaj Mac McAllister",
+      "callsign": "STANDARDS-1",
+      "role": "Standards & Discipline",
+      "domain": "Standards",
+      "tg": "bot",
+      "accent": "#B0413E",
+      "blurb": "USMC (Ret.). Runs the daily standards check and military briefings \u2014 the voice that holds the line on discipline.",
+      "jobs": [
+        {
+          "name": "Daily Standards Check (9:30 AM) \u2014 Mac",
+          "enabled": true,
+          "expr": "30 9 * * *",
+          "tz": "America/New_York",
+          "channel": "last",
+          "to": "",
+          "last_ms": 1781357400040,
+          "status": "ok",
+          "errors": 0,
+          "dur_ms": 71920
+        },
+        {
+          "name": "Mac Weekly VA + Military Briefing (Sat 7AM)",
+          "enabled": true,
+          "expr": "15 7 * * 6",
+          "tz": "",
+          "channel": "telegram",
+          "to": "454000856",
+          "last_ms": 1781349300015,
+          "status": "ok",
+          "errors": 0,
+          "dur_ms": 57113
+        }
+      ]
+    },
+    {
+      "id": "bg-hartwell",
+      "primary": "lmstudio/mlx-community/gemma-4-31b-it",
+      "fallback": null,
+      "tools": [
+        "read",
+        "sessions_send"
+      ],
+      "n_jobs": 2,
+      "n_enabled": 2,
+      "err": 0,
+      "last_ms": 1781359200030,
+      "status": "operational",
+      "accomplishments": [
+        {
+          "date": "2026-05-10",
+          "title": "Sunday reading lists + theology research",
+          "detail": "Cites Augustine's Confessions by book and chapter; voice holds post-session-reset on plain Gemma."
+        }
+      ],
+      "name": "BG Gus Hartwell",
+      "callsign": "DIVINITY-1",
+      "role": "Theology Research",
+      "domain": "Theology",
+      "tg": "bot",
+      "accent": "#7E57C2",
+      "blurb": "USMC (Ret.), Augustine scholar. Deep theology research and the Sunday reading lists \u2014 cites the Confessions by book and chapter.",
+      "jobs": [
+        {
+          "name": "Daily Strategic Note (10:00 AM) \u2014 Gus",
+          "enabled": true,
+          "expr": "0 10 * * *",
+          "tz": "America/New_York",
+          "channel": "last",
+          "to": "",
+          "last_ms": 1781359200030,
+          "status": "ok",
+          "errors": 0,
+          "dur_ms": 61255
+        },
+        {
+          "name": "Gus Sunday Reading List + Reflection (Sun 6PM)",
+          "enabled": true,
+          "expr": "0 18 * * 0",
+          "tz": "America/New_York",
+          "channel": "telegram",
+          "to": "454000856",
+          "last_ms": 1780869600018,
+          "status": "ok",
+          "errors": 0,
+          "dur_ms": 78379
+        }
+      ]
+    }
+  ],
+  "cowork": [
+    "ai-boot-camp-for-family-leaders",
+    "anthropic-dev-academy-4-week-sprint",
+    "anthropic-developer-academy-sprint",
+    "automate-home-network-and-device-controls",
+    "automate-smart-home-controls-cleaner-payments",
+    "build-bow-arrow-studio-booking-platform",
+    "build-fit20-studio-coordinator-task-system",
+    "build-monthly-debrief-rollup-automation",
+    "coach-arnie-aquia-tracker",
+    "coach-arnie-morning-brief",
+    "coach-arnie-morning-brief-2",
+    "coach-arnie-morning-brief-3",
+    "coach-arnie-morning-brief-4",
+    "create-personalized-songs-and-stories-for",
+    "files-mentioned-by-the-user-png",
+    "fix-sally-mae-s-telegram-voice",
+    "hermes-brief-upgrade-v2-resume",
+    "i-don-t-even-know-where",
+    "ingest-31-missing-state-slates",
+    "initialize-carnegie-capital-steward-role",
+    "leadership-brief-pdf-slide-deck",
+    "log-training-session-notes-in-zoho",
+    "pause-recurring-tasks",
+    "recurring-tasks-setup",
+    "scheduled-tasks-setup",
+    "stabilize-sally-mae-airbnb-agent",
+    "weekly-planning-and-workflow-review",
+    "write-airbnb-reviews-for-listings"
+  ],
+  "cowork_date": "2026-06-09 \u2013 2026-06-11"
+}

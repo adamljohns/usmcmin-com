@@ -1,12 +1,12 @@
 {
-  "generated": "2026-06-14T04:54:14.200956+00:00",
+  "generated": "2026-06-14T05:28:39.094495+00:00",
   "totals": {
     "agents": 14,
     "operational": 11,
     "degraded": 3,
     "jobs": 75,
     "enabled": 43,
-    "accomplishments": 23,
+    "accomplishments": 43,
     "cowork": 28
   },
   "agents": [
@@ -29,12 +29,17 @@
         {
           "date": "2026-05-22",
           "title": "Tier-1/Tier-2 model routing",
-          "detail": "Split the fleet onto two resident Gemmas + lazy-loaded Qwen, ending the multi-model swap-death stalls."
+          "detail": "Split the fleet onto two resident Gemmas + a lazy-loaded Qwen, ending the multi-model swap-death stalls."
         },
         {
           "date": "2026-05-29",
           "title": "Pipeline freshness watchdog",
           "detail": "Added a daily watchdog that alerts on any stale agent data feed after a silent 3-day outage went unnoticed."
+        },
+        {
+          "date": "2026-05-26",
+          "title": "Cron timeout remediation",
+          "detail": "Traced 13 broken crons to a 30s default; set local-LLM crons to 180\u2013300s. 22 crons fixed fleet-wide."
         }
       ],
       "name": "Max Pemberton",
@@ -130,6 +135,11 @@
           "date": "2026-06-13",
           "title": "Fleet health watchdog",
           "detail": "New :1235 soft-hang + RAG embed watchdog closes two silent-failure points found in the infra audit."
+        },
+        {
+          "date": "2026-05-13",
+          "title": "Apple Vision OCR microservice",
+          "detail": "PyObjC OCR service on :1236 as an explicit fallback for pure-OCR workflows."
         }
       ],
       "name": "Hermes",
@@ -174,6 +184,11 @@
           "date": "2026-05-24",
           "title": "10 daily Watch readings live",
           "detail": "Five readings to the SDG-4 brotherhood and five to Adam's DM, every day, on schedule."
+        },
+        {
+          "date": "2026-05-23",
+          "title": "Tier-1 pin for daily-watch crons",
+          "detail": "Kept his 10 watch crons on the 31B model \u2014 the 26B's smaller compaction window overflowed the bootstrap."
         }
       ],
       "name": "Preacher John",
@@ -330,12 +345,17 @@
         {
           "date": "2026-06-11",
           "title": "Church directory to 28,517 churches",
-          "detail": "Shattered the 7,777 target; added dedup guard, virtual rendering, and substantiation workflow."
+          "detail": "Shattered the 7,777 target; added a dedup guard, virtual rendering, and a substantiation workflow."
         },
         {
           "date": "2026-05-29",
           "title": "usmcmin.org shipped as an offline PWA",
-          "detail": "Service worker app-shell precache across 84 top-level pages, installable + offline."
+          "detail": "Service-worker app-shell precache across 84 top-level pages, installable + offline."
+        },
+        {
+          "date": "2026-05-29",
+          "title": "Weekly site backup automation",
+          "detail": "Monday 3 AM git backup of usmcmin.org with a status report to Adam."
         }
       ],
       "name": "Chaplain Chuck",
@@ -449,6 +469,11 @@
           "date": "2026-05-09",
           "title": "Six themed daily-post crons",
           "detail": "Baked the weekday theme into each cron so the model never has to guess the day; fixed the silver=gold price bug."
+        },
+        {
+          "date": "2026-05-09",
+          "title": "Price-cache-first discipline",
+          "detail": "AGENTS.md rule to read the price cache before posting, preventing stale/duplicated market numbers."
         }
       ],
       "name": "Andrew Carnegie III",
@@ -612,6 +637,11 @@
           "date": "2026-05-05",
           "title": "Airbnb autopilot live",
           "detail": "Twice-daily dashboard pull feeding the occupancy/payout digest, with cookie-expiry handling."
+        },
+        {
+          "date": "2026-05-05",
+          "title": "Sally \u2194 Carnegie comms",
+          "detail": "sessions_send pairing so hospitality cashflow can hand off to the capital desk."
         }
       ],
       "name": "Sally Mae Thornton",
@@ -691,6 +721,16 @@
           "date": "2026-05-10",
           "title": "Garmin autopilot",
           "detail": "Browser-based Garmin Connect pull with 1Password re-auth on cookie expiry, feeding the morning fitness brief."
+        },
+        {
+          "date": "2026-05-05",
+          "title": "Coach \u2194 Doc comms pair",
+          "detail": "Live sessions_send handoff so fitness metrics reach the medical lane for clinical context."
+        },
+        {
+          "date": "2026-05-02",
+          "title": "Reliable tool-firing on Gemma 31B",
+          "detail": "Single-task probe discipline makes browser/exec calls fire cleanly \u2014 the baseline Roy & Rush were tuned against."
         }
       ],
       "name": "Coach Arnold Briggs",
@@ -783,6 +823,16 @@
           "date": "2026-06-01",
           "title": "Midday Garmin clinical pull",
           "detail": "Owns the health/vitals lane, turning Garmin data into medically-literate context."
+        },
+        {
+          "date": "2026-05-15",
+          "title": "Garmin Keychain auth diagnosis",
+          "detail": "Diagnosed the headless Garmin auth failure and the op/TCC prompt path that was blocking the pull."
+        },
+        {
+          "date": "2026-05-05",
+          "title": "Doc \u2194 Coach comms pair",
+          "detail": "Cross-agent sessions_send link so clinical reads and fitness data stay in sync."
         }
       ],
       "name": "Doc Hartley",
@@ -887,8 +937,18 @@
       "accomplishments": [
         {
           "date": "2026-05-26",
+          "title": "Intel Desk web_search restored",
+          "detail": "Fixed the tool-call envelope bug via single-intent probes; trajectory logs confirm ~21 real web_search fires."
+        },
+        {
+          "date": "2026-05-26",
           "title": "FXBG civic intel rounds",
           "detail": "Twice-daily Fredericksburg civic monitoring feeding the RESOLUTE Citizen scorecard and RESOLUTE Local."
+        },
+        {
+          "date": "2026-05-19",
+          "title": "Citizen scorecard slate ingestion",
+          "detail": "Batched enrichment of state/House candidate slates with cited evidence into the scorecard database."
         }
       ],
       "name": "Sheriff Roy Caldwell",
@@ -996,6 +1056,11 @@
           "date": "2026-05-27",
           "title": "Newsletter synthesis + day counter",
           "detail": "Dynamic day-N header computed at runtime, replacing a hardcoded date; tightened persona + capability honesty."
+        },
+        {
+          "date": "2026-05-06",
+          "title": "Newsletter pipeline stood up",
+          "detail": "Research-synthesis pipeline producing the daily newsletter from mined sources."
         }
       ],
       "name": "Professor Xavier Archimedes",
@@ -1152,7 +1217,17 @@
         {
           "date": "2026-05-26",
           "title": "8-feed news desk",
-          "detail": "Restored full RSS coverage (8/8 feeds, ~40 items) with an Atom fallback parser and browser-UA workaround."
+          "detail": "Restored full RSS coverage (8/8 feeds, ~40 items) with an Atom fallback parser and a browser-UA workaround."
+        },
+        {
+          "date": "2026-05-26",
+          "title": "Intel Desk web_search restored",
+          "detail": "Same envelope fix as Roy \u2014 confirmed real Brave results (caught a wrong-city collision the model honestly quoted)."
+        },
+        {
+          "date": "2026-05-10",
+          "title": "AP-grade source discipline",
+          "detail": "Hardened to reject out-of-policy sources and anachronisms \u2014 sharp, fast, factual."
         }
       ],
       "name": "Rush Sullivan",
@@ -1202,8 +1277,13 @@
         },
         {
           "date": "2026-05-26",
+          "title": "categorize() refinements",
+          "detail": "Fixed substring bugs (dropbox.com mis-JUNKed, no-reply mis-flagged) and added legal/order overrides."
+        },
+        {
+          "date": "2026-05-26",
           "title": "Daily wheelhouse + Spirit Front",
-          "detail": "Morning check-in, evening reflection capture, and weekly SITREP."
+          "detail": "Morning check-in, evening reflection capture, and the weekly Sunday SITREP."
         }
       ],
       "name": "Pops Henderson",
@@ -1370,6 +1450,16 @@
           "date": "2026-05-10",
           "title": "Distinctive voice on plain Gemma",
           "detail": "Passes the voice probe telling real NCO stories \u2014 no LoRA needed; SOUL.md carries the persona."
+        },
+        {
+          "date": "2026-05-05",
+          "title": "Gus \u2194 Mac comms pair",
+          "detail": "sessions_send link with BG Hartwell for coordinated standards + theology briefings."
+        },
+        {
+          "date": "2026-05-10",
+          "title": "Daily standards check",
+          "detail": "Morning discipline/standards briefing running green on schedule."
         }
       ],
       "name": "SgtMaj Mac McAllister",
@@ -1425,6 +1515,16 @@
           "date": "2026-05-10",
           "title": "Sunday reading lists + theology research",
           "detail": "Cites Augustine's Confessions by book and chapter; voice holds post-session-reset on plain Gemma."
+        },
+        {
+          "date": "2026-05-05",
+          "title": "Gus \u2194 Mac comms pair",
+          "detail": "Cross-agent link with SgtMaj Mac for coordinated briefings."
+        },
+        {
+          "date": "2026-05-10",
+          "title": "Persona-load verified",
+          "detail": "Distinctive-voice probe passed \u2014 names the Confessions Book X unprompted; daily crons green."
         }
       ],
       "name": "BG Gus Hartwell",

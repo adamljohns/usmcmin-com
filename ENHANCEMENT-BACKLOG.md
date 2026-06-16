@@ -38,6 +38,49 @@ Pick the FIRST `[ ]` item, do ONLY that item, conservatively. If it turns risky/
 - [x] (2026-06-04) **G1. Orphan-profile sweep** — checked all `candidates/<state>/*.html` against the live slug set in scorecard.json: **8,970 live profiles, 0 orphans.** The refinement crons' prune step has kept it clean through every dedup (Cole, Garrity, etc.). No action needed.
 - [ ] **G2. KNOWN-STALE punch-list triage** — read KNOWN-STALE-RECORDS.md §B/§D; pick ONE item that does NOT require editing scorecard.json (e.g., updating the doc itself with current findings, or flagging via notify-adam) and progress it. Anything that needs a scorecard.json edit → leave for the refinement crons; just note it.
 
+## H. Issues module — 2026 ballot measures by state (issues.json; cite Ballotpedia; READ the file's existing schema first and match it; additive only)
+- [ ] **H1. Ballot measures — AL, AK, AZ, AR, CA** — add/refresh 2026 statewide ballot-measure summaries (neutral, factual, one short paragraph each, with a Ballotpedia source link) for any of these 5 states missing them in issues.json.
+- [ ] **H2. Ballot measures — CO, CT, DE, FL, GA** — same, these 5 states.
+- [ ] **H3. Ballot measures — HI, ID, IL, IN, IA** — same, these 5 states.
+- [ ] **H4. Ballot measures — KS, KY, LA, ME, MD** — same, these 5 states.
+- [ ] **H5. Ballot measures — MA, MI, MN, MS, MO** — same, these 5 states.
+- [ ] **H6. Ballot measures — MT, NE, NV, NH, NJ** — same, these 5 states.
+- [ ] **H7. Ballot measures — NM, NY, NC, ND, OH** — same, these 5 states.
+- [ ] **H8. Ballot measures — OK, OR, PA, RI, SC** — same, these 5 states.
+- [ ] **H9. Ballot measures — SD, TN, TX, UT, VT** — same, these 5 states.
+- [ ] **H10. Ballot measures — VA, WA, WV, WI, WY** — same, these 5 states (VA = home turf, do it well).
+
+## I. Category deep-dive page enrichment (citizen/<category>.html — verify each has its rubric, the Scripture anchor, and a "key bills/votes/orgs we track" list; enrich the thinnest; conservative, additive)
+- [ ] **I1. Sanctity of Life + Biblical Marriage** — review citizen/sanctity-of-life.html + biblical-marriage.html; ensure each has the scripture anchor + a current key-legislation/orgs list (e.g., Born-Alive, Respect for Marriage Act, SBA/HRC). Add only what's missing + accurate.
+- [ ] **I2. Family & Child Sovereignty + Christian Liberty** — same for those 2 pages (Parents Bill of Rights, school choice; RFRA, conscience cases).
+- [ ] **I3. Economic Stewardship + Election Integrity** — same (CBDC, balanced-budget; SAVE Act, voter-ID, HR1).
+- [ ] **I4. Border & Immigration + Self-Defense & 2A** — same (HR2/Secure the Border, E-Verify; NRA, red-flag/AWB).
+- [ ] **I5. Foreign Policy Restraint + Industry Capture + Public Justice** — same (AUMF/AIPAC; pharma-mandate/Pentagon-audit; Romans 13 / police-funding).
+
+## J. RESOLUTE Local — second-city READINESS docs (research only; write cities/<city>-READINESS.md; broadcaster + agenda-center URLs + roster source; NO code)
+- [ ] **J1. Richmond, VA** — document the meeting broadcaster (YouTube/Granicus), agenda-center URL (CivicPlus/Granicus), and council-roster source. Per EXPANSION-PLAN target #1.
+- [ ] **J2. Raleigh, NC** — same readiness doc.
+- [ ] **J3. Greenville, SC** — same readiness doc.
+- [ ] **J4. Nashville, TN** — same readiness doc.
+- [ ] **J5. Colorado Springs, CO** — same readiness doc.
+
+## K. SEO / share / a11y per-page passes (additive; conservative)
+- [ ] **K1. Meta/OG sweep — citizen-table, citizen-rankings, citizen-formers, citizen-issues** — ensure each has title + meta description + og:title/description/image + twitter-card + canonical; add any missing (accurate).
+- [ ] **K2. Meta/OG sweep — map, compare, find-my-reps, how-to-use** — same for those 4.
+- [ ] **K3. Alt-text sweep — citizen-table, map, compare, find-my-reps** — add concise alt text to any `<img>` missing it (decorative → `alt=""`).
+- [ ] **K4. Heading-order + landmark a11y — index, citizen, scoring-system** — verify a single h1 + logical heading order + a `<main>` landmark; fix only clear violations.
+
+## L. Content / page-health checks (report + fix clear breaks only)
+- [ ] **L1. Changelog render check** — verify changelog.html renders the recent scorecard git history cleanly (it reads commit messages); fix only if clearly broken. (was E3)
+- [ ] **L2. Compare tool check** — load compare.html; verify it can pull two candidate records + render the side-by-side; report any console errors; fix clear breaks only.
+- [ ] **L3. Find-my-reps check** — verify find-my-reps.html ZIP/address lookup returns reps and links to refined profiles; report gaps; fix clear breaks only.
+- [ ] **L4. Rankings + formers freshness** — verify citizen-rankings.html + citizen-formers.html render against current data (now ~1000+ evidence-scored); report any stale hardcoded counts; fix only obvious ones.
+
+## M. Media (additive, separate files — reads scorecard, writes images only)
+- [ ] **M1. OG images** — run `python3 build-og-images.py`; commit only new/changed images. (was C1)
+- [ ] **M2. Federal photos** — run `python3 fetch-bioguide-photos.py`; commit new images; skip if it needs creds. (was C2)
+- [ ] **M3. Sitemap freshness** — run `python3 build-sitemap-xml.py`; sanity-check URL count; push if changed. (was B3)
+
 ---
 
-*Add new ideas at the bottom of the relevant section. Keep tasks small enough to finish + push inside an hour. When the list is all `[x]`/`[skip]`, the cron notifies Adam and idles.*
+*Add new ideas at the bottom of the relevant section. Keep tasks small enough to finish + push inside ~15 min. When the list is all `[x]`/`[skip]`, the cron notifies Adam and idles.*

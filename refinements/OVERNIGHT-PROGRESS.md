@@ -1351,3 +1351,8 @@ jon-bonck-tx-38 · TX · 100 · GOP nominee (open; Hunt→Senate; won 5/26 runof
 carlos-quintanilla · TX · 75 · LOST 3/3 TX-33 primary (~14%, 3rd); pro-life religious-liberty Dem (cross-party deviation)
 jonny-larsen · UT · n/a · still running UT-04 open seat; roster_verified, unscored (only citable position is war-powers; avoid misleading 100%)
 greg-casar · TX · 4 · dedup—merged tx-37-d-placeholder (Casar is real TX-37 D nominee, won 3/3 @80.75%; moved from TX-35)
+- mike-dunleavy · AK · state/100 · AK Gov (term-limited); pro-life/parental-rights/anti-ESG/HB49/Statehood-Defense/NRA-A — deviation: pro-more-legal-immigration
+- steve-marshall · AL · state/100 · sitting AL AG (lost 5/19 Senate primary); abortion-ban defense, Boe/Skrmetti, anti-ESG BlackRock suit, Smith execution, ATF suit — deviation: declined to prosecute IVF post-LePage
+- jonny-larsen · UT · federal/25 · UT-04 D NOMINEE (won 4/25 convention 94.9%); pro-choice/pro-LGBTQ/anti-voucher — deviations: antiwar Article-I, anti-crypto, small-farm
+- ty-jensen · UT · federal/lost · UT-04 R LOST 4/25 GOP convention (1.4%); near-empty platform, anti-drag-in-schools only
+- wesley-meier · WA · federal/currency · party fix D→R (FEC) + not on Aug-4 WA-04 ballot → not_running/former

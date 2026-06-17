@@ -1372,3 +1372,8 @@ greg-casar · TX · 4 · dedup—merged tx-37-d-placeholder (Casar is real TX-37
 - david-jolly · FL · state/0 · FL Gov candidate (D; former GOP Rep, switched parties); now pro-choice/codify Roe / same-sex marriage / caps vouchers / opposes deportation+strikes 287g / AWB+universal BG+expand red-flag — DEVIATION: 2014-17 GOP positions all reversed
 - jason-wb-pizzo · FL · state/22 · sitting State Senator running for Gov (I/NPA); NO SB300+backed Amd4 / against Don't Say Gay / opposed HB1 vouchers / NO SB150 carry — DEVIATION+: former prosecutor, LE-union-endorsed pro-police + filed universal E-Verify bill
 - kyle-evans-gay · DE · state/0 · DE LG (roster fix — replaces phantom 'tonya-williams' which never existed); abortion constitutional amendment / SB5 automatic voter reg / HB70 death-penalty abolition / permit-to-purchase gun control
+ron-desantis · FL · 100 · Gov: Heartbeat Act, SB254/Don't Say Gay, HB1 vouchers, anti-CBDC/ESG, SB1718 E-Verify, SB264 farmland, HB543 carry
+wilton-simpson · FL · 100 · Ag Comm (fmr Senate Pres): 15-wk ban, school choice, SB90, SB264 farmland; immigration-soft + LARC flags noted
+burt-jones · GA · 100 · Lt Gov — LOST 6/16/2026 GOP gov runoff to Rick Jackson (still sitting Lt Gov); heartbeat, trans-sports, SB233 vouchers, SB202, carry
+anne-lopez · HI · 0 · AG (D): pro-abortion (mifepristone), defends birthright citizenship, defends HI gun restrictions (Wolford/Wilson) — all cited FALSEs
+sylvia-luke · HI · 20 · Lt Gov (D) NOT seeking reelection (AG probe, on leave): 2013 marriage-equality YES, SB1 abortion expansion; +cross-party sex-offender registration TRUE

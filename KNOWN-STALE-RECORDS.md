@@ -1,6 +1,7 @@
 # Known stale records — RESOLUTE Citizen v4.0
 
-**Last updated: 2026-06-01**
+**Last updated: 2026-06-16** (enhancement sweep G2 — §B "Senators not
+seeking re-election" roster pulled + cited; no scorecard.json edits)
 **Maintainer: regenerate this on every web-validation sweep.**
 
 ---
@@ -115,10 +116,51 @@ current cabinet behavior. Worth a manual re-verify:
 ### Senators "not seeking re-election" — 11 incumbents
 
 Per Ballotpedia: 4 Ds + 7 Rs announced they will not seek re-election
-in 2026. Their lame-duck status should be reflected in their records.
-**Action needed:** pull the Ballotpedia list, mark each.
+in 2026 (10 retiring from public office + 1 R running for governor).
+Their lame-duck status should be reflected in their records.
 
-Source: https://ballotpedia.org/List_of_U.S._Senate_incumbents_who_are_not_running_for_re-election_in_2026
+**Roster pulled 2026-06-16 (enhancement sweep — doc update only; the
+per-record `lame_duck` flag + notes belong to the refinement crons,
+which own data/scorecard.json — NOT edited here):**
+
+Democrats (4, all retiring from public office):
+- **Dick Durbin** (D-IL) — retiring
+- **Jeanne Shaheen** (D-NH) — retiring
+- **Tina Smith** (D-MN) — retiring
+- **Gary Peters** (D-MI) — retiring
+
+Republicans (7 per Ballotpedia; 6 named below, 1 unresolved):
+- **Mitch McConnell** (R-KY) — retiring
+- **Joni Ernst** (R-IA) — retiring
+- **Steve Daines** (R-MT) — retiring
+- **Thom Tillis** (R-NC) — retiring
+- **Cynthia Lummis** (R-WY) — retiring
+- **Tommy Tuberville** (R-AL) — NOT retiring; running for governor of
+  Alabama 2026 (so his record needs a `running_higher_office` posture,
+  not a plain retirement note — cf. the Blackburn/Bennet/Klobuchar
+  Senate-for-governor pattern in the resolved section above)
+- ⚠️ **One additional R retiree unresolved by name.** Ballotpedia's
+  count is firm at 7 Rs, but the Ballotpedia list page would not render
+  to the fetcher and three corroborating searches (Wikipedia, The Hill,
+  Ballotpedia News) named only the six above. Do NOT guess the 7th —
+  evidence-first. Re-pull when the source page is reachable.
+
+**Separate category (NOT part of the 11 — they sought re-election and
+LOST renomination, but are still leaving the Senate, so their records go
+stale too):**
+- **Bill Cassidy** (R-LA) — lost primary
+- **John Cornyn** (R-TX) — lost primary runoff
+
+**Action remaining (refinement-cron territory):** mark each of the above
+records `lame_duck` (or `running_higher_office` for Tuberville; `lost`
+for Cassidy/Cornyn) in data/scorecard.json with the cited source. The
+enhancement track does not edit scorecard.json.
+
+Sources:
+- https://ballotpedia.org/List_of_U.S._Senate_incumbents_who_are_not_running_for_re-election_in_2026
+- https://en.wikipedia.org/wiki/2026_United_States_Senate_elections
+- https://ballotpedia.org/United_States_Senate_elections,_2026
+- https://thehill.com/homenews/house/5600507-congressional-lawmakers-not-seeking-reelection-2026/
 
 ### ✅ Senators running for governor — RESOLVED 2026-06-02
 

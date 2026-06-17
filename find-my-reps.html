@@ -360,7 +360,7 @@
   <button class="nav-toggle" aria-label="Menu"><span></span><span></span><span></span></button>
 </nav>
 
-<div class="fmr-container">
+<main id="main" class="fmr-container">
   <nav class="view-toggle" aria-label="RESOLUTE Citizen sub-pages" style="display:flex;justify-content:center;gap:8px;margin:16px 0;flex-wrap:wrap;">
     <a href="citizen.html" style="color:var(--gray);text-decoration:none;font-size:0.82rem;padding:6px 18px;border-radius:20px;border:1px solid var(--border);">Cards</a>
     <a href="citizen-table.html" style="color:var(--gray);text-decoration:none;font-size:0.82rem;padding:6px 18px;border-radius:20px;border:1px solid var(--border);">Table</a>
@@ -403,7 +403,7 @@
 
   <div id="fmrAnnounce" role="status" aria-live="polite" aria-atomic="true" class="vh"></div>
   <div id="fmrResults" class="fmr-results hidden" role="region" aria-label="Your representatives"></div>
-</div>
+</main>
 
 <footer>
   <p><strong>RESOLUTE Citizen</strong> &mdash; a module of <a href="https://usmcmin.org">U.S.M.C. Ministries</a></p>
@@ -723,6 +723,12 @@
              j === ('commonwealth of ' + stateName).toLowerCase() ||
              j === 'supreme court of ' + stateName.toLowerCase();
     });
+    // Statewide-elected/appointed executive officers (Secretary of State,
+    // Treasurer, etc.) are tagged level 'state-executive', not 'state', so
+    // they fall outside stateAll above. Surface them under Statewide Offices
+    // — otherwise they appear in no group at all.
+    var stateExecutive = all.filter(function(c){ return sameState(c) && c.level === 'state-executive'; });
+    statewide = statewide.concat(stateExecutive);
     var legislature = stateAll.filter(function(c){
       return statewide.indexOf(c) === -1;
     });

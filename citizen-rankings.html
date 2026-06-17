@@ -9,7 +9,7 @@
   <meta name="description" content="Live rankings of every elected official scored against the RESOLUTE Citizen 100-point Christian-voter rubric. Filter by office, party, or tier. Letter grades A-F.">
   <meta property="og:site_name" content="RESOLUTE Citizen Scorecard">
   <meta property="og:title" content="RESOLUTE Citizen Rankings — Top &amp; Bottom Scorers">
-  <meta property="og:description" content="Who actually scores well on Christian-voter criteria? Live rankings across 8,400+ officeholders. Filterable by office, party, and weighting tier.">
+  <meta property="og:description" content="Who actually scores well on Christian-voter criteria? Live rankings across 8,900+ officeholders. Filterable by office, party, and weighting tier.">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://usmcmin.com/citizen-rankings.html">
   <meta property="og:image" content="https://usmcmin.com/assets/og/og-citizen.jpg">
@@ -17,7 +17,7 @@
   <meta property="og:image:height" content="630">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="RESOLUTE Citizen Rankings">
-  <meta name="twitter:description" content="Live A-F letter-grade rankings across 8,400+ elected officials.">
+  <meta name="twitter:description" content="Live A-F letter-grade rankings across 8,900+ elected officials.">
   <meta name="twitter:image" content="https://usmcmin.com/assets/og/og-citizen.jpg">
   <link rel="stylesheet" href="assets/css/main.min.css">
   <link rel="icon" type="image/svg+xml" href="assets/icons/favicon.svg">
@@ -440,7 +440,7 @@
       <div class="rk-tagline">RESOLUTE Citizen &middot; Live Rankings</div>
       <h1>Who Actually Grades Well?</h1>
       <p>Every elected official in our database scored against the v4.0 RESOLUTE Citizen rubric &mdash; 10 categories, 50 questions, 100 points. <strong>60 points come from God First</strong> (✝ life, marriage, family sovereignty, Christian liberty, economic stewardship, election integrity); <strong>40 from America First</strong> (🇺🇸 border, self-defense, foreign-policy restraint, industry capture). Scores include foreign-influence adjustments (AIPAC, Soros, China-linked PACs).</p>
-      <p style="font-size:0.82rem;">Coverage as of <time datetime="2026-05-18">May 18, 2026</time>: ~190 federal officials carry <strong>individually-curated</strong> v4.0 scores (top of Senate, House leadership, Squad, Freedom Caucus, SCOTUS, cabinet, top governors); ~400 House members carry <strong>party-default</strong> archetype scores; the remaining ~7,890 are flagged as partial pending evidence review. <a href="scoring-system.html">Read the full methodology &rarr;</a></p>
+      <p style="font-size:0.82rem;">Coverage (live snapshot): <strong id="rkCovScored">&mdash;</strong> of <strong id="rkCovTotal">&mdash;</strong> officials in the database carry at least one evidence-backed answer (a question where we found a public-record position); <strong id="rkCovSubst">&mdash;</strong> are scored on 25 or more of the 50 questions. The rest are pending evidence review. <a href="scoring-system.html">Read the full methodology &rarr;</a></p>
       <details style="margin-top:10px;font-size:0.82rem;color:var(--gray);">
         <summary style="cursor:pointer;color:var(--accent);font-weight:600;">How to read the score &mdash; <em>dynamic max</em> explainer</summary>
         <div style="padding:8px 0 0 14px;border-left:2px solid var(--border);margin-top:6px;padding-left:14px;line-height:1.65;">
@@ -451,7 +451,7 @@
       </details>
 
       <div class="rk-dist" id="distribution">
-        <div class="rk-dist-title">Score distribution across all 8,472 candidates (current snapshot)</div>
+        <div class="rk-dist-title">Score distribution across all <span id="rkDistTotal">&mdash;</span> candidates (live snapshot)</div>
         <!-- Populated by JS on load -->
       </div>
 
@@ -755,10 +755,21 @@
 
       var counts = { A: 0, B: 0, C: 0, D: 0, F: 0 };
       var withScore = 0;
+      var substantial = 0;
       ALL_ROWS.forEach(function(r) {
         if (r.ans > 0) withScore++;
+        if (r.ans >= 25) substantial++;
         counts[r.lg] = (counts[r.lg] || 0) + 1;
       });
+      var total = ALL_ROWS.length;
+      function setCount(id, val) {
+        var el = document.getElementById(id);
+        if (el) el.textContent = val.toLocaleString();
+      }
+      setCount('rkDistTotal', total);
+      setCount('rkCovTotal', total);
+      setCount('rkCovScored', withScore);
+      setCount('rkCovSubst', substantial);
       var max = Math.max(counts.A, counts.B, counts.C, counts.D, counts.F);
       ['A', 'B', 'C', 'D', 'F'].forEach(function(g) {
         var pct = max > 0 ? Math.round(100 * counts[g] / max) : 0;

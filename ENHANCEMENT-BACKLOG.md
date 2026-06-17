@@ -78,8 +78,8 @@ Pick the FIRST `[ ]` item, do ONLY that item, conservatively. If it turns risky/
 
 ## M. Media (additive, separate files — reads scorecard, writes images only)
 - [x] (2026-06-17) **M1. OG images** — ran `python3 build-og-images.py` (script present, exited clean, "Generated 10 OG images": the 10 `assets/og/og-citizen-*.jpg` category cards). **Nothing to commit — all 10 regenerated images are byte-identical to the committed copies, so `git status` showed 0 image diffs** (the only untracked file was an unrelated `refinements/*.json` left by the refine cron, which I did NOT touch — that's refinement-cron territory). OG assets are already current; verified-no-op. No data/scorecard.json touched. (was C1)
-- [ ] **M2. Federal photos** — run `python3 fetch-bioguide-photos.py`; commit new images; skip if it needs creds. (was C2)
-- [ ] **M3. Sitemap freshness** — run `python3 build-sitemap-xml.py`; sanity-check URL count; push if changed. (was B3)
+- [skip] (2026-06-17) **M2. Federal photos** — refinement-cron territory: `fetch-bioguide-photos.py` doesn't just write image files — it sets `c['photo']`, **overwrites `data/scorecard.json`** (lines 100–102, `json.dump(data, f)`) AND runs `build-data.py --quiet` (line 104), both of which the enhance track is forbidden to touch (contention with the refine crons). No flag suppresses the scorecard write. Bioguide photo refresh belongs to a refinement-cron run, not enhancement. Not run; nothing committed but this note. (was C2)
+- [x] (2026-06-17) **M3. Sitemap freshness** — ran `/opt/homebrew/bin/python3 build-sitemap-xml.py`. **Verified no-op:** regenerated `sitemap.xml` with **9204 URLs**, byte-identical to the committed copy (0 git diff) — the sitemap was already current at today's date (`<lastmod>2026-06-17</lastmod>`). URL count sane (9204; script reads the live `*.html` inventory via rglob, excludes auth-gated dashboards + redirect stubs, writes only `sitemap.xml` — never touches `data/scorecard.json`). Nothing to commit for the sitemap itself. (was B3)
 
 ---
 

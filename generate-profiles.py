@@ -150,7 +150,9 @@ def classify_office_tier(c):
                  r'director of|administrator of|ambassador|chief of staff|deputy chief of staff|'
                  r'homeland security advisor|chief justice|associate justice.+supreme court|'
                  r'special envoy)', o):
-        if re.search(r'^attorney general$|state attorney general', o) and 'united states' not in o:
+        if (re.search(r'^attorney general$|state attorney general|secretary of state|'
+                      r'state treasurer|state auditor|state comptroller', o)
+                and 'u.s.' not in o and 'united states' not in o):
             return 'state'
         return 'federal'
     if re.search(r'\bgovernor\b|^lt\.?\s+governor|lieutenant governor|'

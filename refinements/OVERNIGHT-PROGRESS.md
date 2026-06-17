@@ -1356,3 +1356,9 @@ greg-casar · TX · 4 · dedup—merged tx-37-d-placeholder (Casar is real TX-37
 - jonny-larsen · UT · federal/25 · UT-04 D NOMINEE (won 4/25 convention 94.9%); pro-choice/pro-LGBTQ/anti-voucher — deviations: antiwar Article-I, anti-crypto, small-farm
 - ty-jensen · UT · federal/lost · UT-04 R LOST 4/25 GOP convention (1.4%); near-empty platform, anti-drag-in-schools only
 - wesley-meier · WA · federal/currency · party fix D→R (FEC) + not on Aug-4 WA-04 ballot → not_running/former
+- wes-allen · AL · state/100 · AL SoS; ENGINE FIX re-tiered state SoS→state; pro-life ban + VCAP + permitless carry + SB1 ballot-harvesting ban + DHS-SAVE — currency: LOST 6/16/26 Lt.Gov GOP runoff to Wahl, stays SoS thru Jan 2027
+- will-ainsworth · AL · state/100 · AL LG; "abortion is murder", CHOOSE Act, anti-CRT, permitless carry — currency: term-limited + declined 2026 governor race, exiting Jan 2027 (thin: many era-wins are Ivey's)
+- leslie-rutledge · AR · state/100 · AR LG (running reelect, unopposed); AG record—certified trigger ban, SAFE Act, Ten Commandments, ARPA/Title-IX/mask suits, DACA suit, NRA amicus
+- eleni-kounalakis · CA · state/8 · CA LG; pro-choice(PP/NARAL/EMILY's)/pro-LGBTQ(1st trans council)/gun-control/sanctuary/mail-in — DEVIATION: CSLEA police endorsement (1 TRUE) — currency: withdrew from governor 8/8/25 → running CA Treasurer 2026
+- rob-bonta · CA · state/0 · CA AG (running reelect, declined gov); all-FALSE—PP-defunding block, trans-care defense, AB1955, ESG/climate suits, anti-SAVE-Act, cash-bail abolition, sanctuary/birthright defense, AWB defense
+  (batch also shipped fix: state Secretary of State offices now classify as state tier, not federal — 22 records corrected)

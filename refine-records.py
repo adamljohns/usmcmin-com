@@ -136,7 +136,7 @@ def classify_office_tier(c):
         return 'state'
     if 'state supreme court' in o or re.search(r'(chief justice|justice).+state', o):
         return 'state'
-    if re.search(r'\bmayor\b|city council|city commission|town council|borough council|'
+    if re.search(r'\bmayor\b|\bpolice chief\b|\bchief of police\b|city council|city commission|town council|borough council|'
                  r'county (commissioner|supervisor|judge|board)|'
                  r'school board|board of education|'
                  r'district attorney|county attorney|state\'?s attorney|circuit attorney|'

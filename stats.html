@@ -442,11 +442,30 @@
         return (b.total || 0) - (a.total || 0);
       });
 
+      // Rank the three levels by live coverage so the methodology note names
+      // the deepest/thinnest level honestly rather than restating a fixed
+      // "federal is ~complete" framing the current figures don't support.
+      var lvlRank = [
+        { label: 'state offices', pct: (lv.state && lv.state.pct) || 0 },
+        { label: 'local offices', pct: (lv.local && lv.local.pct) || 0 },
+        { label: 'federal offices', pct: (lv.federal && lv.federal.pct) || 0 }
+      ].sort(function(a, b){ return b.pct - a.pct; });
+      var deepest = lvlRank[0], thinnest = lvlRank[lvlRank.length - 1];
+
       var html = '<section class="st-section"><h2>Evidence coverage by state</h2>' +
         '<p class="lead">The share of records in each state carrying a cited, public-record position rather than ' +
         'party-default scaffolding. Nationally <strong style="color:var(--white);">' + fmt(nat.evidence_scored) +
         '</strong> of <strong style="color:var(--white);">' + fmt(nat.total) + '</strong> records are evidence-scored ' +
         '(<strong style="color:var(--accent);">' + p1(nat.pct) + '%</strong>).</p>' +
+        '<p class="lead">A record is <em>evidence-scored</em> once at least one of its answers cites a ' +
+        'public-record source &mdash; a recorded vote, a public statement, an official filing &mdash; ' +
+        'rather than resting on party-default scaffolding. Default answers still appear on a profile; ' +
+        'they simply are not counted here until a citation stands behind them. Coverage runs deepest among ' +
+        esc(deepest.label) + ' (<strong style="color:var(--accent);">' + p1(deepest.pct) + '%</strong>) and ' +
+        'thinnest among ' + esc(thinnest.label) + ' (<strong style="color:var(--accent);">' + p1(thinnest.pct) +
+        '%</strong>), where the refinement work is still active &mdash; state legislatures are the current ' +
+        'frontier. For how each scored record\'s confidence is then tagged, see ' +
+        '<a href="#scoring-confidence" style="color:var(--accent);">Scoring confidence</a> below.</p>' +
         '<div class="st-grid">';
       html += lvlCard('Federal', lv.federal);
       html += lvlCard('State', lv.state);

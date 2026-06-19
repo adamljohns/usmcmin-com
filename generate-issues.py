@@ -22,6 +22,36 @@ def generate_issue_page(issue):
             opponents_html += f'<li>{o}</li>'
         opponents_html += '</ul>'
 
+    result_html = ''
+    r = issue.get('result')
+    if r:
+        status_txt = {
+            'passed': 'Passed',
+            'defeated': 'Defeated',
+            'passed-enjoined': 'Passed — certification blocked in court',
+            'pending': 'Pending',
+        }.get(r.get('status', ''), r.get('outcome') or str(r.get('status', '')).replace('-', ' ').title())
+        tally = ''
+        if r.get('yes_pct') is not None and r.get('no_pct') is not None:
+            tally = f" &middot; {r['yes_pct']}% Yes / {r['no_pct']}% No"
+        decided = f" &middot; decided {r['decided_date']}" if r.get('decided_date') else ''
+        note_html = ''
+        if r.get('note'):
+            note_html = f'<div style="margin-top:6px;color:var(--gray);font-size:0.85rem;line-height:1.6;">{r["note"]}</div>'
+        src = r.get('source') or {}
+        src_html = ''
+        if src.get('url'):
+            label = src.get('label', src['url'])
+            src_html = f'<div style="margin-top:8px;font-size:0.8rem;color:var(--gray);">Result source: <a href="{src["url"]}" target="_blank" rel="noopener" style="color:#8B5A1F;font-weight:600;text-decoration:none;">{label}</a></div>'
+        result_html = (
+            '\n    <div style="margin:0 0 18px;padding:14px 18px;background:rgba(201,168,76,0.06);'
+            'border:1px solid rgba(201,168,76,0.25);border-left:4px solid #c9a84c;border-radius:8px;">'
+            '<span style="display:inline-block;font-size:0.7rem;font-weight:700;text-transform:uppercase;'
+            'letter-spacing:1px;color:#8B5A1F;">Official Result</span>'
+            f'<div style="color:var(--white);font-size:0.95rem;font-weight:700;margin-top:4px;">{status_txt}{tally}{decided}</div>'
+            f'{note_html}{src_html}</div>'
+        )
+
     sources_html = ''
     if issue.get('sources'):
         sources_html = '<div class="issue-sources"><h3>Sources &amp; Resources</h3>'
@@ -160,7 +190,7 @@ def generate_issue_page(issue):
     <div class="issue-location">{issue.get('location', '')}</div>
   </div>
 
-  <div class="issue-body">
+  <div class="issue-body">{result_html}
     {issue.get('body', '')}
     {supporters_html}
     {opponents_html}

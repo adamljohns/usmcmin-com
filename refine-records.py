@@ -369,18 +369,42 @@ def main():
     categories = sc['categories']
     categories_by_id = {c['id']: c for c in categories}
     rubrics = sc['meta']['rubrics']
-    by_slug = {c.get('slug'): c for c in sc['candidates']}
+    # Index candidates by slug. Bare slugs are NOT unique — e.g. three different
+    # "mark-johnson" state legislators (OH/MN/AR). A plain {slug: c} dict would
+    # silently keep only the LAST one and misapply a dossier to the wrong person,
+    # so also keep the full collision list and let a dossier disambiguate with a
+    # "slug@ST" key (or a top-level "state" field on the entry).
+    by_slug = {}
+    slug_matches = {}
+    for c in sc['candidates']:
+        s = c.get('slug')
+        by_slug[s] = c
+        slug_matches.setdefault(s, []).append(c)
 
     fresh_date = date.today().isoformat()
     dossier_reset = bool(dossier.get('reset_unspecified', False))
     reports = []
     all_issues = []
     missing = []
-    for slug, entry in records_spec.items():
-        rec = by_slug.get(slug)
-        if not rec:
-            missing.append(slug)
+    ambiguous = []
+    for raw_slug, entry in records_spec.items():
+        # disambiguate collisions: "slug@ST" key (or a top-level "state" field on the entry)
+        slug, _, key_state = raw_slug.partition('@')
+        want_state = (key_state or (entry.get('state') or '')).upper() or None
+        matches = slug_matches.get(slug, [])
+        if not matches:
+            missing.append(raw_slug)
             continue
+        if len(matches) == 1:
+            rec = matches[0]                       # unique slug — bare key still works
+        else:
+            narrowed = [c for c in matches if (c.get('state') or '').upper() == want_state] if want_state else []
+            if len(narrowed) == 1:
+                rec = narrowed[0]
+            else:
+                # never guess which "mark-johnson" — skip + report loudly
+                ambiguous.append((raw_slug, [f"{c.get('slug')}@{c.get('state')}({c.get('level')})" for c in matches]))
+                continue
         rep = apply_record(rec, entry, categories, categories_by_id, rubrics, fresh_date,
                            reset_unspecified=dossier_reset)
         reports.append(rep)
@@ -404,6 +428,10 @@ def main():
     print(f'{len(reports)} record(s) refined, {sum(r["cells_with_evidence"] for r in reports)} evidence cells set')
     if missing:
         print(f'\n!! {len(missing)} slug(s) NOT FOUND: {missing}')
+    if ambiguous:
+        print(f'\n!! {len(ambiguous)} AMBIGUOUS bare slug(s) — SKIPPED (key them "slug@ST" to target the right person):')
+        for raw, opts in ambiguous:
+            print(f'   - {raw!r} matches {opts}')
     if all_issues:
         print(f'\n!! {len(all_issues)} VALIDATION ISSUE(S):')
         for i in all_issues:

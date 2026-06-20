@@ -1906,3 +1906,8 @@ gentner-drummond · OK · 91 · AG (R), in 2026 OK GOV RUNOFF vs Mazzei Aug 25 (
 - daniel-perez · FL HD-116 · 97->100 · R Speaker, ACU 90%; term-limited+ambassador-nominee; YEA across life/marriage/vouchers/elections/immigration/guns; deviations only fiscal/institutional vs DeSantis
 - kevin-d-chambliss · FL HD-117 · 0->12 · D; 7 cited NAY roll calls (HB5/SB300/HB1557/SB254/HB1521/HB1/SB1718/SB7050), Equality FL endorsed; DEVIATION YEA HB3 porn age-verification; NOT VOTING on HB543 (null not false)
 - mike-redondo · FL HD-118 · 97->100 · R, seated Dec 2023 (pre-2024 votes void), future Speaker designate; thin record, FRTL-endorsed (life) + party-line 2025 immigration; 2025 gun votes not located → null
+- juan-carlos-porras · FL HD-119 · 97->100 · R Miami-Dade; YEA SB300/HB1(ESA co-introducer)/HB3-ESG/SB214/SB1718/HB1451/HB543; no deviations
+- jim-mooney-jr · FL HD-120 · 97->83 · R Keys; reliable (YEA HB5/HB543/HB1/HB3-minors/SB1718/SB7050) but TWO deviations: NAY HB1557 ('Don't Say Gay') + NOT VOTING SB300 (6-week ban, abstained not nay)
+- carlos-g-muñiz · FL Supreme Court (Chief Justice) · 100->100 · joined 6-1 Planned Parenthood v State majority ending FL constitutional abortion right; Amendment 4 concurrence calls unborn 'a class of human beings'; evidence_federal (chief rotates to Couriel 2026-07-01)
+- charles-t-canady · FL Supreme Court · 100->100 · STATUS FIX: RETIRED Dec 31 2025 (->former); authored federal Partial-Birth Abortion Ban Act + coined term; central to DOMA 1996; joined 6-1 abortion ruling; recused from redistricting
+- jamie-r-grosshans · FL Supreme Court · 100->100 · AUTHORED the 6-1 Planned Parenthood v State majority + the Amendment 4 keep-off-ballot dissent; ADF Blackstone Fellow / Christian Legal Society; evidence_federal

@@ -1926,3 +1926,8 @@ gentner-drummond · OK · 91 · AG (R), in 2026 OK GOV RUNOFF vs Mazzei Aug 25 (
 - matt-barton · GA HD-5 · 97->100 · R Calhoun, THIN (GA roll-calls JS-blocked); attributed only strictly party-line marquee House votes — SB140(trans-minors)+SB63(cash-bail); not on GLA 2024 cert; evidence_state
 - sheikh-rahman · GA SD-5 · 0->0 · D Gwinnett, first Muslim/immigrant GA senator; documented progressive, every FALSE cited — NO on SB202(voter-ID/drop-box), LGBT-caucus member, opposes CRT-instruction limits; no conservative-side vote found; evidence_state
 - jason-ridley · GA HD-6 · 97->100 · R Murray Co farmer, Baptist; LEAD SPONSOR HB1045(SOGI parental-consent/anti-secrecy)→marriage+family; self-reported HB481 heartbeat YES (personhood); Club for Growth 58%; no deviation; evidence_state
+- matt-brass · GA · 100 · R SD-6 Rules chair; SB202/SB319/SB140/HB1018/HB1105 + HB481 LIFE Act
+- johnny-chastain · GA · 100 · R HD-7 freshman; 2025 RFRA/Riley Gaines/school-choice YES + pro-life
+- nabilah-islam-parkes · GA · 14 · D resigned SD-7 2026-03-13 for Lt Gov; anti-life/voucher/sanctuary, FOR ESG (dev)
+- russ-goodman · GA · 100 · R SD-8 Ag chair; NO on IVF (pro-life dev) + SB140/SB202/HB1018/HB1105/SB319
+- stan-gunter · GA · 88 · R HD-8 Judiciary chair; YES IVF (FALSE) + NO 2023 vouchers (dev); RFRA/CBDC/SB140

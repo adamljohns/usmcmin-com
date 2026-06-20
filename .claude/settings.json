@@ -1,0 +1,55 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(python3 build-data.py:*)",
+      "Bash(python3 build-search-index.py:*)",
+      "Bash(python3 generate-profiles.py:*)",
+      "Bash(python3 build-category-pages.py:*)",
+      "Bash(python3 build-sitemap-xml.py:*)",
+      "Bash(python3 generate-issues.py:*)",
+      "Bash(python3 build-stats.py:*)",
+      "Bash(python3 build-places.py:*)",
+      "Bash(python3 build-zips.py:*)",
+      "Bash(python3 build-minify.py:*)",
+      "Bash(python3 build-webp.py:*)",
+      "Bash(python3 build-og-images.py:*)",
+      "Bash(python3 -m http.server:*)",
+      "Bash(pip install -r requirements.txt:*)",
+      "Bash(pip3 install -r requirements.txt:*)",
+      "Bash(python3 -m pip install -r requirements.txt:*)",
+      "Bash(git status:*)",
+      "Bash(git diff:*)",
+      "Bash(git log:*)",
+      "Bash(git show:*)",
+      "Bash(git branch:*)",
+      "Bash(git add:*)",
+      "Bash(ls:*)",
+      "Bash(cat:*)",
+      "Bash(head:*)",
+      "Bash(tail:*)",
+      "Bash(wc:*)",
+      "Bash(du:*)",
+      "Bash(rg:*)",
+      "Bash(grep:*)",
+      "Bash(find:*)"
+    ],
+    "deny": [
+      "Read(./data/scorecard.json)",
+      "Read(./assets/audio/**)",
+      "Read(./assets/video/**)",
+      "Read(./assets/photos/**)",
+      "Read(./**/*.m4a)",
+      "Read(./**/*.mp4)",
+      "Read(./**/*.mp3)"
+    ]
+  },
+  "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          { "type": "command", "command": "bash \"$CLAUDE_PROJECT_DIR/.claude/session-start.sh\"" }
+        ]
+      }
+    ]
+  }
+}

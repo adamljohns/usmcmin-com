@@ -1,0 +1,9 @@
+# The CORE build/deploy pipeline (build-data.py, generate-profiles.py,
+# build-search-index.py, build-category-pages.py, build-sitemap-xml.py) is
+# Python-stdlib-only and needs nothing here. The three packages below are each
+# imported by a single peripheral script — install only if you run those.
+# Unpinned by preference: install latest. Pin here only if an upgrade breaks a script.
+Pillow      # PIL: optimize-photos.py / audit-photos.py image handling
+PyYAML      # yaml: data/config parsing in one helper script
+GitPython   # git: reads scorecard.json git history for changelog tooling
+# System dep (not pip): ImageMagick — build-webp.py and the og-image builders shell out to `magick`.

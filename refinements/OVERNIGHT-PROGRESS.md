@@ -1901,3 +1901,8 @@ gentner-drummond · OK · 91 · AG (R), in 2026 OK GOV RUNOFF vs Mazzei Aug 25 (
 - tom-fabricio · FL HD-110 · 97->100 · R re-elected unopposed 2026; YEA SB300 + FRTL/NRA endorsed, co-sponsor HJR583 religious-expression + LEO bills (marriage/immigration lines unconfirmed → null)
 - david-borrero · FL HD-111 · 97->100 · R right-flank; LEAD AUTHOR HB1519 abortion-abolition/personhood + pride-flag ban (HB901/347) + HB835 religious-liberty, cosponsor HB103 permitless carry, NRA endorsed
 - alex-rizo · FL HD-112 · 97->100 · R; 13 pdftotext-verified YEA roll calls (HB5/SB300/HB289/HB1557/HB1069/HB1521/HB1/HB3-minors/SB7054-CBDC/HB3-ESG/HB1-riot/SB1718/HB543/HB759)
+- demi-busatta · FL HD-114 · 97->88 · R; YEA SB300/HB5/HB1521/HB1/HB543/SB1718 but DEVIATION NAY HB1557 ('Don't Say Gay'); did not deviate on guns/immigration
+- omar-blanco · FL HD-115 · 97->100 · R firefighter, seated Nov 2024 (pre-2024 votes void); thin record, YEA 2025 immigration package (SB2-B/SB2-C) only verified cell
+- daniel-perez · FL HD-116 · 97->100 · R Speaker, ACU 90%; term-limited+ambassador-nominee; YEA across life/marriage/vouchers/elections/immigration/guns; deviations only fiscal/institutional vs DeSantis
+- kevin-d-chambliss · FL HD-117 · 0->12 · D; 7 cited NAY roll calls (HB5/SB300/HB1557/SB254/HB1521/HB1/SB1718/SB7050), Equality FL endorsed; DEVIATION YEA HB3 porn age-verification; NOT VOTING on HB543 (null not false)
+- mike-redondo · FL HD-118 · 97->100 · R, seated Dec 2023 (pre-2024 votes void), future Speaker designate; thin record, FRTL-endorsed (life) + party-line 2025 immigration; 2025 gun votes not located → null

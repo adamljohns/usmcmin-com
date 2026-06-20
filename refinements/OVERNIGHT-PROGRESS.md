@@ -1891,3 +1891,8 @@ gentner-drummond · OK · 91 · AG (R), in 2026 OK GOV RUNOFF vs Mazzei Aug 25 (
 - chip-lamarca · FL HD-100 · 67 (was party-default 97) · R, TERM-LIMITED (open seat 2026). DEVIATIONS: NAY SB300 6-wk ban + NAY HB1557 Don't Say Gay + did-not-vote HB1 vouchers. Conservative: YEA HB931 chaplains, SB1580 conscience, co-sponsor SB1718. FI ~57%
 - hillary-cassel · FL HD-101 · 97→0 · CORRECTION: D→R party-switcher (Dec 2024, over Israel/antisemitism, NOT social issues). Prior 97 was party-inferred. HARD contrary: Ruth's List + Equality Florida endorsed as D; post-switch NAY HB759 (kept gun-age limit); DeSantis calls her 'very liberal'. No conservative evidence found
 - mike-gottlieb · FL HD-102 · 0 · D criminal-defense atty, TERM-LIMITED (open seat 2026), FI ~10%, all-HARD PDF roll calls: NAY HB5/SB300/HB1557/HB1/SB1718. DEVIATION: sponsored HB487 (2019) arming tactical medics → self-defense left null (mixed), not scored anti-gun
+- robin-bartleman · FL HD-103 · 0 · D, uniformly progressive; NAY SB300/HB543/SB1718/HB759/HB1, PP+EMILY backed (all verified roll calls)
+- felicia-robinson · FL HD-104 · 0 · D; NAY SB300/HB543/SB1718/HB1 (corrected aggregator's false SB1718 YEA -> NAY per official PDF)
+- marie-paule-woodson · FL HD-105 · 0 · D, Freedom Index 13%; NAY SB300/HB543/SB1718/HB759, anti-HB1557/HB1
+- fabian-basabe · FL HD-106 · 97->64 · R maverick: SKIPPED SB300 + filed 12-wk loosening (life FALSE), self-IDs LGBTQ (marriage q0/q1 FALSE) but YES HB1521/HB1069/HB1/HB543/SB1718
+- wallace-aristide · FL HD-107 · 0 · D freshman; NAY H289 personhood + HB759 gun-age (thin record, rest null)

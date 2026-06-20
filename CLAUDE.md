@@ -1,38 +1,53 @@
 # usmcmin.com — Working Notes for Claude
 
-## Brand voice
-- Captain voice: direct, calm, plain. Talk to one operator, not a crowd.
-- NO hype. No "revolutionary/game-changing/unlock/supercharge."
-  No exclamation-point enthusiasm. Honesty over salesmanship —
-  the "Captain's Call" recs tell people what to SKIP, and that's the brand.
+> Fast-loading notes for every session. The deep references are **AGENTS.md**
+> (full script catalog + data-file map) and **MAINTENANCE.md** (update playbook).
+> Read those before non-trivial work. This file is the short version.
 
-## Visual rules
-- Palette: muted golds + navy. Soft sage + light gray accents.
-- TFC private track uses bronze #CE8E31 (text-bronze #8B5A1F, deeper button bronze #B07320)
-  + slate #1E293B. USMC public track uses USMC navy + gold.
-- No neon. No animations. No hover-jiggles. Static, calm, scannable.
-- WCAG AA contrast minimum. Never encode meaning in hue alone — pair color with a
-  letter, label, or shape.
+## What this is
+- The **U.S.M.C. Ministries** website (https://usmcmin.com). Static site on
+  GitHub Pages, auto-deploys from `main`. No backend, no database.
+- Flagship feature: **RESOLUTE Citizen** — a Christian voter scorecard for
+  ~8,500 elected officials across all 50 states + DC + PR.
+- **Source of truth: `data/scorecard.json`** (large, ~45MB). Everything else
+  under `data/states/`, `data/index.json`, profile HTMLs, etc. is *derived* —
+  do not edit derived files by hand.
 
-## Tier system (S/A/B/C)
-- S = START HERE (10–15%). A = CORE (30–40%). B = DEPTH (30–40%). C = OPTIONAL (15–20%).
-- If everything is S, nothing is. Hold the distribution line.
-- Visual: bronze S, slate A, sage B, gray C. Letter in white on a 32px circle, top-left
-  of every task/tool card. Card border (2px) matches tier. C-tier cards at 80% opacity.
-- Filter chip "Show S+A only" on Compass + Sovereign filter rows.
+## The dev loop (after ANY scorecard.json edit, in order)
+```bash
+python3 build-data.py          # scorecard.json → per-state slices + index.json (idempotent)
+python3 generate-profiles.py   # regenerates the 8,500+ candidate profile HTMLs
+python3 -m http.server 8888    # preview → http://localhost:8888/citizen.html
+```
+Most `add-*` / `enrich-*` scripts call `build-data.py` at the end of `main()`.
+Don't skip it — per-state files go stale and the site serves mismatched data.
 
-## Two-track architecture
-- TRACK=usmc → 5-week public (Watchman lexicon, AI Mission branding).
-- TRACK=fc   → 7-week private (Captain lexicon, TFC visual identity, Armada order:
-  Vision → Body → Spiritual → Husbanding → Fathering → Finance → Sabbath).
-- One `build/site_pages.py` source. `fc_track_builder.py` + `watchman_track_builder.py`
-  are post-processors. Per-week pages emit only on TRACK=fc.
+## Cardinal rule (the one that bites)
+- **Web-verify every resolved election result before publishing.** Model recall
+  is NOT sufficient for outcomes inside the last ~12 months. Cite a reputable
+  source (AP / NBC / CNN / state SoS) in the record's `sources[]` before changing
+  any `candidacy_status` to `won` / `lost` / `lost_primary`. (See MAINTENANCE.md.)
 
-## Out of scope unless asked
-- Don't touch the Heartbeat Posts page.
-- Don't rewrite task/tool content (it's been through 6 iterations).
-- Don't build wizards/quizzes.
+## House rules
+- **No fabricated data.** Can't verify a name/score from a primary source → leave
+  it `null` or skip. Adam would rather have gaps than fakes.
+- **Cite sources verbatim** in commits and in each record's `sources[]`.
+- **One record per person.** When someone changes races, extend the existing
+  record's `office` + `candidacy_status`; never create a duplicate with a
+  batch-suffixed slug.
+- **Small, sharp commits** with detailed messages. Note what was deliberately
+  left out vs. forgotten.
+- **Never push to `main`.** Push to your working branch; Adam reviews and merges.
+- No `--force` / `--no-verify` / commit-amending without explicit permission.
 
-## Before any page is "done"
-- Open it in a browser. Verify at ~390px width.
-- Type-checking ≠ feature-checking — actually look at it.
+## Don't edit by hand
+- `data/states/*.json`, `data/index.json` (built by `build-data.py`)
+- `data/places.json`, `data/zips.json`, `data/stats.json` (built by their scripts)
+- `*.min.css` / `*.min.js` — edit the source, then run `build-minify.py`
+
+## Adding / changing rosters — which script?
+- State legislators in bulk → `add-state-batch.py`.
+- One-off local officials → small `add-<topic>.py` modeled on `add-melbourne-fl.py`.
+- Federal phones / socials → `enrich-phones.py`, `enrich-federal-social-local.py`.
+- New photos → `optimize-photos.py`, then `build-webp.py`, then the dev loop.
+- Full catalog of 46 scripts: **AGENTS.md**.

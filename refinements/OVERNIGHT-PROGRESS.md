@@ -1931,3 +1931,8 @@ gentner-drummond · OK · 91 · AG (R), in 2026 OK GOV RUNOFF vs Mazzei Aug 25 (
 - nabilah-islam-parkes · GA · 14 · D resigned SD-7 2026-03-13 for Lt Gov; anti-life/voucher/sanctuary, FOR ESG (dev)
 - russ-goodman · GA · 100 · R SD-8 Ag chair; NO on IVF (pro-life dev) + SB140/SB202/HB1018/HB1105/SB319
 - stan-gunter · GA · 88 · R HD-8 Judiciary chair; YES IVF (FALSE) + NO 2023 vouchers (dev); RFRA/CBDC/SB140
+- nikki-merritt · GA SD-9 · 0 · D Gwinnett; pro-choice (Choice Tracker/GA WIN List), NAY SB39 trans-care ban, anti-voucher, pro-voting-access VRA, gun-control SB40/SB119; no deviation; evidence_state
+- emanuel-jones · GA SD-10 · 0 · D LOST 2026 GA-13 congressional primary (did not seek Senate re-election)→status lost; Baptist deacon; Freedom Index 0%, NO HB1018/HB1105/SB63, YES Green New Deal
+- will-wade · GA HD-9 · 97->100 · R Baptist banker; PRIMARY SPONSOR HB1084(anti-CRT), GLA 2026 pro-life cert, 7-sheriff endorsements, trans-sports/minor-transition; vacating HD-9→2026 GOP nominee SD-51 (won 06-16 runoff); evidence_state
+- victor-anderson · GA HD-10 · 97->94 · R B.C. Grant Baptist deacon; YES SB1/SB185/SB233/HB268/SB36/HB963, man-woman marriage, border wall, photo ID; FALSE=restrictionist not abolitionist; no deviation; evidence_state
+- rick-jasperse · GA HD-11 · 97->92 · R lead sponsor HB60 guns-everywhere + HB1105; YES SB319/trans-sports/SB140/Parents-Bill-of-Rights/citizen-only-voting; CROSS-PARTY DEVIATION: NO on SB233 vouchers; NO on IVF; evidence_state

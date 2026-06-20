@@ -1841,3 +1841,8 @@ gentner-drummond · OK · 91 · AG (R), in 2026 OK GOV RUNOFF vs Mazzei Aug 25 (
 - randy-maggard · FL HD-54 · 100 · GOP Chief Whip, SB1718 YES + HB543/HB1/HB1557 cosponsor + party-line SB300
 - kevin-m-steele · FL HD-55 · 100 · CURRENCY: running for US House CD-14 (running_higher_office); sheriff/NRA endorsements, deport-statement
 - brad-yeager · FL HD-56 · 100 · DeSantis-endorsed, SB300 YEA + HB543/HB133 + HB173 parental-rights + HB95 armed-church-security sponsor
+- adam-anderson · FL HD-57 · 100 · R, SB300/SB254/HB1/HB3/HB931/SB1718/SB264 YEA + HB543 permitless-carry co-introducer; iVoterGuide pro-life/marriage/conscience
+- kimberly-berfield · FL HD-58 · 100 · R, SB300/SB254/HB3/HB931/SB1718/HB543 YEA + anti-ESG(HB3'23)/sound-money(HB999)/SB214/HB601-pro-police + gun-age-rollback; NRA'22
+- berny-jacques · FL HD-59 · 100 · R former-prosecutor, SB300 YEA + pro-life HB415 sponsor + FRTL'24; HB359 hand-count sponsor; HB955 mandatory-E-Verify sponsor; NRA member
+- lindsay-cross · FL HD-60 · 9 · D, CURRENCY: announced 2026-06-04 NOT seeking reelection (not_running). NO on SB300/HB1/SB1718/HB543; PP/EMILY's-List/Equality-FL/Moms-Demand. CREDIT: HB1009 religious-expression YES (102-7)
+- linda-chaney · FL HD-61 · 100 · R since 2020 (HD-69→61), HB5/SB300/SB254/HB1557/HB1/HB931/SB1718 YEA + HB289 personhood + floor pro-life advocacy; FRTL/NRA/FOP. Absent on HB543 (gap). Scraper SB254-NAY debunked vs official PDF

@@ -1853,3 +1853,8 @@ gentner-drummond · OK · 91 · AG (R), in 2026 OK GOV RUNOFF vs Mazzei Aug 25 (
 - berny-jacques · FL HD-59 · 100 · R former-prosecutor, SB300 YEA + pro-life HB415 sponsor + FRTL'24; HB359 hand-count sponsor; HB955 mandatory-E-Verify sponsor; NRA member
 - lindsay-cross · FL HD-60 · 9 · D, CURRENCY: announced 2026-06-04 NOT seeking reelection (not_running). NO on SB300/HB1/SB1718/HB543; PP/EMILY's-List/Equality-FL/Moms-Demand. CREDIT: HB1009 religious-expression YES (102-7)
 - linda-chaney · FL HD-61 · 100 · R since 2020 (HD-69→61), HB5/SB300/SB254/HB1557/HB1/HB931/SB1718 YEA + HB289 personhood + floor pro-life advocacy; FRTL/NRA/FOP. Absent on HB543 (gap). Scraper SB254-NAY debunked vs official PDF
+- fentrice-driskell · FL HD-67 · 0 · D House Dem Leader, CURRENCY: term-limited→running FL Senate SD-16 (running_higher_office). NAY on SB300/HB1557/HB1/HB931/SB7050/SB1718/HB543; PP/Ruth's-List/EMILY's-List
+- lawrence-mcclure · FL HD-68 · 100 · R Budget Cmte Chair, SB300/HB1557/SB254/HB1/HB543 YEA + HB1808 anti-sanctuary; FRTL'24 + NRA-A endorsement + gun-age-rollback
+- danny-alvarez · FL HD-69 · 100 · R Army officer/atty, 13 roll-calls all YEA (SB300/HB1069/SB254/HB1521/HB1/HB3/HB931/SB7054-CBDC/SB7050/SB1718/SB4-C/HB543/SB450-death-penalty)
+- michael-owen · FL HD-70 · 100 · R, CURRENCY: first elected 2024 (pre-2025 bills N/A). HARD: SB4-C/SB2-C 2025 immigration YEA + FRTL'24 + Sheriff Chronister/Wells endorsements
+- will-robinson-jr · FL HD-71 · 80 · R State Affairs Chair, CURRENCY: term-limited NOT running 2026 (not_running). DEVIATION: NAY on HB1557+HB1069 (classroom-instruction); else YEA HB5/SB300/SB254/HB1521/HB1/HB3/HB931/SB7054/SB90/SB7050/SB1718/HB543/HB1-antiriot; NRA'22

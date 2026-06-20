@@ -1896,3 +1896,8 @@ gentner-drummond · OK · 91 · AG (R), in 2026 OK GOV RUNOFF vs Mazzei Aug 25 (
 - marie-paule-woodson · FL HD-105 · 0 · D, Freedom Index 13%; NAY SB300/HB543/SB1718/HB759, anti-HB1557/HB1
 - fabian-basabe · FL HD-106 · 97->64 · R maverick: SKIPPED SB300 + filed 12-wk loosening (life FALSE), self-IDs LGBTQ (marriage q0/q1 FALSE) but YES HB1521/HB1069/HB1/HB543/SB1718
 - wallace-aristide · FL HD-107 · 0 · D freshman; NAY H289 personhood + HB759 gun-age (thin record, rest null)
+- dotie-joseph · FL HD-108 · 0 · D, TERM-LIMITED → running for GOVERNOR (Aug 2026 Dem primary); NAY HB1557/HB543 + filed gun-restriction amendments, LED fight vs SB1718; SB300 = NOT VOTING so life nulled
+- ashley-gantt · FL HD-109 · 0 · D, running for FL SENATE SD-34 (not HD-109); 9 verified NAY roll calls (SB300/HB289/HB1069/HB1521/HB1/SB1718/HB543/HB759), Ruth's List backed, challenged school-chaplains bill
+- tom-fabricio · FL HD-110 · 97->100 · R re-elected unopposed 2026; YEA SB300 + FRTL/NRA endorsed, co-sponsor HJR583 religious-expression + LEO bills (marriage/immigration lines unconfirmed → null)
+- david-borrero · FL HD-111 · 97->100 · R right-flank; LEAD AUTHOR HB1519 abortion-abolition/personhood + pride-flag ban (HB901/347) + HB835 religious-liberty, cosponsor HB103 permitless carry, NRA endorsed
+- alex-rizo · FL HD-112 · 97->100 · R; 13 pdftotext-verified YEA roll calls (HB5/SB300/HB289/HB1557/HB1069/HB1521/HB1/HB3-minors/SB7054-CBDC/HB3-ESG/HB1-riot/SB1718/HB543/HB759)

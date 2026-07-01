@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="canonical" href="https://usmcmin.com/family-captain/battle-bro-form/viewform.html">
+  <title>Battle Brother Form — The Family Captain</title>
+  <meta name="description" content="Weekly Battle Brother accountability check-in for The Family Captain Armada cohort. Replaces Google Forms — remembers your last SACA and submission history.">
+  <meta name="robots" content="noindex,nofollow">
+  <link rel="stylesheet" href="../../assets/css/main.css">
+  <link rel="icon" type="image/svg+xml" href="../../assets/icons/favicon.svg">
+  <link rel="icon" type="image/png" sizes="32x32" href="../../assets/icons/favicon-32.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Staatliches&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --gold: #CE8E31; --navy: #1E293B; --border: #D1D5DB;
+    --gray: #6B7280; --white: #FFFFFF; --text: #334155;
+    --font-main: 'Staatliches', sans-serif;
+    --font-body: 'Roboto', sans-serif;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: #E8EDF2; color: var(--text); font-family: var(--font-body); }
+  body > nav, nav.site-nav, header.site-header { display: none !important; }
+
+  .tfc-top { background: var(--navy); padding: 14px 24px; border-bottom: 1px solid #2B4A72; }
+  .tfc-top-inner { max-width: 720px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+  .tfc-wordmark { font-family: var(--font-main); color: #FFF; font-size: 1.35rem; text-decoration: none; letter-spacing: 0.5px; }
+  .tfc-wordmark .accent { color: var(--gold); }
+  .tfc-top-note { font-size: 0.75rem; color: #94A3B8; letter-spacing: 0.04em; text-transform: uppercase; }
+
+  .bb-hero { background: var(--navy); color: #FFF; text-align: center; padding: 32px 20px 28px; }
+  .bb-hero .bb-kicker { font-size: 0.72rem; letter-spacing: 3px; color: var(--gold); font-weight: 700; text-transform: uppercase; }
+  .bb-hero h1 { font-family: var(--font-main); font-size: clamp(1.9rem, 5vw, 2.6rem); margin: 8px 0; font-weight: 500; }
+  .bb-hero p { color: #CBD5E1; max-width: 560px; margin: 0 auto; line-height: 1.6; font-size: 0.95rem; }
+
+  .bb-wrap { max-width: 720px; margin: 0 auto; padding: 24px 16px 64px; }
+  #bbFlash { background: #FFF8EE; border: 1px solid var(--gold); color: var(--navy); padding: 12px 16px; margin-bottom: 16px; font-weight: 600; font-size: 0.92rem; }
+  #bbFlash[hidden] { display: none !important; }
+
+  .memory-bar { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; justify-content: space-between; margin-bottom: 18px; font-size: 0.82rem; color: var(--gray); }
+  .memory-bar button { background: #FFF; border: 1px solid var(--border); color: var(--text); padding: 6px 12px; cursor: pointer; font-size: 0.78rem; font-weight: 600; font-family: inherit; }
+  .memory-bar button:hover { border-color: var(--gold); color: #8B5A1F; }
+
+  #weekPicker { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 20px; }
+  .week-chip { display: inline-flex; align-items: center; gap: 6px; padding: 8px 12px; border: 1px solid var(--border); background: #FFF; cursor: pointer; font-size: 0.8rem; color: var(--text); font-family: inherit; }
+  .week-chip.active { border-color: var(--chip-color, var(--gold)); background: color-mix(in srgb, var(--chip-color, var(--gold)) 12%, white); font-weight: 700; }
+
+  #themeBanner { background: color-mix(in srgb, var(--theme-color, var(--gold)) 14%, white); border-left: 4px solid var(--theme-color, var(--gold)); padding: 14px 18px; margin-bottom: 20px; }
+  #themeBanner .tb-kicker { display: block; font-size: 0.68rem; letter-spacing: 2px; color: var(--gray); font-weight: 700; text-transform: uppercase; }
+  #themeBanner .tb-title { font-family: var(--font-main); font-size: 1.35rem; color: var(--navy); font-weight: 500; }
+
+  .progress-wrap { margin-bottom: 20px; }
+  .bb-progress { height: 6px; background: #D1D5DB; overflow: hidden; }
+  .bb-progress-fill { height: 100%; background: var(--gold); width: 25%; transition: width 0.35s ease; }
+  .progress-text { text-align: center; color: var(--gray); font-size: 0.8rem; margin-top: 6px; }
+
+  .bb-step { display: none; }
+  .bb-step.active { display: block; }
+  .bb-card { background: #FFF; border: 1px solid var(--border); margin-bottom: 16px; overflow: hidden; }
+  .section-bar { font-family: var(--font-main); background: var(--navy); color: #FFF; padding: 12px 18px; font-size: 1.05rem; margin: 0; font-weight: 500; }
+  .bb-card-body { padding: 20px 18px 22px; }
+  .bb-field { margin-bottom: 18px; }
+  .bb-field label { display: block; font-weight: 600; color: var(--navy); margin-bottom: 6px; font-size: 0.95rem; }
+  .bb-field label .req { color: #B85042; }
+  .bb-field input, .bb-field textarea, .bb-field select {
+    width: 100%; border: 1px solid var(--border); padding: 12px; font-size: 0.95rem; color: var(--navy); background: #FFF; font-family: inherit;
+  }
+  .bb-field textarea { min-height: 96px; resize: vertical; line-height: 1.5; }
+  .bb-field input:focus, .bb-field textarea:focus, .bb-field select:focus { outline: none; border-color: var(--gold); }
+  .bb-hint { font-size: 0.82rem; color: var(--gray); margin-top: 6px; line-height: 1.5; }
+  .bb-list { margin: 10px 0 0 20px; color: #475569; font-size: 0.9rem; line-height: 1.55; }
+
+  .star-row { display: flex; gap: 6px; align-items: center; flex-wrap: wrap; margin-top: 8px; }
+  .star-btn { background: transparent; border: 0; font-size: 2rem; line-height: 1; cursor: pointer; color: #D1D5DB; padding: 0 2px; }
+  .star-btn.selected { color: var(--gold); }
+  .rating-rubric { margin-top: 14px; font-size: 0.84rem; color: #475569; line-height: 1.55; }
+  .rating-rubric p { margin: 4px 0; }
+  #clearRating { font-size: 0.82rem; color: var(--gold); margin-left: 8px; }
+  #ratingHint { font-size: 0.82rem; color: #8B5A1F; font-weight: 600; margin-top: 6px; }
+
+  .btn-row { display: flex; gap: 10px; margin-top: 8px; flex-wrap: wrap; }
+  .btn-ghost, .btn-primary {
+    padding: 14px 22px; font-size: 0.95rem; font-weight: 700; cursor: pointer; border: 0; font-family: inherit;
+    text-transform: uppercase; letter-spacing: 0.04em;
+  }
+  .btn-ghost { background: #FFF; border: 1px solid var(--border) !important; color: var(--text); flex: 1; min-width: 120px; }
+  .btn-ghost:hover { border-color: var(--gold) !important; color: #8B5A1F; }
+  .btn-primary { background: var(--gold); color: #FFF; flex: 1; min-width: 120px; }
+  .btn-primary:hover { background: #B57628; }
+  .btn-primary[hidden], .btn-ghost[hidden] { display: none !important; }
+
+  #doneShell { text-align: center; padding: 40px 20px; background: #FFF; border: 1px solid var(--border); }
+  #doneShell[hidden] { display: none !important; }
+  #doneShell h2 { font-family: var(--font-main); font-size: 2rem; color: var(--navy); margin-bottom: 8px; font-weight: 500; }
+  #doneShell p { color: #475569; margin-bottom: 20px; }
+  #doneShell .done-meta { font-weight: 700; color: var(--gold); }
+
+  #historyPanel { margin-top: 32px; padding-top: 24px; border-top: 1px solid var(--border); }
+  #historyPanel[hidden] { display: none !important; }
+  #historyPanel h3 { font-family: var(--font-main); font-size: 1.2rem; color: var(--navy); margin-bottom: 12px; font-weight: 500; }
+  .hist-row { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 12px 14px; background: #FFF; border-left: 3px solid var(--gold); margin-bottom: 8px; border: 1px solid var(--border); border-left: 3px solid var(--gold); }
+  .hist-meta { font-size: 0.8rem; color: var(--gray); }
+  .hist-edit { background: var(--gold); color: #FFF; border: 0; padding: 6px 12px; font-size: 0.78rem; font-weight: 700; cursor: pointer; text-transform: uppercase; font-family: inherit; }
+  .hist-edit:hover { background: #B57628; }
+
+  .bb-footer { background: var(--navy); color: #9CA3AF; text-align: center; padding: 20px 16px; font-size: 0.82rem; }
+  .bb-footer a { color: var(--gold); }
+</style>
+</head>
+<body>
+
+<header class="tfc-top">
+  <div class="tfc-top-inner">
+    <a href="https://thefamilycaptain.com/" target="_blank" rel="noopener" class="tfc-wordmark">THE FAMILY <span class="accent">CAPTAIN</span></a>
+    <span class="tfc-top-note">Armada · Battle Brother</span>
+  </div>
+</header>
+
+<section class="bb-hero">
+  <div class="bb-kicker">Weekly Accountability</div>
+  <h1>Battle Brother Form</h1>
+  <p>Standalone check-in for your Battle Brother and Armada call. Remembers your name, last week&rsquo;s SACA, and history in this browser.</p>
+</section>
+
+<div class="bb-wrap">
+  <div id="bbFlash" hidden role="status"></div>
+
+  <div class="memory-bar">
+    <span>Saved locally in this browser — drafts auto-save as you go.</span>
+    <span>
+      <button type="button" id="btnExport">Export memory</button>
+      <button type="button" id="btnClearDraft">Clear draft</button>
+    </span>
+  </div>
+
+  <div id="weekPicker" aria-label="Select Armada week theme"></div>
+  <div id="themeBanner"></div>
+
+  <div id="doneShell" hidden>
+    <h2>Your response has been recorded.</h2>
+    <p><span class="done-meta" id="doneName"></span> &mdash; <span id="doneWeek"></span></p>
+    <p class="bb-hint">A copy was emailed to the TFC team. Your browser also kept the full history locally.</p>
+    <div class="btn-row" style="justify-content:center;max-width:400px;margin:24px auto 0;">
+      <button type="button" class="btn-primary" id="btnAnother">Submit another response</button>
+    </div>
+  </div>
+
+  <div id="formShell">
+    <div class="progress-wrap">
+      <div class="bb-progress"><div class="bb-progress-fill" id="progressFill"></div></div>
+      <div class="progress-text" id="progressText">Step 1 of 4</div>
+    </div>
+
+    <section class="bb-step active" id="step-checkin">
+      <div class="bb-card">
+        <h2 class="section-bar">Check-In</h2>
+        <div class="bb-card-body">
+          <p class="bb-hint" style="margin-top:0;margin-bottom:16px;"><span class="req">*</span> Indicates required question</p>
+          <div class="bb-field">
+            <label for="reporterName">Name <span class="req">*</span> <span style="font-weight:400;color:var(--gray);">(first and last)</span></label>
+            <input type="text" id="reporterName" name="reporterName" autocomplete="name" placeholder="Adam Johns">
+          </div>
+          <div class="bb-field">
+            <label for="lastWeekSaca">What was your Battle Brother&rsquo;s SACA for last week? <span class="req">*</span></label>
+            <textarea id="lastWeekSaca" name="lastWeekSaca" placeholder="His goal from last week — auto-fills from memory when possible"></textarea>
+            <p class="bb-hint">SACA = Self-Assigned Captain&rsquo;s Action. Pulled from your last submission when this browser remembers you.</p>
+          </div>
+          <div class="bb-field">
+            <label for="sacaPassFail">Did he complete his SACA? (Pass/Fail) <span class="req">*</span></label>
+            <select id="sacaPassFail" name="sacaPassFail">
+              <option value="">Choose</option>
+              <option value="Pass">Pass</option>
+              <option value="Fail">Fail</option>
+            </select>
+          </div>
+          <div class="bb-field">
+            <label for="thisWeekSaca">What is your Battle Brother&rsquo;s SACA for this week? <span class="req">*</span></label>
+            <textarea id="thisWeekSaca" name="thisWeekSaca" placeholder="Begin working through/reporting financial movements with wife…"></textarea>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="bb-step" id="step-brother">
+      <div class="bb-card">
+        <h2 class="section-bar">Battle Brother</h2>
+        <div class="bb-card-body">
+          <div class="bb-field">
+            <label for="battleBrotherCall">Did you have your Battle Brother call? <span class="req">*</span></label>
+            <select id="battleBrotherCall" name="battleBrotherCall">
+              <option value="">Choose</option>
+              <option value="Yes">Yes</option>
+              <option value="No">No</option>
+            </select>
+          </div>
+          <div class="bb-field">
+            <label for="threeQuestionsAsked">Did your Battle Brother ask you the required 3 questions below? (Yes/No) <span class="req">*</span></label>
+            <select id="threeQuestionsAsked" name="threeQuestionsAsked">
+              <option value="">Choose</option>
+              <option value="Yes">Yes</option>
+              <option value="No">No</option>
+            </select>
+            <ul class="bb-list">
+              <li>What was your previous Captain&rsquo;s Action, and did you complete it?</li>
+              <li>What is your Captain&rsquo;s Action for this coming week, and when exactly will you do it?</li>
+              <li>What obstacle or challenge might hold you back next week, and how will you overcome it?</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="bb-step" id="step-armada">
+      <div class="bb-card">
+        <h2 class="section-bar">Armada Rating</h2>
+        <div class="bb-card-body">
+          <div class="bb-field">
+            <label for="armadaCall">Did you have your Armada call? <span class="req">*</span></label>
+            <select id="armadaCall" name="armadaCall">
+              <option value="">Choose</option>
+              <option value="Yes">Yes</option>
+              <option value="No">No</option>
+            </select>
+          </div>
+          <div class="bb-field">
+            <label>How would you rate the Armada call? <span class="req">*</span></label>
+            <input type="hidden" id="armadaRating" name="armadaRating" value="">
+            <div class="star-row" role="group" aria-label="Armada call rating 1 to 5">
+              <button type="button" class="star-btn" data-value="1" aria-label="1 star" aria-pressed="false">★</button>
+              <button type="button" class="star-btn" data-value="2" aria-label="2 stars" aria-pressed="false">★</button>
+              <button type="button" class="star-btn" data-value="3" aria-label="3 stars" aria-pressed="false">★</button>
+              <button type="button" class="star-btn" data-value="4" aria-label="4 stars" aria-pressed="false">★</button>
+              <button type="button" class="star-btn" data-value="5" aria-label="5 stars" aria-pressed="false">★</button>
+              <a href="#" id="clearRating">Clear selection</a>
+            </div>
+            <div id="ratingHint"></div>
+            <div class="rating-rubric">
+              <p><strong>1 — Wasted Time:</strong> No structure, no leadership, no clear outcomes.</p>
+              <p><strong>2 — Surface-Level:</strong> Basic structure, but shallow discussion and weak accountability.</p>
+              <p><strong>3 — Solid:</strong> Clear flow, participation, some accountability and actionable takeaways.</p>
+              <p><strong>4 — High Impact:</strong> Strong leadership, focused call, clear and measurable actions.</p>
+              <p><strong>5 — Transformational:</strong> Deep breakthroughs, direct challenge, brotherhood engagement, and real behavioral change.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="bb-step" id="step-comments">
+      <div class="bb-card">
+        <h2 class="section-bar">Confidential Comments to TFC Team</h2>
+        <div class="bb-card-body">
+          <p class="bb-hint" style="margin-top:0;">These additional comments can be <strong>anything</strong> related to your armada, battle brother, and anything else. Comments are confidential and seen only by JM and Alan. They are reviewed weekly, and action is taken immediately.</p>
+          <div class="bb-field">
+            <label for="confidentialComments">Any additional comments? <span class="req">*</span></label>
+            <textarea id="confidentialComments" name="confidentialComments" placeholder="Praying for Alan's transition and JM as things get re-organized…"></textarea>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="btn-row">
+      <button type="button" class="btn-ghost" id="btnBack">Back</button>
+      <button type="button" class="btn-primary" id="btnNext">Next</button>
+      <button type="button" class="btn-primary" id="btnSubmit" hidden>Submit</button>
+    </div>
+  </div>
+
+  <div id="historyPanel" hidden>
+    <h3>Recent submissions (this browser)</h3>
+    <div id="historyList"></div>
+  </div>
+</div>
+
+<footer class="bb-footer">
+  <p>The Family Captain &middot; hosted at <a href="https://usmcmin.com">usmcmin.com</a></p>
+  <p style="margin-top:6px;">&copy; 2026 U.S.M.C. Ministries</p>
+</footer>
+
+<script src="battle-bro-form.js"></script>
+</body>
+</html>

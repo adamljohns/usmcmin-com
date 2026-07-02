@@ -20,7 +20,7 @@
  *
  * Bump SW_VERSION when the shell changes so installs refresh on next launch.
  */
-const SW_VERSION = 'v3-2026-07-02';
+const SW_VERSION = 'v4-2026-07-02';
 const CORE_CACHE = 'fin-core-' + SW_VERSION;
 const RUNTIME_CACHE = 'fin-runtime-' + SW_VERSION;
 const OFFLINE_FALLBACK = '/finance/finance.html';
@@ -29,6 +29,7 @@ const CORE_ASSETS = [
   '/finance/finance.html',
   '/finance/review.html',
   '/finance/debt.html',
+  '/finance/forecast.html',
   '/finance/financial-command.html',
   '/finance/stewardship-dashboard.html',
   '/finance/financial-intake.html',

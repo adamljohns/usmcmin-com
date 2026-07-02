@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <title>Cash Forecast — Fin Command</title>
+  <meta name="robots" content="noindex, nofollow">
+  <link rel="icon" type="image/png" sizes="32x32" href="../assets/icons/favicon-32.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="../assets/icons/finance-apple-touch-icon.png">
+  <link rel="manifest" href="finance.webmanifest">
+  <meta name="theme-color" content="#0A0A0A">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <style>
+    :root { --gold:#D4AF37; --bg:#0a0a0a; --card:#141416; --border:#2A2D35; --gray:#9aa0a8; --green:#4ade80; --red:#f87171; --orange:#fbbf24; }
+    * { box-sizing:border-box; margin:0; padding:0; -webkit-tap-highlight-color:transparent; }
+    body { background:var(--bg); color:#F0F0F0; font-family:system-ui,-apple-system,sans-serif; min-height:100vh;
+           padding:calc(env(safe-area-inset-top,0px) + 12px) 14px calc(env(safe-area-inset-bottom,0px) + 24px); max-width:760px; margin:0 auto; }
+    a { color:var(--gold); text-decoration:none; }
+    .top { display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; }
+    .top h1 { font-size:1.05rem; color:var(--gold); letter-spacing:0.04em; }
+    .top .nav { font-size:0.85rem; color:var(--gray); }
+    .banner { background:rgba(255,165,0,0.08); border:1px solid rgba(255,165,0,0.4); color:#f5c46a;
+              border-radius:10px; padding:12px 14px; font-size:0.83rem; line-height:1.5; margin-bottom:14px; display:none; }
+
+    .hero { background:var(--card); border:1px solid var(--gold); border-radius:14px; padding:16px; margin-bottom:14px; }
+    .hero .row { display:flex; justify-content:space-around; text-align:center; margin-bottom:10px; }
+    .hero .v { font-weight:700; font-size:1.15rem; }
+    .hero .k { color:var(--gray); font-size:0.7rem; text-transform:uppercase; letter-spacing:0.08em; margin-top:2px; }
+    .low-flag { text-align:center; border-radius:10px; padding:8px 12px; font-size:0.85rem; font-weight:600; }
+    .low-flag.bad { background:rgba(248,113,113,0.12); border:1px solid var(--red); color:var(--red); }
+    .low-flag.ok { background:rgba(74,222,128,0.1); border:1px solid var(--green); color:var(--green); }
+    svg { width:100%; height:190px; display:block; margin-top:8px; }
+
+    .ctl { display:flex; gap:8px; margin-bottom:14px; }
+    .ctl button { flex:1; padding:9px; border-radius:10px; border:1px solid var(--border); background:transparent;
+                  color:var(--gray); font-weight:600; font-size:0.85rem; cursor:pointer; font-family:inherit; }
+    .ctl button.sel { border-color:var(--gold); background:rgba(212,175,55,0.14); color:var(--gold); }
+
+    .sect { color:var(--gray); font-size:0.72rem; text-transform:uppercase; letter-spacing:0.1em; margin:16px 0 8px; }
+    .flow { background:var(--card); border:1px solid var(--border); border-radius:12px; padding:12px 14px; margin-bottom:8px;
+            display:flex; align-items:center; gap:10px; }
+    .flow .info { flex:1; min-width:0; }
+    .flow .nm { font-size:0.85rem; line-height:1.3; }
+    .flow .cd { color:var(--gray); font-size:0.72rem; }
+    .flow .amt { font-weight:700; white-space:nowrap; font-size:0.92rem; background:transparent; border:1px solid transparent;
+                 border-radius:6px; color:inherit; width:96px; text-align:right; font-family:inherit; padding:4px 6px; }
+    .flow .amt:focus { border-color:var(--gold); outline:none; }
+    .flow .amt.pos { color:var(--green); } .flow .amt.neg { color:var(--red); }
+    .toggle { position:relative; width:42px; height:24px; flex:0 0 42px; }
+    .toggle input { opacity:0; width:0; height:0; }
+    .toggle .tr { position:absolute; inset:0; background:var(--border); border-radius:12px; transition:0.2s; cursor:pointer; }
+    .toggle .tr:before { content:""; position:absolute; width:18px; height:18px; border-radius:50%; background:#888; left:3px; top:3px; transition:0.2s; }
+    .toggle input:checked + .tr { background:rgba(212,175,55,0.4); }
+    .toggle input:checked + .tr:before { transform:translateX(18px); background:var(--gold); }
+
+    #gate { position:fixed; inset:0; background:var(--bg); z-index:999; display:flex; align-items:center; justify-content:center; padding:20px; }
+    #gate .g-card { max-width:360px; width:100%; background:var(--card); border:1px solid var(--border); border-radius:12px; padding:32px 24px; text-align:center; }
+    #gate input { width:100%; background:#0f0f11; border:1px solid var(--border); border-radius:8px; color:#fff; padding:12px; margin:14px 0; text-align:center; font-size:1rem; }
+    #gate button { width:100%; background:var(--gold); color:#000; border:none; border-radius:8px; padding:12px; font-weight:700; font-size:1rem; cursor:pointer; }
+    .hint { color:var(--gray); font-size:0.75rem; line-height:1.5; margin-top:10px; }
+  </style>
+</head>
+<body>
+
+<div id="gate" style="display:none">
+  <div class="g-card">
+    <div style="font-size:1.6rem">🔒</div>
+    <h2 style="color:var(--gold);font-size:1.1rem;margin:8px 0 4px">Steward Access</h2>
+    <input type="password" id="gatePass" placeholder="Access code" onkeydown="if(event.key==='Enter')gateUnlock()">
+    <button onclick="gateUnlock()">Unlock</button>
+  </div>
+</div>
+
+<div class="top">
+  <h1>📈 Cash Forecast</h1>
+  <div class="nav"><a href="debt.html">Debt</a> · <a href="review.html">Review</a> · <a href="finance.html">Dashboard</a></div>
+</div>
+
+<div class="banner" id="banner"></div>
+
+<div class="hero" id="hero" style="display:none">
+  <div class="row">
+    <div><div class="v" id="hStart">—</div><div class="k">Cash today</div></div>
+    <div><div class="v" id="hNet">—</div><div class="k">Net next 30d</div></div>
+    <div><div class="v" id="hEnd">—</div><div class="k" id="hEndK">In 60 days</div></div>
+  </div>
+  <div class="low-flag" id="lowFlag">—</div>
+  <svg id="chart" viewBox="0 0 720 190" preserveAspectRatio="none"></svg>
+</div>
+
+<div class="ctl" id="ctl" style="display:none">
+  <button data-d="30" onclick="setDays(this)">30 days</button>
+  <button data-d="60" class="sel" onclick="setDays(this)">60 days</button>
+  <button data-d="90" onclick="setDays(this)">90 days</button>
+</div>
+
+<div class="sect" id="flowsHead" style="display:none">Recurring flows (toggle off to exclude · tap amount to correct)</div>
+<div id="flows"></div>
+<div class="hint" id="footHint" style="display:none">
+  Amounts are 90-day observed averages from your actual transactions — not promises. The apartment-rent average is inflated by a catch-up cluster in May; correct it to the true monthly rent and the forecast tightens. Corrections stick (the auto-detector never overwrites your edits). Descriptive only — the Three Laws hold.
+</div>
+
+<script>
+var API_CANDIDATES = ['http://127.0.0.1:3847', 'https://intake.usmcmin.com'];
+var API = null;
+var PW = localStorage.getItem('moop_finance_auth') || 'steward-2026';
+var days = 60, fc = null, flows = [];
+
+function gateUnlock() {
+  if (document.getElementById('gatePass').value === 'steward') {
+    localStorage.setItem('moop_steward_auth', 'true');
+    localStorage.setItem('moop_finance_auth', 'steward-2026');
+    document.getElementById('gate').style.display = 'none';
+    boot();
+  } else {
+    var el = document.getElementById('gatePass'); el.value = ''; el.placeholder = 'Invalid code';
+  }
+}
+
+async function resolveApi() {
+  for (var i = 0; i < API_CANDIDATES.length; i++) {
+    try {
+      var ctrl = new AbortController();
+      var t = setTimeout(function(){ ctrl.abort(); }, 2500);
+      var r = await fetch(API_CANDIDATES[i] + '/health', { signal: ctrl.signal });
+      clearTimeout(t);
+      if (r.ok) return API_CANDIDATES[i];
+    } catch (e) {}
+  }
+  return null;
+}
+function banner(m){ var b=document.getElementById('banner'); b.innerHTML=m; b.style.display=m?'block':'none'; }
+async function api(pathq, opts) {
+  var sep = pathq.indexOf('?') >= 0 ? '&' : '?';
+  var r = await fetch(API + pathq + sep + 'pw=' + encodeURIComponent(PW), opts);
+  if (!r.ok) throw new Error('HTTP ' + r.status);
+  return r.json();
+}
+function fmt$(n){ var s = '$' + Math.abs(n).toLocaleString('en-US',{maximumFractionDigits:0}); return n<0 ? '−'+s : s; }
+
+async function loadForecast() {
+  fc = await api('/fin/forecast?days=' + days);
+  document.getElementById('hero').style.display = 'block';
+  document.getElementById('ctl').style.display = 'flex';
+  document.getElementById('hStart').textContent = fmt$(fc.start_balance);
+  var net = document.getElementById('hNet');
+  net.textContent = fmt$(fc.net_30d);
+  net.style.color = fc.net_30d >= 0 ? 'var(--green)' : 'var(--red)';
+  var end = document.getElementById('hEnd');
+  end.textContent = fmt$(fc.end_balance);
+  end.style.color = fc.end_balance >= 0 ? '' : 'var(--red)';
+  document.getElementById('hEndK').textContent = 'In ' + days + ' days';
+  var lf = document.getElementById('lowFlag');
+  var lowDate = new Date(fc.low.date + 'T00:00:00').toLocaleDateString('en-US', {month:'short', day:'numeric'});
+  if (fc.low.balance < 0) {
+    lf.className = 'low-flag bad';
+    lf.textContent = '⚠️ Projected low: ' + fmt$(fc.low.balance) + ' on ' + lowDate;
+  } else {
+    lf.className = 'low-flag ok';
+    lf.textContent = 'Projected low stays positive: ' + fmt$(fc.low.balance) + ' on ' + lowDate;
+  }
+  drawChart();
+}
+
+function drawChart() {
+  var svg = document.getElementById('chart');
+  var W = 720, H = 190, padL = 6, padR = 6, padT = 12, padB = 14;
+  var pts = fc.series;
+  var vals = pts.map(function(p){ return p.balance; });
+  var mn = Math.min.apply(null, vals.concat([0])), mx = Math.max.apply(null, vals);
+  if (mx === mn) mx = mn + 1;
+  function x(i){ return padL + (W - padL - padR) * i / (pts.length - 1); }
+  function y(v){ return padT + (H - padT - padB) * (1 - (v - mn) / (mx - mn)); }
+  var line = pts.map(function(p, i){ return (i ? 'L' : 'M') + x(i).toFixed(1) + ',' + y(p.balance).toFixed(1); }).join(' ');
+  var zeroY = y(0);
+  var area = line + ' L' + x(pts.length - 1).toFixed(1) + ',' + zeroY.toFixed(1) + ' L' + x(0).toFixed(1) + ',' + zeroY.toFixed(1) + ' Z';
+  var lowI = pts.findIndex(function(p){ return p.date === fc.low.date; });
+  svg.innerHTML =
+    '<defs><linearGradient id="g" x1="0" y1="0" x2="0" y2="1">' +
+    '<stop offset="0%" stop-color="#D4AF37" stop-opacity="0.28"/>' +
+    '<stop offset="100%" stop-color="#D4AF37" stop-opacity="0.02"/></linearGradient></defs>' +
+    (zeroY > padT && zeroY < H - padB
+      ? '<line x1="0" y1="' + zeroY + '" x2="' + W + '" y2="' + zeroY + '" stroke="#f87171" stroke-width="1" stroke-dasharray="5,5" opacity="0.6"/>'
+      : '') +
+    '<path d="' + area + '" fill="url(#g)"/>' +
+    '<path d="' + line + '" fill="none" stroke="#D4AF37" stroke-width="2.2"/>' +
+    (lowI >= 0
+      ? '<circle cx="' + x(lowI) + '" cy="' + y(pts[lowI].balance) + '" r="4.5" fill="' + (fc.low.balance < 0 ? '#f87171' : '#4ade80') + '"/>'
+      : '');
+}
+
+async function loadFlows() {
+  var d = await api('/fin/recurring');
+  flows = d.recurring;
+  document.getElementById('flowsHead').style.display = 'block';
+  document.getElementById('footHint').style.display = 'block';
+  var wrap = document.getElementById('flows');
+  wrap.innerHTML = '';
+  flows.forEach(function(f, i) {
+    var div = document.createElement('div');
+    div.className = 'flow';
+    div.innerHTML =
+      '<label class="toggle"><input type="checkbox" ' + (f.active ? 'checked' : '') + ' onchange="toggleFlow(' + i + ', this.checked)">' +
+      '<span class="tr"></span></label>' +
+      '<div class="info"><div class="nm">' + f.name + '</div>' +
+      '<div class="cd">' + f.cadence + ' · next ' + (f.next_date || '?') + ' · ' + f.source + '</div></div>' +
+      '<input class="amt ' + (f.amount >= 0 ? 'pos' : 'neg') + '" inputmode="decimal" value="' + f.amount.toFixed(2) + '" ' +
+      'onchange="editAmount(' + i + ', this)">';
+    wrap.appendChild(div);
+  });
+}
+
+async function toggleFlow(i, on) {
+  try {
+    await api('/fin/recurring', { method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({ name: flows[i].name, active: on }) });
+    flows[i].active = on ? 1 : 0;
+    await loadForecast();
+  } catch (e) { banner('Save failed: ' + e.message); }
+}
+
+async function editAmount(i, input) {
+  var v = parseFloat(input.value);
+  if (isNaN(v)) { input.value = flows[i].amount.toFixed(2); return; }
+  try {
+    await api('/fin/recurring', { method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({ name: flows[i].name, amount: v }) });
+    flows[i].amount = v;
+    input.className = 'amt ' + (v >= 0 ? 'pos' : 'neg');
+    await loadForecast();
+    await loadFlows();
+  } catch (e) { banner('Save failed: ' + e.message); }
+}
+
+function setDays(btn) {
+  days = parseInt(btn.dataset.d, 10);
+  document.querySelectorAll('.ctl button').forEach(function(b){ b.classList.remove('sel'); });
+  btn.classList.add('sel');
+  loadForecast();
+}
+
+async function boot() {
+  API = await resolveApi();
+  if (!API) {
+    banner('<strong>Finance API unreachable.</strong> The forecast talks to the subscribe-server on Adam\'s Mac; it lights up here once the <code>intake.usmcmin.com</code> tunnel is live. Open this page on the Mac to forecast today.');
+    return;
+  }
+  try { await loadForecast(); await loadFlows(); }
+  catch (e) { banner('<strong>Could not load forecast:</strong> ' + e.message); }
+}
+
+(function init() {
+  var authed = localStorage.getItem('moop_steward_auth') === 'true'
+            || localStorage.getItem('moop_finance_auth') === 'steward-2026';
+  if (!authed) document.getElementById('gate').style.display = 'flex';
+  else boot();
+})();
+</script>
+
+<script>
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', function () {
+      navigator.serviceWorker.register('/finance/finance-sw.js').catch(function(){});
+    });
+  }
+</script>
+</body>
+</html>

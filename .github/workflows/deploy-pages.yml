@@ -1,0 +1,47 @@
+# Deploy usmcmin.com to GitHub Pages via Actions.
+#
+# Why this exists (2026-07-02): the legacy branch-based Pages pipeline began
+# rejecting every build with a 0ms "Page build failed" once the repo crossed
+# ~4.5GB of git history (months of civic-enrichment image commits). The
+# legacy builder clones the whole repo; this workflow instead uploads only
+# the working tree (~0.94GB after the course-media offload to Releases) as
+# a Pages artifact, which the Actions deploy path accepts.
+#
+# Pattern: official "Static HTML" starter workflow, shallow checkout.
+name: Deploy static site to Pages
+
+on:
+  push:
+    branches: ["main"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# One deploy at a time; skip intermediate queued runs but let in-progress finish.
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout (shallow — history is 4.5GB, tree is what we publish)
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: '.'
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

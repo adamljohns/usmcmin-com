@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <title>Review Queue — Fin Command</title>
+  <meta name="robots" content="noindex, nofollow">
+  <link rel="icon" type="image/png" sizes="32x32" href="../assets/icons/favicon-32.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="../assets/icons/finance-apple-touch-icon.png">
+  <link rel="manifest" href="finance.webmanifest">
+  <meta name="theme-color" content="#0A0A0A">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <style>
+    :root { --gold:#D4AF37; --bg:#0a0a0a; --card:#141416; --border:#2A2D35; --gray:#9aa0a8; --green:#4ade80; --red:#f87171; }
+    * { box-sizing:border-box; margin:0; padding:0; -webkit-tap-highlight-color:transparent; }
+    body { background:var(--bg); color:#F0F0F0; font-family:system-ui,-apple-system,sans-serif; min-height:100vh;
+           padding:calc(env(safe-area-inset-top,0px) + 12px) 14px calc(env(safe-area-inset-bottom,0px) + 20px); }
+    a { color:var(--gold); text-decoration:none; }
+
+    .top { display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; }
+    .top h1 { font-size:1.05rem; color:var(--gold); letter-spacing:0.04em; }
+    .top .left-count { font-size:0.85rem; color:var(--gray); }
+    .progress { height:5px; background:var(--border); border-radius:3px; overflow:hidden; margin-bottom:16px; }
+    .progress > div { height:100%; background:linear-gradient(90deg,var(--gold),var(--green)); transition:width 0.3s; }
+
+    .banner { background:rgba(255,165,0,0.08); border:1px solid rgba(255,165,0,0.4); color:#f5c46a;
+              border-radius:10px; padding:12px 14px; font-size:0.85rem; line-height:1.5; margin-bottom:14px; display:none; }
+
+    .card { background:var(--card); border:1px solid var(--border); border-radius:14px; padding:18px 16px; margin-bottom:14px; }
+    .amount { font-size:2rem; font-weight:700; text-align:center; }
+    .amount.neg { color:var(--red); } .amount.pos { color:var(--green); }
+    .merchant { text-align:center; font-size:0.95rem; margin:8px 0 4px; line-height:1.4; word-break:break-word; }
+    .meta { text-align:center; color:var(--gray); font-size:0.78rem; line-height:1.5; }
+
+    .sect-label { color:var(--gray); font-size:0.72rem; text-transform:uppercase; letter-spacing:0.1em; margin:14px 0 8px; }
+    .cls-row { display:flex; gap:8px; }
+    .cls-btn { flex:1; padding:10px 4px; border-radius:10px; border:1px solid var(--border); background:transparent;
+               color:var(--gray); font-size:0.85rem; font-weight:600; cursor:pointer; font-family:inherit; }
+    .cls-btn.sel { border-color:var(--gold); background:rgba(212,175,55,0.14); color:var(--gold); }
+
+    .cats { display:grid; grid-template-columns:1fr 1fr; gap:8px; max-height:34vh; overflow-y:auto; }
+    .cat-btn { padding:11px 8px; border-radius:10px; border:1px solid var(--border); background:transparent; color:#ddd;
+               font-size:0.82rem; cursor:pointer; text-align:left; font-family:inherit; line-height:1.3; }
+    .cat-btn.sel { border-color:var(--gold); background:rgba(212,175,55,0.14); color:var(--gold); font-weight:600; }
+    .cat-btn .n { color:var(--gray); font-size:0.7rem; }
+
+    .rule-row { display:flex; align-items:center; gap:10px; margin-top:6px; }
+    .rule-row input[type=checkbox] { width:20px; height:20px; accent-color:var(--gold); }
+    .rule-row label { font-size:0.83rem; color:#ddd; }
+    #rulePattern { width:100%; margin-top:8px; background:#0f0f11; border:1px solid var(--border); border-radius:8px;
+                   color:var(--gold); padding:10px 12px; font-size:0.85rem; font-family:ui-monospace,monospace; display:none; }
+
+    .actions { display:flex; gap:8px; margin-top:16px; }
+    .btn { flex:1; padding:14px 6px; border-radius:12px; border:none; font-weight:700; font-size:0.95rem; cursor:pointer; font-family:inherit; }
+    .btn-classify { background:linear-gradient(90deg,var(--gold),#c9a02c); color:#000; }
+    .btn-classify:disabled { opacity:0.35; }
+    .btn-skip { background:transparent; border:1px solid var(--border); color:var(--gray); flex:0 0 84px; }
+    .row2 { display:flex; gap:8px; margin-top:8px; }
+    .btn-exclude { background:transparent; border:1px solid var(--border); color:var(--gray); font-size:0.8rem; padding:10px; }
+
+    .toast { position:fixed; left:50%; transform:translateX(-50%); bottom:calc(env(safe-area-inset-bottom,0px) + 24px);
+             background:#1d1f24; border:1px solid var(--gold); color:var(--gold); border-radius:24px; padding:10px 20px;
+             font-size:0.85rem; opacity:0; transition:opacity 0.25s; pointer-events:none; max-width:90vw; text-align:center; }
+    .toast.show { opacity:1; }
+    .done-card { text-align:center; padding:60px 20px; }
+    .done-card h2 { color:var(--gold); margin-bottom:10px; }
+    .done-card p { color:var(--gray); font-size:0.9rem; line-height:1.6; }
+
+    /* mini steward gate */
+    #gate { position:fixed; inset:0; background:var(--bg); z-index:999; display:flex; align-items:center; justify-content:center; padding:20px; }
+    #gate .g-card { max-width:360px; width:100%; background:var(--card); border:1px solid var(--border); border-radius:12px; padding:32px 24px; text-align:center; }
+    #gate input { width:100%; background:#0f0f11; border:1px solid var(--border); border-radius:8px; color:#fff; padding:12px; margin:14px 0; text-align:center; font-size:1rem; }
+    #gate button { width:100%; background:var(--gold); color:#000; border:none; border-radius:8px; padding:12px; font-weight:700; font-size:1rem; cursor:pointer; }
+  </style>
+</head>
+<body>
+
+<div id="gate" style="display:none">
+  <div class="g-card">
+    <div style="font-size:1.6rem">🔒</div>
+    <h2 style="color:var(--gold);font-size:1.1rem;margin:8px 0 4px">Steward Access</h2>
+    <input type="password" id="gatePass" placeholder="Access code" onkeydown="if(event.key==='Enter')gateUnlock()">
+    <button onclick="gateUnlock()">Unlock</button>
+  </div>
+</div>
+
+<div class="top">
+  <h1>🧾 Review Queue</h1>
+  <div class="left-count"><span id="leftCount">…</span> left · <a href="finance.html">Dashboard</a></div>
+</div>
+<div class="progress"><div id="progFill" style="width:0%"></div></div>
+
+<div class="banner" id="apiBanner"></div>
+
+<div id="reviewArea" style="display:none">
+  <div class="card">
+    <div class="amount" id="txAmount">—</div>
+    <div class="merchant" id="txMerchant">—</div>
+    <div class="meta" id="txMeta">—</div>
+  </div>
+
+  <div class="sect-label">Classification</div>
+  <div class="cls-row">
+    <button class="cls-btn sel" data-cls="personal" onclick="pickCls(this)">Personal</button>
+    <button class="cls-btn" data-cls="business" onclick="pickCls(this)">Business</button>
+    <button class="cls-btn" data-cls="transfer" onclick="pickCls(this)">Transfer</button>
+  </div>
+
+  <div class="sect-label">Category</div>
+  <div class="cats" id="catGrid"></div>
+
+  <div class="sect-label">Teach a rule</div>
+  <div class="rule-row">
+    <input type="checkbox" id="ruleChk" checked onchange="document.getElementById('rulePattern').style.display=this.checked?'block':'none'">
+    <label for="ruleChk">Apply to every transaction like this (teaches a permanent rule)</label>
+  </div>
+  <input type="text" id="rulePattern" style="display:block">
+
+  <div class="actions">
+    <button class="btn btn-skip" onclick="nextTxn()">Skip</button>
+    <button class="btn btn-classify" id="classifyBtn" onclick="classify(false)" disabled>Classify</button>
+  </div>
+  <div class="row2">
+    <button class="btn btn-exclude" onclick="classify(true)">Classify + exclude from budgets (one-off outlier)</button>
+  </div>
+</div>
+
+<div id="doneArea" class="done-card" style="display:none">
+  <h2>Queue clear 🎉</h2>
+  <p>Every transaction is classified. New ones land here after each Friday sync —<br>and every rule you taught works forever.</p>
+  <p style="margin-top:16px"><a href="finance.html">← Back to Financial Command</a></p>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ── Config / State ───────────────────────────────────────────────────────────
+var API_CANDIDATES = ['http://127.0.0.1:3847', 'https://intake.usmcmin.com'];
+var API = null;
+var PW = localStorage.getItem('moop_finance_auth') || 'steward-2026';
+var queue = [], idx = 0, categories = [], selectedCat = null, initialTotal = null;
+
+// ── Steward gate (same convention as finance.html) ───────────────────────────
+function gateUnlock() {
+  if (document.getElementById('gatePass').value === 'steward') {
+    localStorage.setItem('moop_steward_auth', 'true');
+    localStorage.setItem('moop_finance_auth', 'steward-2026');
+    document.getElementById('gate').style.display = 'none';
+    boot();
+  } else {
+    var el = document.getElementById('gatePass'); el.value = ''; el.placeholder = 'Invalid code';
+  }
+}
+
+// ── API resolution: first candidate whose /health answers wins ───────────────
+async function resolveApi() {
+  for (var i = 0; i < API_CANDIDATES.length; i++) {
+    try {
+      var ctrl = new AbortController();
+      var t = setTimeout(function(){ ctrl.abort(); }, 2500);
+      var r = await fetch(API_CANDIDATES[i] + '/health', { signal: ctrl.signal });
+      clearTimeout(t);
+      if (r.ok) return API_CANDIDATES[i];
+    } catch (e) {}
+  }
+  return null;
+}
+
+function banner(msg) {
+  var b = document.getElementById('apiBanner');
+  b.innerHTML = msg; b.style.display = msg ? 'block' : 'none';
+}
+
+function toast(msg) {
+  var t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('show');
+  setTimeout(function(){ t.classList.remove('show'); }, 2200);
+}
+
+// ── Data loads ───────────────────────────────────────────────────────────────
+async function api(pathq, opts) {
+  var sep = pathq.indexOf('?') >= 0 ? '&' : '?';
+  var r = await fetch(API + pathq + sep + 'pw=' + encodeURIComponent(PW), opts);
+  if (!r.ok) throw new Error('HTTP ' + r.status);
+  return r.json();
+}
+
+async function loadQueue() {
+  var d = await api('/fin/transactions?review=1&limit=100');
+  queue = d.transactions; idx = 0;
+  var s = await api('/fin/summary');
+  var left = s.transactions.needs_review;
+  if (initialTotal === null) initialTotal = left;
+  updateCounter(left);
+}
+
+async function loadCategories() {
+  var d = await api('/fin/categories');
+  categories = d.categories;
+  renderCats();
+}
+
+function updateCounter(left) {
+  document.getElementById('leftCount').textContent = left;
+  var pct = initialTotal > 0 ? Math.round(100 * (initialTotal - left) / initialTotal) : 100;
+  document.getElementById('progFill').style.width = pct + '%';
+  if (left === 0) {
+    document.getElementById('reviewArea').style.display = 'none';
+    document.getElementById('doneArea').style.display = 'block';
+  }
+}
+
+// ── Rendering ────────────────────────────────────────────────────────────────
+function renderCats() {
+  var g = document.getElementById('catGrid');
+  g.innerHTML = '';
+  categories.forEach(function(c) {
+    var b = document.createElement('button');
+    b.className = 'cat-btn';
+    b.innerHTML = c.name + ' <span class="n">(' + c.used + ')</span>';
+    b.onclick = function(){ pickCat(b, c.name); };
+    g.appendChild(b);
+  });
+  var nb = document.createElement('button');
+  nb.className = 'cat-btn'; nb.textContent = '+ New category…';
+  nb.onclick = function() {
+    var name = prompt('New category name:');
+    if (name && name.trim()) { pickCatByName(name.trim()); }
+  };
+  g.appendChild(nb);
+}
+
+function pickCat(btn, name) {
+  document.querySelectorAll('.cat-btn').forEach(function(b){ b.classList.remove('sel'); });
+  btn.classList.add('sel');
+  selectedCat = name;
+  document.getElementById('classifyBtn').disabled = false;
+}
+function pickCatByName(name) {
+  selectedCat = name;
+  document.getElementById('classifyBtn').disabled = false;
+  toast('Category: ' + name);
+}
+function pickCls(btn) {
+  document.querySelectorAll('.cls-btn').forEach(function(b){ b.classList.remove('sel'); });
+  btn.classList.add('sel');
+}
+
+// Derive a teachable LIKE pattern from the raw bank string: first 2-3 tokens,
+// digits/noise trimmed, uppercased, '%' suffix. Adam can edit it before saving.
+function derivePattern(raw) {
+  var s = (raw || '').toUpperCase().replace(/\s+/g, ' ').trim();
+  var tokens = s.split(' ').filter(function(t){ return !/^[X\d\-#*.]{4,}$/.test(t); });
+  var take = tokens.slice(0, Math.min(3, tokens.length)).join(' ');
+  if (take.length > 26) take = take.slice(0, 26);
+  return take.length >= 4 ? take + '%' : s.slice(0, 20) + '%';
+}
+
+function showTxn() {
+  var t = queue[idx];
+  if (!t) { loadQueue().then(function(){ if (queue.length) showTxn(); }); return; }
+  var neg = t.amount < 0;
+  var amtEl = document.getElementById('txAmount');
+  amtEl.textContent = (neg ? '−$' : '+$') + Math.abs(t.amount).toLocaleString('en-US', {minimumFractionDigits:2});
+  amtEl.className = 'amount ' + (neg ? 'neg' : 'pos');
+  document.getElementById('txMerchant').textContent = t.raw_name || '(no description)';
+  document.getElementById('txMeta').textContent = t.date + ' · ' + (t.account_name || '') + ' · ' + (t.institution || '');
+  document.getElementById('rulePattern').value = derivePattern(t.raw_name);
+  selectedCat = null;
+  document.getElementById('classifyBtn').disabled = true;
+  document.querySelectorAll('.cat-btn').forEach(function(b){ b.classList.remove('sel'); });
+}
+
+function nextTxn() { idx++; showTxn(); }
+
+// ── Classify ─────────────────────────────────────────────────────────────────
+async function classify(exclude) {
+  var t = queue[idx];
+  if (!t || !selectedCat) { toast('Pick a category first'); return; }
+  var cls = document.querySelector('.cls-btn.sel').dataset.cls;
+  var body = { txn_key: t.txn_key, category: selectedCat, classification: cls };
+  if (exclude) body.budget_exclude = true;
+  if (document.getElementById('ruleChk').checked) {
+    var pat = document.getElementById('rulePattern').value.trim();
+    if (pat.length >= 4) body.make_rule = pat;
+  }
+  document.getElementById('classifyBtn').disabled = true;
+  try {
+    var d = await api('/fin/classify', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(body)
+    });
+    updateCounter(d.remaining);
+    toast(d.rule_applied_to > 0
+      ? '✓ Classified — rule caught ' + d.rule_applied_to + ' more'
+      : '✓ Classified');
+    // Rule may have consumed items later in the local page; drop any the rule matched.
+    if (d.rule_applied_to > 0 && body.make_rule) {
+      var rx = new RegExp('^' + body.make_rule.replace(/[.*+?^${}()|[\]\\]/g, '\\$&').replace(/%/g, '.*') + '$', 'i');
+      queue = queue.filter(function(q, i){ return i <= idx || !rx.test((q.raw_name || '').toUpperCase()); });
+    }
+    idx++;
+    if (idx >= queue.length) { await loadQueue(); }
+    showTxn();
+    // refresh category counts occasionally
+    if (Math.random() < 0.2) loadCategories();
+  } catch (e) {
+    toast('Save failed — ' + e.message);
+    document.getElementById('classifyBtn').disabled = false;
+  }
+}
+
+// ── Boot ─────────────────────────────────────────────────────────────────────
+async function boot() {
+  banner('');
+  API = await resolveApi();
+  if (!API) {
+    banner('<strong>Finance API unreachable.</strong> The review queue talks to the subscribe-server, which currently answers only on Adam\'s Mac (localhost) — so review works from the Mac today, and from this phone once the <code>intake.usmcmin.com</code> tunnel is live. Nothing is lost; the queue will be right here.');
+    return;
+  }
+  try {
+    await loadCategories();
+    await loadQueue();
+    if (queue.length) {
+      document.getElementById('reviewArea').style.display = 'block';
+      showTxn();
+    } else {
+      updateCounter(0);
+    }
+  } catch (e) {
+    banner('<strong>Could not load the queue:</strong> ' + e.message);
+  }
+}
+
+(function init() {
+  var authed = localStorage.getItem('moop_steward_auth') === 'true'
+            || localStorage.getItem('moop_finance_auth') === 'steward-2026';
+  if (!authed) {
+    document.getElementById('gate').style.display = 'flex';
+  } else {
+    boot();
+  }
+})();
+</script>
+
+<script>
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', function () {
+      navigator.serviceWorker.register('/finance/finance-sw.js').catch(function(){});
+    });
+  }
+</script>
+</body>
+</html>

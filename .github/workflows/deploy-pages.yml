@@ -45,3 +45,9 @@ jobs:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
+        with:
+          # A ~0.94GB artifact takes longer than the 10-min default to fan out
+          # to the Pages CDN — the first workflow deploy sat in
+          # deployment_queued until the action's own timeout canceled it.
+          timeout: 1800000
+          error_count: 30

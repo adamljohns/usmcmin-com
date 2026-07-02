@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <title>Debt Freedom — Fin Command</title>
+  <meta name="robots" content="noindex, nofollow">
+  <link rel="icon" type="image/png" sizes="32x32" href="../assets/icons/favicon-32.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="../assets/icons/finance-apple-touch-icon.png">
+  <link rel="manifest" href="finance.webmanifest">
+  <meta name="theme-color" content="#0A0A0A">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <style>
+    :root { --gold:#D4AF37; --bg:#0a0a0a; --card:#141416; --border:#2A2D35; --gray:#9aa0a8; --green:#4ade80; --red:#f87171; --orange:#fbbf24; }
+    * { box-sizing:border-box; margin:0; padding:0; -webkit-tap-highlight-color:transparent; }
+    body { background:var(--bg); color:#F0F0F0; font-family:system-ui,-apple-system,sans-serif; min-height:100vh;
+           padding:calc(env(safe-area-inset-top,0px) + 12px) 14px calc(env(safe-area-inset-bottom,0px) + 24px); max-width:760px; margin:0 auto; }
+    a { color:var(--gold); text-decoration:none; }
+    .top { display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; }
+    .top h1 { font-size:1.05rem; color:var(--gold); letter-spacing:0.04em; }
+    .top .nav { font-size:0.85rem; color:var(--gray); }
+
+    .banner { background:rgba(255,165,0,0.08); border:1px solid rgba(255,165,0,0.4); color:#f5c46a;
+              border-radius:10px; padding:12px 14px; font-size:0.83rem; line-height:1.5; margin-bottom:14px; display:none; }
+
+    .results { background:var(--card); border:1px solid var(--gold); border-radius:14px; padding:18px 16px; margin-bottom:14px; text-align:center; }
+    .results .big { font-size:1.9rem; font-weight:700; color:var(--gold); }
+    .results .sub { color:var(--gray); font-size:0.82rem; margin-top:4px; }
+    .results .row { display:flex; justify-content:space-around; margin-top:14px; }
+    .results .cell .v { font-weight:700; font-size:1.05rem; }
+    .results .cell .k { color:var(--gray); font-size:0.72rem; text-transform:uppercase; letter-spacing:0.08em; margin-top:2px; }
+
+    .controls { background:var(--card); border:1px solid var(--border); border-radius:14px; padding:16px; margin-bottom:14px; }
+    .strat { display:flex; gap:8px; margin-bottom:14px; }
+    .strat button { flex:1; padding:10px; border-radius:10px; border:1px solid var(--border); background:transparent;
+                    color:var(--gray); font-weight:600; font-size:0.88rem; cursor:pointer; font-family:inherit; }
+    .strat button.sel { border-color:var(--gold); background:rgba(212,175,55,0.14); color:var(--gold); }
+    .slider-row { display:flex; align-items:center; gap:12px; }
+    .slider-row input[type=range] { flex:1; accent-color:var(--gold); }
+    .slider-row .val { min-width:86px; text-align:right; font-weight:700; color:var(--gold); }
+    .hint { color:var(--gray); font-size:0.75rem; margin-top:8px; line-height:1.5; }
+
+    .debt { background:var(--card); border:1px solid var(--border); border-radius:12px; padding:14px; margin-bottom:10px; }
+    .debt .head { display:flex; justify-content:space-between; align-items:baseline; gap:8px; }
+    .debt .name { font-size:0.88rem; line-height:1.35; word-break:break-word; }
+    .debt .inst { color:var(--gray); font-size:0.72rem; }
+    .debt .bal { color:var(--red); font-weight:700; font-size:1.05rem; white-space:nowrap; }
+    .debt .fields { display:flex; gap:8px; margin-top:10px; flex-wrap:wrap; }
+    .fld { flex:1; min-width:110px; }
+    .fld label { display:block; color:var(--gray); font-size:0.68rem; text-transform:uppercase; letter-spacing:0.06em; margin-bottom:4px; }
+    .fld input { width:100%; background:#0f0f11; border:1px solid var(--border); border-radius:8px; color:#fff;
+                 padding:9px 10px; font-size:0.9rem; font-family:inherit; }
+    .fld input.est { border-color:var(--orange); color:var(--orange); }
+    .badges { margin-top:8px; display:flex; gap:6px; flex-wrap:wrap; }
+    .badge { font-size:0.68rem; padding:3px 9px; border-radius:12px; border:1px solid var(--border); color:var(--gray); }
+    .badge.cliff { border-color:var(--orange); color:var(--orange); }
+    .badge.payoff { border-color:var(--green); color:var(--green); }
+    .badge.est { border-color:var(--orange); color:var(--orange); }
+    .saved { color:var(--green); font-size:0.72rem; opacity:0; transition:opacity 0.3s; }
+    .saved.show { opacity:1; }
+
+    #gate { position:fixed; inset:0; background:var(--bg); z-index:999; display:flex; align-items:center; justify-content:center; padding:20px; }
+    #gate .g-card { max-width:360px; width:100%; background:var(--card); border:1px solid var(--border); border-radius:12px; padding:32px 24px; text-align:center; }
+    #gate input { width:100%; background:#0f0f11; border:1px solid var(--border); border-radius:8px; color:#fff; padding:12px; margin:14px 0; text-align:center; font-size:1rem; }
+    #gate button { width:100%; background:var(--gold); color:#000; border:none; border-radius:8px; padding:12px; font-weight:700; font-size:1rem; cursor:pointer; }
+  </style>
+</head>
+<body>
+
+<div id="gate" style="display:none">
+  <div class="g-card">
+    <div style="font-size:1.6rem">🔒</div>
+    <h2 style="color:var(--gold);font-size:1.1rem;margin:8px 0 4px">Steward Access</h2>
+    <input type="password" id="gatePass" placeholder="Access code" onkeydown="if(event.key==='Enter')gateUnlock()">
+    <button onclick="gateUnlock()">Unlock</button>
+  </div>
+</div>
+
+<div class="top">
+  <h1>⚔️ Debt Freedom</h1>
+  <div class="nav"><a href="review.html">Review</a> · <a href="finance.html">Dashboard</a></div>
+</div>
+
+<div class="banner" id="banner"></div>
+
+<div class="results" id="results" style="display:none">
+  <div class="big" id="freeDate">—</div>
+  <div class="sub" id="freeSub">projected debt-free date</div>
+  <div class="row">
+    <div class="cell"><div class="v" id="rTotal">—</div><div class="k">Total debt</div></div>
+    <div class="cell"><div class="v" id="rInterest">—</div><div class="k">Interest to pay</div></div>
+    <div class="cell"><div class="v" id="rMin">—</div><div class="k">Monthly mins</div></div>
+  </div>
+</div>
+
+<div class="controls" id="controls" style="display:none">
+  <div class="strat">
+    <button id="stAv" class="sel" onclick="setStrategy('avalanche')">Avalanche (highest APR first)</button>
+    <button id="stSn" onclick="setStrategy('snowball')">Snowball (smallest first)</button>
+  </div>
+  <div class="slider-row">
+    <span style="color:var(--gray);font-size:0.8rem">Extra/mo</span>
+    <input type="range" id="extraSlider" min="0" max="2000" step="25" value="500" oninput="extraChanged(false)" onchange="extraChanged(true)">
+    <span class="val" id="extraVal">$500</span>
+  </div>
+  <div class="hint">The Three Laws hold: this planner describes outcomes — it never moves money. Tap any APR or minimum field to replace an <span style="color:var(--orange)">orange estimate</span> with the real number from your statement; the plan re-computes instantly and remembers forever.</div>
+</div>
+
+<div id="debtList"></div>
+
+<script>
+var API_CANDIDATES = ['http://127.0.0.1:3847', 'https://intake.usmcmin.com'];
+var API = null;
+var PW = localStorage.getItem('moop_finance_auth') || 'steward-2026';
+var strategy = 'avalanche', extra = 500, debts = [], plan = null;
+
+function gateUnlock() {
+  if (document.getElementById('gatePass').value === 'steward') {
+    localStorage.setItem('moop_steward_auth', 'true');
+    localStorage.setItem('moop_finance_auth', 'steward-2026');
+    document.getElementById('gate').style.display = 'none';
+    boot();
+  } else {
+    var el = document.getElementById('gatePass'); el.value = ''; el.placeholder = 'Invalid code';
+  }
+}
+
+async function resolveApi() {
+  for (var i = 0; i < API_CANDIDATES.length; i++) {
+    try {
+      var ctrl = new AbortController();
+      var t = setTimeout(function(){ ctrl.abort(); }, 2500);
+      var r = await fetch(API_CANDIDATES[i] + '/health', { signal: ctrl.signal });
+      clearTimeout(t);
+      if (r.ok) return API_CANDIDATES[i];
+    } catch (e) {}
+  }
+  return null;
+}
+
+function banner(msg) {
+  var b = document.getElementById('banner');
+  b.innerHTML = msg; b.style.display = msg ? 'block' : 'none';
+}
+
+async function api(pathq, opts) {
+  var sep = pathq.indexOf('?') >= 0 ? '&' : '?';
+  var r = await fetch(API + pathq + sep + 'pw=' + encodeURIComponent(PW), opts);
+  if (!r.ok) throw new Error('HTTP ' + r.status);
+  return r.json();
+}
+
+function fmt$(n) { return '$' + Math.abs(n).toLocaleString('en-US', {maximumFractionDigits:0}); }
+
+async function loadAll() {
+  var d = await api('/fin/debts');
+  debts = d.debts;
+  await refreshPlan();
+  renderDebts();
+}
+
+async function refreshPlan() {
+  plan = await api('/fin/payoff-plan?strategy=' + strategy + '&extra=' + extra);
+  renderResults();
+}
+
+function renderResults() {
+  document.getElementById('results').style.display = 'block';
+  document.getElementById('controls').style.display = 'block';
+  var free = plan.debt_free_date;
+  document.getElementById('freeDate').textContent = free
+    ? new Date(free + '-15').toLocaleDateString('en-US', {year:'numeric', month:'long'})
+    : '600+ months';
+  document.getElementById('freeSub').textContent =
+    (plan.months_to_debt_free ? plan.months_to_debt_free + ' months · ' : '') +
+    strategy + ' · +' + fmt$(extra) + '/mo extra' +
+    (plan.any_estimates ? ' · CONTAINS ESTIMATES' : '');
+  var totalDebt = debts.reduce(function(s, x){ return s + Math.abs(x.balance); }, 0);
+  document.getElementById('rTotal').textContent = fmt$(totalDebt);
+  document.getElementById('rInterest').textContent = fmt$(plan.total_interest);
+  document.getElementById('rMin').textContent = fmt$(plan.monthly_minimums);
+  banner(plan.any_estimates
+    ? '<strong>Orange fields are estimates</strong> (21.99% APR / 2% minimum assumed). Enter real numbers from each statement and the projection tightens — the plan is only as honest as its inputs.'
+    : '');
+}
+
+function planFor(name) {
+  if (!plan) return null;
+  for (var i = 0; i < plan.debts.length; i++) if (plan.debts[i].name === name) return plan.debts[i];
+  return null;
+}
+
+function renderDebts() {
+  var wrap = document.getElementById('debtList');
+  wrap.innerHTML = '';
+  debts.forEach(function(x) {
+    var p = planFor(x.account_name) || {};
+    var card = document.createElement('div');
+    card.className = 'debt';
+    var aprVal = x.apr !== null && x.apr !== undefined ? (x.apr * 100).toFixed(2) : '';
+    var minVal = x.min_payment !== null && x.min_payment !== undefined ? x.min_payment : '';
+    card.innerHTML =
+      '<div class="head"><div><div class="name">' + x.account_name + '</div>' +
+      '<div class="inst">' + (x.institution || '') + '</div></div>' +
+      '<div class="bal">' + fmt$(x.balance) + '</div></div>' +
+      '<div class="fields">' +
+      '<div class="fld"><label>APR % (statement)</label><input inputmode="decimal" placeholder="21.99 (est)" value="' + aprVal + '" ' +
+        (aprVal ? '' : 'class="est" ') + 'onchange="saveMeta(this, \'' + escapeQ(x.account_name) + '\', \'apr\')"></div>' +
+      '<div class="fld"><label>Min payment $</label><input inputmode="decimal" placeholder="auto (est)" value="' + minVal + '" ' +
+        (minVal ? '' : 'class="est" ') + 'onchange="saveMeta(this, \'' + escapeQ(x.account_name) + '\', \'min_payment\')"></div>' +
+      '</div>' +
+      '<div class="badges">' +
+      (p.paid_off ? '<span class="badge payoff">paid off ' + p.paid_off + '</span>' : '') +
+      (p.interest_paid ? '<span class="badge">interest ' + fmt$(p.interest_paid) + '</span>' : '') +
+      (p.estimated ? '<span class="badge est">using estimates</span>' : '') +
+      (x.promo_apr_end ? '<span class="badge cliff">promo ends ' + x.promo_apr_end + '</span>' : '') +
+      '<span class="saved" id="sv-' + cssId(x.account_name) + '">saved ✓</span>' +
+      '</div>';
+    wrap.appendChild(card);
+  });
+}
+
+function escapeQ(s) { return s.replace(/\\/g, '\\\\').replace(/'/g, "\\'"); }
+function cssId(s) { return s.replace(/[^a-zA-Z0-9]/g, ''); }
+
+async function saveMeta(input, account, field) {
+  var v = parseFloat(input.value);
+  if (isNaN(v)) return;
+  var body = { account_name: account };
+  body[field] = field === 'apr' ? v / 100 : v;   // UI shows %, API stores decimal
+  try {
+    await api('/fin/debt-meta', { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify(body) });
+    input.classList.remove('est');
+    var sv = document.getElementById('sv-' + cssId(account));
+    if (sv) { sv.classList.add('show'); setTimeout(function(){ sv.classList.remove('show'); }, 1500); }
+    var d = await api('/fin/debts'); debts = d.debts;
+    await refreshPlan();
+    renderDebts();
+  } catch (e) { alert('Save failed: ' + e.message); }
+}
+
+function setStrategy(s) {
+  strategy = s;
+  document.getElementById('stAv').classList.toggle('sel', s === 'avalanche');
+  document.getElementById('stSn').classList.toggle('sel', s === 'snowball');
+  refreshPlan();
+}
+
+var extraDebounce = null;
+function extraChanged(commit) {
+  extra = parseInt(document.getElementById('extraSlider').value, 10);
+  document.getElementById('extraVal').textContent = '$' + extra;
+  clearTimeout(extraDebounce);
+  extraDebounce = setTimeout(refreshPlan, commit ? 0 : 350);
+}
+
+async function boot() {
+  API = await resolveApi();
+  if (!API) {
+    banner('<strong>Finance API unreachable.</strong> The planner talks to the subscribe-server, which answers only on Adam\'s Mac until the <code>intake.usmcmin.com</code> tunnel is live. Open this page on the Mac to plan today.');
+    return;
+  }
+  try { await loadAll(); }
+  catch (e) { banner('<strong>Could not load debts:</strong> ' + e.message); }
+}
+
+(function init() {
+  var authed = localStorage.getItem('moop_steward_auth') === 'true'
+            || localStorage.getItem('moop_finance_auth') === 'steward-2026';
+  if (!authed) document.getElementById('gate').style.display = 'flex';
+  else boot();
+})();
+</script>
+
+<script>
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', function () {
+      navigator.serviceWorker.register('/finance/finance-sw.js').catch(function(){});
+    });
+  }
+</script>
+</body>
+</html>

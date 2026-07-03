@@ -9,7 +9,7 @@ This is the **U.S.M.C. Ministries** website. The flagship feature is
 **RESOLUTE Citizen** — a Christian voter scorecard for ~8,500 elected
 officials across all 50 states + DC + PR.
 
-- **Live**: https://usmcmin.com (GitHub Pages, auto-deploys from `main`)
+- **Live**: https://usmcmin.com — served from **Cloudflare R2** (bucket `usmcmin-com-site`) via the `usmcmin-com` Worker since 2026-07-03; a GitHub Action (`.github/workflows/deploy-r2.yml`) syncs the repo root → R2 on every push to `main` (~2-4 min). **`git push` = deploy, unchanged for all agents.** GitHub Pages is a dormant fallback only (its build exceeded the 1 GB limit and was erroring). Do NOT hand-upload to R2. Worker + rollback: `~/usmcmin-com-worker/ROLLBACK.md`.
 - **Static site** — no backend, no database
 - **Source of truth**: `data/scorecard.json`. Everything else is derived.
 - **Working branch**: `claude/quick-wins-pr`. Adam reviews and merges to `main`.

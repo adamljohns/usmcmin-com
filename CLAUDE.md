@@ -1,7 +1,7 @@
 # usmcmin.com — Working Notes for Claude
 
 > **What this is:** the U.S.M.C. Ministries static website (`git@github.com:adamljohns/usmcmin-com`),
-> served from **Cloudflare R2 via the `usmcmin-com` Worker** and **auto-deploying from `main`** (`git push` = deploy; a GitHub Action syncs to R2 in ~2-4 min — GitHub Pages is a dormant fallback only). Two subsystems:
+> served from **Cloudflare R2 via the `usmcmin-com` Worker** and **auto-deploying from `main`** (`git push` = deploy; a GitHub Action syncs to R2 in ~2-4 min — GitHub Pages is DISABLED entirely; rollback procedure lives in `~/usmcmin-com-worker/ROLLBACK.md`). Two subsystems:
 > 1. **RESOLUTE Citizen** voter scorecard (~8,500 officials). Source of truth is `data/scorecard.json`
 >    (~42 MB, minified — never hand-expand it or `Read` it into context). `data/states/*`, `data/index.json`,
 >    and `candidates/**` are **derived — do not hand-edit**. Built by the in-repo Python scripts.

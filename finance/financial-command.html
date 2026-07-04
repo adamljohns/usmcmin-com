@@ -32,10 +32,19 @@
   .nav-brand { color: var(--gold); font-weight: 700; font-size: 0.9rem; text-decoration: none; }
   .nav a { color: var(--gray); font-size: 0.8rem; text-decoration: none; padding: 3px 8px; border-radius: 4px; }
   .nav a:hover { color: var(--gold); }
-  .header { text-align: center; padding: 30px 20px 16px; border-bottom: 2px solid var(--gold); }
+  /* Global body>nav (main.min.css) is position:fixed height:70px and captures this
+     page's own <nav>, floating it over the header — reserve nav space + iOS safe area. */
+  .header { text-align: center; padding: calc(70px + env(safe-area-inset-top, 0px) + 30px) 20px 16px; border-bottom: 2px solid var(--gold); }
   .header h1 { font-family: 'Playfair Display', serif; font-size: 2rem; color: var(--white); margin-bottom: 4px; }
   .header .sub { color: var(--gold); font-size: 0.9rem; }
   .updated { text-align: center; font-size: 0.75rem; color: var(--gray); padding: 8px; }
+
+  @media (max-width: 640px) {
+    .header { padding: calc(70px + env(safe-area-inset-top, 0px) + 34px) 16px 18px; }
+    .header h1 { font-size: clamp(1.85rem, 10vw, 2.6rem); line-height: 1.15; }
+    .entity-panel { padding-left: 16px; padding-right: 16px; padding-bottom: calc(28px + env(safe-area-inset-bottom, 0px)); }
+    .tab-bar { padding-left: 14px; padding-right: 14px; }
+  }
 
   /* ENTITY TABS */
   .tab-bar { display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; padding: 16px 20px 0; }

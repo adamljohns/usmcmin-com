@@ -22,7 +22,7 @@
   --gold: #6B7280;
   --gold-light: #4B5563;
   --gold-dim: rgba(107,114,128,0.10);
-  --font-main: 'Georgia', 'Times New Roman', serif;
+  --font-main: 'Playfair Display', Georgia, 'Times New Roman', serif;
   --font-sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
   --radius: 8px;
   --transition: 0.25s ease;
@@ -185,6 +185,17 @@ body > nav {
 .hero-btns {
   display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;
 }
+.hero-btns .btn {
+  min-height: 48px;
+  padding: 0.75rem 1.5rem;
+}
+.hero-btns .btn img {
+  width: 28px;
+  height: 28px;
+  margin: 0;
+  border-radius: 6px;
+  object-fit: contain;
+}
 
 .btn {
   display: inline-flex; align-items: center; gap: 0.5rem;
@@ -269,9 +280,15 @@ section { padding: 5rem 2rem; }
 /* ── WHAT WE OFFER CARDS ── */
 .offer-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 1.5rem;
   margin-top: 3rem;
+}
+@media (max-width: 900px) {
+  .offer-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 560px) {
+  .offer-grid { grid-template-columns: 1fr; }
 }
 
 .offer-card {
@@ -301,6 +318,15 @@ section { padding: 5rem 2rem; }
 }
 .offer-card p {
   color: var(--gray-light); font-size: 0.95rem; flex: 1; margin-bottom: 1.5rem; line-height: 1.65;
+}
+.offer-card .btn {
+  margin-top: auto;
+  width: 100%;
+  justify-content: center;
+  white-space: nowrap;
+  font-size: 0.82rem;
+  padding: 0.7rem 1.1rem;
+  letter-spacing: 0.03em;
 }
 .offer-tag {
   display: inline-block; font-size: 0.7rem; font-weight: 700;
@@ -344,9 +370,16 @@ section { padding: 5rem 2rem; }
 .badge-new { background: #22c55e; color: #fff; }
 .badge-coming { background: var(--navy); color: var(--white); }
 
-.product-body { padding: 1.5rem; }
+.product-card { display: flex; flex-direction: column; }
+.product-body {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  padding: 1.5rem;
+}
 .product-body h3 { font-size: 1.1rem; font-weight: 700; margin-bottom: 0.35rem; }
 .product-body p { color: var(--gray-light); font-size: 0.9rem; margin-bottom: 1.25rem; }
+.product-body .btn { margin-top: auto; }
 .product-price {
   font-size: 1.4rem; font-weight: 700; color: var(--gold);
   margin-bottom: 1rem;
@@ -359,7 +392,7 @@ section { padding: 5rem 2rem; }
   grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
   gap: 2rem;
   margin-top: 3rem;
-  align-items: start;
+  align-items: stretch;
 }
 
 .coaching-card {
@@ -369,6 +402,14 @@ section { padding: 5rem 2rem; }
   padding: 2rem;
   transition: all var(--transition);
   position: relative;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+.coaching-card .btn {
+  margin-top: auto;
+  width: 100%;
+  justify-content: center;
 }
 .coaching-card.featured {
   border-color: var(--gold);
@@ -415,6 +456,15 @@ section { padding: 5rem 2rem; }
 .about-img-wrap {
   position: relative;
 }
+.about-portrait {
+  width: 100%;
+  height: auto;
+  max-height: 420px;
+  object-fit: contain;
+  background: var(--bg-card-2);
+  border-radius: 12px;
+  border: 1px solid var(--border);
+}
 .about-img-placeholder {
   background: var(--bg-card-2);
   border: 1px solid var(--border);
@@ -428,8 +478,14 @@ section { padding: 5rem 2rem; }
 .about-content .section-title { text-align: left; margin-bottom: 1.25rem; }
 .about-content p { color: var(--gray-light); line-height: 1.8; margin-bottom: 1.25rem; }
 .about-stats {
-  display: grid; grid-template-columns: repeat(3, 1fr);
-  gap: 1rem; margin: 2rem 0;
+  display: grid; grid-template-columns: repeat(5, 1fr);
+  gap: 0.75rem; margin: 2rem 0;
+}
+@media (max-width: 768px) {
+  .about-stats { grid-template-columns: repeat(3, 1fr); }
+}
+@media (max-width: 420px) {
+  .about-stats { grid-template-columns: repeat(2, 1fr); }
 }
 .stat-item { text-align: center; }
 .stat-num { font-size: 1.8rem; font-weight: 800; color: var(--gold); display: block; }
@@ -496,8 +552,14 @@ footer {
   max-width: 1180px; margin: 0 auto;
 }
 .footer-top {
-  display: grid; grid-template-columns: 2fr 1fr 1fr 1fr;
-  gap: 3rem; margin-bottom: 3rem;
+  display: grid; grid-template-columns: 1.6fr repeat(5, 1fr);
+  gap: 2rem 1.5rem; margin-bottom: 3rem;
+}
+@media (max-width: 1100px) {
+  .footer-top { grid-template-columns: 1fr 1fr 1fr; }
+}
+@media (max-width: 700px) {
+  .footer-top { grid-template-columns: 1fr 1fr; }
 }
 .footer-brand .name { font-size: 1.1rem; font-weight: 700; margin-bottom: 0.25rem; }
 .footer-brand .tag { font-size: 0.7rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--gold); margin-bottom: 1rem; }
@@ -572,7 +634,7 @@ footer {
 .theme-toggle > * { display: none; }
 /* label sits opposite the thumb. Default (light/bright): label left, tomb thumb right */
 .theme-toggle::before {
-  content: "Bright Mode";
+  content: "Dark Mode";
   position: absolute; top: 0; bottom: 0; left: 11px; right: 32px;
   display: flex; align-items: center; justify-content: flex-start;
   font-family: var(--font-sans); font-size: 8.5px; font-weight: 700;
@@ -588,7 +650,7 @@ footer {
 }
 /* dark mode: cross thumb slides left, label flips right */
 [data-theme="dark"] .theme-toggle::before {
-  content: "Dark Mode"; left: 32px; right: 11px; justify-content: flex-end;
+  content: "Bright Mode"; left: 32px; right: 11px; justify-content: flex-end;
 }
 [data-theme="dark"] .theme-toggle::after {
   left: 3px; background-image: url("/assets/icons/shield-toggle-cross-96.png");

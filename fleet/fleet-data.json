@@ -1,19 +1,19 @@
 {
-  "generated": "2026-07-09T16:37:50.339403+00:00",
+  "generated": "2026-07-09T18:34:21.564246+00:00",
   "totals": {
     "agents": 14,
     "operational": 9,
     "degraded": 5,
     "jobs": 130,
-    "enabled": 86,
+    "enabled": 85,
     "accomplishments": 188,
     "cowork": 30
   },
   "health": {
     "cron": {
-      "enabled": 86,
-      "ran26h": 49,
-      "delivered": 42,
+      "enabled": 85,
+      "ran26h": 47,
+      "delivered": 40,
       "fails": [
         "C5iSR PRE-WARMUP (Qwen 32B before daily post) (carnegie)",
         "Stand-up 07:34 \u2014 Preacher John (preacher-john)",
@@ -25,7 +25,7 @@
     },
     "cron_source": "openclaw.sqlite",
     "launchd": {
-      "healthy": 74,
+      "healthy": 76,
       "fails": [
         "ai.openclaw.weekly-digest: exit -9",
         "com.moop.carnegie-consistency-check: exit 1"
@@ -44,7 +44,7 @@
       "voice": null,
       "tools": [],
       "n_jobs": 10,
-      "n_enabled": 9,
+      "n_enabled": 8,
       "err": 0,
       "last_ms": 1783597800050,
       "status": "operational",
@@ -143,17 +143,6 @@
           "dur_ms": 18515
         },
         {
-          "name": "Adjutant Evening Pulse (Weekday)",
-          "enabled": true,
-          "expr": "0 21,23 * * 1-5",
-          "tz": "America/New_York",
-          "channel": "telegram",
-          "last_ms": 1783566000042,
-          "status": "ok",
-          "errors": 0,
-          "dur_ms": 7542
-        },
-        {
           "name": "Dev Loop: main daily reflection",
           "enabled": true,
           "expr": "05 22 * * *",
@@ -218,6 +207,17 @@
           "status": "\u2014",
           "errors": 0,
           "dur_ms": null
+        },
+        {
+          "name": "Adjutant Evening Pulse (Weekday)",
+          "enabled": false,
+          "expr": "0 21,23 * * 1-5",
+          "tz": "America/New_York",
+          "channel": "telegram",
+          "last_ms": 1783566000042,
+          "status": "ok",
+          "errors": 0,
+          "dur_ms": 7542
         },
         {
           "name": "SimpleFIN Balance Pull (Finance Friday 6AM)",
@@ -338,10 +338,11 @@
     },
     {
       "id": "preacher-john",
-      "primary": "lmstudio/gemma-4-31b-it",
+      "primary": "xai/grok-4.5",
       "fallback": "lmstudio/mlx-community/qwen3.6-35b-a3b",
       "fallbacks": [
-        "lmstudio/mlx-community/qwen3.6-35b-a3b"
+        "lmstudio/mlx-community/qwen3.6-35b-a3b",
+        "lmstudio/gemma-4-31b-it"
       ],
       "voice": {
         "trained": "2026-07-02",
@@ -425,6 +426,16 @@
       "accent": "#7E57C2",
       "blurb": "John Wesley Graves, ThD. Delivers the daily Watch readings (10/day) to the SDG-4 brotherhood and Adam's DM, and handles theology and devotional work off the Bible Through the Experience corpus.",
       "projects": [],
+      "upgrade": {
+        "lane": "Bible/devotion",
+        "browser_profile": "usmc",
+        "files": {
+          "AGENTS.md": 19286,
+          "MEMORY.md": 8399,
+          "HEARTBEAT.md": 856
+        },
+        "verified": "2026-07-09"
+      },
       "jobs": [
         {
           "name": "Stand-up 07:34 \u2014 Preacher John",
@@ -829,9 +840,10 @@
     },
     {
       "id": "carnegie",
-      "primary": "lmstudio/mlx-community/qwen3.6-35b-a3b",
-      "fallback": "lmstudio/gemma-4-31b-it",
+      "primary": "xai/grok-4.5",
+      "fallback": "lmstudio/mlx-community/qwen3.6-35b-a3b",
       "fallbacks": [
+        "lmstudio/mlx-community/qwen3.6-35b-a3b",
         "lmstudio/gemma-4-31b-it"
       ],
       "voice": null,
@@ -934,10 +946,20 @@
       "domain": "Capital",
       "tg": "@AndrewCarnegieIIICPA_bot",
       "accent": "#C9A227",
-      "blurb": "CFA/JD on Qwen-32B. Publishes the C5iSR daily market post (Mon\u2013Sat), tracks crypto and metals, and frames capital allocation as stewardship.",
+      "blurb": "CFA/JD capital steward. Publishes the C5iSR daily market post (Mon\u2013Sat), tracks crypto and metals, and frames capital allocation as stewardship.",
       "projects": [
         "initialize-carnegie-capital-steward-role"
       ],
+      "upgrade": {
+        "lane": "C5iSR/capital",
+        "browser_profile": "c5isr",
+        "files": {
+          "AGENTS.md": 34774,
+          "MEMORY.md": 38968,
+          "HEARTBEAT.md": 4966
+        },
+        "verified": "2026-07-09"
+      },
       "jobs": [
         {
           "name": "Skill: finance-news",
@@ -1108,9 +1130,10 @@
     },
     {
       "id": "sally",
-      "primary": "lmstudio/mlx-community/qwen3.6-35b-a3b",
-      "fallback": "lmstudio/gemma-4-31b-it",
+      "primary": "xai/grok-4.5",
+      "fallback": "lmstudio/mlx-community/qwen3.6-35b-a3b",
       "fallbacks": [
+        "lmstudio/mlx-community/qwen3.6-35b-a3b",
         "lmstudio/gemma-4-31b-it"
       ],
       "voice": null,
@@ -1128,7 +1151,7 @@
       "n_jobs": 11,
       "n_enabled": 8,
       "err": 2,
-      "last_ms": 1783600800054,
+      "last_ms": 1783620000038,
       "status": "degraded",
       "accomplishments": [
         {
@@ -1222,7 +1245,28 @@
         "stabilize-sally-mae-airbnb-agent",
         "write-airbnb-reviews-for-listings"
       ],
+      "upgrade": {
+        "lane": "Airbnb/studio",
+        "browser_profile": "airbnb",
+        "files": {
+          "AGENTS.md": 17721,
+          "MEMORY.md": 19652,
+          "HEARTBEAT.md": 6759
+        },
+        "verified": "2026-07-09"
+      },
       "jobs": [
+        {
+          "name": "Skill: airbnb-host",
+          "enabled": true,
+          "expr": "0 14 * * *",
+          "tz": "America/New_York",
+          "channel": "discord",
+          "last_ms": 1783620000038,
+          "status": "ok",
+          "errors": 0,
+          "dur_ms": 22821
+        },
         {
           "name": "Skill: airbnb-reader",
           "enabled": true,
@@ -1266,17 +1310,6 @@
           "status": "ok",
           "errors": 0,
           "dur_ms": 15996
-        },
-        {
-          "name": "Skill: airbnb-host",
-          "enabled": true,
-          "expr": "0 14 * * *",
-          "tz": "America/New_York",
-          "channel": "discord",
-          "last_ms": 1783533600042,
-          "status": "ok",
-          "errors": 0,
-          "dur_ms": 18174
         },
         {
           "name": "Skill: airbnb-search",
@@ -1348,10 +1381,11 @@
     },
     {
       "id": "coach-arnie",
-      "primary": "lmstudio/gemma-4-31b-it",
+      "primary": "xai/grok-4.5",
       "fallback": "lmstudio/mlx-community/qwen3.6-35b-a3b",
       "fallbacks": [
-        "lmstudio/mlx-community/qwen3.6-35b-a3b"
+        "lmstudio/mlx-community/qwen3.6-35b-a3b",
+        "lmstudio/gemma-4-31b-it"
       ],
       "voice": {
         "trained": "2026-07-02",
@@ -1466,6 +1500,16 @@
         "coach-arnie-morning-brief-4",
         "log-training-session-notes-in-zoho"
       ],
+      "upgrade": {
+        "lane": "Garmin/fit20",
+        "browser_profile": "garmin / fit20",
+        "files": {
+          "AGENTS.md": 16572,
+          "MEMORY.md": 6123,
+          "HEARTBEAT.md": 954
+        },
+        "verified": "2026-07-09"
+      },
       "jobs": [
         {
           "name": "Coach Midday Garmin Read (12:00 EDT)",
@@ -2072,7 +2116,7 @@
       "domain": "Research",
       "tg": "@ProfX4MOOP_L3_bot",
       "accent": "#8E6FB0",
-      "blurb": "PhD on Qwen-32B. Synthesizes research, builds reading lists, and writes the daily newsletter synthesis with a running day counter.",
+      "blurb": "PhD research lead. Synthesizes research, builds reading lists, and writes the daily newsletter synthesis with a running day counter.",
       "projects": [
         "anthropic-dev-academy-4-week-sprint",
         "anthropic-developer-academy-sprint"
@@ -2254,7 +2298,7 @@
       "n_jobs": 5,
       "n_enabled": 5,
       "err": 0,
-      "last_ms": 1783600200059,
+      "last_ms": 1783616400048,
       "status": "operational",
       "accomplishments": [
         {
@@ -2343,6 +2387,17 @@
       "projects": [],
       "jobs": [
         {
+          "name": "Daily News Brief (1:00 PM) \u2014 Rush",
+          "enabled": true,
+          "expr": "0 13 * * *",
+          "tz": "America/New_York",
+          "channel": "discord",
+          "last_ms": 1783616400048,
+          "status": "ok",
+          "errors": 0,
+          "dur_ms": 328238
+        },
+        {
           "name": "Skill: news-aggregator",
           "enabled": true,
           "expr": "30 8 * * *",
@@ -2374,17 +2429,6 @@
           "status": "ok",
           "errors": 0,
           "dur_ms": 24062
-        },
-        {
-          "name": "Daily News Brief (1:00 PM) \u2014 Rush",
-          "enabled": true,
-          "expr": "0 13 * * *",
-          "tz": "America/New_York",
-          "channel": "discord",
-          "last_ms": 1783530000024,
-          "status": "ok",
-          "errors": 0,
-          "dur_ms": 313240
         },
         {
           "name": "Liberty Brief (Fri 11:53) \u2014 Rush Sullivan",

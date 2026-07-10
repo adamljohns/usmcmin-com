@@ -1,5 +1,5 @@
 {
-  "generated": "2026-07-10T14:15:30.587435+00:00",
+  "generated": "2026-07-10T15:45:45.980509+00:00",
   "totals": {
     "agents": 14,
     "operational": 11,
@@ -12,8 +12,8 @@
   "health": {
     "cron": {
       "enabled": 86,
-      "ran26h": 48,
-      "delivered": 45,
+      "ran26h": 49,
+      "delivered": 46,
       "fails": [
         "C5iSR PRE-WARMUP (Qwen 32B before daily post) (carnegie)",
         "Skill: devotion-ultimate (preacher-john)"
@@ -21,7 +21,7 @@
     },
     "cron_source": "openclaw.sqlite",
     "launchd": {
-      "healthy": 75,
+      "healthy": 73,
       "fails": [
         "ai.openclaw.weekly-digest: exit -9",
         "com.moop.carnegie-consistency-check: exit 1",
@@ -337,16 +337,17 @@
         "exec",
         "rag__agent_self_introspect",
         "read",
+        "write",
+        "edit",
+        "apply_patch",
+        "image",
         "sessions_history",
         "sessions_send",
         "web_fetch",
         "web_search",
-        "message",
         "memory_search",
         "memory_get",
-        "write",
-        "edit",
-        "apply_patch"
+        "message"
       ],
       "n_jobs": 15,
       "n_enabled": 5,
@@ -417,7 +418,7 @@
         "lane": "Bible/devotion",
         "browser_profile": "usmc",
         "files": {
-          "AGENTS.md": 19546,
+          "AGENTS.md": 19803,
           "MEMORY.md": 10017,
           "HEARTBEAT.md": 856
         },
@@ -605,12 +606,17 @@
         "exec",
         "rag__agent_self_introspect",
         "read",
+        "write",
+        "edit",
+        "apply_patch",
+        "image",
         "sessions_history",
         "sessions_send",
         "web_fetch",
         "web_search",
         "memory_search",
-        "memory_get"
+        "memory_get",
+        "message"
       ],
       "n_jobs": 11,
       "n_enabled": 6,
@@ -839,15 +845,16 @@
         "browser",
         "rag__agent_self_introspect",
         "read",
+        "write",
+        "edit",
+        "apply_patch",
+        "image",
         "sessions_history",
         "sessions_send",
         "web_fetch",
         "web_search",
         "memory_search",
-        "memory_get",
-        "write",
-        "edit",
-        "apply_patch"
+        "memory_get"
       ],
       "n_jobs": 15,
       "n_enabled": 14,
@@ -943,8 +950,8 @@
         "lane": "C5iSR/capital",
         "browser_profile": "c5isr",
         "files": {
-          "AGENTS.md": 34703,
-          "MEMORY.md": 38968,
+          "AGENTS.md": 34960,
+          "MEMORY.md": 41910,
           "HEARTBEAT.md": 4966
         },
         "verified": "2026-07-10"
@@ -1129,16 +1136,19 @@
       "tools": [
         "browser",
         "exec",
+        "rag__agent_self_introspect",
         "read",
+        "write",
+        "edit",
+        "apply_patch",
+        "image",
         "sessions_history",
         "sessions_send",
         "web_fetch",
         "web_search",
         "memory_search",
         "memory_get",
-        "write",
-        "edit",
-        "apply_patch"
+        "message"
       ],
       "n_jobs": 12,
       "n_enabled": 9,
@@ -1234,7 +1244,7 @@
         "lane": "Airbnb/studio",
         "browser_profile": "airbnb",
         "files": {
-          "AGENTS.md": 18258,
+          "AGENTS.md": 18515,
           "MEMORY.md": 20028,
           "HEARTBEAT.md": 6440
         },
@@ -1391,15 +1401,16 @@
         "browser",
         "rag__agent_self_introspect",
         "read",
+        "write",
+        "edit",
+        "apply_patch",
+        "image",
         "sessions_history",
         "sessions_send",
         "web_fetch",
         "web_search",
         "memory_search",
-        "memory_get",
-        "write",
-        "edit",
-        "apply_patch"
+        "memory_get"
       ],
       "n_jobs": 5,
       "n_enabled": 5,
@@ -1495,7 +1506,7 @@
         "lane": "Garmin/fit20",
         "browser_profile": "garmin / fit20",
         "files": {
-          "AGENTS.md": 16529,
+          "AGENTS.md": 16786,
           "MEMORY.md": 6123,
           "HEARTBEAT.md": 954
         },
@@ -1572,6 +1583,10 @@
         "browser",
         "rag__agent_self_introspect",
         "read",
+        "write",
+        "edit",
+        "apply_patch",
+        "image",
         "sessions_history",
         "sessions_send",
         "web_fetch",
@@ -1582,7 +1597,7 @@
       "n_jobs": 10,
       "n_enabled": 5,
       "err": 0,
-      "last_ms": 1783690500035,
+      "last_ms": 1783698300056,
       "status": "operational",
       "accomplishments": [
         {
@@ -1671,6 +1686,17 @@
       "projects": [],
       "jobs": [
         {
+          "name": "Liberty Brief (Fri 11:45) \u2014 Doc Hartley",
+          "enabled": true,
+          "expr": "45 11 * * 5",
+          "tz": "America/New_York",
+          "channel": "discord",
+          "last_ms": 1783698300056,
+          "status": "ok",
+          "errors": 0,
+          "dur_ms": 7385
+        },
+        {
           "name": "Skill: garmin-reader",
           "enabled": true,
           "expr": "35 9 * * *",
@@ -1713,17 +1739,6 @@
           "status": "ok",
           "errors": 0,
           "dur_ms": 25003
-        },
-        {
-          "name": "Liberty Brief (Fri 11:45) \u2014 Doc Hartley",
-          "enabled": true,
-          "expr": "45 11 * * 5",
-          "tz": "America/New_York",
-          "channel": "discord",
-          "last_ms": null,
-          "status": "\u2014",
-          "errors": 0,
-          "dur_ms": null
         },
         {
           "name": "Doc Morning Clinical Read (0800 EDT)",
@@ -1792,11 +1807,16 @@
       ],
       "voice": null,
       "tools": [
-        "web_search",
-        "web_fetch",
-        "sessions_send",
-        "sessions_history",
+        "rag__agent_self_introspect",
         "read",
+        "write",
+        "edit",
+        "apply_patch",
+        "image",
+        "sessions_history",
+        "sessions_send",
+        "web_fetch",
+        "web_search",
         "memory_search",
         "memory_get"
       ],
@@ -2013,10 +2033,17 @@
       ],
       "voice": null,
       "tools": [
+        "exec",
+        "rag__agent_self_introspect",
         "read",
         "write",
-        "exec",
+        "edit",
+        "apply_patch",
+        "image",
+        "sessions_history",
         "sessions_send",
+        "web_fetch",
+        "web_search",
         "memory_search",
         "memory_get"
       ],
@@ -2277,13 +2304,19 @@
       ],
       "voice": null,
       "tools": [
-        "web_search",
-        "web_fetch",
-        "sessions_send",
-        "sessions_history",
+        "rag__agent_self_introspect",
         "read",
+        "write",
+        "edit",
+        "apply_patch",
+        "image",
+        "sessions_history",
+        "sessions_send",
+        "web_fetch",
+        "web_search",
         "memory_search",
-        "memory_get"
+        "memory_get",
+        "message"
       ],
       "n_jobs": 5,
       "n_enabled": 5,
@@ -2444,11 +2477,19 @@
       "voice": null,
       "tools": [
         "browser",
-        "memory_search",
+        "rag__agent_self_introspect",
         "read",
-        "sessions_send",
         "write",
-        "memory_get"
+        "edit",
+        "apply_patch",
+        "image",
+        "sessions_history",
+        "sessions_send",
+        "web_fetch",
+        "web_search",
+        "memory_search",
+        "memory_get",
+        "message"
       ],
       "n_jobs": 14,
       "n_enabled": 8,
@@ -2707,8 +2748,16 @@
       ],
       "voice": null,
       "tools": [
+        "rag__agent_self_introspect",
         "read",
+        "write",
+        "edit",
+        "apply_patch",
+        "image",
+        "sessions_history",
         "sessions_send",
+        "web_fetch",
+        "web_search",
         "memory_search",
         "memory_get"
       ],
@@ -2840,8 +2889,16 @@
       ],
       "voice": null,
       "tools": [
+        "rag__agent_self_introspect",
         "read",
+        "write",
+        "edit",
+        "apply_patch",
+        "image",
+        "sessions_history",
         "sessions_send",
+        "web_fetch",
+        "web_search",
         "memory_search",
         "memory_get"
       ],

@@ -8,6 +8,13 @@
   var STORAGE_KEY = 'fc_battle_brother_v1';
   var FORMSUBMIT_URL = 'https://formsubmit.co/ajax/usmcministries2022@gmail.com';
 
+  // Armada weeks run Mon–Sun. Anchor = Monday of a known Sabbath week
+  // (Finance was the week before: Mon 2026-06-29). After Sabbath the
+  // cycle rolls to Vision and repeats. Override anytime with ?week=N
+  // or ?theme=key, or by tapping a week chip.
+  var ARMADA_ANCHOR = { y: 2026, m: 6, d: 6 }; // month is 0-indexed → Jul 6, 2026
+  var ARMADA_ANCHOR_WEEK = 7; // Sabbath
+
   var THEMES = [
     { week: 1, key: 'vision', title: 'Vision', icon: '🗺️', color: '#B85042' },
     { week: 2, key: 'body', title: 'Body', icon: '💪', color: '#E89B47' },
@@ -20,7 +27,8 @@
 
   var STEPS = ['checkin', 'brother', 'armada', 'comments'];
   var currentStep = 0;
-  var selectedWeek = 6;
+  var selectedWeek = 7;
+  var weekFromOverride = false;
   var editingId = null;
 
   var form = {
@@ -50,16 +58,60 @@
   }
 
   function themeByWeek(n) {
-    return THEMES.find(function (t) { return t.week === n; }) || THEMES[5];
+    return THEMES.find(function (t) { return t.week === n; }) || THEMES[6];
+  }
+
+  /** Monday 00:00 local of the calendar week containing `date`. */
+  function mondayOf(date) {
+    var d = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+    var day = d.getDay(); // 0=Sun … 6=Sat
+    var offset = day === 0 ? -6 : 1 - day;
+    d.setDate(d.getDate() + offset);
+    d.setHours(0, 0, 0, 0);
+    return d;
+  }
+
+  /**
+   * Current Armada week from the calendar (Mon–Sun cycle).
+   * Anchored to the known Sabbath week starting Mon 2026-07-06.
+   */
+  function calendarWeek(now) {
+    var today = now || new Date();
+    var thisMon = mondayOf(today);
+    var anchor = new Date(ARMADA_ANCHOR.y, ARMADA_ANCHOR.m, ARMADA_ANCHOR.d);
+    anchor = mondayOf(anchor);
+    var msPerWeek = 7 * 24 * 60 * 60 * 1000;
+    var elapsed = Math.floor((thisMon - anchor) / msPerWeek);
+    var idx = ((ARMADA_ANCHOR_WEEK - 1) + elapsed) % 7;
+    if (idx < 0) idx += 7;
+    return idx + 1;
   }
 
   function weekFromUrl() {
     var params = new URLSearchParams(window.location.search);
     var w = parseInt(params.get('week'), 10);
-    if (w >= 1 && w <= 7) return w;
+    if (w >= 1 && w <= 7) {
+      weekFromOverride = true;
+      return w;
+    }
     var key = (params.get('theme') || '').toLowerCase();
     var hit = THEMES.find(function (t) { return t.key === key; });
-    return hit ? hit.week : 6;
+    if (hit) {
+      weekFromOverride = true;
+      return hit.week;
+    }
+    weekFromOverride = false;
+    return calendarWeek();
+  }
+
+  function syncWeekToUrl(week) {
+    try {
+      var url = new URL(window.location.href);
+      var t = themeByWeek(week);
+      url.searchParams.set('week', String(week));
+      url.searchParams.set('theme', t.key);
+      window.history.replaceState({}, '', url.pathname + url.search + url.hash);
+    } catch (e) {}
   }
 
   function el(id) { return document.getElementById(id); }
@@ -146,17 +198,22 @@
   function renderWeekPicker() {
     var wrap = el('weekPicker');
     if (!wrap) return;
+    var cal = calendarWeek();
     wrap.innerHTML = THEMES.map(function (t) {
       var active = t.week === selectedWeek ? ' active' : '';
+      var mark = t.week === cal ? ' <span class="wc-now" title="Current Armada week">· now</span>' : '';
       return '<button type="button" class="week-chip' + active + '" data-week="' + t.week + '" style="--chip-color:' + t.color + '">' +
         '<span class="wc-icon">' + t.icon + '</span>' +
-        '<span class="wc-label">Wk ' + t.week + ' · ' + t.title + '</span></button>';
+        '<span class="wc-label">Wk ' + t.week + ' · ' + t.title + mark + '</span></button>';
     }).join('');
     wrap.querySelectorAll('.week-chip').forEach(function (btn) {
       btn.addEventListener('click', function () {
         selectedWeek = parseInt(btn.dataset.week, 10);
+        weekFromOverride = selectedWeek !== calendarWeek();
+        syncWeekToUrl(selectedWeek);
         renderWeekPicker();
         updateThemeBanner();
+        prefillLastSaca();
         saveDraft();
       });
     });
@@ -167,7 +224,10 @@
     var banner = el('themeBanner');
     if (banner) {
       banner.style.setProperty('--theme-color', t.color);
-      banner.innerHTML = '<span class="tb-kicker">This week&rsquo;s Armada theme</span>' +
+      var kicker = weekFromOverride && selectedWeek !== calendarWeek()
+        ? 'Armada theme (manual pick)'
+        : 'This week&rsquo;s Armada theme';
+      banner.innerHTML = '<span class="tb-kicker">' + kicker + '</span>' +
         '<span class="tb-title">' + t.icon + ' Week ' + t.week + ' — ' + t.title + '</span>';
     }
     document.title = 'Battle Brother Form · Week ' + t.week + ' ' + t.title + ' — The Family Captain';
@@ -399,6 +459,7 @@
 
   function init() {
     selectedWeek = weekFromUrl();
+    if (!weekFromOverride) syncWeekToUrl(selectedWeek);
     renderWeekPicker();
     updateThemeBanner();
     restoreProfile();

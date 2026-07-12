@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <title>Trading Desk — Fin Command</title>
+  <meta name="robots" content="noindex, nofollow">
+  <link rel="icon" type="image/png" sizes="32x32" href="../assets/icons/favicon-32.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="../assets/icons/finance-apple-touch-icon.png">
+  <link rel="manifest" href="finance.webmanifest">
+  <meta name="theme-color" content="#0A0A0A">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <style>
+    :root { --gold:#D4AF37; --bg:#0a0a0a; --card:#141416; --border:#2A2D35; --gray:#9aa0a8; --green:#4ade80; --red:#f87171; --orange:#fbbf24; }
+    * { box-sizing:border-box; margin:0; padding:0; -webkit-tap-highlight-color:transparent; }
+    body { background:var(--bg); color:#F0F0F0; font-family:system-ui,-apple-system,sans-serif; min-height:100vh;
+           padding:calc(env(safe-area-inset-top,0px) + 12px) 14px calc(env(safe-area-inset-bottom,0px) + 24px); max-width:760px; margin:0 auto; }
+    a { color:var(--gold); text-decoration:none; }
+    .top { display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; }
+    .top h1 { font-size:1.05rem; color:var(--gold); letter-spacing:0.04em; }
+    .top .nav { font-size:0.85rem; color:var(--gray); }
+    .paper { background:rgba(74,222,128,0.07); border:1px solid rgba(74,222,128,0.35); color:#9be8b4;
+             border-radius:10px; padding:10px 14px; font-size:0.78rem; line-height:1.5; margin-bottom:14px; }
+    .banner { background:rgba(255,165,0,0.08); border:1px solid rgba(255,165,0,0.4); color:#f5c46a;
+              border-radius:10px; padding:12px 14px; font-size:0.83rem; line-height:1.5; margin-bottom:14px; display:none; }
+    .hero { background:var(--card); border:1px solid var(--gold); border-radius:14px; padding:18px 16px; margin-bottom:14px; text-align:center; }
+    .hero .big { font-size:2rem; font-weight:700; color:var(--gold); }
+    .hero .sub { color:var(--gray); font-size:0.8rem; margin-top:4px; }
+    .hero .row { display:flex; justify-content:space-around; margin-top:14px; }
+    .hero .cell .v { font-weight:700; font-size:1rem; }
+    .hero .cell .k { color:var(--gray); font-size:0.68rem; text-transform:uppercase; letter-spacing:0.07em; margin-top:2px; }
+    .sect { color:var(--gray); font-size:0.72rem; text-transform:uppercase; letter-spacing:0.1em; margin:18px 0 8px; }
+    .item { background:var(--card); border:1px solid var(--border); border-radius:12px; padding:12px 14px; margin-bottom:8px; }
+    .item .r1 { display:flex; justify-content:space-between; align-items:baseline; gap:10px; }
+    .item .nm { font-size:0.88rem; line-height:1.3; }
+    .item .val { font-weight:700; white-space:nowrap; font-size:0.98rem; }
+    .item .note { color:var(--gray); font-size:0.72rem; margin-top:4px; line-height:1.4; }
+    .pos { color:var(--green); } .neg { color:var(--red); }
+    canvas { width:100%; height:150px; background:var(--card); border:1px solid var(--border); border-radius:12px; }
+    .legend { color:var(--gray); font-size:0.68rem; margin-top:5px; text-align:right; }
+    .legend b { color:var(--gold); font-weight:600; } .legend i { color:#7aa7f0; font-style:normal; }
+    .ticket { background:var(--card); border:1px solid var(--border); border-radius:12px; padding:14px; }
+    .ticket .frow { display:flex; gap:8px; margin-bottom:9px; }
+    .ticket input, .ticket select, .ticket textarea { background:#0f0f11; border:1px solid var(--border); border-radius:8px;
+      color:#fff; padding:10px; font-size:0.92rem; font-family:inherit; width:100%; }
+    .ticket textarea { min-height:74px; resize:vertical; }
+    .sidebtn { flex:1; padding:10px 0; border-radius:8px; border:1px solid var(--border); background:#0f0f11; color:var(--gray); font-weight:700; cursor:pointer; }
+    .sidebtn.buy.on { background:rgba(74,222,128,0.15); border-color:var(--green); color:var(--green); }
+    .sidebtn.sell.on { background:rgba(248,113,113,0.15); border-color:var(--red); color:var(--red); }
+    .go { width:100%; background:var(--gold); color:#000; border:none; border-radius:8px; padding:13px; font-weight:700; font-size:1rem; cursor:pointer; }
+    .go:disabled { opacity:0.45; }
+    .qhint { color:var(--gray); font-size:0.74rem; margin:2px 0 9px; min-height:1em; }
+    .cancel { background:none; border:1px solid var(--red); color:var(--red); border-radius:8px; padding:5px 12px; font-size:0.75rem; cursor:pointer; }
+    .thesis-ct { font-size:0.68rem; color:var(--gray); text-align:right; margin-top:3px; }
+    #gate { position:fixed; inset:0; background:var(--bg); z-index:999; display:flex; align-items:center; justify-content:center; padding:20px; }
+    #gate .g-card { max-width:360px; width:100%; background:var(--card); border:1px solid var(--border); border-radius:12px; padding:32px 24px; text-align:center; }
+    #gate input { width:100%; background:#0f0f11; border:1px solid var(--border); border-radius:8px; color:#fff; padding:12px; margin:14px 0; text-align:center; font-size:1rem; }
+    #gate button { width:100%; background:var(--gold); color:#000; border:none; border-radius:8px; padding:12px; font-weight:700; font-size:1rem; cursor:pointer; }
+  </style>
+</head>
+<body>
+
+<div id="gate" style="display:none">
+  <div class="g-card"><div style="font-size:1.6rem">🔒</div>
+    <h2 style="color:var(--gold);font-size:1.1rem;margin:8px 0 4px">Steward Access</h2>
+    <input type="password" id="gatePass" placeholder="Access code" onkeydown="if(event.key==='Enter')gateUnlock()">
+    <button onclick="gateUnlock()">Unlock</button></div>
+</div>
+
+<div class="top">
+  <h1>📊 Trading Desk — Paper Lab</h1>
+  <div class="nav"><a href="assets.html">Net Worth</a> · <a href="finance.html">Dashboard</a></div>
+</div>
+
+<div class="paper">🧪 <b>PAPER TRADING.</b> Simulated money, real discipline. This desk is hard-wired to
+Alpaca's paper API only — live trading is not connected here and will not be. Every order requires a
+written thesis, logged before submission.</div>
+
+<div class="banner" id="banner"></div>
+
+<div class="hero" id="hero" style="display:none">
+  <div class="big" id="hEquity">—</div>
+  <div class="sub">paper account equity</div>
+  <div class="row">
+    <div class="cell"><div class="v" id="hDayPL">—</div><div class="k">Day P&amp;L</div></div>
+    <div class="cell"><div class="v" id="hCash">—</div><div class="k">Cash</div></div>
+    <div class="cell"><div class="v" id="hBP">—</div><div class="k">Buying power</div></div>
+  </div>
+</div>
+
+<div id="chartWrap" style="display:none">
+  <div class="sect">Equity vs SPY — 1 month (normalized %)</div>
+  <canvas id="chart" height="150"></canvas>
+  <div class="legend"><b>— portfolio</b> &nbsp; <i>— SPY</i></div>
+</div>
+
+<div class="sect" id="posHead" style="display:none">Positions</div>
+<div id="positions"></div>
+
+<div class="sect" id="ordHead" style="display:none">Open Orders</div>
+<div id="orders"></div>
+
+<div class="sect" id="tickHead" style="display:none">Order Ticket</div>
+<div class="ticket" id="ticket" style="display:none">
+  <div class="frow">
+    <input id="tSym" placeholder="Symbol (e.g. VOO)" autocapitalize="characters" autocomplete="off" style="text-transform:uppercase">
+    <button class="sidebtn" style="flex:0 0 92px" onclick="getQuote()">Quote</button>
+  </div>
+  <div class="qhint" id="qhint"></div>
+  <div class="frow">
+    <button class="sidebtn buy on" id="bBuy" onclick="setSide('buy')">BUY</button>
+    <button class="sidebtn sell" id="bSell" onclick="setSide('sell')">SELL</button>
+  </div>
+  <div class="frow">
+    <input id="tQty" type="number" min="0" step="any" placeholder="Shares (qty)">
+    <select id="tType" onchange="document.getElementById('tLimit').style.display=this.value==='limit'?'block':'none'">
+      <option value="market">Market</option><option value="limit">Limit</option>
+    </select>
+    <select id="tTif"><option value="day">Day</option><option value="gtc">GTC</option></select>
+  </div>
+  <input id="tLimit" type="number" min="0" step="any" placeholder="Limit price" style="display:none;margin-bottom:9px">
+  <textarea id="tThesis" placeholder="Thesis (required, ≥ 20 chars): why this position, what would prove it wrong, exit plan…"
+            oninput="thesisCount()"></textarea>
+  <div class="thesis-ct" id="tCt">0 / 20 minimum</div>
+  <button class="go" id="tGo" onclick="placeOrder()" disabled>Submit paper order</button>
+  <div class="note" style="margin-top:8px;color:var(--gray);font-size:0.72rem">Market orders placed
+  outside market hours queue for the next open. The thesis is written to the local ledger before the
+  order leaves this machine.</div>
+</div>
+
+<div class="sect" id="logHead" style="display:none">Thesis Ledger (latest)</div>
+<div id="log"></div>
+
+<script>
+var API_CANDIDATES = ['http://127.0.0.1:3847', 'https://intake.usmcmin.com'];
+var API = null, PW = localStorage.getItem('moop_finance_auth') || 'steward-2026';
+var side = 'buy';
+
+function gateUnlock() {
+  if (document.getElementById('gatePass').value === 'steward') {
+    localStorage.setItem('moop_steward_auth','true'); localStorage.setItem('moop_finance_auth','steward-2026');
+    document.getElementById('gate').style.display='none'; boot();
+  } else { var e=document.getElementById('gatePass'); e.value=''; e.placeholder='Invalid code'; }
+}
+async function resolveApi(){ for(var i=0;i<API_CANDIDATES.length;i++){ try{ var c=new AbortController(); var t=setTimeout(()=>c.abort(),2500);
+  var r=await fetch(API_CANDIDATES[i]+'/health',{signal:c.signal}); clearTimeout(t); if(r.ok) return API_CANDIDATES[i]; }catch(e){} } return null; }
+function banner(m){ var b=document.getElementById('banner'); b.innerHTML=m; b.style.display=m?'block':'none'; }
+async function api(pathq,opts){ var s=pathq.indexOf('?')>=0?'&':'?'; var r=await fetch(API+pathq+s+'pw='+encodeURIComponent(PW),opts);
+  var j=await r.json().catch(function(){return {};}); if(!r.ok) throw new Error(j.error||('HTTP '+r.status)); return j; }
+function fmt$(n){ n=Number(n)||0; var s='$'+Math.abs(n).toLocaleString('en-US',{maximumFractionDigits:2}); return n<0?'−'+s:s; }
+function plClass(n){ return Number(n)>=0?'pos':'neg'; }
+function plSign(n){ return (Number(n)>=0?'+':'')+fmt$(n).replace('−','-'); }
+
+function setSide(s){ side=s;
+  document.getElementById('bBuy').classList.toggle('on',s==='buy');
+  document.getElementById('bSell').classList.toggle('on',s==='sell'); }
+function thesisCount(){ var n=document.getElementById('tThesis').value.trim().length;
+  document.getElementById('tCt').textContent=n+' / 20 minimum';
+  document.getElementById('tGo').disabled = n<20; }
+
+async function getQuote(){
+  var sym=document.getElementById('tSym').value.trim().toUpperCase(); if(!sym) return;
+  var h=document.getElementById('qhint'); h.textContent='…';
+  try { var q=await api('/fin/trading/quote?symbol='+sym);
+    var lt=(q.snapshot&&q.snapshot.latestTrade)||{}; var db=(q.snapshot&&q.snapshot.dailyBar)||{};
+    h.textContent=sym+': last '+fmt$(lt.p||db.c||0)+(db.o?('  (day open '+fmt$(db.o)+')'):'')+'  — IEX feed';
+  } catch(e){ h.textContent='Quote failed: '+e.message; }
+}
+
+async function placeOrder(){
+  var sym=document.getElementById('tSym').value.trim().toUpperCase();
+  var qty=Number(document.getElementById('tQty').value);
+  var type=document.getElementById('tType').value;
+  var tif=document.getElementById('tTif').value;
+  var lp=Number(document.getElementById('tLimit').value);
+  var thesis=document.getElementById('tThesis').value.trim();
+  if(!sym||!qty||qty<=0){ alert('Symbol and qty required.'); return; }
+  if(type==='limit'&&(!lp||lp<=0)){ alert('Limit price required.'); return; }
+  var sum=side.toUpperCase()+' '+qty+' '+sym+' @ '+(type==='limit'?('limit '+fmt$(lp)):'market')+' ('+tif+')\n\nThesis: '+thesis+'\n\nPAPER order — submit?';
+  if(!confirm(sum)) return;
+  var btn=document.getElementById('tGo'); btn.disabled=true; btn.textContent='Submitting…';
+  try {
+    var body={symbol:sym, side:side, qty:qty, type:type, time_in_force:tif, thesis:thesis};
+    if(type==='limit') body.limit_price=lp;
+    var r=await api('/fin/trading/order',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
+    banner('✅ Order '+((r.order&&r.order.status)||'submitted')+' — logged as ledger #'+r.log_id);
+    document.getElementById('tThesis').value=''; thesisCount(); loadAll();
+  } catch(e){ banner('❌ '+e.message); }
+  btn.textContent='Submit paper order'; thesisCount();
+}
+
+async function cancelOrder(id){
+  if(!confirm('Cancel open order '+id.slice(0,8)+'…?')) return;
+  try { await api('/fin/trading/cancel',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({order_id:id})}); loadAll(); }
+  catch(e){ banner('Cancel failed: '+e.message); }
+}
+
+function drawChart(hist, bars){
+  var eq=(hist.timestamp||[]).map(function(t,i){ return {t:t*1000, v:hist.equity[i]}; }).filter(function(p){return p.v!=null&&p.v>0;});
+  if(eq.length<2) { document.getElementById('chartWrap').style.display='none'; return; }
+  document.getElementById('chartWrap').style.display='block';
+  var spy=(bars||[]).map(function(b){ return {t:new Date(b.t).getTime(), v:b.c}; });
+  var t0=eq[0].t;
+  function norm(series){ var b=series[0].v; return series.map(function(p){ return {t:p.t, v:(p.v/b-1)*100}; }); }
+  var s1=norm(eq), s2=spy.length>1?norm(spy.filter(function(p){return p.t>=t0-86400000;})):[];
+  var c=document.getElementById('chart'); var dpr=window.devicePixelRatio||1;
+  var W=c.clientWidth*dpr, H=150*dpr; c.width=W; c.height=H;
+  var ctx=c.getContext('2d');
+  var all=s1.concat(s2); var min=Math.min.apply(null,all.map(function(p){return p.v;}));
+  var max=Math.max.apply(null,all.map(function(p){return p.v;})); if(max-min<0.5){max+=0.25;min-=0.25;}
+  var tMin=Math.min(s1[0].t, s2.length?s2[0].t:s1[0].t), tMax=s1[s1.length-1].t;
+  function X(t){ return 8*dpr+(t-tMin)/(tMax-tMin)*(W-16*dpr); }
+  function Y(v){ return H-12*dpr-(v-min)/(max-min)*(H-24*dpr); }
+  // zero line
+  ctx.strokeStyle='#2A2D35'; ctx.lineWidth=1; ctx.beginPath(); ctx.moveTo(0,Y(0)); ctx.lineTo(W,Y(0)); ctx.stroke();
+  function line(s,color){ if(s.length<2)return; ctx.strokeStyle=color; ctx.lineWidth=2*dpr; ctx.beginPath();
+    s.forEach(function(p,i){ i?ctx.lineTo(X(p.t),Y(p.v)):ctx.moveTo(X(p.t),Y(p.v)); }); ctx.stroke(); }
+  line(s2,'#7aa7f0'); line(s1,'#D4AF37');
+}
+
+async function loadAll(){
+  var st=await api('/fin/trading/status');
+  if(!st.configured){
+    banner('🕐 <b>Lab awaiting keys.</b> '+st.note+' The desk lights up the moment they land in Keychain — nothing else to set up.');
+    return;
+  }
+  if(st.reachable===false){ banner('⚠️ Keys configured but Alpaca unreachable: '+(st.error||'')); return; }
+  banner('');
+  var a=(await api('/fin/trading/account')).account;
+  document.getElementById('hero').style.display='block';
+  document.getElementById('hEquity').textContent=fmt$(a.equity);
+  var day=Number(a.equity)-Number(a.last_equity);
+  var el=document.getElementById('hDayPL'); el.textContent=plSign(day); el.className='v '+plClass(day);
+  document.getElementById('hCash').textContent=fmt$(a.cash);
+  document.getElementById('hBP').textContent=fmt$(a.buying_power);
+
+  try { var h=(await api('/fin/trading/history?period=1M')).history;
+        var b=(await api('/fin/trading/benchmark?symbol=SPY&days=32')).bars; drawChart(h,b); } catch(e){}
+
+  var pos=(await api('/fin/trading/positions')).positions||[];
+  document.getElementById('posHead').style.display='block';
+  var pw=document.getElementById('positions'); pw.innerHTML='';
+  if(!pos.length) pw.innerHTML='<div class="item"><div class="note">No positions yet. The first one starts with a thesis below.</div></div>';
+  pos.forEach(function(p){
+    var d=document.createElement('div'); d.className='item';
+    d.innerHTML='<div class="r1"><div class="nm"><b>'+p.symbol+'</b> — '+p.qty+' @ '+fmt$(p.avg_entry_price)+'</div>'+
+      '<div class="val">'+fmt$(p.market_value)+'</div></div>'+
+      '<div class="note"><span class="'+plClass(p.unrealized_pl)+'">'+plSign(p.unrealized_pl)+' ('+(Number(p.unrealized_plpc)*100).toFixed(2)+'%)</span>'+
+      ' · now '+fmt$(p.current_price)+'</div>';
+    pw.appendChild(d);
+  });
+
+  var ords=(await api('/fin/trading/orders?status=open')).orders||[];
+  document.getElementById('ordHead').style.display='block';
+  var ow=document.getElementById('orders'); ow.innerHTML='';
+  if(!ords.length) ow.innerHTML='<div class="item"><div class="note">No open orders.</div></div>';
+  ords.forEach(function(o){
+    var d=document.createElement('div'); d.className='item';
+    d.innerHTML='<div class="r1"><div class="nm"><b>'+o.symbol+'</b> '+o.side.toUpperCase()+' '+(o.qty||o.notional)+
+      ' · '+o.type+(o.limit_price?(' @ '+fmt$(o.limit_price)):'')+'</div>'+
+      '<button class="cancel" onclick="cancelOrder(\''+o.id+'\')">Cancel</button></div>'+
+      '<div class="note">'+o.status+' · '+(o.submitted_at||'').replace('T',' ').slice(0,16)+'</div>';
+    ow.appendChild(d);
+  });
+
+  document.getElementById('tickHead').style.display='block';
+  document.getElementById('ticket').style.display='block';
+
+  try {
+    var lg=(await api('/fin/trading/log?limit=8')).log||[];
+    if(lg.length){ document.getElementById('logHead').style.display='block';
+      var lw=document.getElementById('log'); lw.innerHTML='';
+      lg.forEach(function(r){
+        var d=document.createElement('div'); d.className='item';
+        d.innerHTML='<div class="r1"><div class="nm"><b>'+r.symbol+'</b> '+r.side.toUpperCase()+' '+(r.qty||('$'+r.notional))+
+          '</div><div class="val" style="font-size:0.75rem;color:var(--gray)">'+r.status+'</div></div>'+
+          '<div class="note">'+r.ts.replace('T',' ')+' — '+String(r.thesis).slice(0,180)+'</div>';
+        lw.appendChild(d);
+      });
+    }
+  } catch(e){}
+}
+
+async function boot(){
+  API=await resolveApi();
+  if(!API){ banner('⚠️ Finance API unreachable. On iPhone this needs the intake tunnel; on the Mac the local server.'); return; }
+  try { await loadAll(); } catch(e){ banner('⚠️ '+e.message); }
+  setInterval(function(){ loadAll().catch(function(){}); }, 60000);
+}
+
+if (localStorage.getItem('moop_steward_auth')==='true') { boot(); }
+else { document.getElementById('gate').style.display='flex'; }
+if ('serviceWorker' in navigator) navigator.serviceWorker.register('finance-sw.js');
+</script>
+</body>
+</html>

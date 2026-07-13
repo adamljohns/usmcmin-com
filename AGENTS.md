@@ -12,7 +12,7 @@ officials across all 50 states + DC + PR.
 - **Live**: https://usmcmin.com — served from **Cloudflare R2** (bucket `usmcmin-com-site`) via the `usmcmin-com` Worker since 2026-07-03; a GitHub Action (`.github/workflows/deploy-r2.yml`) syncs the repo root → R2 on every push to `main` (~2-4 min). **`git push` = deploy, unchanged for all agents.** GitHub Pages is DISABLED entirely (its build exceeded the 1 GB limit and was erroring); rollback procedure lives in `~/usmcmin-com-worker/ROLLBACK.md`. Do NOT hand-upload to R2.
 - **Static site** — no backend, no database
 - **Source of truth**: `data/scorecard.json`. Everything else is derived.
-- **Working branch**: `claude/quick-wins-pr`. Adam reviews and merges to `main`.
+- **Working branches**: create an isolated task branch (`codex/...` or `claude/...`). Adam reviews and merges to `main`; do not work directly on `main`.
 - **Remote**: SSH (`git@github.com:adamljohns/usmcmin-com.git`).
 
 ## The dev loop
@@ -48,7 +48,11 @@ python3 -m http.server 8888    # then open http://localhost:8888/citizen.html
 
 ---
 
-## Script catalog (46 scripts, by purpose)
+## Core script catalog (by purpose)
+
+The repo also contains many numbered, one-off enrichment batch scripts. The
+table below lists the reusable entry points; use `rg --files -g '*.py'` when
+you need to locate a historical batch.
 
 ### 🏗️ Build / regen (run after data edits)
 
@@ -262,4 +266,4 @@ A: `git log --oneline -10` to find the last good commit, then
 
 ---
 
-*Last updated: 2026-04-30 by the optimization-sweep agent.*
+*Last updated: 2026-07-13 after the Cloudflare R2 cutover and site-health pass.*

@@ -5,11 +5,11 @@
   <script>(function(){try{var s=localStorage.getItem('usmc-theme')||localStorage.getItem('theme');if(s!=='light')document.documentElement.setAttribute('data-theme','dark');}catch(e){}})();</script>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>RESOLUTE Citizen Scorecard — U.S.M.C. Ministries</title>
-  <meta name="description" content="The RESOLUTE Citizen Scorecard — a 10-category, 100-point biblical scorecard (60 God First + 40 America First) for over 8,400 officials across all 50 states. Vote confidently.">
+  <meta name="description" content="The RESOLUTE Citizen Scorecard — a 10-category, 100-point biblical scorecard (60 God First + 40 America First) for 8,900+ officials across all 50 states. Vote confidently.">
   <link rel="canonical" href="https://usmcmin.com/citizen.html">
   <meta property="og:site_name" content="RESOLUTE Citizen Scorecard">
   <meta property="og:title" content="RESOLUTE Citizen Scorecard — U.S.M.C. Ministries">
-  <meta property="og:description" content="Equipping Christians to vote confidently. 10-category, 100-point scorecard — 60 God First + 40 America First — for over 8,400 local, state, and federal officials with photos, scores, voting records, and tap-to-call contact info.">
+  <meta property="og:description" content="Equipping Christians to vote confidently. 10-category, 100-point scorecard — 60 God First + 40 America First — for 8,900+ local, state, and federal officials with photos, scores, voting records, and tap-to-call contact info.">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://usmcmin.com/citizen.html">
   <meta property="og:image" content="https://usmcmin.com/assets/og/og-citizen.jpg">
@@ -18,7 +18,7 @@
   <meta property="og:image:alt" content="RESOLUTE Citizen — Christian Voter Scorecard, U.S.M.C. Ministries">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="RESOLUTE Citizen Scorecard">
-  <meta name="twitter:description" content="10-category, 100-point Christian voter scorecard (60 God First + 40 America First) for 8,400+ elected officials. Photos, scores, sources, contact info.">
+  <meta name="twitter:description" content="10-category, 100-point Christian voter scorecard (60 God First + 40 America First) for 8,900+ elected officials. Photos, scores, sources, contact info.">
   <meta name="twitter:image" content="https://usmcmin.com/assets/og/og-citizen.jpg">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="stylesheet" href="assets/css/main.min.css">
@@ -171,6 +171,7 @@
     /* View toggle */
     .view-toggle {
       display: flex;
+      flex-wrap: wrap;
       justify-content: center;
       gap: 8px;
       margin: 16px 0;
@@ -515,6 +516,30 @@
       font-weight: 600;
     }
 
+    .sc-freshness {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      margin-top: 14px;
+      padding: 6px 12px;
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      color: var(--gray-light);
+      background: rgba(168,176,188,0.06);
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.02em;
+    }
+    .sc-freshness-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: #6BA368;
+      box-shadow: 0 0 0 3px rgba(107,163,104,0.16);
+      flex: 0 0 auto;
+    }
+
     @media (max-width: 600px) {
       .sc-grid { grid-template-columns: 1fr; }
       .sc-scores { grid-template-columns: repeat(4, 1fr); gap: 8px; }
@@ -577,6 +602,10 @@
     <p class="tagline">Equipping Christians to vote with conviction, not confusion.</p>
     <p class="subtitle">Every score is based on public records, official votes, and stated positions &mdash; not opinion. Grounded in historically orthodox, Protestant Christian values and the duty of Christians to elect righteous magistrates.</p>
     <p class="methodology">10 categories &times; 5 questions &times; 2 pts = 100 points max &middot; 60 God First + 40 America First &middot; <a href="scoring-system.html">How scoring works</a> &middot; <a href="#methodology">Full methodology</a></p>
+    <div class="sc-freshness" role="status" aria-live="polite">
+      <span class="sc-freshness-dot" aria-hidden="true"></span>
+      <span id="scorecardFreshness">Loading live directory status&hellip;</span>
+    </div>
   </div>
 
   <!-- Global Name Search — find any rep across all 50 states without picking one first -->
@@ -593,7 +622,7 @@
         onblur="this.style.borderColor='var(--border)';setTimeout(closeGlobalSearchDropdown,200)"
         oninput="renderGlobalSearchResults(this.value)"
         onkeydown="handleGlobalSearchKey(event)">
-      <p id="globalSearchStatus" style="margin-top:6px;font-size:0.75rem;color:var(--gray);min-height:1.2em;">Across 8,400+ federal, state, and local officials. No state-pick required.</p>
+      <p id="globalSearchStatus" style="margin-top:6px;font-size:0.75rem;color:var(--gray);min-height:1.2em;">Nationwide index &middot; all 50 states + DC + PR &middot; no state-pick required.</p>
     </div>
     <ul id="globalSearchDropdown" role="listbox" aria-label="Candidate search suggestions"
         style="display:none;position:absolute;top:100%;left:0;right:0;background:var(--bg-card);border:1px solid var(--accent);border-top:none;border-radius:0 0 12px 12px;max-height:380px;overflow-y:auto;list-style:none;padding:0;margin:0;z-index:50;box-shadow:0 8px 24px rgba(0,0,0,0.35);"></ul>
@@ -871,7 +900,7 @@ function renderGlobalSearchResults(query) {
   });
   var top = matches.slice(0, 8);
   if (!top.length) {
-    dropdown.innerHTML = '<li style="padding:14px;color:var(--gray);text-align:center;font-size:0.85rem;">No matches found across 8,400+ officials. Try a partial name or check spelling.</li>';
+    dropdown.innerHTML = '<li style="padding:14px;color:var(--gray);text-align:center;font-size:0.85rem;">No matches found in the nationwide index. Try a partial name or check spelling.</li>';
     dropdown.style.display = 'block';
     return;
   }
@@ -1182,6 +1211,29 @@ fetch('data/index.json', { cache: 'no-cache' })
     INDEX_DATA = index;
     DATA.categories = index.categories;
     DATA.meta = index.meta;
+
+    var meta = index.meta || {};
+    var total = Number(meta.total_candidates || 0);
+    var totalLabel = total ? total.toLocaleString() : 'Nationwide';
+    var updatedLabel = '';
+    if (meta.last_updated) {
+      var updatedDate = new Date(meta.last_updated + 'T00:00:00Z');
+      if (!isNaN(updatedDate.getTime())) {
+        updatedLabel = updatedDate.toLocaleDateString('en-US', {
+          month: 'short', day: 'numeric', year: 'numeric', timeZone: 'UTC'
+        });
+      }
+    }
+    var freshnessEl = document.getElementById('scorecardFreshness');
+    if (freshnessEl) {
+      freshnessEl.textContent = totalLabel + ' officials' +
+        (updatedLabel ? ' · data updated ' + updatedLabel : ' · live nationwide data');
+    }
+    var globalStatusEl = document.getElementById('globalSearchStatus');
+    if (globalStatusEl && total) {
+      globalStatusEl.textContent = 'Across ' + totalLabel +
+        ' federal, state, and local officials · no state-pick required.';
+    }
 
     var st = getInitialState();
     var showModal = !st;

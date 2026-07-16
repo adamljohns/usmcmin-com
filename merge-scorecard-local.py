@@ -22,10 +22,19 @@ def main():
     records = {}
     for r in data.get("candidates", []):
         findings = r.get("findings") or []
-        if not findings:
-            continue
         st = (r.get("state") or "").upper()
         key = f"{r['slug']}@{st}" if st else r["slug"]
+
+        # BANK THE DISCOVERY even when the candidate yielded nothing. A Brave-found campaign
+        # site is a durable asset: persisting it to profile.campaign_website means the query is
+        # spent once per candidate ever, the record stops looking "thin", and every later round
+        # reads the good source for free. Without this we'd re-discover the same sites forever.
+        if not findings:
+            if r.get("source_discovered") and r.get("campaign_website"):
+                records[key] = {"profile": {"campaign_website": r["campaign_website"],
+                                            "source_discovered_date": today}}
+            continue
+
         evidence, srcs = {}, []
         for f in findings:
             cat, qi = f["category"], str(f["question_idx"])
@@ -36,12 +45,16 @@ def main():
             }
             if f.get("source_url"):
                 srcs.append(f["source_url"])
+        prof = {
+            "confidence": CONF.get(r.get("level"), "evidence_state"),
+            "confidence_note": f"Local-grind (Qwen finds + Gemma cross-check, verbatim-verified) {today}",
+            "last_refined": today,
+        }
+        if r.get("source_discovered") and r.get("campaign_website"):
+            prof["campaign_website"] = r["campaign_website"]
+            prof["source_discovered_date"] = today
         records[key] = {
-            "profile": {
-                "confidence": CONF.get(r.get("level"), "evidence_state"),
-                "confidence_note": f"Local-grind (Qwen finds + Gemma cross-check, verbatim-verified) {today}",
-                "last_refined": today,
-            },
+            "profile": prof,
             "evidence": evidence,
             "sources_add": sorted(set(srcs)),
             "notes_append": f"Local-grind evidence pass {today}: {len(findings)} verbatim-verified position(s).",
@@ -53,10 +66,11 @@ def main():
         "records": records,
     }
     json.dump(dossier, open(out, "w"), indent=1)
-    cats = sum(len(v["evidence"]) for v in records.values())
-    cells = sum(len(qs) for v in records.values() for qs in v["evidence"].values())
-    print(f"wrote {out}: {len(records)} candidate(s), {cats} categories, {cells} scored cells"
-          + (" [RESET mode]" if reset else " [additive]"))
+    cells = sum(len(qs) for v in records.values() for qs in v.get("evidence", {}).values())
+    scored = sum(1 for v in records.values() if v.get("evidence"))
+    banked = sum(1 for v in records.values() if v.get("profile", {}).get("campaign_website"))
+    print(f"wrote {out}: {len(records)} record(s) — {scored} evidence-scored ({cells} cells), "
+          f"{banked} discovered source(s) banked" + (" [RESET mode]" if reset else " [additive]"))
 
 
 if __name__ == "__main__":

@@ -1,5 +1,5 @@
 {
-  "generated": "2026-07-16T21:04:09.291990+00:00",
+  "generated": "2026-07-16T23:31:30.597917+00:00",
   "totals": {
     "agents": 14,
     "operational": 13,
@@ -18,9 +18,10 @@
     },
     "cron_source": "openclaw.sqlite",
     "launchd": {
-      "healthy": 81,
+      "healthy": 80,
       "fails": [
         "com.moop.claude-telegram-bridge: exit 1",
+        "com.moop.garmin-rounds: exit 1",
         "com.moop.psa-consistency-check: exit 1",
         "com.moop.tacc-feed: exit 1",
         "com.moop.sally-airbnb-digest: exit 5"
@@ -101,6 +102,11 @@
           "detail": "Rebuilt fleet dashboard; sally airbnb-host recovered (operational); committed + pushed fleet/ live snapshot on polish/proven-coaching-nav-20260716 (PR #29)."
         },
         {
+          "date": "2026-07-16",
+          "title": "COM PR polish: C5iSR+coaching+fleet push",
+          "detail": "PR #29: fleet snapshot 21:04 UTC + C5iSR wayfinding + RESOLUTE redirect polish; not merged to main."
+        },
+        {
           "date": "2026-07-10",
           "title": "Fleet dashboard restored to 14/14 operational",
           "detail": "Cleared stale cron error counters, fixed Liberty Brief Discord target, fixed weekly-digest Keychain token wrapper, rebuilt/pushed usmcmin.com/fleet."
@@ -159,11 +165,6 @@
           "date": "2026-05-26",
           "title": "Cron timeout remediation",
           "detail": "Traced 13 broken crons to a 30s default; set local-LLM crons to 180\u2013300s. 22 crons fixed fleet-wide."
-        },
-        {
-          "date": "2026-05-22",
-          "title": "Tier-1/Tier-2 model routing",
-          "detail": "Split the fleet onto two resident Gemmas + a lazy-loaded Qwen, ending the multi-model swap-death stalls."
         }
       ],
       "name": "Max Pemberton",
@@ -1483,7 +1484,7 @@
       "n_jobs": 7,
       "n_enabled": 6,
       "err": 0,
-      "last_ms": 1784217600022,
+      "last_ms": 1784242800050,
       "status": "operational",
       "accomplishments": [
         {
@@ -1591,6 +1592,17 @@
       },
       "jobs": [
         {
+          "name": "Nutrition log ping 19:00 \u2014 Coach Arnie",
+          "enabled": true,
+          "expr": "0 19 * * *",
+          "tz": "America/New_York",
+          "channel": "",
+          "last_ms": 1784242800050,
+          "status": "ok",
+          "errors": 0,
+          "dur_ms": 21560
+        },
+        {
           "name": "Coach Midday Garmin Read (12:00 EDT)",
           "enabled": true,
           "expr": "0 12 * * *",
@@ -1611,17 +1623,6 @@
           "status": "ok",
           "errors": 0,
           "dur_ms": 25411
-        },
-        {
-          "name": "Nutrition log ping 19:00 \u2014 Coach Arnie",
-          "enabled": true,
-          "expr": "0 19 * * *",
-          "tz": "America/New_York",
-          "channel": "",
-          "last_ms": 1784156400048,
-          "status": "ok",
-          "errors": 0,
-          "dur_ms": 31230
         },
         {
           "name": "Skill: zoho-crm (fit20 Mon leads)",
@@ -1884,7 +1885,7 @@
       "n_jobs": 7,
       "n_enabled": 6,
       "err": 0,
-      "last_ms": 1784201760031,
+      "last_ms": 1784241000044,
       "status": "operational",
       "accomplishments": [
         {
@@ -1975,6 +1976,17 @@
       ],
       "jobs": [
         {
+          "name": "Evening Civic Watch (6:30 PM) \u2014 Sheriff Roy",
+          "enabled": true,
+          "expr": "30 18 * * *",
+          "tz": "America/New_York",
+          "channel": "discord",
+          "last_ms": 1784241000044,
+          "status": "ok",
+          "errors": 0,
+          "dur_ms": 302313
+        },
+        {
           "name": "Dev Loop: sheriff-roy daily reflection",
           "enabled": true,
           "expr": "50 22 * * *",
@@ -1984,17 +1996,6 @@
           "status": "ok",
           "errors": 0,
           "dur_ms": 10976
-        },
-        {
-          "name": "Evening Civic Watch (6:30 PM) \u2014 Sheriff Roy",
-          "enabled": true,
-          "expr": "30 18 * * *",
-          "tz": "America/New_York",
-          "channel": "discord",
-          "last_ms": 1784154778948,
-          "status": "ok",
-          "errors": 0,
-          "dur_ms": 81332
         },
         {
           "name": "Skill: fxbg-city-code (Wed code check)",

@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-build-category-pages.py — generate 10 per-category deep-dive pages under
+build-category-pages.py — generate 13 per-category deep-dive pages under
 /citizen/<slug>.html. Each page is a focused (~1-page) explainer:
   • Hero with tier badge + the 10-pt allocation
   • What this measures (description)
@@ -749,7 +749,9 @@ def render_page(cat):
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:image" content="https://usmcmin.com/assets/og/og-citizen-{cat['slug']}.jpg">
   <link rel="stylesheet" href="/assets/css/main.min.css">
-  <link rel="icon" href="/assets/img/favicon.png" type="image/png">
+  <link rel="icon" type="image/svg+xml" href="/assets/icons/favicon.svg">
+  <link rel="icon" type="image/png" sizes="32x32" href="/assets/icons/favicon-32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/assets/icons/favicon-16.png">
   <style>
     .cp-container {{ max-width: 820px; margin: 0 auto; padding: 24px 20px 60px; }}
     .cp-hero {{

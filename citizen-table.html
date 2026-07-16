@@ -113,7 +113,7 @@
     }
 
     /* View toggle */
-    .view-toggle { display: flex; justify-content: center; gap: 8px; margin: 16px 0; }
+    .view-toggle { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; margin: 16px 0; }
     .view-toggle a { color: var(--gray); text-decoration: none; font-size: 0.82rem; padding: 6px 18px; border-radius: 20px; border: 1px solid var(--border); transition: all 0.2s; }
     .view-toggle a:hover { border-color: var(--accent); color: var(--accent); }
     .view-toggle a.active { background: var(--accent-dim); border-color: var(--accent); color: var(--accent); }
@@ -124,7 +124,16 @@
     .sc-filter select:focus, .sc-filter input:focus { border-color: var(--accent); }
 
     /* Jurisdiction section */
-    .jurisdiction-section { margin-bottom: 36px; }
+    .jurisdiction-section {
+      margin-bottom: 36px;
+      overflow-x: auto;
+      overscroll-behavior-inline: contain;
+      -webkit-overflow-scrolling: touch;
+    }
+    .jurisdiction-section:focus-visible {
+      outline: 2px solid var(--accent);
+      outline-offset: 3px;
+    }
     .jurisdiction-header {
       font-family: var(--font-main); font-size: 1.3rem; color: var(--accent);
       padding: 12px 0; border-bottom: 2px solid var(--accent); margin-bottom: 0;
@@ -613,7 +622,7 @@ function renderTables() {
     totalRendered += candidates.length;
 
     var sectionId = 'jur-' + jurisdiction.toLowerCase().replace(/[^a-z0-9]+/g, '-');
-    html += '<section class="jurisdiction-section" aria-labelledby="' + sectionId + '">';
+    html += '<section class="jurisdiction-section" aria-labelledby="' + sectionId + '" tabindex="0">';
     html += '<h2 class="jurisdiction-header" id="' + sectionId + '">' + esc(jurisdiction) + ' <span style="font-size:0.7rem;color:var(--gray);font-weight:400;">(' + candidates.length + ')</span></h2>';
     html += '<table class="sc-table">';
     html += '<caption class="vh">RESOLUTE Citizen scorecard for ' + esc(jurisdiction) + ': ' + candidates.length + ' candidate(s), sorted per current filter. Columns show party, total score out of ' + MAX_TOTAL + ', and per-category subscore out of ' + MAX_PER_TOPIC + '.</caption>';

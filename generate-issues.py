@@ -69,7 +69,9 @@ def generate_issue_page(issue):
   <title>{issue['title']} — RESOLUTE Citizen | U.S.M.C. Ministries</title>
   <meta name="description" content="{issue.get('summary', '')}">
   <link rel="stylesheet" href="../assets/css/main.min.css">
-  <link rel="icon" href="../assets/img/favicon.png" type="image/png">
+  <link rel="icon" type="image/svg+xml" href="../assets/icons/favicon.svg">
+  <link rel="icon" type="image/png" sizes="32x32" href="../assets/icons/favicon-32.png">
+  <link rel="apple-touch-icon" href="../assets/icons/apple-touch-icon.png">
   <style>
     .issue-container {{ max-width: 900px; margin: 0 auto; padding: 20px; }}
     .issue-back {{ display: inline-block; color: var(--accent); text-decoration: none; font-size: 0.85rem; margin-bottom: 20px; }}

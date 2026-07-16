@@ -26,6 +26,9 @@ UA = {"User-Agent": "Mozilla/5.0 (compatible; MOOPScorecardBot/1.0; +https://usm
 CTX = ssl._create_unverified_context()
 ISSUE_PATHS = ["", "/issues", "/on-the-issues", "/priorities", "/platform", "/record",
                "/positions", "/agenda", "/about", "/beliefs", "/values", "/where-i-stand"]
+# A single sentence may back at most this many rubric cells. Beyond that it stops being
+# evidence for a specific question and becomes inference from a general vibe.
+MAX_CELLS_PER_QUOTE = 2
 ISSUEY = re.compile(r"issue|priorit|platform|record|position|agenda|values|beliefs|where-i-stand|on-the-issues|my-plan", re.I)
 HREF_RE = re.compile(r'href=["\']([^"\'#?]+)', re.I)
 SCORECARD = "data/scorecard.json"
@@ -76,9 +79,10 @@ def model_at(base, prefer=None):
         names = [m.get("id") or m.get("model") or m.get("name") for m in (j.get("data") or j.get("models") or [])]
         names = [n for n in names if n and "embed" not in n.lower()]
         if prefer:
-            for n in names:
-                if prefer.lower() in n.lower():
-                    return n
+            for p in ([prefer] if isinstance(prefer, str) else prefer):
+                for n in names:
+                    if p.lower() in n.lower():
+                        return n
         return names[0] if names else None
     except Exception:
         return None
@@ -242,7 +246,10 @@ def main():
     qmodel = model_at(qwen)
     if not qmodel:
         sys.exit(f"NO_QWEN: {qwen}/models did not answer")
-    gmodel = model_at(gemma, prefer="gemma") if crosscheck else None
+    # Pin the cross-checker: LM Studio's /models order varies, and silently drifting between
+    # gemma-4-31b and gemma-4-26b (or worse, back to Qwen — defeating the cross-MODEL check)
+    # makes rounds non-reproducible. Prefer the fleet's configured 31b, then any Gemma.
+    gmodel = model_at(gemma, prefer=["gemma-4-31b", "gemma"]) if crosscheck else None
     if crosscheck and not gmodel:
         print(f"warn: no Gemma at {gemma}; disabling cross-check", file=sys.stderr)
         crosscheck = False
@@ -264,6 +271,7 @@ def main():
             print(f"  [{i}/{len(batch)}] {slug}: no fetchable sources")
             continue
 
+        quote_uses = {}   # one sentence must not fill a whole category — see MAX_CELLS_PER_QUOTE
         qlist = applicable_questions(categories, level)
         qmap = {n + 1: qlist[n] for n in range(len(qlist))}
         numbered = "\n".join(f"{n}. {q}" for n, (_, _, q) in qmap.items())
@@ -285,8 +293,15 @@ def main():
             if n not in qmap or stance not in ("support", "oppose") or not quote:
                 continue
             cat_id, q_idx, q_text = qmap[n]
-            # gate 1: verbatim
             nq = norm(quote)
+            # gate 0: no over-application. One quote answering 4 distinct questions is
+            # inference wearing a citation's clothes ("FALSE on E-Verify because he said
+            # the state limits ICE cooperation" is a losing argument). Cap the reuse.
+            if quote_uses.get(nq, 0) >= MAX_CELLS_PER_QUOTE:
+                rec["held"].append({"category": cat_id, "question_idx": q_idx, "stance": stance,
+                                    "quote": quote, "reason": "quote_overused"})
+                continue
+            # gate 1: verbatim
             src = next((u for u, t in pages if nq and nq in norm(t)), None)
             if not src:
                 rec["held"].append({"category": cat_id, "question_idx": q_idx, "stance": stance,
@@ -312,6 +327,7 @@ def main():
                                 max_tokens=120).strip().strip('"')[:240] or quote[:220]
                 except Exception:
                     pass
+            quote_uses[nq] = quote_uses.get(nq, 0) + 1
             rec["findings"].append({"category": cat_id, "question_idx": q_idx,
                                     "score_impact": (stance == "support"),
                                     "quote": quote, "source_url": src, "claim_text": text})

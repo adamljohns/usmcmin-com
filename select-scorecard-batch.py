@@ -46,6 +46,10 @@ def main():
         "level": c.get("level"), "party": c.get("party"), "office": c.get("office"),
         "website": c.get("website"),
         "campaign_website": (c.get("profile") or {}).get("campaign_website"),
+        # carried so a discovery-only bank can RE-STATE the existing confidence verbatim.
+        # refine-records stamps evidence_<tier> on any record whose profile arrives WITHOUT a
+        # confidence key — which would falsely mark an unscored candidate "evidence-reviewed".
+        "confidence": (c.get("profile") or {}).get("confidence"),
     } for c in pool[:N]]
     json.dump(batch, open(OUT, "w"), indent=1)
     print(f"selected {len(batch)} of {len(pool)} eligible (unscored + fetchable) -> {OUT}")

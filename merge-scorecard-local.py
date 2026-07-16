@@ -31,8 +31,13 @@ def main():
         # reads the good source for free. Without this we'd re-discover the same sites forever.
         if not findings:
             if r.get("source_discovered") and r.get("campaign_website"):
+                # Banking a source is NOT evidence. refine-records stamps evidence_<tier> on any
+                # record whose profile arrives with no confidence key, so RE-STATE the existing
+                # value explicitly (even when null) — otherwise banking a URL silently promotes
+                # an unscored candidate to "evidence-reviewed" with 0 claims. (Happened 7-16.)
                 records[key] = {"profile": {"campaign_website": r["campaign_website"],
-                                            "source_discovered_date": today}}
+                                            "source_discovered_date": today,
+                                            "confidence": r.get("existing_confidence")}}
             continue
 
         evidence, srcs = {}, []

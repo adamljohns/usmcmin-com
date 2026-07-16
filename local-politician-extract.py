@@ -267,6 +267,7 @@ def main():
                # scorecard.json even when this candidate yields no findings — one query, forever
                "campaign_website": c.get("campaign_website"),
                "source_discovered": bool(c.get("source_discovered")),
+               "existing_confidence": c.get("confidence"),   # preserved on discovery-only banks
                "sources_fetched": [], "findings": [], "held": [], "status": "no_sources"}
         pages = gather_pages(build_sources(c))
         rec["sources_fetched"] = [u for u, _ in pages]

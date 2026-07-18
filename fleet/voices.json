@@ -1,31 +1,251 @@
 {
-  "_comment": "Fleet narration-voice roster — which TTS voice each agent speaks with, and which Scripture (or confessional corpus) each narrates on usmcmin.org. Engines: kokoro = Kokoro-82M via mlx-audio on the M5 Max (voice ids a*=US b*=UK, f/m=female/male); piper = legacy Piper voices (Max's en_GB-alan is the established LBCF/Catechism/Institutes narrator; Esther's shipped BTE audio is Piper en_GB-jenny, frozen). This file is the display source for the fleet Command Center's Voice card and mirrors data/book-voices.json in the bible-reading-plan-bot repo (the render-time source of truth for the Bible audio itself). 12 male voices + Miss Sally.",
+  "_comment": "Fleet narration-voice roster \u2014 local engines only for agent speech (Kokoro + Piper). ElevenLabs reserved for evergreen/published content Principal creates. BANNED forever: am_puck, bm_fable, am_fenrir (Principal 2026-07-17). Engines: kokoro = Kokoro-82M via mlx-audio; piper = Piper local. This file is the display source for the fleet Command Center Voice card.",
   "narrators": {
-    "main":          {"voice": "en_GB-alan", "engine": "piper", "character": "British male — the Pemberton voice",
-                      "narrates": ["1689 London Baptist Confession (32 ch)", "Baptist Catechism (15 sections)", "Calvin's Institutes (Beveridge, 14 ch so far)"]},
-    "pops":          {"voice": "bm_george", "engine": "kokoro", "character": "British male, patriarch",
-                      "narrates": ["Genesis", "Exodus", "Leviticus", "Numbers", "Deuteronomy"]},
-    "sheriff-roy":   {"voice": "bm_lewis", "engine": "kokoro", "character": "British male, steady lawman",
-                      "narrates": ["Joshua", "Judges", "1–2 Samuel", "1–2 Kings", "1–2 Chronicles", "Ezra", "Nehemiah"]},
-    "sally":         {"voice": "bf_emma", "engine": "kokoro", "character": "British female (plus registers: af_heart, bf_alice, bf_isabella)",
-                      "narrates": ["Ruth (bf_emma — live)", "Proverbs 31 (af_heart — live)", "Song of Solomon (bf_alice)", "Esther (bf_isabella; shipped BTE audio stays Piper jenny)"]},
-    "carnegie":      {"voice": "am_onyx", "engine": "kokoro", "character": "US male, deep gravitas",
-                      "narrates": ["Job", "Ecclesiastes", "Isaiah", "Jeremiah", "Lamentations", "Ezekiel", "Daniel", "Hebrews"]},
-    "chaps":         {"voice": "am_adam", "engine": "kokoro", "character": "US male, worship register",
-                      "narrates": ["Psalms"]},
-    "preacher-john": {"voice": "am_michael", "engine": "kokoro", "character": "US male — the Daily Watch narrator",
-                      "narrates": ["Proverbs 1–30 (live)", "The Watchman's Daily Readings (all five watches)"]},
-    "coach-arnie":   {"voice": "am_eric", "engine": "kokoro", "character": "US male, exhorter",
-                      "narrates": ["Hosea", "Joel", "Amos", "Obadiah", "Jonah", "Micah", "Nahum", "Habakkuk", "Zephaniah", "Haggai", "Zechariah", "Malachi", "James", "Jude"]},
-    "sgt-maj-mac":   {"voice": "am_echo", "engine": "kokoro", "character": "US male, precise",
-                      "narrates": ["Matthew"]},
-    "rush":          {"voice": "am_fenrir", "engine": "kokoro", "character": "US male, urgent correspondent",
-                      "narrates": ["Mark", "1–2 Peter"]},
-    "doc":           {"voice": "bm_fable", "engine": "kokoro", "character": "British male, the physician-historian",
-                      "narrates": ["Luke", "Acts"]},
-    "prof-x":        {"voice": "am_liam", "engine": "kokoro", "character": "US male, theologian",
-                      "narrates": ["John", "1–3 John", "Revelation"]},
-    "bg-hartwell":   {"voice": "bm_daniel", "engine": "kokoro", "character": "British male, command presence",
-                      "narrates": ["Romans", "1–2 Corinthians", "Galatians", "Ephesians", "Philippians", "Colossians", "1–2 Thessalonians", "1–2 Timothy", "Titus", "Philemon (live)"]}
+    "main": {
+      "voice": "en_GB-alan",
+      "engine": "piper",
+      "character": "British male \u2014 the Pemberton voice",
+      "narrates": [
+        "1689 London Baptist Confession (32 ch)",
+        "Baptist Catechism (15 sections)",
+        "Calvin's Institutes (Beveridge, 14 ch so far)"
+      ]
+    },
+    "pops": {
+      "voice": "am_michael",
+      "engine": "kokoro",
+      "character": "US male \u2014 patriarch (was PJ register)",
+      "narrates": [
+        "Genesis",
+        "Exodus",
+        "Leviticus",
+        "Numbers",
+        "Deuteronomy"
+      ]
+    },
+    "sheriff-roy": {
+      "voice": "en_US-ryan-high",
+      "engine": "piper",
+      "character": "US male deep (Piper ryan; old bm_lewis \u2192 Carnegie) @ 1.25x",
+      "narrates": [
+        "Joshua",
+        "Judges",
+        "1\u20132 Samuel",
+        "1\u20132 Kings",
+        "1\u20132 Chronicles",
+        "Ezra",
+        "Nehemiah"
+      ],
+      "speed": 1.25
+    },
+    "sally": {
+      "voice": "bf_emma",
+      "engine": "kokoro",
+      "character": "British female (plus registers: af_heart, bf_alice, bf_isabella)",
+      "narrates": [
+        "Ruth (bf_emma \u2014 live)",
+        "Proverbs 31 (af_heart \u2014 live)",
+        "Song of Solomon (bf_alice)",
+        "Esther (bf_isabella; shipped BTE audio stays Piper jenny)"
+      ]
+    },
+    "carnegie": {
+      "voice": "bm_lewis",
+      "engine": "kokoro",
+      "character": "British male steady (from Sheriff Roy)",
+      "narrates": [
+        "Job",
+        "Ecclesiastes",
+        "Isaiah",
+        "Jeremiah",
+        "Lamentations",
+        "Ezekiel",
+        "Daniel",
+        "Hebrews"
+      ]
+    },
+    "chaps": {
+      "voice": "am_adam",
+      "engine": "kokoro",
+      "character": "US male, worship register",
+      "narrates": [
+        "Psalms"
+      ]
+    },
+    "preacher-john": {
+      "voice": "bm_george",
+      "engine": "kokoro",
+      "character": "British male patriarch register (from Pops)",
+      "narrates": [
+        "Proverbs 1\u201330 (live)",
+        "The Watchman's Daily Readings (all five watches)"
+      ]
+    },
+    "coach-arnie": {
+      "voice": "en_US-hfc_male-medium",
+      "engine": "piper",
+      "character": "US male deep deckplate coach (Piper hfc_male @ 1.25x \u2014 Principal 2026-07-17)",
+      "narrates": [
+        "Hosea",
+        "Joel",
+        "Amos",
+        "Obadiah",
+        "Jonah",
+        "Micah",
+        "Nahum",
+        "Habakkuk",
+        "Zephaniah",
+        "Haggai",
+        "Zechariah",
+        "Malachi",
+        "James",
+        "Jude"
+      ],
+      "speed": 1.25
+    },
+    "sgt-maj-mac": {
+      "voice": "en_US-joe-medium",
+      "engine": "piper",
+      "character": "US male deckplate (Piper joe \u2014 Principal)",
+      "narrates": [
+        "Matthew"
+      ]
+    },
+    "rush": {
+      "voice": "bm_george",
+      "engine": "kokoro",
+      "character": "British male (from Pops; am_fenrir banned)",
+      "narrates": [
+        "Mark",
+        "1\u20132 Peter"
+      ]
+    },
+    "doc": {
+      "voice": "am_liam",
+      "engine": "kokoro",
+      "character": "US male (from Prof X; bm_fable banned)",
+      "narrates": [
+        "Luke",
+        "Acts"
+      ]
+    },
+    "prof-x": {
+      "voice": "bm_daniel",
+      "engine": "kokoro",
+      "character": "British male command (from BG Hartwell)",
+      "narrates": [
+        "John",
+        "1\u20133 John",
+        "Revelation"
+      ]
+    },
+    "bg-hartwell": {
+      "voice": "am_onyx",
+      "engine": "kokoro",
+      "character": "US male deep gravitas (from Carnegie)",
+      "narrates": [
+        "Romans",
+        "1\u20132 Corinthians",
+        "Galatians",
+        "Ephesians",
+        "Philippians",
+        "Colossians",
+        "1\u20132 Thessalonians",
+        "1\u20132 Timothy",
+        "Titus",
+        "Philemon (live)"
+      ]
+    },
+    "hermes": {
+      "voice": "am_adam",
+      "engine": "kokoro",
+      "character": "US male Adam/MoopBotPro register (from Chaps casting; shared OK)",
+      "narrates": [
+        "Fleet comms and briefs (no Scripture assignment)"
+      ]
+    }
+  },
+  "banned_voices": {
+    "ids": [
+      "am_echo",
+      "am_fenrir",
+      "am_puck",
+      "bm_fable"
+    ],
+    "reason": "Principal 2026-07-17: am_puck/bm_fable/am_fenrir never; am_echo weak (Mac ditch)",
+    "effective": "2026-07-17T21:58-04:00"
+  },
+  "replacement_bench": {
+    "available": [
+      {
+        "voice": "en_US-joe-medium",
+        "engine": "piper",
+        "note": "US male Piper \u2014 free for next reassignment"
+      },
+      {
+        "voice": "en_US-lessac-medium",
+        "engine": "piper",
+        "note": "US male Piper \u2014 free for next reassignment"
+      },
+      {
+        "voice": "am_santa",
+        "engine": "kokoro",
+        "note": "assigned to Hermes for now"
+      },
+      {
+        "voice": "en_US-ryan-high",
+        "engine": "piper",
+        "note": "assigned to Sheriff Roy for now"
+      }
+    ],
+    "note": "3 banned (puck/fable/fenrir) replaced with local males; Principal will reassign further"
+  },
+  "reassignment_log": {
+    "at": "2026-07-17T21:50-04:00",
+    "banned": [
+      "am_puck",
+      "bm_fable",
+      "am_fenrir"
+    ],
+    "moves": {
+      "pops": "am_michael (from preacher-john)",
+      "preacher-john": "bm_george (from pops)",
+      "rush": "bm_george (from pops; am_fenrir banned)",
+      "doc": "am_liam (from prof-x; bm_fable banned)",
+      "prof-x": "bm_daniel (from bg-hartwell)",
+      "carnegie": "bm_lewis (from sheriff-roy)",
+      "bg-hartwell": "am_onyx (from carnegie)",
+      "sheriff-roy": "en_US-ryan-high (new local Piper; old voice moved to Carnegie)",
+      "hermes": "am_santa (new; am_puck banned)"
+    },
+    "unchanged": [
+      "main",
+      "sally",
+      "chaps",
+      "coach-arnie",
+      "sgt-maj-mac"
+    ]
+  },
+  "reassignment_log_2": {
+    "at": "2026-07-17T21:58-04:00",
+    "moves": {
+      "sgt-maj-mac": "en_US-joe-medium",
+      "hermes": "am_adam (Chaps register)"
+    },
+    "australian_note": "No en_AU in rhasspy/piper-voices (only en_US + en_GB). Local AU deep masculine not available; deep US Piper males auditioned for Coach."
+  },
+  "reassignment_log_3": {
+    "at": "2026-07-17T22:04-04:00",
+    "moves": {
+      "coach-arnie": "en_US-hfc_male-medium piper speed=1.25 (cand A)"
+    }
+  },
+  "reassignment_log_4": {
+    "at": "2026-07-17T22:12-04:00",
+    "moves": {
+      "sheriff-roy": "speed 1.25",
+      "fleet_greetings": "generate + wire Mission Control agent pages",
+      "agent_voice_skill": "install agent-voice into all PSA workspaces"
+    }
   }
 }

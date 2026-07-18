@@ -69,13 +69,35 @@
   <h2 class="section-head">Voice Greeting</h2>
   <div class="spec-card" style="padding:1rem 1.1rem">
     <div style="margin-bottom:.65rem;color:var(--gray);font-size:.9rem">
-      <strong>en_US-ryan-high</strong> (piper) · speed 1.25
+      <strong>en_US-ryan-high</strong> (piper) · speed 1.25 · 5 rotating greetings
     </div>
     <audio controls preload="metadata" style="width:100%;max-width:36rem">
       <source src="audio/greetings/sheriff-roy-greeting.mp3" type="audio/mpeg">
       Your browser does not support the audio element.
     </audio>
-    <p style="margin-top:.85rem;line-height:1.55">Sheriff Roy Caldwell. Eyes on Fredericksburg and the civic picture. I will keep you informed and keep it clean.</p>
+    <p id="greet-text" style="margin-top:.85rem;line-height:1.55">Sheriff Roy Caldwell. Eyes on Fredericksburg and the civic picture. I will keep you informed and keep it clean.</p>
+    <button id="greet-shuffle" type="button"
+      style="margin-top:.6rem;background:none;border:1px solid var(--gray);border-radius:6px;
+             color:var(--gray);padding:.3rem .8rem;cursor:pointer;font-size:.85rem">
+      &#128256; Another greeting</button>
+    <script>
+    (function(){
+      var V = [{"s": "audio/greetings/sheriff-roy-greeting.mp3", "t": "Sheriff Roy Caldwell. Eyes on Fredericksburg and the civic picture. I will keep you informed and keep it clean."}, {"s": "audio/greetings/sheriff-roy-greeting-2.mp3", "t": "Sheriff Roy. I ride the civic beat — council, code, and the county line. Want the Fredericksburg picture this week?"}, {"s": "audio/greetings/sheriff-roy-greeting-3.mp3", "t": "Roy Caldwell here. Scorecards current, meetings tracked, nothing slips past the watch. Which race or ruling should I dig into?"}, {"s": "audio/greetings/sheriff-roy-greeting-4.mp3", "t": "The Sheriff, checking in. Local government answers to the citizens who show up informed. Shall I brief you before the next meeting?"}, {"s": "audio/greetings/sheriff-roy-greeting-5.mp3", "t": "Roy here. Eyes on the city, hand on the record, and the scorecard tells no lies. What civic question needs an answer?"}];
+      var au = document.querySelector('#voice-greeting audio');
+      var sr = au ? au.querySelector('source') : null;
+      var tx = document.getElementById('greet-text');
+      var last = -1;
+      function pick(play){
+        var i; do { i = Math.floor(Math.random()*V.length); } while (V.length > 1 && i === last);
+        last = i;
+        if (sr) { sr.src = V[i].s; au.load(); if (play) au.play(); }
+        if (tx) tx.textContent = V[i].t;
+      }
+      pick(false);
+      var b = document.getElementById('greet-shuffle');
+      if (b) b.addEventListener('click', function(){ pick(true); });
+    })();
+    </script>
   </div>
 </section>
 
@@ -108,7 +130,7 @@
   <div class="footer-inner">
     <div class="footer-bottom">
       <div style="color:var(--gray);font-size:0.85rem;margin-bottom:0.4rem">
-        Fleet Command Center — auto-generated from live OpenClaw + Hermes state. Last updated: <strong>2026-07-18 02:36 UTC</strong></div>
+        Fleet Command Center — auto-generated from live OpenClaw + Hermes state. Last updated: <strong>2026-07-18 02:48 UTC</strong></div>
       <div style="color:var(--gray);font-size:0.8rem">© 2026 U.S.M.C. Ministries &nbsp;|&nbsp;
         <a href="../fleet/index.html">Dashboard</a> &nbsp;|&nbsp;
         <a href="../sitemap.html">Sitemap</a> &nbsp;|&nbsp;
@@ -119,7 +141,7 @@
 <script src="../assets/js/main.js" defer></script>
 <script>
 (function(){
-  var GEN="2026-07-18T02:36:26.410395+00:00";
+  var GEN="2026-07-18T02:48:17.488888+00:00";
   function rel(ms){ms=+ms;if(!ms)return"—";var s=(Date.now()-ms)/1000;
     if(s<0)return"scheduled";if(s<3600)return Math.max(0,Math.floor(s/60))+"m ago";
     if(s<86400)return Math.floor(s/3600)+"h ago";return Math.floor(s/86400)+"d ago";}

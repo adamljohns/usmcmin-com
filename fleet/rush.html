@@ -69,13 +69,35 @@
   <h2 class="section-head">Voice Greeting</h2>
   <div class="spec-card" style="padding:1rem 1.1rem">
     <div style="margin-bottom:.65rem;color:var(--gray);font-size:.9rem">
-      <strong>bm_george</strong> (kokoro) · speed 1.0
+      <strong>bm_george</strong> (kokoro) · speed 1.0 · 5 rotating greetings
     </div>
     <audio controls preload="metadata" style="width:100%;max-width:36rem">
       <source src="audio/greetings/rush-greeting.mp3" type="audio/mpeg">
       Your browser does not support the audio element.
     </audio>
-    <p style="margin-top:.85rem;line-height:1.55">Rush Sullivan, on the wire. I will give you the news that matters — clear, fast, and without fluff.</p>
+    <p id="greet-text" style="margin-top:.85rem;line-height:1.55">Rush Sullivan, on the wire. I will give you the news that matters — clear, fast, and without fluff.</p>
+    <button id="greet-shuffle" type="button"
+      style="margin-top:.6rem;background:none;border:1px solid var(--gray);border-radius:6px;
+             color:var(--gray);padding:.3rem .8rem;cursor:pointer;font-size:.85rem">
+      &#128256; Another greeting</button>
+    <script>
+    (function(){
+      var V = [{"s": "audio/greetings/rush-greeting.mp3", "t": "Rush Sullivan, on the wire. I will give you the news that matters — clear, fast, and without fluff."}, {"s": "audio/greetings/rush-greeting-2.mp3", "t": "Rush Sullivan on the wire. Headlines verified, noise filtered, signal delivered. Want the morning rundown?"}, {"s": "audio/greetings/rush-greeting-3.mp3", "t": "Sullivan here, deadline met. I track the stories that touch the mission and skip the circus. What beat should I watch for you?"}, {"s": "audio/greetings/rush-greeting-4.mp3", "t": "Rush, from the newsdesk. Fast is good; right is better — I deliver both. Shall I pull today's top three?"}, {"s": "audio/greetings/rush-greeting-5.mp3", "t": "This is Rush. If it matters to the house, the ministry, or the Republic, it crosses my desk first. What do you want covered?"}];
+      var au = document.querySelector('#voice-greeting audio');
+      var sr = au ? au.querySelector('source') : null;
+      var tx = document.getElementById('greet-text');
+      var last = -1;
+      function pick(play){
+        var i; do { i = Math.floor(Math.random()*V.length); } while (V.length > 1 && i === last);
+        last = i;
+        if (sr) { sr.src = V[i].s; au.load(); if (play) au.play(); }
+        if (tx) tx.textContent = V[i].t;
+      }
+      pick(false);
+      var b = document.getElementById('greet-shuffle');
+      if (b) b.addEventListener('click', function(){ pick(true); });
+    })();
+    </script>
   </div>
 </section>
 
@@ -108,7 +130,7 @@
   <div class="footer-inner">
     <div class="footer-bottom">
       <div style="color:var(--gray);font-size:0.85rem;margin-bottom:0.4rem">
-        Fleet Command Center — auto-generated from live OpenClaw + Hermes state. Last updated: <strong>2026-07-18 02:36 UTC</strong></div>
+        Fleet Command Center — auto-generated from live OpenClaw + Hermes state. Last updated: <strong>2026-07-18 02:48 UTC</strong></div>
       <div style="color:var(--gray);font-size:0.8rem">© 2026 U.S.M.C. Ministries &nbsp;|&nbsp;
         <a href="../fleet/index.html">Dashboard</a> &nbsp;|&nbsp;
         <a href="../sitemap.html">Sitemap</a> &nbsp;|&nbsp;
@@ -119,7 +141,7 @@
 <script src="../assets/js/main.js" defer></script>
 <script>
 (function(){
-  var GEN="2026-07-18T02:36:26.410395+00:00";
+  var GEN="2026-07-18T02:48:17.488888+00:00";
   function rel(ms){ms=+ms;if(!ms)return"—";var s=(Date.now()-ms)/1000;
     if(s<0)return"scheduled";if(s<3600)return Math.max(0,Math.floor(s/60))+"m ago";
     if(s<86400)return Math.floor(s/3600)+"h ago";return Math.floor(s/86400)+"d ago";}

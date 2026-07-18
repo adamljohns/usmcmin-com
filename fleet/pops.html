@@ -69,13 +69,35 @@
   <h2 class="section-head">Voice Greeting</h2>
   <div class="spec-card" style="padding:1rem 1.1rem">
     <div style="margin-bottom:.65rem;color:var(--gray);font-size:.9rem">
-      <strong>am_michael</strong> (kokoro) · speed 1.0
+      <strong>am_michael</strong> (kokoro) · speed 1.0 · 5 rotating greetings
     </div>
     <audio controls preload="metadata" style="width:100%;max-width:36rem">
       <source src="audio/greetings/pops-greeting.mp3" type="audio/mpeg">
       Your browser does not support the audio element.
     </audio>
-    <p style="margin-top:.85rem;line-height:1.55">Evening, son. Pops here. Family first, always. Tell me what the house needs and we will get after it.</p>
+    <p id="greet-text" style="margin-top:.85rem;line-height:1.55">Evening, son. Pops here. Family first, always. Tell me what the house needs and we will get after it.</p>
+    <button id="greet-shuffle" type="button"
+      style="margin-top:.6rem;background:none;border:1px solid var(--gray);border-radius:6px;
+             color:var(--gray);padding:.3rem .8rem;cursor:pointer;font-size:.85rem">
+      &#128256; Another greeting</button>
+    <script>
+    (function(){
+      var V = [{"s": "audio/greetings/pops-greeting.mp3", "t": "Evening, son. Pops here. Family first, always. Tell me what the house needs and we will get after it."}, {"s": "audio/greetings/pops-greeting-2.mp3", "t": "Well hey there, it's Pops. I watch the family inbox and keep the homefront squared away. Anything weighing on the house today?"}, {"s": "audio/greetings/pops-greeting-3.mp3", "t": "Pops checking in. Mail is sorted, the calendar is honest, and the family rhythm is my post. What should I keep an eye on for you?"}, {"s": "audio/greetings/pops-greeting-4.mp3", "t": "Hello from the front porch. I handle the letters, the reminders, and the little things before they become big things. What needs tending?"}, {"s": "audio/greetings/pops-greeting-5.mp3", "t": "It's Pops. A steady house makes a strong man — that is my whole job. Want me to walk the inbox with you?"}];
+      var au = document.querySelector('#voice-greeting audio');
+      var sr = au ? au.querySelector('source') : null;
+      var tx = document.getElementById('greet-text');
+      var last = -1;
+      function pick(play){
+        var i; do { i = Math.floor(Math.random()*V.length); } while (V.length > 1 && i === last);
+        last = i;
+        if (sr) { sr.src = V[i].s; au.load(); if (play) au.play(); }
+        if (tx) tx.textContent = V[i].t;
+      }
+      pick(false);
+      var b = document.getElementById('greet-shuffle');
+      if (b) b.addEventListener('click', function(){ pick(true); });
+    })();
+    </script>
   </div>
 </section>
 
@@ -84,7 +106,7 @@
   <h2 class="section-head">Scheduled Work</h2>
   <div class="table-scroll"><table class="job-table"><thead><tr>
           <th>Scheduled Job</th><th>When</th><th>Delivers</th><th>Last Run</th><th>Status</th>
-        </tr></thead><tbody><tr class="row-ok"><td>Dev Loop: pops daily reflection</td><td class="mono">daily 22:30</td><td>discord</td><td><span class="rel" data-ts="1784341800036">6m ago</span></td><td><span class="tag-badge badge-ok">ok</span></td></tr><tr class="row-ok"><td>Pops Spirit Front Evening Capture (2030)</td><td class="mono">daily 20:30</td><td>telegram</td><td><span class="rel" data-ts="1784334600104">2h ago</span></td><td><span class="tag-badge badge-ok">ok</span></td></tr><tr class="row-ok"><td>Liberty Brief (Fri 11:55) — Pops Henderson</td><td class="mono">Fri 11:55</td><td>discord</td><td><span class="rel" data-ts="1784303700024">10h ago</span></td><td><span class="tag-badge badge-ok">ok</span></td></tr><tr class="row-ok"><td>Pops Daily Wheelhouse Check-in (7:37 AM)</td><td class="mono">daily 07:43</td><td>telegram</td><td><span class="rel" data-ts="1784288580049">14h ago</span></td><td><span class="tag-badge badge-ok">ok</span></td></tr><tr class="row-ok"><td>Pops Spirit Front Weekly SITREP (Sun 1900)</td><td class="mono">Sun 19:00</td><td>telegram</td><td><span class="rel" data-ts="1783897200040">5d ago</span></td><td><span class="tag-badge badge-ok">ok</span></td></tr><tr class="row-ok"><td>Skill: calendar-apple (Sun family week)</td><td class="mono">Sun 18:00</td><td>telegram</td><td><span class="rel" data-ts="1783893627558">5d ago</span></td><td><span class="tag-badge badge-ok">ok</span></td></tr><tr class="row-ok"><td>Pops Sunday Family Huddle Agenda Draft (Sun 4 PM)</td><td class="mono">Sun 16:00</td><td>telegram</td><td><span class="rel" data-ts="1783886400042">5d ago</span></td><td><span class="tag-badge badge-ok">ok</span></td></tr><tr class="row-ok"><td>Pops Spirit Front Monthly Pulse + Vision-Read (1st 0700)</td><td class="mono">daily 07:20</td><td>telegram</td><td><span class="rel" data-ts="1782904800023">16d ago</span></td><td><span class="tag-badge badge-ok">ok</span></td></tr><tr class="row-off"><td>Stand-up 07:40 — Pops Henderson</td><td class="mono">Mon–Fri 07:40</td><td>discord</td><td><span class="rel" data-ts="1784202000017">1d ago</span></td><td><span class="tag-badge badge-off">disabled</span></td></tr></tbody></table></div>
+        </tr></thead><tbody><tr class="row-ok"><td>Dev Loop: pops daily reflection</td><td class="mono">daily 22:30</td><td>discord</td><td><span class="rel" data-ts="1784341800036">18m ago</span></td><td><span class="tag-badge badge-ok">ok</span></td></tr><tr class="row-ok"><td>Pops Spirit Front Evening Capture (2030)</td><td class="mono">daily 20:30</td><td>telegram</td><td><span class="rel" data-ts="1784334600104">2h ago</span></td><td><span class="tag-badge badge-ok">ok</span></td></tr><tr class="row-ok"><td>Liberty Brief (Fri 11:55) — Pops Henderson</td><td class="mono">Fri 11:55</td><td>discord</td><td><span class="rel" data-ts="1784303700024">10h ago</span></td><td><span class="tag-badge badge-ok">ok</span></td></tr><tr class="row-ok"><td>Pops Daily Wheelhouse Check-in (7:37 AM)</td><td class="mono">daily 07:43</td><td>telegram</td><td><span class="rel" data-ts="1784288580049">15h ago</span></td><td><span class="tag-badge badge-ok">ok</span></td></tr><tr class="row-ok"><td>Pops Spirit Front Weekly SITREP (Sun 1900)</td><td class="mono">Sun 19:00</td><td>telegram</td><td><span class="rel" data-ts="1783897200040">5d ago</span></td><td><span class="tag-badge badge-ok">ok</span></td></tr><tr class="row-ok"><td>Skill: calendar-apple (Sun family week)</td><td class="mono">Sun 18:00</td><td>telegram</td><td><span class="rel" data-ts="1783893627558">5d ago</span></td><td><span class="tag-badge badge-ok">ok</span></td></tr><tr class="row-ok"><td>Pops Sunday Family Huddle Agenda Draft (Sun 4 PM)</td><td class="mono">Sun 16:00</td><td>telegram</td><td><span class="rel" data-ts="1783886400042">5d ago</span></td><td><span class="tag-badge badge-ok">ok</span></td></tr><tr class="row-ok"><td>Pops Spirit Front Monthly Pulse + Vision-Read (1st 0700)</td><td class="mono">daily 07:20</td><td>telegram</td><td><span class="rel" data-ts="1782904800023">16d ago</span></td><td><span class="tag-badge badge-ok">ok</span></td></tr><tr class="row-off"><td>Stand-up 07:40 — Pops Henderson</td><td class="mono">Mon–Fri 07:40</td><td>discord</td><td><span class="rel" data-ts="1784202000017">1d ago</span></td><td><span class="tag-badge badge-off">disabled</span></td></tr></tbody></table></div>
 </section>
 
 <section class="container fleet-section">
@@ -108,7 +130,7 @@
   <div class="footer-inner">
     <div class="footer-bottom">
       <div style="color:var(--gray);font-size:0.85rem;margin-bottom:0.4rem">
-        Fleet Command Center — auto-generated from live OpenClaw + Hermes state. Last updated: <strong>2026-07-18 02:36 UTC</strong></div>
+        Fleet Command Center — auto-generated from live OpenClaw + Hermes state. Last updated: <strong>2026-07-18 02:48 UTC</strong></div>
       <div style="color:var(--gray);font-size:0.8rem">© 2026 U.S.M.C. Ministries &nbsp;|&nbsp;
         <a href="../fleet/index.html">Dashboard</a> &nbsp;|&nbsp;
         <a href="../sitemap.html">Sitemap</a> &nbsp;|&nbsp;
@@ -119,7 +141,7 @@
 <script src="../assets/js/main.js" defer></script>
 <script>
 (function(){
-  var GEN="2026-07-18T02:36:26.410395+00:00";
+  var GEN="2026-07-18T02:48:17.488888+00:00";
   function rel(ms){ms=+ms;if(!ms)return"—";var s=(Date.now()-ms)/1000;
     if(s<0)return"scheduled";if(s<3600)return Math.max(0,Math.floor(s/60))+"m ago";
     if(s<86400)return Math.floor(s/3600)+"h ago";return Math.floor(s/86400)+"d ago";}

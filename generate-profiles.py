@@ -884,16 +884,45 @@ def generate_profile(candidate, categories, meta, nav=None):
     # questions where our research found no public position either way.
     answered_count = total['answered']
     max_possible = answered_count * POINTS_PER_TRUE  # 2pt per answered Q
-    if max_possible > 0:
+    # Thin-record guard (2026-07-19 / Adam Harding screenshot):
+    # Dynamic-max % of answered was designed so we don't punish missing research,
+    # but with only a handful of cells it produced "A / 100%" while OG said 6/100.
+    # Below MIN_ANSWERED_FOR_DYNAMIC_GRADE we show absolute /100 (2 pts × global max)
+    # and suppress the letter grade so thin seeds cannot look like full A's.
+    MIN_ANSWERED_FOR_DYNAMIC_GRADE = 10
+    thin_record = answered_count < MIN_ANSWERED_FOR_DYNAMIC_GRADE
+    if thin_record:
+        pct_of_max = max(0, min(100, round((adjusted_score / MAX_TOTAL) * 100))) if MAX_TOTAL else 0
+        grade_letter = '\u2014'  # em dash — grade withheld
+    elif max_possible > 0:
         # Cap pct floor at 0 — when adjustments (e.g., -50 Soros) exceed
         # max_possible, raw pct goes negative which displays as nonsense
         # like "-250%". Cap display at 0; the absolute negative score is
         # still visible in the adjusted_score field for full transparency.
         raw_pct = round((adjusted_score / max_possible) * 100)
         pct_of_max = max(0, raw_pct)
+        grade_letter = letter_grade(pct_of_max)
     else:
         pct_of_max = 0
-    grade_letter = letter_grade(pct_of_max)
+        grade_letter = letter_grade(pct_of_max)
+
+    if thin_record:
+        thin_score_title = (
+            f'Thin evidence seed \u2014 {answered_count} questions answered. '
+            f'Showing absolute {adjusted_score}/100 (not dynamic-max %). '
+            f'Letter grade suppressed until \u2265{MIN_ANSWERED_FOR_DYNAMIC_GRADE} answered cells. '
+            f'Raw dynamic max would be {max_possible} pts ({answered_count}\u00d72).'
+        )
+        grade_aria = (
+            f'Thin seed \u2014 letter grade withheld until \u2265{MIN_ANSWERED_FOR_DYNAMIC_GRADE} answered questions'
+        )
+    else:
+        thin_score_title = (
+            'Score on a uniform /100 scale (percentage of dynamic max). '
+            'Lets you compare a state councilor, state senator, and U.S. senator at a glance '
+            'even though they answer different question counts.'
+        )
+        grade_aria = f'Letter grade {grade_letter} ({pct_of_max} of 100)'
 
     # Data-freshness: latest verified_date across this candidate's claims
     # (if any are verified), else fall back to scorecard-level last_updated.
@@ -1851,9 +1880,9 @@ def generate_profile(candidate, categories, meta, nav=None):
     <div class="prof-total-main">
       <div class="prof-total-label">RESOLUTE Citizen Score</div>
       <div class="prof-total-headline">
-        <span class="prof-total-score" style="color:{total_color};" title="Score on a uniform /100 scale (percentage of dynamic max). Lets you compare a state councilor, state senator, and U.S. senator at a glance even though they answer different question counts.">{pct_of_max}</span>
+        <span class="prof-total-score" style="color:{total_color};" title="{thin_score_title}">{pct_of_max}</span>
         <span class="prof-total-max" title="Uniform /100 display scale — every official is shown on the same 100-point visual whether they're scored on 22, 43, or 50 questions. The underlying math is unchanged: {adjusted_score} earned of {max_possible} dynamic max (2 pts × {answered_count} answered).">/ 100</span>
-        <span class="prof-grade" style="color:{total_color};border-color:{total_color};" aria-label="Letter grade {grade_letter} ({pct_of_max} of 100)">{grade_letter}</span>
+        <span class="prof-grade" style="color:{total_color};border-color:{total_color};" aria-label="{grade_aria}">{grade_letter}</span>
       </div>
       <div class="prof-total-detail">
         <span class="prof-raw" title="Raw dynamic-max number: 2 points × {answered_count} answered questions. Federal officials max out at /100 when all 50 questions are scored. State officials max out at /86 (43 applicable × 2). Local officials max out at /44 (22 applicable × 2). The headline above normalizes all of these to a uniform /100 visual; this caption keeps the raw integer for transparency.">Raw: <strong>{adjusted_score}</strong> of <strong>{max_possible}</strong> dynamic max</span>

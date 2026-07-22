@@ -11,6 +11,8 @@ Recommended: square PNG, ~256×256, transparent or dark background.
 |---|---|
 | `main.png`         | Max Pemberton (Adjutant) |
 | `hermes.png`       | Hermes (Staff Officer) |
+| `cursor.png`       | Cursor Strike Team |
+| `claude-meister.png` | Claude Meister |
 | `preacher-john.png`| Preacher John |
 | `chaps.png`        | Chaplain Chuck |
 | `carnegie.png`     | Andrew Carnegie III |

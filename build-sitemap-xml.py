@@ -71,6 +71,7 @@ HIGH_PRIORITY = {
     "methodology-foreign-influence.html": (0.75, "monthly"),
     "petition.html": (0.8, "monthly"),
     "compare.html": (0.7, "weekly"),
+    "races/index.html": (0.85, "weekly"),
     "council-notes.html": (0.6, "weekly"),
     "sitemap.html": (0.5, "monthly"),
     "bow-arrow/index.html": (0.7, "monthly"),
@@ -93,6 +94,8 @@ def priority_for(rel: str) -> tuple[float, str]:
         return (0.6, "monthly")
     if rel.startswith("candidates/"):
         return (0.5, "monthly")
+    if rel.startswith("races/"):
+        return (0.8, "weekly")
     if rel.startswith("issues/"):
         return (0.4, "monthly")
     return (0.5, "monthly")
@@ -123,6 +126,8 @@ def shard_key(rel: str) -> str:
         parts = rel.split("/")
         state = parts[1] if len(parts) > 2 else "misc"
         return f"candidates-{state}"
+    if rel.startswith("races/"):
+        return "races"
     if rel.startswith("issues/"):
         return "issues"
     return "navigation"

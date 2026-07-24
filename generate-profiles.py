@@ -1134,13 +1134,19 @@ def generate_profile(candidate, categories, meta, nav=None):
         date_str = ' · '.join(dates)
         decl = cand.get('declared_date') or ''
         decl_str = f', declared {decl}' if decl else ''
+        race_id = cand.get('race_id') or ''
+        race_link = (
+            f' <a href="../../races/{race_id}.html">This race &rarr;</a>'
+            if race_id else ''
+        )
         candidacy_banner_html = (
             '<div class="prof-candidacy-banner" role="note" aria-label="Candidacy status">'
             f'<span class="prof-candidacy-chip {chip_class}">{chip_label}</span>'
             '<div class="prof-candidacy-text">'
             f'Currently running for <strong>{cand.get("office","")}</strong>'
             f'{decl_str}. {date_str}.'
-            f' <a href="../../compare.html?race={cand.get("race_id")}">'
+            f'{race_link}'
+            f' <a href="../../compare.html?race={race_id}">'
             f'Compare against other candidates &rarr;</a>'
             '</div>'
             '</div>'

@@ -1,26 +1,27 @@
 {
-  "generated": "2026-07-25T18:58:41.776563+00:00",
+  "generated": "2026-07-25T19:02:41.902830+00:00",
   "totals": {
     "agents": 16,
-    "operational": 13,
-    "degraded": 3,
-    "jobs": 114,
-    "enabled": 90,
+    "operational": 12,
+    "degraded": 4,
+    "jobs": 119,
+    "enabled": 94,
     "accomplishments": 234,
     "cowork": 38
   },
   "health": {
     "cron": {
-      "enabled": 90,
-      "ran26h": 40,
-      "delivered": 35,
+      "enabled": 94,
+      "ran26h": 43,
+      "delivered": 37,
       "fails": [
         "Evening Civic Watch (6:30 PM) \u2014 Sheriff Roy (sheriff-roy)",
         "Nutrition log ping 19:00 \u2014 Coach Arnie (coach-arnie)",
-        "Fleet Dream Loop HOURLY until 17:30 2026-07-25 (main)"
+        "Fleet Dream Loop HOURLY until 17:30 2026-07-25 (main)",
+        "Airbnb Daily Check-in/Check-out Guardian (hermes)"
       ]
     },
-    "cron_source": "openclaw.sqlite",
+    "cron_source": "openclaw.sqlite + hermes/cron/jobs.json",
     "launchd": {
       "healthy": 52,
       "fails": []
@@ -520,11 +521,11 @@
       "voice": null,
       "tools": [],
       "skills": [],
-      "n_jobs": 0,
-      "n_enabled": 0,
-      "err": 0,
-      "last_ms": null,
-      "status": "operational",
+      "n_jobs": 5,
+      "n_enabled": 4,
+      "err": 1,
+      "last_ms": 1784995346064,
+      "status": "degraded",
       "accomplishments": [
         {
           "date": "2026-07-21",
@@ -661,7 +662,63 @@
           }
         ]
       },
-      "jobs": []
+      "jobs": [
+        {
+          "name": "MOOP Command Noon Capture",
+          "enabled": true,
+          "expr": "0 12 * * *",
+          "tz": "",
+          "channel": "origin",
+          "last_ms": 1784995346064,
+          "status": "ok",
+          "errors": 0,
+          "dur_ms": null
+        },
+        {
+          "name": "Airbnb Daily Check-in/Check-out Guardian",
+          "enabled": true,
+          "expr": "0 12 * * *",
+          "tz": "",
+          "channel": "origin",
+          "last_ms": 1784995209985,
+          "status": "error",
+          "errors": 1,
+          "dur_ms": null
+        },
+        {
+          "name": "MOOP Command Nightly Reconciliation",
+          "enabled": true,
+          "expr": "15 21 * * *",
+          "tz": "",
+          "channel": "origin",
+          "last_ms": 1784942314702,
+          "status": "ok",
+          "errors": 0,
+          "dur_ms": null
+        },
+        {
+          "name": "Melaleuca Monday Briefing",
+          "enabled": true,
+          "expr": "0 9 * * 1",
+          "tz": "",
+          "channel": "origin",
+          "last_ms": 1784552468689,
+          "status": "ok",
+          "errors": 0,
+          "dur_ms": null
+        },
+        {
+          "name": "Grok Sprint Read-Only Overwatch",
+          "enabled": false,
+          "expr": "once in 30m",
+          "tz": "",
+          "channel": "telegram",
+          "last_ms": 1784232032441,
+          "status": "ok",
+          "errors": 0,
+          "dur_ms": null
+        }
+      ]
     },
     {
       "id": "cursor",

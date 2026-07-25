@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Fredericksburg Christ-Centered Commerce | C5iSR</title>
+  <meta name="description" content="Scored map of Fredericksburg-area businesses for Christ-centered patronage and network. Ownership, alignment, reliability." />
+  <style>
+    :root {
+      --bg: #0b1210;
+      --bg-card: #14201c;
+      --gold: #c9a84c;
+      --gold-dim: rgba(201,168,76,0.15);
+      --text: #f2efe6;
+      --gray: #9aa39a;
+      --border: rgba(201,168,76,0.22);
+      --green: #2ecc71;
+      --yellow: #f1c40f;
+      --red: #e74c3c;
+      --black-band: #555;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: Georgia, "Times New Roman", serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.55;
+    }
+    a { color: var(--gold); }
+    .wrap { max-width: 920px; margin: 0 auto; padding: 24px 18px 80px; }
+    .module-tag {
+      display: inline-block;
+      background: var(--gold-dim);
+      border: 1px solid rgba(201,168,76,0.35);
+      color: var(--gold);
+      font-family: Inter, system-ui, sans-serif;
+      font-size: 0.72rem;
+      font-weight: 600;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      padding: 4px 14px;
+      border-radius: 20px;
+      margin-bottom: 16px;
+    }
+    h1 {
+      font-size: clamp(1.8rem, 4vw, 2.6rem);
+      font-weight: 400;
+      margin: 0 0 8px;
+      line-height: 1.15;
+    }
+    h1 span { color: var(--gold); }
+    .subtitle {
+      font-family: Inter, system-ui, sans-serif;
+      color: var(--gray);
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      font-size: 0.85rem;
+      margin-bottom: 18px;
+    }
+    blockquote {
+      margin: 0 0 28px;
+      padding: 16px 18px;
+      border-left: 3px solid var(--gold);
+      background: rgba(255,255,255,0.03);
+      color: #ddd6c5;
+      font-size: 1.05rem;
+    }
+    .bands {
+      display: flex; flex-wrap: wrap; gap: 10px;
+      font-family: Inter, system-ui, sans-serif;
+      font-size: 0.82rem;
+      margin-bottom: 28px;
+    }
+    .band-pill {
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      padding: 6px 12px;
+      background: var(--bg-card);
+    }
+    .panel {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 20px;
+      margin-bottom: 18px;
+    }
+    .panel h2 {
+      font-size: 1.15rem;
+      color: var(--gold);
+      margin: 0 0 10px;
+      font-weight: 400;
+    }
+    .panel p, .panel li { color: #d7d2c6; font-size: 0.98rem; }
+    .featured {
+      display: grid;
+      gap: 14px;
+    }
+    @media (min-width: 720px) {
+      .featured { grid-template-columns: 1.2fr 1fr; }
+    }
+    .biz-card {
+      background: linear-gradient(160deg, rgba(46,204,113,0.08), transparent 55%), var(--bg-card);
+      border: 1px solid rgba(46,204,113,0.35);
+      border-radius: 14px;
+      padding: 18px;
+    }
+    .biz-card .eyebrow {
+      font-family: Inter, system-ui, sans-serif;
+      font-size: 0.7rem;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--green);
+      font-weight: 700;
+      margin-bottom: 6px;
+    }
+    .biz-card h3 { margin: 0 0 6px; font-size: 1.35rem; font-weight: 400; }
+    .meta {
+      font-family: Inter, system-ui, sans-serif;
+      font-size: 0.82rem;
+      color: var(--gray);
+      margin-bottom: 10px;
+    }
+    .map-stub {
+      min-height: 220px;
+      border-radius: 12px;
+      border: 1px dashed rgba(201,168,76,0.35);
+      background:
+        radial-gradient(circle at 62% 48%, rgba(46,204,113,0.55) 0 7px, transparent 8px),
+        linear-gradient(180deg, #1a2822, #101816);
+      display: flex; align-items: flex-end; justify-content: center;
+      padding: 14px;
+      font-family: Inter, system-ui, sans-serif;
+      font-size: 0.8rem;
+      color: var(--gray);
+      text-align: center;
+    }
+    .sister {
+      display: grid; gap: 12px;
+    }
+    @media (min-width: 640px) { .sister { grid-template-columns: 1fr 1fr; } }
+    .sister a.card {
+      display: block;
+      text-decoration: none;
+      color: inherit;
+      border: 1px solid rgba(201,168,76,0.35);
+      border-radius: 12px;
+      padding: 16px;
+      background: linear-gradient(135deg, rgba(201,168,76,0.10), rgba(30,58,95,0.08));
+    }
+    .sister .kicker {
+      font-family: Inter, system-ui, sans-serif;
+      font-size: 0.72rem;
+      color: var(--gold);
+      letter-spacing: 1.2px;
+      text-transform: uppercase;
+      font-weight: 700;
+    }
+    .cta-row {
+      display: flex; flex-wrap: wrap; gap: 10px;
+      margin-top: 14px;
+    }
+    .btn {
+      font-family: Inter, system-ui, sans-serif;
+      display: inline-block;
+      text-decoration: none;
+      font-weight: 700;
+      font-size: 0.88rem;
+      padding: 10px 16px;
+      border-radius: 8px;
+      border: 1px solid var(--gold);
+      color: var(--gold);
+      background: var(--gold-dim);
+    }
+    .btn.solid {
+      background: rgba(201,168,76,0.28);
+      color: var(--text);
+    }
+    .submit-cta {
+      border: 1px dashed rgba(201,168,76,0.35);
+      border-radius: 12px;
+      padding: 26px;
+      text-align: center;
+      margin-top: 8px;
+    }
+    .submit-cta h3 { color: var(--gold); margin: 0 0 8px; font-weight: 400; }
+    .submit-cta p { color: var(--gray); margin: 0 0 14px; font-size: 0.9rem; }
+    footer {
+      margin-top: 36px;
+      padding-top: 18px;
+      border-top: 1px solid var(--border);
+      font-family: Inter, system-ui, sans-serif;
+      font-size: 0.78rem;
+      color: var(--gray);
+      text-align: center;
+    }
+    .soft-banner {
+      font-family: Inter, system-ui, sans-serif;
+      font-size: 0.75rem;
+      background: #1a2a22;
+      color: #b8d4c4;
+      padding: 8px 12px;
+      text-align: center;
+      border-bottom: 1px solid rgba(46,204,113,0.25);
+    }
+  </style>
+</head>
+<body>
+  <div class="soft-banner">Soft launch · Fredericksburg edition · Evidence before heat · Feedback welcome</div>
+  <div class="wrap">
+    <div class="module-tag">C5iSR · Christ-Centered Commerce · v0.3</div>
+    <h1><span>Fredericksburg</span> Christ-Centered Commerce</h1>
+    <p class="subtitle">Fredericksburg · Spotsylvania · Stafford</p>
+    <blockquote>
+      “Not Best of the Berg. Who owns it. How they operate. Whether we’d send a brother.”
+    </blockquote>
+
+    <div class="bands">
+      <span class="band-pill">🟢 Recommended</span>
+      <span class="band-pill">🟡 Caution</span>
+      <span class="band-pill">🔴 Not recommended</span>
+      <span class="band-pill">⬛ Avoid</span>
+      <span class="band-pill">⚪ Unrated</span>
+    </div>
+
+        <div class="featured">
+      <div class="biz-card" id="featured-card">
+        <div class="eyebrow">Featured · First Green</div>
+        <h3>fit20 Cosner's Corner</h3>
+        <div class="meta">Fitness & Training · 9679 Patriot Hwy · Owner/Trainer Tony Plath</div>
+        <p style="margin:0 0 12px;color:#d7d2c6;font-size:0.95rem;">
+          High-intensity 20-minute training. Named local owner on official studio page.
+          Public brand is fitness — not ideology-first. Network path on file.
+        </p>
+        <div class="cta-row">
+          <a class="btn solid" href="business/fit20-cosners-corner.html">Open scorecard →</a>
+          <a class="btn" href="https://www.fit20.com/usa/studios/cosners-corner/contact" target="_blank" rel="noopener">Studio site</a>
+        </div>
+      </div>
+      <div>
+        <div id="map" class="map-stub" style="min-height:240px;padding:0;border-style:solid;overflow:hidden;"></div>
+        <p style="font-family:Inter,system-ui,sans-serif;font-size:0.78rem;color:var(--gray);margin:8px 0 0;">
+          Live map · <code>data/businesses.json</code> · Green = recommended
+        </p>
+      </div>
+    </div>
+
+    <div class="panel" style="margin-top:18px;" id="directory-panel">
+      <h2>Directory</h2>
+      <p style="margin-top:0">Published listings only. Soft launch starts with the first Green exemplar.</p>
+      <div id="biz-list" style="display:grid;gap:12px;"></div>
+    </div>
+
+    <div class="panel" style="margin-top:18px;">
+      <h2>How we score</h2>
+      <p>Ten-point Christ-Centered Commerce scorecard: ownership, truth in marketing, public brand alignment, family safety, worker dignity, community fruit, reliability, financial integrity, digital integrity, network worthiness. Red and Black require public sources. Full rules on the methodology page.</p>
+      <div class="cta-row">
+        <a class="btn" href="methodology.html">Methodology</a>
+        <a class="btn" href="about.html">About</a>
+        <a class="btn" href="directory.html">Directory</a>
+      </div>
+    </div>
+
+    <div class="panel">
+      <h2>Sister pillars</h2>
+      <div class="sister">
+        <a class="card" href="https://usmcmin.org/churches-fxbg.html" target="_blank" rel="noopener">
+          <div class="kicker">Faith</div>
+          <strong>Church Directory</strong>
+          <p style="margin:6px 0 0;color:var(--gray);font-size:0.88rem;">Theological due diligence for where you plant your family.</p>
+        </a>
+        <a class="card" href="https://usmcmin.com/citizen.html?state=VA" target="_blank" rel="noopener">
+          <div class="kicker">Civic</div>
+          <strong>RESOLUTE Citizen</strong>
+          <p style="margin:6px 0 0;color:var(--gray);font-size:0.88rem;">Magistrate scorecards for righteous public authority.</p>
+        </a>
+      </div>
+    </div>
+
+    <div class="submit-cta">
+      <h3>Know a business we should review?</h3>
+      <p>Suggest a listing, correct a fact, note a connection, or appeal a rating. Community input + Principal connection flags — same growth pattern as the church directory.</p>
+      <a class="btn solid" href="suggest.html">Submit feedback →</a>
+    </div>
+
+    <div class="panel">
+      <h2>C5iSR</h2>
+      <p>Need a commerce audit, online presence diagnostic, or ops package for your own business? That’s the commercial offer behind the map.</p>
+      <div class="cta-row">
+        <a class="btn" href="/c5isr/">C5iSR services</a>
+      </div>
+    </div>
+
+    <footer>
+      Christ-Centered Commerce · C5iSR project on USMC Ministries web infrastructure ·
+      Commercial invoices → C5iSR LLC · Soft launch public · Evidence before heat
+    </footer>
+  </div>
+
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script>
+  (async function () {
+    const bandColor = { green:'#2ecc71', yellow:'#f1c40f', red:'#e74c3c', black:'#555', gray:'#9aa39a' };
+    try {
+      const res = await fetch('data/businesses.json', { cache: 'no-store' });
+      const data = await res.json();
+      const list = (data.businesses || []).filter(b => b.publish !== false);
+      const el = document.getElementById('biz-list');
+      if (el) {
+        el.innerHTML = list.map(b => {
+          const c = bandColor[b.overall] || bandColor.gray;
+          return `<div class="biz-card" style="border-color:${c}55;background:linear-gradient(160deg,${c}14,transparent 55%),var(--bg-card)">
+            <div class="eyebrow" style="color:${c}">${(b.overall||'gray').toUpperCase()}${b.featured?' · Featured':''}</div>
+            <h3 style="margin:0 0 6px;font-size:1.2rem;font-weight:400">${b.name}</h3>
+            <div class="meta">${b.category||''} · ${b.address||''} ${b.city||''}</div>
+            <p style="margin:0 0 10px;color:#d7d2c6;font-size:0.92rem">${b.summary||''}</p>
+            <a class="btn solid" href="business/${b.slug}.html">Scorecard →</a>
+          </div>`;
+        }).join('') || '<p style="color:var(--gray)">No published businesses yet.</p>';
+      }
+      if (window.L && document.getElementById('map')) {
+        const map = L.map('map', { scrollWheelZoom:false }).setView([38.3032, -77.4605], 11);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+          attribution: '&copy; OpenStreetMap', maxZoom: 18
+        }).addTo(map);
+        const pts = [];
+        list.forEach(b => {
+          if (b.lat == null || b.lng == null) return;
+          const c = bandColor[b.overall] || bandColor.gray;
+          const m = L.circleMarker([b.lat, b.lng], { radius:9, color:c, fillColor:c, fillOpacity:0.85, weight:2 })
+            .addTo(map)
+            .bindPopup(`<strong>${b.name}</strong><br/>${(b.overall||'').toUpperCase()} · <a href="business/${b.slug}.html">scorecard</a>`);
+          pts.push([b.lat, b.lng]);
+        });
+        if (pts.length) map.fitBounds(pts, { padding:[28,28], maxZoom:13 });
+      }
+    } catch (e) {
+      console.warn('commerce data load failed', e);
+    }
+  })();
+  </script>
+</body>
+</html>

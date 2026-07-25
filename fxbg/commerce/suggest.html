@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Suggest / Feedback — Christ-Centered Commerce</title>
+<meta name="description" content="Suggest a business, correct a fact, note a connection, or appeal a rating."/>
+<style>
+:root{--bg:#0b1210;--bg-card:#14201c;--gold:#c9a84c;--gold-dim:rgba(201,168,76,.15);--text:#f2efe6;--gray:#9aa39a;--border:rgba(201,168,76,.22);--green:#2ecc71;--red:#e74c3c}
+*{box-sizing:border-box}body{margin:0;font-family:Georgia,serif;background:var(--bg);color:var(--text);line-height:1.55}
+a{color:var(--gold)}.wrap{max-width:640px;margin:0 auto;padding:24px 18px 80px}
+.module-tag{display:inline-block;background:var(--gold-dim);border:1px solid rgba(201,168,76,.35);color:var(--gold);font-family:Inter,system-ui,sans-serif;font-size:.72rem;font-weight:600;letter-spacing:2px;text-transform:uppercase;padding:4px 14px;border-radius:20px;margin:14px 0 16px}
+h1{font-size:clamp(1.6rem,4vw,2.2rem);font-weight:400;margin:0 0 10px}h1 span{color:var(--gold)}
+.panel{background:var(--bg-card);border:1px solid var(--border);border-radius:14px;padding:20px;margin-bottom:16px}
+.back{font-family:Inter,system-ui,sans-serif;font-size:.85rem}
+label{display:block;font-family:Inter,system-ui,sans-serif;font-size:.82rem;color:var(--gray);margin:12px 0 4px}
+input,select,textarea{width:100%;background:#0e1714;border:1px solid var(--border);border-radius:8px;color:var(--text);padding:10px 12px;font-family:Inter,system-ui,sans-serif;font-size:.95rem}
+textarea{min-height:130px;resize:vertical}
+.hp{position:absolute;left:-9999px;opacity:0;height:0;width:0}
+.btn{font-family:Inter,system-ui,sans-serif;display:inline-block;border:0;cursor:pointer;font-weight:700;font-size:.9rem;padding:12px 18px;border-radius:8px;background:rgba(201,168,76,.32);color:var(--text);margin-top:16px}
+.note{font-family:Inter,system-ui,sans-serif;font-size:.8rem;color:var(--gray);margin-top:10px}
+.ok{color:var(--green)}.err{color:var(--red)}
+.soft-banner{font-family:Inter,system-ui,sans-serif;font-size:.75rem;background:#1a2a22;color:#b8d4c4;padding:8px 12px;text-align:center;border-bottom:1px solid rgba(46,204,113,.25)}
+footer{margin-top:28px;font-family:Inter,system-ui,sans-serif;font-size:.78rem;color:var(--gray);text-align:center}
+</style>
+</head>
+<body>
+<div class="soft-banner">Feedback lands with Adam · rate-limited · sources help</div>
+<div class="wrap">
+  <a class="back" href="index.html">← Christ-Centered Commerce</a>
+  <div class="module-tag">Feedback</div>
+  <h1>Suggest / <span>correct</span></h1>
+  <div class="panel">
+    <p style="margin-top:0;color:#d7d2c6">Know a business we should review? See an error? Note a connection? Same growth pattern as the church directory.</p>
+    <form id="c3-form">
+      <div class="hp" aria-hidden="true"><label>Company website<input type="text" name="website" tabindex="-1" autocomplete="off"/></div>
+      <label for="type">Type</label>
+      <select id="type" name="type" required>
+        <option value="suggest">Suggest a business</option>
+        <option value="correct">Correct a fact</option>
+        <option value="appeal">Appeal a rating</option>
+        <option value="connection">Note a connection</option>
+        <option value="photo">Photo / source drop</option>
+      </select>
+      <label for="business_name">Business name</label>
+      <input id="business_name" name="business_name" required maxlength="200" placeholder="e.g. fit20 Cosner's Corner"/>
+      <label for="business_id">Business id (optional)</label>
+      <input id="business_id" name="business_id" maxlength="80" placeholder="fit20-cosners-corner"/>
+      <label for="category">Category (optional)</label>
+      <input id="category" name="category" maxlength="80" placeholder="fitness-training"/>
+      <label for="message">Message / evidence</label>
+      <textarea id="message" name="message" required maxlength="4000" placeholder="What should we know? Include public URLs."></textarea>
+      <label for="source_urls">Source URLs (optional)</label>
+      <textarea id="source_urls" name="source_urls" maxlength="2000" placeholder="https://..."></textarea>
+      <label for="adam_connection">Your connection (optional)</label>
+      <select id="adam_connection" name="adam_connection">
+        <option value="none">None / unknown</option>
+        <option value="know_owner">Know the owner</option>
+        <option value="customer">Customer</option>
+        <option value="vendor">Vendor</option>
+        <option value="church_tie">Church tie</option>
+        <option value="other">Other</option>
+      </select>
+      <label for="overall_suggestion">Band suggestion (optional)</label>
+      <select id="overall_suggestion" name="overall_suggestion">
+        <option value="unset">Unset</option>
+        <option value="green">Green</option>
+        <option value="yellow">Yellow</option>
+        <option value="red">Red</option>
+        <option value="black">Black</option>
+        <option value="gray">Gray</option>
+      </select>
+      <label for="submitter_name">Your name (optional)</label>
+      <input id="submitter_name" name="submitter_name" maxlength="120"/>
+      <label for="submitter_email">Email (optional — for follow-up)</label>
+      <input id="submitter_email" name="submitter_email" type="email" maxlength="160"/>
+      <button class="btn" type="submit" id="submit-btn">Send feedback</button>
+      <p class="note" id="status" role="status"></p>
+    </form>
+  </div>
+  <footer>No auto-publish of community Red · Human review · C5iSR / USMC Ministries</footer>
+</div>
+<script>
+(function(){
+  const form = document.getElementById('c3-form');
+  const status = document.getElementById('status');
+  const btn = document.getElementById('submit-btn');
+  const ENDPOINTS = [
+    'https://api.usmcmin.com/commerce/feedback',
+    'https://usmcmin.com/api/commerce/feedback',
+    '/api/commerce/feedback'
+  ];
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    status.className = 'note';
+    status.textContent = 'Sending…';
+    btn.disabled = true;
+    const fd = new FormData(form);
+    const payload = Object.fromEntries(fd.entries());
+    payload.adam_visited = false;
+    payload.product = 'christ-centered-commerce';
+    payload.edition = 'fredericksburg';
+    let lastErr = 'Could not reach feedback API';
+    for (const url of ENDPOINTS) {
+      try {
+        const res = await fetch(url, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+          body: JSON.stringify(payload),
+          mode: 'cors'
+        });
+        if (res.ok) {
+          status.className = 'note ok';
+          status.textContent = 'Received. Thank you — Adam will see this in the feedback queue.';
+          form.reset();
+          btn.disabled = false;
+          return;
+        }
+        lastErr = 'Server ' + res.status;
+      } catch (err) {
+        lastErr = String(err && err.message || err);
+      }
+    }
+    // Fallback: mailto so soft launch never loses signal
+    const subject = encodeURIComponent('[C3 feedback] ' + (payload.type||'') + ' — ' + (payload.business_name||''));
+    const body = encodeURIComponent(
+      'type: ' + payload.type + '\n' +
+      'business: ' + payload.business_name + '\n' +
+      'id: ' + (payload.business_id||'') + '\n' +
+      'category: ' + (payload.category||'') + '\n' +
+      'connection: ' + (payload.adam_connection||'') + '\n' +
+      'band: ' + (payload.overall_suggestion||'') + '\n' +
+      'from: ' + (payload.submitter_name||'') + ' <' + (payload.submitter_email||'') + '>\n\n' +
+      (payload.message||'') + '\n\nSources:\n' + (payload.source_urls||'')
+    );
+    status.className = 'note';
+    status.innerHTML = 'API path not live yet (' + lastErr + '). Opening mail fallback to Adam…';
+    window.location.href = 'mailto:adam.l.johns@gmail.com?subject=' + subject + '&body=' + body;
+    btn.disabled = false;
+  });
+})();
+</script>
+</body>
+</html>

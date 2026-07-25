@@ -1,10 +1,49 @@
 #!/usr/bin/env python3
 """Generate individual issue detail pages from issues.json"""
+import html
 import json
 import os
 
+def _esc(s):
+    return html.escape(str(s or ''), quote=True)
+
+def _json_ld(issue, page_url):
+    data = {
+        '@context': 'https://schema.org',
+        '@type': 'NewsArticle',
+        'headline': issue['title'],
+        'description': issue.get('summary', ''),
+        'url': page_url,
+        'inLanguage': 'en-US',
+        'author': {
+            '@type': 'Organization',
+            'name': 'U.S.M.C. Ministries',
+            'url': 'https://usmcmin.com',
+        },
+        'publisher': {
+            '@type': 'Organization',
+            'name': 'U.S.M.C. Ministries',
+            'url': 'https://usmcmin.com',
+            'logo': {
+                '@type': 'ImageObject',
+                'url': 'https://usmcmin.com/assets/img/logo.png',
+            },
+        },
+        'isPartOf': {
+            '@type': 'WebPage',
+            'name': 'RESOLUTE Citizen Issues',
+            'url': 'https://usmcmin.com/citizen-issues.html',
+        },
+    }
+    if issue.get('date'):
+        data['datePublished'] = issue['date']
+    return json.dumps(data, ensure_ascii=False)
+
 def generate_issue_page(issue):
     slug = issue['slug']
+    page_url = f'https://usmcmin.com/issues/{slug}.html'
+    title = issue['title']
+    summary = issue.get('summary', '')
     urgency_class = {'critical': 'urgency-critical', 'soon': 'urgency-soon', 'info': 'urgency-info'}.get(issue.get('urgency', 'info'), 'urgency-info')
     card_class = {'critical': 'issue-card-urgent', 'soon': 'issue-card-upcoming', 'info': 'issue-card-info'}.get(issue.get('urgency', 'info'), 'issue-card-info')
 
@@ -66,12 +105,27 @@ def generate_issue_page(issue):
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>{issue['title']} — RESOLUTE Citizen | U.S.M.C. Ministries</title>
-  <meta name="description" content="{issue.get('summary', '')}">
+  <link rel="canonical" href="{page_url}">
+  <title>{_esc(title)} — RESOLUTE Citizen | U.S.M.C. Ministries</title>
+  <meta name="description" content="{_esc(summary)}">
+  <meta property="og:title" content="{_esc(title)} — RESOLUTE Citizen">
+  <meta property="og:description" content="{_esc(summary)}">
+  <meta property="og:url" content="{page_url}">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="RESOLUTE Citizen">
+  <meta property="og:image" content="https://usmcmin.com/assets/og/og-citizen.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="{_esc(title)}">
+  <meta name="twitter:description" content="{_esc(summary)}">
+  <meta name="twitter:image" content="https://usmcmin.com/assets/og/og-citizen.jpg">
+  <script type="application/ld+json">{_json_ld(issue, page_url)}</script>
   <link rel="stylesheet" href="../assets/css/main.min.css">
   <link rel="icon" type="image/svg+xml" href="../assets/icons/favicon.svg">
   <link rel="icon" type="image/png" sizes="32x32" href="../assets/icons/favicon-32.png">
   <link rel="apple-touch-icon" href="../assets/icons/apple-touch-icon.png">
+  <script>(function(){{try{{var s=localStorage.getItem('usmc-theme')||localStorage.getItem('theme');if(s!=='light')document.documentElement.setAttribute('data-theme','dark');}}catch(e){{}}}})();</script>
   <style>
     .issue-container {{ max-width: 900px; margin: 0 auto; padding: 20px; }}
     .issue-back {{ display: inline-block; color: var(--accent); text-decoration: none; font-size: 0.85rem; margin-bottom: 20px; }}

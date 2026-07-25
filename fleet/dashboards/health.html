@@ -1,45 +1,85 @@
 <!DOCTYPE html>
-<html lang="en"><head>
-<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Health & Fitness Dashboard — Fleet Domain Dashboard</title>
-<style>
-body{margin:0;font-family:Inter,system-ui,sans-serif;background:#0b0d10;color:#eee}
-.wrap{max-width:980px;margin:0 auto;padding:1.25rem 1rem 3rem}
-.nav a{color:#bbb;text-decoration:none;border:1px solid rgba(255,255,255,.1);padding:.3rem .7rem;border-radius:999px;font-size:.8rem;margin-right:.4rem;display:inline-block;margin-bottom:.4rem}
-h1{margin:.8rem 0 .3rem;font-size:1.55rem}
-.sub{color:#9aa;margin-bottom:1.2rem}
-.card{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08);border-radius:14px;padding:1rem;margin:.7rem 0}
-.k{color:#C9A227;font-weight:700}.muted{color:#888;font-size:.82rem}
-.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:.7rem}
-.stat{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08);border-radius:12px;padding:.8rem}
-.stat .n{font-size:1.35rem;font-weight:700;color:#C9A227}
-.stat .l{font-size:.72rem;color:#9aa;text-transform:uppercase}
-pre{white-space:pre-wrap;font-size:.78rem;color:#bbb;background:rgba(0,0,0,.25);padding:.7rem;border-radius:8px;overflow:auto}
-</style></head><body><div class="wrap">
-<div class="nav">
-<a href="../index.html">Fleet</a>
-<a href="../usage.html">Usage</a>
-<a href="../cowork.html">Cowork</a>
-<a href="../coach-arnie.html">Agent page</a>
-</div>
-<h1>Health & Fitness Dashboard</h1>
-<p class="sub">Coach Arnie + Doc Hartley shared board — Garmin vitals, training load, clinical notes.<br><span class="muted">Owner: coach-arnie · Generated 2026-07-10 17:24 EDT</span></p>
-
-<div class="grid">
-  <div class="stat"><div class="n">Coach</div><div class="l">Training owner</div></div>
-  <div class="stat"><div class="n">Doc</div><div class="l">Clinical owner</div></div>
-  <div class="stat"><div class="n">yes</div><div class="l">garmin data</div></div>
-</div>
-<div class="card"><div class="k">Latest garmin-rounds keys</div>
-<pre>['ok', 'ts', 'ts_local', 'url', 'captured', 'core_total', 'class', 'reason', 'vitals']</pre>
-<p class="muted">Source: ~/.openclaw/shared-memory/context/garmin-rounds-latest.json · profile: personal Chrome</p>
-</div>
-<div class="card"><div class="k">Agent deep-dives</div>
-<p><a href="../coach-arnie.html" style="color:#C9A227">Coach Arnie</a> · <a href="../doc.html" style="color:#C9A227">Doc Hartley</a></p>
-</div>
-
-<div class="card"><div class="k">Update doctrine</div>
-<p class="muted">Coach + Doc co-own this board. Refresh after garmin-rounds and clinical reads.</p>
-<p class="muted">Hermes + owning PSA should refresh this board from live ops data. Log wins with <code>~/Scripts/fleet-log-win.py coach-arnie "title" "detail"</code>.</p>
-</div>
-</div></body></html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <script>(function(){try{var s=localStorage.getItem('usmc-theme')||localStorage.getItem('theme');if(s!=='light')document.documentElement.setAttribute('data-theme','dark');}catch(e){}})();</script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Health &amp; Fitness Dashboard — Fleet Command</title>
+  <meta name="description" content="Coach + Doc shared health board.">
+  <meta name="robots" content="noindex">
+  <link rel="stylesheet" href="/assets/css/main.min.css">
+  <link rel="stylesheet" href="/assets/css/fleet.css">
+  <link rel="icon" type="image/svg+xml" href="/assets/icons/favicon.svg">
+</head>
+<body>
+<a href="#main" class="skip-link">Skip to content</a>
+<nav>
+  <a href="/" class="nav-brand" style="text-decoration:none">
+    <img src="/assets/img/logo.png" alt="U.S.M.C. Ministries" style="object-fit:contain">
+    <div class="nav-brand-text"><div class="name">U.S.M.C. Ministries</div><div class="tag">Fleet Command</div></div>
+  </a>
+  <ul class="nav-links">
+    <li><a href="/fleet/index.html">Dashboard</a></li>
+    <li><a href="/fleet/usage.html">Usage</a></li>
+    <li><a href="/fleet/cowork.html">Cowork</a></li>
+    <li><a href="/fleet/dashboards/index.html">Domain Boards</a></li>
+    <li><a href="/">Main Site</a></li>
+    <li><a href="https://usmcmin.org" target="_blank">Ministry Site</a></li>
+  </ul>
+  <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme" title="Switch light/dark mode">&#127769;</button>
+  <button class="nav-toggle" aria-label="Menu"><span></span><span></span><span></span></button>
+</nav>
+<main id="main">
+<section class="fleet-hero">
+  <div class="container">
+    <div class="fleet-eyebrow">HEALTH · COACH + DOC</div>
+    <h1>Health &amp; Fitness Dashboard</h1>
+    <p class="fleet-sub">Garmin vitals, training load, clinical notes.
+       Owners: <a href="/fleet/coach-arnie.html">Coach Arnie</a> · <a href="/fleet/doc.html">Doc Hartley</a>.</p>
+    <div class="stat-strip">
+      <div class="stat"><div class="stat-n">Coach</div><div class="stat-l">Training</div></div>
+      <div class="stat"><div class="stat-n">Doc</div><div class="stat-l">Clinical</div></div>
+      <div class="stat"><div class="stat-n status-good">yes</div><div class="stat-l">Garmin data</div></div>
+    </div>
+  </div>
+</section>
+<section class="container fleet-section">
+  <h2 class="section-head">Latest garmin-rounds keys</h2>
+  <pre class="mono" style="white-space:pre-wrap;font-size:.82rem;padding:1rem;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius)">['ok', 'ts', 'ts_local', 'url', 'captured', 'core_total', 'class', 'reason', 'vitals']</pre>
+  <p class="section-note">Source: ~/.openclaw/shared-memory/context/garmin-rounds-latest.json · profile: fit20 Chrome</p>
+</section>
+<section class="container fleet-section">
+  <h2 class="section-head">Update Doctrine</h2>
+  <p class="section-note">Coach + Doc co-own this board. Refresh after garmin-rounds and clinical reads. Log wins with <code class="mono">~/Scripts/fleet-log-win.py coach-arnie "title" "detail"</code>.</p>
+</section></main>
+<footer>
+  <div class="footer-inner">
+    <div class="footer-bottom">
+      <div style="color:var(--gray);font-size:0.85rem;margin-bottom:0.4rem">
+        Fleet Command Center — auto-generated from live OpenClaw + Hermes state. Last updated: <strong>2026-07-25 23:14 UTC</strong></div>
+      <div style="color:var(--gray);font-size:0.8rem">© 2026 U.S.M.C. Ministries &nbsp;|&nbsp;
+        <a href="/fleet/index.html">Dashboard</a> &nbsp;|&nbsp;
+        <a href="/sitemap.html">Sitemap</a> &nbsp;|&nbsp;
+        <a href="/">Main Site</a></div>
+    </div>
+  </div>
+</footer>
+<script src="/assets/js/main.js" defer></script>
+<script>
+(function(){
+  var GEN="2026-07-25T23:14:28.222542+00:00";
+  function rel(ms){ms=+ms;if(!ms)return"—";var s=(Date.now()-ms)/1000;
+    if(s<0)return"scheduled";if(s<3600)return Math.max(0,Math.floor(s/60))+"m ago";
+    if(s<86400)return Math.floor(s/3600)+"h ago";return Math.floor(s/86400)+"d ago";}
+  function tick(){document.querySelectorAll(".rel").forEach(function(e){
+    var t=e.getAttribute("data-ts");if(t&&t!=="0")e.textContent=rel(t);});}
+  tick();setInterval(tick,60000);
+  setInterval(function(){
+    if(document.visibilityState!=="visible")return;
+    fetch("/fleet/fleet-data.json?_="+Date.now()).then(function(r){return r.json();}).then(function(d){
+      if(d&&d.generated&&d.generated!==GEN)location.reload();}).catch(function(){});
+  },180000);
+})();
+</script>
+</body>
+</html>

@@ -2,11 +2,11 @@
 
 const { fieldManual: module03FieldManual } = require('./module-03.field-manual.js');
 
-const sharedSupport =`This exercise is for a basically safe marriage. It is not a substitute for crisis care, medical treatment, addiction recovery, trauma care, or qualified pastoral and clinical counsel. If there are threats, stalking, coercion, violence, sexual pressure, active addiction, an ongoing affair, or fear of retaliation, do not use a joint exercise to force disclosure or reconciliation. Seek confidential, individual help and prioritize immediate safety. In the United States, call or text 911 for immediate danger and contact the National Domestic Violence Hotline for confidential planning. A husband must never use Scripture, forgiveness, headship, money, children, or course completion to demand access, silence concern, or prevent help.`;
+const sharedSupport =`This course is formation for a basically safe marriage. It is not crisis care, clinical treatment, addiction recovery, trauma care, or a substitute for qualified pastoral counsel. If there is immediate danger, contact emergency services. Do not use joint exercises to force disclosure or reconciliation where coercion, threats, violence, or fear of retaliation are present. A husband must never use Scripture, forgiveness, headship, money, children, or course completion to demand access, silence concern, or prevent help.`;
 
 const commonResources = [
-  { label: 'Read Scripture in several translations at BibleGateway', href: 'https://www.biblegateway.com/' },
-  { label: 'National Domestic Violence Hotline — confidential U.S. support', href: 'https://www.thehotline.org/' }
+  { label: 'Read Scripture in the MOOP Bible Translation Engine on usmcmin.org', href: 'https://usmcmin.org/bible.html' },
+  
 ];
 
 const course = {

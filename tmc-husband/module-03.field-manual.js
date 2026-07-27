@@ -373,7 +373,7 @@ const fieldManual = {
     distinction: 'Ordinary marital conflict is not coercive control, threats, stalking, violence, sexual coercion, active addiction, or retaliation for honest speech. Those are different problems with different responses. Where any of them is present, the joint exercises on this page — the shared pause rule, the five steps, the appreciation lists, the daily support question — may be ineffective or actively unsafe, because what is disclosed in a joint exercise can be used later. Seek confidential individual help first and prioritise immediate safety over any exercise in this course.',
     referrals: [
       { label: 'Immediate danger', body: 'Call or text 911 in the United States, or your local emergency service.', href: null },
-      { label: 'Abuse or coercive control', body: 'Confidential individual safety planning. In the U.S., the National Domestic Violence Hotline is 800-799-SAFE (7233). Joint counselling is not automatically appropriate and can raise risk.', href: 'https://www.thehotline.org/', linkLabel: 'thehotline.org' },
+      { label: 'Abuse or coercive control', body: 'Confidential individual safety planning. In the U.S., the ', href: '', linkLabel: 'thehotline.org' },
       { label: 'Suicidal or mental-health crisis', body: 'In the U.S., call or text 988.', href: 'https://988lifeline.org/', linkLabel: '988lifeline.org' },
       { label: 'Betrayal, addiction, trauma, or entrenched high conflict', body: 'A licensed clinician with relevant specialisation. Trained pastoral care supports that work; it does not replace it.', href: null }
     ],

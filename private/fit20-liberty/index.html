@@ -4,14 +4,14 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <meta name="robots" content="noindex,nofollow" />
-<title>fit20 Liberty Place · Studio Command V1</title>
+<title>fit20 Liberty Place · Studio Command V1.1</title>
 <link rel="icon" href="assets/favicon.png" />
 <style>
 :root{--ink:#1b1f1c;--muted:#5f675f;--line:#d0d5d0;--paper:#f3f5f2;--card:#fff;--charcoal:#2f3430;--lime:#5fa312;--lime-dk:#3d7a14;--lime-soft:#eaf6d8;--warn:#d97706;--warn-soft:#fef3c7;--bad:#8a2f2f;--ok:#3d7a14;--ok-soft:#e7f3dc}
 *{box-sizing:border-box}html,body{margin:0;padding:0;font-family:"Avenir Next","Segoe UI",Helvetica,Arial,sans-serif;background:var(--paper);color:var(--ink);min-height:100%}
-a{color:var(--lime-dk)}
-#gate{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px;background:radial-gradient(ellipse at 20% 0%,#3d7a1433,transparent 50%),linear-gradient(160deg,#2f3430 0%,#1b1f1c 55%,#2a3228 100%)}
-.gate-card{width:min(440px,100%);background:#fff;border-radius:14px;padding:28px 26px 24px;box-shadow:0 20px 50px rgba(0,0,0,.35)}
+a{color:var(--lime-dk);text-decoration:none}a:hover{text-decoration:underline}
+#gate{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px;background:radial-gradient(ellipse at 20% 0%,#3d7a1433,transparent 50%),linear-gradient(160deg,#2f3430,#1b1f1c 55%,#2a3228)}
+.gate-card{width:min(460px,100%);background:#fff;border-radius:14px;padding:28px 26px 24px;box-shadow:0 20px 50px rgba(0,0,0,.35)}
 .gate-card .eyebrow{font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--lime-dk);font-weight:800;margin-bottom:6px}
 .gate-card h1{margin:0 0 8px;font-size:22px;color:var(--charcoal);line-height:1.15}
 .gate-card p{margin:0 0 16px;font-size:13.5px;color:var(--muted);line-height:1.4}
@@ -22,18 +22,24 @@ a{color:var(--lime-dk)}
 .gate-err{display:none;margin-top:10px;font-size:12.5px;color:var(--bad);text-align:center}
 .gate-foot{margin-top:14px;font-size:11px;color:#8a928a;text-align:center}
 #app{display:none}
-.top{background:var(--charcoal);color:#f4f7f2;padding:14px 18px 12px;display:flex;flex-wrap:wrap;gap:10px 18px;align-items:flex-end;justify-content:space-between}
+.top{background:var(--charcoal);color:#f4f7f2;padding:14px 18px 12px}
+.top-row{display:flex;flex-wrap:wrap;gap:12px 18px;align-items:flex-end;justify-content:space-between}
 .brand-lockup{display:flex;gap:12px;align-items:center}
-.brand-logo{height:34px;width:auto;background:#fff;border-radius:6px;padding:4px 8px}
+.brand-logo{height:36px;width:auto;background:#fff;border-radius:6px;padding:4px 8px}
 .top .eyebrow{font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:#d6f0a8;font-weight:700}
 .top h1{margin:2px 0 0;font-size:20px;font-weight:750}
+.studio-switch{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+.studio-switch a{font-size:12px;font-weight:700;padding:6px 12px;border-radius:999px;border:1px solid #5a6166;color:#d0d5d0}
+.studio-switch a.on{background:var(--lime);border-color:var(--lime);color:#fff}
+.studio-switch a:hover{border-color:var(--lime);text-decoration:none}
 .quicklinks{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
-.quicklinks a{color:#d6f0a8;font-size:12px;font-weight:650;text-decoration:none;border:1px solid #5a6166;padding:5px 9px;border-radius:999px}
-.quicklinks a:hover{border-color:var(--lime);background:#3a403c}
+.quicklinks a{color:#d6f0a8;font-size:12px;font-weight:650;border:1px solid #5a6166;padding:5px 9px;border-radius:999px}
+.quicklinks a:hover{border-color:var(--lime);background:#3a403c;text-decoration:none}
 .top .meta{font-size:12px;color:#d0d5d0;text-align:right;line-height:1.35}
 .top .meta strong{color:#d6f0a8}
 .banner{background:var(--warn-soft);border-bottom:1px solid #f0d78c;color:#7a4e00;font-size:12.5px;padding:8px 18px}
 .banner b{color:#5c3a00}
+.banner.ok{background:var(--ok-soft);border-bottom-color:#b7d7a0;color:#2f5a14}
 .wrap{max-width:1180px;margin:0 auto;padding:16px 16px 40px}
 .kpis{display:grid;grid-template-columns:repeat(6,1fr);gap:10px;margin-bottom:14px}
 @media(max-width:960px){.kpis{grid-template-columns:repeat(3,1fr)}}
@@ -43,7 +49,7 @@ a{color:var(--lime-dk)}
 .kpi .val{font-size:26px;font-weight:800;color:var(--charcoal);line-height:1.1;margin-top:4px}
 .kpi .sub{font-size:11px;color:var(--muted);margin-top:2px}
 .kpi.ok .val{color:var(--ok)}.kpi.hot .val{color:var(--warn)}.kpi.bad .val{color:var(--bad)}
-.grid2{display:grid;grid-template-columns:1.2fr 1fr;gap:12px;margin-bottom:12px}
+.grid2{display:grid;grid-template-columns:1.35fr 1fr;gap:12px;margin-bottom:12px}
 @media(max-width:900px){.grid2{grid-template-columns:1fr}}
 .card{background:var(--card);border:1px solid var(--line);border-radius:10px;overflow:hidden;margin-bottom:12px}
 .card-h{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:10px 12px;background:var(--charcoal);color:#f4f7f2}
@@ -52,125 +58,264 @@ a{color:var(--lime-dk)}
 .card-b{padding:10px 12px 12px}
 table{width:100%;border-collapse:collapse;font-size:12.5px}
 th{text-align:left;font-size:10px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);border-bottom:1px solid var(--line);padding:0 6px 6px}
-td{padding:7px 6px;border-bottom:1px solid #e8ebe8;vertical-align:top}
+td{padding:8px 6px;border-bottom:1px solid #e8ebe8;vertical-align:top}
 tr:last-child td{border-bottom:0}
 .tag{display:inline-block;font-size:10px;font-weight:700;padding:2px 7px;border-radius:999px}
 .tag-hot{background:#fee2e2;color:#991b1b}.tag-warm{background:var(--warn-soft);color:#92400e}.tag-ok{background:var(--ok-soft);color:var(--ok)}.tag-demo{background:var(--lime-soft);color:var(--lime-dk)}
-.call-row{display:flex;gap:10px;padding:10px 0;border-bottom:1px dashed var(--line)}
-.call-row:last-child{border-bottom:0}
-.rank{flex:0 0 28px;height:28px;border-radius:50%;background:var(--lime-soft);color:var(--lime-dk);font-weight:800;display:flex;align-items:center;justify-content:center;font-size:13px}
-.call-row h3{margin:0 0 2px;font-size:14px}.call-row p{margin:0;font-size:12px;color:var(--muted);line-height:1.35}
-.why{margin-top:4px;font-size:12px;color:var(--ink)}
-.member-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px 10px;max-height:420px;overflow:auto;font-size:12.5px}
-@media(max-width:800px){.member-grid{grid-template-columns:repeat(2,1fr)}}
-.member-grid div{padding:6px 8px;border:1px solid #e8ebe8;border-radius:7px;background:#fafbfa}
-.member-grid b{display:block;color:var(--charcoal)}
-.member-grid span{color:var(--muted);font-size:11px}
-.footer{margin-top:18px;font-size:11px;color:var(--muted);text-align:center}
-.btn{border:1px solid var(--line);background:#fff;border-radius:7px;padding:7px 10px;font-size:12px;font-weight:650;cursor:pointer;color:var(--charcoal);text-decoration:none;display:inline-block}
+.lead{border:1px solid var(--line);border-radius:10px;padding:12px;margin-bottom:10px;background:#fafbfa}
+.lead:last-child{margin-bottom:0}
+.lead-top{display:flex;gap:10px;align-items:flex-start}
+.rank{flex:0 0 28px;height:28px;border-radius:50%;background:var(--lime-soft);color:var(--lime-dk);font-weight:800;display:flex;align-items:center;justify-content:center}
+.lead h3{margin:0 0 4px;font-size:15px}
+.lead .why{font-size:12.5px;color:var(--ink);margin:6px 0 8px;line-height:1.35}
+.contact-row{display:flex;flex-wrap:wrap;gap:8px;margin-top:6px}
+.contact-row a,.btn{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line);background:#fff;border-radius:8px;padding:7px 10px;font-size:12px;font-weight:700;color:var(--charcoal);cursor:pointer}
+.contact-row a.phone{background:var(--charcoal);color:#fff;border-color:var(--charcoal)}
+.contact-row a.email{background:var(--lime-soft);border-color:#cfe8a8;color:var(--lime-dk)}
+.contact-row a.zoho{background:#fff}
+.contact-row a:hover{border-color:var(--lime);text-decoration:none}
+.phone-lg{font-size:14px;font-weight:800;letter-spacing:.02em}
+.email-lg{font-size:12.5px;word-break:break-all}
 .btn.primary{background:var(--charcoal);color:#fff;border-color:var(--charcoal)}
 .btn-row{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
+.footer{margin-top:18px;font-size:11px;color:var(--muted);text-align:center}
+.copy{font-size:12.5px;color:var(--muted);line-height:1.45}
 </style>
 </head>
 <body>
 <div id="gate">
   <div class="gate-card">
     <img src="assets/fit20-logo.png" alt="fit20" style="width:145px;height:auto;margin-bottom:14px;" />
-    <div class="eyebrow">Private studio workspace · Not public navigation</div>
-    <h1>fit20 Liberty Place<br/>Studio Command</h1>
-    <p>Studio Command for <b>Liberty Place</b>. Names only on the board — no phones/emails stored in this page.</p>
+    <div class="eyebrow">Private · PIN + host path · Not public nav</div>
+    <h1>fit20 Liberty Place<br/>Studio Command V1.1</h1>
+    <p>Clickable leads with <b>phone + email</b> from live Cosner Zoho. Call / SMS / mailto / Zoho one-tap. Same shell for both studios.</p>
     <input id="pin" type="password" inputmode="numeric" maxlength="8" placeholder="••••" autocomplete="off" />
     <button type="button" id="unlock">Unlock dashboard</button>
     <div class="gate-err" id="gateErr">Wrong PIN. Try again.</div>
-    <div class="gate-foot">V1.0 Liberty · Coach Arnie · PIN gate + host private path</div>
+    <div class="gate-foot">V1.1 · Coach Arnie · 2026-07-28 19:30 EDT</div>
   </div>
 </div>
 <div id="app">
   <header class="top">
-    <div>
-      <div class="brand-lockup">
-        <img class="brand-logo" src="assets/fit20-logo.png" alt="fit20" />
-        <div>
-          <div class="eyebrow">Studio Command · Liberty Place</div>
-          <h1>Private Studio Dashboard</h1>
+    <div class="top-row">
+      <div>
+        <div class="brand-lockup">
+          <img class="brand-logo" src="assets/fit20-logo.png" alt="fit20" />
+          <div>
+            <div class="eyebrow">Studio Command · Liberty Place</div>
+            <h1>Private Studio OS</h1>
+          </div>
         </div>
+        <div class="studio-switch">
+          <a class="" href="/private/fit20-cosner/">Cosner’s Corner</a>
+          <a class="on" href="/private/fit20-liberty/">Liberty Place</a>
+        </div>
+        <nav class="quicklinks">
+          <a href="https://calendar.google.com/calendar/u/0/r/week" target="_blank" rel="noopener">Calendar ↗</a>
+          <a href="https://crm.zoho.eu/crm/org20068806089/tab/Home/begin" target="_blank" rel="noopener">Cosner Zoho ↗</a>
+          <a href="https://crm.zoho.eu/crm/org20068806089/tab/Contacts" target="_blank" rel="noopener">Members module ↗</a>
+          <a href="https://fit20app.com" target="_blank" rel="noopener">Trainers App ↗</a>
+          <a href="https://www.fit20.com/usa/home" target="_blank" rel="noopener">fit20 USA ↗</a>
+        </nav>
       </div>
-      <nav class="quicklinks" aria-label="Studio systems">
-        <a href="https://calendar.google.com/calendar/u/0/r/week" target="_blank" rel="noopener noreferrer">Studio calendar ↗</a>
-        <a href="https://crm.zoho.eu/crm/org20068806089/tab/Home/begin" target="_blank" rel="noopener noreferrer">Cosner Zoho ↗</a>
-        <a href="https://fit20app.com" target="_blank" rel="noopener noreferrer">Trainers App ↗</a>
-        <a href="https://www.fit20.com/usa/home" target="_blank" rel="noopener noreferrer">fit20 USA ↗</a>
-      </nav>
-    </div>
-    <div class="meta">
-      <div><strong>V1.0 Liberty</strong></div>
-      <div>Studio: Liberty Place</div>
-      <div>SC: Adam Johns · NASM</div>
-      <div id="asOf">As of: —</div>
+      <div class="meta">
+        <div><strong>V1.1</strong> · clickable leads</div>
+        <div>Studio: Liberty Place</div>
+        <div>SC: Adam Johns · NASM</div>
+        <div id="asOf">As of: —</div>
+      </div>
     </div>
   </header>
-  
-  <div class="banner"><b>LIBERTY DASHBOARD · 2026-07-28 14:45 EDT.</b> Prior mixed board retargeted to <b>Liberty Place</b>. Trainers App switcher shows Liberty <b>168</b>. You worked Liberty today. Cosner is a separate board.</div>
+  <div class="banner ok"><b>V1.1 LIBERTY · 2026-07-28 19:30 EDT.</b> Same command shell as Cosner. Shared Cosner Zoho lead queue is clickable (phone/email). Liberty App board = <b>168</b>. You worked Liberty today; Cosner tomorrow.</div>
   <div class="wrap">
-    <section class="kpis">
-      <div class="kpi ok"><div class="lbl">Liberty board</div><div class="val">168</div><div class="sub">Trainers App</div></div>
-      <div class="kpi"><div class="lbl">Aquia board</div><div class="val">66</div><div class="sub">App switcher</div></div>
-      <div class="kpi"><div class="lbl">Cosner board</div><div class="val">151</div><div class="sub">see Cosner dash</div></div>
-      <div class="kpi hot"><div class="lbl">Today focus</div><div class="val">LIB</div><div class="sub">Adam @ Liberty</div></div>
-      <div class="kpi"><div class="lbl">Lobby sign</div><div class="val">V2</div><div class="sub">Liberty PDF sent</div></div>
-      <div class="kpi ok"><div class="lbl">App login</div><div class="val">OK</div><div class="sub">fit20 Google</div></div>
-    </section>
+    
+<section class="kpis">
+  <div class="kpi ok"><div class="lbl">Liberty board</div><div class="val">168</div><div class="sub">Trainers App</div></div>
+  <div class="kpi"><div class="lbl">Aquia</div><div class="val">66</div><div class="sub">App switcher</div></div>
+  <div class="kpi"><div class="lbl">Cosner sister</div><div class="val">151</div><div class="sub">other board</div></div>
+  <div class="kpi hot"><div class="lbl">Shared queue</div><div class="val">6</div><div class="sub">Cosner Zoho leads</div></div>
+  <div class="kpi"><div class="lbl">Today trained</div><div class="val">6+</div><div class="sub">Liberty EOD</div></div>
+  <div class="kpi ok"><div class="lbl">App login</div><div class="val">OK</div><div class="sub">fit20 Google</div></div>
+</section>
     <div class="grid2">
       <section class="card">
-        <div class="card-h"><h2>Liberty ops snapshot</h2><span class="chip">Today</span></div>
+        <div class="card-h"><h2>Who to call next</h2><span class="chip">Zoho live · click to reach</span></div>
         <div class="card-b">
-          <table>
-            <tr><th>Item</th><th>Note</th></tr>
-            <tr><td>Studio</td><td><b>Liberty Place</b> · 1000 Winchester St Suite 201</td></tr>
-            <tr><td>Trainers App count</td><td><b>168</b> profiles on studio tile</td></tr>
-            <tr><td>Door sign</td><td>Liberty Place lobby wait sign V2 approved look</td></tr>
-            <tr><td>Next for Adam</td><td>Tomorrow · Cosner’s Corner shift</td></tr>
-          </table>
-          <div class="btn-row">
-            <a class="btn primary" href="https://fit20app.com" target="_blank" rel="noopener noreferrer">Open Trainers App</a>
-            <a class="btn" href="https://calendar.google.com/calendar/u/0/r/week" target="_blank" rel="noopener noreferrer">Calendar</a>
+          <p class="copy" style="margin-top:0">Phone + email from <b>fit20 Cosners Corner</b> Zoho Home (Recently Created + Open Tasks). Tap <b>Call / RC</b> to hand off to RingCentral / phone. Full RC Carecenter embed = next slice.</p>
+          
+        <div class="lead">
+          <div class="lead-top">
+            <div class="rank">1</div>
+            <div style="flex:1">
+              <h3><a href="https://crm.zoho.eu/crm/org20068806089/tab/Contacts/248316000216761422/canvas/248316000036824647" target="_blank" rel="noopener">Sandra Blake</a>
+                <span class="tag tag-hot">2. Prospect</span></h3>
+              <div class="phone-lg">540-842-9036</div>
+              <div class="email-lg">sandrabla@verizon.net</div>
+              <div class="why"><b>Why now:</b> NEW today 5:06 PM · linked to Phillip Blake · seen from Kohl’s / Hope’s Heroes · hot duo path</div>
+              <div class="contact-row">
+                <a class="phone" href="tel:5408429036">📞 Call / RC</a>
+                <a class="email" href="mailto:sandrabla@verizon.net">✉ Email</a>
+                <a class="sms" href="sms:5408429036">💬 SMS</a>
+                <a class="zoho" href="https://crm.zoho.eu/crm/org20068806089/tab/Contacts/248316000216761422/canvas/248316000036824647" target="_blank" rel="noopener">Zoho record ↗</a>
+              </div>
+            </div>
           </div>
+        </div>
+
+        <div class="lead">
+          <div class="lead-top">
+            <div class="rank">2</div>
+            <div style="flex:1">
+              <h3><a href="https://crm.zoho.eu/crm/org20068806089/tab/Contacts/248316000215876345/canvas/248316000036824647" target="_blank" rel="noopener">Phillip Blake</a>
+                <span class="tag tag-hot">2pe. Pending</span></h3>
+              <div class="phone-lg">(540) 841-9036</div>
+              <div class="email-lg">philbla@verizon.net</div>
+              <div class="why"><b>Why now:</b> Pending · partner Sandra just created · FIT window open · call/text pair</div>
+              <div class="contact-row">
+                <a class="phone" href="tel:5408419036">📞 Call / RC</a>
+                <a class="email" href="mailto:philbla@verizon.net">✉ Email</a>
+                <a class="sms" href="sms:5408419036">💬 SMS</a>
+                <a class="zoho" href="https://crm.zoho.eu/crm/org20068806089/tab/Contacts/248316000215876345/canvas/248316000036824647" target="_blank" rel="noopener">Zoho record ↗</a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="lead">
+          <div class="lead-top">
+            <div class="rank">3</div>
+            <div style="flex:1">
+              <h3><a href="https://crm.zoho.eu/crm/org20068806089/tab/Contacts/248316000214665862/canvas/248316000036824647" target="_blank" rel="noopener">Taurica Wallace</a>
+                <span class="tag tag-hot">2pe. Pending</span></h3>
+              <div class="phone-lg">(202) 441-7073</div>
+              <div class="email-lg">tauricaw@gmail.com</div>
+              <div class="why"><b>Why now:</b> Open tasks due Jul 27–28 · Call to join + Follow up HIGH · overdue closed-loop</div>
+              <div class="contact-row">
+                <a class="phone" href="tel:2024417073">📞 Call / RC</a>
+                <a class="email" href="mailto:tauricaw@gmail.com">✉ Email</a>
+                <a class="sms" href="sms:2024417073">💬 SMS</a>
+                <a class="zoho" href="https://crm.zoho.eu/crm/org20068806089/tab/Contacts/248316000214665862/canvas/248316000036824647" target="_blank" rel="noopener">Zoho record ↗</a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="lead">
+          <div class="lead-top">
+            <div class="rank">4</div>
+            <div style="flex:1">
+              <h3><a href="https://crm.zoho.eu/crm/org20068806089/tab/Contacts/248316000215756022/canvas/248316000036824647" target="_blank" rel="noopener">Niyah Yisrael</a>
+                <span class="tag tag-warm">2. Prospect</span></h3>
+              <div class="phone-lg">(703) 565-8136</div>
+              <div class="email-lg">niyahyisrael@gmail.com</div>
+              <div class="why"><b>Why now:</b> Prospect · website · FIT path needs next task</div>
+              <div class="contact-row">
+                <a class="phone" href="tel:7035658136">📞 Call / RC</a>
+                <a class="email" href="mailto:niyahyisrael@gmail.com">✉ Email</a>
+                <a class="sms" href="sms:7035658136">💬 SMS</a>
+                <a class="zoho" href="https://crm.zoho.eu/crm/org20068806089/tab/Contacts/248316000215756022/canvas/248316000036824647" target="_blank" rel="noopener">Zoho record ↗</a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="lead">
+          <div class="lead-top">
+            <div class="rank">5</div>
+            <div style="flex:1">
+              <h3><a href="https://crm.zoho.eu/crm/org20068806089/tab/Contacts/248316000216572164/canvas/248316000036824647" target="_blank" rel="noopener">Juwon Ojomo</a>
+                <span class="tag tag-warm">1. Lead</span></h3>
+              <div class="phone-lg">(571) 494-7811</div>
+              <div class="email-lg">juwonojomo@gmail.com</div>
+              <div class="why"><b>Why now:</b> Website lead Jul 24 · no next task visible · book or Lost</div>
+              <div class="contact-row">
+                <a class="phone" href="tel:5714947811">📞 Call / RC</a>
+                <a class="email" href="mailto:juwonojomo@gmail.com">✉ Email</a>
+                <a class="sms" href="sms:5714947811">💬 SMS</a>
+                <a class="zoho" href="https://crm.zoho.eu/crm/org20068806089/tab/Contacts/248316000216572164/canvas/248316000036824647" target="_blank" rel="noopener">Zoho record ↗</a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="lead">
+          <div class="lead-top">
+            <div class="rank">6</div>
+            <div style="flex:1">
+              <h3><a href="https://crm.zoho.eu/crm/org20068806089/tab/Contacts/248316000215367092/canvas/248316000036824647" target="_blank" rel="noopener">Laurie Eure</a>
+                <span class="tag tag-warm">1x. No interest before FIT</span></h3>
+              <div class="phone-lg">(540) 226-0366</div>
+              <div class="email-lg">lreure6@gmail.com</div>
+              <div class="why"><b>Why now:</b> Open HIGH task Sep 1 · Art of Aging · future win-back on calendar</div>
+              <div class="contact-row">
+                <a class="phone" href="tel:5402260366">📞 Call / RC</a>
+                <a class="email" href="mailto:lreure6@gmail.com">✉ Email</a>
+                <a class="sms" href="sms:5402260366">💬 SMS</a>
+                <a class="zoho" href="https://crm.zoho.eu/crm/org20068806089/tab/Contacts/248316000215367092/canvas/248316000036824647" target="_blank" rel="noopener">Zoho record ↗</a>
+              </div>
+            </div>
+          </div>
+        </div>
         </div>
       </section>
       <section class="card">
-        <div class="card-h"><h2>Sister studio</h2><span class="chip">Cosner</span></div>
-        <div class="card-b arch" style="font-size:13px;line-height:1.45">
-          Cosner’s has its own dashboard with the <b>151-name</b> Trainers App roster and live Cosner Zoho leads.
-          Do not mix Liberty headcount into Cosner KPIs again.
+        <div class="card-h"><h2>Boss-ready snapshot</h2><span class="chip">v1.1</span></div>
+        <div class="card-b">
+          <table>
+            <tr><th>System</th><th>Status</th></tr>
+            <tr><td>Zoho Cosner</td><td><span class="tag tag-ok">GREEN</span> cosnerscorner@fit20usa.com</td></tr>
+            <tr><td>Trainers App</td><td><span class="tag tag-ok">GREEN</span> agent Chrome · not Safari</td></tr>
+            <tr><td>Cosner board</td><td><b>151</b> profiles</td></tr>
+            <tr><td>Liberty board</td><td><b>168</b> profiles</td></tr>
+            <tr><td>Lead actions</td><td><span class="tag tag-demo">tel · sms · mailto · Zoho</span></td></tr>
+            <tr><td>Walkthrough</td><td><a href="https://youtu.be/CE-eT83fUYw" target="_blank" rel="noopener">YouTube unlisted ↗</a></td></tr>
+          </table>
           <div class="btn-row">
-            <a class="btn primary" href="/private/fit20-cosner/" target="_blank" rel="noopener noreferrer">Open Cosner dashboard</a>
+            <a class="btn primary" href="https://crm.zoho.eu/crm/org20068806089/tab/Home/begin" target="_blank" rel="noopener">Open Zoho Home</a>
+            <a class="btn" href="/private/fit20-cosner/">Switch to Cosner’s Corner</a>
           </div>
+          <p class="copy">Structure beats discipline — one screen for roster pulse + call queue + studio switch.</p>
         </div>
       </section>
     </div>
+    
+<section class="card">
+  <div class="card-h"><h2>Floor pulse · recent</h2><span class="chip">SITREP + App</span></div>
+  <div class="card-b" style="overflow-x:auto">
+    <table>
+      <thead><tr><th>Member</th><th>Source</th><th>Note</th><th>Flag</th></tr></thead>
+      <tbody>
+        <tr><td><b>Denise</b></td><td>Liberty floor 7/28</td><td>3 current bests</td><td><span class='tag tag-ok'>OK</span></td></tr>
+<tr><td><b>Bowen</b></td><td>Liberty floor 7/28</td><td>Clean session · Julie miss</td><td><span class='tag tag-ok'>OK</span></td></tr>
+<tr><td><b>Giselle</b></td><td>Liberty floor 7/28</td><td>Doc day · load managed</td><td><span class='tag tag-ok'>OK</span></td></tr>
+<tr><td><b>Donna</b></td><td>Liberty floor 7/28</td><td>Stenosis/DDD · 3 machine mods</td><td><span class='tag tag-warm'>WARN</span></td></tr>
+<tr><td><b>Joe</b></td><td>Liberty floor 7/28</td><td>Return from pause · load conservative</td><td><span class='tag tag-ok'>OK</span></td></tr>
+<tr><td><b>Ajay Patel</b></td><td>Cosner Trainers App</td><td>S105 · RVG Jul 20 · loads stable</td><td><span class='tag tag-ok'>OK</span></td></tr>
+      </tbody>
+    </table>
   </div>
-
-  <div class="wrap"><div class="footer">Coach Arnold Briggs · Liberty Place · Structure beats discipline · V1.0 Liberty</div>
-  <div class="btn-row" style="justify-content:center"><button class="btn primary" type="button" onclick="lockAgain()">Lock screen</button></div>
+</section>
+    <div class="footer">Coach Arnold Briggs · Liberty Place · V1.1 · PIN UX gate only · host private path</div>
+    <div class="btn-row" style="justify-content:center"><button class="btn primary" type="button" onclick="lockAgain()">Lock screen</button></div>
   </div>
 </div>
 <script>
-const POC_PIN = "2020";
-const STORE = "sc_liberty_v1";
-const gate = document.getElementById("gate");
-const app = document.getElementById("app");
-const pin = document.getElementById("pin");
-const err = document.getElementById("gateErr");
+const POC_PIN="2020";
+const STORE="sc_liberty_v11";
+const gate=document.getElementById("gate");
+const app=document.getElementById("app");
+const pin=document.getElementById("pin");
+const err=document.getElementById("gateErr");
 function unlock(){
-  if ((pin.value||"").trim()===POC_PIN){
+  if((pin.value||"").trim()===POC_PIN){
     sessionStorage.setItem(STORE,"1");
     gate.style.display="none"; app.style.display="block"; err.style.display="none";
-    document.getElementById("asOf").textContent="As of: "+new Date().toLocaleString("en-US",{timeZone:"America/New_York"})+" · 2026-07-28 14:45 EDT";
+    document.getElementById("asOf").textContent="As of: "+new Date().toLocaleString("en-US",{timeZone:"America/New_York"})+" · live Zoho 2026-07-28 19:30 EDT";
   } else { err.style.display="block"; pin.value=""; pin.focus(); }
 }
 function lockAgain(){ sessionStorage.removeItem(STORE); app.style.display="none"; gate.style.display="flex"; pin.value=""; pin.focus(); }
 document.getElementById("unlock").addEventListener("click", unlock);
 pin.addEventListener("keydown", e=>{ if(e.key==="Enter") unlock(); });
-if(sessionStorage.getItem(STORE)==="1"){ gate.style.display="none"; app.style.display="block"; document.getElementById("asOf").textContent="As of: "+new Date().toLocaleString("en-US",{timeZone:"America/New_York"})+" · 2026-07-28 14:45 EDT"; }
+if(sessionStorage.getItem(STORE)==="1"){ gate.style.display="none"; app.style.display="block"; document.getElementById("asOf").textContent="As of: "+new Date().toLocaleString("en-US",{timeZone:"America/New_York"})+" · live Zoho 2026-07-28 19:30 EDT"; }
 </script>
 </body></html>

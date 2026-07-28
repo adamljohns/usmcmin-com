@@ -4,379 +4,87 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <meta name="robots" content="noindex,nofollow" />
-<title>fit20 Cosner’s Corner · Studio Command V1</title>
+<title>fit20 Cosner’s Corner · Studio Command V2</title>
 <link rel="icon" href="assets/favicon.png" />
 <style>
-  :root {
-    --ink: #1b1f1c;
-    --muted: #5f675f;
-    --line: #d0d5d0;
-    --paper: #f3f5f2;
-    --card: #ffffff;
-    --charcoal: #2f3430;
-    --lime: #5fa312;
-    --lime-dk: #3d7a14;
-    --lime-soft: #eaf6d8;
-    --warn: #d97706;
-    --warn-soft: #fef3c7;
-    --bad: #8a2f2f;
-    --bad-soft: #f6e8e8;
-    --ok: #3d7a14;
-    --ok-soft: #e7f3dc;
-  }
-  * { box-sizing: border-box; }
-  html, body {
-    margin: 0; padding: 0;
-    font-family: "Avenir Next", "Segoe UI", Helvetica, Arial, sans-serif;
-    background: var(--paper);
-    color: var(--ink);
-    min-height: 100%;
-  }
-  a { color: var(--lime-dk); }
-
-  /* ===== PIN GATE ===== */
-  #gate {
-    min-height: 100vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 24px;
-    background:
-      radial-gradient(ellipse at 20% 0%, #3d7a1433, transparent 50%),
-      linear-gradient(160deg, #2f3430 0%, #1b1f1c 55%, #2a3228 100%);
-  }
-  .gate-card {
-    width: min(420px, 100%);
-    background: #fff;
-    border-radius: 14px;
-    padding: 28px 26px 24px;
-    box-shadow: 0 20px 50px rgba(0,0,0,.35);
-  }
-  .gate-card .eyebrow {
-    font-size: 11px;
-    letter-spacing: .16em;
-    text-transform: uppercase;
-    color: var(--lime-dk);
-    font-weight: 800;
-    margin-bottom: 6px;
-  }
-  .gate-card h1 {
-    margin: 0 0 8px;
-    font-size: 22px;
-    color: var(--charcoal);
-    line-height: 1.15;
-  }
-  .gate-card p {
-    margin: 0 0 16px;
-    font-size: 13.5px;
-    color: var(--muted);
-    line-height: 1.4;
-  }
-  .gate-card input {
-    width: 100%;
-    font-size: 18px;
-    letter-spacing: .2em;
-    text-align: center;
-    padding: 12px;
-    border: 2px solid var(--line);
-    border-radius: 8px;
-    margin-bottom: 10px;
-  }
-  .gate-card input:focus {
-    outline: none;
-    border-color: var(--lime);
-  }
-  .gate-card button {
-    width: 100%;
-    border: 0;
-    background: var(--charcoal);
-    color: #fff;
-    font-weight: 700;
-    font-size: 14px;
-    padding: 12px;
-    border-radius: 8px;
-    cursor: pointer;
-  }
-  .gate-card button:hover { background: var(--lime-dk); }
-  .gate-err {
-    display: none;
-    margin-top: 10px;
-    font-size: 12.5px;
-    color: var(--bad);
-    text-align: center;
-  }
-  .gate-foot {
-    margin-top: 14px;
-    font-size: 11px;
-    color: #8a928a;
-    text-align: center;
-  }
-
-  /* ===== APP ===== */
-  #app { display: none; }
-  .top {
-    background: var(--charcoal);
-    color: #f4f7f2;
-    padding: 14px 18px 12px;
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px 18px;
-    align-items: flex-end;
-    justify-content: space-between;
-  }
-  .brand-lockup { display:flex; align-items:center; gap:14px; }
-  .brand-logo {
-    width: 118px;
-    height: auto;
-    background: #fff;
-    border-radius: 7px;
-    padding: 6px 8px;
-  }
-  .quicklinks { display:flex; gap:8px; flex-wrap:wrap; margin-top:9px; }
-  .quicklinks a {
-    color:#fff;
-    text-decoration:none;
-    border:1px solid #6e786f;
-    border-radius:7px;
-    padding:6px 9px;
-    font-size:11px;
-    font-weight:700;
-  }
-  .quicklinks a:hover { background:var(--lime-dk); border-color:var(--lime); }
-  .top .eyebrow {
-    font-size: 10px;
-    letter-spacing: .14em;
-    text-transform: uppercase;
-    color: #d6f0a8;
-    font-weight: 700;
-  }
-  .top h1 {
-    margin: 2px 0 0;
-    font-size: 20px;
-    font-weight: 750;
-  }
-  .top .meta {
-    font-size: 12px;
-    color: #d0d5d0;
-    text-align: right;
-    line-height: 1.35;
-  }
-  .top .meta strong { color: #d6f0a8; }
-  .banner {
-    background: var(--warn-soft);
-    border-bottom: 1px solid #f0d78c;
-    color: #7a4e00;
-    font-size: 12.5px;
-    padding: 8px 18px;
-  }
-  .banner b { color: #5c3a00; }
-  .wrap { max-width: 1180px; margin: 0 auto; padding: 16px 16px 40px; }
-
-  .kpis {
-    display: grid;
-    grid-template-columns: repeat(6, 1fr);
-    gap: 10px;
-    margin-bottom: 14px;
-  }
-  @media (max-width: 960px) {
-    .kpis { grid-template-columns: repeat(3, 1fr); }
-  }
-  @media (max-width: 560px) {
-    .kpis { grid-template-columns: repeat(2, 1fr); }
-  }
-  .kpi {
-    background: var(--card);
-    border: 1px solid var(--line);
-    border-radius: 10px;
-    padding: 12px 12px 10px;
-  }
-  .kpi .lbl {
-    font-size: 10px;
-    letter-spacing: .08em;
-    text-transform: uppercase;
-    color: var(--muted);
-    font-weight: 700;
-  }
-  .kpi .val {
-    font-size: 26px;
-    font-weight: 800;
-    color: var(--charcoal);
-    line-height: 1.1;
-    margin-top: 4px;
-  }
-  .kpi .sub { font-size: 11px; color: var(--muted); margin-top: 2px; }
-  .kpi.hot .val { color: var(--warn); }
-  .kpi.ok .val { color: var(--ok); }
-  .kpi.bad .val { color: var(--bad); }
-
-  .grid2 {
-    display: grid;
-    grid-template-columns: 1.4fr 1fr;
-    gap: 12px;
-    margin-bottom: 12px;
-  }
-  @media (max-width: 900px) {
-    .grid2 { grid-template-columns: 1fr; }
-  }
-  .card {
-    background: var(--card);
-    border: 1px solid var(--line);
-    border-radius: 10px;
-    overflow: hidden;
-  }
-  .card-h {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 8px;
-    padding: 10px 12px;
-    background: var(--charcoal);
-    color: #f4f7f2;
-  }
-  .card-h h2 {
-    margin: 0;
-    font-size: 13px;
-    letter-spacing: .04em;
-    text-transform: uppercase;
-  }
-  .card-h .chip {
-    font-size: 10px;
-    font-weight: 700;
-    background: var(--lime);
-    color: #fff;
-    padding: 2px 8px;
-    border-radius: 999px;
-  }
-  .card-b { padding: 10px 12px 12px; }
-
-  table {
-    width: 100%;
-    border-collapse: collapse;
-    font-size: 12.5px;
-  }
-  th {
-    text-align: left;
-    font-size: 10px;
-    letter-spacing: .06em;
-    text-transform: uppercase;
-    color: var(--muted);
-    border-bottom: 1px solid var(--line);
-    padding: 0 6px 6px;
-  }
-  td {
-    padding: 8px 6px;
-    border-bottom: 1px solid #e8ebe8;
-    vertical-align: top;
-  }
-  tr:last-child td { border-bottom: 0; }
-  .tag {
-    display: inline-block;
-    font-size: 10px;
-    font-weight: 700;
-    padding: 2px 7px;
-    border-radius: 999px;
-    letter-spacing: .03em;
-  }
-  .tag-hot { background: #fee2e2; color: #991b1b; }
-  .tag-warm { background: var(--warn-soft); color: #92400e; }
-  .tag-ok { background: var(--ok-soft); color: var(--ok); }
-  .tag-pause { background: #e5e7eb; color: #374151; }
-  .tag-demo { background: var(--lime-soft); color: var(--lime-dk); }
-
-  .call-row {
-    display: flex;
-    gap: 10px;
-    padding: 10px 0;
-    border-bottom: 1px dashed var(--line);
-  }
-  .call-row:last-child { border-bottom: 0; }
-  .rank {
-    flex: 0 0 28px;
-    height: 28px;
-    border-radius: 50%;
-    background: var(--lime-soft);
-    color: var(--lime-dk);
-    font-weight: 800;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 13px;
-  }
-  .call-row h3 { margin: 0 0 2px; font-size: 14px; }
-  .call-row p { margin: 0; font-size: 12px; color: var(--muted); line-height: 1.35; }
-  .why { margin-top: 4px; font-size: 12px; color: var(--ink); }
-
-  .pipe {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 8px;
-  }
-  @media (max-width: 700px) { .pipe { grid-template-columns: repeat(2, 1fr); } }
-  .pipe .stage {
-    background: var(--paper);
-    border: 1px solid var(--line);
-    border-radius: 8px;
-    padding: 10px;
-    text-align: center;
-  }
-  .pipe .stage .n { font-size: 22px; font-weight: 800; color: var(--charcoal); }
-  .pipe .stage .l { font-size: 10px; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); font-weight: 700; }
-
-  .arch {
-    font-size: 12.5px;
-    line-height: 1.45;
-    color: var(--ink);
-  }
-  .arch code {
-    background: var(--lime-soft);
-    padding: 1px 5px;
-    border-radius: 4px;
-    font-size: 11.5px;
-  }
-  .arch ol { margin: 6px 0 0 18px; padding: 0; }
-  .arch li { margin: 4px 0; }
-
-  .footer {
-    margin-top: 18px;
-    font-size: 11px;
-    color: var(--muted);
-    text-align: center;
-  }
-  .btn-row { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 8px; }
-  .btn {
-    border: 1px solid var(--line);
-    background: #fff;
-    border-radius: 7px;
-    padding: 7px 10px;
-    font-size: 12px;
-    font-weight: 650;
-    cursor: pointer;
-    color: var(--charcoal);
-  }
-  .btn.primary {
-    background: var(--charcoal);
-    color: #fff;
-    border-color: var(--charcoal);
-  }
-  .btn:hover { border-color: var(--lime); }
+:root{--ink:#1b1f1c;--muted:#5f675f;--line:#d0d5d0;--paper:#f3f5f2;--card:#fff;--charcoal:#2f3430;--lime:#5fa312;--lime-dk:#3d7a14;--lime-soft:#eaf6d8;--warn:#d97706;--warn-soft:#fef3c7;--bad:#8a2f2f;--ok:#3d7a14;--ok-soft:#e7f3dc}
+*{box-sizing:border-box}html,body{margin:0;padding:0;font-family:"Avenir Next","Segoe UI",Helvetica,Arial,sans-serif;background:var(--paper);color:var(--ink);min-height:100%}
+a{color:var(--lime-dk)}
+#gate{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px;background:radial-gradient(ellipse at 20% 0%,#3d7a1433,transparent 50%),linear-gradient(160deg,#2f3430 0%,#1b1f1c 55%,#2a3228 100%)}
+.gate-card{width:min(440px,100%);background:#fff;border-radius:14px;padding:28px 26px 24px;box-shadow:0 20px 50px rgba(0,0,0,.35)}
+.gate-card .eyebrow{font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--lime-dk);font-weight:800;margin-bottom:6px}
+.gate-card h1{margin:0 0 8px;font-size:22px;color:var(--charcoal);line-height:1.15}
+.gate-card p{margin:0 0 16px;font-size:13.5px;color:var(--muted);line-height:1.4}
+.gate-card input{width:100%;font-size:18px;letter-spacing:.2em;text-align:center;padding:12px;border:2px solid var(--line);border-radius:8px;margin-bottom:10px}
+.gate-card input:focus{outline:none;border-color:var(--lime)}
+.gate-card button{width:100%;border:0;background:var(--charcoal);color:#fff;font-weight:700;font-size:14px;padding:12px;border-radius:8px;cursor:pointer}
+.gate-card button:hover{background:var(--lime-dk)}
+.gate-err{display:none;margin-top:10px;font-size:12.5px;color:var(--bad);text-align:center}
+.gate-foot{margin-top:14px;font-size:11px;color:#8a928a;text-align:center}
+#app{display:none}
+.top{background:var(--charcoal);color:#f4f7f2;padding:14px 18px 12px;display:flex;flex-wrap:wrap;gap:10px 18px;align-items:flex-end;justify-content:space-between}
+.brand-lockup{display:flex;gap:12px;align-items:center}
+.brand-logo{height:34px;width:auto;background:#fff;border-radius:6px;padding:4px 8px}
+.top .eyebrow{font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:#d6f0a8;font-weight:700}
+.top h1{margin:2px 0 0;font-size:20px;font-weight:750}
+.quicklinks{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
+.quicklinks a{color:#d6f0a8;font-size:12px;font-weight:650;text-decoration:none;border:1px solid #5a6166;padding:5px 9px;border-radius:999px}
+.quicklinks a:hover{border-color:var(--lime);background:#3a403c}
+.top .meta{font-size:12px;color:#d0d5d0;text-align:right;line-height:1.35}
+.top .meta strong{color:#d6f0a8}
+.banner{background:var(--warn-soft);border-bottom:1px solid #f0d78c;color:#7a4e00;font-size:12.5px;padding:8px 18px}
+.banner b{color:#5c3a00}
+.wrap{max-width:1180px;margin:0 auto;padding:16px 16px 40px}
+.kpis{display:grid;grid-template-columns:repeat(6,1fr);gap:10px;margin-bottom:14px}
+@media(max-width:960px){.kpis{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:560px){.kpis{grid-template-columns:repeat(2,1fr)}}
+.kpi{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:12px}
+.kpi .lbl{font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:700}
+.kpi .val{font-size:26px;font-weight:800;color:var(--charcoal);line-height:1.1;margin-top:4px}
+.kpi .sub{font-size:11px;color:var(--muted);margin-top:2px}
+.kpi.ok .val{color:var(--ok)}.kpi.hot .val{color:var(--warn)}.kpi.bad .val{color:var(--bad)}
+.grid2{display:grid;grid-template-columns:1.2fr 1fr;gap:12px;margin-bottom:12px}
+@media(max-width:900px){.grid2{grid-template-columns:1fr}}
+.card{background:var(--card);border:1px solid var(--line);border-radius:10px;overflow:hidden;margin-bottom:12px}
+.card-h{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:10px 12px;background:var(--charcoal);color:#f4f7f2}
+.card-h h2{margin:0;font-size:13px;letter-spacing:.04em;text-transform:uppercase}
+.card-h .chip{font-size:10px;font-weight:700;background:var(--lime);color:#fff;padding:2px 8px;border-radius:999px}
+.card-b{padding:10px 12px 12px}
+table{width:100%;border-collapse:collapse;font-size:12.5px}
+th{text-align:left;font-size:10px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);border-bottom:1px solid var(--line);padding:0 6px 6px}
+td{padding:7px 6px;border-bottom:1px solid #e8ebe8;vertical-align:top}
+tr:last-child td{border-bottom:0}
+.tag{display:inline-block;font-size:10px;font-weight:700;padding:2px 7px;border-radius:999px}
+.tag-hot{background:#fee2e2;color:#991b1b}.tag-warm{background:var(--warn-soft);color:#92400e}.tag-ok{background:var(--ok-soft);color:var(--ok)}.tag-demo{background:var(--lime-soft);color:var(--lime-dk)}
+.call-row{display:flex;gap:10px;padding:10px 0;border-bottom:1px dashed var(--line)}
+.call-row:last-child{border-bottom:0}
+.rank{flex:0 0 28px;height:28px;border-radius:50%;background:var(--lime-soft);color:var(--lime-dk);font-weight:800;display:flex;align-items:center;justify-content:center;font-size:13px}
+.call-row h3{margin:0 0 2px;font-size:14px}.call-row p{margin:0;font-size:12px;color:var(--muted);line-height:1.35}
+.why{margin-top:4px;font-size:12px;color:var(--ink)}
+.member-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px 10px;max-height:420px;overflow:auto;font-size:12.5px}
+@media(max-width:800px){.member-grid{grid-template-columns:repeat(2,1fr)}}
+.member-grid div{padding:6px 8px;border:1px solid #e8ebe8;border-radius:7px;background:#fafbfa}
+.member-grid b{display:block;color:var(--charcoal)}
+.member-grid span{color:var(--muted);font-size:11px}
+.footer{margin-top:18px;font-size:11px;color:var(--muted);text-align:center}
+.btn{border:1px solid var(--line);background:#fff;border-radius:7px;padding:7px 10px;font-size:12px;font-weight:650;cursor:pointer;color:var(--charcoal);text-decoration:none;display:inline-block}
+.btn.primary{background:var(--charcoal);color:#fff;border-color:var(--charcoal)}
+.btn-row{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
 </style>
 </head>
 <body>
-
-<!-- PIN GATE — demo pin in brief; change before any public host -->
 <div id="gate">
   <div class="gate-card">
     <img src="assets/fit20-logo.png" alt="fit20" style="width:145px;height:auto;margin-bottom:14px;" />
     <div class="eyebrow">Private studio workspace · Not public navigation</div>
     <h1>fit20 Cosner’s Corner<br/>Studio Command</h1>
-    <p>Studio Command V1. Operational overview for Cosner’s Corner. No member contact details are stored in this page.</p>
+    <p>Studio Command for <b>Cosner’s Corner</b>. Names only on the board — no phones/emails stored in this page.</p>
     <input id="pin" type="password" inputmode="numeric" maxlength="8" placeholder="••••" autocomplete="off" />
     <button type="button" id="unlock">Unlock dashboard</button>
     <div class="gate-err" id="gateErr">Wrong PIN. Try again.</div>
-    <div class="gate-foot">V1 · Coach Arnie · 2026-07-28 · authorized studio users only</div>
+    <div class="gate-foot">V2.0 Cosner · Coach Arnie · PIN gate + host private path</div>
   </div>
 </div>
-
 <div id="app">
   <header class="top">
     <div>
@@ -388,282 +96,249 @@
         </div>
       </div>
       <nav class="quicklinks" aria-label="Studio systems">
-        <a href="https://calendar.google.com/calendar/u/0/r/week" target="_blank" rel="noopener noreferrer">Open studio calendar ↗</a>
-        <a href="https://crm.zoho.eu/crm/org20068806089/tab/Contacts/custom-view/248316000000370707" target="_blank" rel="noopener noreferrer">Open Cosner Zoho ↗</a>
+        <a href="https://calendar.google.com/calendar/u/0/r/week" target="_blank" rel="noopener noreferrer">Studio calendar ↗</a>
+        <a href="https://crm.zoho.eu/crm/org20068806089/tab/Home/begin" target="_blank" rel="noopener noreferrer">Cosner Zoho ↗</a>
+        <a href="https://fit20app.com" target="_blank" rel="noopener noreferrer">Trainers App ↗</a>
         <a href="https://www.fit20.com/usa/home" target="_blank" rel="noopener noreferrer">fit20 USA ↗</a>
       </nav>
     </div>
     <div class="meta">
-      <div><strong>Version 1.0</strong> · mixed live/demo feed</div>
-      <div>Studio: Cosner’s Corner VA</div>
+      <div><strong>V2.0 Cosner</strong></div>
+      <div>Studio: Cosner’s Corner</div>
       <div>SC: Adam Johns · NASM</div>
       <div id="asOf">As of: —</div>
     </div>
   </header>
-
-  <div class="banner">
-    <b>V1 DATA NOTICE.</b> Roster totals and trainer allocation are from the 2026-07-27 read-only Cosner Zoho rebuild.
-    Lead priorities, progress examples, and revenue remain clearly labeled demo until the automated feed is approved.
-  </div>
-
+  
+  <div class="banner"><b>COSNER LIVE · 2026-07-28 14:45 EDT.</b> Trainers App Cosner board = <b>151</b> profiles (operational roster). Zoho org confirmed <b>fit20 Cosners Corner</b> via cosnerscorner@fit20usa.com. Zoho stage-3 export still shows 53 — undercount vs floor board; use Trainers App headcount until full stage filter rebuild. No Liberty roster on this page.</div>
   <div class="wrap">
     <section class="kpis">
-      <div class="kpi ok"><div class="lbl">Active members</div><div class="val">52</div><div class="sub">live Zoho rebuild</div></div>
-      <div class="kpi"><div class="lbl">Paused members</div><div class="val">1</div><div class="sub">live Zoho rebuild</div></div>
-      <div class="kpi hot"><div class="lbl">Hot leads</div><div class="val">3</div><div class="sub">call today</div></div>
-      <div class="kpi"><div class="lbl">Warm / FIT</div><div class="val">6</div><div class="sub">book window</div></div>
-      <div class="kpi bad"><div class="lbl">Trainer unassigned</div><div class="val">16</div><div class="sub">review queue</div></div>
-      <div class="kpi"><div class="lbl">Roster verified</div><div class="val">7/27</div><div class="sub">20:23 EDT</div></div>
+      <div class="kpi ok"><div class="lbl">Cosner board</div><div class="val">151</div><div class="sub">Trainers App live</div></div>
+      <div class="kpi"><div class="lbl">Prospects</div><div class="val">10</div><div class="sub">App filter</div></div>
+      <div class="kpi"><div class="lbl">Guests</div><div class="val">14</div><div class="sub">App filter</div></div>
+      <div class="kpi hot"><div class="lbl">Pipeline hot</div><div class="val">5</div><div class="sub">Zoho leads listed</div></div>
+      <div class="kpi"><div class="lbl">Zoho stage-3</div><div class="val">53</div><div class="sub">export undercount</div></div>
+      <div class="kpi ok"><div class="lbl">Zoho org</div><div class="val">OK</div><div class="sub">Cosners Corner</div></div>
     </section>
-
-    <section class="card" style="margin-bottom:12px;">
-      <div class="card-h">
-        <h2>Today · Tuesday, July 28</h2>
-        <span class="chip">Calendar snapshot</span>
-      </div>
-      <div class="card-b" style="overflow-x:auto;">
-        <table>
-          <thead><tr><th>Time</th><th>Studio duty</th><th>Location / note</th></tr></thead>
-          <tbody>
-            <tr><td>11:00–1:20</td><td><b>Adam’s Block</b></td><td>Cosner’s Corner</td></tr>
-            <tr><td>12:00–2:00</td><td>Todd’s Administrative Hours</td><td>Carecenter</td></tr>
-            <tr><td>2:00–4:00</td><td>Debora’s Administrative Hours</td><td>Carecenter</td></tr>
-            <tr><td>2:00–2:20</td><td>Adam’s fit20 Brain Training</td><td>Calendar event</td></tr>
-            <tr><td>3:20–3:40</td><td>Adam Johns fit20 Training</td><td>Liberty Place</td></tr>
-          </tbody>
-        </table>
-        <div class="btn-row">
-          <a class="btn primary" href="https://calendar.google.com/calendar/u/0/r/week" target="_blank" rel="noopener noreferrer" style="text-decoration:none;">Open live calendar</a>
-          <a class="btn" href="https://crm.zoho.eu/crm/org20068806089/tab/Contacts/custom-view/248316000000370707" target="_blank" rel="noopener noreferrer" style="text-decoration:none;">Open Cosner members</a>
-        </div>
-      </div>
-    </section>
-
     <div class="grid2">
       <section class="card">
-        <div class="card-h">
-          <h2>Who to call next</h2>
-          <span class="chip">AI queue</span>
-        </div>
-        <div class="card-b">
-          <div class="call-row">
-            <div class="rank">1</div>
-            <div>
-              <h3>Janet M. <span class="tag tag-hot">HOT</span></h3>
-              <p>Last touch: 6 days · Zoho note: “wants Tue FIT” · no task open</p>
-              <div class="why"><b>Why now:</b> Ageing hot + FIT intent + no next task (closed-loop gap).</div>
-            </div>
-          </div>
-          <div class="call-row">
-            <div class="rank">2</div>
-            <div>
-              <h3>Thad F. <span class="tag tag-hot">HOT</span></h3>
-              <p>Task was due Jul 20 · PIF 12-mo question · owner unclear</p>
-              <div class="why"><b>Why now:</b> Overdue high task — confirm renew vs Lost.</div>
-            </div>
-          </div>
-          <div class="call-row">
-            <div class="rank">3</div>
-            <div>
-              <h3>Brenda S. <span class="tag tag-warm">WARM</span></h3>
-              <p>FIT invite drafted 7/24 · not sent · Cosner slots open</p>
-              <div class="why"><b>Why now:</b> Draft ready — human send gate only.</div>
-            </div>
-          </div>
-          <div class="call-row">
-            <div class="rank">4</div>
-            <div>
-              <h3>Sylvia / Cevilia <span class="tag tag-warm">WARM</span></h3>
-              <p>VM left today mid-note open · better target may be Janet</p>
-              <div class="why"><b>Why now:</b> Don’t re-call blind — bot ranks by note age + stage.</div>
-            </div>
-          </div>
+        <div class="card-h"><h2>Who to work next</h2><span class="chip">Cosner Zoho</span></div>
+        <div class="card-b"><div class="call-row"><div class="rank">1</div><div>
+      <h3>Phillip Blake <span class="tag tag-hot">2pe. Pending</span></h3>
+      <div class="why"><b>Why now:</b> Open task due today · Robert Test · Cosner Zoho</div>
+    </div></div><div class="call-row"><div class="rank">2</div><div>
+      <h3>Taurica Wallace <span class="tag tag-hot">2pe. Pending</span></h3>
+      <div class="why"><b>Why now:</b> Pending FIT path · Todd on record</div>
+    </div></div><div class="call-row"><div class="rank">3</div><div>
+      <h3>Niyah Yisrael <span class="tag tag-warm">2. Prospect</span></h3>
+      <div class="why"><b>Why now:</b> Prospect · FIT trainer Robert · Aug window</div>
+    </div></div><div class="call-row"><div class="rank">4</div><div>
+      <h3>Juwon Ojomo <span class="tag tag-hot">1. Lead</span></h3>
+      <div class="why"><b>Why now:</b> New website lead Jul 24 · needs next task</div>
+    </div></div><div class="call-row"><div class="rank">5</div><div>
+      <h3>Brenda Seybert <span class="tag tag-hot">1. Lead</span></h3>
+      <div class="why"><b>Why now:</b> Facebook lead · Todd attached · closed-loop gap</div>
+    </div></div>
           <div class="btn-row">
-            <button class="btn primary" type="button" onclick="alert('Live mode: opens ranked script + one-tap RC. PoC only.')">Start call 1 script</button>
-            <button class="btn" type="button" onclick="alert('Live mode: mark done → draft Zoho note for paste.')">Log outcome</button>
+            <a class="btn primary" href="https://crm.zoho.eu/crm/org20068806089/tab/Contacts" target="_blank" rel="noopener noreferrer">Open Cosner members</a>
+            <a class="btn" href="https://fit20app.com" target="_blank" rel="noopener noreferrer">Open Trainers App</a>
           </div>
         </div>
       </section>
-
       <section class="card">
-        <div class="card-h">
-          <h2>Pipeline snapshot</h2>
-          <span class="chip">RO Zoho shape</span>
-        </div>
-        <div class="card-b">
-          <div class="pipe">
-            <div class="stage"><div class="n">14</div><div class="l">Active leads</div></div>
-            <div class="stage"><div class="n">5</div><div class="l">FIT booked</div></div>
-            <div class="stage"><div class="n">3</div><div class="l">Trial / 9–199</div></div>
-            <div class="stage"><div class="n">2</div><div class="l">MSA close</div></div>
-          </div>
-          <p class="arch" style="margin-top:12px;">
-            <b>Closed-loop law (Rebecca):</b> offer / callback / waiting → <code>note + next task</code> or Lost/delete.
-            Tag alone ≠ status. This panel flags gaps automatically.
-          </p>
-        </div>
-      </section>
-    </div>
-
-    <section class="card" style="margin-bottom:12px;">
-      <div class="card-h">
-        <h2>Members · progress &amp; payment pulse</h2>
-        <span class="chip">Sheet + Zoho</span>
-      </div>
-      <div class="card-b" style="overflow-x:auto;">
-        <table>
-          <thead>
-            <tr>
-              <th>Member</th>
-              <th>Plan</th>
-              <th>Last session</th>
-              <th>Progress</th>
-              <th>Payment</th>
-              <th>Flag</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>Magnolia Martin <span class="tag tag-demo">realtor</span></td>
-              <td>12-mo</td>
-              <td>Mon 7/27</td>
-              <td>Back after ~1 mo · Fri return</td>
-              <td><span class="tag tag-ok">Current</span></td>
-              <td>Relationship keep · Caldwell Elite</td>
-            </tr>
-            <tr>
-              <td>Julie Atkinson</td>
-              <td>12-mo</td>
-              <td>Mon 7/27</td>
-              <td>Solid · reschedule → next Tue</td>
-              <td><span class="tag tag-ok">Current</span></td>
-              <td>Calendar move</td>
-            </tr>
-            <tr>
-              <td>Howard</td>
-              <td>6-mo</td>
-              <td>Mon 7/27</td>
-              <td>Shoulder ache · iPad note</td>
-              <td><span class="tag tag-ok">Current</span></td>
-              <td>Mod / seatbelt-first</td>
-            </tr>
-            <tr>
-              <td>Giselle</td>
-              <td>12-mo</td>
-              <td>Prior block</td>
-              <td>Mid-block continuity</td>
-              <td><span class="tag tag-ok">Current</span></td>
-              <td>Candace transition watch</td>
-            </tr>
-            <tr>
-              <td>Demo — Pause risk</td>
-              <td>Paused</td>
-              <td>18 days</td>
-              <td>No show streak</td>
-              <td><span class="tag tag-pause">Paused</span></td>
-              <td>Win-back queue</td>
-            </tr>
-            <tr>
-              <td>Demo — SEPA fail</td>
-              <td>12-mo</td>
-              <td>5 days</td>
-              <td>Training OK</td>
-              <td><span class="tag tag-hot">Billing</span></td>
-              <td>Payment chase</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </section>
-
-    <div class="grid2">
-      <section class="card">
-        <div class="card-h">
-          <h2>Today’s floor (from shift OS)</h2>
-          <span class="chip">SITREP feed</span>
-        </div>
+        <div class="card-h"><h2>Login status</h2><span class="chip">Live check</span></div>
         <div class="card-b">
           <table>
-            <thead><tr><th>Client</th><th>Outcome</th><th>Follow</th></tr></thead>
-            <tbody>
-              <tr><td>Howard</td><td>Trained · shoulder</td><td>iPad note</td></tr>
-              <tr><td>Magnolia Martin</td><td>Trained · return Fri</td><td>Agent intel</td></tr>
-              <tr><td>Julie + Judy Atkinson</td><td>Trained</td><td>Julie → Tue</td></tr>
-              <tr><td>Paul / Jonathan</td><td>Good sessions</td><td>—</td></tr>
-              <tr><td>Mike &amp; Pat</td><td>Trained · tomatoes 🍅</td><td>Keep</td></tr>
-              <tr><td>Sherry</td><td>Rescheduled / not on board</td><td>—</td></tr>
-            </tbody>
+            <tr><th>System</th><th>Status</th><th>Detail</th></tr>
+            <tr><td>Zoho CRM</td><td><span class="tag tag-ok">GREEN</span></td><td>Welcome fit20 Cosners Corner · cosnerscorner@fit20usa.com</td></tr>
+            <tr><td>Trainers App</td><td><span class="tag tag-ok">GREEN</span></td><td>adamjohns@fit20usa.com · agent Chrome (not Safari)</td></tr>
+            <tr><td>Studio selected</td><td><span class="tag tag-ok">COSNER</span></td><td>Fredericksburg Cosner’s Corner · 151</td></tr>
+            <tr><td>Liberty board</td><td><span class="tag tag-demo">SEPARATE</span></td><td>Kept as Liberty dashboard · 168 on app switcher</td></tr>
           </table>
-        </div>
-      </section>
-
-      <section class="card">
-        <div class="card-h">
-          <h2>Product architecture</h2>
-          <span class="chip">Pitch</span>
-        </div>
-        <div class="card-b arch">
-          <b>What leadership buys:</b> one screen instead of email → Sheet → RingCentral → Zoho hop.
-          <ol>
-            <li><b>Sources:</b> Zoho CRM (Cosner org RO) + Cosner Active Members Sheet + Block Recap + Paused Members xlsx + shift voice SITREP.</li>
-            <li><b>Agent:</b> Coach desk crawls notes → ranked call queue + closed-loop gaps + member flags.</li>
-            <li><b>UI:</b> this PIN page (private path, no public nav) — charcoal/lime fit20 desk.</li>
-            <li><b>Guardrails:</b> no auto-email, no Zoho write without order, no daily Chrome Profile 3, no invented vitals/PII.</li>
-            <li><b>Scale:</b> same shell → Liberty / Aquia tiles when multi-login warm.</li>
-          </ol>
-          <p style="margin:10px 0 0;"><b>usmcmin.com fit:</b> public site keeps ministry + fitness intake.
-          This lives as <code>/private/fit20-cosner/</code> (or subdomain) with PIN or auth — same pattern as internal C5iSR tools, not a storefront page.</p>
-          <div class="btn-row">
-            <button class="btn primary" type="button" onclick="lockAgain()">Lock screen</button>
-            <button class="btn" type="button" onclick="alert('Next build: live JSON feed from garmin-style rounds script for Zoho lead pulse.')">See live-feed plan</button>
-          </div>
+          <p style="font-size:12.5px;color:var(--muted);margin:10px 0 0">Tomorrow you’re at Cosner’s — this is the board to open. Safari is not the agent driver; same Google login on fit20 Chrome CDP 18803.</p>
         </div>
       </section>
     </div>
+    <section class="card">
+      <div class="card-h"><h2>Cosner members · Trainers App board</h2><span class="chip">151 names</span></div>
+      <div class="card-b">
+        <p style="margin:0 0 10px;font-size:12.5px;color:var(--muted)">Full Cosner floor list from fit20app.com (RO). Trainer column filled only when Zoho stage-3 export had a match — blanks mean not in that 53 export, not “no trainer forever.”</p>
+        <div class="member-grid"><div><b>Adam Johns</b><span>—</span></div>
+<div><b>Ajay Patel</b><span>—</span></div>
+<div><b>Alice Prior</b><span>Robert VanGee</span></div>
+<div><b>Alisha Pham</b><span>—</span></div>
+<div><b>Amy Steele</b><span>Todd Welsh</span></div>
+<div><b>Anne Pokorny</b><span>—</span></div>
+<div><b>Anne Soybel</b><span>—</span></div>
+<div><b>Ashleigh Diehl</b><span>—</span></div>
+<div><b>Ashley Taylor</b><span>—</span></div>
+<div><b>Ava Gaetano</b><span>—</span></div>
+<div><b>Barbara Stevens</b><span>—</span></div>
+<div><b>Benjamin Church</b><span>—</span></div>
+<div><b>Bill Shute</b><span>—</span></div>
+<div><b>Bob Spencer</b><span>—</span></div>
+<div><b>Bob Church</b><span>—</span></div>
+<div><b>Bonnie Sechrist</b><span>—</span></div>
+<div><b>Brandon Kramer</b><span>—</span></div>
+<div><b>Brian Croes</b><span>—</span></div>
+<div><b>Buffy Myrick</b><span>—</span></div>
+<div><b>Carmetta Malone-Moss</b><span>—</span></div>
+<div><b>Carolyn Morrison</b><span>—</span></div>
+<div><b>Cassie Viswanath</b><span>—</span></div>
+<div><b>Catherine Terrill</b><span>—</span></div>
+<div><b>Cathy Sato</b><span>—</span></div>
+<div><b>Cheryl Walker</b><span>Robert VanGee</span></div>
+<div><b>Chip Trahos</b><span>—</span></div>
+<div><b>Chris Ladosky</b><span>—</span></div>
+<div><b>Christina Nowack</b><span>—</span></div>
+<div><b>Chuck Barber</b><span>—</span></div>
+<div><b>Darlene Barber</b><span>—</span></div>
+<div><b>Dave Prior</b><span>Robert VanGee</span></div>
+<div><b>David Dane</b><span>—</span></div>
+<div><b>Deb Cannon</b><span>—</span></div>
+<div><b>Debbie Thompson</b><span>—</span></div>
+<div><b>Debora Hogan</b><span>Robert VanGee</span></div>
+<div><b>Deborah Testa Bennett</b><span>—</span></div>
+<div><b>Debra Luffman</b><span>Robert VanGee</span></div>
+<div><b>Debra Mallow</b><span>Todd Welsh</span></div>
+<div><b>Dennis Larson</b><span>—</span></div>
+<div><b>Devra Pickett</b><span>—</span></div>
+<div><b>Diane Watson</b><span>—</span></div>
+<div><b>Donna Bell</b><span>—</span></div>
+<div><b>Donna Guevara</b><span>—</span></div>
+<div><b>Dragan Viswanath</b><span>Todd Welsh</span></div>
+<div><b>Eileen Shea</b><span>—</span></div>
+<div><b>Emma Handley</b><span>Todd Welsh</span></div>
+<div><b>Eunicseiana (Neesee) Johnson</b><span>—</span></div>
+<div><b>Gary Bender</b><span>Adam Johns</span></div>
+<div><b>Gay Borchardt</b><span>—</span></div>
+<div><b>Gregory Wigglesworth</b><span>Robert VanGee</span></div>
+<div><b>Hillary Moyer</b><span>—</span></div>
+<div><b>Ian Lane</b><span>—</span></div>
+<div><b>Ivy VanGee</b><span>—</span></div>
+<div><b>Jeff Pokorny</b><span>—</span></div>
+<div><b>Jenneth Zimmermann</b><span>—</span></div>
+<div><b>Joan DeGraff</b><span>—</span></div>
+<div><b>John Mastin</b><span>—</span></div>
+<div><b>Jose Vasquez</b><span>—</span></div>
+<div><b>Jose’s Wife Vasquez</b><span>—</span></div>
+<div><b>Julia Migliaccio</b><span>—</span></div>
+<div><b>Julie Cardello</b><span>—</span></div>
+<div><b>Kamal Viswanath</b><span>—</span></div>
+<div><b>Karen Ivory</b><span>—</span></div>
+<div><b>Karen Foster</b><span>Morgan Hughes</span></div>
+<div><b>Kathy Brown</b><span>Robert VanGee</span></div>
+<div><b>Kathy Kincaid</b><span>—</span></div>
+<div><b>Kayla Bullock</b><span>—</span></div>
+<div><b>Keith Dozier</b><span>—</span></div>
+<div><b>Kevin Handley</b><span>Adam Johns</span></div>
+<div><b>Kim Mills</b><span>—</span></div>
+<div><b>Kristi Fleischman</b><span>—</span></div>
+<div><b>Kyra Bullock</b><span>—</span></div>
+<div><b>Larry Dingus</b><span>Todd Welsh / Kayla Bullock</span></div>
+<div><b>Laura Elliott Bender</b><span>—</span></div>
+<div><b>Laura Brooks</b><span>Todd Welsh</span></div>
+<div><b>Leona VanGee</b><span>—</span></div>
+<div><b>Leslie Larson</b><span>—</span></div>
+<div><b>Linda Koch</b><span>—</span></div>
+<div><b>Linda Hickman</b><span>—</span></div>
+<div><b>Linda Sherman</b><span>Robert VanGee</span></div>
+<div><b>Lisa Besceglia</b><span>—</span></div>
+<div><b>Lisa Lambert</b><span>—</span></div>
+<div><b>Lori Hayes</b><span>—</span></div>
+<div><b>Luis Morales</b><span>—</span></div>
+<div><b>Mandy Anderson</b><span>—</span></div>
+<div><b>Maria Morales</b><span>—</span></div>
+<div><b>Marty Monts</b><span>Robert VanGee</span></div>
+<div><b>Mary Smith</b><span>—</span></div>
+<div><b>Melissa Palmertree</b><span>—</span></div>
+<div><b>Michael Trahos</b><span>—</span></div>
+<div><b>Michele Pendergraft</b><span>—</span></div>
+<div><b>Michelle Halpin</b><span>Todd Welsh</span></div>
+<div><b>Mike Smith</b><span>—</span></div>
+<div><b>Nadine Wigglesworth</b><span>Robert VanGee</span></div>
+<div><b>Nancy Shannon</b><span>—</span></div>
+<div><b>Nancy Wang</b><span>—</span></div>
+<div><b>Nancy Wade</b><span>Todd Welsh</span></div>
+<div><b>Natalie Stephenson</b><span>—</span></div>
+<div><b>Nikki Manning</b><span>—</span></div>
+<div><b>Nikolas Brown</b><span>Todd Welsh</span></div>
+<div><b>Octavio de Urioste</b><span>Todd Welsh</span></div>
+<div><b>Pat Smith</b><span>—</span></div>
+<div><b>Pat Brown</b><span>Robert VanGee</span></div>
+<div><b>Patricia Erickson</b><span>Todd Welsh</span></div>
+<div><b>PATRICK CHURCH</b><span>—</span></div>
+<div><b>Patty Merritt</b><span>—</span></div>
+<div><b>Patty Strong</b><span>Todd Welsh</span></div>
+<div><b>Paula Wright</b><span>—</span></div>
+<div><b>Peter Sun</b><span>—</span></div>
+<div><b>Phillip Blake</b><span>—</span></div>
+<div><b>Rathje Schultze</b><span>—</span></div>
+<div><b>REBECCA CHURCH</b><span>—</span></div>
+<div><b>Rebecca Schafer</b><span>—</span></div>
+<div><b>Rhonda Johnson</b><span>Robert VanGee</span></div>
+<div><b>Rick VanGee</b><span>—</span></div>
+<div><b>Ricky VanGee</b><span>—</span></div>
+<div><b>Rita Gudan</b><span>—</span></div>
+<div><b>Robert VanGee</b><span>—</span></div>
+<div><b>Robin Hobbs</b><span>—</span></div>
+<div><b>Ronald VanGee</b><span>—</span></div>
+<div><b>Rudy Zimmermann</b><span>—</span></div>
+<div><b>Sharon Bixby</b><span>Todd Welsh</span></div>
+<div><b>Sharon Bullock</b><span>—</span></div>
+<div><b>Shonna Pope</b><span>—</span></div>
+<div><b>Sonia Knight</b><span>—</span></div>
+<div><b>Sonya Brooks</b><span>—</span></div>
+<div><b>Stephanie Fitzgerald</b><span>Robert VanGee</span></div>
+<div><b>Susan Dane</b><span>—</span></div>
+<div><b>Susan Barber</b><span>—</span></div>
+<div><b>Suzi Croes</b><span>—</span></div>
+<div><b>Tamara Garrett</b><span>—</span></div>
+<div><b>Tammy Ostrom</b><span>—</span></div>
+<div><b>Taurica Wallace</b><span>—</span></div>
+<div><b>Terri Mosey</b><span>—</span></div>
+<div><b>Terry Hawley</b><span>—</span></div>
+<div><b>Thad Furlong</b><span>Robert VanGee</span></div>
+<div><b>Thomas Schneider</b><span>—</span></div>
+<div><b>Tim Capriani</b><span>—</span></div>
+<div><b>Tina Hinkle</b><span>—</span></div>
+<div><b>Todd Welsh</b><span>—</span></div>
+<div><b>Tom Sherman</b><span>—</span></div>
+<div><b>Tracy Affeldt</b><span>—</span></div>
+<div><b>Tracy Magin</b><span>—</span></div>
+<div><b>Tracy Borchardt</b><span>—</span></div>
+<div><b>Valentina de Urioste</b><span>—</span></div>
+<div><b>Valerie Horton</b><span>Robert VanGee</span></div>
+<div><b>Velma Lee</b><span>—</span></div>
+<div><b>William Lee</b><span>—</span></div>
+<div><b>William Erickson</b><span>Todd Welsh</span></div>
+<div><b>Winonia Barnes</b><span>Robert VanGee</span></div>
+<div><b>Zane Brown</b><span>—</span></div></div>
+      </div>
+    </section>
+  </div>
 
-    <div class="footer">
-      Coach Arnold Briggs · fit20 desk PoC · Structure beats discipline · DEMO DATA · CID CAB-0727-POC1
-    </div>
+  <div class="wrap"><div class="footer">Coach Arnold Briggs · Cosner’s Corner · Structure beats discipline · V2.0 Cosner</div>
+  <div class="btn-row" style="justify-content:center"><button class="btn primary" type="button" onclick="lockAgain()">Lock screen</button></div>
   </div>
 </div>
-
 <script>
-  // V1 convenience PIN. Hosting must also enforce server-side access control.
-  const POC_PIN = "2020";
-  const gate = document.getElementById("gate");
-  const app = document.getElementById("app");
-  const pin = document.getElementById("pin");
-  const err = document.getElementById("gateErr");
-
-  function unlock() {
-    if ((pin.value || "").trim() === POC_PIN) {
-      sessionStorage.setItem("cosner_sc_poc", "1");
-      gate.style.display = "none";
-      app.style.display = "block";
-      err.style.display = "none";
-      document.getElementById("asOf").textContent =
-        "As of: " + new Date().toLocaleString("en-US", { timeZone: "America/New_York" }) + " · DEMO";
-    } else {
-      err.style.display = "block";
-      pin.value = "";
-      pin.focus();
-    }
-  }
-  function lockAgain() {
-    sessionStorage.removeItem("cosner_sc_poc");
-    app.style.display = "none";
-    gate.style.display = "flex";
-    pin.value = "";
-    pin.focus();
-  }
-  document.getElementById("unlock").addEventListener("click", unlock);
-  pin.addEventListener("keydown", (e) => { if (e.key === "Enter") unlock(); });
-  if (sessionStorage.getItem("cosner_sc_poc") === "1") {
-    gate.style.display = "none";
-    app.style.display = "block";
-    document.getElementById("asOf").textContent =
-      "As of: " + new Date().toLocaleString("en-US", { timeZone: "America/New_York" }) + " · DEMO";
-  }
+const POC_PIN = "2020";
+const STORE = "sc_cosner_v2";
+const gate = document.getElementById("gate");
+const app = document.getElementById("app");
+const pin = document.getElementById("pin");
+const err = document.getElementById("gateErr");
+function unlock(){
+  if ((pin.value||"").trim()===POC_PIN){
+    sessionStorage.setItem(STORE,"1");
+    gate.style.display="none"; app.style.display="block"; err.style.display="none";
+    document.getElementById("asOf").textContent="As of: "+new Date().toLocaleString("en-US",{timeZone:"America/New_York"})+" · 2026-07-28 14:45 EDT";
+  } else { err.style.display="block"; pin.value=""; pin.focus(); }
+}
+function lockAgain(){ sessionStorage.removeItem(STORE); app.style.display="none"; gate.style.display="flex"; pin.value=""; pin.focus(); }
+document.getElementById("unlock").addEventListener("click", unlock);
+pin.addEventListener("keydown", e=>{ if(e.key==="Enter") unlock(); });
+if(sessionStorage.getItem(STORE)==="1"){ gate.style.display="none"; app.style.display="block"; document.getElementById("asOf").textContent="As of: "+new Date().toLocaleString("en-US",{timeZone:"America/New_York"})+" · 2026-07-28 14:45 EDT"; }
 </script>
-</body>
-</html>
+</body></html>

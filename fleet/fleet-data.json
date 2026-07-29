@@ -1,5 +1,5 @@
 {
-  "generated": "2026-07-29T10:05:02.117175+00:00",
+  "generated": "2026-07-29T10:35:05.871484+00:00",
   "totals": {
     "agents": 16,
     "operational": 15,
@@ -18,10 +18,11 @@
     },
     "cron_source": "openclaw.sqlite + hermes/cron/jobs.json",
     "launchd": {
-      "healthy": 54,
+      "healthy": 53,
       "fails": [
         "com.moop.garmin-rounds: exit 1",
-        "com.moop.pj-wisdom-grp: exit 5"
+        "com.moop.pj-wisdom-grp: exit 5",
+        "com.moop.pj-wisdom-dm: exit 5"
       ]
     }
   },
@@ -114,7 +115,7 @@
       "n_jobs": 24,
       "n_enabled": 13,
       "err": 0,
-      "last_ms": 1785319292428,
+      "last_ms": 1785319800044,
       "status": "operational",
       "accomplishments": [
         {
@@ -276,6 +277,17 @@
       },
       "jobs": [
         {
+          "name": "Skill: briefing",
+          "enabled": true,
+          "expr": "10 6 * * *",
+          "tz": "America/New_York",
+          "channel": "discord",
+          "last_ms": 1785319800044,
+          "status": "ok",
+          "errors": 0,
+          "dur_ms": 17846
+        },
+        {
           "name": "fleet-freshness-watchdog",
           "enabled": true,
           "expr": "0 * * * *",
@@ -307,17 +319,6 @@
           "status": "ok",
           "errors": 0,
           "dur_ms": 56081
-        },
-        {
-          "name": "Skill: briefing",
-          "enabled": true,
-          "expr": "10 6 * * *",
-          "tz": "America/New_York",
-          "channel": "discord",
-          "last_ms": 1785233400058,
-          "status": "ok",
-          "errors": 0,
-          "dur_ms": 16428
         },
         {
           "name": "Skill: agent-self-introspect",
@@ -555,7 +556,7 @@
       "n_jobs": 12,
       "n_enabled": 11,
       "err": 0,
-      "last_ms": 1785318385798,
+      "last_ms": 1785320203735,
       "status": "operational",
       "accomplishments": [
         {
@@ -695,6 +696,17 @@
       },
       "jobs": [
         {
+          "name": "Fleet Integrity Watch",
+          "enabled": true,
+          "expr": "15 6 * * *",
+          "tz": "",
+          "channel": "origin",
+          "last_ms": 1785320203735,
+          "status": "ok",
+          "errors": 0,
+          "dur_ms": null
+        },
+        {
           "name": "Infrastructure Readiness Check",
           "enabled": true,
           "expr": "45 5 * * *",
@@ -745,17 +757,6 @@
           "tz": "",
           "channel": "origin",
           "last_ms": 1785254481044,
-          "status": "ok",
-          "errors": 0,
-          "dur_ms": null
-        },
-        {
-          "name": "Fleet Integrity Watch",
-          "enabled": true,
-          "expr": "15 6 * * *",
-          "tz": "",
-          "channel": "origin",
-          "last_ms": 1785233811704,
           "status": "ok",
           "errors": 0,
           "dur_ms": null

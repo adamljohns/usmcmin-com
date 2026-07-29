@@ -1,9 +1,9 @@
 {
-  "generated": "2026-07-29T13:35:32.941394+00:00",
+  "generated": "2026-07-29T14:05:45.090029+00:00",
   "totals": {
     "agents": 16,
-    "operational": 15,
-    "degraded": 1,
+    "operational": 14,
+    "degraded": 2,
     "jobs": 129,
     "enabled": 100,
     "accomplishments": 277,
@@ -13,8 +13,10 @@
     "cron": {
       "enabled": 100,
       "ran26h": 45,
-      "delivered": 42,
-      "fails": []
+      "delivered": 41,
+      "fails": [
+        "Daily Strategic Note (10:00 AM) \u2014 Gus (bg-hartwell)"
+      ]
     },
     "cron_source": "openclaw.sqlite + hermes/cron/jobs.json",
     "launchd": {
@@ -115,7 +117,7 @@
       "n_jobs": 24,
       "n_enabled": 13,
       "err": 0,
-      "last_ms": 1785330092429,
+      "last_ms": 1785333707346,
       "status": "operational",
       "accomplishments": [
         {
@@ -282,10 +284,10 @@
           "expr": "0 * * * *",
           "tz": "",
           "channel": "last",
-          "last_ms": 1785330092429,
+          "last_ms": 1785333707346,
           "status": "ok",
           "errors": 0,
-          "dur_ms": 82
+          "dur_ms": 70
         },
         {
           "name": "Fleet Morning SITREP (consolidated stand-up)",
@@ -4368,9 +4370,9 @@
       ],
       "n_jobs": 6,
       "n_enabled": 5,
-      "err": 0,
-      "last_ms": 1785294600051,
-      "status": "operational",
+      "err": 1,
+      "last_ms": 1785333600051,
+      "status": "degraded",
       "accomplishments": [
         {
           "date": "2026-07-26",
@@ -4491,6 +4493,17 @@
       },
       "jobs": [
         {
+          "name": "Daily Strategic Note (10:00 AM) \u2014 Gus",
+          "enabled": true,
+          "expr": "0 10 * * *",
+          "tz": "America/New_York",
+          "channel": "discord",
+          "last_ms": 1785333600051,
+          "status": "error",
+          "errors": 1,
+          "dur_ms": 105209
+        },
+        {
           "name": "Dev Loop: bg-hartwell daily reflection (implement-or-escalate)",
           "enabled": true,
           "expr": "10 23 * * *",
@@ -4500,17 +4513,6 @@
           "status": "ok",
           "errors": 0,
           "dur_ms": 45838
-        },
-        {
-          "name": "Daily Strategic Note (10:00 AM) \u2014 Gus",
-          "enabled": true,
-          "expr": "0 10 * * *",
-          "tz": "America/New_York",
-          "channel": "discord",
-          "last_ms": 1785247200065,
-          "status": "ok",
-          "errors": 0,
-          "dur_ms": 68214
         },
         {
           "name": "Gus Sunday Reading List + Reflection (Sun 6PM)",

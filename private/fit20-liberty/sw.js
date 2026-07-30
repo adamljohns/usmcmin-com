@@ -1,5 +1,5 @@
 /* fit20 Liberty Studio Command PWA · CAB-0730-PWA · cache shell only, never data/ */
-const CACHE = "sc-liberty-v131-pin1";
+const CACHE = "sc-liberty-v15-fw3";
 const PRECACHE = [
   "./",
   "./index.html",

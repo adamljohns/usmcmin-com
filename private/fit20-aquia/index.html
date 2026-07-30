@@ -11,7 +11,7 @@
 <meta name="apple-mobile-web-app-title" content="Aquia SC" />
 <meta name="application-name" content="Aquia SC" />
 <meta name="description" content="Private fit20 Aquia Park Studio Command. PIN gate. Installable app." />
-<title>fit20 Aquia Park · Studio Command V1.3.1</title>
+<title>fit20 Aquia Park · Studio Command V1.5</title>
 <link rel="icon" href="assets/favicon.png" />
 <link rel="apple-touch-icon" href="assets/apple-touch-icon.png" />
 <link rel="manifest" href="manifest.webmanifest" />
@@ -31,8 +31,8 @@ a{color:var(--lime-dk);text-decoration:none}a:hover{text-decoration:underline}
 .gate-err{display:none;margin-top:10px;font-size:12.5px;color:var(--bad);text-align:center}
 .gate-foot{margin-top:14px;font-size:11px;color:#8a928a;text-align:center}
 #app{display:none}
-.top{background:var(--charcoal);color:#f4f7f2;padding:14px 18px 12px}
-.top-row{display:flex;flex-wrap:wrap;gap:12px 18px;align-items:flex-end;justify-content:space-between}
+.top{background:var(--charcoal);color:#f4f7f2;padding:calc(18px + env(safe-area-inset-top, 0px)) 18px 14px;padding-top:calc(28px + env(safe-area-inset-top, 12px))}
+.top-row{display:flex;flex-wrap:wrap;gap:14px 20px;align-items:flex-start;justify-content:space-between}
 .brand-lockup{display:flex;gap:12px;align-items:center}
 .brand-logo{height:36px;width:auto;background:#fff;border-radius:6px;padding:4px 8px}
 .top .eyebrow{font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:#d6f0a8;font-weight:700}
@@ -44,7 +44,9 @@ a{color:var(--lime-dk);text-decoration:none}a:hover{text-decoration:underline}
 .quicklinks{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
 .quicklinks a{color:#d6f0a8;font-size:12px;font-weight:650;border:1px solid #5a6166;padding:5px 9px;border-radius:999px}
 .quicklinks a:hover{border-color:var(--lime);background:#3a403c;text-decoration:none}
-.top .meta{font-size:12px;color:#d0d5d0;text-align:right;line-height:1.35}
+.top .meta{font-size:12px;color:#d0d5d0;text-align:left;line-height:1.4;flex:1 1 200px;min-width:180px;padding-top:2px}
+@media(min-width:820px){.top .meta{text-align:right}}
+@media(max-width:900px){.top-row{flex-direction:column;align-items:stretch}.top .meta{text-align:left;border-top:1px solid #4a524c;padding-top:10px;margin-top:2px}}
 .top .meta strong{color:#d6f0a8}
 .banner{background:var(--ok-soft);border-bottom:1px solid #b7d7a0;color:#2f5a14;font-size:12.5px;padding:8px 18px}
 .banner b{color:#1f4a0c}
@@ -94,6 +96,21 @@ tr:last-child td{border-bottom:0}
 .install-bar .btn{background:var(--lime);border-color:var(--lime);color:#fff}
 .install-bar .btn.ghost{background:transparent;color:#d0d5d0;border-color:#5a6166}
 .pwa-hint{font-size:11.5px;color:var(--muted);text-align:center;margin:8px 0 0}
+.chk-list{list-style:none;margin:0;padding:0}
+.chk-list li{display:flex;gap:10px;align-items:flex-start;padding:7px 0;border-bottom:1px solid #e8ebe8;font-size:12.5px}
+.chk-list li:last-child{border-bottom:0}
+.chk-list input{margin-top:2px;width:18px;height:18px;accent-color:var(--lime-dk);flex:0 0 auto}
+.chk-list label{flex:1;line-height:1.35;cursor:pointer}
+.chk-list label.done{text-decoration:line-through;color:var(--muted)}
+.chk-group{margin:0 0 12px}
+.chk-group h3{margin:0 0 4px;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.chk-meta{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:0 0 10px}
+.chk-meta label{display:block;font-size:10px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin-bottom:3px}
+.chk-meta input,.chk-meta select{width:100%;border:1px solid var(--line);border-radius:8px;padding:8px 10px;font-size:13px;background:#fff}
+.chk-actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+.floor-meta{font-size:11px;color:var(--muted)}
+.trainer{font-size:11px;font-weight:700;color:var(--lime-dk)}
+
 </style>
 </head>
 <body>
@@ -101,31 +118,36 @@ tr:last-child td{border-bottom:0}
 <div id="gate"><div class="gate-card">
 <img src="assets/fit20-logo.png" alt="fit20" style="width:145px;height:auto;margin-bottom:14px;" />
 <div class="eyebrow">Private · PIN + host path · Not public nav</div>
-<h1>fit20 Aquia Park<br/>Studio Command V1.3.1</h1>
-<p><b>HARD SPLIT:</b> Aquia Park clients only. Call/Text → RingCentral · Email → fit20 Gmail (<code>adamjohns@fit20usa.com</code>). <b>Installable app</b> — Add to Home Screen after unlock.</p>
+<h1>fit20 Aquia Park<br/>Studio Command V1.5</h1>
+<p><b>Communications:</b> Call / Text → RingCentral · Email → Aquia Park Gmail (<code>aquiapark@fit20usa.com</code>). <b>Installable app</b> — Add to Home Screen after unlock.</p>
 <input id="pin" type="password" inputmode="numeric" maxlength="8" placeholder="••••" autocomplete="off" />
 <button type="button" id="unlock">Unlock dashboard</button>
 <div class="gate-err" id="gateErr">Wrong PIN. Try again.</div>
-<div class="gate-foot">V1.3.1 PWA · CAB-0730-PIN1 · 2026-07-30 17:35 EDT</div>
+<div class="gate-foot">V1.5 · CAB-0730-FW3 · Franchise Well · 2026-07-30</div>
 </div></div>
 <div id="app">
 <header class="top"><div class="top-row"><div>
 <div class="brand-lockup"><img class="brand-logo" src="assets/fit20-logo.png" alt="fit20" /><div>
-<div class="eyebrow">Studio Command · Aquia Park</div><h1>Private Studio OS</h1></div></div>
+<div class="eyebrow">Studio Command · Aquia Park</div><h1>Studio Dashboard</h1></div></div>
 <div class="studio-switch"><a class="" href="/private/fit20-cosner/">Cosner’s Corner</a><a class="" href="/private/fit20-liberty/">Liberty Place</a><a class="on" href="/private/fit20-aquia/">Aquia Park</a></div>
 <nav class="quicklinks">
 <a href="https://calendar.google.com/calendar/u/0/r/week" target="_blank" rel="noopener">Calendar ↗</a>
 <a href="https://fit20app.com" target="_blank" rel="noopener">Trainers App ↗</a>
-<a href="https://mail.google.com/mail/u/0/?authuser=adamjohns%40fit20usa.com" target="_blank" rel="noopener">fit20 Gmail ↗</a>
+<a href="https://mail.google.com/mail/u/0/?authuser=aquiapark%40fit20usa.com" target="_blank" rel="noopener">Aquia Gmail ↗</a>
 <a href="https://app.ringcentral.com" target="_blank" rel="noopener">RingCentral ↗</a>
 
 <a href="https://www.fit20.com/usa/home" target="_blank" rel="noopener">fit20 USA ↗</a>
 </nav></div>
-<div class="meta"><div><strong>V1.3.1 PWA</strong> · HARD studio split</div><div>Studio: Aquia Park</div><div>SC: Adam Johns · NASM</div><div id="asOf">As of: —</div><div id="pwaStatus">App: browser tab</div></div>
+<div class="meta">
+<div><strong>V1.5</strong></div>
+<div>Studio: Aquia Park</div>
+<div>SC: Adam Johns</div>
+<div id="asOf">As of: —</div>
+<div id="pwaStatus">App: browser tab</div>
+</div>
 </div></header>
-<div class="banner"><b>V1.3 AQUIA PWA · 2026-07-30. HARD SPLIT · installable home-screen app · prior V1.2 content retained · RC + fit20 Gmail · grind ON.</b></div>
+<div class="banner"><b>AQUIA · V1.5</b> · Franchise Well checklist live · Call/Text RC · Email Aquia Gmail · team/tablet ready.</div>
 <div class="wrap">
-<div class="law"><b>LAW:</b> Aquia Park only · RC call/text · fit20 Gmail · never publish data/ · continuous grind ON 2026-07-29.</div>
 <section class="kpis"><div class="kpi ok"><div class="lbl">Aquia board</div><div class="val">66</div><div class="sub">App live 7/29</div></div><div class="kpi hot"><div class="lbl">Hot leads</div><div class="val">—</div><div class="sub">pending</div></div><div class="kpi "><div class="lbl">Queue</div><div class="val">0</div><div class="sub">no bleed</div></div><div class="kpi "><div class="lbl">Floor</div><div class="val">0</div><div class="sub">await dump</div></div><div class="kpi "><div class="lbl">Rule</div><div class="val">HARD</div><div class="sub">Aquia only</div></div><div class="kpi "><div class="lbl">Path</div><div class="val">NEW</div><div class="sub">/private/fit20-aquia/</div></div></section>
 <div class="grid2">
 <section class="card"><div class="card-h"><h2>Who to call next</h2><span class="chip">Aquia-only</span></div>
@@ -133,23 +155,62 @@ tr:last-child td{border-bottom:0}
           <h3>Aquia Park lead queue pending</h3>
           <div class="why"><b>Why empty:</b> Authorized stub 2026-07-29. Need Aquia crawl before lead buttons go live.</div>
         </div></div></div></div></section>
-<section class="card"><div class="card-h"><h2>Boss-ready snapshot</h2><span class="chip">v1.2</span></div>
-<div class="card-b"><table>
-<tr><th>System</th><th>Status</th></tr>
-<tr><td>Zoho</td><td><span class="tag tag-warm">PENDING</span> Aquia org + App crawl</td></tr>
-<tr><td>Trainers App</td><td><span class="tag tag-ok">fit20 Google · RO</span></td></tr>
-<tr><td>Studio split</td><td><span class="tag tag-ok">HARD</span> this studio only</td></tr>
-<tr><td>Contact</td><td><span class="tag tag-ok">RC · fit20 Gmail</span></td></tr>
-<tr><td>Board total</td><td><b>66</b> pending verify</td></tr>
-<tr><td>Walkthrough</td><td><a href="https://youtu.be/CE-eT83fUYw" target="_blank" rel="noopener">YouTube ↗</a></td></tr>
-</table>
-<div class="btn-row"><a class="btn primary" href="https://fit20app.com" target="_blank" rel="noopener">Open Trainers App</a><a class="btn" href="/private/fit20-cosner/">Cosner board</a></div>
-<p class="copy">Structure beats discipline — one screen per studio.</p>
+<section class="card"><div class="card-h"><h2>Shift checklist</h2><span class="chip">FRANCHISE WELL</span></div>
+<div class="card-b">
+<p class="copy" style="margin-top:0">Official <b>Franchise Well Fitness · Studio Operation Checklist</b>. Saves on this device. Same Franchise Well list on every studio tablet. Check off on this device — change freely.</p>
+<div class="chk-meta">
+  <div><label for="chkShift">Shift</label><select id="chkShift" data-k="fw_shift"><option value="AM">AM</option><option value="MID">Mid</option><option value="PM" selected>PM</option></select></div>
+  <div><label for="chkTemp">Studio temp °F</label><input id="chkTemp" data-k="fw_temp" type="text" inputmode="numeric" placeholder="e.g. 63" value="" /></div>
+  <div><label for="chkTrainer">Trainer on block</label><input id="chkTrainer" data-k="fw_trainer" type="text" placeholder="Name" value="" /></div>
+  <div><label for="chkDate">Date</label><input id="chkDate" data-k="fw_date" type="text" value="2026-07-30" /></div>
+</div>
+<div class="chk-group"><h3>Opening the studio</h3>
+<ul class="chk-list" id="chkOpen">
+<li><input type="checkbox" id="o01" data-k="fw_o01" data-seed="0"/><label for="o01">Prepare studio for the training block</label></li>
+<li><input type="checkbox" id="o02" data-k="fw_o02" data-seed="0"/><label for="o02">Check-in ready (tablet / member flow)</label></li>
+<li><input type="checkbox" id="o03" data-k="fw_o03" data-seed="0"/><label for="o03">Assess & address: New Member screens</label></li>
+<li><input type="checkbox" id="o04" data-k="fw_o04" data-seed="0"/><label for="o04">Assess & address studio temperature</label></li>
+<li><input type="checkbox" id="o05" data-k="fw_o05" data-seed="0"/><label for="o05">Bathrooms · towels/treatment · cleanliness · supplies</label></li>
+<li><input type="checkbox" id="o06" data-k="fw_o06" data-seed="0"/><label for="o06">FIT / member documents ready for block</label></li>
+<li><input type="checkbox" id="o07" data-k="fw_o07" data-seed="0"/><label for="o07">Check RingCentral, Zoho & Email</label></li>
+<li><input type="checkbox" id="o08" data-k="fw_o08" data-seed="0"/><label for="o08">Review & respond: emails, texts, VMs (RC/Gmail) · update Zoho</label></li>
+<li><input type="checkbox" id="o09" data-k="fw_o09" data-seed="0"/><label for="o09">Contact at least TWO outstanding leads · update Zoho</label></li>
+<li><input type="checkbox" id="o10" data-k="fw_o10" data-seed="0"/><label for="o10">Contact HOT leads (RC) · update Zoho</label></li>
+<li><input type="checkbox" id="o11" data-k="fw_o11" data-seed="0"/><label for="o11">Gmail: file completed correspondence · update Zoho</label></li>
+<li><input type="checkbox" id="o12" data-k="fw_o12" data-seed="0"/><label for="o12">Training blocks — take notes</label></li>
+<li><input type="checkbox" id="o13" data-k="fw_o13" data-seed="0"/><label for="o13">Prepare for training sessions</label></li>
+<li><input type="checkbox" id="o14" data-k="fw_o14" data-seed="0"/><label for="o14">Wipe down lobby · beverages / waiting area</label></li>
+<li><input type="checkbox" id="o15" data-k="fw_o15" data-seed="0"/><label for="o15">Review veteran requests / no-shows (RC, Zoho, Gmail)</label></li>
+<li><input type="checkbox" id="o16" data-k="fw_o16" data-seed="0"/><label for="o16">Identify & fix ALL no-shows — reschedule or cancel</label></li>
+<li><input type="checkbox" id="o17" data-k="fw_o17" data-seed="0"/><label for="o17">Identify & fix late cancels · update Zoho</label></li>
+<li><input type="checkbox" id="o18" data-k="fw_o18" data-seed="0"/><label for="o18">Clear remaining calls / texts / VMs / emails · update Zoho</label></li>
+<li><input type="checkbox" id="o19" data-k="fw_o19" data-seed="0"/><label for="o19">Complete studio tasks in Zoho</label></li>
+<li><input type="checkbox" id="o20" data-k="fw_o20" data-seed="0"/><label for="o20">Update client tracking spreadsheet · update Zoho</label></li>
+<li><input type="checkbox" id="o21" data-k="fw_o21" data-seed="0"/><label for="o21">After each session: notes as required</label></li>
+<li><input type="checkbox" id="o22" data-k="fw_o22" data-seed="0"/><label for="o22">Prepare studio for the next training block</label></li>
+</ul></div>
+<div class="chk-group"><h3>Closing the studio</h3>
+<ul class="chk-list" id="chkClose">
+<li><input type="checkbox" id="c01" data-k="fw_c01" data-seed="0"/><label for="c01">Print documents as needed (training prints, etc.)</label></li>
+<li><input type="checkbox" id="c02" data-k="fw_c02" data-seed="0"/><label for="c02">Replenish stations</label></li>
+<li><input type="checkbox" id="c03" data-k="fw_c03" data-seed="0"/><label for="c03">Clean floors — sweep & Swiffer</label></li>
+<li><input type="checkbox" id="c04" data-k="fw_c04" data-seed="0"/><label for="c04">Spot clean as needed</label></li>
+<li><input type="checkbox" id="c05" data-k="fw_c05" data-seed="0"/><label for="c05">Restock trainer pads & supplies</label></li>
+<li><input type="checkbox" id="c06" data-k="fw_c06" data-seed="0"/><label for="c06">Log out of RingCentral</label></li>
+<li><input type="checkbox" id="c07" data-k="fw_c07" data-seed="0"/><label for="c07">Log out of Trainers App & laptop</label></li>
+<li><input type="checkbox" id="c08" data-k="fw_c08" data-seed="0"/><label for="c08">Log time sheet</label></li>
+</ul></div>
+<div class="chk-actions">
+  <button class="btn" type="button" id="chkReset">Reload latest shift seed</button>
+  <button class="btn" type="button" id="chkClear">Clear all</button>
+</div>
+<p class="copy" id="chkStamp" style="margin:8px 0 0;font-size:11px">Checklist local to this device</p>
+<p class="copy" style="margin:6px 0 0;font-size:11px">Aquia Park board · digital checklist for trainers / tablets.</p>
 </div></section></div>
 <section class="card"><div class="card-h"><h2>Floor pulse · Aquia Park only</h2><span class="chip">SITREP</span></div>
 <div class="card-b" style="overflow-x:auto"><table><thead><tr><th>Member</th><th>Source</th><th>Note</th><th>Flag</th></tr></thead>
 <tbody><tr><td colspan="4"><b>Aquia floor empty — awaiting App/Zoho crawl. No Cosner/Liberty rows by law.</b></td></tr></tbody></table></div></section>
-<div class="footer">Coach Arnold Briggs · Aquia Park · V1.3.1 PWA · CAB-0730-PIN1 · PIN gate · private path · installable</div>
+<div class="footer">Coach Arnold Briggs · Aquia Park · V1.5 · CAB-0730-FW3 · Franchise Well · PIN gate · installable</div>
 <p class="pwa-hint" id="iosInstallHint">iPhone/iPad: Safari → Share → <b>Add to Home Screen</b>. Android/Chrome: use Install bar or browser menu → Install app.</p>
 <div class="btn-row" style="justify-content:center"><button class="btn primary" type="button" onclick="lockAgain()">Lock screen</button></div>
 </div></div>
@@ -164,7 +225,7 @@ tr:last-child td{border-bottom:0}
 
 <script>
 const POC_PIN="2020";
-const STORE="sc_aquia_v13";
+const STORE="sc_aquia_v15";
 const gate=document.getElementById("gate");
 const app=document.getElementById("app");
 const pin=document.getElementById("pin");
@@ -178,7 +239,7 @@ function isStandalone(){
   return window.matchMedia("(display-mode: standalone)").matches || window.navigator.standalone === true;
 }
 function stamp(){
-  document.getElementById("asOf").textContent="As of: "+new Date().toLocaleString("en-US",{timeZone:"America/New_York"})+" · 2026-07-30 17:35 EDT build";
+  document.getElementById("asOf").textContent="As of: "+new Date().toLocaleString("en-US",{timeZone:"America/New_York"});
   if(pwaStatus){
     pwaStatus.textContent = isStandalone() ? "App: installed (standalone)" : "App: browser tab · installable";
   }
@@ -248,6 +309,54 @@ if(sessionStorage.getItem(STORE)==="1"){
   stamp();
   maybeShowInstall();
 }
+// Franchise Well checklist — device-local
+(function(){
+  const open=document.getElementById("chkOpen");
+  const close=document.getElementById("chkClose");
+  const stamp=document.getElementById("chkStamp");
+  if(!open||!close) return;
+  const boxes=[...open.querySelectorAll("input[type=checkbox][data-k]"),...close.querySelectorAll("input[type=checkbox][data-k]")];
+  const fields=[...document.querySelectorAll("#chkShift,#chkTemp,#chkTrainer,#chkDate")];
+  const SEED_FLAG="fw_seeded_v15_aquia";
+  function applySeed(){
+    boxes.forEach(b=>{ localStorage.setItem(b.dataset.k, "0"); });
+    localStorage.setItem("fw_shift","PM");
+    localStorage.setItem("fw_temp","");
+    localStorage.setItem("fw_trainer","");
+    localStorage.setItem("fw_date", new Date().toLocaleDateString("en-CA",{timeZone:"America/New_York"}));
+    localStorage.setItem(SEED_FLAG,"1");
+  }
+  if(localStorage.getItem(SEED_FLAG)!=="1"){ applySeed(); }
+  function refresh(){
+    let n=0;
+    boxes.forEach(b=>{
+      const on=localStorage.getItem(b.dataset.k)==="1";
+      b.checked=on;
+      const lab=document.querySelector('label[for="'+b.id+'"]');
+      if(lab) lab.classList.toggle("done", on);
+      if(on) n++;
+    });
+    fields.forEach(f=>{
+      const v=localStorage.getItem(f.dataset.k);
+      if(v!==null) f.value=v;
+    });
+    if(stamp) stamp.textContent=n+" / "+boxes.length+" done · Franchise Well · saved on this device · "+new Date().toLocaleString("en-US",{timeZone:"America/New_York"});
+  }
+  boxes.forEach(b=>b.addEventListener("change",()=>{
+    localStorage.setItem(b.dataset.k, b.checked?"1":"0");
+    refresh();
+  }));
+  fields.forEach(f=>{
+    f.addEventListener("change",()=>{ localStorage.setItem(f.dataset.k, f.value||""); refresh(); });
+    f.addEventListener("input",()=>{ localStorage.setItem(f.dataset.k, f.value||""); });
+  });
+  const seedBtn=document.getElementById("chkReset");
+  const clearBtn=document.getElementById("chkClear");
+  if(seedBtn) seedBtn.addEventListener("click",()=>{ applySeed(); refresh(); });
+  if(clearBtn) clearBtn.addEventListener("click",()=>{ boxes.forEach(b=>localStorage.setItem(b.dataset.k,"0")); refresh(); });
+  refresh();
+})();
+
 if("serviceWorker" in navigator){
   window.addEventListener("load", ()=>{
     navigator.serviceWorker.register("./sw.js", { scope: "./" }).catch(()=>{});

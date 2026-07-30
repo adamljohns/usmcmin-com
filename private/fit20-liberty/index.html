@@ -11,7 +11,7 @@
 <meta name="apple-mobile-web-app-title" content="Liberty SC" />
 <meta name="application-name" content="Liberty SC" />
 <meta name="description" content="Private fit20 Liberty Place Studio Command. PIN gate. Installable app." />
-<title>fit20 Liberty Place · Studio Command V1.3</title>
+<title>fit20 Liberty Place · Studio Command V1.3.1</title>
 <link rel="icon" href="assets/favicon.png" />
 <link rel="apple-touch-icon" href="assets/apple-touch-icon.png" />
 <link rel="manifest" href="manifest.webmanifest" />
@@ -101,12 +101,12 @@ tr:last-child td{border-bottom:0}
 <div id="gate"><div class="gate-card">
 <img src="assets/fit20-logo.png" alt="fit20" style="width:145px;height:auto;margin-bottom:14px;" />
 <div class="eyebrow">Private · PIN + host path · Not public nav</div>
-<h1>fit20 Liberty Place<br/>Studio Command V1.3</h1>
+<h1>fit20 Liberty Place<br/>Studio Command V1.3.1</h1>
 <p><b>HARD SPLIT:</b> Liberty Place clients only. Call/Text → RingCentral · Email → fit20 Gmail (<code>adamjohns@fit20usa.com</code>). <b>Installable app</b> — Add to Home Screen after unlock.</p>
 <input id="pin" type="password" inputmode="numeric" maxlength="8" placeholder="••••" autocomplete="off" />
 <button type="button" id="unlock">Unlock dashboard</button>
 <div class="gate-err" id="gateErr">Wrong PIN. Try again.</div>
-<div class="gate-foot">V1.3 PWA · CAB-0730-PWA · 2026-07-30 15:55 EDT</div>
+<div class="gate-foot">V1.3.1 PWA · CAB-0730-PIN1 · 2026-07-30 17:35 EDT</div>
 </div></div>
 <div id="app">
 <header class="top"><div class="top-row"><div>
@@ -121,7 +121,7 @@ tr:last-child td{border-bottom:0}
 
 <a href="https://www.fit20.com/usa/home" target="_blank" rel="noopener">fit20 USA ↗</a>
 </nav></div>
-<div class="meta"><div><strong>V1.3 PWA</strong> · HARD studio split</div><div>Studio: Liberty Place</div><div>SC: Adam Johns · NASM</div><div id="asOf">As of: —</div><div id="pwaStatus">App: browser tab</div></div>
+<div class="meta"><div><strong>V1.3.1 PWA</strong> · HARD studio split</div><div>Studio: Liberty Place</div><div>SC: Adam Johns · NASM</div><div id="asOf">As of: —</div><div id="pwaStatus">App: browser tab</div></div>
 </div></header>
 <div class="banner"><b>V1.3 LIBERTY PWA · 2026-07-30. HARD SPLIT · installable home-screen app · prior V1.2 content retained · RC + fit20 Gmail · grind ON.</b></div>
 <div class="wrap">
@@ -154,7 +154,7 @@ tr:last-child td{border-bottom:0}
 <tr><td><b>Donna</b></td><td>Liberty 7/28</td><td>Stenosis/DDD mods</td><td><span class='tag tag-warm'>WARN</span></td></tr>
 <tr><td><b>Joe</b></td><td>Liberty 7/28</td><td>Return pause · conservative</td><td><span class='tag tag-ok'>OK</span></td></tr>
 <tr><td><b>Realtor visit</b></td><td>Liberty 7/28</td><td>Calendar touch</td><td><span class='tag tag-ok'>OK</span></td></tr></tbody></table></div></section>
-<div class="footer">Coach Arnold Briggs · Liberty Place · V1.3 PWA · CAB-0730-PWA · PIN gate · private path · installable</div>
+<div class="footer">Coach Arnold Briggs · Liberty Place · V1.3.1 PWA · CAB-0730-PIN1 · PIN gate · private path · installable</div>
 <p class="pwa-hint" id="iosInstallHint">iPhone/iPad: Safari → Share → <b>Add to Home Screen</b>. Android/Chrome: use Install bar or browser menu → Install app.</p>
 <div class="btn-row" style="justify-content:center"><button class="btn primary" type="button" onclick="lockAgain()">Lock screen</button></div>
 </div></div>
@@ -183,24 +183,24 @@ function isStandalone(){
   return window.matchMedia("(display-mode: standalone)").matches || window.navigator.standalone === true;
 }
 function stamp(){
-  document.getElementById("asOf").textContent="As of: "+new Date().toLocaleString("en-US",{timeZone:"America/New_York"})+" · 2026-07-30 15:55 EDT build";
+  document.getElementById("asOf").textContent="As of: "+new Date().toLocaleString("en-US",{timeZone:"America/New_York"})+" · 2026-07-30 17:35 EDT build";
   if(pwaStatus){
     pwaStatus.textContent = isStandalone() ? "App: installed (standalone)" : "App: browser tab · installable";
   }
   if(isStandalone() && installBar) installBar.classList.remove("on");
 }
 function unlock(){
-  if((pin.value||"").trim()===POC_PIN){
-    sessionStorage.setItem(STORE,"1");
-    gate.style.display="none";
-    app.style.display="block";
-    err.style.display="none";
+  const val=((pin&&pin.value)||"").trim();
+  if(val===POC_PIN){
+    try{sessionStorage.setItem(STORE,"1");}catch(_e){}
+    if(gate) gate.style.display="none";
+    if(app) app.style.display="block";
+    if(err) err.style.display="none";
     stamp();
     maybeShowInstall();
   }else{
-    err.style.display="block";
-    pin.value="";
-    pin.focus();
+    if(err) err.style.display="block";
+    if(pin){ pin.value=""; pin.focus(); }
   }
 }
 function lockAgain(){
@@ -229,8 +229,7 @@ window.addEventListener("appinstalled", ()=>{
 if(installBtn){
   installBtn.addEventListener("click", async ()=>{
     if(!deferredPrompt){
-      alert("On iPhone: Safari Share → Add to Home Screen.
-On Android/desktop Chrome: use the browser Install / Add to Home Screen menu.");
+      alert("On iPhone: Safari Share → Add to Home Screen. On Android/Chrome: browser menu → Install / Add to Home Screen.");
       return;
     }
     deferredPrompt.prompt();
@@ -245,8 +244,9 @@ if(installDismiss){
     installBar.classList.remove("on");
   });
 }
-document.getElementById("unlock").addEventListener("click", unlock);
-pin.addEventListener("keydown", e=>{if(e.key==="Enter")unlock();});
+const unlockBtn=document.getElementById("unlock");
+if(unlockBtn) unlockBtn.addEventListener("click", unlock);
+if(pin) pin.addEventListener("keydown", e=>{if(e.key==="Enter")unlock();});
 if(sessionStorage.getItem(STORE)==="1"){
   gate.style.display="none";
   app.style.display="block";

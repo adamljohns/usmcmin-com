@@ -1,5 +1,5 @@
 /* fit20 Cosner Studio Command PWA · CAB-0730-PWA · cache shell only, never data/ */
-const CACHE = "sc-cosner-v131-pin1";
+const CACHE = "sc-cosner-v14-floor";
 const PRECACHE = [
   "./",
   "./index.html",

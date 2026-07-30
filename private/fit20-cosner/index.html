@@ -102,11 +102,17 @@ tr:last-child td{border-bottom:0}
 .pwa-hint{font-size:11.5px;color:var(--muted);text-align:center;margin:8px 0 0}
 
 .chk-list{list-style:none;margin:0;padding:0}
-.chk-list li{display:flex;gap:10px;align-items:flex-start;padding:8px 0;border-bottom:1px solid #e8ebe8;font-size:13px}
+.chk-list li{display:flex;gap:10px;align-items:flex-start;padding:7px 0;border-bottom:1px solid #e8ebe8;font-size:12.5px}
 .chk-list li:last-child{border-bottom:0}
-.chk-list input{margin-top:2px;width:18px;height:18px;accent-color:var(--lime-dk)}
+.chk-list input{margin-top:2px;width:18px;height:18px;accent-color:var(--lime-dk);flex:0 0 auto}
 .chk-list label{flex:1;line-height:1.35;cursor:pointer}
 .chk-list label.done{text-decoration:line-through;color:var(--muted)}
+.chk-group{margin:0 0 12px}
+.chk-group h3{margin:0 0 4px;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.chk-meta{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:0 0 10px}
+.chk-meta label{display:block;font-size:10px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin-bottom:3px}
+.chk-meta input,.chk-meta select{width:100%;border:1px solid var(--line);border-radius:8px;padding:8px 10px;font-size:13px;background:#fff}
+.chk-actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
 .floor-meta{font-size:11px;color:var(--muted)}
 .trainer{font-size:11px;font-weight:700;color:var(--lime-dk)}
 
@@ -122,7 +128,7 @@ tr:last-child td{border-bottom:0}
 <input id="pin" type="password" inputmode="numeric" maxlength="8" placeholder="••••" autocomplete="off" />
 <button type="button" id="unlock">Unlock dashboard</button>
 <div class="gate-err" id="gateErr">Wrong PIN. Try again.</div>
-<div class="gate-foot">Cosner’s Corner · updated 2026-07-30 18:45 EDT</div>
+<div class="gate-foot">Cosner’s Corner · updated 2026-07-30 18:50 EDT</div>
 </div></div>
 <div id="app">
 <header class="top"><div class="top-row"><div>
@@ -146,9 +152,9 @@ tr:last-child td{border-bottom:0}
 <div id="pwaStatus">App: browser tab</div>
 </div>
 </div></header>
-<div class="banner"><b>COSNER · Thu 2026-07-30</b> · Floor live · Call/Text RC · Email Cosner Gmail · checklist on right · Blake pair post-FIT check in Zoho.</div>
+<div class="banner"><b>COSNER · Thu 2026-07-30 PM</b> · Franchise Well checklist live (Todd sheet · temp 63°) · RC + Cosner Gmail · floor from SC.</div>
 <div class="wrap">
-<section class="kpis"><div class="kpi ok"><div class="lbl">Board</div><div class="val">152</div><div class="sub">Cosner App</div></div><div class="kpi hot"><div class="lbl">Hot leads</div><div class="val">3</div><div class="sub">Zoho queue</div></div><div class="kpi "><div class="lbl">Call queue</div><div class="val">6</div><div class="sub">Cosner only</div></div><div class="kpi ok"><div class="lbl">Trained today</div><div class="val">16+</div><div class="sub">Thu 7/30 floor</div></div><div class="kpi "><div class="lbl">Open flags</div><div class="val">3</div><div class="sub">Ashley · Octavio · Blake pair</div></div><div class="kpi "><div class="lbl">Shift</div><div class="val">PM</div><div class="sub">Todd scheduled · Adam helped</div></div></section>
+<section class="kpis"><div class="kpi ok"><div class="lbl">Board</div><div class="val">152</div><div class="sub">Cosner App</div></div><div class="kpi hot"><div class="lbl">Hot leads</div><div class="val">3</div><div class="sub">Zoho queue</div></div><div class="kpi "><div class="lbl">Call queue</div><div class="val">6</div><div class="sub">Cosner only</div></div><div class="kpi ok"><div class="lbl">Trained today</div><div class="val">16+</div><div class="sub">Thu 7/30 floor</div></div><div class="kpi "><div class="lbl">Open flags</div><div class="val">3</div><div class="sub">Ashley · Octavio · Blakes · close logout/timesheet</div></div><div class="kpi "><div class="lbl">Shift</div><div class="val">PM</div><div class="sub">Todd scheduled · Adam helped</div></div></section>
 <div class="grid2">
 <section class="card"><div class="card-h"><h2>Who to call next</h2><span class="chip">Cosner Zoho</span></div>
 <div class="card-b"><p class="copy" style="margin-top:0">Cosner leads. <b>Call/Text</b> → RingCentral · <b>Email</b> → Cosner’s Corner Gmail.</p>
@@ -229,20 +235,57 @@ tr:last-child td{border-bottom:0}
             <a class="zoho" href="https://crm.zoho.eu/crm/org20068806089/tab/Contacts/248316000215367092/canvas/248316000036824647" target="_blank" rel="noopener">Zoho ↗</a>
           </div>
         </div></div></div></div></section>
-<section class="card"><div class="card-h"><h2>Shift checklist</h2><span class="chip">DIGITAL</span></div>
+<section class="card"><div class="card-h"><h2>Shift checklist</h2><span class="chip">FRANCHISE WELL</span></div>
 <div class="card-b">
-<p class="copy" style="margin-top:0">Tap to check off on this device. <b>Official Franchise Well list loading next</b> when your checklist photo lands — scaffold until then.</p>
-<ul class="chk-list" id="shiftChecklist">
-  <li><input type="checkbox" id="c1" data-k="cosner_chk_open"/><label for="c1">Studio open / lights · temp · TV · tablet ready</label></li>
-  <li><input type="checkbox" id="c2" data-k="cosner_chk_cal"/><label for="c2">Calendar reviewed for today's blocks</label></li>
-  <li><input type="checkbox" id="c3" data-k="cosner_chk_floor"/><label for="c3">Floor pulse matches who actually trained</label></li>
-  <li><input type="checkbox" id="c4" data-k="cosner_chk_zoho"/><label for="c4">Zoho closed-loop on FITs / leads touched</label></li>
-  <li><input type="checkbox" id="c5" data-k="cosner_chk_rc"/><label for="c5">RingCentral texts/calls logged as needed</label></li>
-  <li><input type="checkbox" id="c6" data-k="cosner_chk_clean"/><label for="c6">End-block: leave studio ready for next trainer</label></li>
-  <li><input type="checkbox" id="c7" data-k="cosner_chk_ashley"/><label for="c7">Coach Ashley on pace bar → Robert / Todd</label></li>
-  <li><input type="checkbox" id="c8" data-k="cosner_chk_blake"/><label for="c8">Phillip + Sandra Blake Zoho = post-FIT (if trained)</label></li>
-</ul>
-<p class="copy" id="chkStamp" style="margin:8px 0 0;font-size:11px">Checklist local to this phone · not yet synced</p>
+<p class="copy" style="margin-top:0">Official <b>Franchise Well Fitness · Studio Operation Checklist</b>. Saves on this device. Seeded from Todd sheet <b>Th 7/30 PM</b> (your photo) — change freely.</p>
+<div class="chk-meta">
+  <div><label for="chkShift">Shift</label><select id="chkShift" data-k="fw_shift"><option value="AM">AM</option><option value="MID">Mid</option><option value="PM" selected>PM</option></select></div>
+  <div><label for="chkTemp">Studio temp °F</label><input id="chkTemp" data-k="fw_temp" type="text" inputmode="numeric" placeholder="e.g. 63" value="63" /></div>
+  <div><label for="chkTrainer">Trainer on block</label><input id="chkTrainer" data-k="fw_trainer" type="text" placeholder="Name" value="Todd / Adam helped" /></div>
+  <div><label for="chkDate">Date</label><input id="chkDate" data-k="fw_date" type="text" value="2026-07-30" /></div>
+</div>
+<div class="chk-group"><h3>Opening the studio</h3>
+<ul class="chk-list" id="chkOpen">
+<li><input type="checkbox" id="o01" data-k="fw_o01" data-seed="1"/><label for="o01">Prepare studio for the training block</label></li>
+<li><input type="checkbox" id="o02" data-k="fw_o02" data-seed="1"/><label for="o02">Check-in ready (tablet / member flow)</label></li>
+<li><input type="checkbox" id="o03" data-k="fw_o03" data-seed="1"/><label for="o03">Assess & address: New Member screens</label></li>
+<li><input type="checkbox" id="o04" data-k="fw_o04" data-seed="1"/><label for="o04">Assess & address studio temperature</label></li>
+<li><input type="checkbox" id="o05" data-k="fw_o05" data-seed="1"/><label for="o05">Bathrooms · towels/treatment · cleanliness · supplies</label></li>
+<li><input type="checkbox" id="o06" data-k="fw_o06" data-seed="1"/><label for="o06">FIT / member documents ready for block</label></li>
+<li><input type="checkbox" id="o07" data-k="fw_o07" data-seed="1"/><label for="o07">Check RingCentral, Zoho & Email</label></li>
+<li><input type="checkbox" id="o08" data-k="fw_o08" data-seed="1"/><label for="o08">Review & respond: emails, texts, VMs (RC/Gmail) · update Zoho</label></li>
+<li><input type="checkbox" id="o09" data-k="fw_o09" data-seed="1"/><label for="o09">Contact at least TWO outstanding leads · update Zoho</label></li>
+<li><input type="checkbox" id="o10" data-k="fw_o10" data-seed="1"/><label for="o10">Contact HOT leads (RC) · update Zoho</label></li>
+<li><input type="checkbox" id="o11" data-k="fw_o11" data-seed="1"/><label for="o11">Gmail: file completed correspondence · update Zoho</label></li>
+<li><input type="checkbox" id="o12" data-k="fw_o12" data-seed="1"/><label for="o12">Training blocks — take notes</label></li>
+<li><input type="checkbox" id="o13" data-k="fw_o13" data-seed="1"/><label for="o13">Prepare for training sessions</label></li>
+<li><input type="checkbox" id="o14" data-k="fw_o14" data-seed="1"/><label for="o14">Wipe down lobby · beverages / waiting area</label></li>
+<li><input type="checkbox" id="o15" data-k="fw_o15" data-seed="1"/><label for="o15">Review veteran requests / no-shows (RC, Zoho, Gmail)</label></li>
+<li><input type="checkbox" id="o16" data-k="fw_o16" data-seed="1"/><label for="o16">Identify & fix ALL no-shows — reschedule or cancel</label></li>
+<li><input type="checkbox" id="o17" data-k="fw_o17" data-seed="1"/><label for="o17">Identify & fix late cancels · update Zoho</label></li>
+<li><input type="checkbox" id="o18" data-k="fw_o18" data-seed="1"/><label for="o18">Clear remaining calls / texts / VMs / emails · update Zoho</label></li>
+<li><input type="checkbox" id="o19" data-k="fw_o19" data-seed="1"/><label for="o19">Complete studio tasks in Zoho</label></li>
+<li><input type="checkbox" id="o20" data-k="fw_o20" data-seed="1"/><label for="o20">Update client tracking spreadsheet · update Zoho</label></li>
+<li><input type="checkbox" id="o21" data-k="fw_o21" data-seed="1"/><label for="o21">After each session: notes as required</label></li>
+<li><input type="checkbox" id="o22" data-k="fw_o22" data-seed="1"/><label for="o22">Prepare studio for the next training block</label></li>
+</ul></div>
+<div class="chk-group"><h3>Closing the studio</h3>
+<ul class="chk-list" id="chkClose">
+<li><input type="checkbox" id="c01" data-k="fw_c01" data-seed="1"/><label for="c01">Print documents as needed (training prints, etc.)</label></li>
+<li><input type="checkbox" id="c02" data-k="fw_c02" data-seed="1"/><label for="c02">Replenish stations</label></li>
+<li><input type="checkbox" id="c03" data-k="fw_c03" data-seed="1"/><label for="c03">Clean floors — sweep & Swiffer</label></li>
+<li><input type="checkbox" id="c04" data-k="fw_c04" data-seed="1"/><label for="c04">Spot clean as needed</label></li>
+<li><input type="checkbox" id="c05" data-k="fw_c05" data-seed="1"/><label for="c05">Restock trainer pads & supplies</label></li>
+<li><input type="checkbox" id="c06" data-k="fw_c06" data-seed="1"/><label for="c06">Log out of RingCentral</label></li>
+<li><input type="checkbox" id="c07" data-k="fw_c07" data-seed="0"/><label for="c07">Log out of Trainers App & laptop</label></li>
+<li><input type="checkbox" id="c08" data-k="fw_c08" data-seed="0"/><label for="c08">Log time sheet</label></li>
+</ul></div>
+<div class="chk-actions">
+  <button class="btn" type="button" id="chkSeed730">Reload Th 7/30 PM seed</button>
+  <button class="btn" type="button" id="chkClear">Clear all</button>
+</div>
+<p class="copy" id="chkStamp" style="margin:8px 0 0;font-size:11px">Checklist local to this device</p>
+<p class="copy" style="margin:6px 0 0;font-size:11px">Still open from photo: <b>Trainers App logout</b> · <b>Log time sheet</b>. Floor flags stay on Floor pulse (Ashley coach · Blake Zoho).</p>
 </div></section></div>
 <section class="card"><div class="card-h"><h2>Floor pulse · Thu 7/30</h2><span class="chip">LIVE SHIFT</span></div>
 <div class="card-b" style="overflow-x:auto"><table><thead><tr><th>Time / block</th><th>Member</th><th>Trainer</th><th>Note</th><th>Flag</th></tr></thead>
@@ -260,7 +303,7 @@ tr:last-child td{border-bottom:0}
 </tbody></table>
 <p class="copy" style="margin:10px 0 0">Scheduled: <b>Todd</b>. Adam helped PM (~3:45–6:00). Overall floor: no clinical issues. Kathy next week 5:00 = out of town (calendar yellow — ALJ).</p>
 </div></section>
-<div class="footer">fit20 Cosner’s Corner · PIN gate · installable · updated 2026-07-30 18:45 EDT</div>
+<div class="footer">fit20 Cosner’s Corner · PIN gate · installable · updated 2026-07-30 18:50 EDT</div>
 <p class="pwa-hint" id="iosInstallHint">iPhone/iPad: Safari → Share → <b>Add to Home Screen</b>. Android/Chrome: use Install bar or browser menu → Install app.</p>
 <div class="btn-row" style="justify-content:center"><button class="btn primary" type="button" onclick="lockAgain()">Lock screen</button></div>
 </div></div>
@@ -360,27 +403,54 @@ if(sessionStorage.getItem(STORE)==="1"){
   maybeShowInstall();
 }
 
-// Shift checklist — device-local
+// Franchise Well checklist — device-local
 (function(){
-  const root=document.getElementById("shiftChecklist");
-  if(!root) return;
+  const open=document.getElementById("chkOpen");
+  const close=document.getElementById("chkClose");
   const stamp=document.getElementById("chkStamp");
-  const boxes=[...root.querySelectorAll("input[type=checkbox][data-k]")];
+  if(!open||!close) return;
+  const boxes=[...open.querySelectorAll("input[type=checkbox][data-k]"),...close.querySelectorAll("input[type=checkbox][data-k]")];
+  const fields=[...document.querySelectorAll("#chkShift,#chkTemp,#chkTrainer,#chkDate")];
+  const SEED_FLAG="fw_seeded_v15b";
+  function applySeed(){
+    boxes.forEach(b=>{
+      const on=b.getAttribute("data-seed")==="1";
+      localStorage.setItem(b.dataset.k, on?"1":"0");
+    });
+    localStorage.setItem("fw_shift","PM");
+    localStorage.setItem("fw_temp","63");
+    localStorage.setItem("fw_trainer","Todd / Adam helped");
+    localStorage.setItem("fw_date","2026-07-30");
+    localStorage.setItem(SEED_FLAG,"1");
+  }
+  if(localStorage.getItem(SEED_FLAG)!=="1"){ applySeed(); }
   function refresh(){
     let n=0;
     boxes.forEach(b=>{
       const on=localStorage.getItem(b.dataset.k)==="1";
       b.checked=on;
-      const lab=root.querySelector("label[for=\""+b.id+"\"]");
+      const lab=document.querySelector('label[for="'+b.id+'"]');
       if(lab) lab.classList.toggle("done", on);
       if(on) n++;
     });
-    if(stamp) stamp.textContent=n+" / "+boxes.length+" done · saved on this phone · "+new Date().toLocaleString("en-US",{timeZone:"America/New_York"});
+    fields.forEach(f=>{
+      const v=localStorage.getItem(f.dataset.k);
+      if(v!==null) f.value=v;
+    });
+    if(stamp) stamp.textContent=n+" / "+boxes.length+" done · Franchise Well · saved on this device · "+new Date().toLocaleString("en-US",{timeZone:"America/New_York"});
   }
   boxes.forEach(b=>b.addEventListener("change",()=>{
     localStorage.setItem(b.dataset.k, b.checked?"1":"0");
     refresh();
   }));
+  fields.forEach(f=>{
+    f.addEventListener("change",()=>{ localStorage.setItem(f.dataset.k, f.value||""); refresh(); });
+    f.addEventListener("input",()=>{ localStorage.setItem(f.dataset.k, f.value||""); });
+  });
+  const seedBtn=document.getElementById("chkSeed730");
+  const clearBtn=document.getElementById("chkClear");
+  if(seedBtn) seedBtn.addEventListener("click",()=>{ applySeed(); refresh(); });
+  if(clearBtn) clearBtn.addEventListener("click",()=>{ boxes.forEach(b=>localStorage.setItem(b.dataset.k,"0")); refresh(); });
   refresh();
 })();
 

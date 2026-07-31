@@ -1,5 +1,5 @@
 {
-  "generated": "2026-07-31T09:39:52.271713+00:00",
+  "generated": "2026-07-31T10:09:57.043351+00:00",
   "totals": {
     "agents": 16,
     "operational": 15,
@@ -18,9 +18,11 @@
     },
     "cron_source": "openclaw.sqlite + hermes/cron/jobs.json",
     "launchd": {
-      "healthy": 55,
+      "healthy": 53,
       "fails": [
-        "com.moop.garmin-rounds: exit 1"
+        "com.moop.garmin-rounds: exit 1",
+        "com.moop.pj-wisdom-grp: exit 5",
+        "com.moop.pj-wisdom-dm: exit 5"
       ]
     }
   },
@@ -113,7 +115,7 @@
       "n_jobs": 24,
       "n_enabled": 13,
       "err": 0,
-      "last_ms": 1785488492457,
+      "last_ms": 1785492092428,
       "status": "operational",
       "accomplishments": [
         {
@@ -280,10 +282,10 @@
           "expr": "0 * * * *",
           "tz": "",
           "channel": "last",
-          "last_ms": 1785488492457,
+          "last_ms": 1785492092428,
           "status": "ok",
           "errors": 0,
-          "dur_ms": 65
+          "dur_ms": 70
         },
         {
           "name": "Dev Loop: main daily reflection (implement-or-escalate)",
@@ -554,7 +556,7 @@
       "n_jobs": 12,
       "n_enabled": 11,
       "err": 0,
-      "last_ms": 1785461201280,
+      "last_ms": 1785491210590,
       "status": "operational",
       "accomplishments": [
         {
@@ -694,6 +696,17 @@
       },
       "jobs": [
         {
+          "name": "Infrastructure Readiness Check",
+          "enabled": true,
+          "expr": "45 5 * * *",
+          "tz": "",
+          "channel": "origin",
+          "last_ms": 1785491210590,
+          "status": "ok",
+          "errors": 0,
+          "dur_ms": null
+        },
+        {
           "name": "MOOP Command Nightly Reconciliation",
           "enabled": true,
           "expr": "15 21 * * *",
@@ -755,17 +768,6 @@
           "tz": "",
           "channel": "origin",
           "last_ms": 1785405673305,
-          "status": "ok",
-          "errors": 0,
-          "dur_ms": null
-        },
-        {
-          "name": "Infrastructure Readiness Check",
-          "enabled": true,
-          "expr": "45 5 * * *",
-          "tz": "",
-          "channel": "origin",
-          "last_ms": 1785404799468,
           "status": "ok",
           "errors": 0,
           "dur_ms": null
@@ -932,7 +934,7 @@
       "n_jobs": 6,
       "n_enabled": 5,
       "err": 0,
-      "last_ms": 1785465300054,
+      "last_ms": 1785492000057,
       "status": "operational",
       "accomplishments": [
         {
@@ -1136,6 +1138,17 @@
       },
       "jobs": [
         {
+          "name": "Skill: devotion-ultimate",
+          "enabled": true,
+          "expr": "0 6 * * *",
+          "tz": "America/New_York",
+          "channel": "discord",
+          "last_ms": 1785492000057,
+          "status": "ok",
+          "errors": 0,
+          "dur_ms": 73229
+        },
+        {
           "name": "Dev Loop: preacher-john daily reflection (implement-or-escalate)",
           "enabled": true,
           "expr": "35 22 * * *",
@@ -1145,17 +1158,6 @@
           "status": "ok",
           "errors": 0,
           "dur_ms": 77271
-        },
-        {
-          "name": "Skill: devotion-ultimate",
-          "enabled": true,
-          "expr": "0 6 * * *",
-          "tz": "America/New_York",
-          "channel": "discord",
-          "last_ms": 1785405600059,
-          "status": "ok",
-          "errors": 0,
-          "dur_ms": 64967
         },
         {
           "name": "Skill: scripture-lookup (Sun BTE smoke)",

@@ -126,10 +126,143 @@
     }
   }
 
+  function sectionStorageKey(moduleId) {
+    return `usmcmin:tmc-husband:v1:sections:${moduleId}`;
+  }
+
+  function loadSections(storage, moduleId) {
+    try {
+      const raw = storage.getItem(sectionStorageKey(moduleId));
+      const parsed = raw ? JSON.parse(raw) : {};
+      return parsed && typeof parsed === 'object' && !Array.isArray(parsed) ? parsed : {};
+    } catch (_error) {
+      return {};
+    }
+  }
+
+  function saveSections(storage, moduleId, sections) {
+    storage.setItem(sectionStorageKey(moduleId), JSON.stringify(sections));
+  }
+
+  function formatMissionTime(ms) {
+    const total = Math.max(0, Math.ceil(ms / 1000));
+    const mm = String(Math.floor(total / 60)).padStart(2, '0');
+    const ss = String(total % 60).padStart(2, '0');
+    return `${mm}:${ss}`;
+  }
+
+  function initFieldManual(storage) {
+    const root = document.querySelector('[data-field-manual]');
+    const hud = document.getElementById('module-mission-hud');
+    if (!root) return;
+
+    const moduleId = root.getAttribute('data-field-manual');
+    let sections = loadSections(storage, moduleId);
+    const sectionNodes = root.querySelectorAll('[data-track-section]');
+    const totalSections = sectionNodes.length;
+
+    function updateSectionUI() {
+      let done = 0;
+      sectionNodes.forEach((node) => {
+        const id = node.getAttribute('data-track-section');
+        const complete = sections[id] === true;
+        node.classList.toggle('is-section-complete', complete);
+        const input = node.querySelector(`[data-section-complete="${id}"]`);
+        if (input) input.checked = complete;
+        if (complete) done += 1;
+      });
+      const pct = totalSections ? Math.round((done / totalSections) * 100) : 0;
+      document.querySelectorAll('[data-section-progress-bar]').forEach((bar) => {
+        bar.style.width = `${pct}%`;
+      });
+      document.querySelectorAll('[data-section-progress-summary]').forEach((node) => {
+        node.textContent = `${done} of ${totalSections} sections checked (${pct}%)`;
+      });
+    }
+
+    root.querySelectorAll('[data-section-complete]').forEach((input) => {
+      input.addEventListener('change', () => {
+        const id = input.getAttribute('data-section-complete');
+        sections[id] = input.checked;
+        saveSections(storage, moduleId, sections);
+        updateSectionUI();
+      });
+    });
+    updateSectionUI();
+
+    if (!hud) return;
+
+    const minutes = Number(hud.getAttribute('data-mission-minutes')) || 75;
+    const display = hud.querySelector('[data-mission-display]');
+    const pctNode = hud.querySelector('[data-mission-pct]');
+    const startBtn = hud.querySelector('[data-mission-start]');
+    const pauseBtn = hud.querySelector('[data-mission-pause]');
+    const addBtn = hud.querySelector('[data-mission-add5]');
+    let remainingMs = minutes * 60 * 1000;
+    let endAt = null;
+    let paused = false;
+    let timerId = null;
+
+    function renderMission() {
+      if (display) display.textContent = formatMissionTime(remainingMs);
+      if (pctNode) {
+        const pct = Math.round((remainingMs / (minutes * 60 * 1000)) * 100);
+        pctNode.textContent = `${pct}%`;
+      }
+      hud.classList.toggle('mission-urgent', remainingMs <= 5 * 60 * 1000 && remainingMs > 0);
+    }
+
+    function tick() {
+      if (paused || endAt === null) return;
+      remainingMs = endAt - Date.now();
+      if (remainingMs <= 0) {
+        remainingMs = 0;
+        paused = true;
+        if (pauseBtn) pauseBtn.hidden = true;
+        clearInterval(timerId);
+      }
+      renderMission();
+    }
+
+    function startMission() {
+      hud.hidden = false;
+      endAt = Date.now() + remainingMs;
+      paused = false;
+      if (startBtn) startBtn.hidden = true;
+      if (pauseBtn) { pauseBtn.hidden = false; pauseBtn.textContent = 'Pause'; }
+      clearInterval(timerId);
+      timerId = setInterval(tick, 250);
+      renderMission();
+    }
+
+    startBtn?.addEventListener('click', startMission);
+    pauseBtn?.addEventListener('click', () => {
+      if (!paused) {
+        remainingMs = Math.max(0, endAt - Date.now());
+        paused = true;
+        pauseBtn.textContent = 'Resume';
+      } else {
+        endAt = Date.now() + remainingMs;
+        paused = false;
+        pauseBtn.textContent = 'Pause';
+        clearInterval(timerId);
+        timerId = setInterval(tick, 250);
+      }
+      renderMission();
+    });
+    addBtn?.addEventListener('click', () => {
+      remainingMs += 5 * 60 * 1000;
+      if (!paused && endAt !== null) endAt += 5 * 60 * 1000;
+      renderMission();
+    });
+    renderMission();
+  }
+
   function initBrowser() {
     const storage = getBrowserStorage();
     let state = loadState(storage);
     updateDocument(state);
+    initFieldManual(storage);
 
     document.querySelectorAll('[data-complete-module]').forEach((button) => {
       button.addEventListener('click', () => {

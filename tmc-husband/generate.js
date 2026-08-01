@@ -3,7 +3,7 @@
 const fs = require('node:fs');
 const path = require('node:path');
 const { course } = require('./course.v1.js');
-const { renderModule03 } = require('./render-module-03.js');
+const { renderFieldManual } = require('./render-field-manual.js');
 
 function esc(value) {
   return String(value).replace(/[&<>"']/g, (character) => ({
@@ -56,12 +56,16 @@ function progressPanel() {
 }
 
 function renderLanding() {
-  const cards = course.modules.map((module) => `<li class="module-card" data-module-card="${module.id}">
-    <p class="eyebrow">Module ${module.number}</p>
+  const cards = course.modules.map((module) => {
+    const live = course.publishedModuleIds && course.publishedModuleIds.has(module.id);
+    const statusNote = live ? '' : ' <span class="module-draft-tag">Draft</span>';
+    return `<li class="module-card${live ? '' : ' module-card-draft'}" data-module-card="${module.id}">
+    <p class="eyebrow">Module ${module.number}${statusNote}</p>
     <h2><a href="${module.slug}">${esc(module.title)}</a></h2>
     <p>${esc(module.question)}</p>
     <p class="module-status" data-module-status="${module.id}">Not complete</p>
-  </li>`).join('\n');
+  </li>`;
+  }).join('\n');
   return layout({
     title: course.title,
     description: 'A free, static, seven-module Christian course helping husbands practice faithful, attentive marriage.',
@@ -76,7 +80,7 @@ function renderLanding() {
       </section>
       ${progressPanel()}
       <section aria-labelledby="syllabus-title">
-        <p class="review-notice">${esc(course.status)} The lessons are original ministry drafts informed by verified research; they do not reproduce protected course media, transcripts, or lesson wording.</p>
+        <p class="review-notice">Modules 1–3 are live with full NotebookLM media rooms. Modules 4–7 are draft placeholders until Adam approves the next wave. Original ministry prose informed by verified research; does not reproduce protected course media or transcripts.</p>
         <h2 id="syllabus-title">Course map</h2>
         <ol class="module-grid">${cards}</ol>
       </section>
@@ -91,8 +95,9 @@ function renderLanding() {
 function renderModule(module) {
   const prev = module.number > 1 ? `<a href="module-${String(module.number - 1).padStart(2, '0')}.html">← Module ${module.number - 1}</a>` : '<a href="index.html">← Course home</a>';
   const next = module.number < 7 ? `<a href="module-${String(module.number + 1).padStart(2, '0')}.html">Module ${module.number + 1} →</a>` : '<a href="progress.html">Progress →</a>';
+  const published = course.publishedModuleIds && course.publishedModuleIds.has(module.id);
   if (module.fieldManual) {
-    return renderModule03({ module, course, layout, progressPanel, esc, prev, next });
+    return renderFieldManual({ module, course, layout, progressPanel, esc, prev, next });
   }
   const paragraphs = module.missionBrief.map((paragraph) => `<p>${esc(paragraph)}</p>`).join('\n');
   const scripture = module.scripture.map((item) => `<li><h3>${esc(item.reference)}</h3><p>${esc(item.note)}</p></li>`).join('\n');
@@ -105,13 +110,14 @@ function renderModule(module) {
     title: `Module ${module.number}: ${module.title}`,
     description: module.question,
     page: module.id,
+    noindex: !published,
     body: `<main id="main-content" class="lesson">
       <nav class="module-nav" aria-label="Previous and next modules">${prev}${next}</nav>
       <header class="lesson-header">
-        <p class="eyebrow">Module ${module.number} of 7</p>
+        <p class="eyebrow">Module ${module.number} of 7${published ? '' : ' · Draft'}</p>
         <h1>${esc(module.title)}</h1>
         <p class="lede">${esc(module.question)}</p>
-        <p class="review-notice">${esc(course.status)}</p>
+        ${published ? '' : `<p class="review-notice">${esc(course.status)}</p>`}
       </header>
       ${progressPanel()}
       <article>

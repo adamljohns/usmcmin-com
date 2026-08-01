@@ -1,5 +1,7 @@
 'use strict';
 
+const { fieldManual: module01FieldManual } = require('./module-01.field-manual.js');
+const { fieldManual: module02FieldManual } = require('./module-02.field-manual.js');
 const { fieldManual: module03FieldManual } = require('./module-03.field-manual.js');
 
 const sharedSupport =`This course is formation for a basically safe marriage. It is not crisis care, clinical treatment, addiction recovery, trauma care, or a substitute for qualified pastoral counsel. If there is immediate danger, contact emergency services. Do not use joint exercises to force disclosure or reconciliation where coercion, threats, violence, or fear of retaliation are present. A husband must never use Scripture, forgiveness, headship, money, children, or course completion to demand access, silence concern, or prevent help.`;
@@ -9,12 +11,15 @@ const commonResources = [
   
 ];
 
+const publishedModuleIds = new Set(['m01', 'm02', 'm03']);
+
 const course = {
   id: 'tmc-husband-v1',
   contentVersion: 1,
   title: 'The Husband Course',
   subtitle: 'Seven field-tested practices for faithful, attentive marriage',
-  status: 'Draft pending Adam, doctrinal, editorial, and rights review.',
+  publishedModuleIds,
+  status: 'Modules 1–3 are live for Adam’s review. Modules 4–7 remain draft until approved.',
   promise: 'Work through one module at a time, take one observable action, and build a repeatable rhythm of covenant care. Your progress stays only in this browser on this device.',
   modules: [
     {
@@ -46,7 +51,8 @@ const course = {
       fieldAction: { title: 'Complete the first twenty-minute marriage check-in', steps: ['Ask for a mutually workable time.', 'Share one specific appreciation.', 'Listen to one current pressure without defending.', 'Choose one action you personally own and a time to do it.'], finishLine: 'The check-in occurred, ended respectfully, and your owned action is scheduled or finished.' },
       conversation: ['Would a brief weekly check-in serve you, and what would make it feel safe rather than burdensome?', 'What is one thing I did this week that helped?', 'What is one pressure you want me to understand—not necessarily solve?', 'What one action would be most useful for me to own before we talk again?'],
       support: sharedSupport,
-      resources: commonResources
+      resources: commonResources,
+      fieldManual: module01FieldManual
     },
     {
       id: 'm02', number: 2, slug: 'module-02.html', title: 'Communicate to Understand',
@@ -73,7 +79,8 @@ const course = {
       fieldAction: { title: 'Use one listen-back conversation', steps: ['Choose one manageable concern and ask consent to practice.', 'Listen without interruption for up to five minutes.', 'Restate content and significance in your own words.', 'Ask what you missed and revise before responding.'], finishLine: 'Your wife confirms that your summary represents her concern accurately enough, without being required to agree with you or repeat the exercise.' },
       conversation: ['Is now a workable time for me to listen without trying to fix?', 'What part of this matters most to you?', 'What did I miss or distort in my summary?', 'Would empathy, an idea, a specific action, or more time be most helpful?'],
       support: sharedSupport,
-      resources: commonResources
+      resources: commonResources,
+      fieldManual: module02FieldManual
     },
     {
       id: 'm03', number: 3, slug: 'module-03.html', title: 'Fight the Problem, Not Each Other',

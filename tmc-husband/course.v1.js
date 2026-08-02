@@ -3,6 +3,10 @@
 const { fieldManual: module01FieldManual } = require('./module-01.field-manual.js');
 const { fieldManual: module02FieldManual } = require('./module-02.field-manual.js');
 const { fieldManual: module03FieldManual } = require('./module-03.field-manual.js');
+const { fieldManual: module04FieldManual } = require('./module-04.field-manual.js');
+const { fieldManual: module05FieldManual } = require('./module-05.field-manual.js');
+const { fieldManual: module06FieldManual } = require('./module-06.field-manual.js');
+const { fieldManual: module07FieldManual } = require('./module-07.field-manual.js');
 
 const sharedSupport =`This course is formation for a basically safe marriage. It is not crisis care, clinical treatment, addiction recovery, trauma care, or a substitute for qualified pastoral counsel. If there is immediate danger, contact emergency services. Do not use joint exercises to force disclosure or reconciliation where coercion, threats, violence, or fear of retaliation are present. A husband must never use Scripture, forgiveness, headship, money, children, or course completion to demand access, silence concern, or prevent help.`;
 
@@ -17,14 +21,21 @@ const course = {
   id: 'tmc-husband-v1',
   contentVersion: 1,
   title: 'The Husband Course',
-  subtitle: 'Seven field-tested practices for faithful, attentive marriage',
+  subtitle: 'Seven modules. One field action each week.',
   publishedModuleIds,
-  status: 'Modules 1–3 are live for Adam’s review. Modules 4–7 remain draft until approved.',
-  promise: 'Work through one module at a time, take one observable action, and build a repeatable rhythm of covenant care. Your progress stays only in this browser on this device.',
+  status: 'Modules 1–3 ready for review locally. Modules 4–7 draft. Not deployed until Adam approves.',
+  promise: 'Each module tells you exactly what to do this week — with an observable finish line your wife could notice. Progress stays only in this browser on this device.',
+  howItWorks: [
+    { title: 'Read the module', body: 'Short opening, Scripture anchor, and 3–5 numbered tasks. About 45–60 minutes.' },
+    { title: 'Ship the field action', body: 'One required exercise with a visible finish line. Husband-owned — her participation is invited, not demanded.' },
+    { title: 'Optional depth', body: 'Study aids from Notebook by Gemini, a knowledge check, and conversation prompts if she is willing.' }
+  ],
   modules: [
     {
       id: 'm01', number: 1, slug: 'module-01.html', title: 'Build the Foundation',
       question: 'What am I building my marriage on, and what am I personally responsible to reinforce?',
+      fieldActionSummary: 'Weekly 20-minute marriage check-in + one act of care',
+      timeEstimate: '45–60 min + one check-in this week',
       missionBrief: [
         `A strong marriage is not built by discovering the perfect spouse or by waiting for a season with fewer demands. It is built by two imperfect people practicing truth, faithfulness, repentance, and care under ordinary pressure. For a husband, the first assignment is not to grade his wife. It is to ask what kind of man he is becoming before God and what his repeated conduct is placing into the home. Promises at the altar matter, but daily patterns give those promises visible shape. The foundation is reinforced when your wife can reasonably expect that your words will match your actions, that problems can be named, and that you will return after distraction or failure rather than disappear into defensiveness.`,
         `Christian covenant does not mean pretending everything is healthy. Covenant love tells the truth, protects the vulnerable, keeps rightful promises, and refuses both abandonment and domination. Christlike leadership cannot be measured by how efficiently a husband gets his way. It is measured by service, responsibility, self-control, and willingness to lay down pride. That means taking initiative without taking over. You can invite a check-in, arrange childcare, put away the phone, and admit your part. You cannot command trust, schedule your wife’s emotions, or make her perform closeness. Faithful initiative creates room for honest response; control punishes response when it is inconvenient.`,
@@ -57,6 +68,8 @@ const course = {
     {
       id: 'm02', number: 2, slug: 'module-02.html', title: 'Communicate to Understand',
       question: 'Do I listen to understand, or listen to answer and defend?',
+      fieldActionSummary: 'One 15-minute listen-back conversation',
+      timeEstimate: '45–60 min + one listen-back',
       missionBrief: [
         `Listening is not silence while preparing a rebuttal. It is disciplined attention offered long enough to understand what another person means, values, fears, or needs. Husbands often mistake problem-solving for love: identify the issue, propose the fix, and move on. A solution can be useful, but an early solution may communicate that the speaker’s experience is an obstacle to remove. Understanding comes first. Your wife is not asking you to surrender judgment or agree with every conclusion. She is asking, at minimum, to know whether her words reached you without being filtered immediately through self-protection.`,
         `The core practice is listen-back. One spouse speaks briefly about one concern. The listener summarizes both content and significance in his own words, then asks whether he understood. He does not cross-examine, diagnose, correct chronology, quote earlier statements, or introduce his counter-case. If the summary misses, he tries again. Only after the speaker says the summary is substantially accurate does the listener ask whether she wants empathy, ideas, action, or simply time. This process may feel slow because it interrupts the habits that usually make a conversation fast and fruitless.`,
@@ -85,6 +98,8 @@ const course = {
     {
       id: 'm03', number: 3, slug: 'module-03.html', title: 'Fight the Problem, Not Each Other',
       question: 'What conflict pattern do I bring into the marriage?',
+      fieldActionSummary: 'Pause-and-return rule + one written decision',
+      timeEstimate: '45–60 min + one conflict practice',
       missionBrief: [
         `Conflict is not proof that a marriage is defective. Two adults with different histories, bodies, expectations, responsibilities, and limits will collide. The decisive question is not whether conflict appears but what the couple does when it does. A husband can bring courage to conflict by staying truthful and regulated without becoming passive or aggressive. Courage names a problem specifically, protects the other person’s dignity, and accepts a fair boundary. Cowardice may look loud and dominating, but it may also look like disappearing, refusing every conversation, or agreeing outwardly while retaliating later.`,
         `Begin by identifying your recurring move. Under pressure, do you pursue harder, withdraw without a return, lecture, become sarcastic, appease, keep score, bring in unrelated failures, or threaten the relationship? The pattern is not your permanent identity, and naming it is not self-condemnation. It gives you a point of intervention. “When I feel misunderstood, I speed up, raise my voice, and stack evidence” is more useful than “I am just passionate.” A description that protects your ego will not help you change your conduct.`,
@@ -137,7 +152,8 @@ const course = {
       fieldAction: { title: 'Make one specific confession or repair attempt', steps: ['Choose a specific behavior rather than a global flaw.', 'Name the wrong and its impact without “but.”', 'Offer one concrete repair or accountability step.', 'Allow time and boundaries without demanding forgiveness or closure.'], finishLine: 'You made a safe, specific repair attempt and completed or scheduled the concrete action you offered, without requiring a particular response.' },
       conversation: ['Is there a manageable hurt I need to hear without defending?', 'What impact of my action have I not understood?', 'What repair would be meaningful, if any?', 'What boundary or time do you need me to respect now?'],
       support: sharedSupport,
-      resources: commonResources
+      resources: commonResources,
+      fieldManual: module04FieldManual
     },
     {
       id: 'm05', number: 5, slug: 'module-05.html', title: 'Understand the Family You Brought In',
@@ -164,7 +180,8 @@ const course = {
       fieldAction: { title: 'Retain one pattern and replace one pattern', steps: ['Describe one inherited pattern that serves your marriage.', 'Describe one pattern that no longer serves it.', 'Choose a cue and a specific replacement response.', 'Practice or rehearse the replacement once.'], finishLine: 'You named one pattern to retain, one to replace, and carried out the replacement behavior once without diagnosing or assigning homework to your wife.' },
       conversation: ['Would you be willing to tell me how one pattern from my family affects our home?', 'Which strength from my background do you value?', 'When my old pattern appears, what observable response would feel different?', 'Is there a family topic or boundary you do not want this exercise to cross?'],
       support: sharedSupport,
-      resources: commonResources
+      resources: commonResources,
+      fieldManual: module05FieldManual
     },
     {
       id: 'm06', number: 6, slug: 'module-06.html', title: 'Guard Friendship and Intimacy',
@@ -191,7 +208,8 @@ const course = {
       fieldAction: { title: 'Complete one pressure-free no-screen connection block', steps: ['Invite rather than announce, offering realistic choices.', 'Agree on at least thirty minutes and an activity.', 'State clearly that there is no expectation of sex or forced disclosure.', 'Put devices away and review gently afterward.'], finishLine: 'You shared at least thirty minutes of mutually chosen, no-screen connection while respecting every physical and conversational boundary.' },
       conversation: ['What kind of connection would feel welcome this week?', 'What makes affection feel safe and free of hidden expectations?', 'What pressure is affecting your capacity for friendship or intimacy?', 'How can I respond better when your answer is no or not yet?'],
       support: sharedSupport,
-      resources: commonResources
+      resources: commonResources,
+      fieldManual: module06FieldManual
     },
     {
       id: 'm07', number: 7, slug: 'module-07.html', title: 'Put Love into Action',
@@ -218,7 +236,8 @@ const course = {
       fieldAction: { title: 'Repeat one recognizable act of love for seven days', steps: ['Ask what one observable action would genuinely help.', 'Define it small enough to repeat for seven days.', 'Complete it without asking for repayment or daily praise.', 'After day seven, invite a continue/change/stop answer.'], finishLine: 'You completed the chosen action on seven days, repaired any miss honestly, and received optional feedback without arguing for your preferred gesture.' },
       conversation: ['What one small action from me would make this week lighter or warmer?', 'Is there a form of care I offer that does not currently feel helpful?', 'Should I continue, change, or stop this seven-day practice?', 'Which course rhythm would you welcome for the next month?'],
       support: sharedSupport,
-      resources: commonResources
+      resources: commonResources,
+      fieldManual: module07FieldManual
     }
   ]
 };

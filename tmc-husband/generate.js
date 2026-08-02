@@ -56,13 +56,24 @@ function progressPanel() {
 }
 
 function renderLanding() {
+  const published = course.publishedModuleIds || new Set();
+  const howSteps = (course.howItWorks || []).map((step, index) => `<li class="how-step">
+    <p class="how-step-num">${index + 1}</p>
+    <div><h3>${esc(step.title)}</h3><p>${esc(step.body)}</p></div>
+  </li>`).join('\n');
   const cards = course.modules.map((module) => {
-    const live = course.publishedModuleIds && course.publishedModuleIds.has(module.id);
-    const statusNote = live ? '' : ' <span class="module-draft-tag">Draft</span>';
-    return `<li class="module-card${live ? '' : ' module-card-draft'}" data-module-card="${module.id}">
-    <p class="eyebrow">Module ${module.number}${statusNote}</p>
+    const isPublished = published.has(module.id);
+    const badge = isPublished ? 'Ready for review' : 'Draft';
+    const fieldLine = module.fieldActionSummary
+      ? `<p class="module-field-action"><strong>This week:</strong> ${esc(module.fieldActionSummary)}</p>`
+      : '';
+    const timeLine = module.timeEstimate ? `<p class="module-time">${esc(module.timeEstimate)}</p>` : '';
+    return `<li class="module-card${isPublished ? '' : ' module-card-draft'}" data-module-card="${module.id}">
+    <p class="eyebrow">Module ${module.number} · ${esc(badge)}</p>
     <h2><a href="${module.slug}">${esc(module.title)}</a></h2>
-    <p>${esc(module.question)}</p>
+    <p class="module-question">${esc(module.question)}</p>
+    ${fieldLine}
+    ${timeLine}
     <p class="module-status" data-module-status="${module.id}">Not complete</p>
   </li>`;
   }).join('\n');
@@ -72,22 +83,68 @@ function renderLanding() {
     page: 'landing',
     body: `<main id="main-content">
       <section class="hero">
-        <p class="eyebrow">Free · seven modules · no account</p>
+        <p class="eyebrow">Free · seven modules · no account · local progress</p>
         <h1>${esc(course.title)}</h1>
         <p class="lede">${esc(course.subtitle)}</p>
         <p>${esc(course.promise)}</p>
         <div class="button-row"><a class="button" href="module-01.html">Start module 1</a><a class="button secondary" href="progress.html">View progress</a></div>
       </section>
       ${progressPanel()}
+      <section aria-labelledby="how-title" class="how-it-works">
+        <h2 id="how-title">How it works</h2>
+        <ol class="how-steps">${howSteps}</ol>
+      </section>
       <section aria-labelledby="syllabus-title">
-        <p class="review-notice">Modules 1–3 are live with full NotebookLM media rooms. Modules 4–7 are draft placeholders until Adam approves the next wave. Original ministry prose informed by verified research; does not reproduce protected course media or transcripts.</p>
         <h2 id="syllabus-title">Course map</h2>
+        <p class="section-intro">Modules 1–3 are ready for your review. Each ends with one husband-owned field action.</p>
         <ol class="module-grid">${cards}</ol>
       </section>
       <section class="support-callout" aria-labelledby="before-title">
         <h2 id="before-title">Before you begin</h2>
         <p>This course offers education and practice for a basically safe marriage. It is not counseling or crisis care. If there is fear, coercion, violence, stalking, sexual pressure, active addiction, or immediate danger, prioritize confidential individual support rather than a joint exercise.</p>
+        <p><a href="about.html">How this course was made</a> · Original ministry prose; does not reproduce protected course media or transcripts.</p>
       </section>
+    </main>`
+  });
+}
+
+function renderAbout() {
+  return layout({
+    title: 'About This Course',
+    description: 'How The Husband Course was made, what it includes, and what it is not.',
+    page: 'about',
+    noindex: true,
+    body: `<main id="main-content">
+      <header class="page-header">
+        <p class="eyebrow">Background</p>
+        <h1>About The Husband Course</h1>
+        <p class="lede">Method, boundaries, and what you will — and will not — find inside.</p>
+      </header>
+      <article>
+        <section aria-labelledby="what-title"><h2 id="what-title">What this is</h2>
+          <p>A free, static, seven-module Christian formation course for husbands. Each module gives you a short lesson, numbered tasks with observable finish lines, one required field action, optional conversation prompts, and local progress tracking in your browser.</p>
+          <p>Modules 1–3 include optional study aids (audio, video, slides, reports, quizzes) generated through <strong>Notebook by Gemini</strong> from thematically related public research. Modules 4–7 are original ministry prose without a media room.</p>
+        </section>
+        <section aria-labelledby="method-title"><h2 id="method-title">How it was made</h2>
+          <p>Content was developed by U.S.M.C. Ministries using thematic research informed by marriage-formation literature, pastoral review, Scripture framing, and multi-model editorial critique. That research pipeline informed the teaching; it is not reproduced inside the learner path.</p>
+          <p>The site is generated from source files in this repository (<code>tmc-husband/course.v1.js</code> and <code>module-*.field-manual.js</code>) via <code>node tmc-husband/generate.js</code>. Progress is stored only in <code>localStorage</code> on your device — no account, no sync.</p>
+        </section>
+        <section aria-labelledby="not-title"><h2 id="not-title">What this is not</h2>
+          <ul>
+            <li>Not a copy of The Marriage Course — no protected video, audio, transcripts, slides, or workbooks are hosted here.</li>
+            <li>Not crisis care, clinical treatment, addiction recovery, or trauma therapy.</li>
+            <li>Not an endorsement by The Marriage Course, Alpha, Google, or Gemini.</li>
+            <li>Not deployed publicly until the principal approves — this is a local content-complete build.</li>
+          </ul>
+        </section>
+        <section aria-labelledby="rights-title"><h2 id="rights-title">Rights and study aids</h2>
+          <p>Scripture quotations follow the ministry site’s established translation practices. Notebook by Gemini artifacts are optional study aids requiring human editorial review before any public deployment. Each hosted artifact needs a documented rights basis.</p>
+        </section>
+        <section aria-labelledby="safety-title"><h2 id="safety-title">Safety default</h2>
+          <p>Every module assumes a basically safe marriage unless stated otherwise. Abuse, coercion, threats, violence, active addiction, serious betrayal, or fear of retaliation require confidential individual help first — not a joint course exercise.</p>
+        </section>
+      </article>
+      <p class="button-row"><a class="button" href="index.html">← Back to course</a></p>
     </main>`
   });
 }
@@ -129,7 +186,7 @@ function renderModule(module) {
         <section id="field-action" class="field-action" aria-labelledby="action-title"><p class="eyebrow">Required field action</p><h2 id="action-title">${esc(module.fieldAction.title)}</h2><ol>${actionSteps}</ol><p><strong>Observable finish line:</strong> ${esc(module.fieldAction.finishLine)}</p></section>
         <section id="conversation-guide" aria-labelledby="conversation-title"><h2 id="conversation-title">Optional conversation guide</h2><p>Invite; do not assign. Your wife may decline, stop, or suggest another format without penalty.</p><ul>${conversation}</ul></section>
         <section id="support-boundary" class="support-callout" aria-labelledby="support-title"><h2 id="support-title">Support and safety boundary</h2><p>${esc(module.support)}</p></section>
-        <section id="resources" aria-labelledby="resources-title"><h2 id="resources-title">Resources</h2><p>No protected Marriage Course media or unverified NotebookLM artifacts are hosted here.</p><ul>${resources}</ul></section>
+        <section id="resources" aria-labelledby="resources-title"><h2 id="resources-title">Resources</h2><p>No protected Marriage Course media or unverified Notebook by Gemini artifacts are hosted here.</p><ul>${resources}</ul></section>
         <section id="completion" class="completion" aria-labelledby="completion-title"><h2 id="completion-title">Complete module ${module.number}</h2><p>Mark complete only after the observable field-action finish line. You can change this status later.</p><button type="button" data-complete-module="${module.id}" aria-pressed="false">Mark module ${module.number} complete</button><p data-completion-message="${module.id}" aria-live="polite"></p></section>
       </article>
       <nav class="module-nav" aria-label="Previous and next modules">${prev}${next}</nav>
@@ -159,6 +216,7 @@ function renderAll(root = path.resolve(__dirname, '..')) {
   const output = path.join(root, 'tmc-husband');
   fs.mkdirSync(output, { recursive: true });
   fs.writeFileSync(path.join(output, 'index.html'), renderLanding());
+  fs.writeFileSync(path.join(output, 'about.html'), renderAbout());
   fs.writeFileSync(path.join(output, 'progress.html'), renderProgress());
   for (const module of course.modules) {
     fs.writeFileSync(path.join(output, module.slug), renderModule(module));
@@ -167,4 +225,4 @@ function renderAll(root = path.resolve(__dirname, '..')) {
 
 if (require.main === module) renderAll();
 
-module.exports = { renderAll, renderLanding, renderModule, renderProgress };
+module.exports = { renderAll, renderLanding, renderAbout, renderModule, renderProgress };

@@ -267,9 +267,27 @@
     document.querySelectorAll('[data-complete-module]').forEach((button) => {
       button.addEventListener('click', () => {
         const moduleId = button.getAttribute('data-complete-module');
+        const root = document.querySelector(`[data-field-manual="${moduleId}"]`);
+        const message = document.querySelector(`[data-completion-message="${moduleId}"]`);
+
+        if (root && !state.modules[moduleId]) {
+          const sections = loadSections(storage, moduleId);
+          const missing = [];
+          if (!sections['field-action']) missing.push('field action');
+          if (root.querySelector('[data-track-section="assessment"]') && !sections.assessment) missing.push('knowledge check');
+          if (missing.length) {
+            const proceed = window.confirm(
+              `You have not checked off: ${missing.join(' and ')}.\n\nMark complete anyway? Only do this if the finish line is actually done.`
+            );
+            if (!proceed) {
+              if (message) message.textContent = `Not marked complete — finish the ${missing.join(' and ')} first, or confirm to override.`;
+              return;
+            }
+          }
+        }
+
         state = toggleModule(storage, moduleId);
         updateDocument(state);
-        const message = document.querySelector(`[data-completion-message="${moduleId}"]`);
         if (message) message.textContent = state.modules[moduleId]
           ? 'Saved on this device. This module is complete.'
           : 'Saved on this device. This module is not complete.';

@@ -93,7 +93,6 @@ function renderFieldManual({ module, course, layout, progressPanel, esc, prev, n
   const actionSteps = m.fieldAction.steps.map((item) => `<li>${esc(item)}</li>`).join('\n');
   const conversationItems = m.conversation.items.map((item) => `<li>${esc(item)}</li>`).join('\n');
   const selfCheckItems = (m.selfCheck || []).map((item) => `<li>${esc(item)}</li>`).join('\n');
-  const referrals = m.support.referrals.map((x) => `<li><h3>${esc(x.label)}</h3><p>${esc(x.body)}${x.href ? ` <a href="${esc(x.href)}" target="_blank" rel="noopener noreferrer">${esc(x.linkLabel || x.label)} <span aria-hidden="true">↗</span></a>` : ''}</p></li>`).join('\n');
 
   let assessmentSection = '';
   if (m.assessment) {
@@ -162,18 +161,11 @@ function renderFieldManual({ module, course, layout, progressPanel, esc, prev, n
           <ul>${conversationItems}</ul>
           ${sectionCheckoff('conversation')}
         </section>
-        <section id="caution-boundary" class="caution" aria-labelledby="caution-title" data-track-section="caution">
-          <h2 id="caution-title">Read before you proceed</h2>
+        <aside id="safety" class="module-safety" aria-labelledby="safety-title">
+          <h2 id="safety-title">Safety for this module</h2>
           <p>${esc(m.caution)}</p>
-          ${sectionCheckoff('caution')}
-        </section>
-        <section id="support-boundary" class="support-callout" aria-labelledby="support-title" data-track-section="support">
-          <h2 id="support-title">Support and safety</h2>
-          <p>${esc(m.support.lead)}</p>
-          <ul>${referrals}</ul>
-          <p>${esc(m.support.close)}</p>
-          ${sectionCheckoff('support')}
-        </section>
+          <p class="module-safety-link"><a href="about.html#safety">Full safety guidance, boundaries, and where to find confidential help &rarr;</a></p>
+        </aside>
         ${resourcesSection}
         ${assessmentSection}
         <section id="completion" class="completion" aria-labelledby="completion-title" data-track-section="completion">

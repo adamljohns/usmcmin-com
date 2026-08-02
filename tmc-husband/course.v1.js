@@ -15,7 +15,7 @@ const commonResources = [
   
 ];
 
-const publishedModuleIds = new Set(['m01', 'm02', 'm03']);
+const publishedModuleIds = new Set(['m01', 'm02', 'm03', 'm04', 'm05', 'm06', 'm07']);
 
 const course = {
   id: 'tmc-husband-v1',
@@ -23,7 +23,7 @@ const course = {
   title: 'The Husband Course',
   subtitle: 'Seven modules. One field action each week.',
   publishedModuleIds,
-  status: 'Modules 1–3 ready for review locally. Modules 4–7 draft. Not deployed until Adam approves.',
+  status: 'All seven modules are live. Free, local-only progress — no account, no sync. Modules 1–3 include optional study aids.',
   promise: 'Each module tells you exactly what to do this week — with an observable finish line your wife could notice. Progress stays only in this browser on this device.',
   howItWorks: [
     { title: 'Read the module', body: 'Short opening, Scripture anchor, and 3–5 numbered tasks. About 45–60 minutes.' },

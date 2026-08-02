@@ -113,13 +113,13 @@ function renderLanding() {
   </li>`).join('\n');
   const cards = course.modules.map((module) => {
     const isPublished = published.has(module.id);
-    const badge = isPublished ? 'Ready for review' : 'Draft';
+    const badge = isPublished ? '' : 'Draft';
     const fieldLine = module.fieldActionSummary
       ? `<p class="module-field-action"><strong>This week:</strong> ${esc(module.fieldActionSummary)}</p>`
       : '';
     const timeLine = module.timeEstimate ? `<p class="module-time">${esc(module.timeEstimate)}</p>` : '';
     return `<li class="module-card${isPublished ? '' : ' module-card-draft'}" data-module-card="${module.id}">
-    <p class="eyebrow">Module ${module.number} · ${esc(badge)}</p>
+    <p class="eyebrow">Module ${module.number}${badge ? ' · ' + esc(badge) : ''}</p>
     <h2><a href="${module.slug}">${esc(module.title)}</a></h2>
     <p class="module-question">${esc(module.question)}</p>
     ${fieldLine}
@@ -147,7 +147,7 @@ function renderLanding() {
       </section>
       <section aria-labelledby="syllabus-title">
         <h2 id="syllabus-title">Course map</h2>
-        <p class="section-intro">Modules 1–3 are ready for your review. Each ends with one husband-owned field action.</p>
+        <p class="section-intro">Seven modules. Each ends with one husband-owned field action with a finish line your wife could notice.</p>
         <ol class="module-grid">${cards}</ol>
       </section>
       <section class="support-callout" aria-labelledby="before-title">
@@ -191,8 +191,13 @@ function renderAbout() {
         <section aria-labelledby="rights-title"><h2 id="rights-title">Rights and study aids</h2>
           <p>Scripture quotations follow the ministry site’s established translation practices. Notebook by Gemini artifacts are optional study aids requiring human editorial review before any public deployment. Each hosted artifact needs a documented rights basis.</p>
         </section>
-        <section aria-labelledby="safety-title"><h2 id="safety-title">Safety default</h2>
-          <p>Every module assumes a basically safe marriage unless stated otherwise. Abuse, coercion, threats, violence, active addiction, serious betrayal, or fear of retaliation require confidential individual help first — not a joint course exercise.</p>
+        <section id="safety" aria-labelledby="safety-title"><h2 id="safety-title">Safety guidance</h2>
+          <p>Every module assumes a basically safe marriage unless stated otherwise. This course is formation and practice — not counseling, crisis care, clinical treatment, addiction recovery, or trauma therapy. Abuse, coercion, threats, violence, active addiction, serious betrayal, or fear of retaliation require confidential individual help first — not a joint course exercise. A husband must never use Scripture, forgiveness, headship, money, children, or course completion to demand access, silence concern, or prevent help.</p>
+          <ul>
+            <li><strong>Immediate danger:</strong> Call or text <strong>911</strong> (United States), or your local emergency service.</li>
+            <li><strong>Abuse or coercive control:</strong> National Domestic Violence Hotline — <strong>1-800-799-7233</strong>, or text <strong>START</strong> to <strong>88788</strong> (confidential, 24/7).</li>
+            <li><strong>Where fear is present:</strong> seek confidential individual support before any joint exercise in this course.</li>
+          </ul>
         </section>
       </article>
       <p class="button-row"><a class="button" href="index.html">← Back to course</a></p>

@@ -12,7 +12,7 @@
  *
  * Bump SW_VERSION when the shell changes so installs refresh on next launch.
  */
-const SW_VERSION = 'v1-2026-08-01';
+const SW_VERSION = 'v1-2026-08-02';
 const CORE_CACHE = 'tmc-core-' + SW_VERSION;
 const RUNTIME_CACHE = 'tmc-runtime-' + SW_VERSION;
 const OFFLINE_FALLBACK = '/tmc-husband/index.html';

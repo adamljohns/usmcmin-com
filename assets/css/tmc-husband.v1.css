@@ -265,18 +265,36 @@ article > section + section { border-top: 1px solid var(--line); }
   padding: 0.65rem 0;
   grid-template-columns: auto 1fr auto;
 }
+/* Ring fills toward the module's time estimate; it does not empty. */
 .mission-timer-ring {
+  position: relative;
   display: grid;
   place-items: center;
   width: 3.5rem;
   height: 3.5rem;
   border-radius: 50%;
-  border: 3px solid var(--gold);
   color: var(--navy);
   font-weight: 900;
   font-size: 0.72rem;
+  background: conic-gradient(var(--gold) var(--ring, 0%), #e3e0d7 0);
 }
+.mission-timer-ring::after {
+  content: "";
+  position: absolute;
+  inset: 3px;
+  border-radius: 50%;
+  background: var(--surface);
+}
+.mission-timer-pct { position: relative; z-index: 1; }
 .mission-hud-title { margin: 0; color: var(--green-dark); font-size: 0.72rem; font-weight: 850; letter-spacing: 0.08em; text-transform: uppercase; }
+.mission-hud-state {
+  margin-left: 0.4rem; padding: 0.05rem 0.4rem;
+  border-radius: 99rem; background: var(--gold-soft);
+  color: var(--navy); font-size: 0.66rem; letter-spacing: 0.04em;
+}
+.mission-hud.is-paused .mission-hud-state { background: #e6e3da; color: var(--muted); }
+.mission-hud.is-paused .mission-hud-time { color: var(--muted); }
+.mission-hud.is-past-target .mission-timer-ring { background: conic-gradient(var(--green) 100%, var(--green) 0); }
 .mission-hud-time { margin: 0.1rem 0; color: var(--navy); font-family: Georgia, "Times New Roman", serif; font-size: 1.35rem; font-weight: 800; }
 .mission-hud-sub { margin: 0.25rem 0 0; color: var(--muted); font-size: 0.82rem; }
 .mission-xp-track { height: 0.55rem; margin-top: 0.35rem; overflow: hidden; border-radius: 99rem; background: #e3e0d7; }
@@ -290,7 +308,112 @@ article > section + section { border-top: 1px solid var(--line); }
 
 .section-checkoff { margin-top: 1rem; padding-top: 0.75rem; border-top: 1px dashed var(--line); }
 .section-checkoff-label { display: inline-flex; gap: 0.5rem; align-items: center; font-weight: 750; cursor: pointer; }
+.section-tally { margin-left: 0.6rem; color: var(--muted); font-size: 0.8rem; }
 section.is-section-complete { border-left: 4px solid var(--green); padding-left: 0.75rem; }
+
+/* Every line item is its own tracked check — Scripture passages, self-check
+   questions, field-action steps, conversation prompts. */
+.check-list { padding-left: 0; list-style: none; }
+.check-item { margin-bottom: 0.6rem; }
+.check-item-label {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 0.6rem;
+  align-items: start;
+  padding: 0.5rem 0.6rem;
+  border: 1px solid transparent;
+  border-radius: 0.4rem;
+  cursor: pointer;
+}
+.check-item-label:hover { border-color: var(--line); background: var(--surface); }
+.check-item-label input { margin-top: 0.35rem; }
+.check-item-body h3 { margin: 0 0 0.2rem; font-size: 1rem; }
+.check-item-body p { margin: 0; }
+.check-item.is-section-complete > .check-item-label { border-color: var(--green); background: #f1f8f3; }
+.check-item.is-section-complete .check-item-body { color: var(--muted); }
+
+/* Per-module checklist meter, used on the landing cards and the voyage map. */
+.module-meter { display: flex; gap: 0.5rem; align-items: center; margin: 0.5rem 0 0.25rem; }
+.module-meter-track { flex: 1 1 auto; height: 0.4rem; overflow: hidden; border-radius: 99rem; background: #e3e0d7; }
+.module-meter-bar { display: block; height: 100%; width: 0%; background: var(--green); transition: width 240ms ease; }
+.module-meter-label { flex: 0 0 auto; color: var(--muted); font-size: 0.76rem; }
+.module-time-spent { margin: 0.15rem 0 0; color: var(--muted); font-size: 0.78rem; }
+.completion-tally { color: var(--muted); font-size: 0.85rem; }
+
+/* Course-wide time on task. */
+.time-panel {
+  display: grid;
+  gap: 0.6rem;
+  margin: 1.5rem 0;
+  padding: 1.1rem 1.25rem;
+  border: 1px solid var(--line);
+  border-left: 5px solid var(--gold);
+  border-radius: var(--radius);
+  background: var(--surface);
+}
+.time-panel h2 { margin: 0; font-size: 1.05rem; }
+.time-total {
+  margin: 0.2rem 0 0;
+  color: var(--navy);
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 2rem;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+}
+.time-note { margin: 0; color: var(--muted); font-size: 0.84rem; }
+.time-panel button { justify-self: start; }
+
+/* Flashcards, then the knowledge check — in that order, at the end of a module. */
+.drill-panel { margin-block: 2rem; padding: 1.1rem 1.25rem; border: 2px solid var(--navy); border-radius: var(--radius); background: var(--surface); }
+.drill-panel h2 { margin-top: 0.2rem; }
+.drill-controls { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-top: 0.9rem; }
+.flashcard-progress { display: flex; gap: 0.6rem; align-items: center; margin: 0.9rem 0; }
+.flashcard-bar-track { flex: 1 1 auto; height: 0.5rem; overflow: hidden; border-radius: 99rem; background: #e3e0d7; }
+.flashcard-bar { display: block; height: 100%; width: 0%; background: linear-gradient(90deg, var(--green), #4d9773); transition: width 240ms ease; }
+.flashcard-tally { flex: 0 0 auto; color: var(--muted); font-size: 0.8rem; }
+.flashcard-stage { display: grid; }
+.flashcard {
+  display: grid;
+  gap: 0.75rem;
+  align-content: center;
+  min-height: 11rem;
+  padding: 1.25rem;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--paper);
+  cursor: pointer;
+  text-align: center;
+}
+.flashcard:hover { border-color: var(--green); }
+.flashcard-face { margin: 0; font-family: Georgia, "Times New Roman", serif; font-size: 1.15rem; font-weight: 700; color: var(--navy); }
+.flashcard-back { margin: 0; padding-top: 0.75rem; border-top: 1px solid var(--line); color: var(--ink); visibility: hidden; }
+.flashcard.is-flipped .flashcard-back { visibility: visible; }
+.flashcard-counter { margin: 0.6rem 0 0; color: var(--muted); font-size: 0.82rem; text-align: center; }
+.drill-panel.is-known .flashcard { border-color: var(--green); background: #f1f8f3; }
+
+.quiz-list { margin: 0; padding: 0; list-style: none; }
+.quiz-item { margin-bottom: 1.4rem; padding: 0.9rem 1rem; border: 1px solid var(--line); border-left: 4px solid var(--line); border-radius: 0.45rem; background: var(--paper); }
+.quiz-item.is-right { border-left-color: var(--green); }
+.quiz-item.is-wrong { border-left-color: var(--danger); }
+.quiz-question { margin: 0 0 0.7rem; font-weight: 750; }
+.quiz-options { display: grid; gap: 0.35rem; }
+.quiz-option {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 0.55rem;
+  align-items: start;
+  padding: 0.5rem 0.6rem;
+  border: 1px solid transparent;
+  border-radius: 0.35rem;
+  background: var(--surface);
+  cursor: pointer;
+}
+.quiz-option:hover { border-color: var(--line); }
+.quiz-option input { margin-top: 0.3rem; }
+.quiz-option.is-correct { border-color: var(--green); background: #f1f8f3; }
+.quiz-option.is-wrong { border-color: var(--danger); background: var(--danger-soft); }
+.quiz-feedback { margin: 0.7rem 0 0; padding-top: 0.6rem; border-top: 1px dashed var(--line); color: var(--muted); font-size: 0.9rem; }
+.quiz-item.is-right .quiz-feedback { color: var(--green-dark); }
 
 .artifact-media { display: block; width: 100%; margin: 0.5rem 0; border-radius: 0.35rem; background: #000; }
 .assessment-panel { margin-block: 2rem; padding: 1rem; border: 2px solid var(--navy); border-radius: var(--radius); background: var(--surface); }

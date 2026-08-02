@@ -105,7 +105,25 @@ function commissionCard() {
   </section>`;
 }
 
-function renderLanding() {
+// How many tracked checkboxes a rendered module page carries. Counted from the
+// emitted HTML so the landing and progress pages can never drift from the module.
+function countChecks(html) {
+  return (html.match(/data-(?:section|item)-complete=/g) || []).length;
+}
+
+function timePanel({ withReset = false } = {}) {
+  return `<aside class="time-panel" aria-labelledby="time-title">
+    <div>
+      <h2 id="time-title">Time on task</h2>
+      <p class="time-total" data-time-total aria-live="polite">0:00:00</p>
+      <p class="local-status" data-time-detail>No time recorded on this device yet.</p>
+    </div>
+    <p class="time-note">Counted in hours, minutes, and seconds while a module page is open and you are actually working — the clock pauses when you switch away or go idle for three minutes.</p>
+    ${withReset ? '<button class="danger" type="button" data-reset-time>Clear recorded time</button>' : ''}
+  </aside>`;
+}
+
+function renderLanding(checkTotals = {}) {
   const published = course.publishedModuleIds || new Set();
   const howSteps = (course.howItWorks || []).map((step, index) => `<li class="how-step">
     <h3><span class="how-step-num" aria-hidden="true">${index + 1}</span> ${esc(step.title)}</h3>
@@ -118,13 +136,16 @@ function renderLanding() {
       ? `<p class="module-field-action"><strong>This week:</strong> ${esc(module.fieldActionSummary)}</p>`
       : '';
     const timeLine = module.timeEstimate ? `<p class="module-time">${esc(module.timeEstimate)}</p>` : '';
+    const total = checkTotals[module.id] || 0;
     return `<li class="module-card${isPublished ? '' : ' module-card-draft'}" data-module-card="${module.id}">
     <p class="eyebrow">Module ${module.number}${badge ? ' · ' + esc(badge) : ''}</p>
     <h2><a href="${module.slug}">${esc(module.title)}</a></h2>
     <p class="module-question">${esc(module.question)}</p>
     ${fieldLine}
     ${timeLine}
+    <p class="module-meter"><span class="module-meter-track"><span class="module-meter-bar" data-checks-bar="${module.id}"></span></span> <span class="module-meter-label" data-checks-module="${module.id}" data-checks-total="${total}">0 of ${total} checks</span></p>
     <p class="module-status" data-module-status="${module.id}">Not complete</p>
+    <p class="module-time-spent">Time logged: <span data-time-module="${module.id}">Not started</span></p>
   </li>`;
   }).join('\n');
   return layout({
@@ -140,6 +161,7 @@ function renderLanding() {
         <div class="button-row"><a class="button" href="module-01.html">Start module 1</a><a class="button secondary" href="progress.html">View progress</a></div>
       </section>
       ${progressPanel()}
+      ${timePanel()}
       ${rankBanner()}
       <section aria-labelledby="how-title" class="how-it-works">
         <h2 id="how-title">How it works</h2>
@@ -174,7 +196,8 @@ function renderAbout() {
       <article>
         <section aria-labelledby="what-title"><h2 id="what-title">What this is</h2>
           <p>A free, static, seven-module Christian formation course for husbands. Each module gives you a short lesson, numbered tasks with observable finish lines, one required field action, optional conversation prompts, and local progress tracking in your browser.</p>
-          <p>Modules 1–3 include optional study aids (audio, video, slides, reports, quizzes) generated through <strong>Notebook by Gemini</strong> from thematically related public research. Modules 4–7 are original ministry prose without a media room.</p>
+          <p>Modules 1–3 include optional study aids (audio, video, slides, reports) generated through <strong>Notebook by Gemini</strong> from thematically related public research, plus a flashcard deck and a knowledge check built into the page itself. Modules 4–7 are original ministry prose without a media room.</p>
+          <p>Every checkbox in a module — Scripture passage, task, self-check question, field-action step, conversation prompt, flashcard deck, knowledge check — is counted toward that module’s progress. A clock records the hours, minutes, and seconds you actually spend with a module open; it pauses when you switch away or go idle. All of it stays in this browser.</p>
         </section>
         <section aria-labelledby="method-title"><h2 id="method-title">How it was made</h2>
           <p>Content was developed by U.S.M.C. Ministries using thematic research informed by marriage-formation literature, pastoral review, Scripture framing, and multi-model editorial critique. That research pipeline informed the teaching; it is not reproduced inside the learner path.</p>
@@ -250,16 +273,21 @@ function renderModule(module) {
   });
 }
 
-function renderProgress() {
-  const rows = course.modules.map((module) => `<li class="voyage-port" data-progress-module="${module.id}">
+function renderProgress(checkTotals = {}) {
+  const rows = course.modules.map((module) => {
+    const total = checkTotals[module.id] || 0;
+    return `<li class="voyage-port" data-progress-module="${module.id}">
       <span class="voyage-port-num" aria-hidden="true">${module.number}</span>
       <span class="voyage-port-check" data-progress-check aria-hidden="true">○</span>
       <div class="voyage-port-body">
         <a href="${module.slug}">Module ${module.number}: ${esc(module.title)}</a>
         <p class="voyage-port-q">${esc(module.question)}</p>
+        <p class="module-meter"><span class="module-meter-track"><span class="module-meter-bar" data-checks-bar="${module.id}"></span></span> <span class="module-meter-label" data-checks-module="${module.id}" data-checks-total="${total}">0 of ${total} checks</span></p>
         <p class="voyage-port-status" data-module-status="${module.id}">Not complete</p>
+        <p class="module-time-spent">Time logged: <span data-time-module="${module.id}">Not started</span></p>
       </div>
-    </li>`).join('\n');
+    </li>`;
+  }).join('\n');
   return layout({
     title: 'Course Progress',
     description: 'Review and reset local progress for The Husband Course.',
@@ -267,6 +295,7 @@ function renderProgress() {
     body: `<main id="main-content">
       <header class="page-header"><p class="eyebrow">The Husband Course</p><h1>Your progress</h1><p class="lede">Seven field actions. One honest local record.</p></header>
       ${progressPanel()}
+      ${timePanel({ withReset: true })}
       ${rankBanner()}
       ${commissionCard()}
       ${badgeGrid()}
@@ -279,12 +308,16 @@ function renderProgress() {
 function renderAll(root = path.resolve(__dirname, '..')) {
   const output = path.join(root, 'tmc-husband');
   fs.mkdirSync(output, { recursive: true });
-  fs.writeFileSync(path.join(output, 'index.html'), renderLanding());
-  fs.writeFileSync(path.join(output, 'about.html'), renderAbout());
-  fs.writeFileSync(path.join(output, 'progress.html'), renderProgress());
+  // Modules first: the landing and progress pages report their checkbox counts.
+  const checkTotals = {};
   for (const module of course.modules) {
-    fs.writeFileSync(path.join(output, module.slug), renderModule(module));
+    const html = renderModule(module);
+    checkTotals[module.id] = countChecks(html);
+    fs.writeFileSync(path.join(output, module.slug), html);
   }
+  fs.writeFileSync(path.join(output, 'index.html'), renderLanding(checkTotals));
+  fs.writeFileSync(path.join(output, 'about.html'), renderAbout());
+  fs.writeFileSync(path.join(output, 'progress.html'), renderProgress(checkTotals));
 }
 
 if (require.main === module) renderAll();

@@ -58,8 +58,8 @@ function progressPanel() {
 function renderLanding() {
   const published = course.publishedModuleIds || new Set();
   const howSteps = (course.howItWorks || []).map((step, index) => `<li class="how-step">
-    <p class="how-step-num">${index + 1}</p>
-    <div><h3>${esc(step.title)}</h3><p>${esc(step.body)}</p></div>
+    <h3><span class="how-step-num" aria-hidden="true">${index + 1}</span> ${esc(step.title)}</h3>
+    <p>${esc(step.body)}</p>
   </li>`).join('\n');
   const cards = course.modules.map((module) => {
     const isPublished = published.has(module.id);
@@ -92,7 +92,7 @@ function renderLanding() {
       ${progressPanel()}
       <section aria-labelledby="how-title" class="how-it-works">
         <h2 id="how-title">How it works</h2>
-        <ol class="how-steps">${howSteps}</ol>
+        <ul class="how-steps">${howSteps}</ul>
       </section>
       <section aria-labelledby="syllabus-title">
         <h2 id="syllabus-title">Course map</h2>

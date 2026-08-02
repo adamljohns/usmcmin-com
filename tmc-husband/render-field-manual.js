@@ -1,7 +1,9 @@
 'use strict';
 
-function sectionCheckoff(sectionId) {
-  return `<div class="section-checkoff"><label class="section-checkoff-label"><input type="checkbox" data-section-complete="${sectionId}"> <span>Task complete</span></label></div>`;
+const { bibleUrl } = require('./bible-url.js');
+
+function sectionCheckoff(sectionId, label = 'Done') {
+  return `<div class="section-checkoff"><label class="section-checkoff-label"><input type="checkbox" data-section-complete="${sectionId}"> <span>${label}</span></label></div>`;
 }
 
 function missionHud(minutes) {
@@ -67,7 +69,10 @@ function renderFieldManual({ module, course, layout, progressPanel, esc, prev, n
   const ps = (items) => items.map((x) => `<p>${esc(x)}</p>`).join('\n');
   const lis = (items) => items.map((x) => `<li>${esc(x)}</li>`).join('\n');
 
-  const scripture = m.scripture.map((item) => `<li><h3>${esc(item.reference)}</h3><p>${esc(item.note)}</p></li>`).join('\n');
+  const scripture = m.scripture.map((item) => {
+    const href = item.href || bibleUrl(item.reference);
+    return `<li><h3><a href="${esc(href)}" target="_blank" rel="noopener noreferrer">${esc(item.reference)}</a></h3><p>${esc(item.note)}</p></li>`;
+  }).join('\n');
   const tasks = m.tasks.map((task) => {
     const actions = task.actions.map((a) => `<li>${esc(a)}</li>`).join('');
     const callout = task.callout
@@ -81,7 +86,7 @@ function renderFieldManual({ module, course, layout, progressPanel, esc, prev, n
       <p class="task-actions-label">Actions</p>
       <ol class="task-actions">${actions}</ol>
       ${callout}
-      ${sectionCheckoff(`task-${task.number}`)}
+      ${sectionCheckoff(`task-${task.number}`, 'Task complete')}
     </article>`;
   }).join('\n');
 
@@ -123,7 +128,6 @@ function renderFieldManual({ module, course, layout, progressPanel, esc, prev, n
         ${m.finishLineHero ? `<p class="finish-line-hero"><strong>This week&apos;s finish line:</strong> ${esc(m.finishLineHero)}</p>` : ''}
         ${published ? '' : `<p class="review-notice">${esc(course.status)}</p>`}
       </header>
-      ${progressPanel()}
       <article>
         <section id="opening" aria-labelledby="opening-title" data-track-section="opening">
           <p class="eyebrow">Opening</p>
@@ -136,7 +140,6 @@ function renderFieldManual({ module, course, layout, progressPanel, esc, prev, n
           <h2 id="scripture-title">Ground your work in Scripture</h2>
           <p>Read each passage in its wider context before applying it.</p>
           <ul class="scripture-list">${scripture}</ul>
-          <p class="scripture-links"><a href="https://usmcmin.org/bible.html">Read in the MOOP Bible on usmcmin.org</a></p>
           ${sectionCheckoff('scripture')}
         </section>
         <section id="tasks" aria-labelledby="tasks-title">
@@ -151,7 +154,7 @@ function renderFieldManual({ module, course, layout, progressPanel, esc, prev, n
           <h2 id="action-title">${esc(m.fieldAction.title)}</h2>
           <ol>${actionSteps}</ol>
           <p><strong>Observable finish line:</strong> ${esc(m.fieldAction.finishLine)}</p>
-          ${sectionCheckoff('field-action')}
+          ${sectionCheckoff('field-action', 'Field action complete')}
         </section>
         <section id="conversation-guide" aria-labelledby="conversation-title" data-track-section="conversation">
           <h2 id="conversation-title">Optional conversation guide</h2>

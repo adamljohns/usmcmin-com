@@ -251,9 +251,14 @@ function renderModule(module) {
 }
 
 function renderProgress() {
-  const rows = course.modules.map((module) => `<li data-progress-module="${module.id}">
-      <span data-progress-check aria-hidden="true">○</span>
-      <div><a href="${module.slug}">Module ${module.number}: ${esc(module.title)}</a><p data-module-status="${module.id}">Not complete</p></div>
+  const rows = course.modules.map((module) => `<li class="voyage-port" data-progress-module="${module.id}">
+      <span class="voyage-port-num" aria-hidden="true">${module.number}</span>
+      <span class="voyage-port-check" data-progress-check aria-hidden="true">○</span>
+      <div class="voyage-port-body">
+        <a href="${module.slug}">Module ${module.number}: ${esc(module.title)}</a>
+        <p class="voyage-port-q">${esc(module.question)}</p>
+        <p class="voyage-port-status" data-module-status="${module.id}">Not complete</p>
+      </div>
     </li>`).join('\n');
   return layout({
     title: 'Course Progress',
@@ -265,7 +270,7 @@ function renderProgress() {
       ${rankBanner()}
       ${commissionCard()}
       ${badgeGrid()}
-      <section aria-labelledby="module-progress-title"><h2 id="module-progress-title">Module status</h2><ol class="progress-list">${rows}</ol></section>
+      <section aria-labelledby="module-progress-title"><h2 id="module-progress-title">Your voyage</h2><p class="section-intro">Seven ports. Each one is a module you complete by shipping its field action.</p><ol class="voyage-map">${rows}</ol></section>
       <section class="reset-panel" aria-labelledby="reset-title"><h2 id="reset-title">Reset this device</h2><p>This clears all seven completion flags and the last-module pointer from this browser only. It cannot be undone.</p><button class="danger" type="button" data-reset-progress>Reset all course progress</button><p data-reset-message aria-live="polite"></p></section>
     </main>`
   });

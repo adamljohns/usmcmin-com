@@ -25,11 +25,31 @@ function missionHud(minutes) {
   </div>`;
 }
 
-function renderResourceGroups(m, esc) {
+// A single media artifact rendered INLINE inside the lesson (not the trailing dump).
+function inlineArtifact(x, esc, label) {
+  if (!x) return '';
+  let media = '';
+  if (x.mediaType === 'video') {
+    media = `<video class="artifact-media" controls preload="metadata" src="${esc(x.href)}"></video>`;
+  } else if (x.mediaType === 'audio') {
+    media = `<audio class="artifact-media" controls preload="metadata" src="${esc(x.href)}"></audio>`;
+  } else if (x.alt) {
+    media = `<a href="${esc(x.href)}"><img class="inline-graphic" src="${esc(x.href)}" alt="${esc(x.alt)}" loading="lazy"></a>`;
+  }
+  const kick = label || (x.mediaType === 'video' ? 'Watch' : x.mediaType === 'audio' ? 'Listen' : 'Field graphic');
+  return `<figure class="inline-media inline-media-${esc(x.mediaType || 'graphic')}">
+      <figcaption class="inline-media-cap"><span class="inline-media-kick">${esc(kick)}</span> ${esc(x.title)}</figcaption>
+      ${media}
+      ${x.summary ? `<p class="inline-media-sum">${esc(x.summary)}</p>` : ''}
+    </figure>`;
+}
+
+function renderResourceGroups(m, esc, inlinedSlugs = new Set()) {
   if (!m.resources || !m.artifacts) return '';
 
+  const remaining = m.artifacts.filter((x) => !inlinedSlugs.has(x.slug));
   const resourceGroups = m.resources.groups.map((group) => {
-    const artifacts = m.artifacts.filter((x) => x.group === group.key).map((x) => {
+    const artifacts = remaining.filter((x) => x.group === group.key).map((x) => {
       let media = '';
       if (x.state === 'local' && x.mediaType === 'video') {
         media = `<video class="artifact-media" controls preload="metadata" src="${esc(x.href)}"></video>`;
@@ -43,6 +63,7 @@ function renderResourceGroups(m, esc) {
       const image = x.alt ? `<a href="${esc(x.href)}"><img src="${esc(x.href)}" alt="${esc(x.alt)}" loading="lazy"></a>` : '';
       return `<article class="artifact-card" data-artifact="${esc(x.slug)}" data-artifact-state="${esc(x.state)}"><p class="eyebrow">${esc(x.kind || group.heading)}</p><h4>${esc(x.title)}</h4>${link}${image}<p>${esc(x.summary)}</p></article>`;
     }).join('\n');
+    if (!artifacts) return '';
     return `<section class="resource-group" aria-labelledby="resource-${esc(group.key)}"><h3 id="resource-${esc(group.key)}">${esc(group.heading)}</h3><p>${esc(group.note)}</p><div class="artifact-grid">${artifacts}</div></section>`;
   }).join('\n');
 
@@ -53,10 +74,13 @@ function renderResourceGroups(m, esc) {
   const notebookBlock = m.resources.notebook ? `<article><h3>${esc(m.resources.notebook.title)}</h3><p>${esc(m.resources.notebook.body)}</p><a href="${esc(m.resources.notebook.href)}" target="_blank" rel="noopener noreferrer">${esc(m.resources.notebook.label)} <span aria-hidden="true">↗</span></a></article>` : '';
   const journalBlock = m.resources.journal ? `<article><h3>${esc(m.resources.journal.heading)}</h3><p>${esc(m.resources.journal.body)}</p><a href="${esc(m.resources.journal.href)}" target="_blank" rel="noopener noreferrer sponsored">${esc(m.resources.journal.label)} <span aria-hidden="true">↗</span></a><p><small>${esc(m.resources.journal.disclosure)}</small></p></article>` : '';
 
+  // If everything worth showing was already woven into the lesson, skip the trailing section.
+  if (!resourceGroups && !withheldBlock && !notebookBlock && !journalBlock) return '';
+
   return `<section id="resources" aria-labelledby="resources-title" data-track-section="resources">
-    <p class="eyebrow">Resource room</p>
-    <h2 id="resources-title">Study aids</h2>
-    <p>${esc(m.resources.intro)}</p>
+    <p class="eyebrow">Study library</p>
+    <h2 id="resources-title">More study aids</h2>
+    <p>Optional extras beyond the media woven into the lesson above — go deeper if you want to.</p>
     ${resourceGroups}
     ${withheldBlock}
     <div class="resource-actions">${notebookBlock}${journalBlock}</div>
@@ -94,6 +118,14 @@ function renderFieldManual({ module, course, layout, progressPanel, esc, prev, n
   const conversationItems = m.conversation.items.map((item) => `<li>${esc(item)}</li>`).join('\n');
   const selfCheckItems = (m.selfCheck || []).map((item) => `<li>${esc(item)}</li>`).join('\n');
 
+  // Weave the primary media into the lesson flow (not the trailing dump).
+  const arts = m.artifacts || [];
+  const firstOf = (grp) => arts.find((a) => a.group === grp && a.state === 'local' && (a.mediaType || a.alt));
+  const openingVideo = firstOf('video');
+  const tasksGraphic = firstOf('infographics');
+  const reflectAudio = firstOf('audio');
+  const inlinedSlugs = new Set([openingVideo, tasksGraphic, reflectAudio].filter(Boolean).map((a) => a.slug));
+
   let assessmentSection = '';
   if (m.assessment) {
     assessmentSection = `<section id="assessment" class="assessment-panel" aria-labelledby="assessment-title" data-track-section="assessment">
@@ -108,7 +140,7 @@ function renderFieldManual({ module, course, layout, progressPanel, esc, prev, n
   }
 
   const hasResources = (m.artifacts && m.artifacts.length > 0) || (m.resources?.groups && m.resources.groups.length > 0);
-  const resourcesSection = hasResources ? renderResourceGroups(m, esc) : '';
+  const resourcesSection = hasResources ? renderResourceGroups(m, esc, inlinedSlugs) : '';
   const missionMinutes = m.missionDurationMinutes || 60;
   const published = course.publishedModuleIds && course.publishedModuleIds.has(module.id);
 
@@ -132,6 +164,7 @@ function renderFieldManual({ module, course, layout, progressPanel, esc, prev, n
           <p class="eyebrow">Opening</p>
           <h2 id="opening-title">Why this matters now</h2>
           ${ps(m.opening)}
+          ${openingVideo ? inlineArtifact(openingVideo, esc, 'Watch first') : ''}
           ${sectionCheckoff('opening')}
         </section>
         <section id="scripture-frame" aria-labelledby="scripture-title" data-track-section="scripture">
@@ -145,9 +178,10 @@ function renderFieldManual({ module, course, layout, progressPanel, esc, prev, n
           <p class="eyebrow">This week</p>
           <h2 id="tasks-title">Your tasks</h2>
           <p>Work through these in order. Each task has an observable finish line.</p>
+          ${tasksGraphic ? inlineArtifact(tasksGraphic, esc, 'This week&rsquo;s field guide') : ''}
           ${tasks}
         </section>
-        ${selfCheckItems ? `<section id="self-check" aria-labelledby="check-title" data-track-section="self-check"><h2 id="check-title">Private self-check</h2><p>Reflect alone. Do not use these to diagnose or score your wife.</p><ul class="check-list">${selfCheckItems}</ul>${sectionCheckoff('self-check')}</section>` : ''}
+        ${selfCheckItems ? `<section id="self-check" aria-labelledby="check-title" data-track-section="self-check"><h2 id="check-title">Private self-check</h2><p>Reflect alone. Do not use these to diagnose or score your wife.</p><ul class="check-list">${selfCheckItems}</ul>${reflectAudio ? inlineArtifact(reflectAudio, esc, 'Listen while you reflect') : ''}${sectionCheckoff('self-check')}</section>` : ''}
         <section id="field-action" class="field-action" aria-labelledby="action-title" data-track-section="field-action">
           <p class="eyebrow">Required field action</p>
           <h2 id="action-title">${esc(m.fieldAction.title)}</h2>

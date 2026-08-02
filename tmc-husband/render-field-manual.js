@@ -1,25 +1,34 @@
 'use strict';
 
 const { bibleUrl } = require('./bible-url.js');
+const { loadDrills, jsonBlock } = require('./drills.js');
 
 function sectionCheckoff(sectionId, label = 'Done') {
-  return `<div class="section-checkoff"><label class="section-checkoff-label"><input type="checkbox" data-section-complete="${sectionId}"> <span>${label}</span></label></div>`;
+  return `<div class="section-checkoff"><label class="section-checkoff-label"><input type="checkbox" data-section-complete="${sectionId}"> <span>${label}</span></label> <span class="section-tally" data-section-tally aria-live="polite"></span></div>`;
 }
 
+// One tracked line item — a Scripture passage, a self-check question, a step.
+function checkItem(id, body, extra = '') {
+  return `<li class="check-item"><label class="check-item-label"><input type="checkbox" data-item-complete="${id}"> <span class="check-item-body">${body}</span></label>${extra}</li>`;
+}
+
+/* The mission clock records time actually spent in the module — hours, minutes,
+ * and seconds — rather than counting down from a guess. The ring fills toward
+ * the module's time estimate and keeps counting past it.
+ */
 function missionHud(minutes) {
   return `<div id="module-mission-hud" class="mission-hud" data-mission-minutes="${minutes}" hidden aria-live="polite">
     <div class="mission-hud-inner">
-      <div class="mission-timer-ring" aria-hidden="true"><span class="mission-timer-pct" data-mission-pct>100%</span></div>
+      <div class="mission-timer-ring" data-mission-ring aria-hidden="true"><span class="mission-timer-pct" data-mission-pct>0%</span></div>
       <div class="mission-hud-meta">
-        <p class="mission-hud-title">Module mission clock</p>
-        <p class="mission-hud-time" data-mission-display>${minutes}:00</p>
-        <div class="mission-xp-track" role="progressbar" aria-label="Module task progress"><span data-section-progress-bar></span></div>
-        <p class="mission-hud-sub" data-section-progress-summary>0 tasks checked</p>
+        <p class="mission-hud-title">Time on this module <span class="mission-hud-state" data-mission-state>Counting</span></p>
+        <p class="mission-hud-time" data-mission-display>0:00:00</p>
+        <div class="mission-xp-track" role="progressbar" aria-label="Module checklist progress"><span data-section-progress-bar></span></div>
+        <p class="mission-hud-sub"><span data-section-progress-summary>0 of 0 checks complete</span> · target ${minutes} min · course total <strong data-mission-total>0 sec</strong></p>
       </div>
       <div class="mission-hud-controls">
-        <button type="button" class="mission-btn" data-mission-start>Start clock</button>
-        <button type="button" class="mission-btn" data-mission-pause hidden>Pause</button>
-        <button type="button" class="mission-btn mission-btn-ghost" data-mission-add5>+5 min</button>
+        <button type="button" class="mission-btn" data-mission-pause aria-pressed="false">Pause clock</button>
+        <button type="button" class="mission-btn mission-btn-ghost" data-mission-reset>Reset</button>
       </div>
     </div>
   </div>`;
@@ -44,10 +53,12 @@ function inlineArtifact(x, esc, label) {
     </figure>`;
 }
 
-function renderResourceGroups(m, esc, inlinedSlugs = new Set()) {
+function renderResourceGroups(m, esc, inlinedSlugs = new Set(), nativeGroups = new Set()) {
   if (!m.resources || !m.artifacts) return '';
 
-  const remaining = m.artifacts.filter((x) => !inlinedSlugs.has(x.slug));
+  // Anything now rendered natively further down the page (flashcards, quiz) is
+  // dropped here so the same drill is not offered twice.
+  const remaining = m.artifacts.filter((x) => !inlinedSlugs.has(x.slug) && !nativeGroups.has(x.group));
   const resourceGroups = m.resources.groups.map((group) => {
     const artifacts = remaining.filter((x) => x.group === group.key).map((x) => {
       let media = '';
@@ -88,15 +99,58 @@ function renderResourceGroups(m, esc, inlinedSlugs = new Set()) {
   </section>`;
 }
 
+/* Flashcards come before the quiz: drill the material, then test it. */
+function renderFlashcards(cards, esc, moduleNumber) {
+  if (!cards.length) return '';
+  return `<section id="flashcards" class="drill-panel" aria-labelledby="flashcards-title" data-track-section="flashcards" data-flashcards>
+      <p class="eyebrow">Drill first</p>
+      <h2 id="flashcards-title">Flashcards</h2>
+      <p>${cards.length} cards from the Module ${moduleNumber} study material. Read the prompt, answer it in your head, then reveal. Mark a card known when you can answer it without help — the deck remembers on this device.</p>
+      <div class="flashcard-progress"><span class="flashcard-bar-track"><span class="flashcard-bar" data-card-bar></span></span> <span class="flashcard-tally" data-card-tally aria-live="polite">0 of ${cards.length} marked known (0%)</span></div>
+      <div class="flashcard-stage">
+        <div class="flashcard" data-card-inner tabindex="0" role="button" aria-label="Flashcard — activate to reveal the answer">
+          <p class="flashcard-face" data-card-face></p>
+          <p class="flashcard-back" data-card-back></p>
+        </div>
+      </div>
+      <p class="flashcard-counter" data-card-counter aria-live="polite">Card 1 of ${cards.length}</p>
+      <div class="drill-controls">
+        <button type="button" class="mission-btn" data-card-prev aria-label="Previous card">&larr; Previous</button>
+        <button type="button" class="mission-btn" data-card-flip>Show answer</button>
+        <button type="button" class="mission-btn" data-card-known aria-pressed="false">Mark known</button>
+        <button type="button" class="mission-btn" data-card-next aria-label="Next card">Next &rarr;</button>
+        <button type="button" class="mission-btn mission-btn-ghost" data-card-reset>Clear deck</button>
+      </div>
+      <script type="application/json" id="tmc-flashcard-data">${jsonBlock(cards)}</script>
+      <div class="section-checkoff"><label class="section-checkoff-label"><input type="checkbox" data-item-complete="flashcards"> <span>Flashcard drill done</span></label></div>
+    </section>`;
+}
+
+/* The knowledge check is the last thing in the module before you mark it complete. */
+function renderQuiz(questions, esc, moduleNumber, intro) {
+  if (!questions.length) return '';
+  return `<section id="quiz" class="drill-panel assessment-panel" aria-labelledby="quiz-title" data-track-section="quiz" data-quiz>
+      <p class="eyebrow">Last step before you close the module</p>
+      <h2 id="quiz-title">Knowledge check</h2>
+      <p>${esc(intro || `Take this after the tasks, the field action, and the flashcards. ${questions.length} questions — each answer explains itself, right or wrong. Your answers stay on this device.`)}</p>
+      <div class="flashcard-progress"><span class="flashcard-bar-track"><span class="flashcard-bar" data-quiz-bar></span></span> <span class="flashcard-tally" data-quiz-score aria-live="polite">0 of ${questions.length} answered</span></div>
+      <ol class="quiz-list" data-quiz-list></ol>
+      <div class="drill-controls"><button type="button" class="mission-btn mission-btn-ghost" data-quiz-reset>Clear answers and retake</button></div>
+      <script type="application/json" id="tmc-quiz-data">${jsonBlock(questions)}</script>
+      <div class="section-checkoff"><label class="section-checkoff-label"><input type="checkbox" data-item-complete="quiz"> <span>Knowledge check done</span></label></div>
+    </section>`;
+}
+
 function renderFieldManual({ module, course, layout, progressPanel, esc, prev, next }) {
   const m = module.fieldManual;
   const ps = (items) => items.map((x) => `<p>${esc(x)}</p>`).join('\n');
-  const lis = (items) => items.map((x) => `<li>${esc(x)}</li>`).join('\n');
 
-  const scripture = m.scripture.map((item) => {
+  const scripture = m.scripture.map((item, index) => {
     const href = item.href || bibleUrl(item.reference);
-    return `<li><h3><a href="${esc(href)}" target="_blank" rel="noopener noreferrer">${esc(item.reference)}</a></h3><p>${esc(item.note)}</p></li>`;
+    const body = `<h3><a href="${esc(href)}" target="_blank" rel="noopener noreferrer">${esc(item.reference)}</a></h3><p>${esc(item.note)}</p>`;
+    return checkItem(`scripture-${index + 1}`, body);
   }).join('\n');
+
   const tasks = m.tasks.map((task) => {
     const actions = task.actions.map((a) => `<li>${esc(a)}</li>`).join('');
     const callout = task.callout
@@ -114,9 +168,15 @@ function renderFieldManual({ module, course, layout, progressPanel, esc, prev, n
     </article>`;
   }).join('\n');
 
-  const actionSteps = m.fieldAction.steps.map((item) => `<li>${esc(item)}</li>`).join('\n');
-  const conversationItems = m.conversation.items.map((item) => `<li>${esc(item)}</li>`).join('\n');
-  const selfCheckItems = (m.selfCheck || []).map((item) => `<li>${esc(item)}</li>`).join('\n');
+  const actionSteps = m.fieldAction.steps
+    .map((item, index) => checkItem(`action-step-${index + 1}`, esc(item)))
+    .join('\n');
+  const conversationItems = m.conversation.items
+    .map((item, index) => checkItem(`conversation-${index + 1}`, esc(item)))
+    .join('\n');
+  const selfCheckItems = (m.selfCheck || [])
+    .map((item, index) => checkItem(`self-check-${index + 1}`, esc(item)))
+    .join('\n');
 
   // Weave the primary media into the lesson flow (not the trailing dump).
   const arts = m.artifacts || [];
@@ -126,21 +186,17 @@ function renderFieldManual({ module, course, layout, progressPanel, esc, prev, n
   const reflectAudio = firstOf('audio');
   const inlinedSlugs = new Set([openingVideo, tasksGraphic, reflectAudio].filter(Boolean).map((a) => a.slug));
 
-  let assessmentSection = '';
-  if (m.assessment) {
-    assessmentSection = `<section id="assessment" class="assessment-panel" aria-labelledby="assessment-title" data-track-section="assessment">
-      <h2 id="assessment-title">Knowledge check</h2>
-      <p>${esc(m.assessment.intro || 'Complete the quiz after working through the module tasks.')}</p>
-      <h3>Quiz</h3>
-      <iframe class="assessment-frame" title="${esc(m.assessment.quizTitle)}" src="${esc(m.assessment.quizHref)}" loading="lazy"></iframe>
-      <p><a href="${esc(m.assessment.quizHref)}" target="_blank" rel="noopener noreferrer">Open quiz full-screen <span aria-hidden="true">↗</span></a></p>
-      ${m.assessment.flashcardsHref ? `<h3>Flashcards</h3><iframe class="assessment-frame" title="${esc(m.assessment.flashcardsTitle)}" src="${esc(m.assessment.flashcardsHref)}" loading="lazy"></iframe><p><a href="${esc(m.assessment.flashcardsHref)}" target="_blank" rel="noopener noreferrer">Open flashcards full-screen <span aria-hidden="true">↗</span></a></p>` : ''}
-      ${sectionCheckoff('assessment')}
-    </section>`;
-  }
+  const drills = loadDrills(module.id);
+  const nativeGroups = new Set([
+    drills.flashcards.length ? 'flashcards' : null,
+    drills.quiz.length ? 'quiz' : null
+  ].filter(Boolean));
+
+  const flashcardsSection = renderFlashcards(drills.flashcards, esc, module.number);
+  const quizSection = renderQuiz(drills.quiz, esc, module.number, m.assessment && m.assessment.intro);
 
   const hasResources = (m.artifacts && m.artifacts.length > 0) || (m.resources?.groups && m.resources.groups.length > 0);
-  const resourcesSection = hasResources ? renderResourceGroups(m, esc, inlinedSlugs) : '';
+  const resourcesSection = hasResources ? renderResourceGroups(m, esc, inlinedSlugs, nativeGroups) : '';
   const missionMinutes = m.missionDurationMinutes || 60;
   const published = course.publishedModuleIds && course.publishedModuleIds.has(module.id);
 
@@ -170,9 +226,8 @@ function renderFieldManual({ module, course, layout, progressPanel, esc, prev, n
         <section id="scripture-frame" aria-labelledby="scripture-title" data-track-section="scripture">
           <p class="eyebrow">Scripture anchor</p>
           <h2 id="scripture-title">Ground your work in Scripture</h2>
-          <p>Read each passage in its wider context before applying it.</p>
-          <ul class="scripture-list">${scripture}</ul>
-          ${sectionCheckoff('scripture')}
+          <p>Read each passage in its wider context before applying it. Check each one as you read it.</p>
+          <ul class="scripture-list check-list">${scripture}</ul>
         </section>
         <section id="tasks" aria-labelledby="tasks-title">
           <p class="eyebrow">This week</p>
@@ -181,19 +236,18 @@ function renderFieldManual({ module, course, layout, progressPanel, esc, prev, n
           ${tasksGraphic ? inlineArtifact(tasksGraphic, esc, 'This week&rsquo;s field guide') : ''}
           ${tasks}
         </section>
-        ${selfCheckItems ? `<section id="self-check" aria-labelledby="check-title" data-track-section="self-check"><h2 id="check-title">Private self-check</h2><p>Reflect alone. Do not use these to diagnose or score your wife.</p><ul class="check-list">${selfCheckItems}</ul>${reflectAudio ? inlineArtifact(reflectAudio, esc, 'Listen while you reflect') : ''}${sectionCheckoff('self-check')}</section>` : ''}
+        ${selfCheckItems ? `<section id="self-check" aria-labelledby="check-title" data-track-section="self-check"><h2 id="check-title">Private self-check</h2><p>Reflect alone, then check each one off. Do not use these to diagnose or score your wife.</p><ul class="check-list">${selfCheckItems}</ul>${reflectAudio ? inlineArtifact(reflectAudio, esc, 'Listen while you reflect') : ''}</section>` : ''}
         <section id="field-action" class="field-action" aria-labelledby="action-title" data-track-section="field-action">
           <p class="eyebrow">Required field action</p>
           <h2 id="action-title">${esc(m.fieldAction.title)}</h2>
-          <ol>${actionSteps}</ol>
+          <ul class="check-list">${actionSteps}</ul>
           <p><strong>Observable finish line:</strong> ${esc(m.fieldAction.finishLine)}</p>
           ${sectionCheckoff('field-action', 'Field action complete')}
         </section>
         <section id="conversation-guide" aria-labelledby="conversation-title" data-track-section="conversation">
           <h2 id="conversation-title">Optional conversation guide</h2>
           <p>${esc(m.conversation.intro)}</p>
-          <ul>${conversationItems}</ul>
-          ${sectionCheckoff('conversation')}
+          <ul class="check-list">${conversationItems}</ul>
         </section>
         <aside id="safety" class="module-safety" aria-labelledby="safety-title">
           <h2 id="safety-title">Safety for this module</h2>
@@ -201,10 +255,12 @@ function renderFieldManual({ module, course, layout, progressPanel, esc, prev, n
           <p class="module-safety-link"><a href="about.html#safety">Full safety guidance, boundaries, and where to find confidential help &rarr;</a></p>
         </aside>
         ${resourcesSection}
-        ${assessmentSection}
+        ${flashcardsSection}
+        ${quizSection}
         <section id="completion" class="completion" aria-labelledby="completion-title" data-track-section="completion">
           <h2 id="completion-title">Complete module ${module.number}</h2>
           <p>Mark complete only after the field-action finish line. You can change this later.</p>
+          <p class="completion-tally"><span data-section-progress-summary>0 of 0 checks complete</span> · <span data-mission-total>0 sec</span> logged across the course.</p>
           <button type="button" data-complete-module="${module.id}" aria-pressed="false">Mark module ${module.number} complete</button>
           <p data-completion-message="${module.id}" aria-live="polite"></p>
         </section>
@@ -214,4 +270,4 @@ function renderFieldManual({ module, course, layout, progressPanel, esc, prev, n
   });
 }
 
-module.exports = { renderFieldManual, sectionCheckoff, missionHud };
+module.exports = { renderFieldManual, sectionCheckoff, missionHud, checkItem };

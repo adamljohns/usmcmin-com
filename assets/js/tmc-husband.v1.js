@@ -60,6 +60,35 @@
     };
   }
 
+  // Rank ladder — dignified Captain voice, no hype. Indexed by modules completed (0–7).
+  const RANKS = Object.freeze([
+    { rank: 'Ashore', milestone: 'Not yet under way. Begin Module 1 when you are ready.' },
+    { rank: 'Deckhand', milestone: 'First action shipped. The hardest step is behind you.' },
+    { rank: 'Mate', milestone: 'Two modules down. A rhythm is forming.' },
+    { rank: 'Bosun', milestone: 'Halfway to the charter. Steady steaming.' },
+    { rank: 'Watch Officer', milestone: 'Four modules in. The habits are taking hold.' },
+    { rank: 'First Officer', milestone: 'Five complete. The commission is in sight.' },
+    { rank: 'Executive Officer', milestone: 'One module from commissioned. Finish the tour.' },
+    { rank: 'Captain of the Home', milestone: 'All seven shipped. You have completed the course — commissioned.' }
+  ]);
+
+  function deriveRank(completed) {
+    const index = Math.max(0, Math.min(RANKS.length - 1, Number(completed) || 0));
+    return Object.assign({ index }, RANKS[index]);
+  }
+
+  // Badge id -> earned condition, given progress + state. 9 badges total.
+  function deriveBadges(state) {
+    const safe = normalizeState(state);
+    const completed = MODULE_KEYS.filter((key) => safe.modules[key]).length;
+    const earned = {
+      first: completed >= 1,
+      commissioned: completed === MODULE_KEYS.length
+    };
+    for (const key of MODULE_KEYS) earned[key] = safe.modules[key] === true;
+    return earned;
+  }
+
   function toggleModule(storage, moduleId) {
     if (!MODULE_KEYS.includes(moduleId)) throw new Error(`Unknown module: ${moduleId}`);
     const state = loadState(storage);
@@ -103,6 +132,34 @@
     });
     document.querySelectorAll('[data-progress-bar]').forEach((node) => {
       node.style.setProperty('--progress', `${progress.percent}%`);
+    });
+
+    // Rank + milestone copy (only affects pages that opt in with these hooks).
+    const rank = deriveRank(progress.completed);
+    document.querySelectorAll('[data-rank]').forEach((node) => { node.textContent = rank.rank; });
+    document.querySelectorAll('[data-rank-step]').forEach((node) => {
+      node.textContent = `Rank ${rank.index} of ${RANKS.length - 1}`;
+    });
+    document.querySelectorAll('[data-milestone]').forEach((node) => { node.textContent = rank.milestone; });
+
+    // Badges + commission ceremony.
+    const earned = deriveBadges(state);
+    const totalEarned = Object.values(earned).filter(Boolean).length;
+    document.querySelectorAll('[data-badge]').forEach((node) => {
+      const id = node.getAttribute('data-badge');
+      const isEarned = earned[id] === true;
+      node.classList.toggle('earned', isEarned);
+      node.classList.toggle('locked', !isEarned);
+      node.setAttribute('aria-pressed', String(isEarned));
+      const status = node.querySelector('[data-badge-state]');
+      if (status) status.textContent = isEarned ? 'Earned' : 'Locked';
+    });
+    document.querySelectorAll('[data-badge-count]').forEach((node) => {
+      node.textContent = `${totalEarned} of 9 earned`;
+    });
+    document.querySelectorAll('[data-commission]').forEach((node) => {
+      node.classList.toggle('unlocked', progress.isComplete);
+      node.setAttribute('aria-hidden', String(!progress.isComplete));
     });
 
     for (const key of MODULE_KEYS) {
@@ -310,5 +367,5 @@
     else initBrowser();
   }
 
-  return { STORAGE_KEY, SCHEMA_VERSION, MODULE_KEYS, createDefaultState, normalizeState, loadState, saveState, deriveProgress, toggleModule, resetState };
+  return { STORAGE_KEY, SCHEMA_VERSION, MODULE_KEYS, RANKS, createDefaultState, normalizeState, loadState, saveState, deriveProgress, deriveRank, deriveBadges, toggleModule, resetState };
 });

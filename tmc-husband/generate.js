@@ -22,6 +22,9 @@ function layout({ title, description, body, page = '', noindex = false }) {
   <title>${esc(title)} | U.S.M.C. Ministries</title>
   <link rel="stylesheet" href="../assets/css/tmc-husband.v1.css">
   <script src="../assets/js/tmc-husband.v1.js" defer></script>
+  <link rel="manifest" href="tmc-husband.webmanifest">
+  <meta name="theme-color" content="#163047">
+  <link rel="apple-touch-icon" href="../assets/icons/apple-touch-icon.png">
 </head>
 <body data-course-page="${esc(page)}">
   <a class="skip-link" href="#main-content">Skip to course content</a>
@@ -37,6 +40,7 @@ function layout({ title, description, body, page = '', noindex = false }) {
     <p><strong>Local-only course:</strong> no login, upload, or cross-device sync. Progress is saved only in this browser on this device.</p>
     <p>${esc(course.status)}</p>
   </footer>
+  <script>if('serviceWorker' in navigator){window.addEventListener('load',function(){navigator.serviceWorker.register('sw.js',{scope:'/tmc-husband/'}).catch(function(){});});}</script>
 </body>
 </html>
 `;
@@ -53,6 +57,52 @@ function progressPanel() {
     </div>
     <p class="local-status">Saved only on this device. Clearing browser storage removes this progress.</p>
   </aside>`;
+}
+
+// Nine ribbons (badges): first action, one per module (themed to its virtue), and commissioned.
+const BADGES = [
+  { id: 'first', name: 'First Action', desc: 'Shipped your first field action.', glyph: '★' },
+  { id: 'm01', name: 'Foundation', desc: 'Built the foundation.', glyph: '1' },
+  { id: 'm02', name: 'Understanding', desc: 'Listened to understand.', glyph: '2' },
+  { id: 'm03', name: 'Peacemaker', desc: 'Fought the problem, not each other.', glyph: '3' },
+  { id: 'm04', name: 'Repair', desc: 'Made a specific, safe repair.', glyph: '4' },
+  { id: 'm05', name: 'Roots', desc: 'Faced the family you brought in.', glyph: '5' },
+  { id: 'm06', name: 'Friendship', desc: 'Guarded friendship and intimacy.', glyph: '6' },
+  { id: 'm07', name: 'Faithfulness', desc: 'Put love into action for seven days.', glyph: '7' },
+  { id: 'commissioned', name: 'Commissioned', desc: 'Completed all seven modules.', glyph: '⚓' }
+];
+
+function rankBanner() {
+  return `<section class="rank-banner" aria-labelledby="rank-title">
+    <div class="rank-medallion" aria-hidden="true"><span>⚓</span></div>
+    <div class="rank-copy">
+      <p class="eyebrow" data-rank-step>Rank 0 of 7</p>
+      <h2 id="rank-title" data-rank>Ashore</h2>
+      <p class="rank-milestone" data-milestone aria-live="polite">Not yet under way. Begin Module 1 when you are ready.</p>
+    </div>
+  </section>`;
+}
+
+function badgeGrid() {
+  const items = BADGES.map((badge) => `<li class="badge locked" data-badge="${badge.id}" aria-pressed="false">
+      <span class="badge-icon" aria-hidden="true">${esc(badge.glyph)}</span>
+      <span class="badge-name">${esc(badge.name)}</span>
+      <span class="badge-desc">${esc(badge.desc)}</span>
+      <span class="badge-state" data-badge-state>Locked</span>
+    </li>`).join('\n');
+  return `<section class="badges" aria-labelledby="badges-title">
+    <div class="badges-head"><h2 id="badges-title">Ribbons</h2><p class="badge-count" data-badge-count>0 of 9 earned</p></div>
+    <p class="section-intro">Earned quietly, as you ship each field action. Nothing is shared or uploaded.</p>
+    <ul class="badge-grid">${items}</ul>
+  </section>`;
+}
+
+function commissionCard() {
+  return `<section class="commission-card" data-commission aria-hidden="true" aria-labelledby="commission-title">
+    <p class="eyebrow">Charter complete</p>
+    <h2 id="commission-title">Commissioned — Captain of the Home</h2>
+    <p>You completed all seven modules and shipped every field action — quietly, and for the long haul. That is a real thing you did. Well done.</p>
+  </section>`;
 }
 
 function renderLanding() {
@@ -90,6 +140,7 @@ function renderLanding() {
         <div class="button-row"><a class="button" href="module-01.html">Start module 1</a><a class="button secondary" href="progress.html">View progress</a></div>
       </section>
       ${progressPanel()}
+      ${rankBanner()}
       <section aria-labelledby="how-title" class="how-it-works">
         <h2 id="how-title">How it works</h2>
         <ul class="how-steps">${howSteps}</ul>
@@ -206,6 +257,9 @@ function renderProgress() {
     body: `<main id="main-content">
       <header class="page-header"><p class="eyebrow">The Husband Course</p><h1>Your progress</h1><p class="lede">Seven field actions. One honest local record.</p></header>
       ${progressPanel()}
+      ${rankBanner()}
+      ${commissionCard()}
+      ${badgeGrid()}
       <section aria-labelledby="module-progress-title"><h2 id="module-progress-title">Module status</h2><ol class="progress-list">${rows}</ol></section>
       <section class="reset-panel" aria-labelledby="reset-title"><h2 id="reset-title">Reset this device</h2><p>This clears all seven completion flags and the last-module pointer from this browser only. It cannot be undone.</p><button class="danger" type="button" data-reset-progress>Reset all course progress</button><p data-reset-message aria-live="polite"></p></section>
     </main>`

@@ -96,12 +96,44 @@ const fieldManual = {
     close: 'A husband must never use Scripture, forgiveness, headship, money, children, or course completion to demand access, silence concern, or prevent help.'
   },
   resources: {
-    intro: 'Scripture and lawful outbound links only for this module. No protected course media is hosted here.',
-    groups: [],
-    notebook: null,
-    journal: null
+    intro: "Optional study aids from your Notebook by Gemini notebook. Listen, watch, read, or drill \u2014 then return to your field action.",
+    groups: [
+      { key: "video", heading: "Watch", note: "Short video overviews." },
+      { key: "audio", heading: "Listen", note: "Audio briefings for deeper reflection." },
+      { key: "slides", heading: "Slide decks", note: "PDF study decks." },
+      { key: "infographics", heading: "Field graphics", note: "Single-page visual summaries." },
+      { key: "reports", heading: "Read", note: "Study reports as clean, printable PDFs." }
+    ],
+    withheldNotice: null,
+    notebook: {
+      "title": "Your Notebook by Gemini notebook",
+      "body": "Google account required. This is the source for the study aids on this page.",
+      "label": "Open \"TMC (pt4): Healing Hurt and Anger\" in Notebook by Gemini",
+      "href": "https://notebooklm.google.com/notebook/7f890b35-d14f-4027-9920-da58af181649"
+    },
+    journal: {
+      "heading": "Optional companion journal",
+      "label": "The Marriage Course Study Journal",
+      "href": "https://www.amazon.com/dp/0310116694?tag=usmcministrie-20",
+      "body": "Optional written exercises. This module works without it.",
+      "disclosure": "Affiliate disclosure: Amazon Associates link. As an Amazon Associate I earn from qualifying purchases, at no extra cost to you."
+    }
   },
-  artifacts: []
+  artifacts: [
+    { slug: "video-healing-hurt-and-forgiveness", state: "local", group: "video", kind: "Video", title: "Healing Hurt and Forgiveness", summary: "Session video on naming a hurt and making a specific repair.", href: "../assets/media/tmc-husband/m04/video/healing-hurt-and-forgiveness.mp4", mediaType: "video" },
+    { slug: "video-navigating-marital-conflict", state: "local", group: "video", kind: "Video", title: "Navigating Marital Conflict", summary: "Where unresolved anger goes when nobody addresses it.", href: "../assets/media/tmc-husband/m04/video/navigating-marital-conflict.mp4", mediaType: "video" },
+    { slug: "audio-the-danger-of-forgiving-rhinos-and-hedgehogs", state: "local", group: "audio", kind: "Audio", title: "The Danger of Forgiving: Rhinos and Hedgehogs", summary: "Deep-dive audio on the two anger styles and where the model stops applying.", href: "../assets/media/tmc-husband/m04/audio/the-danger-of-forgiving-rhinos-and-hedgehogs.mp3", mediaType: "audio" },
+    { slug: "audio-when-marriage-advice-becomes-ammunition", state: "local", group: "audio", kind: "Audio", title: "When Marriage Advice Becomes Ammunition", summary: "Safety inversion: how repair language gets weaponised. Read against the module caution.", href: "../assets/media/tmc-husband/m04/audio/when-marriage-advice-becomes-ammunition.mp3", mediaType: "audio" },
+    { slug: "slides-marital-repair-blueprint", state: "local", group: "slides", kind: "PDF", title: "Marital Repair Blueprint", summary: "The three-step repair, start to finish.", href: "../assets/media/tmc-husband/m04/slides/marital-repair-blueprint.pdf", linkLabel: "Open slide deck" },
+    { slug: "slides-the-topography-of-repair", state: "local", group: "slides", kind: "PDF", title: "The Topography of Repair", summary: "Mapping how deep a given hurt actually runs.", href: "../assets/media/tmc-husband/m04/slides/the-topography-of-repair.pdf", linkLabel: "Open slide deck" },
+    { slug: "infographic-marriage-healing-and-forgiveness-guide", state: "local", group: "infographics", title: "The Path to Healing", summary: "Anger as signal, the three-step repair, and a red-flag panel on when to seek help.", href: "../assets/media/tmc-husband/m04/infographics/marriage-healing-and-forgiveness-guide.png", alt: "Illustrated field guide titled The Path to Healing: Navigating Hurt and Forgiveness in Marriage, with panels on anger as an alarm, the rhino and hedgehog styles, a three-step repair, a safety filter, and a seven-day plan." },
+    { slug: "infographic-marriage-conflict-and-forgiveness-guide", state: "local", group: "infographics", title: "Marriage Conflict and Forgiveness Guide", summary: "Companion guide on repair sequence and boundaries.", href: "../assets/media/tmc-husband/m04/infographics/marriage-conflict-and-forgiveness-guide.png", alt: "Illustrated multi-panel field guide titled Marriage Conflict and Forgiveness Guide." },
+    { slug: "report-episode-4-the-marriage-course-healing-hurt-and-anger", state: "local", group: "reports", title: "Healing Hurt and Anger", summary: "Executive briefing — best starting point for this module.", href: "../assets/media/tmc-husband/m04/reports/episode-4-the-marriage-course-healing-hurt-and-anger.pdf", linkLabel: "Read the report" },
+    { slug: "report-beyond-the-apple-throw-navigating-anger-and-healing-in-marriage", state: "local", group: "reports", title: "Beyond the Apple Throw", summary: "Longer treatment of anger, repair, and what forgiveness does not mean.", href: "../assets/media/tmc-husband/m04/reports/beyond-the-apple-throw-navigating-anger-and-healing-in-marriage.pdf", linkLabel: "Read the report" },
+    { slug: "report-rhinos-hedgehogs-and-the-buried-alive-rule-5-surprising-lessons-for-a-healthier-marriage", state: "local", group: "reports", title: "Rhinos, Hedgehogs, and the Buried-Alive Rule", summary: "Popular-article register — use as a prompt, not as proof.", href: "../assets/media/tmc-husband/m04/reports/rhinos-hedgehogs-and-the-buried-alive-rule-5-surprising-lessons-for-a-healthier-marriage.pdf", linkLabel: "Read the report" },
+    { slug: "quiz-marriage-quiz", state: "local", group: "quiz", title: "Marriage Quiz", summary: "Knowledge check over this module.", href: "../assets/media/tmc-husband/m04/quiz/marriage-quiz.html", linkLabel: "Open the quiz" },
+    { slug: "flashcards-marriage-flashcards", state: "local", group: "flashcards", title: "Marriage Flashcards", summary: "Flashcard drill over this module.", href: "../assets/media/tmc-husband/m04/flashcards/marriage-flashcards.html", linkLabel: "Open the flashcards" }
+  ]
 };
 
 module.exports = { fieldManual };

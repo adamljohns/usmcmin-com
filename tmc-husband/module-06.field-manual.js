@@ -93,12 +93,49 @@ const fieldManual = {
     close: 'Consent is always voluntary, specific, ongoing, and reversible. Disappointment does not create entitlement.'
   },
   resources: {
-    intro: 'Scripture and lawful outbound links only for this module.',
-    groups: [],
-    notebook: null,
-    journal: null
+    intro: "Optional study aids from your Notebook by Gemini notebook. Listen, watch, read, or drill \u2014 then return to your field action.",
+    groups: [
+      { key: "video", heading: "Watch", note: "Short video overviews." },
+      { key: "audio", heading: "Listen", note: "Audio briefings for deeper reflection." },
+      { key: "slides", heading: "Slide decks", note: "PDF study decks." },
+      { key: "infographics", heading: "Field graphics", note: "Single-page visual summaries." },
+      { key: "reports", heading: "Read", note: "Study reports as clean, printable PDFs." }
+    ],
+    withheldNotice: null,
+    notebook: {
+      "title": "Your Notebook by Gemini notebook",
+      "body": "Google account required. This is the source for the study aids on this page.",
+      "label": "Open \"TMC (pt6): Sexual Intimacy\" in Notebook by Gemini",
+      "href": "https://notebooklm.google.com/notebook/073ab143-9ad0-47be-84da-ef3d4b8c5f03"
+    },
+    journal: {
+      "heading": "Optional companion journal",
+      "label": "The Marriage Course Study Journal",
+      "href": "https://www.amazon.com/dp/0310116694?tag=usmcministrie-20",
+      "body": "Optional written exercises. This module works without it.",
+      "disclosure": "Affiliate disclosure: Amazon Associates link. As an Amazon Associate I earn from qualifying purchases, at no extra cost to you."
+    }
   },
-  artifacts: []
+  artifacts: [
+    { slug: "video-keeping-the-spark-alive", state: "local", group: "video", kind: "Video", title: "Keeping the Spark Alive", summary: "Session video on friendship, attention, and desire over years.", href: "../assets/media/tmc-husband/m06/video/keeping-the-spark-alive.mp4", mediaType: "video" },
+    { slug: "video-the-engine-of-intimacy", state: "local", group: "video", kind: "Video", title: "The Engine of Intimacy", summary: "Why emotional connection and physical intimacy feed each other.", href: "../assets/media/tmc-husband/m06/video/the-engine-of-intimacy.mp4", mediaType: "video" },
+    { slug: "video-restoring-the-spark", state: "local", group: "video", kind: "Video", title: "Restoring the Spark", summary: "What to do when the connection has gone quiet.", href: "../assets/media/tmc-husband/m06/video/restoring-the-spark.mp4", mediaType: "video" },
+    { slug: "video-the-7-day-intimacy-reset", state: "local", group: "video", kind: "Video", title: "The Seven-Day Intimacy Reset", summary: "A week of small, non-pressuring moves.", href: "../assets/media/tmc-husband/m06/video/the-7-day-intimacy-reset.mp4", mediaType: "video" },
+    { slug: "audio-the-best-sex-starts-at-breakfast", state: "local", group: "audio", kind: "Audio", title: "It Starts Long Before the Bedroom", summary: "Deep-dive audio on intimacy as the whole day, not the last hour of it.", href: "../assets/media/tmc-husband/m06/audio/the-best-sex-starts-at-breakfast.mp3", mediaType: "audio" },
+    { slug: "audio-why-responsive-desire-fuels-the-marital-spark", state: "local", group: "audio", kind: "Audio", title: "Responsive Desire", summary: "Deep-dive audio on desire that answers rather than initiates.", href: "../assets/media/tmc-husband/m06/audio/why-responsive-desire-fuels-the-marital-spark.mp3", mediaType: "audio" },
+    { slug: "audio-modernizing-the-psychology-of-marital-intimacy", state: "local", group: "audio", kind: "Audio", title: "Modernising the Psychology of Intimacy", summary: "Critical audio on where the session dates. Read against the module caution.", href: "../assets/media/tmc-husband/m06/audio/modernizing-the-psychology-of-marital-intimacy.mp3", mediaType: "audio" },
+    { slug: "slides-the-intimacy-blueprint", state: "local", group: "slides", kind: "PDF", title: "The Intimacy Blueprint", summary: "Session overview deck.", href: "../assets/media/tmc-husband/m06/slides/the-intimacy-blueprint.pdf", linkLabel: "Open slide deck" },
+    { slug: "slides-the-intimacy-blueprint-2", state: "local", group: "slides", kind: "PDF", title: "The Intimacy Blueprint (Part Two)", summary: "Second half of the blueprint deck.", href: "../assets/media/tmc-husband/m06/slides/the-intimacy-blueprint-2.pdf", linkLabel: "Open slide deck" },
+    { slug: "slides-relational-circuitry", state: "local", group: "slides", kind: "PDF", title: "Relational Circuitry", summary: "How connection, safety, and desire wire together.", href: "../assets/media/tmc-husband/m06/slides/relational-circuitry.pdf", linkLabel: "Open slide deck" },
+    { slug: "infographic-the-spark-and-the-flame", state: "local", group: "infographics", title: "The Spark and the Flame", summary: "Friendship, attention, and desire over a long marriage.", href: "../assets/media/tmc-husband/m06/infographics/the-spark-and-the-flame.png", alt: "Illustrated multi-panel field guide titled The Spark and the Flame." },
+    { slug: "infographic-keeping-the-spark-alive", state: "local", group: "infographics", title: "Keeping the Spark Alive", summary: "Habits that protect intimacy in an ordinary week.", href: "../assets/media/tmc-husband/m06/infographics/keeping-the-spark-alive.png", alt: "Illustrated multi-panel field guide titled Keeping the Spark Alive." },
+    { slug: "infographic-five-secrets-of-sexual-intimacy", state: "local", group: "infographics", title: "Five Secrets of Sexual Intimacy", summary: "Five practices, with a consent and safety panel.", href: "../assets/media/tmc-husband/m06/infographics/five-secrets-of-sexual-intimacy.png", alt: "Illustrated multi-panel field guide titled Five Secrets of Sexual Intimacy." },
+    { slug: "report-briefing-document-the-marriage-course-episode-6-sexual-intimacy", state: "local", group: "reports", title: "Sexual Intimacy: Session Briefing", summary: "Executive briefing — best starting point for this module.", href: "../assets/media/tmc-husband/m06/reports/briefing-document-the-marriage-course-episode-6-sexual-intimacy.pdf", linkLabel: "Read the report" },
+    { slug: "report-beyond-the-bedroom-reclaiming-the-spark-in-your-marriage", state: "local", group: "reports", title: "Beyond the Bedroom", summary: "Longer treatment of intimacy as friendship, safety, and attention.", href: "../assets/media/tmc-husband/m06/reports/beyond-the-bedroom-reclaiming-the-spark-in-your-marriage.pdf", linkLabel: "Read the report" },
+    { slug: "report-good-luck-mr-gorsky-5-surprising-truths-about-keeping-the-spark-alive", state: "local", group: "reports", title: "Five Surprising Truths About Keeping the Spark Alive", summary: "Popular-article register — use as a prompt, not as proof.", href: "../assets/media/tmc-husband/m06/reports/good-luck-mr-gorsky-5-surprising-truths-about-keeping-the-spark-alive.pdf", linkLabel: "Read the report" },
+    { slug: "quiz-marriage-quiz", state: "local", group: "quiz", title: "Marriage Quiz", summary: "Knowledge check over this module.", href: "../assets/media/tmc-husband/m06/quiz/marriage-quiz.html", linkLabel: "Open the quiz" },
+    { slug: "flashcards-marriage-flashcards", state: "local", group: "flashcards", title: "Marriage Flashcards", summary: "Flashcard drill over this module.", href: "../assets/media/tmc-husband/m06/flashcards/marriage-flashcards.html", linkLabel: "Open the flashcards" }
+  ]
 };
 
 module.exports = { fieldManual };

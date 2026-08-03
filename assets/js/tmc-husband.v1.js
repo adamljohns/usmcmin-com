@@ -8,6 +8,25 @@
 
   const STORAGE_KEY = 'usmcmin:tmc-husband:v1:progress';
   const TIME_KEY = 'usmcmin:tmc-husband:v1:time';
+  // Two separate choices, deliberately. TIMING_KEY is whether the course records
+  // time at all — off means nothing is counted and nothing is written. CLOCK_KEY
+  // is only whether the running clock is shown while you work; a man can keep
+  // the record without a stopwatch in his eyeline.
+  const TIMING_KEY = 'usmcmin:tmc-husband:v1:timing';
+  const CLOCK_KEY = 'usmcmin:tmc-husband:v1:clock-visible';
+
+  function timingOn(storage) {
+    try { return storage.getItem(TIMING_KEY) !== 'off'; } catch (error) { return true; }
+  }
+  function setTimingOn(storage, on) {
+    try { storage.setItem(TIMING_KEY, on ? 'on' : 'off'); } catch (error) { /* private mode */ }
+  }
+  function clockVisible(storage) {
+    try { return storage.getItem(CLOCK_KEY) !== 'hidden'; } catch (error) { return true; }
+  }
+  function setClockVisible(storage, visible) {
+    try { storage.setItem(CLOCK_KEY, visible ? 'shown' : 'hidden'); } catch (error) { /* private mode */ }
+  }
   const SCHEMA_VERSION = 1;
   const MODULE_KEYS = Object.freeze(['m01', 'm02', 'm03', 'm04', 'm05', 'm06', 'm07']);
 
@@ -362,6 +381,16 @@
     const totalNode = hud.querySelector('[data-mission-total]');
     const pauseBtn = hud.querySelector('[data-mission-pause]');
     const resetBtn = hud.querySelector('[data-mission-reset]');
+    const hideBtn = hud.querySelector('[data-mission-hide]');
+    const offBtn = hud.querySelector('[data-mission-off]');
+
+    // Timing switched off course-wide: no clock, no counting, no writes. A
+    // single quiet line stays so the setting is discoverable from the module.
+    if (!timingOn(storage)) {
+      hud.classList.add('is-timing-off');
+      hud.hidden = false;
+      return null;
+    }
 
     const table = loadTime(storage);
     let elapsed = table[moduleId] || 0;
@@ -425,6 +454,31 @@
       persist();
       render();
     });
+
+    function applyClockVisibility() {
+      const shown = clockVisible(storage);
+      hud.classList.toggle('is-clock-hidden', !shown);
+      if (hideBtn) {
+        hideBtn.textContent = shown ? 'Hide clock' : 'Show clock';
+        hideBtn.setAttribute('aria-pressed', String(!shown));
+      }
+    }
+
+    hideBtn?.addEventListener('click', () => {
+      setClockVisible(storage, !clockVisible(storage));
+      applyClockVisibility();
+    });
+
+    // Turning timing off from here stops the clock immediately; whatever was
+    // already recorded is kept, so switching back on resumes the record.
+    offBtn?.addEventListener('click', () => {
+      if (!window.confirm('Turn off time tracking for this course? Nothing more will be recorded. Your existing recorded time is kept, and you can turn it back on from the progress page.')) return;
+      persist();
+      setTimingOn(storage, false);
+      window.location.reload();
+    });
+
+    applyClockVisibility();
 
     resetBtn?.addEventListener('click', () => {
       const label = `Reset the clock for this module? ${formatDuration(elapsed)} of recorded time will be cleared. This cannot be undone.`;
@@ -682,10 +736,40 @@
       });
     }
     document.querySelectorAll('[data-time-detail]').forEach((node) => {
+      if (!timingOn(storage)) {
+        node.textContent = total
+          ? 'Time tracking is off. Your earlier recorded time is kept below.'
+          : 'Time tracking is off. Nothing is being recorded.';
+        return;
+      }
       const started = MODULE_KEYS.filter((key) => (table[key] || 0) > 0).length;
       node.textContent = started
         ? `Across ${started} of 7 modules, on this device only.`
         : 'No time recorded on this device yet.';
+    });
+    document.querySelectorAll('[data-time-panel]').forEach((panel) => {
+      panel.classList.toggle('is-timing-off', !timingOn(storage));
+    });
+  }
+
+  // The master switch. Lives on the time panel (landing + progress pages) so a
+  // man can decide once, before he starts, whether this course times him.
+  function initTimingSwitch(storage, onChange) {
+    document.querySelectorAll('[data-timing-toggle]').forEach((button) => {
+      function paint() {
+        const on = timingOn(storage);
+        button.textContent = on ? 'Turn time tracking off' : 'Turn time tracking on';
+        button.setAttribute('aria-pressed', String(!on));
+        button.classList.toggle('secondary', on);
+      }
+      button.addEventListener('click', () => {
+        const turningOff = timingOn(storage);
+        if (turningOff && !window.confirm('Turn off time tracking? Nothing more will be recorded. Your existing recorded time is kept, and you can turn it back on here.')) return;
+        setTimingOn(storage, !turningOff);
+        paint();
+        if (typeof onChange === 'function') onChange();
+      });
+      paint();
     });
   }
 
@@ -714,6 +798,7 @@
     const page = initModulePage(storage);
     renderTimeReadouts(storage);
     renderChecklistReadouts(storage);
+    initTimingSwitch(storage, () => renderTimeReadouts(storage));
 
     if (page) {
       initMissionClock(storage, page.moduleId);

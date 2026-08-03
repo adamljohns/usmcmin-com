@@ -28,9 +28,12 @@ function missionHud(minutes) {
       </div>
       <div class="mission-hud-controls">
         <button type="button" class="mission-btn" data-mission-pause aria-pressed="false">Pause clock</button>
+        <button type="button" class="mission-btn" data-mission-hide aria-pressed="false">Hide clock</button>
         <button type="button" class="mission-btn mission-btn-ghost" data-mission-reset>Reset</button>
+        <button type="button" class="mission-btn mission-btn-ghost" data-mission-off>Turn timing off</button>
       </div>
     </div>
+    <p class="mission-hud-off">Time tracking is off for this course. <a href="progress.html">Turn it back on</a> whenever you want it.</p>
   </div>`;
 }
 

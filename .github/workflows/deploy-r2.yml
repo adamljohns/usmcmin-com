@@ -2,6 +2,12 @@ name: Deploy site to R2
 # usmcmin.com is served from Cloudflare R2 (bucket: usmcmin-com-site) via the
 # `usmcmin-com` Worker (zone routes). This action syncs the repo root -> R2 on
 # every push to main, replacing the GitHub Pages build (kept only as fallback).
+#
+# NOTE: this is `rclone sync`, so anything in the bucket that is not in the repo
+# gets DELETED. The Husband Course heavy media (~2 GB of audio, video, slide
+# PDFs, and infographics) lives in R2 only — it is gitignored and uploaded
+# out-of-band by tmc-husband/sync-media.sh. The excludes below are what keep a
+# deploy from wiping it. If you add a new media directory, exclude it here too.
 on:
   push:
     branches: [main]
@@ -33,6 +39,10 @@ jobs:
           rclone sync . r2:usmcmin-com-site \
             --exclude '.git/**' --exclude '.github/**' \
             --exclude '.openclaw/**' --exclude '.clawhub/**' \
+            --exclude 'assets/media/tmc-husband/*/audio/**' \
+            --exclude 'assets/media/tmc-husband/*/video/**' \
+            --exclude 'assets/media/tmc-husband/*/slides/**' \
+            --exclude 'assets/media/tmc-husband/*/infographics/**' \
             --checksum --fast-list \
             --transfers 64 --checkers 64 \
             --s3-upload-cutoff 200M --s3-chunk-size 32M \

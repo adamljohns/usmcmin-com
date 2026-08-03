@@ -11,35 +11,153 @@ function esc(value) {
   })[character]);
 }
 
+// One accent per module, as a [light-theme, dark-theme] pair. The light value
+// clears 4.5:1 on the light surface; the dark value clears it on #0A0A0A. The
+// course chrome (landing, progress, about) runs on the site's neutral accent.
+// Same idea as the Mission Log's per-block `--blk`, so the two courses read as
+// one family without either one going neon (CLAUDE.md: muted, no neon).
+const NEUTRAL_ACCENT = ['#4A5568', '#A8B0BC'];
+const MODULE_ACCENTS = {
+  m01: ['#8C5A1F', '#E0A45C'], // Foundation — bronze
+  m02: ['#2C6E8A', '#7FC0DC'], // Communication — harbor
+  m03: ['#4C6B2F', '#A6CE7E'], // Conflict — olive
+  m04: ['#9B4A3F', '#EDA093'], // Repair — clay
+  m05: ['#5B5A8C', '#B0AEE4'], // Family roots — slate violet
+  m06: ['#8A3F62', '#E29BBD'], // Intimacy — deep rose
+  m07: ['#1E4E6B', '#8FC3E0']  // Love in action — navy blue
+};
+
+function accentStyle(page) {
+  const [light, dark] = MODULE_ACCENTS[page] || NEUTRAL_ACCENT;
+  return `--mod-l:${light};--mod-d:${dark}`;
+}
+
+// Shared site nav. Course pages are usmcmin.com pages: same brand, same links,
+// same theme toggle. `assets/js/main.js` wires the hamburger and the toggle.
+function siteNav() {
+  return `<nav>
+    <a href="/" class="nav-brand" style="text-decoration:none">
+      <img src="/assets/img/logo.png" alt="U.S.M.C. Ministries" style="object-fit:contain">
+      <div class="nav-brand-text">
+        <div class="name">U.S.M.C. Ministries</div>
+        <div class="tag">Warriors Equipped</div>
+      </div>
+    </a>
+    <ul class="nav-links">
+      <li><a href="/mission.html">Mission</a></li>
+      <li><a href="/shop.html">Shop</a></li>
+      <li><a href="/books.html">Books</a></li>
+      <li><a href="/coaching.html">Coaching</a></li>
+      <li><a href="/ai-mission.html">AI Mission</a></li>
+      <li><a href="/tmc-husband/index.html" class="active">Husband Course</a></li>
+      <li><a href="https://usmcmin.org" target="_blank" rel="noopener">Ministry Site</a></li>
+    </ul>
+    <a href="/coaching.html" class="btn nav-cta">Book a Session</a>
+    <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme" title="Switch light/dark mode">&#9789;</button>
+    <button class="nav-toggle" aria-label="Menu"><span></span><span></span><span></span></button>
+  </nav>`;
+}
+
+// Course rail — the one piece of chrome the shared nav can't carry: where you
+// are inside the course, and the live module count. Sits under the fixed nav.
+function courseRail(page) {
+  const here = (target) => (page === target ? ' aria-current="page"' : '');
+  return `<div class="course-rail">
+    <div class="course-rail-inner">
+      <a class="course-rail-name" href="index.html">The Husband Course</a>
+      <nav class="course-rail-nav" aria-label="Course sections">
+        <a href="index.html"${here('landing')}>Course map</a>
+        <a href="progress.html"${here('progress')}>Progress <span class="nav-progress" data-progress-short>0/7</span></a>
+        <a href="about.html"${here('about')}>About</a>
+      </nav>
+    </div>
+  </div>`;
+}
+
+function siteFooter() {
+  return `<footer>
+    <div class="footer-inner">
+      <div class="footer-top">
+        <div class="footer-brand">
+          <div class="name">U.S.M.C. Ministries</div>
+          <div class="tag">Warriors Equipped. Kingdom Advancing.</div>
+          <p>Helping men become better husbands, fathers, and citizens as they follow Jesus. Based in Fredericksburg, VA.</p>
+        </div>
+        <div class="footer-col">
+          <h4>This course</h4>
+          <ul>
+            <li><a href="index.html">Course map</a></li>
+            <li><a href="progress.html">Your progress</a></li>
+            <li><a href="about.html">How it was made</a></li>
+            <li><a href="about.html#safety">Safety guidance</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Other courses</h4>
+          <ul>
+            <li><a href="/ai-mission.html">The Watchman&rsquo;s Course</a></li>
+            <li><a href="/ai-mission-voyage.html">Mission Log</a></li>
+            <li><a href="/father.html">Father</a></li>
+            <li><a href="/husband.html">Husband (HAPPY)</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Coaching</h4>
+          <ul>
+            <li><a href="https://cal.com/usmc-ministries-2022/counseling" target="_blank" rel="noopener">Pastoral Counsel</a></li>
+            <li><a href="https://cal.com/usmc-ministries-2022/uniting" target="_blank" rel="noopener">Brotherhood Session</a></li>
+            <li><a href="https://cal.com/usmc-ministries-2022/mentoring" target="_blank" rel="noopener">Discipleship</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Ministry</h4>
+          <ul>
+            <li><a href="/about.html">About Adam</a></li>
+            <li><a href="https://usmcmin.org" target="_blank" rel="noopener">usmcmin.org</a></li>
+            <li><a href="mailto:usmcministries2022@gmail.com">Contact</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <div class="verse"><strong>Local-only course:</strong> no login, upload, or cross-device sync. Progress is saved only in this browser, on this device.</div>
+        <div>&copy; 2026 U.S.M.C. Ministries. &nbsp;|&nbsp; <a href="/sitemap.html">Sitemap</a></div>
+      </div>
+    </div>
+  </footer>`;
+}
+
+// Pre-paint theme guard — identical contract to assets/js/main.js: dark by
+// default, light only when the reader has opted in. Runs before first paint so
+// the course never flashes the opposite theme while main.js loads.
+const THEME_GUARD = `(function(){try{var s=localStorage.getItem('usmc-theme')||localStorage.getItem('theme');` +
+  `if(s!=='light')document.documentElement.setAttribute('data-theme','dark');}catch(e){}})();`;
+
 function layout({ title, description, body, page = '', noindex = false }) {
   return `<!doctype html>
 <html lang="en">
 <head>
   <meta charset="utf-8">
+  <script>${THEME_GUARD}</script>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="description" content="${esc(description)}">
   ${noindex ? '<meta name="robots" content="noindex, nofollow">' : ''}
   <title>${esc(title)} | U.S.M.C. Ministries</title>
-  <link rel="stylesheet" href="../assets/css/tmc-husband.v1.css">
-  <script src="../assets/js/tmc-husband.v1.js" defer></script>
+  <link rel="stylesheet" href="/assets/css/main.css">
+  <link rel="stylesheet" href="/assets/css/tmc-husband.v2.css">
+  <link rel="icon" type="image/svg+xml" href="/assets/icons/favicon.svg">
+  <link rel="icon" type="image/png" sizes="32x32" href="/assets/icons/favicon-32.png">
+  <script src="/assets/js/main.js" defer></script>
+  <script src="/assets/js/tmc-husband.v1.js" defer></script>
   <link rel="manifest" href="tmc-husband.webmanifest">
-  <meta name="theme-color" content="#163047">
-  <link rel="apple-touch-icon" href="../assets/icons/apple-touch-icon.png">
+  <meta name="theme-color" content="#1E3A5F">
+  <link rel="apple-touch-icon" href="/assets/icons/apple-touch-icon.png">
 </head>
-<body data-course-page="${esc(page)}">
+<body class="tmc" data-course-page="${esc(page)}" style="${accentStyle(page)}">
   <a class="skip-link" href="#main-content">Skip to course content</a>
-  <header class="site-header">
-    <a class="brand" href="index.html" aria-label="The Husband Course home">U.S.M.C. <span>Ministries</span></a>
-    <nav aria-label="Course navigation">
-      <a href="index.html">Course</a>
-      <a href="progress.html">Progress <span class="nav-progress" data-progress-short>0/7</span></a>
-    </nav>
-  </header>
+  ${siteNav()}
+  ${courseRail(page)}
   ${body}
-  <footer>
-    <p><strong>Local-only course:</strong> no login, upload, or cross-device sync. Progress is saved only in this browser on this device.</p>
-    <p>${esc(course.status)}</p>
-  </footer>
+  ${siteFooter()}
   <script>if('serviceWorker' in navigator){window.addEventListener('load',function(){navigator.serviceWorker.register('sw.js',{scope:'/tmc-husband/'}).catch(function(){});});}</script>
 </body>
 </html>
@@ -137,7 +255,7 @@ function renderLanding(checkTotals = {}) {
       : '';
     const timeLine = module.timeEstimate ? `<p class="module-time">${esc(module.timeEstimate)}</p>` : '';
     const total = checkTotals[module.id] || 0;
-    return `<li class="module-card${isPublished ? '' : ' module-card-draft'}" data-module-card="${module.id}">
+    return `<li class="module-card${isPublished ? '' : ' module-card-draft'}" data-module-card="${module.id}" style="${accentStyle(module.id)}">
     <p class="eyebrow">Module ${module.number}${badge ? ' · ' + esc(badge) : ''}</p>
     <h2><a href="${module.slug}">${esc(module.title)}</a></h2>
     <p class="module-question">${esc(module.question)}</p>
@@ -153,7 +271,8 @@ function renderLanding(checkTotals = {}) {
     description: 'A free, static, seven-module Christian course helping husbands practice faithful, attentive marriage.',
     page: 'landing',
     body: `<main id="main-content">
-      <section class="hero">
+      <section class="course-hero">
+        <span class="course-badge">The Husband Course &middot; U.S.M.C. Ministries</span>
         <p class="eyebrow">Free · seven modules · no account · local progress</p>
         <h1>${esc(course.title)}</h1>
         <p class="lede">${esc(course.subtitle)}</p>
@@ -189,6 +308,7 @@ function renderAbout() {
     noindex: true,
     body: `<main id="main-content">
       <header class="page-header">
+        <span class="course-badge">The Husband Course &middot; U.S.M.C. Ministries</span>
         <p class="eyebrow">Background</p>
         <h1>About The Husband Course</h1>
         <p class="lede">Method, boundaries, and what you will — and will not — find inside.</p>
@@ -250,6 +370,7 @@ function renderModule(module) {
     body: `<main id="main-content" class="lesson">
       <nav class="module-nav" aria-label="Previous and next modules">${prev}${next}</nav>
       <header class="lesson-header">
+        <span class="course-badge">Module ${module.number} &middot; The Husband Course</span>
         <p class="eyebrow">Module ${module.number} of 7${published ? '' : ' · Draft'}</p>
         <h1>${esc(module.title)}</h1>
         <p class="lede">${esc(module.question)}</p>
@@ -276,7 +397,7 @@ function renderModule(module) {
 function renderProgress(checkTotals = {}) {
   const rows = course.modules.map((module) => {
     const total = checkTotals[module.id] || 0;
-    return `<li class="voyage-port" data-progress-module="${module.id}">
+    return `<li class="voyage-port" data-progress-module="${module.id}" style="${accentStyle(module.id)}">
       <span class="voyage-port-num" aria-hidden="true">${module.number}</span>
       <span class="voyage-port-check" data-progress-check aria-hidden="true">○</span>
       <div class="voyage-port-body">
@@ -293,7 +414,7 @@ function renderProgress(checkTotals = {}) {
     description: 'Review and reset local progress for The Husband Course.',
     page: 'progress',
     body: `<main id="main-content">
-      <header class="page-header"><p class="eyebrow">The Husband Course</p><h1>Your progress</h1><p class="lede">Seven field actions. One honest local record.</p></header>
+      <header class="page-header"><span class="course-badge">The Husband Course &middot; U.S.M.C. Ministries</span><p class="eyebrow">Your voyage</p><h1>Your progress</h1><p class="lede">Seven field actions. One honest local record.</p></header>
       ${progressPanel()}
       ${timePanel({ withReset: true })}
       ${rankBanner()}

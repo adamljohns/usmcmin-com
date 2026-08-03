@@ -12,7 +12,7 @@
  *
  * Bump SW_VERSION when the shell changes so installs refresh on next launch.
  */
-const SW_VERSION = 'v1-2026-08-02';
+const SW_VERSION = 'v2-2026-08-02';
 const CORE_CACHE = 'tmc-core-' + SW_VERSION;
 const RUNTIME_CACHE = 'tmc-runtime-' + SW_VERSION;
 const OFFLINE_FALLBACK = '/tmc-husband/index.html';
@@ -28,7 +28,9 @@ const CORE_ASSETS = [
   '/tmc-husband/module-05.html',
   '/tmc-husband/module-06.html',
   '/tmc-husband/module-07.html',
-  '/assets/css/tmc-husband.v1.css',
+  '/assets/css/main.css',
+  '/assets/css/tmc-husband.v2.css',
+  '/assets/js/main.js',
   '/assets/js/tmc-husband.v1.js',
   '/assets/icons/icon-192.png',
   '/assets/icons/icon-512.png',

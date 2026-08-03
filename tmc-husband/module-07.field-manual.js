@@ -92,12 +92,45 @@ const fieldManual = {
     close: 'Course completion is not marriage completion. Seven browser flags are not a spiritual score or evidence that a marriage is safe.'
   },
   resources: {
-    intro: 'Scripture and lawful outbound links only for this module.',
-    groups: [],
-    notebook: null,
-    journal: null
+    intro: "Optional study aids from your Notebook by Gemini notebook. Listen, watch, read, or drill \u2014 then return to your field action.",
+    groups: [
+      { key: "video", heading: "Watch", note: "Short video overviews." },
+      { key: "audio", heading: "Listen", note: "Audio briefings for deeper reflection." },
+      { key: "slides", heading: "Slide decks", note: "PDF study decks." },
+      { key: "infographics", heading: "Field graphics", note: "Single-page visual summaries." },
+      { key: "reports", heading: "Read", note: "Study reports as clean, printable PDFs." }
+    ],
+    withheldNotice: null,
+    notebook: {
+      "title": "Your Notebook by Gemini notebook",
+      "body": "Google account required. This is the source for the study aids on this page.",
+      "label": "Open \"TMC (pt7): Love in Action\" in Notebook by Gemini",
+      "href": "https://notebooklm.google.com/notebook/041c756f-0497-418b-930b-0ee857ea4670"
+    },
+    journal: {
+      "heading": "Optional companion journal",
+      "label": "The Marriage Course Study Journal",
+      "href": "https://www.amazon.com/dp/0310116694?tag=usmcministrie-20",
+      "body": "Optional written exercises. This module works without it.",
+      "disclosure": "Affiliate disclosure: Amazon Associates link. As an Amazon Associate I earn from qualifying purchases, at no extra cost to you."
+    }
   },
-  artifacts: []
+  artifacts: [
+    { slug: "video-love-in-action", state: "local", group: "video", kind: "Video", title: "Love in Action", summary: "Session video on love as something you do on purpose.", href: "../assets/media/tmc-husband/m07/video/love-in-action.mp4", mediaType: "video" },
+    { slug: "video-5-languages-of-marriage", state: "local", group: "video", kind: "Video", title: "The Five Languages of Marriage", summary: "Giving love in the currency your wife actually receives.", href: "../assets/media/tmc-husband/m07/video/5-languages-of-marriage.mp4", mediaType: "video" },
+    { slug: "audio-giving-love-in-your-partner-s-currency", state: "local", group: "audio", kind: "Audio", title: "Giving Love in Her Currency", summary: "Deep-dive audio on paying attention to what actually lands.", href: "../assets/media/tmc-husband/m07/audio/giving-love-in-your-partner-s-currency.mp3", mediaType: "audio" },
+    { slug: "audio-why-love-languages-need-emotional-safety", state: "local", group: "audio", kind: "Audio", title: "Why Love Languages Need Safety First", summary: "Critical audio: the framework assumes a safe marriage. Read against the module caution.", href: "../assets/media/tmc-husband/m07/audio/why-love-languages-need-emotional-safety.mp3", mediaType: "audio" },
+    { slug: "slides-the-love-language-manual", state: "local", group: "slides", kind: "PDF", title: "The Love Language Manual", summary: "The five languages, applied.", href: "../assets/media/tmc-husband/m07/slides/the-love-language-manual.pdf", linkLabel: "Open slide deck" },
+    { slug: "slides-marriage-field-manual", state: "local", group: "slides", kind: "PDF", title: "Marriage Field Manual", summary: "Session overview deck.", href: "../assets/media/tmc-husband/m07/slides/marriage-field-manual.pdf", linkLabel: "Open slide deck" },
+    { slug: "slides-marriage-systems-manual", state: "local", group: "slides", kind: "PDF", title: "Marriage Systems Manual", summary: "Keeping the habits running after the course ends.", href: "../assets/media/tmc-husband/m07/slides/marriage-systems-manual.pdf", linkLabel: "Open slide deck" },
+    { slug: "infographic-love-in-action-relationship-guide", state: "local", group: "infographics", title: "Love in Action Relationship Guide", summary: "The five languages with a practice plan.", href: "../assets/media/tmc-husband/m07/infographics/love-in-action-relationship-guide.png", alt: "Illustrated multi-panel field guide titled Love in Action Relationship Guide." },
+    { slug: "infographic-marriage-maintenance-storyboard-field-guide", state: "local", group: "infographics", title: "Marriage Maintenance Storyboard", summary: "The whole course as one maintenance rhythm.", href: "../assets/media/tmc-husband/m07/infographics/marriage-maintenance-storyboard-field-guide.png", alt: "Illustrated multi-panel field guide titled Marriage Maintenance Storyboard Field Guide." },
+    { slug: "report-love-in-action-insights-from-the-marriage-course-episode-7", state: "local", group: "reports", title: "Love in Action: Session Insights", summary: "Executive briefing — best starting point for this module.", href: "../assets/media/tmc-husband/m07/reports/love-in-action-insights-from-the-marriage-course-episode-7.pdf", linkLabel: "Read the report" },
+    { slug: "report-the-architecture-of-intimacy-why-lasting-love-is-a-learned-language-not-a-reflex", state: "local", group: "reports", title: "The Architecture of Intimacy", summary: "Longer treatment of love as a learned practice rather than a reflex.", href: "../assets/media/tmc-husband/m07/reports/the-architecture-of-intimacy-why-lasting-love-is-a-learned-language-not-a-reflex.pdf", linkLabel: "Read the report" },
+    { slug: "report-love-in-action-beyond-the-spontaneous-myth-and-into-the-five-languages", state: "local", group: "reports", title: "Beyond the Spontaneous Myth", summary: "Popular-article register — use as a prompt, not as proof.", href: "../assets/media/tmc-husband/m07/reports/love-in-action-beyond-the-spontaneous-myth-and-into-the-five-languages.pdf", linkLabel: "Read the report" },
+    { slug: "quiz-marriage-quiz", state: "local", group: "quiz", title: "Marriage Quiz", summary: "Knowledge check over this module.", href: "../assets/media/tmc-husband/m07/quiz/marriage-quiz.html", linkLabel: "Open the quiz" },
+    { slug: "flashcards-marriage-flashcards", state: "local", group: "flashcards", title: "Marriage Flashcards", summary: "Flashcard drill over this module.", href: "../assets/media/tmc-husband/m07/flashcards/marriage-flashcards.html", linkLabel: "Open the flashcards" }
+  ]
 };
 
 module.exports = { fieldManual };

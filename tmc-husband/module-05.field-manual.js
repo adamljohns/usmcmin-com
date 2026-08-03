@@ -97,12 +97,44 @@ const fieldManual = {
     close: 'This course does not require disclosure, renewed family contact, or couple processing of traumatic history.'
   },
   resources: {
-    intro: 'Scripture and lawful outbound links only for this module.',
-    groups: [],
-    notebook: null,
-    journal: null
+    intro: "Optional study aids from your Notebook by Gemini notebook. Listen, watch, read, or drill \u2014 then return to your field action.",
+    groups: [
+      { key: "video", heading: "Watch", note: "Short video overviews." },
+      { key: "audio", heading: "Listen", note: "Audio briefings for deeper reflection." },
+      { key: "slides", heading: "Slide decks", note: "PDF study decks." },
+      { key: "infographics", heading: "Field graphics", note: "Single-page visual summaries." },
+      { key: "reports", heading: "Read", note: "Study reports as clean, printable PDFs." }
+    ],
+    withheldNotice: null,
+    notebook: {
+      "title": "Your Notebook by Gemini notebook",
+      "body": "Google account required. This is the source for the study aids on this page.",
+      "label": "Open \"TMC (pt5): The Impact of Family\" in Notebook by Gemini",
+      "href": "https://notebooklm.google.com/notebook/e6e7bc4f-8dd9-407e-9b70-894acafe3fa4"
+    },
+    journal: {
+      "heading": "Optional companion journal",
+      "label": "The Marriage Course Study Journal",
+      "href": "https://www.amazon.com/dp/0310116694?tag=usmcministrie-20",
+      "body": "Optional written exercises. This module works without it.",
+      "disclosure": "Affiliate disclosure: Amazon Associates link. As an Amazon Associate I earn from qualifying purchases, at no extra cost to you."
+    }
   },
-  artifacts: []
+  artifacts: [
+    { slug: "video-family-impact-past-and-present", state: "local", group: "video", kind: "Video", title: "The Impact of Family: Past and Present", summary: "Session video on the family you brought into the marriage.", href: "../assets/media/tmc-husband/m05/video/family-impact-past-and-present.mp4", mediaType: "video" },
+    { slug: "video-family-dynamics-in-marriage", state: "local", group: "video", kind: "Video", title: "Family Dynamics in Marriage", summary: "How inherited patterns show up in a marriage nobody planned them for.", href: "../assets/media/tmc-husband/m05/video/family-dynamics-in-marriage.mp4", mediaType: "video" },
+    { slug: "audio-trauma-informed-forgiveness-and-cultural-marriage-boundaries", state: "local", group: "audio", kind: "Audio", title: "Trauma-Informed Forgiveness and Boundaries", summary: "Deep-dive audio on forgiveness that does not require unsafe contact.", href: "../assets/media/tmc-husband/m05/audio/trauma-informed-forgiveness-and-cultural-marriage-boundaries.mp3", mediaType: "audio" },
+    { slug: "audio-why-ai-flagged-the-marriage-course-trauma", state: "local", group: "audio", kind: "Audio", title: "Where This Session Needs Care", summary: "Critical audio on the limits of a formation course around trauma. Read against the module caution.", href: "../assets/media/tmc-husband/m05/audio/why-ai-flagged-the-marriage-course-trauma.mp3", mediaType: "audio" },
+    { slug: "slides-navigating-family-legacies", state: "local", group: "slides", kind: "PDF", title: "Navigating Family Legacies", summary: "Leaving, cleaving, and the new centre of gravity.", href: "../assets/media/tmc-husband/m05/slides/navigating-family-legacies.pdf", linkLabel: "Open slide deck" },
+    { slug: "slides-the-marital-blueprint", state: "local", group: "slides", kind: "PDF", title: "The Marital Blueprint", summary: "Session overview deck.", href: "../assets/media/tmc-husband/m05/slides/the-marital-blueprint.pdf", linkLabel: "Open slide deck" },
+    { slug: "infographic-navigating-the-family-tree-guide", state: "local", group: "infographics", title: "Navigating the Family Tree", summary: "Leaving as an emotional shift, inherited conflict styles, and a critical panel on when advice is not enough.", href: "../assets/media/tmc-husband/m05/infographics/navigating-the-family-tree-guide.png", alt: "Illustrated field guide titled Navigating the Family Tree: A Field Guide for Married Couples, with panels on creating a new centre of gravity, inherited conflict styles, evaluating your roots, a healing action plan, and a red-flag note to seek professional help." },
+    { slug: "infographic-navigating-family-patterns-in-marriage", state: "local", group: "infographics", title: "Navigating Family Patterns in Marriage", summary: "Companion guide on inherited patterns and boundaries.", href: "../assets/media/tmc-husband/m05/infographics/navigating-family-patterns-in-marriage.png", alt: "Illustrated multi-panel field guide titled Navigating Family Patterns in Marriage." },
+    { slug: "report-episode-5-the-marriage-course-the-impact-of-family-past-and-present", state: "local", group: "reports", title: "The Impact of Family: Past and Present", summary: "Executive briefing — best starting point for this module.", href: "../assets/media/tmc-husband/m05/reports/episode-5-the-marriage-course-the-impact-of-family-past-and-present.pdf", linkLabel: "Read the report" },
+    { slug: "report-the-ghost-at-the-dinner-table-navigating-family-baggage-and-in-law-dynamics", state: "local", group: "reports", title: "The Ghost at the Dinner Table", summary: "Longer treatment of in-law dynamics and inherited expectations.", href: "../assets/media/tmc-husband/m05/reports/the-ghost-at-the-dinner-table-navigating-family-baggage-and-in-law-dynamics.pdf", linkLabel: "Read the report" },
+    { slug: "report-why-your-in-laws-are-secretly-living-in-your-marriage-5-radical-shifts-for-every-couple", state: "local", group: "reports", title: "Why Your In-Laws Are Living in Your Marriage", summary: "Popular-article register — the headline overclaims; use as a prompt.", href: "../assets/media/tmc-husband/m05/reports/why-your-in-laws-are-secretly-living-in-your-marriage-5-radical-shifts-for-every-couple.pdf", linkLabel: "Read the report" },
+    { slug: "quiz-marriage-quiz", state: "local", group: "quiz", title: "Marriage Quiz", summary: "Knowledge check over this module.", href: "../assets/media/tmc-husband/m05/quiz/marriage-quiz.html", linkLabel: "Open the quiz" },
+    { slug: "flashcards-marriage-flashcards", state: "local", group: "flashcards", title: "Marriage Flashcards", summary: "Flashcard drill over this module.", href: "../assets/media/tmc-husband/m05/flashcards/marriage-flashcards.html", linkLabel: "Open the flashcards" }
+  ]
 };
 
 module.exports = { fieldManual };

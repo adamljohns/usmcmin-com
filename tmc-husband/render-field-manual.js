@@ -195,6 +195,17 @@ function renderFieldManual({ module, course, layout, progressPanel, esc, prev, n
   const flashcardsSection = renderFlashcards(drills.flashcards, esc, module.number);
   const quizSection = renderQuiz(drills.quiz, esc, module.number, m.assessment && m.assessment.intro);
 
+  // The paper track. Every module has a fillable insert; the whole course has a
+  // workbook. Built by tmc-husband/print/*.py.
+  const pad = String(module.number).padStart(2, '0');
+  const insertLink = `<aside class="module-print" aria-labelledby="print-${module.number}-title">
+      <p class="eyebrow">Work it on paper</p>
+      <h2 id="print-${module.number}-title">Module ${module.number} study insert</h2>
+      <p>A fillable PDF for this module: a note block for each video and audio briefing, reading notes on every study report, and this module&rsquo;s knowledge check laid out so you can grade yourself. Type into it, or print it and use a pen.</p>
+      <p class="button-row"><a class="button" href="/downloads/tmc-husband/The_Husband_Course_Module_${pad}_INSERT.pdf">Download the module ${module.number} insert (PDF)</a></p>
+      <p class="module-print-alt">Taking the whole course on paper? <a href="/downloads/tmc-husband/The_Husband_Course_FIELD_WORKBOOK.pdf">The Husband&rsquo;s Field Workbook</a> carries all seven modules.</p>
+    </aside>`;
+
   const hasResources = (m.artifacts && m.artifacts.length > 0) || (m.resources?.groups && m.resources.groups.length > 0);
   const resourcesSection = hasResources ? renderResourceGroups(m, esc, inlinedSlugs, nativeGroups) : '';
   const missionMinutes = m.missionDurationMinutes || 60;
@@ -256,6 +267,7 @@ function renderFieldManual({ module, course, layout, progressPanel, esc, prev, n
           <p class="module-safety-link"><a href="about.html#safety">Full safety guidance, boundaries, and where to find confidential help &rarr;</a></p>
         </aside>
         ${resourcesSection}
+        ${insertLink}
         ${flashcardsSection}
         ${quizSection}
         <section id="completion" class="completion" aria-labelledby="completion-title" data-track-section="completion">

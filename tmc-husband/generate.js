@@ -241,6 +241,30 @@ function timePanel({ withReset = false } = {}) {
   </aside>`;
 }
 
+// The printable pack. The workbook is the overview volume; each module also
+// has a detail insert (media notes, reading notes, self-graded knowledge check).
+// Built by tmc-husband/print/*.py — see that folder's README.
+function printPack() {
+  const inserts = course.modules.map((module) => `<li><a href="/downloads/tmc-husband/The_Husband_Course_Module_${String(module.number).padStart(2, '0')}_INSERT.pdf">Module ${module.number} insert &mdash; ${esc(module.title)}</a></li>`).join('\n');
+  return `<section class="print-pack" aria-labelledby="print-title">
+      <p class="eyebrow">Work it on paper</p>
+      <h2 id="print-title">The printable pack</h2>
+      <p class="section-intro">Every sheet is a real fillable PDF: tap a box and type in Preview, Acrobat, GoodNotes or Notability &mdash; or print it and use a pen. Nothing you write is uploaded anywhere.</p>
+      <div class="print-lead">
+        <div>
+          <h3><a href="/downloads/tmc-husband/The_Husband_Course_FIELD_WORKBOOK.pdf">The Husband&rsquo;s Field Workbook</a></h3>
+          <p>The whole course in one volume &mdash; all seven modules, every task, every field action, with a box wherever the course asks you to do something. Start here.</p>
+          <p class="print-meta">PDF &middot; fillable &middot; works printed</p>
+        </div>
+        <div>
+          <h3>Module inserts</h3>
+          <p>One detail sheet per module: a note block for each video and audio briefing, reading notes on every study report, and the knowledge check laid out to grade yourself.</p>
+          <ul class="print-inserts">${inserts}</ul>
+        </div>
+      </div>
+    </section>`;
+}
+
 function renderLanding(checkTotals = {}) {
   const published = course.publishedModuleIds || new Set();
   const howSteps = (course.howItWorks || []).map((step, index) => `<li class="how-step">
@@ -291,6 +315,7 @@ function renderLanding(checkTotals = {}) {
         <p class="section-intro">Seven modules. Each ends with one husband-owned field action with a finish line your wife could notice.</p>
         <ol class="module-grid">${cards}</ol>
       </section>
+      ${printPack()}
       <section class="support-callout" aria-labelledby="before-title">
         <h2 id="before-title">Before you begin</h2>
         <p>This course offers education and practice for a basically safe marriage. It is not counseling or crisis care. If there is fear, coercion, violence, stalking, sexual pressure, active addiction, or immediate danger, prioritize confidential individual support rather than a joint exercise.</p>

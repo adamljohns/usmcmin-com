@@ -106,7 +106,7 @@ const fieldManual = {
       { key: 'audio', heading: 'Listen', note: 'Audio briefings.' },
       { key: 'slides', heading: 'Slide decks', note: 'PDF study decks.' },
       { key: 'infographics', heading: 'Field graphics', note: 'Visual summaries.' },
-      { key: 'reports', heading: 'Read', note: 'Markdown study aids.' },
+      { key: 'reports', heading: 'Read', note: 'Study reports as clean, printable PDFs.' },
       { key: 'quiz', heading: 'Drill', note: 'Knowledge check.' },
       { key: 'flashcards', heading: 'Drill', note: 'Flashcard practice.' }
     ],
@@ -141,9 +141,9 @@ const fieldManual = {
     { slug: 'slides-relational-architecture', state: 'local', group: 'slides', kind: 'PDF', title: 'Relational Architecture', summary: 'Communication structure and habits.', href: '../assets/media/tmc-husband/m02/slides/relational-architecture.pdf', linkLabel: 'Open slide deck' },
     { slug: 'infographic-art-of-communication', state: 'local', group: 'infographics', title: 'The Art of Effective Communication', summary: 'Visual summary of levels, habits, and listening.', href: '../assets/media/tmc-husband/m02/infographics/art-of-effective-communication.png', alt: 'Infographic titled The Art of Effective Communication showing three communication levels and listening habits.' },
     { slug: 'infographic-mastering-communication', state: 'local', group: 'infographics', title: 'Mastering Marriage Communication Guide', summary: 'Field guide for daily connection practices.', href: '../assets/media/tmc-husband/m02/infographics/mastering-marriage-communication.png', alt: 'Infographic titled Mastering Marriage Communication Guide with panels on listening and emotional disclosure.' },
-    { slug: 'report-beyond-small-talk', state: 'local', group: 'reports', title: 'Beyond Small Talk', summary: 'Moving past logistics.', href: '../assets/media/tmc-husband/m02/reports/beyond-small-talk.md', linkLabel: 'Read the report' },
-    { slug: 'report-lonelier', state: 'local', group: 'reports', title: 'Why You\'re Lonelier Than You Should Be', summary: 'Counter-intuitive truths about connection.', href: '../assets/media/tmc-husband/m02/reports/lonelier-than-you-should-be.md', linkLabel: 'Read the report' },
-    { slug: 'report-effective-connection', state: 'local', group: 'reports', title: 'Effective Communication and Connection', summary: 'Executive briefing on communication.', href: '../assets/media/tmc-husband/m02/reports/effective-communication-and-connection.md', linkLabel: 'Read the report' },
+    { slug: 'report-beyond-small-talk', state: 'local', group: 'reports', title: 'Beyond Small Talk', summary: 'Moving past logistics.', href: '../assets/media/tmc-husband/m02/reports/beyond-small-talk.pdf', linkLabel: 'Read the report' },
+    { slug: 'report-lonelier', state: 'local', group: 'reports', title: 'Why You\'re Lonelier Than You Should Be', summary: 'Counter-intuitive truths about connection.', href: '../assets/media/tmc-husband/m02/reports/lonelier-than-you-should-be.pdf', linkLabel: 'Read the report' },
+    { slug: 'report-effective-connection', state: 'local', group: 'reports', title: 'Effective Communication and Connection', summary: 'Executive briefing on communication.', href: '../assets/media/tmc-husband/m02/reports/effective-communication-and-connection.pdf', linkLabel: 'Read the report' },
     { slug: 'quiz-communication', state: 'local', group: 'quiz', title: 'Communication Quiz', summary: 'Knowledge check.', href: '../assets/media/tmc-husband/m02/quiz/communication-quiz.html', linkLabel: 'Open the quiz' },
     { slug: 'flashcards-marriage', state: 'local', group: 'flashcards', title: 'Marriage Flashcards', summary: 'Flashcard drill.', href: '../assets/media/tmc-husband/m02/flashcards/marriage-flashcards.html', linkLabel: 'Open the flashcards' }
   ]

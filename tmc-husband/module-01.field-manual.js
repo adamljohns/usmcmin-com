@@ -106,7 +106,7 @@ const fieldManual = {
       { key: 'audio', heading: 'Listen', note: 'Audio briefings for deeper reflection.' },
       { key: 'slides', heading: 'Slide decks', note: 'PDF study decks.' },
       { key: 'infographics', heading: 'Field graphics', note: 'Single-page visual summaries.' },
-      { key: 'reports', heading: 'Read', note: 'Markdown study aids.' },
+      { key: 'reports', heading: 'Read', note: 'Study reports as clean, printable PDFs.' },
       { key: 'quiz', heading: 'Drill', note: 'Interactive knowledge check.' }
     ],
     withheldNotice: null,
@@ -138,9 +138,9 @@ const fieldManual = {
     { slug: 'slides-tending-vineyard', state: 'local', group: 'slides', kind: 'PDF', title: 'Tending the Marital Vineyard', summary: 'The four vineyard tasks.', href: '../assets/media/tmc-husband/m01/slides/tending-the-marital-vineyard.pdf', linkLabel: 'Open slide deck' },
     { slug: 'infographic-connection-roadmap', state: 'local', group: 'infographics', title: 'Marriage Connection Roadmap', summary: 'Visual roadmap of connection habits.', href: '../assets/media/tmc-husband/m01/infographics/marriage-connection-roadmap.png', alt: 'Infographic titled Marriage Connection Roadmap with panels on protected time, emotional needs, and vineyard maintenance tasks.' },
     { slug: 'infographic-vineyard-field-guide', state: 'local', group: 'infographics', title: 'Marriage Vineyard Field Guide', summary: 'Single-page field guide on adjusting, pruning, supporting, and renewing.', href: '../assets/media/tmc-husband/m01/infographics/marriage-vineyard-field-guide.png', alt: 'Infographic titled Marriage Vineyard Field Guide illustrating four vineyard tasks for marital maintenance.' },
-    { slug: 'report-building-foundations', state: 'local', group: 'reports', title: 'Building Strong Foundations', summary: 'Executive briefing on foundation habits.', href: '../assets/media/tmc-husband/m01/reports/episode-1-building-strong-foundations.md', linkLabel: 'Read the report' },
-    { slug: 'report-we-to-me', state: 'local', group: 'reports', title: 'From We to Me: Navigating the Seasons of Connection', summary: 'Seasons-of-life framing.', href: '../assets/media/tmc-husband/m01/reports/from-we-to-me-seasons-of-connection.md', linkLabel: 'Read the report' },
-    { slug: 'report-vineyard-secret', state: 'local', group: 'reports', title: 'The Vineyard Secret: Five Surprising Lessons', summary: 'Popular-article register — use as prompt, not proof.', href: '../assets/media/tmc-husband/m01/reports/vineyard-secret-five-lessons.md', linkLabel: 'Read the report' },
+    { slug: 'report-building-foundations', state: 'local', group: 'reports', title: 'Building Strong Foundations', summary: 'Executive briefing on foundation habits.', href: '../assets/media/tmc-husband/m01/reports/episode-1-building-strong-foundations.pdf', linkLabel: 'Read the report' },
+    { slug: 'report-we-to-me', state: 'local', group: 'reports', title: 'From We to Me: Navigating the Seasons of Connection', summary: 'Seasons-of-life framing.', href: '../assets/media/tmc-husband/m01/reports/from-we-to-me-seasons-of-connection.pdf', linkLabel: 'Read the report' },
+    { slug: 'report-vineyard-secret', state: 'local', group: 'reports', title: 'The Vineyard Secret: Five Surprising Lessons', summary: 'Popular-article register — use as prompt, not proof.', href: '../assets/media/tmc-husband/m01/reports/vineyard-secret-five-lessons.pdf', linkLabel: 'Read the report' },
     { slug: 'quiz-marriage-quiz', state: 'local', group: 'quiz', title: 'Marriage Quiz', summary: 'Knowledge check over Module 1 material.', href: '../assets/media/tmc-husband/m01/quiz/marriage-quiz.html', linkLabel: 'Open the quiz' }
   ]
 };

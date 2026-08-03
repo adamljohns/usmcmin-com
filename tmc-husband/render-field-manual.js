@@ -209,6 +209,7 @@ function renderFieldManual({ module, course, layout, progressPanel, esc, prev, n
     <main id="main-content" class="lesson field-manual" data-field-manual="${module.id}">
       <nav class="module-nav" aria-label="Previous and next modules">${prev}${next}</nav>
       <header class="lesson-header module-hero">
+        <span class="course-badge">Module ${module.number} &middot; The Husband Course</span>
         <p class="eyebrow">Module ${module.number} of 7 · ${esc(m.timeEstimate)}${published ? '' : ' · Draft'}</p>
         <h1>${esc(module.title)}</h1>
         <p class="lede">${esc(module.question)}</p>
@@ -233,7 +234,7 @@ function renderFieldManual({ module, course, layout, progressPanel, esc, prev, n
           <p class="eyebrow">This week</p>
           <h2 id="tasks-title">Your tasks</h2>
           <p>Work through these in order. Each task has an observable finish line.</p>
-          ${tasksGraphic ? inlineArtifact(tasksGraphic, esc, 'This week&rsquo;s field guide') : ''}
+          ${tasksGraphic ? inlineArtifact(tasksGraphic, esc, "This week's field guide") : ''}
           ${tasks}
         </section>
         ${selfCheckItems ? `<section id="self-check" aria-labelledby="check-title" data-track-section="self-check"><h2 id="check-title">Private self-check</h2><p>Reflect alone, then check each one off. Do not use these to diagnose or score your wife.</p><ul class="check-list">${selfCheckItems}</ul>${reflectAudio ? inlineArtifact(reflectAudio, esc, 'Listen while you reflect') : ''}</section>` : ''}

@@ -798,3 +798,28 @@
 .tmc .module-print .button-row { margin-top: 1rem; }
 .tmc .module-print-alt { margin: 0.9rem 0 0; color: var(--gray); font-size: 0.86rem; }
 .tmc .module-print-alt a { color: var(--mod); font-weight: 600; }
+
+/* ── Timing controls ───────────────────────────────────────────────────── */
+/* Two independent choices: whether the course records time at all, and
+   whether the running clock is visible while you work. */
+.tmc .time-actions { display: flex; flex-wrap: wrap; gap: 0.6rem; margin: 0.25rem 0 0; }
+.tmc .mission-hud-off { display: none; }
+.tmc .mission-hud.is-timing-off .mission-hud-inner { display: none; }
+.tmc .mission-hud.is-timing-off .mission-hud-off {
+  display: block; width: min(100% - 2rem, 64rem); margin-inline: auto;
+  padding: 0.5rem 0; color: var(--gray); font-size: 0.84rem;
+}
+.tmc .mission-hud.is-timing-off .mission-hud-off a { color: var(--mod); font-weight: 600; }
+/* Clock hidden: the numbers and the ring go, the controls stay so it can come
+   back, and the checklist meter — which is progress, not time — stays too. */
+.tmc .mission-hud.is-clock-hidden .mission-timer-ring,
+.tmc .mission-hud.is-clock-hidden .mission-hud-time,
+.tmc .mission-hud.is-clock-hidden .mission-hud-state { display: none; }
+.tmc .mission-hud.is-clock-hidden .mission-hud-inner { grid-template-columns: 1fr auto; }
+.tmc .time-panel.is-timing-off .time-total { color: var(--gray); }
+/* On a phone the HUD is sticky, so it must stay one row. Pause and Hide are
+   the in-the-moment controls; "Turn timing off" is a decision you make once,
+   and it lives on the progress page with the copy that explains it. */
+@media (max-width: 34rem) {
+  .tmc .mission-hud [data-mission-off] { display: none; }
+}

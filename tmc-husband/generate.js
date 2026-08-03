@@ -230,14 +230,15 @@ function countChecks(html) {
 }
 
 function timePanel({ withReset = false } = {}) {
-  return `<aside class="time-panel" aria-labelledby="time-title">
+  return `<aside class="time-panel" data-time-panel aria-labelledby="time-title">
     <div>
       <h2 id="time-title">Time on task</h2>
       <p class="time-total" data-time-total aria-live="polite">0:00:00</p>
       <p class="local-status" data-time-detail>No time recorded on this device yet.</p>
     </div>
-    <p class="time-note">Counted in hours, minutes, and seconds while a module page is open and you are actually working — the clock pauses when you switch away or go idle for three minutes.</p>
-    ${withReset ? '<button class="danger" type="button" data-reset-time>Clear recorded time</button>' : ''}
+    <p class="time-note">Counted in hours, minutes, and seconds while a module page is open and you are actually working — the clock pauses on its own when you switch away or go idle for three minutes. It is a record of effort, not a target. Nothing is uploaded.</p>
+    <p class="time-note">Would rather not be timed? Turn it off and nothing is recorded. Prefer the record without a clock in your eyeline? Leave it on and use <strong>Hide clock</strong> on any module.</p>
+    <p class="time-actions"><button type="button" data-timing-toggle class="secondary">Turn time tracking off</button>${withReset ? '<button class="danger" type="button" data-reset-time>Clear recorded time</button>' : ''}</p>
   </aside>`;
 }
 
@@ -342,7 +343,7 @@ function renderAbout() {
         <section aria-labelledby="what-title"><h2 id="what-title">What this is</h2>
           <p>A free, static, seven-module Christian formation course for husbands. Each module gives you a short lesson, numbered tasks with observable finish lines, one required field action, optional conversation prompts, and local progress tracking in your browser.</p>
           <p>Modules 1–3 include optional study aids (audio, video, slides, reports) generated through <strong>Notebook by Gemini</strong> from thematically related public research, plus a flashcard deck and a knowledge check built into the page itself. Modules 4–7 are original ministry prose without a media room.</p>
-          <p>Every checkbox in a module — Scripture passage, task, self-check question, field-action step, conversation prompt, flashcard deck, knowledge check — is counted toward that module’s progress. A clock records the hours, minutes, and seconds you actually spend with a module open; it pauses when you switch away or go idle. All of it stays in this browser.</p>
+          <p>Every checkbox in a module — Scripture passage, task, self-check question, field-action step, conversation prompt, flashcard deck, knowledge check — is counted toward that module’s progress. A clock records the hours, minutes, and seconds you actually spend with a module open; it pauses when you switch away or go idle for three minutes. It is a record of effort, not a target &mdash; and it is optional: turn time tracking off on the progress page and nothing is recorded, or keep the record and use <strong>Hide clock</strong> on any module if you would rather not watch a stopwatch. All of it stays in this browser.</p>
         </section>
         <section aria-labelledby="method-title"><h2 id="method-title">How it was made</h2>
           <p>Content was developed by U.S.M.C. Ministries using thematic research informed by marriage-formation literature, pastoral review, Scripture framing, and multi-model editorial critique. That research pipeline informed the teaching; it is not reproduced inside the learner path.</p>

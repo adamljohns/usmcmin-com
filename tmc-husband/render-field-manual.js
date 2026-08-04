@@ -13,7 +13,7 @@ const { loadDrills, jsonBlock } = require('./drills.js');
  * Changing the string mints new URLs, so the browser cache, the service worker
  * cache, and the CDN all fetch fresh. It costs one extra download per reader.
  */
-const MEDIA_VERSION = '2026-08-04';
+const MEDIA_VERSION = '2026-08-04b';
 
 // Local media only — leave off-site links (Notebook by Gemini, etc.) untouched.
 function mediaUrl(href) {

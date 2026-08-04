@@ -5,13 +5,13 @@ const fieldManual = {
   missionDurationMinutes: 45,
   finishLineHero: 'Schedule a weekly 20-minute marriage check-in, complete the first one, and follow through with one act of care based on what you heard.',
   opening: [
-    'This week you build one brick, not a cathedral. A strong marriage grows through protected attention and repeated habits — not one dramatic evening.',
-    'Your first assignment is not to grade your wife. It is to establish a rhythm she can reasonably expect: invite, listen, own one responsibility, act, return.',
+    'A strong marriage is built out of protected attention and repeated habits, so this module asks for one small thing done once rather than a dramatic evening you will not repeat.',
+    'Your first assignment is not to grade your wife but to establish a rhythm she can reasonably expect: invite, listen, own one responsibility, act, and come back.',
     'Her participation is invited, not demanded. If she declines today, you can still schedule the rhythm, write honest answers yourself, and complete a no-strings-attached act of care.'
   ],
   scripture: [
     { reference: 'Matthew 7:24–27', note: 'Jesus connects hearing with doing. Obedient discipleship is not a guarantee that a faithful husband controls every outcome.' },
-    { reference: 'Ephesians 5:21, 25–33', note: 'Mutual submission and a husband\'s self-giving love belong together. Headship language must never authorize coercion, entitlement, or concealment of harm.' },
+    { reference: 'Ephesians 5:21, 25–33', note: 'Verse 21 opens a household code of paired commands, and Paul never reverses the direction inside a pair. A wife\'s submission and a husband\'s self-giving love are two different callings, not one symmetrical rule; both spouses answer to Christ, and headship never authorizes coercion, entitlement, or concealment of harm.' },
     { reference: 'James 1:19–22', note: 'Quick listening and practiced obedience expose the gap between religious speech and embodied faithfulness.' }
   ],
   tasks: [
@@ -107,6 +107,7 @@ const fieldManual = {
       { key: 'slides', heading: 'Slide decks', note: 'PDF study decks.' },
       { key: 'infographics', heading: 'Field graphics', note: 'Single-page visual summaries.' },
       { key: 'reports', heading: 'Read', note: 'Study reports as clean, printable PDFs.' },
+      { key: 'ministry', heading: 'From U.S.M.C. Ministries', note: 'Our own writing on questions this module raises.' },
       { key: 'quiz', heading: 'Drill', note: 'Interactive knowledge check.' }
     ],
     withheldNotice: null,
@@ -141,6 +142,7 @@ const fieldManual = {
     { slug: 'report-building-foundations', state: 'local', group: 'reports', title: 'Building Strong Foundations', summary: 'Executive briefing on foundation habits.', href: '../assets/media/tmc-husband/m01/reports/episode-1-building-strong-foundations.pdf', linkLabel: 'Read the report' },
     { slug: 'report-we-to-me', state: 'local', group: 'reports', title: 'From We to Me: Navigating the Seasons of Connection', summary: 'Seasons-of-life framing.', href: '../assets/media/tmc-husband/m01/reports/from-we-to-me-seasons-of-connection.pdf', linkLabel: 'Read the report' },
     { slug: 'report-vineyard-secret', state: 'local', group: 'reports', title: 'The Vineyard Secret: Five Surprising Lessons', summary: 'Popular-article register — use as prompt, not proof.', href: '../assets/media/tmc-husband/m01/reports/vineyard-secret-five-lessons.pdf', linkLabel: 'Read the report' },
+    { slug: 'post-mutual-submission', state: 'local', group: 'ministry', kind: 'Article', title: 'What the Care and Counsel Bible Gets Wrong About Mutual Submission', summary: 'Why Ephesians 5:21 does not teach symmetrical submission, and what the household code actually commands a husband.', href: 'https://usmcmin.org/blog/what-the-care-and-counsel-bible-gets-wrong-about-mutual-submission.html', linkLabel: 'Read the article' },
     { slug: 'quiz-marriage-quiz', state: 'local', group: 'quiz', title: 'Marriage Quiz', summary: 'Knowledge check over Module 1 material.', href: '../assets/media/tmc-husband/m01/quiz/marriage-quiz.html', linkLabel: 'Open the quiz' }
   ]
 };

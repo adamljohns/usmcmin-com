@@ -3,7 +3,15 @@
  *   - Precaches the course shell so every module works offline.
  *   - HTML: network-first (fresh when online) -> cache -> offline fallback.
  *   - CSS/JS: stale-while-revalidate (fast, self-updating).
+ *   - media (images, PDFs, audio, video): stale-while-revalidate.
  *   - other assets: cache-first.
+ *
+ * Media used to be cache-first with no expiry, which meant a replaced
+ * infographic could never reach an installed app: the first cached copy was
+ * served forever and the only thing that cleared it was an SW_VERSION bump.
+ * Course media is replaced in R2 under unchanging filenames, so it now
+ * revalidates in the background like CSS/JS — the reader still gets an instant
+ * cached render, and the next launch shows the new file.
  *   - Lives at /tmc-husband/sw.js so its default scope is /tmc-husband/ —
  *     it never fights the civic root worker; longest-scope-match wins here.
  *
@@ -12,7 +20,7 @@
  *
  * Bump SW_VERSION when the shell changes so installs refresh on next launch.
  */
-const SW_VERSION = 'v2-2026-08-02';
+const SW_VERSION = 'v3-2026-08-04';
 const CORE_CACHE = 'tmc-core-' + SW_VERSION;
 const RUNTIME_CACHE = 'tmc-runtime-' + SW_VERSION;
 const OFFLINE_FALLBACK = '/tmc-husband/index.html';
@@ -69,6 +77,12 @@ function isAsset(url) {
   return /\.(css|js)$/.test(url.pathname);
 }
 
+// Course media lives in R2 and is replaced in place under the same filename,
+// so it must never be pinned in the cache the way a fingerprinted asset can be.
+function isMedia(url) {
+  return /\.(png|jpe?g|webp|gif|svg|pdf|mp3|m4a|mp4|webm)$/i.test(url.pathname);
+}
+
 self.addEventListener('fetch', (event) => {
   const request = event.request;
   if (request.method !== 'GET') return;
@@ -89,8 +103,8 @@ self.addEventListener('fetch', (event) => {
     return;
   }
 
-  // CSS/JS: stale-while-revalidate.
-  if (isAsset(url)) {
+  // CSS/JS and course media: stale-while-revalidate.
+  if (isAsset(url) || isMedia(url)) {
     event.respondWith(
       caches.match(request).then((cached) => {
         const network = fetch(request).then((response) => {

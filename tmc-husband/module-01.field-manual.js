@@ -100,7 +100,7 @@ const fieldManual = {
     close: 'Never use Scripture, headship, money, children, or course completion to demand access, silence concern, or prevent help.'
   },
   resources: {
-    intro: 'Optional study aids from your Notebook by Gemini notebook. Listen, watch, read, or drill — then return to your field action.',
+    intro: 'Optional study aids. Listen, watch, read, or drill — then return to your field action.',
     groups: [
       { key: 'video', heading: 'Watch', note: 'Short video overviews.' },
       { key: 'audio', heading: 'Listen', note: 'Audio briefings for deeper reflection.' },
@@ -111,12 +111,7 @@ const fieldManual = {
       { key: 'quiz', heading: 'Drill', note: 'Interactive knowledge check.' }
     ],
     withheldNotice: null,
-    notebook: {
-      title: 'Your Notebook by Gemini notebook',
-      body: 'Google account required. This is the source for all study aids below.',
-      label: 'Open "TMC (pt1): Building Strong Connections" in Notebook by Gemini',
-      href: 'https://notebooklm.google.com/notebook/a9e8db5b-8b6b-48f9-8d91-74165d6215ab'
-    },
+
     journal: {
       heading: 'Optional companion journal',
       label: 'The Marriage Course Study Journal',

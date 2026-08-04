@@ -28,7 +28,7 @@ const course = {
   howItWorks: [
     { title: 'Read the module', body: 'Short opening, Scripture anchor, and 3–5 numbered tasks. About 45–60 minutes.' },
     { title: 'Ship the field action', body: 'One required exercise with a visible finish line. Husband-owned — her participation is invited, not demanded.' },
-    { title: 'Optional depth', body: 'Study aids from Notebook by Gemini, a knowledge check, and conversation prompts if she is willing.' }
+    { title: 'Optional depth', body: 'Optional study aids, a knowledge check, and conversation prompts if she is willing.' }
   ],
   modules: [
     {

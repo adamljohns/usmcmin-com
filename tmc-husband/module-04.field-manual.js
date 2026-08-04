@@ -105,12 +105,7 @@ const fieldManual = {
       { key: "reports", heading: "Read", note: "Study reports as clean, printable PDFs." }
     ],
     withheldNotice: null,
-    notebook: {
-      "title": "Your Notebook by Gemini notebook",
-      "body": "Google account required. This is the source for the study aids on this page.",
-      "label": "Open \"TMC (pt4): Healing Hurt and Anger\" in Notebook by Gemini",
-      "href": "https://notebooklm.google.com/notebook/7f890b35-d14f-4027-9920-da58af181649"
-    },
+
     journal: {
       "heading": "Optional companion journal",
       "label": "The Marriage Course Study Journal",

@@ -3,6 +3,24 @@
 const { bibleUrl } = require('./bible-url.js');
 const { loadDrills, jsonBlock } = require('./drills.js');
 
+/* Course media lives in R2 and is served with `cache-control: immutable,
+ * max-age=31536000` on filenames that never change. When a graphic is replaced
+ * in place, browsers that already hold a copy will not so much as revalidate
+ * for a year — the reader keeps seeing the old file and nothing about a deploy
+ * dislodges it. Stamping a version on the URL is what actually retires it.
+ *
+ * BUMP THIS whenever a file under assets/media/tmc-husband/ is replaced.
+ * Changing the string mints new URLs, so the browser cache, the service worker
+ * cache, and the CDN all fetch fresh. It costs one extra download per reader.
+ */
+const MEDIA_VERSION = '2026-08-04';
+
+// Local media only — leave off-site links (Notebook by Gemini, etc.) untouched.
+function mediaUrl(href) {
+  if (!href || !/^\.\.\/assets\/media\//.test(href)) return href;
+  return `${href}${href.includes('?') ? '&' : '?'}v=${MEDIA_VERSION}`;
+}
+
 function sectionCheckoff(sectionId, label = 'Done') {
   return `<div class="section-checkoff"><label class="section-checkoff-label"><input type="checkbox" data-section-complete="${sectionId}"> <span>${label}</span></label> <span class="section-tally" data-section-tally aria-live="polite"></span></div>`;
 }
@@ -42,11 +60,11 @@ function inlineArtifact(x, esc, label) {
   if (!x) return '';
   let media = '';
   if (x.mediaType === 'video') {
-    media = `<video class="artifact-media" controls preload="metadata" src="${esc(x.href)}"></video>`;
+    media = `<video class="artifact-media" controls preload="metadata" src="${esc(mediaUrl(x.href))}"></video>`;
   } else if (x.mediaType === 'audio') {
-    media = `<audio class="artifact-media" controls preload="metadata" src="${esc(x.href)}"></audio>`;
+    media = `<audio class="artifact-media" controls preload="metadata" src="${esc(mediaUrl(x.href))}"></audio>`;
   } else if (x.alt) {
-    media = `<a href="${esc(x.href)}"><img class="inline-graphic" src="${esc(x.href)}" alt="${esc(x.alt)}" loading="lazy"></a>`;
+    media = `<a href="${esc(mediaUrl(x.href))}"><img class="inline-graphic" src="${esc(mediaUrl(x.href))}" alt="${esc(x.alt)}" loading="lazy"></a>`;
   }
   const kick = label || (x.mediaType === 'video' ? 'Watch' : x.mediaType === 'audio' ? 'Listen' : 'Field graphic');
   return `<figure class="inline-media inline-media-${esc(x.mediaType || 'graphic')}">
@@ -66,15 +84,15 @@ function renderResourceGroups(m, esc, inlinedSlugs = new Set(), nativeGroups = n
     const artifacts = remaining.filter((x) => x.group === group.key).map((x) => {
       let media = '';
       if (x.state === 'local' && x.mediaType === 'video') {
-        media = `<video class="artifact-media" controls preload="metadata" src="${esc(x.href)}"></video>`;
+        media = `<video class="artifact-media" controls preload="metadata" src="${esc(mediaUrl(x.href))}"></video>`;
       } else if (x.state === 'local' && x.mediaType === 'audio') {
-        media = `<audio class="artifact-media" controls preload="metadata" src="${esc(x.href)}"></audio>`;
+        media = `<audio class="artifact-media" controls preload="metadata" src="${esc(mediaUrl(x.href))}"></audio>`;
       }
       const defaultLabel = x.linkLabel || (x.mediaType === 'video' ? 'Watch' : x.mediaType === 'audio' ? 'Listen' : x.alt ? 'View graphic' : 'Open');
       const link = x.state === 'local'
-        ? `${media}<a class="artifact-link" href="${esc(x.href)}"${['quiz', 'flashcards'].includes(x.group) ? ' target="_blank" rel="noopener noreferrer"' : ''}>${esc(defaultLabel)}</a>`
+        ? `${media}<a class="artifact-link" href="${esc(mediaUrl(x.href))}"${['quiz', 'flashcards'].includes(x.group) ? ' target="_blank" rel="noopener noreferrer"' : ''}>${esc(defaultLabel)}</a>`
         : '<span class="artifact-held">Available in your Notebook by Gemini — not hosted here</span>';
-      const image = x.alt ? `<a href="${esc(x.href)}"><img src="${esc(x.href)}" alt="${esc(x.alt)}" loading="lazy"></a>` : '';
+      const image = x.alt ? `<a href="${esc(mediaUrl(x.href))}"><img src="${esc(mediaUrl(x.href))}" alt="${esc(x.alt)}" loading="lazy"></a>` : '';
       return `<article class="artifact-card" data-artifact="${esc(x.slug)}" data-artifact-state="${esc(x.state)}"><p class="eyebrow">${esc(x.kind || group.heading)}</p><h4>${esc(x.title)}</h4>${link}${image}<p>${esc(x.summary)}</p></article>`;
     }).join('\n');
     if (!artifacts) return '';

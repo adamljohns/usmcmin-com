@@ -1,4 +1,4 @@
-/* The Husband Course — installable, offline-capable service worker.
+/* The Marriage Course — Husbanding Academy — installable, offline-capable service worker.
  *
  *   - Precaches the course shell so every module works offline.
  *   - HTML: network-first (fresh when online) -> cache -> offline fallback.

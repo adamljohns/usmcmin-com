@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-brand.py — the print brand kit for The Husband Course.
+brand.py — the print brand kit for The Marriage Course — Husbanding Academy.
 
 Everything printable in this course (the field workbook, the seven module
 inserts, and the twenty-one reading PDFs) is drawn with these helpers, so the
@@ -89,7 +89,7 @@ MT = 0.82 * inch
 MB = 0.72 * inch
 USABLE_W = W - ML - MR
 
-COURSE_NAME = "The Husband Course"
+COURSE_NAME = "The Marriage Course — Husbanding Academy"
 MINISTRY = "U.S.M.C. Ministries"
 
 

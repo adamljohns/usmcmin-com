@@ -3,17 +3,39 @@
 const { bibleUrl } = require('./bible-url.js');
 const { loadDrills, jsonBlock } = require('./drills.js');
 
-/* Course media lives in R2 and is served with `cache-control: immutable,
- * max-age=31536000` on filenames that never change. When a graphic is replaced
- * in place, browsers that already hold a copy will not so much as revalidate
- * for a year — the reader keeps seeing the old file and nothing about a deploy
- * dislodges it. Stamping a version on the URL is what actually retires it.
+/* Course media is served from R2 with `cache-control: immutable,
+ * max-age=31536000` on filenames that never change, so replacing a graphic in
+ * place is invisible to anyone who already loaded it — for a year. Stamping a
+ * version onto the media URLs is what actually retires the old file.
  *
- * BUMP THIS whenever a file under assets/media/tmc-husband/ is replaced.
- * Changing the string mints new URLs, so the browser cache, the service worker
- * cache, and the CDN all fetch fresh. It costs one extra download per reader.
+ * The version is derived from tmc-husband/media-manifest.json, which is
+ * committed precisely because the media itself is not: audio, video, slides and
+ * infographics are gitignored and live only in R2, so hashing the files on disk
+ * would give a different answer on a fresh clone than on this machine.
+ *
+ * `sync-media.sh --apply` rebuilds the manifest as it uploads, so replacing a
+ * graphic and pushing it live bumps this on its own. Nobody has to remember.
  */
-const MEDIA_VERSION = '2026-08-04b';
+const MEDIA_VERSION = (() => {
+  const fs = require('fs');
+  const path = require('path');
+  const crypto = require('crypto');
+  try {
+    const raw = fs.readFileSync(path.join(__dirname, 'media-manifest.json'), 'utf8');
+    const files = JSON.parse(raw).files || {};
+    const keys = Object.keys(files).sort();
+    if (!keys.length) throw new Error('empty manifest');
+    const body = keys.map((k) => `${k}:${files[k]}`).join('\n');
+    return crypto.createHash('sha1').update(body).digest('hex').slice(0, 10);
+  } catch (err) {
+    // A missing manifest must not silently un-version every URL — that is the
+    // exact failure this mechanism exists to prevent. Fail the build loudly.
+    throw new Error(
+      'MEDIA_VERSION: cannot read tmc-husband/media-manifest.json (' + err.message + '). ' +
+      'Run: node tmc-husband/build-media-manifest.js'
+    );
+  }
+})();
 
 // Local media only — leave off-site links untouched.
 function mediaUrl(href) {
@@ -241,7 +263,7 @@ function renderFieldManual({ module, course, layout, progressPanel, esc, prev, n
     <main id="main-content" class="lesson field-manual" data-field-manual="${module.id}">
       <nav class="module-nav" aria-label="Previous and next modules">${prev}${next}</nav>
       <header class="lesson-header module-hero">
-        <span class="course-badge">Module ${module.number} &middot; The Husband Course</span>
+        <span class="course-badge">Module ${module.number} &middot; Husbanding Academy</span>
         <p class="eyebrow">Module ${module.number} of 7 · ${esc(m.timeEstimate)}${published ? '' : ' · Draft'}</p>
         <h1>${esc(module.title)}</h1>
         <p class="lede">${esc(module.question)}</p>

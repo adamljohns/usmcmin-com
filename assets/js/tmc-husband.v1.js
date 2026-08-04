@@ -82,14 +82,14 @@
 
   // Rank ladder — dignified Captain voice, no hype. Indexed by modules completed (0–7).
   const RANKS = Object.freeze([
-    { rank: 'Ashore', milestone: 'Not yet under way. Begin Module 1 when you are ready.' },
-    { rank: 'Deckhand', milestone: 'First action shipped. The hardest step is behind you.' },
-    { rank: 'Mate', milestone: 'Two modules down. A rhythm is forming.' },
-    { rank: 'Bosun', milestone: 'Halfway to the charter. Steady steaming.' },
-    { rank: 'Watch Officer', milestone: 'Four modules in. The habits are taking hold.' },
-    { rank: 'First Officer', milestone: 'Five complete. The commission is in sight.' },
-    { rank: 'Executive Officer', milestone: 'One module from commissioned. Finish the tour.' },
-    { rank: 'Captain of the Home', milestone: 'All seven shipped. You have completed the course — commissioned.' }
+    { rank: 'Off the Wall', milestone: 'Not yet on watch. Begin Module 1 when you are ready.' },
+    { rank: 'On the Wall', milestone: 'First action shipped. The hardest step is behind you.' },
+    { rank: 'Keeping Watch', milestone: 'Two modules down. A rhythm is forming.' },
+    { rank: 'Steady Watch', milestone: 'Halfway to the charter. The post is being kept.' },
+    { rank: 'Trusted Watch', milestone: 'Four modules in. The habits are taking hold.' },
+    { rank: 'Night Watch', milestone: 'Five complete. You hold the post when it is hardest.' },
+    { rank: 'The Long Watch', milestone: 'One module from the charter. Finish the watch.' },
+    { rank: 'Watchman of the Home', milestone: 'All seven shipped. You stand watch over your own house.' }
   ]);
 
   function deriveRank(completed) {

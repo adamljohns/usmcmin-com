@@ -1,5 +1,5 @@
 #!/bin/bash
-# Upload The Husband Course heavy media to R2.
+# Upload The Marriage Course — Husbanding Academy heavy media to R2.
 #
 #   tmc-husband/sync-media.sh            # dry run — show what would upload
 #   tmc-husband/sync-media.sh --apply    # do it
@@ -41,3 +41,15 @@ rclone copy "$SRC" "$BUCKET/$SRC" \
   --s3-chunk-size 16M \
   --retries 5 --low-level-retries 20 \
   --stats-one-line --stats 15s --progress
+
+# Media just changed in the bucket, so the URLs the pages emit have to change
+# too — otherwise readers keep the old file for a year behind an `immutable`
+# cache header. Rebuilding the manifest moves MEDIA_VERSION on its own; the
+# regenerated pages then carry fresh ?v= stamps. Skipped on a dry run.
+if [[ -z "$MODE" ]]; then
+  echo
+  echo "Refreshing media manifest so the site versions these files..."
+  node "$REPO/tmc-husband/build-media-manifest.js"
+  node "$REPO/tmc-husband/generate.js"
+  echo "Manifest and pages rebuilt — commit tmc-husband/media-manifest.json with the page changes."
+fi

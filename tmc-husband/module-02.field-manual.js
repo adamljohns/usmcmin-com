@@ -111,12 +111,7 @@ const fieldManual = {
       { key: 'flashcards', heading: 'Drill', note: 'Flashcard practice.' }
     ],
     withheldNotice: null,
-    notebook: {
-      title: 'Your Notebook by Gemini notebook',
-      body: 'Google account required. Source for all study aids below.',
-      label: 'Open "TMC (pt2): The Art of Effective Communication" in Notebook by Gemini',
-      href: 'https://notebooklm.google.com/notebook/e9c6dfcf-b600-4159-b595-2723c4b0c252'
-    },
+
     journal: {
       heading: 'Optional companion journal',
       label: 'The Marriage Course Study Journal',

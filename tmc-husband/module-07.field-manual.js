@@ -101,12 +101,7 @@ const fieldManual = {
       { key: "reports", heading: "Read", note: "Study reports as clean, printable PDFs." }
     ],
     withheldNotice: null,
-    notebook: {
-      "title": "Your Notebook by Gemini notebook",
-      "body": "Google account required. This is the source for the study aids on this page.",
-      "label": "Open \"TMC (pt7): Love in Action\" in Notebook by Gemini",
-      "href": "https://notebooklm.google.com/notebook/041c756f-0497-418b-930b-0ee857ea4670"
-    },
+
     journal: {
       "heading": "Optional companion journal",
       "label": "The Marriage Course Study Journal",

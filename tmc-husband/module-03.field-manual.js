@@ -106,7 +106,7 @@ const fieldManual = {
     close: 'Never use Scripture, forgiveness, headship, money, children, or course completion to demand access, silence concern, or prevent help.'
   },
   resources: {
-    intro: 'Optional study aids from your Notebook by Gemini notebook. Three audio and three video overviews are in your notebook but not hosted here.',
+    intro: 'Optional study aids. Three audio and three video overviews are not hosted here.',
     groups: [
       { key: 'video', heading: 'Watch', note: 'Short video overviews.' },
       { key: 'audio', heading: 'Listen', note: 'Audio briefings for deeper reflection.' },
@@ -117,13 +117,8 @@ const fieldManual = {
       { key: 'flashcards', heading: 'Drill', note: 'Flashcard practice.' },
       { key: 'withheld', heading: 'In your notebook only', note: 'Audio and video overviews not hosted on this site.' }
     ],
-    withheldNotice: 'Six audio and video study aids remain in your Notebook by Gemini notebook only. They are not copied to this site pending rights review and approval.',
-    notebook: {
-      title: 'Your Notebook by Gemini notebook',
-      body: 'Google account required. Holds all sources and study aids, including items not hosted here.',
-      label: 'Open "TMC Episode 3" in Notebook by Gemini',
-      href: 'https://notebooklm.google.com/notebook/9237c8b2-4f96-4cb7-9f32-040305833123'
-    },
+    withheldNotice: 'Six audio and video study aids are not hosted here, pending rights review and approval.',
+
     journal: {
       heading: 'Optional companion journal',
       label: 'The Marriage Course Study Journal',

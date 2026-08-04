@@ -106,12 +106,7 @@ const fieldManual = {
       { key: "reports", heading: "Read", note: "Study reports as clean, printable PDFs." }
     ],
     withheldNotice: null,
-    notebook: {
-      "title": "Your Notebook by Gemini notebook",
-      "body": "Google account required. This is the source for the study aids on this page.",
-      "label": "Open \"TMC (pt5): The Impact of Family\" in Notebook by Gemini",
-      "href": "https://notebooklm.google.com/notebook/e6e7bc4f-8dd9-407e-9b70-894acafe3fa4"
-    },
+
     journal: {
       "heading": "Optional companion journal",
       "label": "The Marriage Course Study Journal",

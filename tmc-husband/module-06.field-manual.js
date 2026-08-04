@@ -102,12 +102,7 @@ const fieldManual = {
       { key: "reports", heading: "Read", note: "Study reports as clean, printable PDFs." }
     ],
     withheldNotice: null,
-    notebook: {
-      "title": "Your Notebook by Gemini notebook",
-      "body": "Google account required. This is the source for the study aids on this page.",
-      "label": "Open \"TMC (pt6): Sexual Intimacy\" in Notebook by Gemini",
-      "href": "https://notebooklm.google.com/notebook/073ab143-9ad0-47be-84da-ef3d4b8c5f03"
-    },
+
     journal: {
       "heading": "Optional companion journal",
       "label": "The Marriage Course Study Journal",

@@ -235,7 +235,7 @@ def render_report(md_path, out_path, module_number, module_title, accent):
         standfirst,
         accent,
         meta_lines=[
-            "Optional study aid generated with Notebook by Gemini from thematically related research.",
+            "Optional study aid generated from thematically related research.",
             "It reflects the source material, not U.S.M.C. Ministries doctrine — read it against the module.",
         ],
     )

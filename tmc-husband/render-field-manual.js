@@ -15,7 +15,7 @@ const { loadDrills, jsonBlock } = require('./drills.js');
  */
 const MEDIA_VERSION = '2026-08-04b';
 
-// Local media only — leave off-site links (Notebook by Gemini, etc.) untouched.
+// Local media only — leave off-site links untouched.
 function mediaUrl(href) {
   if (!href || !/^\.\.\/assets\/media\//.test(href)) return href;
   return `${href}${href.includes('?') ? '&' : '?'}v=${MEDIA_VERSION}`;
@@ -91,7 +91,7 @@ function renderResourceGroups(m, esc, inlinedSlugs = new Set(), nativeGroups = n
       const defaultLabel = x.linkLabel || (x.mediaType === 'video' ? 'Watch' : x.mediaType === 'audio' ? 'Listen' : x.alt ? 'View graphic' : 'Open');
       const link = x.state === 'local'
         ? `${media}<a class="artifact-link" href="${esc(mediaUrl(x.href))}"${['quiz', 'flashcards'].includes(x.group) ? ' target="_blank" rel="noopener noreferrer"' : ''}>${esc(defaultLabel)}</a>`
-        : '<span class="artifact-held">Available in your Notebook by Gemini — not hosted here</span>';
+        : '<span class="artifact-held">Not hosted here</span>';
       const image = x.alt ? `<a href="${esc(mediaUrl(x.href))}"><img src="${esc(mediaUrl(x.href))}" alt="${esc(x.alt)}" loading="lazy"></a>` : '';
       return `<article class="artifact-card" data-artifact="${esc(x.slug)}" data-artifact-state="${esc(x.state)}"><p class="eyebrow">${esc(x.kind || group.heading)}</p><h4>${esc(x.title)}</h4>${link}${image}<p>${esc(x.summary)}</p></article>`;
     }).join('\n');

@@ -1,9 +1,9 @@
 {
-  "generated": "2026-08-04T13:56:16.164836+00:00",
+  "generated": "2026-08-04T17:12:40.121649+00:00",
   "totals": {
     "agents": 16,
-    "operational": 8,
-    "degraded": 8,
+    "operational": 9,
+    "degraded": 7,
     "jobs": 129,
     "enabled": 99,
     "accomplishments": 303,
@@ -12,12 +12,11 @@
   "health": {
     "cron": {
       "enabled": 99,
-      "ran26h": 47,
-      "delivered": 31,
+      "ran26h": 43,
+      "delivered": 27,
       "fails": [
         "Melaleuca Monday Briefing (carnegie)",
         "Evening Civic Watch (6:30 PM) \u2014 Sheriff Roy (sheriff-roy)",
-        "Coach Midday Garmin Read (12:15 EDT) (coach-arnie)",
         "Skill: finance-news (carnegie)",
         "Skill: airbnb-host (sally)",
         "C5iSR social draft (M/W/F) (carnegie)",
@@ -31,13 +30,11 @@
     },
     "cron_source": "openclaw.sqlite + hermes/cron/jobs.json",
     "launchd": {
-      "healthy": 50,
+      "healthy": 52,
       "fails": [
         "com.moop.pj-wisdom-grp: exit 5",
         "com.moop.pj-wisdom-dm: exit 5",
         "com.moop.ba-inbox-rounds: exit 1",
-        "com.moop.pj-second-dm: exit 3",
-        "com.moop.pj-second-grp: exit 3",
         "com.moop.pj-third-dm: exit 3",
         "com.moop.pj-third-grp: exit 3"
       ]
@@ -53,32 +50,32 @@
     {
       "label": "Command Surface Sync",
       "purpose": "Command DB \u2192 Obsidian / TACC / workflows",
-      "last": "2026-08-04T06:52:10-04:00",
+      "last": "2026-08-04T12:58:07-04:00",
       "status": "local-only"
     },
     {
       "label": "Morning Intel",
       "purpose": "Calendar, mail, house, body, wire",
-      "last": "none",
-      "status": "stale"
+      "last": "2026-08-04-morning-brief",
+      "status": "current"
     },
     {
       "label": "Daily Command Brief",
       "purpose": "3\u20135 command priorities",
-      "last": "none",
+      "last": "daily-brief-2026-07-10",
       "status": "stale"
     },
     {
       "label": "Email Action Digest",
       "purpose": "Action/security/finance signal",
-      "last": "none",
+      "last": "email-digest-2026-07-10",
       "status": "stale"
     },
     {
       "label": "Evening AAR",
       "purpose": "Wins, slips, release, tomorrow",
-      "last": "none",
-      "status": "stale"
+      "last": "2026-08-03-evening-wrap",
+      "status": "current"
     },
     {
       "label": "Weekly Review",
@@ -136,7 +133,7 @@
       "n_jobs": 24,
       "n_enabled": 13,
       "err": 1,
-      "last_ms": 1785848492418,
+      "last_ms": 1785862892423,
       "status": "degraded",
       "accomplishments": [
         {
@@ -308,10 +305,10 @@
           "expr": "0 * * * *",
           "tz": "",
           "channel": "last",
-          "last_ms": 1785848492418,
+          "last_ms": 1785862892423,
           "status": "ok",
           "errors": 0,
-          "dur_ms": 77
+          "dur_ms": 86
         },
         {
           "name": "Fleet Morning SITREP (consolidated stand-up)",
@@ -581,9 +578,9 @@
       "skills": [],
       "n_jobs": 12,
       "n_enabled": 11,
-      "err": 6,
-      "last_ms": 1785841122320,
-      "status": "degraded",
+      "err": 0,
+      "last_ms": 1785859535744,
+      "status": "operational",
       "accomplishments": [
         {
           "date": "2026-07-21",
@@ -722,14 +719,36 @@
       },
       "jobs": [
         {
+          "name": "MOOP Command Noon Capture",
+          "enabled": true,
+          "expr": "0 12 * * *",
+          "tz": "",
+          "channel": "origin",
+          "last_ms": 1785859535744,
+          "status": "scheduled",
+          "errors": 0,
+          "dur_ms": null
+        },
+        {
+          "name": "Airbnb Daily Check-in/Check-out Guardian",
+          "enabled": true,
+          "expr": "0 12 * * *",
+          "tz": "",
+          "channel": "origin",
+          "last_ms": 1785859535504,
+          "status": "scheduled",
+          "errors": 0,
+          "dur_ms": null
+        },
+        {
           "name": "Fleet Integrity Watch",
           "enabled": true,
           "expr": "15 6 * * *",
           "tz": "",
           "channel": "origin",
           "last_ms": 1785841122320,
-          "status": "error",
-          "errors": 1,
+          "status": "scheduled",
+          "errors": 0,
           "dur_ms": null
         },
         {
@@ -750,8 +769,8 @@
           "tz": "",
           "channel": "origin",
           "last_ms": 1785806100916,
-          "status": "error",
-          "errors": 1,
+          "status": "scheduled",
+          "errors": 0,
           "dur_ms": null
         },
         {
@@ -761,30 +780,8 @@
           "tz": "",
           "channel": "origin",
           "last_ms": 1785803427423,
-          "status": "error",
-          "errors": 1,
-          "dur_ms": null
-        },
-        {
-          "name": "Airbnb Daily Check-in/Check-out Guardian",
-          "enabled": true,
-          "expr": "0 12 * * *",
-          "tz": "",
-          "channel": "origin",
-          "last_ms": 1785775931206,
-          "status": "error",
-          "errors": 1,
-          "dur_ms": null
-        },
-        {
-          "name": "MOOP Command Noon Capture",
-          "enabled": true,
-          "expr": "0 12 * * *",
-          "tz": "",
-          "channel": "origin",
-          "last_ms": 1785773182928,
-          "status": "error",
-          "errors": 1,
+          "status": "scheduled",
+          "errors": 0,
           "dur_ms": null
         },
         {
@@ -816,8 +813,8 @@
           "tz": "",
           "channel": "origin",
           "last_ms": 1785709820830,
-          "status": "error",
-          "errors": 1,
+          "status": "scheduled",
+          "errors": 0,
           "dur_ms": null
         },
         {
@@ -1143,7 +1140,7 @@
         "browser_profile": "usmc",
         "files": {
           "AGENTS.md": 25483,
-          "MEMORY.md": 71044,
+          "MEMORY.md": 71392,
           "HEARTBEAT.md": 3647
         },
         "verified": "2026-08-04"
@@ -2287,7 +2284,7 @@
       "n_jobs": 10,
       "n_enabled": 8,
       "err": 1,
-      "last_ms": 1785847200051,
+      "last_ms": 1785852900043,
       "status": "degraded",
       "accomplishments": [
         {
@@ -2447,6 +2444,17 @@
       },
       "jobs": [
         {
+          "name": "Skill: adt-codes (status pulse)",
+          "enabled": true,
+          "expr": "15 10 * * *",
+          "tz": "America/New_York",
+          "channel": "discord",
+          "last_ms": 1785852900043,
+          "status": "ok",
+          "errors": 0,
+          "dur_ms": 51473
+        },
+        {
           "name": "Skill: airbnb-reader",
           "enabled": true,
           "expr": "40 8 * * *",
@@ -2478,17 +2486,6 @@
           "status": "error",
           "errors": 4,
           "dur_ms": 763960
-        },
-        {
-          "name": "Skill: adt-codes (status pulse)",
-          "enabled": true,
-          "expr": "15 10 * * *",
-          "tz": "America/New_York",
-          "channel": "discord",
-          "last_ms": 1785766500046,
-          "status": "ok",
-          "errors": 0,
-          "dur_ms": 62715
         },
         {
           "name": "Monthly Suzanne Check-in Reminder",
@@ -2611,8 +2608,8 @@
       ],
       "n_jobs": 7,
       "n_enabled": 6,
-      "err": 3,
-      "last_ms": 1785811500089,
+      "err": 2,
+      "last_ms": 1785860100048,
       "status": "degraded",
       "accomplishments": [
         {
@@ -2803,6 +2800,17 @@
       },
       "jobs": [
         {
+          "name": "Coach Midday Garmin Read (12:15 EDT)",
+          "enabled": true,
+          "expr": "15 12 * * *",
+          "tz": "America/New_York",
+          "channel": "telegram",
+          "last_ms": 1785860100048,
+          "status": "ok",
+          "errors": 0,
+          "dur_ms": 8650
+        },
+        {
           "name": "Dev Loop: coach-arnie daily reflection (implement-or-escalate)",
           "enabled": true,
           "expr": "45 22 * * *",
@@ -2823,17 +2831,6 @@
           "status": "error",
           "errors": 4,
           "dur_ms": 763659
-        },
-        {
-          "name": "Coach Midday Garmin Read (12:15 EDT)",
-          "enabled": true,
-          "expr": "15 12 * * *",
-          "tz": "America/New_York",
-          "channel": "telegram",
-          "last_ms": 1785796649744,
-          "status": "error",
-          "errors": 4,
-          "dur_ms": 1247850
         },
         {
           "name": "Skill: zoho-crm (fit20 Mon leads)",
@@ -4607,7 +4604,7 @@
       "n_jobs": 6,
       "n_enabled": 5,
       "err": 1,
-      "last_ms": 1785813000049,
+      "last_ms": 1785852000045,
       "status": "degraded",
       "accomplishments": [
         {
@@ -4729,6 +4726,17 @@
       },
       "jobs": [
         {
+          "name": "Daily Strategic Note (10:00 AM) \u2014 Gus",
+          "enabled": true,
+          "expr": "0 10 * * *",
+          "tz": "America/New_York",
+          "channel": "discord",
+          "last_ms": 1785852000045,
+          "status": "ok",
+          "errors": 0,
+          "dur_ms": 131582
+        },
+        {
           "name": "Dev Loop: bg-hartwell daily reflection (implement-or-escalate)",
           "enabled": true,
           "expr": "10 23 * * *",
@@ -4738,17 +4746,6 @@
           "status": "ok",
           "errors": 0,
           "dur_ms": 38271
-        },
-        {
-          "name": "Daily Strategic Note (10:00 AM) \u2014 Gus",
-          "enabled": true,
-          "expr": "0 10 * * *",
-          "tz": "America/New_York",
-          "channel": "discord",
-          "last_ms": 1785765600034,
-          "status": "ok",
-          "errors": 0,
-          "dur_ms": 130431
         },
         {
           "name": "Gus Sunday Reading List + Reflection (Sun 6PM)",
@@ -4837,5 +4834,5 @@
     "write-airbnb-reviews-for-listings",
     "you-are-an-expert-ai-agent"
   ],
-  "cowork_date": "2026-08-04T06:53:27-04:00"
+  "cowork_date": "2026-08-04T13:12:40-04:00"
 }

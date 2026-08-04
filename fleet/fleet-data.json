@@ -1,5 +1,5 @@
 {
-  "generated": "2026-08-04T10:55:50.181751+00:00",
+  "generated": "2026-08-04T11:25:53.432448+00:00",
   "totals": {
     "agents": 16,
     "operational": 8,
@@ -37,18 +37,15 @@
     },
     "cron_source": "openclaw.sqlite + hermes/cron/jobs.json",
     "launchd": {
-      "healthy": 47,
+      "healthy": 50,
       "fails": [
         "com.moop.pj-wisdom-grp: exit 5",
         "com.moop.pj-wisdom-dm: exit 5",
-        "com.moop.morning-brief: exit 2",
         "com.moop.ba-inbox-rounds: exit 1",
         "com.moop.pj-second-dm: exit 3",
         "com.moop.pj-second-grp: exit 3",
         "com.moop.pj-third-dm: exit 3",
-        "com.moop.pj-third-grp: exit 3",
-        "com.moop.pj-first-grp: exit 3",
-        "com.moop.pj-first-dm: exit 3"
+        "com.moop.pj-third-grp: exit 3"
       ]
     }
   },
@@ -145,7 +142,7 @@
       "n_jobs": 24,
       "n_enabled": 13,
       "err": 2,
-      "last_ms": 1785838200044,
+      "last_ms": 1785841292424,
       "status": "degraded",
       "accomplishments": [
         {
@@ -312,6 +309,17 @@
       },
       "jobs": [
         {
+          "name": "fleet-freshness-watchdog",
+          "enabled": true,
+          "expr": "0 * * * *",
+          "tz": "",
+          "channel": "last",
+          "last_ms": 1785841292424,
+          "status": "ok",
+          "errors": 0,
+          "dur_ms": 67
+        },
+        {
           "name": "Skill: briefing",
           "enabled": true,
           "expr": "10 6 * * *",
@@ -321,17 +329,6 @@
           "status": "ok",
           "errors": 0,
           "dur_ms": 22474
-        },
-        {
-          "name": "fleet-freshness-watchdog",
-          "enabled": true,
-          "expr": "0 * * * *",
-          "tz": "",
-          "channel": "last",
-          "last_ms": 1785837869679,
-          "status": "ok",
-          "errors": 0,
-          "dur_ms": 82
         },
         {
           "name": "Dev Loop: main daily reflection (implement-or-escalate)",
@@ -591,7 +588,7 @@
       "n_jobs": 12,
       "n_enabled": 11,
       "err": 6,
-      "last_ms": 1785838517772,
+      "last_ms": 1785841122320,
       "status": "degraded",
       "accomplishments": [
         {
@@ -736,7 +733,7 @@
           "expr": "15 6 * * *",
           "tz": "",
           "channel": "origin",
-          "last_ms": 1785838517772,
+          "last_ms": 1785841122320,
           "status": "error",
           "errors": 1,
           "dur_ms": null
@@ -1852,7 +1849,7 @@
       "n_jobs": 17,
       "n_enabled": 15,
       "err": 5,
-      "last_ms": 1785809400053,
+      "last_ms": 1785842700050,
       "status": "degraded",
       "accomplishments": [
         {
@@ -2059,6 +2056,28 @@
       },
       "jobs": [
         {
+          "name": "C5iSR PRE-WARMUP (Qwen 32B before daily post)",
+          "enabled": true,
+          "expr": "25 7 * * 1-6",
+          "tz": "America/New_York",
+          "channel": "",
+          "last_ms": 1785842700050,
+          "status": "ok",
+          "errors": 0,
+          "dur_ms": 2713
+        },
+        {
+          "name": "C5iSR Price Pre-Fetch (7:23AM Mon-Sat)",
+          "enabled": true,
+          "expr": "23 7 * * 1-6",
+          "tz": "",
+          "channel": "",
+          "last_ms": 1785842580065,
+          "status": "ok",
+          "errors": 0,
+          "dur_ms": 4026
+        },
+        {
           "name": "Dev Loop: carnegie daily reflection (implement-or-escalate)",
           "enabled": true,
           "expr": "10 22 * * *",
@@ -2123,28 +2142,6 @@
           "status": "error",
           "errors": 1,
           "dur_ms": 40562
-        },
-        {
-          "name": "C5iSR PRE-WARMUP (Qwen 32B before daily post)",
-          "enabled": true,
-          "expr": "25 7 * * 1-6",
-          "tz": "America/New_York",
-          "channel": "",
-          "last_ms": 1785756300048,
-          "status": "ok",
-          "errors": 0,
-          "dur_ms": 40040
-        },
-        {
-          "name": "C5iSR Price Pre-Fetch (7:23AM Mon-Sat)",
-          "enabled": true,
-          "expr": "23 7 * * 1-6",
-          "tz": "",
-          "channel": "",
-          "last_ms": 1785756180049,
-          "status": "ok",
-          "errors": 0,
-          "dur_ms": 164
         },
         {
           "name": "Skill: tax-deadlines (monthly)",

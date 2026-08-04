@@ -79,10 +79,13 @@
       display: flex;
       align-items: baseline;
       gap: 0.5rem;
-      color: var(--gray-light);
+      color: #E6EAF0; /* readable on dark cards — was gray-light (near-black on navy) */
       text-decoration: none;
       font-size: 0.92rem;
       transition: color 0.2s;
+    }
+    html:not([data-theme="dark"]) .sitemap-links a {
+      color: var(--ink, #1a1a1a);
     }
     .sitemap-links a:hover {
       color: var(--gold);
@@ -92,9 +95,12 @@
       white-space: nowrap;
     }
     .sitemap-links .link-desc {
-      color: var(--gray);
+      color: #A8B0BD; /* secondary text, still readable on dark */
       font-size: 0.82rem;
       font-weight: 400;
+    }
+    html:not([data-theme="dark"]) .sitemap-links .link-desc {
+      color: var(--gray, #666);
     }
     .sitemap-links a:hover .link-desc {
       color: var(--gold);
@@ -108,6 +114,32 @@
     }
     .sitemap-links a:hover .sitemap-arrow {
       color: var(--gold);
+    }
+    /* 2026-08-04: Fleet/Ministry banner links must stay readable on navy */
+    .ministry-banner a {
+      color: #E8D5A3; /* warm gold-sand on navy */
+      text-decoration: underline;
+      text-underline-offset: 2px;
+    }
+    .ministry-banner a:visited {
+      color: #E8D5A3;
+    }
+    .ministry-banner a:hover {
+      color: #F5E6B8;
+    }
+    .ministry-banner ul {
+      color: #D6DCE6;
+    }
+    .ministry-banner li {
+      color: #D6DCE6;
+      margin: 0.15rem 0;
+    }
+    .ministry-banner p,
+    .ministry-banner-text p {
+      color: #C9D1DC;
+    }
+    .ministry-banner h3 {
+      color: var(--gold, #C9A227);
     }
     .ministry-banner {
       background: var(--navy, #0a1628);
@@ -896,7 +928,7 @@
       <div class="ministry-banner-text">
         <h3><img src="assets/icons/shield-cross.png" alt="" width="20" height="20" style="vertical-align:middle;margin-right:6px;">Fleet Command Center</h3>
         <p>Live status board for the U.S.M.C. Ministries AI fleet — every agent, what they run, and the work they've shipped. Auto-refreshed from OpenClaw + Hermes.</p>
-        <ul style="margin-top:0.5rem;columns:2">
+        <ul style="margin-top:0.5rem;columns:2;color:#D6DCE6;">
           <li><a href="fleet/index.html">Fleet Dashboard</a></li>
           <li><a href="fleet/cowork.html">Cowork Project Space</a></li>
           <li><a href="fleet/main.html">Max Pemberton (Adjutant)</a></li>

@@ -49,7 +49,7 @@ function siteNav() {
       <li><a href="/books.html">Books</a></li>
       <li><a href="/coaching.html">Coaching</a></li>
       <li><a href="/ai-mission.html">AI Mission</a></li>
-      <li><a href="/tmc-husband/index.html" class="active">Husband Course</a></li>
+      <li><a href="/tmc-husband/index.html" class="active">Husbanding Academy</a></li>
       <li><a href="https://usmcmin.org" target="_blank" rel="noopener">Ministry Site</a></li>
     </ul>
     <a href="/coaching.html" class="btn nav-cta">Book a Session</a>
@@ -64,7 +64,7 @@ function courseRail(page) {
   const here = (target) => (page === target ? ' aria-current="page"' : '');
   return `<div class="course-rail">
     <div class="course-rail-inner">
-      <a class="course-rail-name" href="index.html">The Husband Course</a>
+      <a class="course-rail-name" href="index.html">Husbanding Academy</a>
       <nav class="course-rail-nav" aria-label="Course sections">
         <a href="index.html"${here('landing')}>Course map</a>
         <a href="progress.html"${here('progress')}>Progress <span class="nav-progress" data-progress-short>0/7</span></a>
@@ -195,7 +195,7 @@ function rankBanner() {
     <div class="rank-medallion" aria-hidden="true"><span>⚓</span></div>
     <div class="rank-copy">
       <p class="eyebrow" data-rank-step>Rank 0 of 7</p>
-      <h2 id="rank-title" data-rank>Ashore</h2>
+      <h2 id="rank-title" data-rank>Off the Wall</h2>
       <p class="rank-milestone" data-milestone aria-live="polite">Not yet under way. Begin Module 1 when you are ready.</p>
     </div>
   </section>`;
@@ -218,7 +218,7 @@ function badgeGrid() {
 function commissionCard() {
   return `<section class="commission-card" data-commission aria-hidden="true" aria-labelledby="commission-title">
     <p class="eyebrow">Charter complete</p>
-    <h2 id="commission-title">Commissioned — Captain of the Home</h2>
+    <h2 id="commission-title">Commissioned — Watchman of the Home</h2>
     <p>You completed all seven modules and shipped every field action — quietly, and for the long haul. That is a real thing you did. Well done.</p>
   </section>`;
 }
@@ -297,7 +297,7 @@ function renderLanding(checkTotals = {}) {
     page: 'landing',
     body: `<main id="main-content">
       <section class="course-hero">
-        <span class="course-badge">The Husband Course &middot; U.S.M.C. Ministries</span>
+        <span class="course-badge">Husbanding Academy &middot; U.S.M.C. Ministries</span>
         <p class="eyebrow">Free · seven modules · no account · local progress</p>
         <h1>${esc(course.title)}</h1>
         <p class="lede">${esc(course.subtitle)}</p>
@@ -329,14 +329,14 @@ function renderLanding(checkTotals = {}) {
 function renderAbout() {
   return layout({
     title: 'About This Course',
-    description: 'How The Husband Course was made, what it includes, and what it is not.',
+    description: 'How The Marriage Course — Husbanding Academy was made, what it includes, and what it is not.',
     page: 'about',
     noindex: true,
     body: `<main id="main-content">
       <header class="page-header">
-        <span class="course-badge">The Husband Course &middot; U.S.M.C. Ministries</span>
+        <span class="course-badge">Husbanding Academy &middot; U.S.M.C. Ministries</span>
         <p class="eyebrow">Background</p>
-        <h1>About The Husband Course</h1>
+        <h1>About the Husbanding Academy</h1>
         <p class="lede">Method, boundaries, and what you will — and will not — find inside.</p>
       </header>
       <article>
@@ -396,7 +396,7 @@ function renderModule(module) {
     body: `<main id="main-content" class="lesson">
       <nav class="module-nav" aria-label="Previous and next modules">${prev}${next}</nav>
       <header class="lesson-header">
-        <span class="course-badge">Module ${module.number} &middot; The Husband Course</span>
+        <span class="course-badge">Module ${module.number} &middot; Husbanding Academy</span>
         <p class="eyebrow">Module ${module.number} of 7${published ? '' : ' · Draft'}</p>
         <h1>${esc(module.title)}</h1>
         <p class="lede">${esc(module.question)}</p>
@@ -437,16 +437,16 @@ function renderProgress(checkTotals = {}) {
   }).join('\n');
   return layout({
     title: 'Course Progress',
-    description: 'Review and reset local progress for The Husband Course.',
+    description: 'Review and reset local progress for The Marriage Course — Husbanding Academy.',
     page: 'progress',
     body: `<main id="main-content">
-      <header class="page-header"><span class="course-badge">The Husband Course &middot; U.S.M.C. Ministries</span><p class="eyebrow">Your voyage</p><h1>Your progress</h1><p class="lede">Seven field actions. One honest local record.</p></header>
+      <header class="page-header"><span class="course-badge">Husbanding Academy &middot; U.S.M.C. Ministries</span><p class="eyebrow">Your watch</p><h1>Your progress</h1><p class="lede">Seven field actions. One honest local record.</p></header>
       ${progressPanel()}
       ${timePanel({ withReset: true })}
       ${rankBanner()}
       ${commissionCard()}
       ${badgeGrid()}
-      <section aria-labelledby="module-progress-title"><h2 id="module-progress-title">Your voyage</h2><p class="section-intro">Seven ports. Each one is a module you complete by shipping its field action.</p><ol class="voyage-map">${rows}</ol></section>
+      <section aria-labelledby="module-progress-title"><h2 id="module-progress-title">Your watch</h2><p class="section-intro">Seven posts. Each one is a module you complete by shipping its field action.</p><ol class="voyage-map">${rows}</ol></section>
       <section class="reset-panel" aria-labelledby="reset-title"><h2 id="reset-title">Reset this device</h2><p>This clears all seven completion flags and the last-module pointer from this browser only. It cannot be undone.</p><button class="danger" type="button" data-reset-progress>Reset all course progress</button><p data-reset-message aria-live="polite"></p></section>
     </main>`
   });

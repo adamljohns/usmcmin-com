@@ -1,4 +1,4 @@
-# The Husband Course — print pack
+# The Marriage Course — Husbanding Academy — print pack
 
 Everything a man can put on paper. Three builders, one brand kit, one export.
 

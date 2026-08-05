@@ -20,7 +20,7 @@
  *
  * Bump SW_VERSION when the shell changes so installs refresh on next launch.
  */
-const SW_VERSION = 'v3-2026-08-04';
+const SW_VERSION = 'v4-2026-08-04';
 const CORE_CACHE = 'tmc-core-' + SW_VERSION;
 const RUNTIME_CACHE = 'tmc-runtime-' + SW_VERSION;
 const OFFLINE_FALLBACK = '/tmc-husband/index.html';
@@ -83,6 +83,25 @@ function isMedia(url) {
   return /\.(png|jpe?g|webp|gif|svg|pdf|mp3|m4a|mp4|webm)$/i.test(url.pathname);
 }
 
+/* Only a complete, successful response belongs in the cache.
+ *
+ *   - A 404 or a 502 stored under the module's own URL comes back as the page
+ *     the next time the reader is offline. The cache is supposed to be the
+ *     fallback, not the thing that breaks.
+ *   - `cache.put` rejects outright on a 206. The audio briefings and videos are
+ *     range-requested, so every seek was throwing an unhandled rejection inside
+ *     the worker.
+ */
+function cacheable(response) {
+  return response && response.ok && response.status === 200 && response.type !== 'opaque';
+}
+
+function store(request, response) {
+  if (!cacheable(response)) return;
+  const copy = response.clone();
+  caches.open(RUNTIME_CACHE).then((cache) => cache.put(request, copy)).catch(() => {});
+}
+
 self.addEventListener('fetch', (event) => {
   const request = event.request;
   if (request.method !== 'GET') return;
@@ -94,8 +113,7 @@ self.addEventListener('fetch', (event) => {
     event.respondWith(
       fetch(request)
         .then((response) => {
-          const copy = response.clone();
-          caches.open(RUNTIME_CACHE).then((cache) => cache.put(request, copy));
+          store(request, response);
           return response;
         })
         .catch(() => caches.match(request).then((hit) => hit || caches.match(OFFLINE_FALLBACK)))
@@ -108,8 +126,7 @@ self.addEventListener('fetch', (event) => {
     event.respondWith(
       caches.match(request).then((cached) => {
         const network = fetch(request).then((response) => {
-          const copy = response.clone();
-          caches.open(RUNTIME_CACHE).then((cache) => cache.put(request, copy));
+          store(request, response);
           return response;
         }).catch(() => cached);
         return cached || network;
@@ -121,8 +138,7 @@ self.addEventListener('fetch', (event) => {
   // Everything else (images, fonts, media): cache-first.
   event.respondWith(
     caches.match(request).then((cached) => cached || fetch(request).then((response) => {
-      const copy = response.clone();
-      caches.open(RUNTIME_CACHE).then((cache) => cache.put(request, copy));
+      store(request, response);
       return response;
     }).catch(() => cached))
   );

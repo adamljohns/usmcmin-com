@@ -49,7 +49,7 @@ function siteNav() {
       <li><a href="/books.html">Books</a></li>
       <li><a href="/coaching.html">Coaching</a></li>
       <li><a href="/ai-mission.html">AI Mission</a></li>
-      <li><a href="/tmc-husband/index.html" class="active">Husbanding Academy</a></li>
+      <li><a href="/tmc-husband/index.html" class="active">The Husband Course</a></li>
       <li><a href="https://usmcmin.org" target="_blank" rel="noopener">Ministry Site</a></li>
     </ul>
     <a href="/coaching.html" class="btn nav-cta">Book a Session</a>
@@ -64,7 +64,7 @@ function courseRail(page) {
   const here = (target) => (page === target ? ' aria-current="page"' : '');
   return `<div class="course-rail">
     <div class="course-rail-inner">
-      <a class="course-rail-name" href="index.html">Husbanding Academy</a>
+      <a class="course-rail-name" href="index.html">The Husband Course</a>
       <nav class="course-rail-nav" aria-label="Course sections">
         <a href="index.html"${here('landing')}>Course map</a>
         <a href="progress.html"${here('progress')}>Progress <span class="nav-progress" data-progress-short>0/7</span></a>
@@ -246,14 +246,14 @@ function timePanel({ withReset = false } = {}) {
 // has a detail insert (media notes, reading notes, self-graded knowledge check).
 // Built by tmc-husband/print/*.py — see that folder's README.
 function printPack() {
-  const inserts = course.modules.map((module) => `<li><a href="/downloads/tmc-husband/The_Husbanding_Academy_Module_${String(module.number).padStart(2, '0')}_INSERT.pdf">Module ${module.number} insert &mdash; ${esc(module.title)}</a></li>`).join('\n');
+  const inserts = course.modules.map((module) => `<li><a href="/downloads/tmc-husband/The_Husband_Course_Module_${String(module.number).padStart(2, '0')}_INSERT.pdf">Module ${module.number} insert &mdash; ${esc(module.title)}</a></li>`).join('\n');
   return `<section class="print-pack" aria-labelledby="print-title">
       <p class="eyebrow">Work it on paper</p>
       <h2 id="print-title">The printable pack</h2>
       <p class="section-intro">Every sheet is a real fillable PDF: tap a box and type in Preview, Acrobat, GoodNotes or Notability &mdash; or print it and use a pen. Nothing you write is uploaded anywhere.</p>
       <div class="print-lead">
         <div>
-          <h3><a href="/downloads/tmc-husband/The_Husbanding_Academy_FIELD_WORKBOOK.pdf">The Husband&rsquo;s Field Workbook</a></h3>
+          <h3><a href="/downloads/tmc-husband/The_Husband_Course_FIELD_WORKBOOK.pdf">The Husband&rsquo;s Field Workbook</a></h3>
           <p>The whole course in one volume &mdash; all seven modules, every task, every field action, with a box wherever the course asks you to do something. Start here.</p>
           <p class="print-meta">PDF &middot; fillable &middot; works printed</p>
         </div>
@@ -297,7 +297,7 @@ function renderLanding(checkTotals = {}) {
     page: 'landing',
     body: `<main id="main-content">
       <section class="course-hero">
-        <span class="course-badge">Husbanding Academy &middot; U.S.M.C. Ministries</span>
+        <span class="course-badge">The Marriage Academy &middot; U.S.M.C. Ministries</span>
         <p class="eyebrow">Free · seven modules · no account · local progress</p>
         <h1>${esc(course.title)}</h1>
         <p class="lede">${esc(course.subtitle)}</p>
@@ -329,14 +329,14 @@ function renderLanding(checkTotals = {}) {
 function renderAbout() {
   return layout({
     title: 'About This Course',
-    description: 'How The Marriage Course — Husbanding Academy was made, what it includes, and what it is not.',
+    description: 'How The Husband Course was made, what it includes, and what it is not.',
     page: 'about',
     noindex: true,
     body: `<main id="main-content">
       <header class="page-header">
-        <span class="course-badge">Husbanding Academy &middot; U.S.M.C. Ministries</span>
+        <span class="course-badge">The Marriage Academy &middot; U.S.M.C. Ministries</span>
         <p class="eyebrow">Background</p>
-        <h1>About the Husbanding Academy</h1>
+        <h1>About The Husband Course</h1>
         <p class="lede">Method, boundaries, and what you will — and will not — find inside.</p>
       </header>
       <article>
@@ -396,7 +396,7 @@ function renderModule(module) {
     body: `<main id="main-content" class="lesson">
       <nav class="module-nav" aria-label="Previous and next modules">${prev}${next}</nav>
       <header class="lesson-header">
-        <span class="course-badge">Module ${module.number} &middot; Husbanding Academy</span>
+        <span class="course-badge">Module ${module.number} &middot; The Husband Course</span>
         <p class="eyebrow">Module ${module.number} of 7${published ? '' : ' · Draft'}</p>
         <h1>${esc(module.title)}</h1>
         <p class="lede">${esc(module.question)}</p>
@@ -437,10 +437,10 @@ function renderProgress(checkTotals = {}) {
   }).join('\n');
   return layout({
     title: 'Course Progress',
-    description: 'Review and reset local progress for The Marriage Course — Husbanding Academy.',
+    description: 'Review and reset local progress for The Husband Course.',
     page: 'progress',
     body: `<main id="main-content">
-      <header class="page-header"><span class="course-badge">Husbanding Academy &middot; U.S.M.C. Ministries</span><p class="eyebrow">Your watch</p><h1>Your progress</h1><p class="lede">Seven field actions. One honest local record.</p></header>
+      <header class="page-header"><span class="course-badge">The Marriage Academy &middot; U.S.M.C. Ministries</span><p class="eyebrow">Your watch</p><h1>Your progress</h1><p class="lede">Seven field actions. One honest local record.</p></header>
       ${progressPanel()}
       ${timePanel({ withReset: true })}
       ${rankBanner()}

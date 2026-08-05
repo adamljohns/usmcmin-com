@@ -20,7 +20,7 @@ const publishedModuleIds = new Set(['m01', 'm02', 'm03', 'm04', 'm05', 'm06', 'm
 const course = {
   id: 'tmc-husband-v1',
   contentVersion: 1,
-  title: 'The Marriage Course — Husbanding Academy',
+  title: 'The Husband Course',
   subtitle: 'Seven modules. One field action each week.',
   publishedModuleIds,
   status: 'All seven modules are live. Free, local-only progress — no account, no sync. Modules 1–3 include optional study aids.',

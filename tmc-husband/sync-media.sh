@@ -1,5 +1,5 @@
 #!/bin/bash
-# Upload The Marriage Course — Husbanding Academy heavy media to R2.
+# Upload The Husband Course heavy media to R2.
 #
 #   tmc-husband/sync-media.sh            # dry run — show what would upload
 #   tmc-husband/sync-media.sh --apply    # do it

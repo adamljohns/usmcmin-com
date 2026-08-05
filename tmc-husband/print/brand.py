@@ -92,6 +92,26 @@ USABLE_W = W - ML - MR
 COURSE_NAME = "The Marriage Course — Husbanding Academy"
 MINISTRY = "U.S.M.C. Ministries"
 
+# The course shipped as "The Husband Course" and its PDFs went out under that
+# name. The rename moved the filenames too, so every builder also writes an
+# identical copy at the old path — a bookmark or a printed link from before
+# 2026-08-04 still resolves, and the copy can never drift because it is written
+# from the same run. Drop this once the old names stop being requested.
+LEGACY_NAMES = ("Husbanding_Academy", "Husband_Course")
+
+
+def legacy_copy(path):
+    """Write the same PDF under its pre-rename filename. Returns that path, or
+    None when the name carries no renamed segment."""
+    import shutil
+    new, old = LEGACY_NAMES
+    if new not in os.path.basename(path):
+        return None
+    legacy = os.path.join(os.path.dirname(path),
+                          os.path.basename(path).replace(new, old))
+    shutil.copyfile(path, legacy)
+    return legacy
+
 
 def ascii_safe(s):
     """Playfair covers the smart punctuation we use, but form-field text and

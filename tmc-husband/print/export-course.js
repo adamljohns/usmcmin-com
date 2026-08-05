@@ -28,12 +28,20 @@ function drillsFor(moduleId) {
   const questions = data.quiz || data.questions || [];
   return {
     flashcards: cards.length,
-    // Only what a self-grade sheet needs: the prompt and how many options.
-    quiz: questions.map((q, i) => ({
-      number: i + 1,
-      question: q.question || q.prompt || '',
-      options: (q.answerOptions || q.options || []).length
-    }))
+    // The prompt, how many options, and the answer — the insert asks the reader
+    // to write from memory, then prints the key on its own page at the back so
+    // he can mark himself without leaving the sheet.
+    quiz: questions.map((q, i) => {
+      const opts = q.answerOptions || q.options || [];
+      const right = opts.find((o) => o && o.isCorrect === true);
+      return {
+        number: i + 1,
+        question: q.question || q.prompt || '',
+        options: opts.length,
+        answer: (right && (right.text || right.answer)) || '',
+        rationale: (right && right.rationale) || ''
+      };
+    })
   };
 }
 

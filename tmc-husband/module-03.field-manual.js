@@ -117,7 +117,7 @@ const fieldManual = {
       { key: 'flashcards', heading: 'Drill', note: 'Flashcard practice.' },
       { key: 'withheld', heading: 'In your notebook only', note: 'Audio and video overviews not hosted on this site.' }
     ],
-    withheldNotice: 'Six audio and video study aids are not hosted here, pending rights review and approval.',
+    withheldNotice: null,
 
     journal: {
       heading: 'Optional companion journal',

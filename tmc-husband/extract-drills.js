@@ -57,6 +57,28 @@ function readExport(file) {
   return JSON.parse(slice);
 }
 
+/* Some notebooks were built with AI critiques of the course sitting alongside the
+ * lesson material, so Gemini wrote drills about them — "According to the AI
+ * reviews (ChatGPT, Claude, etc.), what is the course's blind spot?", "the
+ * 'Claude' critique suggests…". A man studying his marriage should never be
+ * quizzed on what a chatbot thought of the curriculum. The critiques were review
+ * input, not teaching. Filtering here rather than in the JSON means a re-pull
+ * cannot quietly put them back. */
+const REVIEW_ARTIFACT = /\b(chatgpt|claude|gemini|copilot|the ai reviews?|ai critiques?|ai-generated critique)\b/i;
+
+function dropReviewArtifacts(moduleId, key, items) {
+  const kept = items.filter((item) => {
+    const text = [item && item.question, item && item.f, item && item.b]
+      .filter(Boolean).join(' ');
+    return !REVIEW_ARTIFACT.test(text);
+  });
+  const dropped = items.length - kept.length;
+  if (dropped) {
+    console.log(`${moduleId}: dropped ${dropped} ${key} that quizzed on the AI review notes`);
+  }
+  return kept;
+}
+
 function collect(moduleId) {
   const bundle = {};
   for (const [key, dir] of [['flashcards', 'flashcards'], ['quiz', 'quiz']]) {
@@ -65,7 +87,7 @@ function collect(moduleId) {
     for (const name of fs.readdirSync(folder).filter((n) => n.endsWith('.html'))) {
       const data = readExport(path.join(folder, name));
       if (data && Array.isArray(data[key]) && data[key].length) {
-        bundle[key] = data[key];
+        bundle[key] = dropReviewArtifacts(moduleId, key, data[key]);
         bundle.meta = Object.assign({}, bundle.meta, { [key]: { source: name, topics: data.topics || {} } });
       }
     }

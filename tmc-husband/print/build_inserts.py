@@ -17,10 +17,14 @@ it — the part a man works through with headphones on:
      right/wrong tick, and a score line. The web quiz grades itself; this is for
      the man working on paper, and for seeing WHY he missed one.
   5. Flashcard drill log — what he still needs to review.
+  6. Answer key — on its own page at the back, with the reason behind each
+     answer. On the web the quiz reveals itself as you go; on paper this is the
+     only way to grade the sheet.
 
 One insert per module, so printing module 4 doesn't mean printing the book.
 
-Output: downloads/tmc-husband/The_Husband_Course_Module_0N_INSERT.pdf
+Output: downloads/tmc-husband/The_Husbanding_Academy_Module_0N_INSERT.pdf
+        (plus a copy under the old The_Husband_Course_* name — see LEGACY_NAMES)
 """
 
 import json
@@ -33,7 +37,7 @@ from reportlab.lib.colors import HexColor
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from brand import (  # noqa: E402
-    Sheet, cover, wrap, ascii_safe, register_fonts,
+    Sheet, cover, wrap, ascii_safe, register_fonts, legacy_copy,
     MODULE_ACCENTS, WORDED_NUMBER,
     NAVY, INK, GRAY, GRAY_LT, WARM, BORDER, FIELD_BG, FIELD_EDGE,
     SERIF_B, SERIF_I, SANS, SANS_B, SANS_I,
@@ -86,7 +90,7 @@ def build_insert(course, module):
     number = module["number"]
     accent = MODULE_ACCENTS[number]
     mid = f"m{number:02d}"
-    out_path = os.path.join(OUT_DIR, f"The_Husband_Course_Module_{number:02d}_INSERT.pdf")
+    out_path = os.path.join(OUT_DIR, f"The_Husbanding_Academy_Module_{number:02d}_INSERT.pdf")
 
     c = canvas.Canvas(out_path, pagesize=(W, H), pageCompression=1)
     c.setTitle(f"{COURSE_NAME} — Module {number} insert: {module['title']}")
@@ -153,9 +157,9 @@ def build_insert(course, module):
         sheet.kicker("4 · Knowledge check — self-graded")
         sheet.heading(f"{len(quiz)} questions", size=15, space_after=4)
         sheet.body(
-            "Answer from memory first, then check yourself against the module page. "
-            "The score matters less than the last column: a question you missed shows you "
-            "exactly which part of the module to reread.",
+            "Answer from memory first, then mark yourself against the answer key on the "
+            "last page. The score matters less than the last column: a question you missed "
+            "shows you exactly which part of the module to reread.",
             size=9.4, color=GRAY, gap=12,
         )
         for q in quiz:
@@ -209,6 +213,51 @@ def build_insert(course, module):
         sheet.line_field("Cards marked known", f"{mid}.cards.known", width=90)
         sheet.field("Cards I still need to review", f"{mid}.cards.review", rows=2)
 
+    # ── 6. Answer key ──
+    # Last page on purpose: the man writing from memory should have to turn the
+    # sheet over to grade himself. The web quiz reveals the answer as soon as you
+    # pick one; on paper this is the only place to check.
+    if quiz and any(q.get("answer") for q in quiz):
+        sheet.new_page()
+        sheet.kicker("6 · Answer key")
+        sheet.heading("Mark yourself here", size=15, space_after=4)
+        sheet.body(
+            "Every answer carries the reason it is the answer. If you missed one, the "
+            "reason is the part worth rereading — not the letter.",
+            size=9.4, color=GRAY, gap=12,
+        )
+        for q in quiz:
+            if not q.get("answer"):
+                continue
+            q_lines = wrap(c, f"{q['number']}. {q['question']}", SANS_B, 9.2, USABLE_W - 4)
+            a_lines = wrap(c, q["answer"], SANS, 9.2, USABLE_W - 18)
+            r_lines = wrap(c, q.get("rationale", ""), SANS_I, 8.8, USABLE_W - 18) if q.get("rationale") else []
+            sheet.need((len(q_lines) + len(a_lines) + len(r_lines)) * 12.6 + 26)
+
+            c.setFillColor(NAVY)
+            for line in q_lines:
+                c.setFont(SANS_B, 9.2)
+                c.drawString(ML, sheet.y - 9, line)
+                sheet.y -= 12.6
+            sheet.y -= 2
+
+            # accent tick down the side of the answer so it reads as the key
+            block_top = sheet.y
+            c.setFillColor(INK)
+            for line in a_lines:
+                c.setFont(SANS, 9.2)
+                c.drawString(ML + 14, sheet.y - 9, line)
+                sheet.y -= 12.6
+            if r_lines:
+                c.setFillColor(GRAY)
+                for line in r_lines:
+                    c.setFont(SANS_I, 8.8)
+                    c.drawString(ML + 14, sheet.y - 9, line)
+                    sheet.y -= 12.0
+            c.setFillColor(accent)
+            c.rect(ML + 2, sheet.y, 2.4, block_top - sheet.y, stroke=0, fill=1)
+            sheet.y -= 14
+
     # ── Close ──
     action = module.get("fieldAction") or {}
     if action.get("finishLine"):
@@ -231,8 +280,10 @@ def main():
         course = json.load(fh)
     for module in course["modules"]:
         path, pages = build_insert(course, module)
+        legacy = legacy_copy(path)
         print(f"  m{module['number']:02d}  {os.path.basename(path)}  "
-              f"({pages} pages, {os.path.getsize(path) // 1024} KB)")
+              f"({pages} pages, {os.path.getsize(path) // 1024} KB)"
+              f"{'  + legacy name' if legacy else ''}")
     print(f"{len(course['modules'])} module inserts written.")
 
 

@@ -13,7 +13,7 @@ worth of paper without printing the book.
 Fields are real AcroForm fields over ruled boxes, so the same file works typed
 in Preview / Acrobat / GoodNotes or printed and written on with a pen.
 
-Output: downloads/tmc-husband/The_Husbanding_Academy_FIELD_WORKBOOK.pdf
+Output: downloads/tmc-husband/The_Husband_Course_FIELD_WORKBOOK.pdf
 """
 
 import json
@@ -25,7 +25,7 @@ from reportlab.lib.colors import HexColor
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from brand import (  # noqa: E402
-    Sheet, cover, wrap, ascii_safe, register_fonts, legacy_copy,
+    Sheet, cover, wrap, ascii_safe, register_fonts,
     MODULE_ACCENTS, NEUTRAL_ACCENT, WORDED_NUMBER,
     NAVY, INK, GRAY, GRAY_LT, WARM, BORDER,
     SERIF, SERIF_B, SERIF_I, SANS, SANS_B, SANS_I,
@@ -34,7 +34,7 @@ from brand import (  # noqa: E402
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 OUT_DIR = os.path.join(REPO, "downloads", "tmc-husband")
-OUT_PATH = os.path.join(OUT_DIR, "The_Husbanding_Academy_FIELD_WORKBOOK.pdf")
+OUT_PATH = os.path.join(OUT_DIR, "The_Husband_Course_FIELD_WORKBOOK.pdf")
 
 HOW_TO = [
     "This PDF is fillable. Tap any shaded box and type — or print it and write. Whichever fits how you work.",
@@ -200,10 +200,8 @@ def build():
     sheet.finish()
     c.save()
 
-    legacy = legacy_copy(OUT_PATH)
     size_kb = os.path.getsize(OUT_PATH) // 1024
-    print(f"Wrote {os.path.relpath(OUT_PATH, REPO)} — {sheet.page} pages, {size_kb} KB"
-          f"{'  + legacy name' if legacy else ''}")
+    print(f"Wrote {os.path.relpath(OUT_PATH, REPO)} — {sheet.page} pages, {size_kb} KB")
 
 
 if __name__ == "__main__":

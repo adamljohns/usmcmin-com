@@ -23,8 +23,7 @@ it — the part a man works through with headphones on:
 
 One insert per module, so printing module 4 doesn't mean printing the book.
 
-Output: downloads/tmc-husband/The_Husbanding_Academy_Module_0N_INSERT.pdf
-        (plus a copy under the old The_Husband_Course_* name — see LEGACY_NAMES)
+Output: downloads/tmc-husband/The_Husband_Course_Module_0N_INSERT.pdf
 """
 
 import json
@@ -37,7 +36,7 @@ from reportlab.lib.colors import HexColor
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from brand import (  # noqa: E402
-    Sheet, cover, wrap, ascii_safe, register_fonts, legacy_copy,
+    Sheet, cover, wrap, ascii_safe, register_fonts,
     MODULE_ACCENTS, WORDED_NUMBER,
     NAVY, INK, GRAY, GRAY_LT, WARM, BORDER, FIELD_BG, FIELD_EDGE,
     SERIF_B, SERIF_I, SANS, SANS_B, SANS_I,
@@ -90,7 +89,7 @@ def build_insert(course, module):
     number = module["number"]
     accent = MODULE_ACCENTS[number]
     mid = f"m{number:02d}"
-    out_path = os.path.join(OUT_DIR, f"The_Husbanding_Academy_Module_{number:02d}_INSERT.pdf")
+    out_path = os.path.join(OUT_DIR, f"The_Husband_Course_Module_{number:02d}_INSERT.pdf")
 
     c = canvas.Canvas(out_path, pagesize=(W, H), pageCompression=1)
     c.setTitle(f"{COURSE_NAME} — Module {number} insert: {module['title']}")
@@ -280,10 +279,8 @@ def main():
         course = json.load(fh)
     for module in course["modules"]:
         path, pages = build_insert(course, module)
-        legacy = legacy_copy(path)
         print(f"  m{module['number']:02d}  {os.path.basename(path)}  "
-              f"({pages} pages, {os.path.getsize(path) // 1024} KB)"
-              f"{'  + legacy name' if legacy else ''}")
+              f"({pages} pages, {os.path.getsize(path) // 1024} KB)")
     print(f"{len(course['modules'])} module inserts written.")
 
 

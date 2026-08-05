@@ -103,7 +103,11 @@ function renderResourceGroups(m, esc, inlinedSlugs = new Set(), nativeGroups = n
   // dropped here so the same drill is not offered twice.
   const remaining = m.artifacts.filter((x) => !inlinedSlugs.has(x.slug) && !nativeGroups.has(x.group));
   const resourceGroups = m.resources.groups.map((group) => {
-    const artifacts = remaining.filter((x) => x.group === group.key).map((x) => {
+    // Anything we do not host is simply left off. A card that says "not hosted
+    // here", or a notice counting what is missing, advertises an absence the
+    // reader can do nothing about — it reads as a gap in the course rather than
+    // as a decision we made.
+    const artifacts = remaining.filter((x) => x.group === group.key && x.state === 'local').map((x) => {
       let media = '';
       if (x.state === 'local' && x.mediaType === 'video') {
         media = `<video class="artifact-media" controls preload="metadata" src="${esc(mediaUrl(x.href))}"></video>`;
@@ -111,9 +115,7 @@ function renderResourceGroups(m, esc, inlinedSlugs = new Set(), nativeGroups = n
         media = `<audio class="artifact-media" controls preload="metadata" src="${esc(mediaUrl(x.href))}"></audio>`;
       }
       const defaultLabel = x.linkLabel || (x.mediaType === 'video' ? 'Watch' : x.mediaType === 'audio' ? 'Listen' : x.alt ? 'View graphic' : 'Open');
-      const link = x.state === 'local'
-        ? `${media}<a class="artifact-link" href="${esc(mediaUrl(x.href))}"${['quiz', 'flashcards'].includes(x.group) ? ' target="_blank" rel="noopener noreferrer"' : ''}>${esc(defaultLabel)}</a>`
-        : '<span class="artifact-held">Not hosted here</span>';
+      const link = `${media}<a class="artifact-link" href="${esc(mediaUrl(x.href))}"${['quiz', 'flashcards'].includes(x.group) ? ' target="_blank" rel="noopener noreferrer"' : ''}>${esc(defaultLabel)}</a>`;
       const image = x.alt ? `<a href="${esc(mediaUrl(x.href))}"><img src="${esc(mediaUrl(x.href))}" alt="${esc(x.alt)}" loading="lazy"></a>` : '';
       return `<article class="artifact-card" data-artifact="${esc(x.slug)}" data-artifact-state="${esc(x.state)}"><p class="eyebrow">${esc(x.kind || group.heading)}</p><h4>${esc(x.title)}</h4>${link}${image}<p>${esc(x.summary)}</p></article>`;
     }).join('\n');
@@ -121,9 +123,7 @@ function renderResourceGroups(m, esc, inlinedSlugs = new Set(), nativeGroups = n
     return `<section class="resource-group" aria-labelledby="resource-${esc(group.key)}"><h3 id="resource-${esc(group.key)}">${esc(group.heading)}</h3><p>${esc(group.note)}</p><div class="artifact-grid">${artifacts}</div></section>`;
   }).join('\n');
 
-  const withheldBlock = m.resources.withheldNotice
-    ? `<aside class="withheld-notice"><h3>Not hosted on this site</h3><p>${esc(m.resources.withheldNotice)}</p></aside>`
-    : '';
+  const withheldBlock = '';
 
   const notebookBlock = m.resources.notebook ? `<article><h3>${esc(m.resources.notebook.title)}</h3><p>${esc(m.resources.notebook.body)}</p><a href="${esc(m.resources.notebook.href)}" target="_blank" rel="noopener noreferrer">${esc(m.resources.notebook.label)} <span aria-hidden="true">↗</span></a></article>` : '';
   const journalBlock = m.resources.journal ? `<article><h3>${esc(m.resources.journal.heading)}</h3><p>${esc(m.resources.journal.body)}</p><a href="${esc(m.resources.journal.href)}" target="_blank" rel="noopener noreferrer sponsored">${esc(m.resources.journal.label)} <span aria-hidden="true">↗</span></a><p><small>${esc(m.resources.journal.disclosure)}</small></p></article>` : '';

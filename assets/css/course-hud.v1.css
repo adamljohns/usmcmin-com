@@ -1,0 +1,108 @@
+/* course-hud.v1.css — progress HUD shown on every Watchman's Course week page
+   and Family Captain AI Boot Camp page. Pairs with assets/js/course-hud.v1.js.
+
+   Colours resolve against main.css custom properties, with literal fallbacks
+   so the HUD still reads correctly if it is ever dropped onto a page that
+   does not load the site theme. */
+
+.course-hud {
+  --hud-pct: 0;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  max-width: 1080px;
+  margin: 18px auto 0;
+  padding: 14px 18px;
+  border: 1px solid var(--gold-dim, rgba(200, 169, 81, .35));
+  border-radius: 12px;
+  background: var(--card, rgba(255, 255, 255, .03));
+  font-family: 'Inter', system-ui, sans-serif;
+}
+
+/* Conic-gradient ring — no SVG, no images, and it animates from the same
+   --hud-pct the JS sets, so ring and bar can never disagree. */
+.course-hud-ring {
+  flex: 0 0 auto;
+  width: 54px;
+  height: 54px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background:
+    conic-gradient(var(--gold, #C8A951) calc(var(--hud-pct) * 1%), rgba(255, 255, 255, .10) 0);
+  transition: background .4s ease;
+}
+.course-hud-ring::after {
+  content: '';
+  position: absolute;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: var(--bg, #0b0b0d);
+}
+.course-hud-ring { position: relative; }
+.course-hud-ring > span {
+  position: relative;
+  z-index: 1;
+  font-size: .78rem;
+  font-weight: 700;
+  color: var(--gold, #C8A951);
+  letter-spacing: .02em;
+}
+
+.course-hud-body { flex: 1 1 auto; min-width: 0; }
+
+.course-hud-title {
+  font-size: .74rem;
+  text-transform: uppercase;
+  letter-spacing: .09em;
+  color: var(--gold, #C8A951);
+  margin-bottom: 6px;
+}
+
+.course-hud-bar {
+  height: 6px;
+  border-radius: 3px;
+  background: rgba(255, 255, 255, .10);
+  overflow: hidden;
+}
+.course-hud-bar > span {
+  display: block;
+  height: 100%;
+  width: 0;
+  border-radius: 3px;
+  background: linear-gradient(90deg, var(--gold-dim, #8a7434), var(--gold, #C8A951));
+  transition: width .4s ease;
+}
+
+.course-hud-sub {
+  margin-top: 7px;
+  font-size: .78rem;
+  color: var(--muted, #9aa0a6);
+}
+
+.course-hud-link {
+  flex: 0 0 auto;
+  font-size: .78rem;
+  color: var(--gold, #C8A951);
+  text-decoration: none;
+  border: 1px solid var(--gold-dim, rgba(200, 169, 81, .35));
+  border-radius: 8px;
+  padding: 7px 12px;
+  white-space: nowrap;
+  transition: background .2s ease, color .2s ease;
+}
+.course-hud-link:hover {
+  background: var(--gold, #C8A951);
+  color: #0b0b0d;
+}
+
+@media (max-width: 620px) {
+  .course-hud { gap: 12px; padding: 12px 14px; flex-wrap: wrap; }
+  .course-hud-link { order: 3; width: 100%; text-align: center; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .course-hud-ring,
+  .course-hud-bar > span { transition: none; }
+}

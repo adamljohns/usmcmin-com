@@ -118,3 +118,55 @@ grid, no lettering — leave blank plates where labels go."
 When the files land, drop them in `assets/media/tmc-husband/mNN/infographics/`
 with the same filenames, run `tmc-husband/print/sync-media.sh --apply`, and
 tell me — I will rewrite the alt text and the registry summaries to match.
+
+---
+
+## Addendum 2026-08-05 — TWO STYLES ARE MIXED ACROSS THE SET
+
+Adam's note: *"towards the end of our modules, we lost all the color… the
+Vineyard of Marriage / Field Guide to Lifelong Connection looked pretty good
+and they're not too cartoony."*
+
+Measured across all 16 infographics, then checked by eye on a contact sheet.
+The problem is **not** saturation — it is that two incompatible illustration
+styles shipped in the same course.
+
+**STYLE A — illustrated field guide (the standard; keep and match).**
+Painterly scenes with real people in real environments, depth, and seasonal
+range. Navy panel headers, warm skin tones, a red accent for warnings.
+Representative: `m01/marriage-vineyard-field-guide.png` — a vineyard through
+four seasons, snow in Phase 3, sunset in Phase 4.
+
+**STYLE B — flat corporate infographic (the regression; redo).**
+Monochrome navy line-art icons on white, numbered lists, no scenes, no depth.
+`m07/love-in-action-relationship-guide.png` is the clearest case: three
+distinct hues in the whole poster against twelve in the Vineyard guide.
+
+### Redo list — 7 of 16, to be brought onto Style A
+
+| Module | File | Note |
+|---|---|---|
+| m02 | `art-of-effective-communication.png` | flat panels |
+| m02 | `mastering-marriage-communication.png` | flat icon rows |
+| m03 | `marriage-teamwork-guide.png` | text-heavy, sparse art |
+| m05 | `navigating-family-patterns-in-marriage.png` | flat diagram |
+| m06 | `five-secrets-of-sexual-intimacy.png` | numbered list + icons |
+| m06 | `keeping-the-spark-alive.png` | numbered list + icons |
+| m07 | `love-in-action-relationship-guide.png` | **worst — pure line art** |
+
+### Keep as reference (already Style A)
+
+`m01` both · `m03` conflict-and-teamwork + conflict-resolution ·
+`m04` both · `m05` family-tree · `m06` the-spark-and-the-flame ·
+`m07` marriage-maintenance-storyboard
+
+### Correction to the "late modules" reading
+
+The drift is not purely late. **m02 carries two Style B graphics**, and m07
+still has one good Style A piece (`marriage-maintenance-storyboard`). The
+trend is real — m06 is 2-of-3 flat — but any redo pass has to be driven by
+this list rather than by module number.
+
+Reproduce the measurement: mean HLS saturation plus a count of distinct
+10-degree hue buckets over pixels with 0.08 < lightness < 0.94, which ignores
+the white background. Style B lands at 3–6 hues; Style A at 8–20.

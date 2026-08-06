@@ -105,6 +105,24 @@
     };
   }
 
+  // Both courses put a position:fixed nav at the top of the document and let
+  // the hero clear it with its own padding. The HUD sits ABOVE the hero, so it
+  // has to clear that nav itself or it renders underneath it — which is
+  // exactly what happened on first deploy. Measure rather than hardcode 70px,
+  // so this keeps working if the nav height ever changes.
+  function clearFixedHeader(host) {
+    var tallest = 0;
+    var candidates = document.querySelectorAll('nav, header, .site-header, .navbar');
+    for (var i = 0; i < candidates.length; i++) {
+      var el = candidates[i];
+      var cs = getComputedStyle(el);
+      if (cs.position !== 'fixed' && cs.position !== 'sticky') continue;
+      var r = el.getBoundingClientRect();
+      if (r.top <= 2 && r.height > tallest) tallest = r.height;
+    }
+    host.style.setProperty('--hud-clear', Math.round(tallest) + 'px');
+  }
+
   function init() {
     var host = document.querySelector('[data-course-hud]');
     if (!host) return;
@@ -112,6 +130,8 @@
     if (!cfg) return;
 
     var el = build(host, cfg);
+    clearFixedHeader(host);
+    window.addEventListener('resize', function () { clearFixedHeader(host); });
 
     // ---- session timer -----------------------------------------------------
     // Only counts visible time, flushed on a short interval and on unload so a

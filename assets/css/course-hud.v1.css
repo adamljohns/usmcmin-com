@@ -7,11 +7,14 @@
 
 .course-hud {
   --hud-pct: 0;
+  --hud-clear: 0px; /* set by the JS to the fixed nav's measured height */
   display: flex;
   align-items: center;
   gap: 16px;
   max-width: 1080px;
-  margin: 18px auto 0;
+  /* The HUD is the first flow content, above a hero that pads itself clear of
+     the fixed nav — so it must clear that nav on its own. */
+  margin: calc(var(--hud-clear, 0px) + 18px) auto 0;
   padding: 14px 18px;
   border: 1px solid var(--gold-dim, rgba(200, 169, 81, .35));
   border-radius: 12px;
@@ -71,7 +74,10 @@
   height: 100%;
   width: 0;
   border-radius: 3px;
-  background: linear-gradient(90deg, var(--gold-dim, #8a7434), var(--gold, #C8A951));
+  /* Not --gold-dim as the gradient start: on these pages it resolves to a 12%
+     alpha, so the left of the fill vanished into the track and a genuine 25%
+     read as about 4%. Both stops must be opaque. */
+  background: linear-gradient(90deg, var(--accent, #A8B0BC), var(--accent-light, #C5CBD3));
   transition: width .4s ease;
 }
 

@@ -52,3 +52,28 @@
 ## Before any page is "done"
 - Open it in a browser. Verify at ~390px width.
 - Type-checking ≠ feature-checking — actually look at it.
+
+## Visual verification — Playwright is available
+
+Playwright is installed on this Mac but is **not** on PATH, **not** global npm,
+and **not** the Python package — `which playwright` and `import playwright`
+both fail while it is perfectly usable. The definitive signal is the browser
+cache at `~/Library/Caches/ms-playwright/`.
+
+Drive it by absolute path (Node resolves modules from the *script's* directory,
+so a script written to /tmp fails with MODULE_NOT_FOUND even with the right cwd):
+
+```js
+const { chromium } = require('/Users/moop_bot_pro/Scripts/cdp-tmc/node_modules/playwright-core');
+const b = await chromium.launch({ headless: true });
+```
+
+Serve the repo locally (`python3 -m http.server 8931`) rather than using
+`file://` — these pages read `localStorage`, and seeding it needs
+`context.addInitScript()` so it lands before page scripts run.
+
+**Render anything visual before calling it done.** On 2026-08-05 the course HUD
+passed a DOM-stub test on every value and was still broken on screen: it sat
+underneath the `position:fixed` nav, and a geometrically-correct 25% progress
+bar was invisible because its gradient started at a 12%-alpha colour. A stub
+verifies logic; only a browser verifies layout and contrast.

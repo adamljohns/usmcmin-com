@@ -24,7 +24,6 @@ import argparse, html, json, os, re, shutil, subprocess, sys, tempfile
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
-PIPER_VOICES = Path.home() / '.piper-voices'
 BRAND = 'Uniting, Serving, Mentoring, and Counseling Ministries'
 
 # House palette, read off the live pages rather than invented.
@@ -138,7 +137,8 @@ def slide_html(kind, title, body, index=None, total=None):
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument('page')
-    ap.add_argument('--voice', default='en_US-ryan-high')
+    ap.add_argument('--voice', default='am_onyx',
+                    help='Kokoro voice (am_onyx is the house narration voice)')
     ap.add_argument('--out')
     ap.add_argument('--dry-run', action='store_true')
     ap.add_argument('--max-slides', type=int, default=0)
@@ -148,10 +148,11 @@ def main():
     src = ROOT / a.page
     if not src.exists():
         sys.exit(f'no such page: {src}')
-    model = PIPER_VOICES / f'{a.voice}.onnx'
-    if not model.exists():
-        sys.exit(f'voice model missing: {model}\navailable: '
-                 + ', '.join(sorted(p.stem for p in PIPER_VOICES.glob("*.onnx"))))
+    # Kokoro is the house engine — am_onyx narrates 38 of the site's audio
+    # books, so explainers should sound like the rest of usmcmin.org.
+    kokoro_py = Path.home() / '.mlx-audio-venv' / 'bin' / 'python'
+    if not kokoro_py.exists():
+        sys.exit(f'mlx-audio venv missing: {kokoro_py}')
     for tool in ('ffmpeg',):
         if not shutil.which(tool):
             sys.exit(f'{tool} not on PATH')

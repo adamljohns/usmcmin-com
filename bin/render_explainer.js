@@ -17,8 +17,8 @@ const fs = require('fs');
 const os = require('os');
 const path = require('path');
 
-const PIPER = path.join(os.homedir(), '.piper-venv/bin/piper');
-const VOICES = path.join(os.homedir(), '.piper-voices');
+const KOKORO_PY = path.join(os.homedir(), '.mlx-audio-venv/bin/python');
+const KOKORO_TTS = path.join(__dirname, 'kokoro_tts.py');
 const CARD_HOLD = 3.0;   // seconds a brand card stays up
 const W = 1920, H = 1080;
 
@@ -26,34 +26,40 @@ async function main() {
   const [planPath, outPath] = process.argv.slice(2);
   if (!planPath || !outPath) { console.error('usage: render_explainer.js <plan.json> <out.mp4>'); process.exit(2); }
   const plan = JSON.parse(fs.readFileSync(planPath, 'utf8'));
-  const model = path.join(VOICES, `${plan.voice}.onnx`);
-  if (!fs.existsSync(model)) { console.error('voice missing:', model); process.exit(1); }
+  if (!fs.existsSync(KOKORO_PY)) { console.error('mlx-audio venv missing:', KOKORO_PY); process.exit(1); }
 
   const work = fs.mkdtempSync(path.join(os.tmpdir(), 'explainer-'));
   const b = await chromium.launch({ headless: true });
   const page = await b.newPage({ viewport: { width: W, height: H } });
 
   const segments = [];
+  const tts = [];
   for (const s of plan.slides) {
     const i = String(s.index).padStart(3, '0');
     const png = path.join(work, `f${i}.png`);
     await page.setContent(s.html, { waitUntil: 'load' });
     await page.screenshot({ path: png });
 
-    let dur = CARD_HOLD;
-    let wav = null;
-    if (s.narration && s.narration.trim()) {
-      wav = path.join(work, `f${i}.wav`);
-      execFileSync(PIPER, ['-m', model, '-f', wav], { input: s.narration, stdio: ['pipe','ignore','ignore'] });
-      dur = Number(execFileSync('ffprobe',
-        ['-v','error','-show_entries','format=duration','-of','csv=p=0', wav],
-        { encoding: 'utf8' }).trim()) + 0.45;   // a beat of silence after each slide
-    }
-    segments.push({ png, wav, dur });
-    process.stdout.write(`  frame ${s.index + 1}/${plan.slides.length}  ${dur.toFixed(1)}s\r`);
+    const wav = (s.narration && s.narration.trim()) ? path.join(work, `f${i}.wav`) : null;
+    if (wav) tts.push({ text: s.narration, out: wav });
+    segments.push({ png, wav, dur: CARD_HOLD });
+    process.stdout.write(`  slide ${s.index + 1}/${plan.slides.length}\r`);
   }
   await b.close();
-  console.log('\nrendered', segments.length, 'frames');
+  console.log('\nrendered', segments.length, 'frames; narrating', tts.length, 'with Kokoro…');
+
+  // One Kokoro process for every chunk — loading the model per slide would
+  // dominate the run.
+  execFileSync(KOKORO_PY, [KOKORO_TTS], {
+    input: JSON.stringify({ voice: plan.voice, lang: 'a', jobs: tts }),
+    stdio: ['pipe', 'inherit', 'inherit'], maxBuffer: 64 * 1024 * 1024 });
+
+  for (const s of segments) {
+    if (!s.wav || !fs.existsSync(s.wav)) { s.wav = null; continue; }
+    s.dur = Number(execFileSync('ffprobe',
+      ['-v','error','-show_entries','format=duration','-of','csv=p=0', s.wav],
+      { encoding: 'utf8' }).trim()) + 0.45;
+  }
 
   // Per-segment MP4s, then concat. Simpler and far more robust than one giant
   // filtergraph, and a failure localises to a single slide.

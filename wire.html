@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <script>(function(){try{var s=localStorage.getItem('usmc-theme')||localStorage.getItem('theme');if(s!=='light')document.documentElement.setAttribute('data-theme','dark');}catch(e){}})();</script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RESOLUTE Wire — Curated News for Citizens | U.S.M.C. Ministries</title>
+  <meta name="description" content="RESOLUTE Wire — a Drudge-style curated news board for citizens: political, civic, and tech/AI signals with short insight and links to original sources. Human-approved.">
+  <link rel="canonical" href="https://usmcmin.com/wire.html">
+  <meta property="og:site_name" content="RESOLUTE Wire">
+  <meta property="og:title" content="RESOLUTE Wire — Curated News for Citizens">
+  <meta property="og:description" content="Political, civic, and tech/AI signals for informed citizens. Source-led. Human-approved. Not Associated Press.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://usmcmin.com/wire.html">
+  <meta property="og:image" content="https://usmcmin.com/assets/og/og-citizen.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="RESOLUTE Wire">
+  <meta name="twitter:description" content="Curated news for citizens — political, civic, tech/AI. Human-approved.">
+  <meta name="twitter:image" content="https://usmcmin.com/assets/og/og-citizen.jpg">
+  <meta name="robots" content="index,follow">
+  <link rel="stylesheet" href="assets/css/main.min.css">
+  <link rel="icon" type="image/svg+xml" href="assets/icons/favicon.svg">
+  <link rel="icon" type="image/png" sizes="32x32" href="assets/icons/favicon-32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="assets/icons/favicon-16.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="assets/icons/apple-touch-icon.png">
+  <style>
+    .wire-wrap { max-width: 1100px; margin: 0 auto; padding: 20px 16px 48px; }
+    .wire-draft-banner {
+      background: rgba(248,113,113,0.12);
+      border: 1px solid rgba(248,113,113,0.45);
+      color: #fca5a5;
+      border-radius: 8px;
+      padding: 10px 14px;
+      font-size: 0.82rem;
+      font-weight: 700;
+      letter-spacing: 0.4px;
+      text-align: center;
+      margin-bottom: 18px;
+    }
+    .wire-masthead {
+      text-align: center;
+      border-bottom: 3px double var(--border);
+      padding: 28px 8px 18px;
+      margin-bottom: 22px;
+    }
+    .wire-kicker {
+      font-size: 0.72rem;
+      font-weight: 800;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 8px;
+    }
+    .wire-masthead h1 {
+      font-size: clamp(2.1rem, 6vw, 3.4rem);
+      font-weight: 900;
+      color: var(--white);
+      margin: 0 0 8px;
+      letter-spacing: -0.5px;
+    }
+    .wire-masthead h1 .gold { color: var(--accent); }
+    .wire-sub {
+      color: var(--gray);
+      font-size: 0.95rem;
+      max-width: 640px;
+      margin: 0 auto 10px;
+      line-height: 1.55;
+    }
+    .wire-meta {
+      font-size: 0.78rem;
+      color: var(--gray);
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      justify-content: center;
+      align-items: center;
+    }
+    .wire-meta .dot { opacity: 0.45; }
+    .wire-disclosure {
+      margin-top: 10px;
+      font-size: 0.72rem;
+      color: var(--gray);
+      max-width: 720px;
+      margin-left: auto;
+      margin-right: auto;
+      line-height: 1.45;
+    }
+    .wire-lead {
+      display: grid;
+      grid-template-columns: 1.15fr 1fr;
+      gap: 20px;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+      margin-bottom: 28px;
+    }
+    .wire-lead-media {
+      min-height: 220px;
+      background:
+        linear-gradient(135deg, rgba(30,58,95,0.55), rgba(212,175,55,0.12)),
+        radial-gradient(circle at 30% 30%, rgba(212,175,55,0.2), transparent 55%);
+      display: flex;
+      align-items: flex-end;
+      padding: 16px;
+    }
+    .wire-lead-media img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+    .wire-lead-body { padding: 22px 22px 20px; display: flex; flex-direction: column; gap: 10px; }
+    .wire-channel {
+      display: inline-block;
+      font-size: 0.68rem;
+      font-weight: 800;
+      letter-spacing: 1.2px;
+      text-transform: uppercase;
+      padding: 3px 8px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      color: var(--accent);
+      width: fit-content;
+    }
+    .wire-channel.political { border-color: rgba(248,113,113,0.45); color: #fca5a5; }
+    .wire-channel.civic { border-color: rgba(212,175,55,0.5); color: #D4AF37; }
+    .wire-channel.tech { border-color: rgba(96,165,250,0.5); color: #93c5fd; }
+    .wire-channel.defense { border-color: rgba(74,222,128,0.4); color: #86efac; }
+    .wire-lead h2 {
+      font-size: clamp(1.35rem, 3vw, 1.85rem);
+      line-height: 1.25;
+      margin: 0;
+      color: var(--white);
+    }
+    .wire-lead h2 a { color: inherit; text-decoration: none; }
+    .wire-lead h2 a:hover { color: var(--accent); }
+    .wire-insight {
+      color: var(--gray);
+      font-size: 0.95rem;
+      line-height: 1.55;
+      margin: 0;
+    }
+    .wire-source {
+      font-size: 0.78rem;
+      color: var(--gray);
+      margin-top: auto;
+    }
+    .wire-source a { color: var(--accent); text-decoration: none; font-weight: 600; }
+    .wire-source a:hover { text-decoration: underline; }
+    .wire-rails {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      margin-bottom: 28px;
+    }
+    .wire-rail {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 14px 14px 10px;
+      min-height: 160px;
+    }
+    .wire-rail h3 {
+      margin: 0 0 12px;
+      font-size: 0.78rem;
+      letter-spacing: 1.4px;
+      text-transform: uppercase;
+      color: var(--accent);
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 8px;
+    }
+    .wire-item {
+      padding: 10px 0;
+      border-bottom: 1px solid rgba(168,176,188,0.12);
+    }
+    .wire-item:last-child { border-bottom: none; }
+    .wire-item a.hed {
+      display: block;
+      color: var(--white);
+      font-weight: 700;
+      font-size: 0.95rem;
+      line-height: 1.35;
+      text-decoration: none;
+      margin-bottom: 4px;
+    }
+    .wire-item a.hed:hover { color: var(--accent); }
+    .wire-item .blurb {
+      color: var(--gray);
+      font-size: 0.82rem;
+      line-height: 1.45;
+      margin: 0 0 4px;
+    }
+    .wire-item .src {
+      font-size: 0.72rem;
+      color: var(--gray);
+      opacity: 0.9;
+    }
+    .wire-item.placeholder {
+      opacity: 0.72;
+      border: 1px dashed rgba(168,176,188,0.35);
+      border-radius: 8px;
+      padding: 10px;
+      margin-bottom: 8px;
+    }
+    .wire-watch {
+      background: rgba(168,176,188,0.05);
+      border: 1px solid var(--border);
+      border-left: 4px solid var(--accent);
+      border-radius: 8px;
+      padding: 14px 16px;
+      margin-bottom: 28px;
+    }
+    .wire-watch h3 {
+      margin: 0 0 10px;
+      font-size: 0.75rem;
+      letter-spacing: 1.3px;
+      text-transform: uppercase;
+      color: var(--accent);
+    }
+    .wire-watch ul { margin: 0; padding-left: 18px; color: var(--gray); }
+    .wire-watch li { margin-bottom: 8px; line-height: 1.45; }
+    .wire-watch a { color: var(--white); font-weight: 600; text-decoration: none; }
+    .wire-watch a:hover { color: var(--accent); }
+    .wire-dock {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+      margin-bottom: 20px;
+    }
+    .wire-dock a {
+      display: block;
+      text-decoration: none;
+      background: linear-gradient(135deg, rgba(212,175,55,0.10) 0%, rgba(168,176,188,0.06) 100%);
+      border: 1px solid rgba(212,175,55,0.30);
+      border-radius: 12px;
+      padding: 16px 18px;
+      color: var(--white);
+      transition: border-color 0.15s, transform 0.15s;
+    }
+    .wire-dock a:hover { border-color: var(--accent); transform: translateY(-2px); }
+    .wire-dock .k { font-size: 0.7rem; color: #D4AF37; font-weight: 800; letter-spacing: 1.2px; text-transform: uppercase; margin-bottom: 4px; }
+    .wire-dock .t { font-size: 1.05rem; font-weight: 800; margin-bottom: 4px; }
+    .wire-dock .d { font-size: 0.84rem; color: var(--gray); line-height: 1.45; }
+    .wire-empty {
+      color: var(--gray);
+      font-size: 0.85rem;
+      font-style: italic;
+      padding: 8px 0;
+    }
+    @media (max-width: 860px) {
+      .wire-lead { grid-template-columns: 1fr; }
+      .wire-lead-media { min-height: 140px; }
+      .wire-rails { grid-template-columns: 1fr; }
+      .wire-dock { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+<a href="#main" class="skip-link">Skip to content</a>
+
+<nav class="main-nav" aria-label="Primary">
+  <a href="/" class="nav-brand" style="text-decoration:none">
+    <img src="assets/icons/shield-star.png" alt="" width="28" height="28">
+    <div class="nav-brand-text">
+      <strong>U.S.M.C. Ministries</strong>
+      <span>RESOLUTE Wire</span>
+    </div>
+  </a>
+  <ul class="nav-links">
+    <li><a href="mission.html">Mission</a></li>
+    <li><a href="citizen.html">Citizen</a></li>
+    <li><a href="wire.html" class="active" aria-current="page">Wire</a></li>
+    <li><a href="shop.html">Shop</a></li>
+    <li><a href="books.html">Books</a></li>
+    <li><a href="coaching.html">Coaching</a></li>
+    <li><a href="about.html">About</a></li>
+    <li><a href="https://usmcmin.org" target="_blank" rel="noopener">Ministry Site</a></li>
+  </ul>
+  <a href="coaching.html" class="btn nav-cta">Book a Session</a>
+</nav>
+
+<main id="main" class="wire-wrap">
+  <header class="wire-masthead">
+    <div class="wire-kicker">RESOLUTE · Citizens Informed</div>
+    <h1><span class="gold">RESOLUTE</span> Wire</h1>
+    <p class="wire-sub">A curated board for citizens — political, civic, and tech/AI signals with short insight and a path to the original source.</p>
+    <div class="wire-meta">
+      <span id="wireDate">Loading edition…</span>
+      <span class="dot">·</span>
+      <span id="wireEdition">daily</span>
+      <span class="dot">·</span>
+      <span>Desk: Rush Sullivan</span>
+    </div>
+    <p class="wire-disclosure" id="wireDisclosure"></p>
+  </header>
+
+  <section class="wire-lead" id="wireLead" aria-label="Lead story">
+    <div class="wire-lead-media" id="leadMedia" aria-hidden="true"></div>
+    <div class="wire-lead-body">
+      <span class="wire-channel tech" id="leadChannel">Tech / AI</span>
+      <h2 id="leadHed"><a href="#" id="leadLink">Loading…</a></h2>
+      <p class="wire-insight" id="leadInsight"></p>
+      <div class="wire-source" id="leadSource"></div>
+    </div>
+  </section>
+
+  <section class="wire-rails" aria-label="Channel rails">
+    <div class="wire-rail" id="railPolitical">
+      <h3>Political</h3>
+      <div class="wire-empty">Loading…</div>
+    </div>
+    <div class="wire-rail" id="railCivic">
+      <h3>Civic / RESOLUTE</h3>
+      <div class="wire-empty">Loading…</div>
+    </div>
+    <div class="wire-rail" id="railTech">
+      <h3>Tech / AI</h3>
+      <div class="wire-empty">Loading…</div>
+    </div>
+  </section>
+
+  <section class="wire-watch" id="wireWatch" hidden>
+    <h3>Watch</h3>
+    <ul id="watchList"></ul>
+  </section>
+
+  <section class="wire-dock" aria-label="RESOLUTE siblings">
+    <a href="citizen.html">
+      <div class="k">Scorecard</div>
+      <div class="t">RESOLUTE Citizen</div>
+      <div class="d">Magistrates scored. Know who represents you before you vote.</div>
+    </a>
+    <a href="mission.html">
+      <div class="k">Mission Control</div>
+      <div class="t">HAPPY · FULFILLED · RESOLUTE</div>
+      <div class="d">The three modules of U.S.M.C. Ministries — husband, father, citizen.</div>
+    </a>
+  </section>
+</main>
+
+<footer>
+  <p><strong>U.S.M.C. Ministries</strong> &mdash; Warriors Equipped. Kingdom Advancing.</p>
+  <p style="margin-top:6px;font-size:0.75rem;color:var(--gray);">
+    <a href="citizen.html">Citizen</a> |
+    <a href="mission.html">Mission</a> |
+    <a href="https://usmcmin.org">usmcmin.org</a> |
+    <a href="sitemap.html">Sitemap</a> |
+    <a href="about.html">About</a>
+  </p>
+  <p style="margin-top:8px;font-size:0.7rem;color:var(--gray);max-width:640px;margin-left:auto;margin-right:auto;line-height:1.45;">
+    RESOLUTE Wire links out. Insights are brief commentary, not republication of full articles.
+  </p>
+</footer>
+
+<script>
+(function () {
+  const CHANNEL_LABEL = {
+    political: 'Political',
+    civic: 'Civic / RESOLUTE',
+    tech: 'Tech / AI',
+    defense: 'Defense',
+    watch: 'Watch'
+  };
+
+  function esc(s) {
+    return String(s == null ? '' : s)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;');
+  }
+
+  function itemHTML(it) {
+    const ph = it.placeholder ? ' placeholder' : '';
+    const hed = esc(it.hed || 'Untitled');
+    const url = it.url ? esc(it.url) : '';
+    const insight = esc(it.insight || '');
+    const src = esc(it.source || '');
+    const rights = it.rights ? esc(it.rights) : '';
+    const link = url
+      ? '<a class="hed" href="' + url + '" target="_blank" rel="noopener">' + hed + '</a>'
+      : '<span class="hed" style="color:var(--white);font-weight:700">' + hed + '</span>';
+    const srcLine = [src, rights].filter(Boolean).join(' · ');
+    return '<article class="wire-item' + ph + '">' + link +
+      '<p class="blurb">' + insight + '</p>' +
+      '<div class="src">' + srcLine + '</div></article>';
+  }
+
+  function fillRail(el, items) {
+    var h3 = el.querySelector('h3');
+    var title = h3 ? h3.outerHTML : '';
+    if (!items || !items.length) {
+      el.innerHTML = title + '<div class="wire-empty">No items this edition.</div>';
+      return;
+    }
+    el.innerHTML = title + items.map(itemHTML).join('');
+  }
+
+  function isDraft(board) {
+    var st = ((board.publish && board.publish.state) || board.status || '').toUpperCase();
+    return st.indexOf('DRAFT') !== -1 || st.indexOf('PENDING') !== -1 || st.indexOf('REVIEW') !== -1 || st === '' || st === 'EXPIRED';
+  }
+
+  function normalizeItems(board) {
+    // Prefer schema v1 rails; fall back to flat items[]
+    if (board.rails && typeof board.rails === 'object') {
+      return {
+        political: board.rails.political || [],
+        civic: (board.rails.civic || []).concat(Array.isArray(board.civic) ? board.civic : []),
+        tech: (board.rails.tech || []).concat(board.rails.defense || [])
+      };
+    }
+    var items = Array.isArray(board.items) ? board.items : [];
+    return {
+      political: items.filter(function (i) { return (i.channel || '') === 'political'; }),
+      civic: items.filter(function (i) { return (i.channel || '') === 'civic'; }),
+      tech: items.filter(function (i) {
+        var c = i.channel || '';
+        return c === 'tech' || c === 'defense';
+      })
+    };
+  }
+
+  fetch('data/wire-latest.json', { cache: 'no-store' })
+    .then(function (r) { if (!r.ok) throw new Error('board fetch ' + r.status); return r.json(); })
+    .then(function (board) {
+      // Public ship: page is indexable; board status still filters expired/pending items via isDraft helpers if needed later.
+      var robots = document.querySelector('meta[name="robots"]');
+      if (robots) robots.setAttribute('content', 'index,follow');
+
+      var dateBits = [board.board_date || '', board.ts_local || ''].filter(Boolean);
+      document.getElementById('wireDate').textContent = dateBits[0] || board.ts_local || '';
+      document.getElementById('wireEdition').textContent = board.edition || 'daily';
+      document.getElementById('wireDisclosure').textContent = board.disclosure || '';
+      if (board.dek) {
+        var sub = document.querySelector('.wire-sub');
+        if (sub) sub.textContent = board.dek;
+      }
+
+      var lead = board.lead || {};
+      var ch = (lead.channel || 'tech').toLowerCase();
+      var leadCh = document.getElementById('leadChannel');
+      leadCh.textContent = CHANNEL_LABEL[ch] || ch;
+      leadCh.className = 'wire-channel ' + (CHANNEL_LABEL[ch] ? ch : 'tech');
+      document.getElementById('leadHed').innerHTML = lead.url
+        ? '<a id="leadLink" href="' + esc(lead.url) + '" target="_blank" rel="noopener">' + esc(lead.hed || '') + '</a>'
+        : esc(lead.hed || '');
+      document.getElementById('leadInsight').textContent = lead.insight || '';
+      var leadSrcBits = [];
+      if (lead.source) leadSrcBits.push(esc(lead.source));
+      if (lead.rights) leadSrcBits.push(esc(lead.rights));
+      document.getElementById('leadSource').innerHTML = leadSrcBits.join(' · ') +
+        (lead.url ? ' · <a href="' + esc(lead.url) + '" target="_blank" rel="noopener">Read source →</a>' : '');
+      if (lead.image) {
+        document.getElementById('leadMedia').innerHTML = '<img src="' + esc(lead.image) + '" alt="">';
+      }
+
+      var rails = normalizeItems(board);
+      fillRail(document.getElementById('railPolitical'), rails.political);
+      fillRail(document.getElementById('railCivic'), rails.civic);
+      fillRail(document.getElementById('railTech'), rails.tech);
+
+      var watch = Array.isArray(board.watch) ? board.watch : [];
+      if (watch.length) {
+        document.getElementById('wireWatch').hidden = false;
+        document.getElementById('watchList').innerHTML = watch.map(function (w) {
+          var hed = esc(w.hed || '');
+          var link = w.url ? '<a href="' + esc(w.url) + '" target="_blank" rel="noopener">' + hed + '</a>' : hed;
+          return '<li>' + link + (w.insight ? ' — ' + esc(w.insight) : '') +
+            (w.source ? ' <em>(' + esc(w.source) + ')</em>' : '') + '</li>';
+        }).join('');
+      }
+    })
+    .catch(function (err) {
+      document.getElementById('leadHed').textContent = 'Board unavailable';
+      document.getElementById('leadInsight').textContent = String(err && err.message ? err.message : err);
+      ['railPolitical', 'railCivic', 'railTech'].forEach(function (id) {
+        var el = document.getElementById(id);
+        el.innerHTML = el.querySelector('h3').outerHTML + '<div class="wire-empty">Could not load data/wire-latest.json</div>';
+      });
+    });
+})();
+</script>
+<script data-goatcounter="https://usmcmin.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
+<script src="assets/js/main.js" defer></script>
+</body>
+</html>

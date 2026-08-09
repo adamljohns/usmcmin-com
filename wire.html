@@ -256,6 +256,85 @@
       .wire-rails { grid-template-columns: 1fr; }
       .wire-dock { grid-template-columns: 1fr; }
     }
+
+    /* RSA-0809-WIRE-04 Wave A */
+    .main-nav .nav-cta {
+      white-space: nowrap;
+      flex-shrink: 0;
+      padding: 10px 16px;
+      font-size: 0.88rem;
+    }
+    .wire-lead-media {
+      background:
+        linear-gradient(145deg, rgba(30,58,95,0.92), rgba(12,18,28,0.96)),
+        url('assets/og/og-citizen.jpg') center/cover no-repeat;
+      position: relative;
+    }
+    .wire-lead-media.has-image {
+      background: #0c121c;
+    }
+    .wire-lead-media .wire-brand-mark {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      gap: 10px;
+      color: rgba(212,175,55,0.95);
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      font-size: 0.78rem;
+      pointer-events: none;
+    }
+    .wire-lead-media .wire-brand-mark img {
+      width: 64px;
+      height: 64px;
+      opacity: 0.92;
+    }
+    .wire-item {
+      display: grid;
+      grid-template-columns: 72px 1fr;
+      gap: 12px;
+      align-items: start;
+    }
+    .wire-item .thumb {
+      width: 72px;
+      height: 72px;
+      border-radius: 8px;
+      overflow: hidden;
+      background:
+        linear-gradient(145deg, rgba(30,58,95,0.85), rgba(12,18,28,0.95)),
+        url('assets/og/og-citizen.jpg') center/cover no-repeat;
+      border: 1px solid var(--border);
+      flex-shrink: 0;
+    }
+    .wire-item .thumb img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+    .wire-item .body { min-width: 0; }
+    .wire-item a.hed { display: block; margin-bottom: 4px; }
+    .wire-item .blurb {
+      display: -webkit-box;
+      -webkit-line-clamp: 3;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+    .wire-source, .wire-item .src {
+      font-size: 0.78rem;
+      color: var(--gray);
+    }
+    .wire-masthead { padding-top: 18px; }
+    .wire-sub { max-width: 46rem; margin-left: auto; margin-right: auto; }
+    @media (max-width: 640px) {
+      .wire-item { grid-template-columns: 56px 1fr; gap: 10px; }
+      .wire-item .thumb { width: 56px; height: 56px; }
+      .main-nav .nav-cta { padding: 8px 12px; font-size: 0.8rem; }
+    }
   </style>
 </head>
 <body>
@@ -280,6 +359,8 @@
     <li><a href="https://usmcmin.org" target="_blank" rel="noopener">Ministry Site</a></li>
   </ul>
   <a href="coaching.html" class="btn nav-cta">Book a Session</a>
+  <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme" title="Switch light/dark mode">🌙</button>
+  <button class="nav-toggle" aria-label="Menu"><span></span><span></span><span></span></button>
 </nav>
 
 <main id="main" class="wire-wrap">
@@ -373,20 +454,36 @@
       .replace(/"/g, '&quot;');
   }
 
+  function brandThumb(alt) {
+    // Brand fallback — never leave empty muddy blocks without RESOLUTE mark
+    return '<div class="thumb" aria-hidden="true"></div>';
+  }
+
+  function mediaThumb(it) {
+    var img = it && it.image ? String(it.image).trim() : '';
+    if (img) {
+      return '<div class="thumb"><img src="' + esc(img) + '" alt="" loading="lazy" decoding="async" onerror="this.style.display=\'none\'"></div>';
+    }
+    return brandThumb();
+  }
+
   function itemHTML(it) {
     const ph = it.placeholder ? ' placeholder' : '';
     const hed = esc(it.hed || 'Untitled');
     const url = it.url ? esc(it.url) : '';
     const insight = esc(it.insight || '');
     const src = esc(it.source || '');
-    const rights = it.rights ? esc(it.rights) : '';
+    // RSA-0809-WIRE-04: never print schema enums (LINK_FAIR_USE / PUBLIC_RECORD / source_tier)
     const link = url
       ? '<a class="hed" href="' + url + '" target="_blank" rel="noopener">' + hed + '</a>'
       : '<span class="hed" style="color:var(--white);font-weight:700">' + hed + '</span>';
-    const srcLine = [src, rights].filter(Boolean).join(' · ');
-    return '<article class="wire-item' + ph + '">' + link +
+    const srcLine = src || '';
+    return '<article class="wire-item' + ph + '">' +
+      mediaThumb(it) +
+      '<div class="body">' + link +
       '<p class="blurb">' + insight + '</p>' +
-      '<div class="src">' + srcLine + '</div></article>';
+      (srcLine ? '<div class="src">' + srcLine + '</div>' : '') +
+      '</div></article>';
   }
 
   function fillRail(el, items) {
@@ -451,11 +548,25 @@
       document.getElementById('leadInsight').textContent = lead.insight || '';
       var leadSrcBits = [];
       if (lead.source) leadSrcBits.push(esc(lead.source));
-      if (lead.rights) leadSrcBits.push(esc(lead.rights));
+      // no rights / source_tier enums on public face
       document.getElementById('leadSource').innerHTML = leadSrcBits.join(' · ') +
-        (lead.url ? ' · <a href="' + esc(lead.url) + '" target="_blank" rel="noopener">Read source →</a>' : '');
-      if (lead.image) {
-        document.getElementById('leadMedia').innerHTML = '<img src="' + esc(lead.image) + '" alt="">';
+        (lead.url ? (leadSrcBits.length ? ' · ' : '') + '<a href="' + esc(lead.url) + '" target="_blank" rel="noopener">Read source →</a>' : '');
+      var leadMedia = document.getElementById('leadMedia');
+      var limg = lead.image ? String(lead.image).trim() : '';
+      function setBrandLead() {
+        leadMedia.classList.remove('has-image');
+        leadMedia.innerHTML = '<div class="wire-brand-mark"><img src="assets/icons/shield-star.png" alt=""><span>RESOLUTE Wire</span></div>';
+      }
+      if (limg) {
+        leadMedia.classList.add('has-image');
+        var im = document.createElement('img');
+        im.alt = '';
+        im.src = limg;
+        im.onerror = function () { setBrandLead(); };
+        leadMedia.innerHTML = '';
+        leadMedia.appendChild(im);
+      } else {
+        setBrandLead();
       }
 
       var rails = normalizeItems(board);

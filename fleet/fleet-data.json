@@ -1,5 +1,5 @@
 {
-  "generated": "2026-08-09T17:26:09.294603+00:00",
+  "generated": "2026-08-09T18:26:13.671698+00:00",
   "totals": {
     "agents": 16,
     "operational": 10,
@@ -12,18 +12,21 @@
   "health": {
     "cron": {
       "enabled": 101,
-      "ran26h": 40,
-      "delivered": 35,
+      "ran26h": 41,
+      "delivered": 36,
       "fails": []
     },
     "cron_source": "openclaw.sqlite + hermes/cron/jobs.json",
     "launchd": {
-      "healthy": 57,
+      "healthy": 54,
       "fails": [
         "com.moop.pj-wisdom-grp: exit 5",
         "com.moop.pj-wisdom-dm: exit 5",
         "com.moop.morning-brief: exit 1",
+        "com.moop.agenda-dispatcher: exit -9",
         "com.moop.ba-inbox-rounds: exit 1",
+        "com.moop.chatgpt-export-watcher: exit 2",
+        "com.moop.calendar-invite-watcher: exit -9",
         "com.moop.evening-wrap: exit 1",
         "com.moop.pj-first-grp: exit 5",
         "com.moop.pj-first-dm: exit 5"
@@ -124,7 +127,7 @@
       "n_jobs": 26,
       "n_enabled": 14,
       "err": 2,
-      "last_ms": 1786296125893,
+      "last_ms": 1786298678445,
       "status": "degraded",
       "accomplishments": [
         {
@@ -311,6 +314,28 @@
       },
       "jobs": [
         {
+          "name": "fleet-freshness-watchdog",
+          "enabled": true,
+          "expr": "0 * * * *",
+          "tz": "",
+          "channel": "last",
+          "last_ms": 1786298678445,
+          "status": "ok",
+          "errors": 0,
+          "dur_ms": 75
+        },
+        {
+          "name": "Skill: psa-skill-honing (weekly audit)",
+          "enabled": true,
+          "expr": "0 14 * * 0",
+          "tz": "America/New_York",
+          "channel": "discord",
+          "last_ms": 1786298400061,
+          "status": "ok",
+          "errors": 0,
+          "dur_ms": 118769
+        },
+        {
           "name": "ChatGPT data-export READY watch",
           "enabled": true,
           "expr": "",
@@ -320,17 +345,6 @@
           "status": "ok",
           "errors": 0,
           "dur_ms": 69466
-        },
-        {
-          "name": "fleet-freshness-watchdog",
-          "enabled": true,
-          "expr": "0 * * * *",
-          "tz": "",
-          "channel": "last",
-          "last_ms": 1786294909747,
-          "status": "ok",
-          "errors": 0,
-          "dur_ms": 72
         },
         {
           "name": "software-update-watchdog",
@@ -441,17 +455,6 @@
           "status": "ok",
           "errors": 0,
           "dur_ms": 348178
-        },
-        {
-          "name": "Skill: psa-skill-honing (weekly audit)",
-          "enabled": true,
-          "expr": "0 14 * * 0",
-          "tz": "America/New_York",
-          "channel": "discord",
-          "last_ms": 1785693600049,
-          "status": "ok",
-          "errors": 0,
-          "dur_ms": 155916
         },
         {
           "name": "Review compaction policy (SuperGrok loosen)",
@@ -2528,7 +2531,7 @@
       "n_jobs": 10,
       "n_enabled": 8,
       "err": 1,
-      "last_ms": 1786284900051,
+      "last_ms": 1786298400055,
       "status": "degraded",
       "accomplishments": [
         {
@@ -2693,6 +2696,17 @@
       },
       "jobs": [
         {
+          "name": "Skill: airbnb-host",
+          "enabled": true,
+          "expr": "0 14 * * *",
+          "tz": "America/New_York",
+          "channel": "discord",
+          "last_ms": 1786298400055,
+          "status": "ok",
+          "errors": 0,
+          "dur_ms": 276313
+        },
+        {
           "name": "Skill: adt-codes (status pulse)",
           "enabled": true,
           "expr": "15 10 * * *",
@@ -2724,17 +2738,6 @@
           "status": "ok",
           "errors": 0,
           "dur_ms": 76061
-        },
-        {
-          "name": "Skill: airbnb-host",
-          "enabled": true,
-          "expr": "0 14 * * *",
-          "tz": "America/New_York",
-          "channel": "discord",
-          "last_ms": 1786212000051,
-          "status": "ok",
-          "errors": 0,
-          "dur_ms": 14984
         },
         {
           "name": "Weekly Spam Ledger (Sat 8:00)",
@@ -5237,5 +5240,5 @@
     "write-airbnb-reviews-for-listings",
     "you-are-an-expert-ai-agent"
   ],
-  "cowork_date": "2026-08-09T13:26:09-04:00"
+  "cowork_date": "2026-08-09T14:26:13-04:00"
 }

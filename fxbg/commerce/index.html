@@ -203,7 +203,23 @@
       text-align: center;
       border-bottom: 1px solid rgba(46,204,113,0.25);
     }
-  </style>
+  
+    /* Business card media. Photo fills the frame; a logo is contained on a
+       neutral tile because cropping a wordmark looks like a mistake. */
+    .biz-media { border-radius: 10px; overflow: hidden; margin-bottom: 10px; }
+    .biz-media img { width: 100%; display: block; }
+    .biz-media--photo { aspect-ratio: 16 / 9; }
+    .biz-media--photo img { width: 100%; height: 100%; object-fit: cover; }
+    .biz-media--logo { aspect-ratio: 16 / 9; background: #10131a;
+      display: flex; align-items: center; justify-content: center; padding: 12px; }
+    .biz-media--logo img { max-height: 100%; width: auto; object-fit: contain; }
+
+    .biz-card { min-width: 0; }
+    /* Long addresses and hyphen-free category slugs ("brewery-restaurant ·
+       International Parkway corridor (Stafford / exit 133 area)") ran past the
+       card edge and were clipped at 390px. Verified before/after in WebKit. */
+    .biz-card h3, .biz-card .meta, .biz-card p { overflow-wrap: anywhere; }
+</style>
 </head>
 <body>
   <div class="soft-banner">Soft launch · Fredericksburg edition · Evidence before heat · Feedback welcome</div>
@@ -248,7 +264,11 @@
     <div class="panel" style="margin-top:18px;" id="directory-panel">
       <h2>Directory</h2>
       <p style="margin-top:0">Published listings only. Soft launch starts with the first Green exemplar.</p>
-      <div id="biz-list" style="display:grid;gap:12px;"></div>
+      <!-- minmax(0,1fr) rather than a bare `grid`: a content-sized column cannot
+           shrink below its longest unbreakable content, which is how a long
+           business name or address starts widening cards. Defensive; the
+           visible clipping at 390px was cured by the overflow-wrap rule below. -->
+      <div id="biz-list" style="display:grid;grid-template-columns:minmax(0,1fr);gap:12px;"></div>
     </div>
 
     <div class="panel" style="margin-top:18px;">
@@ -310,7 +330,17 @@
       if (el) {
         el.innerHTML = list.map(b => {
           const c = bandColor[b.overall] || bandColor.gray;
+          /* A photo of the place is cropped to fill; a logo is contained on a
+             neutral tile so it is not cropped through the wordmark. The data
+             says which it is — see scripts/enrich-fxbg-commerce.js. A card with
+             no image simply has none rather than a shared placeholder. */
+          const ph = (b.photos && b.photos[0]) || null;
+          const media = ph ? `<div class="biz-media biz-media--${ph.kind==='logo'?'logo':'photo'}">
+              <img src="${ph.url}" alt="" loading="lazy" decoding="async"
+                   onerror="this.closest('.biz-media').remove()">
+            </div>` : '';
           return `<div class="biz-card" style="border-color:${c}55;background:linear-gradient(160deg,${c}14,transparent 55%),var(--bg-card)">
+            ${media}
             <div class="eyebrow" style="color:${c}">${(b.overall||'gray').toUpperCase()}${b.featured?' · Featured':''}</div>
             <h3 style="margin:0 0 6px;font-size:1.2rem;font-weight:400">${b.name}</h3>
             <div class="meta">${b.category||''} · ${b.address||''} ${b.city||''}</div>

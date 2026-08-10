@@ -203,7 +203,31 @@
       text-align: center;
       border-bottom: 1px solid rgba(46,204,113,0.25);
     }
-  </style>
+  
+    /* Card media. The photo fills a 16:9 frame; the logo rides in the corner
+       on a light tile so it reads against any photograph and is never cropped
+       through the wordmark. When there is no photo the logo stands alone on a
+       neutral band rather than stretching to fill. */
+    .biz-media { position: relative; border-radius: 10px; overflow: hidden;
+      margin-bottom: 10px; background: #10131a; }
+    .biz-media--photo { aspect-ratio: 16 / 9; }
+    .biz-media--photo > img:first-child { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .biz-media--photo.is-empty > img:first-child { display: none; }
+    .biz-media--logoonly { aspect-ratio: 16 / 5; display: flex;
+      align-items: center; justify-content: center; padding: 10px; }
+    .biz-logo { max-width: 92px; max-height: 46px; width: auto; height: auto;
+      object-fit: contain; display: block; }
+    .biz-media--photo .biz-logo { position: absolute; left: 10px; bottom: 10px;
+      max-width: 84px; max-height: 40px; padding: 6px 8px; border-radius: 8px;
+      background: rgba(255,255,255,0.92);
+      box-shadow: 0 2px 10px rgba(0,0,0,0.35); }
+
+    .biz-card { min-width: 0; }
+    /* Long addresses and hyphen-free category slugs ("brewery-restaurant ·
+       International Parkway corridor (Stafford / exit 133 area)") ran past the
+       card edge and were clipped at 390px. Verified before/after in WebKit. */
+    .biz-card h3, .biz-card .meta, .biz-card p { overflow-wrap: anywhere; }
+</style>
 </head>
 <body>
   <div class="soft-banner">Soft launch · Fredericksburg edition · Evidence before heat · Feedback welcome</div>
@@ -248,7 +272,11 @@
     <div class="panel" style="margin-top:18px;" id="directory-panel">
       <h2>Directory</h2>
       <p style="margin-top:0">Published listings only. Soft launch starts with the first Green exemplar.</p>
-      <div id="biz-list" style="display:grid;gap:12px;"></div>
+      <!-- minmax(0,1fr) rather than a bare `grid`: a content-sized column cannot
+           shrink below its longest unbreakable content, which is how a long
+           business name or address starts widening cards. Defensive; the
+           visible clipping at 390px was cured by the overflow-wrap rule below. -->
+      <div id="biz-list" style="display:grid;grid-template-columns:minmax(0,1fr);gap:12px;"></div>
     </div>
 
     <div class="panel" style="margin-top:18px;">
@@ -310,7 +338,25 @@
       if (el) {
         el.innerHTML = list.map(b => {
           const c = bandColor[b.overall] || bandColor.gray;
+          /* Two assets, two jobs. The photo shows the place and fills a 16:9
+             frame; the logo identifies the business and sits as a badge over
+             the corner of it, contained so a wordmark is never cropped. A card
+             with neither simply has no media — no shared placeholder. */
+          const m = b.media || {};
+          const logoTag = m.logo ? `<img class="biz-logo" src="${m.logo.url}" alt=""
+                loading="lazy" decoding="async" onerror="this.remove()">` : '';
+          let media = '';
+          if (m.photo) {
+            media = `<div class="biz-media biz-media--photo">
+              <img src="${m.photo.url}" alt="" loading="lazy" decoding="async"
+                   onerror="this.closest('.biz-media').classList.add('is-empty')">
+              ${logoTag}
+            </div>`;
+          } else if (m.logo) {
+            media = `<div class="biz-media biz-media--logoonly">${logoTag}</div>`;
+          }
           return `<div class="biz-card" style="border-color:${c}55;background:linear-gradient(160deg,${c}14,transparent 55%),var(--bg-card)">
+            ${media}
             <div class="eyebrow" style="color:${c}">${(b.overall||'gray').toUpperCase()}${b.featured?' · Featured':''}</div>
             <h3 style="margin:0 0 6px;font-size:1.2rem;font-weight:400">${b.name}</h3>
             <div class="meta">${b.category||''} · ${b.address||''} ${b.city||''}</div>

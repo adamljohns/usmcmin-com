@@ -383,6 +383,14 @@
    in the flow, so this page's first block rendered behind it. --nav-clear is
    defined once in assets/css/main.css; don't hard-code a pixel value here. */
 .lease-hero { padding-top: var(--nav-clear); }
+
+/* The rate table cannot fit a phone at its minimum content width, and a table
+   that overflows scrolls the whole PAGE sideways. Give it its own scroll box
+   so the rest of the layout stays put. */
+@media (max-width: 520px) {
+  .snap-table { display: block; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  .snap-table tbody { display: table; width: 100%; min-width: 340px; }
+}
 </style>
 </head>
 <body>

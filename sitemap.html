@@ -26,7 +26,9 @@
   <style>
     .sitemap-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      /* min() lets the track shrink below 300px on a phone; a bare
+         minmax(300px,1fr) cannot, and forced 97px of sideways scroll. */
+      grid-template-columns: repeat(auto-fill, minmax(min(300px, 100%), 1fr));
       gap: 2rem;
       margin-top: 3rem;
     }
@@ -221,8 +223,21 @@
 
     @media (max-width: 640px) {
       .sitemap-grid {
-        grid-template-columns: 1fr;
+        /* `1fr` is shorthand for minmax(auto, 1fr), and `auto` refuses to go
+           below the item's min-content width. One card holds a long unbroken
+           entry (~409px), so the single column grew to 467px and scrolled the
+           page sideways by 97px. minmax(0, 1fr) lets the track shrink; the
+           wrap rule below lets the text inside it reflow. */
+        grid-template-columns: minmax(0, 1fr);
       }
+      .sitemap-card { min-width: 0; overflow-wrap: anywhere; }
+      /* `.sitemap-links a` is a flex row: title, description, then an arrow
+         pinned right with margin-left:auto. On a phone the row cannot fit, and
+         because flex items refuse to shrink past their min-content the
+         description collapsed to 11px while the arrow was pushed 22px off the
+         screen. Let the row wrap and let the description shrink. */
+      .sitemap-links a { flex-wrap: wrap; }
+      .sitemap-links a .link-desc { min-width: 0; flex: 1 1 100%; }
       .ministry-banner {
         flex-direction: column;
         align-items: flex-start;

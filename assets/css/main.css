@@ -61,6 +61,12 @@
 
 html {
   scroll-behavior: smooth;
+  /* iOS Safari inflates text inside narrow blocks unless told not to. The nav
+     brand is the block that suffers: it is already at four lines inside a 70px
+     bar on a 390px phone, and any inflation tips it over the bar and onto the
+     page headline. Reported from a real iPhone 2026-08-10. */
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
   /* Without this every in-page `#anchor` jump lands the target heading behind
      the fixed masthead — the reader clicks "Scoring", arrives, and the heading
      they asked for is the one line they cannot see. Measured 2026-08-10:
@@ -104,7 +110,15 @@ body > nav {
   padding: 0 1.75rem;
   display: flex; align-items: center; justify-content: flex-start;
   gap: 1.5rem;
-  height: 70px;
+  height: var(--nav-h);
+  /* Hard guarantee: the masthead can never paint outside its own bar. Content
+     clearance below is a fixed --nav-clear, so anything the bar renders past
+     its edge lands on the page — which is exactly what happened on Adam's
+     iPhone, where larger text pushed the brand block 12-45px over the headline.
+     With the clamp and hidden tagline above, this only ever engages at extreme
+     text sizes, and a slightly clipped brand is a far better failure than a
+     banner sitting on the page's h1. */
+  overflow: hidden;
 }
 
 .nav-brand {
@@ -115,7 +129,34 @@ body > nav {
   min-width: 0;
 }
 .nav-brand img { height: 42px; width: 42px; border-radius: 4px; object-fit: contain; }
-.nav-brand-text { line-height: 1.1; }
+.nav-brand-text {
+  line-height: 1.1;
+  /* Hard ceiling: the bar is --nav-h and the brand lives inside it. Without
+     this the brand grows and paints over the page below. */
+  max-height: var(--nav-h);
+  min-width: 0;
+}
+/* Targeted by POSITION, not class, because the brand block has more than one
+   markup shape across the site: most pages use `.name` + `.tag` divs, wire.html
+   uses a bare <strong> + <span>. A class-only rule silently missed wire.html —
+   which is the page Adam photographed with the banner sitting on the headline.
+   First child = the name, second = the tagline, whatever tag they use. */
+.nav-brand-text > :first-child {
+  display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.nav-brand-text > * { display: block; }
+
+/* On a phone the tagline is decoration and the name is the brand. Dropping it
+   removes an entire line from a bar that was fitting four into 70px — which is
+   what put "RESOLUTE Wire" on top of the page headline on a real iPhone. */
+@media (max-width: 560px) {
+  .nav-brand-text > :nth-child(2) { display: none; }
+  /* Two lines, not one: tried one and the full name no longer fitted at the
+     default size, so it truncated a wordmark that had been fine. Two lines is
+     clean at default and at 1.3x text; past that the bar's overflow guard
+     clips inside the masthead rather than letting it paint on the page. */
+}
 .nav-brand-text .name { font-size: 0.95rem; font-weight: 700; color: var(--nav-text, var(--white)); letter-spacing: 0.03em; }
 .nav-brand-text .tag { font-size: 0.7rem; color: var(--gold); letter-spacing: 0.12em; text-transform: uppercase; }
 
@@ -636,15 +677,109 @@ footer {
    underneath the banner. Use the variable; don't invent a new number. */
 .below-masthead { padding-top: var(--nav-clear); }
 
-/* ── PAGE HERO (inner pages) ── */
-.page-hero {
-  /* 140px = --nav-h + 70px of deliberate breathing room above the h1. */
-  padding: 140px 2rem 60px;
+/* ── PAGE HEAD SYSTEM ──────────────────────────────────────────────────────
+   One component for every inner page. Audited 2026-08-10: the site had 27
+   distinct page-head implementations across 73 pages, only 6 of them this one,
+   and 32 pages whose head carried no <h1> at all. See HERO-SYSTEM.md.
+
+     <header class="page-hero">            (or --compact / --feature)
+       <img class="page-hero-mark">        optional, feature size only
+       <p class="page-hero-eyebrow">       the kicker
+       <h1>                                required; use .sr-only if not shown
+       <p class="page-hero-lede">          one sentence, capped at 62ch
+       <div class="page-hero-actions">     optional CTAs, 48px min tap target
+
+   Top padding is --nav-clear plus the size's own room, so a page head can never
+   render under the fixed masthead again. Don't invent a new head class. */
+
+.page-hero--compact,
+.page-hero--feature { /* share everything below with .page-hero */ }
+
+.page-hero,
+.page-hero--compact,
+.page-hero--feature {
+  padding: calc(var(--nav-clear) + 2.25rem) 2rem 2.75rem;
   text-align: center;
-  background: radial-gradient(ellipse at top, rgba(30,58,95,0.3) 0%, transparent 60%);
   border-bottom: 1px solid var(--border);
+  background: radial-gradient(ellipse at 50% 0%, rgba(30,58,95,0.30) 0%, transparent 62%);
 }
-.page-hero h1 { font-family: var(--font-main); font-size: clamp(2rem, 4vw, 3.2rem); margin-bottom: 1rem; }
+.page-hero--compact { padding: calc(var(--nav-clear) + 1rem) 2rem 1.5rem; }
+.page-hero--feature { padding: calc(var(--nav-clear) + 3.5rem) 2rem 3.5rem; }
+
+/* The one flourish: a hairline under the kicker. It replaces the ad-hoc
+   dividers several pages had each invented, and gives every head the same
+   optical anchor. */
+.page-hero-eyebrow {
+  font-size: 0.76rem; font-weight: 700; letter-spacing: 0.18em;
+  text-transform: uppercase; color: var(--gold);
+  margin: 0 0 0.75rem;
+}
+.page-hero-eyebrow::after {
+  content: ""; display: block; width: 48px; height: 1px;
+  background: var(--gold); opacity: 0.75;
+  margin: 0.65rem auto 0;
+}
+
+.page-hero-mark {
+  width: 44px; height: 44px; object-fit: contain;
+  margin: 0 auto 1rem; display: block;
+}
+
+.page-hero h1,
+.page-hero--compact h1,
+.page-hero--feature h1 {
+  font-family: var(--font-main);
+  font-size: clamp(1.9rem, 1.2rem + 2.4vw, 3.1rem);
+  font-weight: 700; line-height: 1.12; letter-spacing: -0.01em;
+  margin: 0 auto; max-width: 20ch;
+}
+.page-hero--compact h1 { font-size: clamp(1.5rem, 1.1rem + 1.4vw, 2.1rem); }
+
+/* 62ch cap: long measure is the quickest way a calm layout starts to look
+   careless, and several one-off heads ran the full page width. */
+.page-hero-lede,
+.page-hero--compact .page-hero-lede,
+.page-hero--feature .page-hero-lede {
+  color: var(--gray-light);
+  font-size: clamp(0.98rem, 0.9rem + 0.3vw, 1.13rem);
+  line-height: 1.65;
+  max-width: 62ch;
+  margin: 1rem auto 0;
+}
+
+/* Small print that belongs in the head but is not a kicker — a rubric version,
+   a dateline, a source note. Kept separate because an eyebrow is 1-3 words; a
+   long string set in uppercase at .18em tracking wraps to five lines on a phone
+   and takes over the page (which is exactly what happened when scoring-system's
+   version badge was first mapped onto .page-hero-eyebrow). */
+.page-hero-meta {
+  color: var(--gray);
+  font-size: 0.82rem;
+  line-height: 1.5;
+  max-width: 68ch;
+  margin: 1rem auto 0;
+}
+
+.page-hero-actions {
+  display: flex; flex-wrap: wrap; gap: 0.75rem;
+  justify-content: center; margin-top: 1.75rem;
+}
+.page-hero-actions .btn { min-height: 48px; }
+
+@media (max-width: 560px) {
+  .page-hero,
+  .page-hero--compact,
+  .page-hero--feature { padding-left: 1.25rem; padding-right: 1.25rem; }
+  .page-hero--feature { padding-top: calc(var(--nav-clear) + 2rem); padding-bottom: 2.5rem; }
+  .page-hero h1,
+  .page-hero--feature h1 { max-width: 16ch; }
+}
+
+/* The old `.page-hero` padding/type rules lived here and, being later in the
+   file, silently overrode the system above. Removed 2026-08-10 — the six pages
+   already using .page-hero pick up the new sizing with no markup change. The
+   `.page-hero p` rule below is kept so those pages' un-classed lede paragraphs
+   still read correctly until they are converted to .page-hero-lede. */
 .page-hero p { color: var(--gray-light); max-width: 550px; margin: 0 auto; }
 
 /* ── COMING SOON CARD ── */

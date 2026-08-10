@@ -295,19 +295,25 @@
     }
     .wire-item {
       display: grid;
-      grid-template-columns: 72px 1fr;
+      /* Thumbnail on the RIGHT so every headline starts at the same x. With it
+         on the left, cards that have no picture (most of them — the desk only
+         supplies art for some sources) started 72px further left than the ones
+         that do, and the rail read as a ragged zigzag. */
+      grid-template-columns: 1fr 72px;
       gap: 12px;
       align-items: start;
     }
+    .wire-item .body { grid-column: 1; grid-row: 1; }
+    .wire-item .thumb { grid-column: 2; grid-row: 1; }
+    .wire-item.no-media { grid-template-columns: 1fr; }
     .wire-item .thumb {
       width: 72px;
       height: 72px;
       border-radius: 8px;
       overflow: hidden;
-      background:
-        linear-gradient(145deg, rgba(30,58,95,0.85), rgba(12,18,28,0.95)),
-        url('assets/og/og-citizen.jpg') center/cover no-repeat;
-      border: 1px solid var(--border);
+      /* Plain tint, not og-citizen.jpg. When a source image 404s the old
+         background revealed the very placeholder we are trying to avoid. */
+      background: linear-gradient(145deg, rgba(30,58,95,0.85), rgba(12,18,28,0.95));
       flex-shrink: 0;
     }
     .wire-item .thumb img {
@@ -331,7 +337,7 @@
     .wire-masthead { padding-top: 18px; }
     .wire-sub { max-width: 46rem; margin-left: auto; margin-right: auto; }
     @media (max-width: 640px) {
-      .wire-item { grid-template-columns: 56px 1fr; gap: 10px; }
+      .wire-item { grid-template-columns: 1fr 56px; gap: 10px; }
       .wire-item .thumb { width: 56px; height: 56px; }
       .main-nav .nav-cta { padding: 8px 12px; font-size: 0.8rem; }
     }
@@ -459,17 +465,22 @@
       .replace(/"/g, '&quot;');
   }
 
-  function brandThumb(alt) {
-    // Brand fallback — never leave empty muddy blocks without RESOLUTE mark
-    return '<div class="thumb" aria-hidden="true"></div>';
+  /* The feed's own OG art is not an article image. The desk sets it as a
+     fallback when a source has no usable picture, and on 2026-08-10 that was 6
+     of 11 items — so the rail rendered as a column of identical RESOLUTE
+     Citizen tiles and read like a broken page. A card with no picture is
+     honest; six copies of the same picture is not. */
+  var GENERIC_ART = /\/assets\/og\/og-[a-z0-9-]+\.(jpe?g|png|webp)(\?|$)/i;
+
+  function hasRealImage(it) {
+    var img = it && it.image ? String(it.image).trim() : '';
+    return img && !GENERIC_ART.test(img) ? img : '';
   }
 
   function mediaThumb(it) {
-    var img = it && it.image ? String(it.image).trim() : '';
-    if (img) {
-      return '<div class="thumb"><img src="' + esc(img) + '" alt="" loading="lazy" decoding="async" onerror="this.style.display=\'none\'"></div>';
-    }
-    return brandThumb();
+    var img = hasRealImage(it);
+    if (!img) return '';
+    return '<div class="thumb"><img src="' + esc(img) + '" alt="" loading="lazy" decoding="async" onerror="this.closest(\'.wire-item\').classList.add(\'no-media\'); this.parentNode.remove();"></div>';
   }
 
   function itemHTML(it) {
@@ -483,8 +494,9 @@
       ? '<a class="hed" href="' + url + '" target="_blank" rel="noopener">' + hed + '</a>'
       : '<span class="hed" style="color:var(--white);font-weight:700">' + hed + '</span>';
     const srcLine = src || '';
-    return '<article class="wire-item' + ph + '">' +
-      mediaThumb(it) +
+    const media = mediaThumb(it);
+    return '<article class="wire-item' + ph + (media ? '' : ' no-media') + '">' +
+      media +
       '<div class="body">' + link +
       '<p class="blurb">' + insight + '</p>' +
       (srcLine ? '<div class="src">' + srcLine + '</div>' : '') +

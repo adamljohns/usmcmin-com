@@ -107,6 +107,15 @@
     .offers,.include-grid,.path{grid-template-columns:1fr;}
     .c5-hero h1{font-size:30px;}
   }
+
+/* Clear the fixed masthead. `body > nav` is position:fixed and takes no space
+   in the flow, so this page's first block rendered behind it. --nav-clear is
+   defined once in assets/css/main.css; don't hard-code a pixel value here. */
+.c5-hero { padding-top: var(--nav-clear, 94px); }
+/* Fallback literal because this page pulls main.min.css from the absolute
+   https://usmcmin.com origin rather than a repo-relative path, so the
+   custom property is unavailable when previewing locally or if that
+   request ever fails. 94px = --nav-h 70px + 1.5rem. */
 </style>
 </head>
 <body>

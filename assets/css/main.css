@@ -2,6 +2,14 @@
 
 /* ── LIGHT THEME (default) — Silver/Gray motif ── */
 :root {
+  /* Height of the fixed masthead (`body > nav`). Anything that starts at the
+     top of the document is painted UNDERNEATH it, so this is the number every
+     first-content-block has to clear. Change it here, not in a page. */
+  --nav-h: 70px;
+  /* Masthead + breathing room. This is the floor for the top padding of a
+     page's first content block — see `.below-masthead` below. */
+  --nav-clear: calc(var(--nav-h) + 1.5rem);
+
   --bg-dark: #FFFFFF;
   --bg-card: #F4F5F7;
   --bg-card-2: #EBEDF0;
@@ -51,7 +59,14 @@
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-html { scroll-behavior: smooth; }
+html {
+  scroll-behavior: smooth;
+  /* Without this every in-page `#anchor` jump lands the target heading behind
+     the fixed masthead — the reader clicks "Scoring", arrives, and the heading
+     they asked for is the one line they cannot see. Measured 2026-08-10:
+     23 of 74 pages had at-risk anchors. */
+  scroll-padding-top: var(--nav-clear);
+}
 
 body {
   background: var(--bg-dark);
@@ -596,8 +611,23 @@ footer {
   position: fixed; left: 1rem; top: 1rem; width: auto; height: auto; overflow: visible;
 }
 
+/* ── CLEARING THE FIXED MASTHEAD ──────────────────────────────────────────
+   `body > nav` is position:fixed, so it takes no space in the flow and the
+   first block on a page renders behind it. `.hero` and `.page-hero` already
+   reserve the room in their own padding; every OTHER page needs to as well.
+
+   Put `class="below-masthead"` on a page's first content block — or, if that
+   block already has a padding shorthand you don't want to disturb, set
+   `padding-top: var(--nav-clear)` on it in the page's own <style>.
+
+   This was not enforced before 2026-08-10, so 15 pages each invented their own
+   top padding (0px to 48px, all short of 70px) and the first line of text sat
+   underneath the banner. Use the variable; don't invent a new number. */
+.below-masthead { padding-top: var(--nav-clear); }
+
 /* ── PAGE HERO (inner pages) ── */
 .page-hero {
+  /* 140px = --nav-h + 70px of deliberate breathing room above the h1. */
   padding: 140px 2rem 60px;
   text-align: center;
   background: radial-gradient(ellipse at top, rgba(30,58,95,0.3) 0%, transparent 60%);

@@ -44,6 +44,39 @@ TARGETS = [
 
 
 def minify_css(text):
+    # calc() requires whitespace around + and -; protect before aggressive
+    # operator trimming (2026-08-10: broke --nav-clear in main.min.css).
+    calcs = []
+
+    def stash_calcs(src):
+        out = []
+        i = 0
+        n = len(src)
+        while i < n:
+            if src.startswith('calc(', i):
+                j = i + 5
+                depth = 1
+                while j < n:
+                    ch = src[j]
+                    if ch == '(':
+                        depth += 1
+                    elif ch == ')':
+                        depth -= 1
+                        if depth == 0:
+                            calcs.append(src[i:j + 1])
+                            out.append(f'__CALC{len(calcs) - 1}__')
+                            i = j + 1
+                            break
+                    j += 1
+                else:
+                    out.append(src[i])
+                    i += 1
+            else:
+                out.append(src[i])
+                i += 1
+        return ''.join(out)
+
+    text = stash_calcs(text)
     # Remove /* ... */ comments (greedy across lines)
     text = re.sub(r'/\*[\s\S]*?\*/', '', text)
     # Collapse runs of whitespace into a single space
@@ -54,6 +87,9 @@ def minify_css(text):
     text = text.replace(';}', '}')
     # Remove leading 0 from 0.5em, 0.25rem, etc. (saves a byte)
     text = re.sub(r'(?<![\d.])0\.', '.', text)
+    for i, calc in enumerate(calcs):
+        inner = re.sub(r'\s+', ' ', calc[5:-1].strip())
+        text = text.replace(f'__CALC{i}__', f'calc({inner})')
     return text.strip()
 
 

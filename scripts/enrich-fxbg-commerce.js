@@ -86,18 +86,71 @@ async function scrape(browser, biz) {
 
     const found = await page.evaluate(() => {
       if (!document.body) return null;   // not an HTML document
-      const tels = [...document.querySelectorAll('a[href^="tel:"]')]
-        .map(a => a.getAttribute('href').replace(/^tel:/i, '').trim());
+
+      const abs = u => { try { return new URL(u, location.href).toString(); } catch { return null; } };
       const meta = sel => { const e = document.querySelector(sel); return e && e.getAttribute('content'); };
       const link = sel => { const e = document.querySelector(sel); return e && e.getAttribute('href'); };
-      return {
-        tels,
-        bodyText: (document.body.innerText || '').slice(0, 40000),
-        og: meta('meta[property="og:image"]') || meta('meta[name="og:image"]') ||
-            meta('meta[property="twitter:image"]') || meta('meta[name="twitter:image"]'),
-        touch: link('link[rel="apple-touch-icon"]') || link('link[rel="apple-touch-icon-precomposed"]'),
-        title: document.title || '',
+
+      /* ---- LOGO candidates, best source first ----
+         A business's logo is declared in a handful of standard places. Prefer
+         the ones that are unambiguous (schema.org, apple-touch-icon) over
+         guessing from the DOM. */
+      const logos = [];
+      const push = (u, source) => {
+        const a = u && abs(u);
+        if (a && !PLATFORM_CHROME.test(a)) logos.push({ url: a, source });
       };
+
+      for (const el of document.querySelectorAll('script[type="application/ld+json"]')) {
+        try {
+          const walk = node => {
+            if (!node || typeof node !== 'object') return;
+            if (Array.isArray(node)) return node.forEach(walk);
+            if (node.logo) push(typeof node.logo === 'string' ? node.logo : node.logo.url, 'json-ld');
+            Object.values(node).forEach(walk);
+          };
+          walk(JSON.parse(el.textContent));
+        } catch {}
+      }
+      push(link('link[rel="apple-touch-icon"]'), 'apple-touch-icon');
+      push(link('link[rel="apple-touch-icon-precomposed"]'), 'apple-touch-icon');
+      push(meta('meta[property="og:logo"]'), 'og:logo');
+      // a header image that calls itself a logo
+      for (const img of document.querySelectorAll('header img, .header img, nav img, .logo img, img.logo, img[class*="logo"], img[id*="logo"], img[alt*="logo" i], img[src*="logo" i]')) {
+        push(img.currentSrc || img.getAttribute('src'), 'header-img');
+        if (logos.length > 8) break;
+      }
+
+      /* ---- PHOTO candidates ----
+         og:image first (what the business chose to represent itself), then the
+         largest genuinely in-content image. Anything that looks like a logo or
+         an icon is excluded here — it will be picked up as the logo instead. */
+      /* Chrome belonging to the PLATFORM, not the business. When a business's
+         only "website" is a Facebook page we would otherwise scrape Facebook's
+         own brand mark and file it as their logo — that happened to 6 records
+         on the first two-asset run. */
+      const PLATFORM_CHROME = /facebook\.com\/images\/|\/rsrc\.php\/|fbcdn\.net\/rsrc|instagram\.com\/static\/|yelp\.com\/assets\/|etsy\.com\/images\//i;
+      const LOGOISH = /(logo|favicon|icon|brandmark|wordmark|sprite|badge)/i;
+      const photos = [];
+      const pushPhoto = (u, source) => {
+        const a = u && abs(u);
+        if (a && !LOGOISH.test(a) && !PLATFORM_CHROME.test(a)) photos.push({ url: a, source });
+      };
+      pushPhoto(meta('meta[property="og:image"]') || meta('meta[name="og:image"]'), 'og:image');
+      pushPhoto(meta('meta[property="twitter:image"]') || meta('meta[name="twitter:image"]'), 'twitter:image');
+
+      const inContent = [...document.querySelectorAll('img')]
+        .filter(i => !i.closest('header, nav, footer, .header, .footer'))
+        .map(i => ({ el: i, w: i.naturalWidth || i.width || 0, h: i.naturalHeight || i.height || 0 }))
+        .filter(o => o.w >= 400 && o.h >= 240)
+        .sort((a, b) => (b.w * b.h) - (a.w * a.h))
+        .slice(0, 4);
+      for (const o of inContent) pushPhoto(o.el.currentSrc || o.el.getAttribute('src'), 'content-image');
+
+      const tels = [...document.querySelectorAll('a[href^="tel:"]')]
+        .map(a => a.getAttribute('href').replace(/^tel:/i, '').trim());
+
+      return { tels, bodyText: (document.body.innerText || '').slice(0, 40000), logos, photos };
     });
 
     if (!found) { out.notes.push('not an HTML document'); return out; }
@@ -108,42 +161,43 @@ async function scrape(browser, biz) {
       for (const t of found.tels) {
         const norm = normalizePhone(t);
         if (!norm) continue;
-        const bare = digits(norm);
-        if (textDigits.includes(bare)) { out.phone = norm; break; }
+        if (textDigits.includes(digits(norm))) { out.phone = norm; break; }
       }
       if (!out.phone && found.tels.length) {
         out.notes.push(`tel: present but not confirmed in page text (${found.tels.length})`);
       }
     }
 
-    /* ---- image: og first, apple-touch-icon only as an explicit logo ---- */
-    const tryImage = async (src, kind) => {
-      if (!src) return null;
-      let abs;
-      try { abs = new URL(src, page.url()).toString(); } catch { return null; }
+    /* Confirm a candidate actually loads and is big enough to use. A declared
+       URL is not evidence the file exists. */
+    const measure = async (cand, minW, minH) => {
       const probe = await page.evaluate(u => new Promise(res => {
         const i = new Image();
         i.onload = () => res({ ok: true, w: i.naturalWidth, h: i.naturalHeight });
         i.onerror = () => res({ ok: false });
-        setTimeout(() => res({ ok: false, timeout: true }), 10000);
+        setTimeout(() => res({ ok: false }), 9000);
         i.src = u;
-      }), abs);
-      if (!probe.ok) return null;
-      if (probe.w < 200 || probe.h < 120) {
-        out.notes.push(`${kind} rejected, ${probe.w}x${probe.h} (too small)`);
-        return null;
-      }
-      return { url: abs, w: probe.w, h: probe.h };
+      }), cand.url).catch(() => ({ ok: false }));
+      if (!probe.ok || probe.w < minW || probe.h < minH) return null;
+      return { url: cand.url, source: cand.source, w: probe.w, h: probe.h };
     };
 
-    if (!(biz.photos && biz.photos.length)) {
-      const og = await tryImage(found.og, 'og:image');
-      if (og) out.image = og;
-      else {
-        const lg = await tryImage(found.touch, 'apple-touch-icon');
-        if (lg) out.logo = lg;
+    const seen = new Set();
+    const firstUsable = async (cands, minW, minH) => {
+      for (const c of cands) {
+        if (seen.has(c.url)) continue;
+        const m = await measure(c, minW, minH);
+        if (m) { seen.add(c.url); return m; }
       }
-    }
+      return null;
+    };
+
+    /* Logos are square-ish and can legitimately be small — 96px is plenty for a
+       card badge. Photos need to be big enough not to look degraded when they
+       fill a 16:9 frame. */
+    out.logo  = await firstUsable(found.logos, 96, 96);
+    out.image = await firstUsable(found.photos, 400, 240);
+
     return out;
   } finally {
     await ctx.close();
@@ -168,11 +222,11 @@ async function pool(items, n, worker) {
   const all = doc.businesses;
 
   const targets = all.filter(b =>
-    b.web && (!b.phone || !(b.photos && b.photos.length))
+    b.web && (!b.phone || !(b.media && b.media.logo) || !(b.media && b.media.photo))
   ).slice(0, LIMIT);
 
   console.log(`directory : ${all.length} businesses (${doc.edition}, rubric ${doc.rubric_version})`);
-  console.log(`targets   : ${targets.length}  (missing a phone or a photo, and have a website)`);
+  console.log(`targets   : ${targets.length}  (missing a phone, logo, or photo, and have a website)`);
   console.log(`mode      : ${CHECK ? 'CHECK — nothing will be written' : 'WRITE'}\n`);
 
   const browser = await chromium.launch({ headless: true });
@@ -197,37 +251,45 @@ async function pool(items, n, worker) {
   const byId = new Map(results.map(r => [r.id, r]));
   let phones = 0, photos = 0, logos = 0, dead = 0;
   const deadList = [];
+  const stamp = new Date().toISOString().slice(0, 10);
 
   for (const biz of all) {
     const r = byId.get(biz.id);
     if (!r) continue;
     if (r.phone && !biz.phone) { phones++; if (!CHECK) biz.phone = r.phone; }
-    if (r.image) {
-      photos++;
-      if (!CHECK) biz.photos = [{ url: r.image.url, kind: 'og-image', source: 'business website',
-                                   w: r.image.w, h: r.image.h, checked: new Date().toISOString().slice(0, 10) }];
-    } else if (r.logo) {
+
+    /* logo and photo are stored separately and do different jobs on a card: the
+       logo identifies the business, the photo shows the place. Neither stands in
+       for the other, which is why an og:image that is really a wordmark is
+       filed as a logo. */
+    const media = Object.assign({}, biz.media);
+    if (r.logo && !media.logo) {
       logos++;
-      if (!CHECK) biz.photos = [{ url: r.logo.url, kind: 'logo', source: 'business website',
-                                   w: r.logo.w, h: r.logo.h, checked: new Date().toISOString().slice(0, 10) }];
+      if (!CHECK) media.logo = { url: r.logo.url, w: r.logo.w, h: r.logo.h,
+                                 source: r.logo.source, checked: stamp };
     }
+    if (r.image && !media.photo) {
+      photos++;
+      if (!CHECK) media.photo = { url: r.image.url, w: r.image.w, h: r.image.h,
+                                  source: r.image.source, checked: stamp };
+    }
+    if (!CHECK && (media.logo || media.photo)) biz.media = media;
+
     const bad = r.status === 'unreachable' || /^http-[45]/.test(String(r.status));
     if (bad) {
       dead++;
       deadList.push({ id: r.id, name: r.name, web: r.web, status: r.status, note: r.notes[0] || '' });
-      // Flag for a human. Never edit or drop the website ourselves.
       if (!CHECK) {
         biz.review_flag = Object.assign({}, biz.review_flag, {
-          website_status: r.status,
-          website_checked: new Date().toISOString().slice(0, 10),
+          website_status: r.status, website_checked: stamp,
         });
       }
     }
   }
 
   console.log(`\nphones filled    : ${phones}`);
-  console.log(`photos (og)      : ${photos}`);
-  console.log(`logos only       : ${logos}`);
+  console.log(`photos added     : ${photos}`);
+  console.log(`logos added      : ${logos}`);
   console.log(`websites failing : ${dead}   <- flagged for review, not changed`);
   if (deadList.length) {
     console.log('\nsites that did not answer:');
@@ -237,17 +299,19 @@ async function pool(items, n, worker) {
 
   if (CHECK) { console.log('\n--check: nothing written.'); return; }
 
-  const withPhoto = all.filter(b => b.photos && b.photos.length).length;
+  const withPhoto = all.filter(b => b.media && b.media.photo).length;
+  const withLogo  = all.filter(b => b.media && b.media.logo).length;
+  const withBoth  = all.filter(b => b.media && b.media.photo && b.media.logo).length;
   const withPhone = all.filter(b => b.phone).length;
   doc.updated = new Date().toISOString().slice(0, 10);
   fs.writeFileSync(DATA, JSON.stringify(doc, null, 2) + '\n');
   fs.writeFileSync(REPORT, JSON.stringify({
     ran: new Date().toISOString(), edition: doc.edition,
-    totals: { businesses: all.length, withPhone, withPhoto },
+    totals: { businesses: all.length, withPhone, withPhoto, withLogo, withBoth },
     filled: { phones, photos, logos }, deadSites: deadList,
   }, null, 2) + '\n');
 
-  console.log(`\ncoverage now  phone ${withPhone}/${all.length}   photo ${withPhoto}/${all.length}`);
+  console.log(`\ncoverage now  phone ${withPhone}/${all.length}   logo ${withLogo}/${all.length}   photo ${withPhoto}/${all.length}   both ${withBoth}/${all.length}`);
   console.log(`wrote ${path.relative(REPO, DATA)}`);
   console.log(`wrote ${path.relative(REPO, REPORT)}`);
 })();

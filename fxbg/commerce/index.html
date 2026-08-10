@@ -204,15 +204,23 @@
       border-bottom: 1px solid rgba(46,204,113,0.25);
     }
   
-    /* Business card media. Photo fills the frame; a logo is contained on a
-       neutral tile because cropping a wordmark looks like a mistake. */
-    .biz-media { border-radius: 10px; overflow: hidden; margin-bottom: 10px; }
-    .biz-media img { width: 100%; display: block; }
+    /* Card media. The photo fills a 16:9 frame; the logo rides in the corner
+       on a light tile so it reads against any photograph and is never cropped
+       through the wordmark. When there is no photo the logo stands alone on a
+       neutral band rather than stretching to fill. */
+    .biz-media { position: relative; border-radius: 10px; overflow: hidden;
+      margin-bottom: 10px; background: #10131a; }
     .biz-media--photo { aspect-ratio: 16 / 9; }
-    .biz-media--photo img { width: 100%; height: 100%; object-fit: cover; }
-    .biz-media--logo { aspect-ratio: 16 / 9; background: #10131a;
-      display: flex; align-items: center; justify-content: center; padding: 12px; }
-    .biz-media--logo img { max-height: 100%; width: auto; object-fit: contain; }
+    .biz-media--photo > img:first-child { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .biz-media--photo.is-empty > img:first-child { display: none; }
+    .biz-media--logoonly { aspect-ratio: 16 / 5; display: flex;
+      align-items: center; justify-content: center; padding: 10px; }
+    .biz-logo { max-width: 92px; max-height: 46px; width: auto; height: auto;
+      object-fit: contain; display: block; }
+    .biz-media--photo .biz-logo { position: absolute; left: 10px; bottom: 10px;
+      max-width: 84px; max-height: 40px; padding: 6px 8px; border-radius: 8px;
+      background: rgba(255,255,255,0.92);
+      box-shadow: 0 2px 10px rgba(0,0,0,0.35); }
 
     .biz-card { min-width: 0; }
     /* Long addresses and hyphen-free category slugs ("brewery-restaurant ·
@@ -330,15 +338,23 @@
       if (el) {
         el.innerHTML = list.map(b => {
           const c = bandColor[b.overall] || bandColor.gray;
-          /* A photo of the place is cropped to fill; a logo is contained on a
-             neutral tile so it is not cropped through the wordmark. The data
-             says which it is — see scripts/enrich-fxbg-commerce.js. A card with
-             no image simply has none rather than a shared placeholder. */
-          const ph = (b.photos && b.photos[0]) || null;
-          const media = ph ? `<div class="biz-media biz-media--${ph.kind==='logo'?'logo':'photo'}">
-              <img src="${ph.url}" alt="" loading="lazy" decoding="async"
-                   onerror="this.closest('.biz-media').remove()">
-            </div>` : '';
+          /* Two assets, two jobs. The photo shows the place and fills a 16:9
+             frame; the logo identifies the business and sits as a badge over
+             the corner of it, contained so a wordmark is never cropped. A card
+             with neither simply has no media — no shared placeholder. */
+          const m = b.media || {};
+          const logoTag = m.logo ? `<img class="biz-logo" src="${m.logo.url}" alt=""
+                loading="lazy" decoding="async" onerror="this.remove()">` : '';
+          let media = '';
+          if (m.photo) {
+            media = `<div class="biz-media biz-media--photo">
+              <img src="${m.photo.url}" alt="" loading="lazy" decoding="async"
+                   onerror="this.closest('.biz-media').classList.add('is-empty')">
+              ${logoTag}
+            </div>`;
+          } else if (m.logo) {
+            media = `<div class="biz-media biz-media--logoonly">${logoTag}</div>`;
+          }
           return `<div class="biz-card" style="border-color:${c}55;background:linear-gradient(160deg,${c}14,transparent 55%),var(--bg-card)">
             ${media}
             <div class="eyebrow" style="color:${c}">${(b.overall||'gray').toUpperCase()}${b.featured?' · Featured':''}</div>

@@ -96,7 +96,13 @@
 /* Clear the fixed masthead. `body > nav` is position:fixed and takes no space
    in the flow, so this page's first block rendered behind it. --nav-clear is
    defined once in assets/css/main.css; don't hard-code a pixel value here. */
-.hr-hero { padding-top: var(--nav-clear); }
+.hr-hero {
+  /* The hero is flex-centred inside a 320px min-height, so centring pulls tall
+     content back up toward the masthead and padding-top alone left only 5px of
+     clearance. Bumping the floor and letting the box grow gives real headroom. */
+  padding-top: calc(var(--nav-clear) + 1.5rem);
+  padding-bottom: 2rem;
+}
 </style>
 </head>
 <body>

@@ -798,9 +798,14 @@ footer {
    guard), so no per-page markup change is needed. */
 .theme-toggle {
   position: relative; box-sizing: border-box;
-  width: 118px; min-width: 118px; height: 28px;
+  /* 44px, not 28px. This is a primary control on every page and 28px is well
+     under the 44px minimum a thumb can hit reliably; Adam okayed the size
+     change on 2026-08-10. The ::before label and ::after knob both position
+     against this box (top:0/bottom:0 and top:50%), so they re-centre on their
+     own — no other change needed. */
+  width: 118px; min-width: 118px; height: 44px;
   margin-left: 0.5rem; padding: 0; flex-shrink: 0;
-  border: 1px solid var(--border); border-radius: 14px;
+  border: 1px solid var(--border); border-radius: 22px;
   background: var(--bg-card-2);
   cursor: pointer; overflow: hidden; vertical-align: middle;
   font-size: 0; color: transparent; line-height: 1;

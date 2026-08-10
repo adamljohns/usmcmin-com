@@ -119,3 +119,34 @@ Each wave re-runs `scripts/audit-header-overlap.js` and
 The shield mark on `--feature` page-heads: yes on section landings only, or not
 at all? My recommendation is section landings only — roughly six pages. Putting
 it on every page-head is how a mark stops carrying weight.
+
+---
+
+## 9. Rollout attempt 1 — what went wrong (2026-08-10)
+
+Wave 2 was attempted and **reverted before shipping**. Worth recording so it is
+not retried the same way.
+
+The RESOLUTE cluster (`state`, `stats`, `map`, `compare`, `how-to-use`,
+`find-my-reps`) all share the shape
+`div.<x>-container > div.<x>-hero > span.<x>-hero-badge + h1 + p`, so adding
+`page-hero-eyebrow` to the badge span looked like a one-line conversion.
+
+Two things broke it:
+
+1. **Each page's own badge rule still won.** Those styles live in the page's
+   inline `<style>`, which comes after the external sheet, so the eyebrow's
+   font-size and tracking were overridden. Computed sizes stayed at 10.56px and
+   11.2px instead of the system's 12.16px — the pages ended up *differently*
+   inconsistent, which is worse than leaving them alone.
+2. **The badge is a pill, the eyebrow is not.** `.page-hero-eyebrow::after`
+   draws a 48px rule beneath the label. Applied to a pill-shaped badge it drew a
+   horizontal line *inside* the pill, which reads as a rendering bug.
+
+**The lesson:** this component cannot be adopted by adding a class. A page
+converts by replacing its head markup and deleting its own head rules, or it
+does not convert. Half-adoption is a regression.
+
+So wave 2 should be done **one page at a time, with a render check on each**,
+not as a bulk class sweep. Budget accordingly — six pages is an afternoon, not
+a script.

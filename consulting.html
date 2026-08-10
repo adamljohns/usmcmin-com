@@ -55,7 +55,11 @@
             background: rgba(0,0,0,0.95);
             position: sticky; top: 0; z-index: 100;
         }
-        nav a {
+        /* :not(.nav-brand) — the brand is an <a> too, and this rule's
+           white-space:nowrap out-specified `.nav-brand`, forcing
+           "U.S.M.C. Ministries" onto one line where it ran underneath the
+           theme toggle at 390px. Nav LINKS should not wrap; the brand should. */
+        nav a:not(.nav-brand) {
             color: var(--gray); text-decoration: none; font-size: 0.85rem;
             font-weight: 500; padding: 5px 12px; border-radius: 20px;
             border: 1px solid transparent; transition: all 0.2s;
@@ -66,6 +70,12 @@
 
         /* ── Hero ────────────────────────────────────── */
         .hero {
+            /* The shared main.css `.hero` is display:flex/row for the
+               full-viewport homepage hero. This page reuses the class name for
+               an ordinary page header whose children are meant to stack, so it
+               must opt back out of flex or the h1 and paragraphs lay out in a
+               single row (h1 ended up off-screen left at 390px). */
+            display: block;
             text-align: center;
             padding: 70px 20px 55px;
             background: linear-gradient(180deg, rgba(168,176,188,0.1) 0%, transparent 100%);
@@ -280,7 +290,13 @@
         .hamburger { display:none; background:none; border:none; color:var(--gold); font-size:1.5rem; cursor:pointer; padding:8px 12px; }
         @media (max-width: 640px) {
             nav { flex-wrap:nowrap; justify-content:space-between; align-items:center; }
-            nav .nav-brand { color:var(--gold) !important; font-weight:600; font-size:0.9rem; white-space:nowrap; }
+            nav .nav-brand {
+            color:var(--gold) !important; font-weight:600; font-size:0.9rem;
+            /* `white-space:nowrap` was here and forced "U.S.M.C. Ministries"
+               onto one line, which then ran 5px underneath the theme toggle
+               at 390px. Every other page lets the brand wrap to two lines. */
+            min-width: 0;
+        }
             .hamburger { display:block; }
             nav .nav-links { display:none; flex-basis:100%; flex-direction:column; gap:4px; padding-top:10px; }
             nav .nav-links.open { display:flex; }

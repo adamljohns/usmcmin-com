@@ -30,22 +30,35 @@ def website(c):
     return c.get("website") or (c.get("profile") or {}).get("campaign_website")
 
 
+def strikes(c):
+    try:
+        return int((c.get("profile") or {}).get("grind_strikes") or 0)
+    except (TypeError, ValueError):
+        return 0
+
+
 def rank(c):
+    # Fewest grind strikes FIRST — a candidate the grind already struck out on drops behind
+    # every fresh candidate, so the pool head can't clog with permanent no-source strikeouts
+    # (the Aug-7 hamster wheel: the same 20 MD delegates re-ground every round forever).
     st = c.get("state") or "ZZ"
     tier = 0 if st in HIGH else (2 if st in DEFER else 1)
     hi = HIGH.index(st) if st in HIGH else 99
-    return (tier, hi, st, c.get("slug") or "")
+    return (strikes(c), tier, hi, st, c.get("slug") or "")
 
 
 def main():
     C = json.load(open("data/scorecard.json"))["candidates"]
-    pool = [c for c in C if active(c) and not evid(c) and website(c)]
+    # 3 strikes = out of the rotation (until a new source class resets the game)
+    pool = [c for c in C if active(c) and not evid(c) and website(c) and strikes(c) < 3]
     pool.sort(key=rank)
     batch = [{
         "slug": c["slug"], "name": c.get("name"), "state": c.get("state"),
         "level": c.get("level"), "party": c.get("party"), "office": c.get("office"),
         "website": c.get("website"),
         "campaign_website": (c.get("profile") or {}).get("campaign_website"),
+        "records_website": (c.get("profile") or {}).get("records_website"),
+        "grind_strikes": strikes(c),
         # carried so a discovery-only bank can RE-STATE the existing confidence verbatim.
         # refine-records stamps evidence_<tier> on any record whose profile arrives WITHOUT a
         # confidence key — which would falsely mark an unscored candidate "evidence-reviewed".

@@ -25,19 +25,24 @@ def main():
         st = (r.get("state") or "").upper()
         key = f"{r['slug']}@{st}" if st else r["slug"]
 
-        # BANK THE DISCOVERY even when the candidate yielded nothing. A Brave-found campaign
-        # site is a durable asset: persisting it to profile.campaign_website means the query is
-        # spent once per candidate ever, the record stops looking "thin", and every later round
-        # reads the good source for free. Without this we'd re-discover the same sites forever.
+        # ZERO-YIELD: bank any discoveries AND mark the ATTEMPT (strike). The strike is what
+        # un-clogs the pool head — the selector sorts fewest-strikes-first and benches 3+, so
+        # a no-source candidate can't be re-ground every round forever (the Aug-7 hamster wheel).
+        # Banking a source is NOT evidence: RE-STATE the existing confidence explicitly (even
+        # null) or refine-records stamps evidence_<tier> on the record. (Happened 7-16.)
         if not findings:
+            prof = {"grind_attempted": today,
+                    "grind_strikes": int(r.get("grind_strikes") or 0) + 1,
+                    "confidence": r.get("existing_confidence")}
             if r.get("source_discovered") and r.get("campaign_website"):
-                # Banking a source is NOT evidence. refine-records stamps evidence_<tier> on any
-                # record whose profile arrives with no confidence key, so RE-STATE the existing
-                # value explicitly (even when null) — otherwise banking a URL silently promotes
-                # an unscored candidate to "evidence-reviewed" with 0 claims. (Happened 7-16.)
-                records[key] = {"profile": {"campaign_website": r["campaign_website"],
-                                            "source_discovered_date": today,
-                                            "confidence": r.get("existing_confidence")}}
+                prof["campaign_website"] = r["campaign_website"]
+                prof["source_discovered_date"] = today
+                prof["grind_strikes"] = int(r.get("grind_strikes") or 0)  # new source = no strike; retry next round
+            if r.get("records_discovered") and r.get("records_website"):
+                prof["records_website"] = r["records_website"]
+                prof["source_discovered_date"] = today
+                prof["grind_strikes"] = int(r.get("grind_strikes") or 0)  # new source = no strike
+            records[key] = {"profile": prof}
             continue
 
         evidence, srcs = {}, []
@@ -55,8 +60,12 @@ def main():
             "confidence_note": f"Local-grind (Qwen finds + Gemma cross-check, verbatim-verified) {today}",
             "last_refined": today,
         }
+        prof["grind_strikes"] = 0   # scored — clear the bench count
         if r.get("source_discovered") and r.get("campaign_website"):
             prof["campaign_website"] = r["campaign_website"]
+            prof["source_discovered_date"] = today
+        if r.get("records_discovered") and r.get("records_website"):
+            prof["records_website"] = r["records_website"]
             prof["source_discovered_date"] = today
         records[key] = {
             "profile": prof,

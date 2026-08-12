@@ -98,8 +98,29 @@ def main():
     slp = float(sys.argv[sys.argv.index("--sleep") + 1]) if "--sleep" in sys.argv else 0.4
     batch = json.load(open(src))
     key = brave_key()
-    found = spent = 0
+    found = spent = rec_found = 0
+
+    # ---- Pass 2 target: the voting-RECORD page (LegiScan). For the ~2/3 of state legislators
+    # with no campaign site, sponsorships/roll-calls are the quotable evidence — bill titles
+    # appear verbatim on legiscan.com person pages, so the verbatim gate works unchanged.
+    LEGISCAN_RE = re.compile(r"https?://legiscan\.com/[A-Z]{2}/people/[A-Za-z0-9_\-]+", re.I)
+
     for c in batch:
+        if (c.get("level") == "state" and not c.get("records_website") and spent < mx):
+            q2 = f'"{c.get("name")}" {c.get("state")} site:legiscan.com'
+            try:
+                res2 = brave_search(key, q2, count=5)
+                spent += 1
+                hit = next((m.group(0) for r in res2
+                            for m in [LEGISCAN_RE.search(r.get("url") or "")] if m), None)
+                if hit:
+                    c["records_website"] = hit
+                    c["records_discovered"] = True
+                    rec_found += 1
+                    print(f"  R {c['slug']:26} -> {hit}")
+            except Exception as e:
+                print(f"  brave error (records) for {c['slug']}: {str(e)[:60]}")
+            time.sleep(slp)
         if not looks_thin(c) or spent >= mx:
             continue
         office = (c.get("office") or "").split("(")[0].strip()
@@ -121,8 +142,8 @@ def main():
             print(f"  . {c['slug']:26} (no campaign site found)")
         time.sleep(slp)
     json.dump(batch, open(out, "w"), indent=1)
-    print(f"wrote {out}: {found} campaign site(s) discovered on {spent} Brave quer(ies), "
-          f"{len(batch)} candidates in batch")
+    print(f"wrote {out}: {found} campaign site(s) + {rec_found} records page(s) discovered "
+          f"on {spent} Brave quer(ies), {len(batch)} candidates in batch")
 
 
 if __name__ == "__main__":

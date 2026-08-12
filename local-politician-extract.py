@@ -153,7 +153,7 @@ def applicable_questions(categories, level):
 
 def build_sources(c):
     urls = []
-    for u in (c.get("website"), c.get("campaign_website")):
+    for u in (c.get("website"), c.get("campaign_website"), c.get("records_website")):
         if u:
             urls.append(str(u).rstrip("/"))
     nm = (c.get("name") or "").strip()
@@ -180,7 +180,9 @@ def gather_pages(bases):
     candidate /issues pages are gold; homepages and nav-heavy pages sink. -> [(url, text)]"""
     pages = []
     for base in bases:
-        cands = [base + p for p in ISSUE_PATHS] if "ballotpedia.org" not in base else [base]
+        # single-page sources: appending /issues paths to these just 404s
+        single = any(h in base for h in ("ballotpedia.org", "legiscan.com"))
+        cands = [base] if single else [base + p for p in ISSUE_PATHS]
         tried, discovered, got = set(), False, 0
         idx = 0
         while idx < len(cands) and got < 6 and len(tried) < 12:
@@ -192,7 +194,7 @@ def gather_pages(bases):
                 raw = fetch(url)
             except Exception:
                 continue
-            if not discovered and "ballotpedia.org" not in base:
+            if not discovered and not single:
                 discovered = True
                 cands.extend(u for u in discover_links(raw, base) if u not in tried)
             txt = to_text(raw)
@@ -268,6 +270,9 @@ def main():
                "campaign_website": c.get("campaign_website"),
                "source_discovered": bool(c.get("source_discovered")),
                "existing_confidence": c.get("confidence"),   # preserved on discovery-only banks
+               "records_website": c.get("records_website"),
+               "records_discovered": bool(c.get("records_discovered")),
+               "grind_strikes": c.get("grind_strikes") or 0,
                "sources_fetched": [], "findings": [], "held": [], "status": "no_sources"}
         pages = gather_pages(build_sources(c))
         rec["sources_fetched"] = [u for u, _ in pages]

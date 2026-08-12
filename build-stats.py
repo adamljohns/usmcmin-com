@@ -162,7 +162,10 @@ def compute():
             all(x is None for x in (scores.get(cat) or [None]))
             for cat in scores
         ) if scores else True
-        if has_verified:
+        # evidence_reviewed = verified claims[] (frontier enrich-batches) OR an
+        # evidence_* confidence (grind/dossier-refined records carry their evidence
+        # in scores+footnotes with ZERO claims[] — claims-count alone undercounts).
+        if has_verified or conf.startswith('evidence'):
             confidence_counts['evidence_reviewed'] += 1
         elif conf == 'party_default':
             confidence_counts['party_default'] += 1

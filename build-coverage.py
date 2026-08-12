@@ -48,14 +48,15 @@ LEVELS = ('federal', 'state', 'local')
 
 
 def is_evidence_scored(c):
-    """True if the candidate has >=1 answer carrying a citation footnote."""
-    af = c.get('answer_footnotes') or {}
-    for refs_per_q in af.values():
-        if isinstance(refs_per_q, list):
-            for refs in refs_per_q:
-                if isinstance(refs, list) and refs:
-                    return True
-    return False
+    """The site's ONE honest evidence line (same as build-stats.py):
+    an evidence_* confidence (individually researched, verbatim/cited — grind or dossier)
+    OR at least one verified claims[] entry (frontier enrich-batches).
+    Footnote-refs alone do NOT count: legacy bulk scaffolding carries answer_footnotes on
+    party-default records, which inflated this metric to a false 85% (2026-08-12)."""
+    conf = ((c.get('profile') or {}).get('confidence') or '')
+    if conf.startswith('evidence'):
+        return True
+    return any(cl.get('verified') for cl in (c.get('claims') or []))
 
 
 def pct(scored, total):

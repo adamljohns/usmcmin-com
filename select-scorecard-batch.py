@@ -8,7 +8,7 @@ swing-state legislatures (the ~7k-record frontier), then everyone else.
 
 Usage: select-scorecard-batch.py [N] [OUT.json]
 """
-import json, sys
+import json, re, sys
 
 N = int(sys.argv[1]) if len(sys.argv) > 1 else 20
 OUT = sys.argv[2] if len(sys.argv) > 2 else "/tmp/scorecard-local-batch.json"
@@ -37,14 +37,28 @@ def strikes(c):
         return 0
 
 
+GOV_SITE = re.compile(r"\.gov|legis|assembly|senate\.|house\.|mgaleg|capitol|\.state\.", re.I)
+
+
+def yield_tier(c):
+    """Score-likelihood first: a candidate with a real campaign/personal site yields verbatim
+    evidence at several times the rate of a gov-bio-only legislator, so work them first.
+    0 = campaign site on file/banked · 1 = non-gov website · 2 = gov bio only (needs discovery)."""
+    if (c.get("profile") or {}).get("campaign_website"):
+        return 0
+    w = c.get("website") or ""
+    return 1 if (w and not GOV_SITE.search(w)) else 2
+
+
 def rank(c):
     # Fewest grind strikes FIRST — a candidate the grind already struck out on drops behind
     # every fresh candidate, so the pool head can't clog with permanent no-source strikeouts
     # (the Aug-7 hamster wheel: the same 20 MD delegates re-ground every round forever).
+    # Then YIELD tier, then civic-impact state order.
     st = c.get("state") or "ZZ"
     tier = 0 if st in HIGH else (2 if st in DEFER else 1)
     hi = HIGH.index(st) if st in HIGH else 99
-    return (strikes(c), tier, hi, st, c.get("slug") or "")
+    return (strikes(c), yield_tier(c), tier, hi, st, c.get("slug") or "")
 
 
 def main():

@@ -261,7 +261,7 @@ def main():
     batch = json.load(open(batch_path))
     results = []
 
-    for i, c in enumerate(batch, 1):
+    def process_candidate(c):
         slug, name, level = c["slug"], c.get("name"), c.get("level") or "state"
         rec = {"slug": slug, "state": c.get("state"), "level": level, "name": name,
                "party": c.get("party"), "office": c.get("office"),
@@ -277,9 +277,7 @@ def main():
         pages = gather_pages(build_sources(c))
         rec["sources_fetched"] = [u for u, _ in pages]
         if not pages:
-            results.append(rec)
-            print(f"  [{i}/{len(batch)}] {slug}: no fetchable sources")
-            continue
+            return rec, f"{slug}: no fetchable sources"
 
         quote_uses = {}   # one sentence must not fill a whole category — see MAX_CELLS_PER_QUOTE
         qlist = applicable_questions(categories, level)
@@ -292,9 +290,7 @@ def main():
             proposals = parse_findings(chat(qwen, qmodel, EXTRACT_SYS, user, max_tokens=1400))
         except Exception as e:
             rec["status"] = "extract_error"; rec["error"] = str(e)[:120]
-            results.append(rec)
-            print(f"  [{i}/{len(batch)}] {slug}: extract error {str(e)[:60]}")
-            continue
+            return rec, f"{slug}: extract error {str(e)[:60]}"
 
         for p in proposals:
             if not isinstance(p, dict):
@@ -342,9 +338,16 @@ def main():
                                     "score_impact": (stance == "support"),
                                     "quote": quote, "source_url": src, "claim_text": text})
         rec["status"] = "ok" if rec["findings"] else ("held_only" if rec["held"] else "no_findings")
-        results.append(rec)
-        print(f"  [{i}/{len(batch)}] {slug}: {len(rec['findings'])} verified, "
-              f"{len(rec['held'])} held  ({rec['status']}, {len(pages)} pages)")
+        return rec, (f"{slug}: {len(rec['findings'])} verified, "
+                     f"{len(rec['held'])} held  ({rec['status']}, {len(pages)} pages)")
+
+    # 4-wide: page-fetching overlaps (the big wall-clock win); LLM calls simply queue at the
+    # servers. Gates are per-candidate and share no mutable state, so quality is unchanged.
+    from concurrent.futures import ThreadPoolExecutor
+    with ThreadPoolExecutor(max_workers=4) as ex:
+        for i, (rec, line) in enumerate(ex.map(process_candidate, batch), 1):
+            results.append(rec)
+            print(f"  [{i}/{len(batch)}] {line}", flush=True)
 
     out = {"generated": time.strftime("%Y-%m-%dT%H:%M:%S"), "extractor": "local-" + qmodel.split("/")[-1],
            "crosscheck": bool(crosscheck), "candidates": results}

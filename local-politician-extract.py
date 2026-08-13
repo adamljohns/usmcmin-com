@@ -275,9 +275,22 @@ def main():
                "grind_strikes": c.get("grind_strikes") or 0,
                "sources_fetched": [], "findings": [], "held": [], "status": "no_sources"}
         pages = gather_pages(build_sources(c))
+        # IDENTITY GATE: a page can only be evidence about THIS candidate if it actually names
+        # them. Roster-era data sometimes attached the WRONG rep's site (kathy-l-rapp ->
+        # repbashline.com), and the verbatim gate alone would happily quote the wrong person's
+        # positions onto this candidate's card. Surname-missing pages are dropped entirely.
+        surname = norm(re.sub(r"\s+(jr|sr|ii|iii|iv)\.?$", "", (name or ""), flags=re.I)).split()[-1] if name else ""
+        if surname:
+            named = [(u, t) for u, t in pages if surname in norm(t)]
+            dropped = len(pages) - len(named)
+            pages = named
+        else:
+            dropped = 0
         rec["sources_fetched"] = [u for u, _ in pages]
         if not pages:
-            return rec, f"{slug}: no fetchable sources"
+            rec["status"] = "no_identified_sources" if dropped else "no_sources"
+            return rec, (f"{slug}: {dropped} page(s) dropped by identity gate — no usable sources"
+                         if dropped else f"{slug}: no fetchable sources")
 
         quote_uses = {}   # one sentence must not fill a whole category — see MAX_CELLS_PER_QUOTE
         qlist = applicable_questions(categories, level)

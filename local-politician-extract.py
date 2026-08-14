@@ -174,14 +174,50 @@ JUNK = re.compile(r"complete the Captcha|receive Ballotpedia|enable JavaScript|A
                   r"are you a robot|too many requests|verifying you are human", re.I)
 
 
-def gather_pages(bases):
+def legiscan_api_page(url, name=None, state=None):
+    """Pull a legislator's sponsorship record via the LegiScan Public API.
+
+    legiscan.com HTML is Cloudflare-blocked (and scraping is prohibited). Banked
+    profile.records_website URLs are resolved through legiscan_client.py instead,
+    which caches + budgets queries and synthesizes quotable sponsorship text for
+    the verbatim gate. Returns (url, text) or None.
+    """
+    try:
+        from legiscan_client import person_record_text, LegiScanError
+    except ImportError as e:
+        print(f"  legiscan: client import failed: {e}", file=sys.stderr)
+        return None
+    try:
+        out = person_record_text(url, name or "", state=state)
+    except LegiScanError as e:
+        print(f"  legiscan: {e}", file=sys.stderr)
+        return None
+    except Exception as e:
+        print(f"  legiscan unexpected: {str(e)[:80]}", file=sys.stderr)
+        return None
+    if not out:
+        return None
+    pub, text = out
+    if len(text) < 300:
+        return None
+    return pub, text[:14000]
+
+
+def gather_pages(bases, name=None, state=None):
     """Fetch each base's homepage + issue paths + discovered issue links, then rank by
     issue-richness so real position prose leads (and survives the combined-text cap) —
-    candidate /issues pages are gold; homepages and nav-heavy pages sink. -> [(url, text)]"""
+    candidate /issues pages are gold; homepages and nav-heavy pages sink. -> [(url, text)]
+
+    LegiScan person URLs are fetched via the Public API (not HTML)."""
     pages = []
     for base in bases:
+        if "legiscan.com" in base:
+            hit = legiscan_api_page(base, name=name, state=state)
+            if hit:
+                pages.append(hit)
+            continue
         # single-page sources: appending /issues paths to these just 404s
-        single = any(h in base for h in ("ballotpedia.org", "legiscan.com"))
+        single = "ballotpedia.org" in base
         cands = [base] if single else [base + p for p in ISSUE_PATHS]
         tried, discovered, got = set(), False, 0
         idx = 0
@@ -205,15 +241,17 @@ def gather_pages(bases):
 
     def issue_score(p):
         u, t = p
-        return (4 if ISSUEY.search(u) else 0) + min(len(ISSUE_KW.findall(t)), 30)
+        bonus = 5 if "legiscan.com" in u else (4 if ISSUEY.search(u) else 0)
+        return bonus + min(len(ISSUE_KW.findall(t)), 30)
     pages.sort(key=issue_score, reverse=True)
     return pages
 
 
 EXTRACT_SYS = (
     "You are a meticulous, nonpartisan political researcher building a voter scorecard. "
-    "From the SOURCE TEXT (the candidate's own site and/or Ballotpedia), decide which NUMBERED "
-    "POSITIONS the candidate's record or clearly stated views SUPPORT or OPPOSE. "
+    "From the SOURCE TEXT (the candidate's own site, Ballotpedia, and/or LegiScan sponsorship "
+    "record), decide which NUMBERED POSITIONS the candidate's record or clearly stated views "
+    "SUPPORT or OPPOSE. "
     "Reply with ONLY a JSON array, no prose. Each element: "
     '{"n": <position number>, "stance": "support"|"oppose", "quote": "<sentence copied EXACTLY from the source text>"}. '
     "HARD RULES: (1) The quote MUST be copied word-for-word from the SOURCE TEXT — never paraphrase, "
@@ -221,6 +259,8 @@ EXTRACT_SYS = (
     "(2) 'support' = the candidate affirms/advances the position as written; 'oppose' = the candidate's "
     "record or words contradict it. (3) Only include a position with clear, on-point evidence — when unsure, "
     "OMIT it (a blank is required; a wrong answer is unacceptable). (4) Do not infer from party. "
+    "(5) For LegiScan sponsorship lines, a bill the candidate sponsored is evidence they SUPPORT "
+    "what that bill does — copy the sponsorship sentence exactly; do not invent roll-call votes. "
     'Example of the required shape: [{"n": 7, "stance": "support", "quote": "exact sentence copied from the source text"}]'
 )
 
@@ -274,11 +314,12 @@ def main():
                "records_discovered": bool(c.get("records_discovered")),
                "grind_strikes": c.get("grind_strikes") or 0,
                "sources_fetched": [], "findings": [], "held": [], "status": "no_sources"}
-        pages = gather_pages(build_sources(c))
+        pages = gather_pages(build_sources(c), name=name, state=c.get("state"))
         # IDENTITY GATE: a page can only be evidence about THIS candidate if it actually names
         # them. Roster-era data sometimes attached the WRONG rep's site (kathy-l-rapp ->
         # repbashline.com), and the verbatim gate alone would happily quote the wrong person's
         # positions onto this candidate's card. Surname-missing pages are dropped entirely.
+        # LegiScan API pages always embed the resolved sponsor name, so they pass when correct.
         surname = norm(re.sub(r"\s+(jr|sr|ii|iii|iv)\.?$", "", (name or ""), flags=re.I)).split()[-1] if name else ""
         if surname:
             named = [(u, t) for u, t in pages if surname in norm(t)]

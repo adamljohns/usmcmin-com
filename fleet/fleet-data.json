@@ -1,29 +1,27 @@
 {
-  "generated": "2026-08-15T11:07:25.837103+00:00",
+  "generated": "2026-08-15T12:07:30.473042+00:00",
   "totals": {
     "agents": 16,
-    "operational": 15,
-    "degraded": 1,
+    "operational": 16,
+    "degraded": 0,
     "jobs": 130,
     "enabled": 100,
-    "accomplishments": 398,
+    "accomplishments": 399,
     "cowork": 41
   },
   "health": {
     "cron": {
       "enabled": 100,
-      "ran26h": 58,
-      "delivered": 53,
+      "ran26h": 61,
+      "delivered": 56,
       "fails": []
     },
     "cron_source": "openclaw.sqlite + hermes/cron/jobs.json",
     "launchd": {
-      "healthy": 63,
+      "healthy": 65,
       "fails": [
-        "com.moop.fit20-inbox-rounds: exit 1",
         "com.moop.chatgpt-export-watcher: exit 2",
         "com.moop.calendar-invite-watcher: exit 2",
-        "com.moop.usmc-inbox-rounds: exit 1",
         "com.moop.evening-wrap: exit 1",
         "com.moop.pj-third-grp: exit 3"
       ]
@@ -39,7 +37,7 @@
     {
       "label": "Command Surface Sync",
       "purpose": "Command DB \u2192 Obsidian / TACC / workflows",
-      "last": "2026-08-14T22:27:09-04:00",
+      "last": "2026-08-15T07:47:12-04:00",
       "status": "local-only"
     },
     {
@@ -126,7 +124,7 @@
       "n_jobs": 25,
       "n_enabled": 13,
       "err": 0,
-      "last_ms": 1786791692419,
+      "last_ms": 1786795325051,
       "status": "operational",
       "accomplishments": [
         {
@@ -336,10 +334,10 @@
           "expr": "0 * * * *",
           "tz": "",
           "channel": "last",
-          "last_ms": 1786791692419,
+          "last_ms": 1786795325051,
           "status": "ok",
           "errors": 0,
-          "dur_ms": 87
+          "dur_ms": 84
         },
         {
           "name": "Weekly Self-Audit (Sat 05:57 ET)",
@@ -609,7 +607,7 @@
     },
     {
       "id": "hermes",
-      "primary": "openai-codex/gpt-5.6-sol",
+      "primary": "custom/gpt-5.6-sol",
       "fallback": "openai-codex/gpt-5.5",
       "fallbacks": [
         "openai-codex/gpt-5.5",
@@ -894,7 +892,7 @@
       "n_jobs": 0,
       "n_enabled": 0,
       "err": 0,
-      "last_ms": 1786756003259,
+      "last_ms": 1786793704359,
       "status": "operational",
       "accomplishments": [
         {
@@ -991,7 +989,7 @@
       "n_jobs": 0,
       "n_enabled": 0,
       "err": 0,
-      "last_ms": 1786731590788,
+      "last_ms": 1786792600070,
       "status": "operational",
       "accomplishments": [
         {
@@ -2056,9 +2054,14 @@
       "n_jobs": 17,
       "n_enabled": 15,
       "err": 0,
-      "last_ms": 1786759800235,
+      "last_ms": 1786793400044,
       "status": "operational",
       "accomplishments": [
+        {
+          "date": "2026-08-15",
+          "title": "Carnegie \u2014 Twenty-Minute Capital Review \u2014 2026-08-15",
+          "detail": "PDF shipped via psa-send-pdf.sh \u00b7 file=2026-08-15-twenty-minute-capital-review"
+        },
         {
           "date": "2026-08-11",
           "title": "Carnegie \u2014 Boaz money explainer (simple) \u2014 2026-08-11",
@@ -2240,7 +2243,7 @@
         "browser_profile": "c5isr",
         "files": {
           "AGENTS.md": 43248,
-          "MEMORY.md": 61126,
+          "MEMORY.md": 61851,
           "HEARTBEAT.md": 5705
         },
         "verified": "2026-08-15"
@@ -2303,6 +2306,39 @@
       },
       "jobs": [
         {
+          "name": "C5iSR SATURDAY \u2014 RESOURCE SHARE",
+          "enabled": true,
+          "expr": "30 7 * * 6",
+          "tz": "America/New_York",
+          "channel": "telegram",
+          "last_ms": 1786793400044,
+          "status": "ok",
+          "errors": 0,
+          "dur_ms": 56464
+        },
+        {
+          "name": "C5iSR PRE-WARMUP (Qwen 32B before daily post)",
+          "enabled": true,
+          "expr": "25 7 * * 1-6",
+          "tz": "America/New_York",
+          "channel": "",
+          "last_ms": 1786793100029,
+          "status": "ok",
+          "errors": 0,
+          "dur_ms": 3434
+        },
+        {
+          "name": "C5iSR Price Pre-Fetch (7:23AM Mon-Sat)",
+          "enabled": true,
+          "expr": "23 7 * * 1-6",
+          "tz": "",
+          "channel": "",
+          "last_ms": 1786792982079,
+          "status": "ok",
+          "errors": 0,
+          "dur_ms": 943
+        },
+        {
           "name": "Dev Loop: carnegie daily reflection (implement-or-escalate)",
           "enabled": true,
           "expr": "10 22 * * *",
@@ -2356,28 +2392,6 @@
           "status": "ok",
           "errors": 0,
           "dur_ms": 153000
-        },
-        {
-          "name": "C5iSR PRE-WARMUP (Qwen 32B before daily post)",
-          "enabled": true,
-          "expr": "25 7 * * 1-6",
-          "tz": "America/New_York",
-          "channel": "",
-          "last_ms": 1786706700036,
-          "status": "ok",
-          "errors": 0,
-          "dur_ms": 3713
-        },
-        {
-          "name": "C5iSR Price Pre-Fetch (7:23AM Mon-Sat)",
-          "enabled": true,
-          "expr": "23 7 * * 1-6",
-          "tz": "",
-          "channel": "",
-          "last_ms": 1786706580067,
-          "status": "ok",
-          "errors": 0,
-          "dur_ms": 905
         },
         {
           "name": "C5iSR THURSDAY \u2014 KINGDOM FINANCE",
@@ -2444,17 +2458,6 @@
           "status": "ok",
           "errors": 0,
           "dur_ms": 40427
-        },
-        {
-          "name": "C5iSR SATURDAY \u2014 RESOURCE SHARE",
-          "enabled": true,
-          "expr": "30 7 * * 6",
-          "tz": "America/New_York",
-          "channel": "telegram",
-          "last_ms": 1786188600064,
-          "status": "ok",
-          "errors": 0,
-          "dur_ms": 28935
         },
         {
           "name": "Skill: tax-deadlines (monthly)",
@@ -2549,9 +2552,9 @@
       ],
       "n_jobs": 10,
       "n_enabled": 8,
-      "err": 1,
-      "last_ms": 1786760700038,
-      "status": "degraded",
+      "err": 0,
+      "last_ms": 1786795200044,
+      "status": "operational",
       "accomplishments": [
         {
           "date": "2026-08-11",
@@ -2671,7 +2674,7 @@
         "browser_profile": "airbnb",
         "files": {
           "AGENTS.md": 23226,
-          "MEMORY.md": 34508,
+          "MEMORY.md": 34768,
           "HEARTBEAT.md": 5224
         },
         "verified": "2026-08-15"
@@ -2729,6 +2732,17 @@
         ]
       },
       "jobs": [
+        {
+          "name": "Weekly Spam Ledger (Sat 8:00)",
+          "enabled": true,
+          "expr": "0 8 * * 6",
+          "tz": "America/New_York",
+          "channel": "telegram",
+          "last_ms": 1786795200044,
+          "status": "ok",
+          "errors": 0,
+          "dur_ms": 122921
+        },
         {
           "name": "Dev Loop: sally daily reflection (implement-or-escalate)",
           "enabled": true,
@@ -2794,17 +2808,6 @@
           "status": "ok",
           "errors": 0,
           "dur_ms": 82872
-        },
-        {
-          "name": "Weekly Spam Ledger (Sat 8:00)",
-          "enabled": true,
-          "expr": "0 8 * * 6",
-          "tz": "America/New_York",
-          "channel": "telegram",
-          "last_ms": 1786190400059,
-          "status": "error",
-          "errors": 1,
-          "dur_ms": 422474
         },
         {
           "name": "Monthly Suzanne Check-in Reminder",
@@ -3039,7 +3042,7 @@
         "browser_profile": "garmin / fit20",
         "files": {
           "AGENTS.md": 20984,
-          "MEMORY.md": 22492,
+          "MEMORY.md": 22903,
           "HEARTBEAT.md": 1238
         },
         "verified": "2026-08-15"
@@ -4353,7 +4356,7 @@
       "n_jobs": 11,
       "n_enabled": 10,
       "err": 0,
-      "last_ms": 1786761000044,
+      "last_ms": 1786794180234,
       "status": "operational",
       "accomplishments": [
         {
@@ -4654,6 +4657,17 @@
       },
       "jobs": [
         {
+          "name": "Pops Daily Wheelhouse Check-in (7:37 AM)",
+          "enabled": true,
+          "expr": "43 7 * * *",
+          "tz": "America/New_York",
+          "channel": "telegram",
+          "last_ms": 1786794180234,
+          "status": "ok",
+          "errors": 0,
+          "dur_ms": 66030
+        },
+        {
           "name": "Dev Loop: pops daily reflection (implement-or-escalate)",
           "enabled": true,
           "expr": "30 22 * * *",
@@ -4696,17 +4710,6 @@
           "status": "ok",
           "errors": 0,
           "dur_ms": 278699
-        },
-        {
-          "name": "Pops Daily Wheelhouse Check-in (7:37 AM)",
-          "enabled": true,
-          "expr": "43 7 * * *",
-          "tz": "America/New_York",
-          "channel": "telegram",
-          "last_ms": 1786707780044,
-          "status": "ok",
-          "errors": 0,
-          "dur_ms": 85042
         },
         {
           "name": "Pops Spirit Front Weekly SITREP (Sun 1900)",
@@ -4831,7 +4834,7 @@
       "n_jobs": 5,
       "n_enabled": 4,
       "err": 0,
-      "last_ms": 1786763100053,
+      "last_ms": 1786792500040,
       "status": "operational",
       "accomplishments": [
         {
@@ -4979,6 +4982,17 @@
       },
       "jobs": [
         {
+          "name": "Mac Weekly VA + Military Briefing (Sat 7AM)",
+          "enabled": true,
+          "expr": "15 7 * * 6",
+          "tz": "",
+          "channel": "telegram",
+          "last_ms": 1786792500040,
+          "status": "ok",
+          "errors": 0,
+          "dur_ms": 186961
+        },
+        {
           "name": "Dev Loop: sgt-maj-mac daily reflection (implement-or-escalate)",
           "enabled": true,
           "expr": "05 23 * * *",
@@ -5010,17 +5024,6 @@
           "status": "ok",
           "errors": 0,
           "dur_ms": 183479
-        },
-        {
-          "name": "Mac Weekly VA + Military Briefing (Sat 7AM)",
-          "enabled": true,
-          "expr": "15 7 * * 6",
-          "tz": "",
-          "channel": "telegram",
-          "last_ms": 1786187700059,
-          "status": "ok",
-          "errors": 0,
-          "dur_ms": 15146
         },
         {
           "name": "Stand-up 07:37 \u2014 SgtMaj Mac McAllister",
@@ -5360,5 +5363,5 @@
     "write-airbnb-reviews-for-listings",
     "you-are-an-expert-ai-agent"
   ],
-  "cowork_date": "2026-08-15T07:07:25-04:00"
+  "cowork_date": "2026-08-15T08:07:30-04:00"
 }

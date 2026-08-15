@@ -45,7 +45,8 @@ CLASSIFY_SYS = (
     "supports/opposes that numbered position — or {\"skip\": true} if no position fits cleanly. "
     "HARD RULES: pick at most ONE position, the single clearest fit. If the bill is procedural, "
     "budgetary, local-scope, symbolic, or its policy direction is not OBVIOUS from the text alone, "
-    "reply {\"skip\": true}. Wrong-and-confident is unacceptable; skipping is always safe."
+    "reply {\"skip\": true}. Funding, facilities, or administration FOR AN EXISTING program is NOT "
+    "a position on that program — skip those. Wrong-and-confident is unacceptable; skipping is always safe."
 )
 VERIFY_SYS = (
     "You are auditing a bill-to-scorecard mapping. Given a POSITION (affirmative policy statement), "
@@ -107,7 +108,16 @@ def main():
     bills = [v for v in (ls.pull("getMasterList", id=sid).get("masterlist") or {}).values()
              if isinstance(v, dict) and v.get("bill_id")]
     flagged = [b for b in bills if KW.search(b.get("title") or "")]
-    print(f"bills {len(bills)} | keyword-flagged {len(flagged)} | working first {max_bills}")
+    # Marquee-first: burn the per-bill budget on the strongest rubric signals, not on
+    # bill-number order (grandparent visitation before the Heartbeat Bill = wasted spend).
+    STRONG = re.compile(r"abortion|reproductive|heartbeat|firearm|handgun|assault weapon|red flag|"
+                        r"transgender|gender-affirm|gender identity|marriage|school choice|voucher|"
+                        r"charter school|parental right|voter id|citizenship.*vot|sanctuary|"
+                        r"illegal immigra|bail reform|defund|puberty|minor.*(surgery|hormone)|"
+                        r"religious (freedom|liberty)|prayer|obscen|drag", re.I)
+    flagged.sort(key=lambda b: (0 if STRONG.search(b.get("title") or "") else 1, b.get("number") or ""))
+    n_strong = sum(1 for b in flagged if STRONG.search(b.get("title") or ""))
+    print(f"bills {len(bills)} | keyword-flagged {len(flagged)} (strong-signal {n_strong}) | working first {max_bills}")
 
     # --- classification (cached forever; Qwen proposes, Gemma must agree) ---
     try:
@@ -159,7 +169,64 @@ def main():
         if not finals:
             skipped["no_final_rc"] += 1
             continue
+
+        # DUAL-DIRECTION COHERENCE GATE (the HB444 lesson): double-negative titles
+        # ("Immigration Enforcement Agreements - Prohibition") invert polarity past a single
+        # yes/no verify — that run scored 30 Democrats TRUE on sanctuary PREEMPTION. So with
+        # the bill's full description in hand, ask BOTH models BOTH directions; keep the
+        # mapping only if all four answers are coherent (support=YES/oppose=NO or the reverse,
+        # unanimously, and matching the classifier's polarity). Any confusion = skip the bill.
+        cat_id, q_idx = cls["cat"], cls["q"]
+        q_text = next(q for n, (ci, qi, q) in qmap.items() if ci == cat_id and qi == q_idx)
+        desc = f"{bill.get('bill_number')} — {bill.get('title') or ''}\n{(bill.get('description') or '')[:500]}"
+        answers = {}
+        try:
+            for mdl_base, mdl in (( qwen, qmodel), (gemma, gmodel)):
+                for direction in ("SUPPORTS", "OPPOSES"):
+                    a = lpe.chat(mdl_base, mdl,
+                                 "Answer with one word, YES or NO. Be literal; prohibitions and "
+                                 "repeals reverse direction.",
+                                 f"POSITION: {q_text}\nBILL:\n{desc}\n\nQUESTION: Does a YEA vote on "
+                                 f"this bill {direction} the position?", max_tokens=6).strip().upper()
+                    answers[(mdl, direction)] = a.startswith("YES")
+        except Exception:
+            skipped["coherence_error"] = skipped.get("coherence_error", 0) + 1
+            continue
+        sup = [answers[(m, "SUPPORTS")] for m in (qmodel, gmodel)]
+        opp = [answers[(m, "OPPOSES")] for m in (qmodel, gmodel)]
+        coherent_support = all(sup) and not any(opp)
+        coherent_oppose = all(opp) and not any(sup)
+        if not ((coherent_support and cls["yea"] == "support") or
+                (coherent_oppose and cls["yea"] == "oppose")):
+            skipped["incoherent_polarity"] = skipped.get("incoherent_polarity", 0) + 1
+            continue
         rc = ls.pull("getRollCall", id=finals[-1]["roll_call_id"]).get("roll_call") or {}
+
+        # CONTESTED-VOTE GATE: a roll call only carries positional signal if it divided the
+        # chamber. A 124-7 charter-FACILITIES vote is consensus housekeeping — scoring 88
+        # Democrats TRUE on "school choice" from it is the misleading-credit trap the
+        # methodology forbids. Keep a vote only if (a) the losing side is >=25% of yea+nay,
+        # or (b) the parties genuinely diverged (majority of D's opposite majority of R's) —
+        # the mechanical form of the runbook's "party-line marquee votes are HARD evidence."
+        yea_n, nay_n = int(rc.get("yea") or 0), int(rc.get("nay") or 0)
+        contested = (yea_n + nay_n) > 0 and min(yea_n, nay_n) / (yea_n + nay_n) >= 0.25
+        py = {"D": [0, 0], "R": [0, 0]}
+        for mv in (rc.get("votes") or []):
+            vt = (mv.get("vote_text") or "").strip().lower()
+            if vt not in ("yea", "nay"):
+                continue
+            pp = (people.get(mv.get("people_id")) or {}).get("party") or ""
+            if pp in py:
+                py[pp][0 if vt == "yea" else 1] += 1
+        def maj(side):
+            y, n = side
+            return None if (y + n) < 5 else (y > n)
+        dmaj, rmaj = maj(py["D"]), maj(py["R"])
+        party_divided = dmaj is not None and rmaj is not None and dmaj != rmaj
+        if not (contested or party_divided):
+            skipped["uncontested"] = skipped.get("uncontested", 0) + 1
+            continue
+
         src = bill.get("state_link") or bill.get("url") or f"https://legiscan.com/{state}/bill/{bill.get('bill_number')}"
         tally = f"{rc.get('yea')}-{rc.get('nay')}"
         n_scored_this_bill = 0

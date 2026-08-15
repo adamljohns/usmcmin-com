@@ -1,5 +1,5 @@
-/* fit20 Aquia Studio Command PWA · CAB-0730-PWA · cache shell only, never data/ */
-const CACHE = "sc-aquia-v21";
+/* fit20 Aquia Studio Command PWA · V3.1 · cache shell only, never data/ */
+const CACHE = "sc-aquia-v31";
 const PRECACHE = [
   "./",
   "./index.html",

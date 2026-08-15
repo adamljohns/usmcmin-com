@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="canonical" href="https://usmcmin.com/family-captain/battle-bro-form/viewform.html">
   <title>Battle Brother Form — The Family Captain</title>
-  <meta name="description" content="Weekly Battle Brother accountability check-in for The Family Captain Armada cohort. Replaces Google Forms — remembers your last SACA and submission history.">
+  <meta name="description" content="Weekly Battle Brother check-in plus HabitShare-style captain habit board — streaks, shared habits with your Battle Brother, and local memory for the Armada year.">
   <meta name="robots" content="noindex,nofollow">
   <link rel="stylesheet" href="../../assets/css/main.css">
   <link rel="icon" type="image/svg+xml" href="../../assets/icons/favicon.svg">
@@ -108,6 +108,71 @@
 
   .bb-footer { background: var(--navy); color: #9CA3AF; text-align: center; padding: 20px 16px; font-size: 0.82rem; }
   .bb-footer a { color: var(--gold); }
+
+  .bb-mode { display: flex; gap: 0; margin-bottom: 18px; border: 1px solid var(--border); background: #FFF; }
+  .bb-mode-btn {
+    flex: 1; padding: 12px 10px; border: 0; background: transparent; cursor: pointer;
+    font-family: inherit; font-weight: 700; font-size: 0.82rem; letter-spacing: 0.04em;
+    text-transform: uppercase; color: var(--gray);
+  }
+  .bb-mode-btn + .bb-mode-btn { border-left: 1px solid var(--border); }
+  .bb-mode-btn.active { background: var(--navy); color: #FFF; }
+  .bb-mode-btn:focus-visible { outline: 2px solid var(--gold); outline-offset: -2px; }
+
+  .habit-stats { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 16px; }
+  .habit-stat {
+    flex: 1; min-width: 120px; background: #FFF; border: 1px solid var(--border);
+    border-left: 3px solid var(--gold); padding: 12px 14px;
+  }
+  .habit-stat .hs-label { display: block; font-size: 0.68rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--gray); font-weight: 700; }
+  .habit-stat .hs-value { font-family: var(--font-main); font-size: 1.6rem; color: var(--navy); font-weight: 500; line-height: 1.1; margin-top: 4px; }
+
+  .habit-day-head { display: grid; grid-template-columns: minmax(110px, 1.4fr) repeat(7, 1fr) 52px; gap: 4px; align-items: center; margin-bottom: 8px; padding: 0 4px; }
+  .habit-day-head span { text-align: center; font-size: 0.68rem; font-weight: 700; color: var(--gray); text-transform: uppercase; letter-spacing: 0.04em; }
+  .habit-day-head .hd-name { text-align: left; }
+  .habit-day-head .hd-today { color: var(--gold); }
+
+  .habit-row {
+    display: grid; grid-template-columns: minmax(110px, 1.4fr) repeat(7, 1fr) 52px; gap: 4px;
+    align-items: center; background: #FFF; border: 1px solid var(--border); padding: 10px 8px; margin-bottom: 8px;
+  }
+  .habit-row .hr-meta { min-width: 0; }
+  .habit-row .hr-name { font-weight: 700; color: var(--navy); font-size: 0.88rem; line-height: 1.25; }
+  .habit-row .hr-sub { font-size: 0.72rem; color: var(--gray); margin-top: 2px; }
+  .habit-row .hr-streak { font-size: 0.72rem; color: #8B5A1F; font-weight: 700; }
+  .habit-check {
+    width: 100%; aspect-ratio: 1; max-width: 36px; margin: 0 auto; display: flex; align-items: center; justify-content: center;
+    border: 1.5px solid var(--border); background: #FFF; cursor: pointer; font-size: 0.85rem; color: transparent; padding: 0;
+    font-family: inherit;
+  }
+  .habit-check.on { background: var(--gold); border-color: var(--gold); color: #FFF; font-weight: 700; }
+  .habit-check:disabled { opacity: 0.45; cursor: default; }
+  .habit-check.weekly-slot { border-style: dashed; }
+  .habit-share-btn {
+    border: 1px solid var(--border); background: #FFF; font-size: 0.65rem; font-weight: 700; text-transform: uppercase;
+    letter-spacing: 0.03em; padding: 6px 4px; cursor: pointer; color: var(--gray); font-family: inherit; width: 100%;
+  }
+  .habit-share-btn.shared { border-color: var(--gold); color: #8B5A1F; background: #FFF8EE; }
+
+  .habit-add { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+  .habit-add input, .habit-add select {
+    flex: 1; min-width: 140px; border: 1px solid var(--border); padding: 10px 12px; font-size: 0.9rem; font-family: inherit; color: var(--navy);
+  }
+  .habit-add .btn-primary { flex: 0 0 auto; min-width: 0; padding: 10px 16px; font-size: 0.82rem; }
+
+  .brother-pack { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
+  .brother-pack textarea {
+    width: 100%; min-height: 88px; border: 1px solid var(--border); padding: 10px 12px; font-size: 0.82rem;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; color: var(--navy); line-height: 1.4;
+  }
+  .habit-empty { color: var(--gray); font-size: 0.88rem; padding: 8px 0; }
+
+  @media (max-width: 520px) {
+    .habit-day-head, .habit-row { grid-template-columns: minmax(88px, 1.2fr) repeat(7, 1fr) 44px; gap: 2px; padding-left: 4px; padding-right: 4px; }
+    .habit-row .hr-name { font-size: 0.78rem; }
+    .habit-check { max-width: 28px; font-size: 0.72rem; }
+    .habit-share-btn { font-size: 0.58rem; padding: 4px 2px; }
+  }
 </style>
 </head>
 <body>
@@ -122,14 +187,19 @@
 <section class="bb-hero">
   <div class="bb-kicker">Weekly Accountability</div>
   <h1>Battle Brother Form</h1>
-  <p>Standalone check-in for your Battle Brother and Armada call. Remembers your name, last week&rsquo;s SACA, and history in this browser. Theme follows the Armada calendar (Mon–Sun) and rolls after Sabbath.</p>
+  <p>Weekly Armada check-in plus a HabitShare-style board — streaks, selective sharing with your Battle Brother, and memory that stays in this browser until a year-long backend lands.</p>
 </section>
 
 <div class="bb-wrap">
   <div id="bbFlash" hidden role="status"></div>
 
+  <div class="bb-mode" role="tablist" aria-label="Battle Brother modules">
+    <button type="button" class="bb-mode-btn active" id="modeForm" data-mode="form" role="tab" aria-selected="true">Weekly Form</button>
+    <button type="button" class="bb-mode-btn" id="modeHabits" data-mode="habits" role="tab" aria-selected="false">Habit Board</button>
+  </div>
+
   <div class="memory-bar">
-    <span>Saved locally in this browser — drafts auto-save as you go.</span>
+    <span>Saved locally in this browser — drafts and habit checks auto-save.</span>
     <span>
       <button type="button" id="btnExport">Export memory</button>
       <button type="button" id="btnClearDraft">Clear draft</button>
@@ -138,6 +208,55 @@
 
   <div id="weekPicker" aria-label="Select Armada week theme"></div>
   <div id="themeBanner"></div>
+
+  <div id="habitShell" hidden>
+    <div class="habit-stats" id="habitStats"></div>
+
+    <div class="bb-card">
+      <h2 class="section-bar">Your Captain Habits</h2>
+      <div class="bb-card-body">
+        <p class="bb-hint" style="margin-top:0;">Tap a cell to check today&rsquo;s work. Weekly habits fill on Monday of the Armada week. Toggle <strong>Share</strong> to include a habit in the pack you send your Battle Brother — HabitShare-style privacy, one brother at a time.</p>
+        <div class="habit-day-head" id="habitDayHead"></div>
+        <div id="habitRows"></div>
+        <div class="habit-add">
+          <input type="text" id="newHabitName" placeholder="Add a habit (e.g. Family meeting)" maxlength="80" autocomplete="off">
+          <select id="newHabitCadence" aria-label="Habit cadence">
+            <option value="daily">Daily</option>
+            <option value="weekly">Weekly</option>
+          </select>
+          <button type="button" class="btn-primary" id="btnAddHabit">Add</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="bb-card">
+      <h2 class="section-bar">Share with Battle Brother</h2>
+      <div class="bb-card-body">
+        <p class="bb-hint" style="margin-top:0;">Export only habits marked Share. Your brother pastes the pack into his Habit Board. No account required yet — swap files or paste text.</p>
+        <div class="brother-pack">
+          <button type="button" class="btn-ghost" id="btnCopySharePack" style="flex:1;">Copy share pack</button>
+          <button type="button" class="btn-ghost" id="btnDownloadSharePack" style="flex:1;">Download share pack</button>
+        </div>
+        <div class="bb-field" style="margin-top:16px;margin-bottom:0;">
+          <label for="importSharePack">Import brother&rsquo;s share pack</label>
+          <textarea id="importSharePack" placeholder='Paste his JSON pack here, then tap Import'></textarea>
+        </div>
+        <div class="btn-row" style="margin-top:10px;">
+          <button type="button" class="btn-primary" id="btnImportSharePack">Import</button>
+          <button type="button" class="btn-ghost" id="btnClearBrotherPack">Clear brother board</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="bb-card" id="brotherHabitsCard">
+      <h2 class="section-bar">Brother&rsquo;s Shared Habits</h2>
+      <div class="bb-card-body">
+        <p class="bb-hint" style="margin-top:0;" id="brotherHabitsHint">No brother pack imported yet.</p>
+        <div class="habit-day-head" id="brotherDayHead"></div>
+        <div id="brotherHabitRows"></div>
+      </div>
+    </div>
+  </div>
 
   <div id="doneShell" hidden>
     <h2>Your response has been recorded.</h2>

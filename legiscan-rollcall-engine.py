@@ -1,0 +1,232 @@
+#!/usr/bin/env python3
+"""legiscan-rollcall-engine.py — roll-call-first evidence scoring. THE coverage inversion.
+
+Instead of researching one candidate at a time, classify one MARQUEE BILL and every
+legislator on its recorded roll call gets a cited cell simultaneously (a 141-member vote
+scores a whole chamber at once). This is how the ~5,000 bio-only state legislators — whom
+per-candidate source discovery cannot reach — become evidence-scored.
+
+TRUST MODEL (libel-grade, same shape as the grind):
+  - The only LLM step is BILL CLASSIFICATION: Qwen maps a bill title/description to ONE
+    rubric question + what a YEA means (support/oppose); Gemma must independently agree
+    (title -> same question, same polarity) or the bill is SKIPPED. Ambiguous bills SKIP.
+  - The VOTES are deterministic LegiScan API data — no model touches them. Yea/Nay only
+    (absent/excused/NV never scored). One bill maps to at most ONE rubric cell.
+  - Candidate matching is exact: state + normalized name (+ district tiebreak); ambiguous
+    names are SKIPPED, never guessed (slug@STATE keys through the hardened engine).
+  - Citation: the bill's OFFICIAL state_link + a note naming the vote, date, and tally.
+  - Existing evidence_* candidates are left alone (this fills the unscored frontier).
+
+Usage:
+  legiscan-rollcall-engine.py MD                      # dry: classify + build dossier + report
+  legiscan-rollcall-engine.py MD --max-bills 40       # cap getBill spend for the state
+  legiscan-rollcall-engine.py MD --apply              # ...then apply+build+push via commit_refinement
+"""
+import json, os, re, subprocess, sys, time
+
+sys.path.insert(0, ".")
+import importlib.util
+_spec = importlib.util.spec_from_file_location("lpe", "local-politician-extract.py")
+lpe = importlib.util.module_from_spec(_spec)
+_spec.loader.exec_module(lpe)                      # chat/model_at — one implementation
+from legiscan_client import LegiScanClient, LegiScanError
+
+SCORECARD = "data/scorecard.json"
+CLASS_CACHE = os.path.expanduser("~/.openclaw/state/legiscan-bill-classifications.json")
+KW = re.compile(r"abortion|reproductive|firearm|gun|second amendment|marriage|gender|transgender|"
+                r"parent|school choice|charter|voucher|voter|election|ballot|immigra|sanctuary|"
+                r"bail|police|religio|prayer|obscen|library|puberty|minor|esg|gold|bullion", re.I)
+FINAL_RC = re.compile(r"third reading|final passage|passage|floor vote|concur", re.I)
+
+CLASSIFY_SYS = (
+    "You map a state legislative BILL to a voter-scorecard POSITION. You are given numbered "
+    "positions (affirmative policy statements) and a bill title/description. Reply ONLY with JSON: "
+    '{"n": <position number>, "yea": "support"|"oppose"} — meaning a YEA vote on this bill '
+    "supports/opposes that numbered position — or {\"skip\": true} if no position fits cleanly. "
+    "HARD RULES: pick at most ONE position, the single clearest fit. If the bill is procedural, "
+    "budgetary, local-scope, symbolic, or its policy direction is not OBVIOUS from the text alone, "
+    "reply {\"skip\": true}. Wrong-and-confident is unacceptable; skipping is always safe."
+)
+VERIFY_SYS = (
+    "You are auditing a bill-to-scorecard mapping. Given a POSITION (affirmative policy statement), "
+    "a BILL title/description, and the claim that a YEA vote {POLARITY} that position: answer YES "
+    "only if the mapping is obviously correct from the text alone (right topic AND right direction). "
+    "Otherwise answer NO. Answer with one word."
+)
+
+
+def norm_name(s):
+    s = re.sub(r"\s+(jr|sr|ii|iii|iv)\.?$", "", (s or "").strip().lower(), flags=re.I)
+    s = re.sub(r"[^a-z\s'-]", "", s)
+    return re.sub(r"\s+", " ", s).strip()
+
+
+def surname(s):
+    parts = norm_name(s).split()
+    return parts[-1] if parts else ""
+
+
+def main():
+    state = sys.argv[1].upper()
+    max_bills = int(sys.argv[sys.argv.index("--max-bills") + 1]) if "--max-bills" in sys.argv else 40
+    apply_now = "--apply" in sys.argv
+    today = time.strftime("%Y-%m-%d")
+
+    qwen = "http://127.0.0.1:1235/v1"; gemma = "http://127.0.0.1:1234/v1"
+    qmodel = lpe.model_at(qwen)
+    gmodel = lpe.model_at(gemma, prefer=["gemma-4-31b", "gemma"])
+    if not (qmodel and gmodel):
+        sys.exit("ABORT: need BOTH local models (Qwen classify + Gemma verify) — refusing to run single-brained.")
+
+    sc = json.load(open(SCORECARD))
+    cats = sc["categories"]
+    qlist = lpe.applicable_questions(cats, "state")
+    qmap = {n + 1: qlist[n] for n in range(len(qlist))}
+    numbered = "\n".join(f"{n}. {q}" for n, (_, _, q) in qmap.items())
+
+    # --- candidates we can score: this state's unscored active state legislators ---
+    def evid(c): return ((c.get("profile") or {}).get("confidence") or "").startswith("evidence")
+    pool = [c for c in sc["candidates"]
+            if (c.get("state") or "").upper() == state and c.get("level") == "state"
+            and (c.get("status") or "active") not in ("lost", "former", "deceased") and not evid(c)]
+    by_name = {}
+    for c in pool:
+        by_name.setdefault(norm_name(c.get("name")), []).append(c)
+        by_name.setdefault(surname(c.get("name")), []).append(c)
+    print(f"{state}: {len(pool)} unscored active state legislators in scorecard")
+
+    ls = LegiScanClient()
+    spent0 = ls.queries_this_month
+    sess = ls.pull("getSessionList", state=state).get("sessions") or []
+    cur = [s for s in sess if not s.get("sine_die")] or sess[:1]
+    if not cur:
+        sys.exit(f"no sessions for {state}")
+    sid = cur[0]["session_id"]
+    print(f"session: {sid} {cur[0].get('session_name')}")
+
+    bills = [v for v in (ls.pull("getMasterList", id=sid).get("masterlist") or {}).values()
+             if isinstance(v, dict) and v.get("bill_id")]
+    flagged = [b for b in bills if KW.search(b.get("title") or "")]
+    print(f"bills {len(bills)} | keyword-flagged {len(flagged)} | working first {max_bills}")
+
+    # --- classification (cached forever; Qwen proposes, Gemma must agree) ---
+    try:
+        ccache = json.load(open(CLASS_CACHE))
+    except Exception:
+        ccache = {}
+    os.makedirs(os.path.dirname(CLASS_CACHE), exist_ok=True)
+
+    # people map for THIS session (1 query, heavily reused)
+    ppl = (ls.pull("getSessionPeople", id=sid).get("sessionpeople") or {}).get("people") or []
+    people = {p["people_id"]: p for p in ppl}
+    print(f"session people: {len(people)}")
+
+    records, used_bills, skipped = {}, [], {"ambiguous_class": 0, "gemma_no": 0, "no_final_rc": 0,
+                                           "no_match": 0, "ambiguous_name": 0}
+    for b in flagged[:max_bills]:
+        bkey = f"{state}:{b['bill_id']}"
+        cls = ccache.get(bkey)
+        if cls is None:
+            title = f"{b.get('number')} — {b.get('title') or ''}"
+            try:
+                raw = lpe.chat(qwen, qmodel, CLASSIFY_SYS,
+                               f"NUMBERED POSITIONS:\n{numbered}\n\nBILL:\n{title}", max_tokens=60)
+                v = lpe.extract_json(raw) or {}
+            except Exception:
+                v = {}
+            if not isinstance(v, dict) or v.get("skip") or v.get("n") not in qmap or v.get("yea") not in ("support", "oppose"):
+                cls = {"skip": True}
+            else:
+                cat_id, q_idx, q_text = qmap[v["n"]]
+                pol = "SUPPORTS" if v["yea"] == "support" else "OPPOSES"
+                try:
+                    ans = lpe.chat(gemma, gmodel, VERIFY_SYS.replace("{POLARITY}", pol),
+                                   f"POSITION: {q_text}\nBILL: {title}", max_tokens=6).strip().upper()
+                except Exception:
+                    ans = "NO"
+                cls = ({"cat": cat_id, "q": q_idx, "yea": v["yea"], "title": b.get("title")}
+                       if ans.startswith("YES") else {"skip": True, "why": "gemma_no"})
+                if cls.get("why") == "gemma_no":
+                    skipped["gemma_no"] += 1
+            ccache[bkey] = cls
+            json.dump(ccache, open(CLASS_CACHE, "w"), indent=1)
+        if cls.get("skip"):
+            skipped["ambiguous_class"] += 1
+            continue
+
+        bill = ls.pull("getBill", id=b["bill_id"]).get("bill") or {}
+        finals = [v for v in (bill.get("votes") or []) if FINAL_RC.search(v.get("desc") or "")]
+        if not finals:
+            skipped["no_final_rc"] += 1
+            continue
+        rc = ls.pull("getRollCall", id=finals[-1]["roll_call_id"]).get("roll_call") or {}
+        src = bill.get("state_link") or bill.get("url") or f"https://legiscan.com/{state}/bill/{bill.get('bill_number')}"
+        tally = f"{rc.get('yea')}-{rc.get('nay')}"
+        n_scored_this_bill = 0
+        for mv in (rc.get("votes") or []):
+            vt = (mv.get("vote_text") or "").strip().lower()
+            if vt not in ("yea", "nay"):
+                continue                      # absent/excused/NV are never positions
+            p = people.get(mv.get("people_id")) or {}
+            nm = norm_name(p.get("name"))
+            matches = [c for c in {id(x): x for x in (by_name.get(nm, []) + by_name.get(surname(p.get("name")), []))}.values()]
+            # district tiebreak when >1
+            if len(matches) > 1 and p.get("district"):
+                dm = [c for c in matches if str(c.get("district") or "") and str(c.get("district")) in str(p.get("district"))]
+                matches = dm or matches
+            if not matches:
+                skipped["no_match"] += 1
+                continue
+            if len(matches) > 1:
+                skipped["ambiguous_name"] += 1
+                continue
+            c = matches[0]
+            supports = (cls["yea"] == "support") == (vt == "yea")
+            key = f"{c['slug']}@{state}"
+            rec = records.setdefault(key, {"profile": {
+                "confidence": "evidence_state",
+                "confidence_note": f"Roll-call engine (LegiScan API, Qwen+Gemma-agreed bill mapping) {today}",
+                "last_refined": today, "grind_strikes": 0}, "evidence": {}, "sources_add": []})
+            cellq = str(cls["q"])
+            if cellq in rec["evidence"].get(cls["cat"], {}):
+                continue                      # first recorded final vote wins; don't churn
+            rec["evidence"].setdefault(cls["cat"], {})[cellq] = {
+                "v": bool(supports),
+                "src": [src],
+                "note": (f"Voted {vt.upper()} on {bill.get('bill_number')} — "
+                         f"{(cls.get('title') or '')[:150]} ({rc.get('desc')}, {rc.get('date')}, {tally}).")[:400],
+            }
+            if src not in rec["sources_add"]:
+                rec["sources_add"].append(src)
+            n_scored_this_bill += 1
+        if n_scored_this_bill:
+            used_bills.append(f"{bill.get('bill_number')} -> {cls['cat']}[{cls['q']}] ({n_scored_this_bill} legislators)")
+
+    for k, rec in records.items():
+        ncells = sum(len(q) for q in rec["evidence"].values())
+        rec["notes_append"] = f"Roll-call engine {today}: {ncells} recorded floor vote(s) via LegiScan API."
+
+    print(f"\nbills used: {len(used_bills)}")
+    for u in used_bills[:12]:
+        print("   ", u)
+    cells = sum(len(q) for r in records.values() for q in r["evidence"].values())
+    print(f"RESULT: {len(records)} candidate(s), {cells} cited cells | skipped: {skipped}")
+    print(f"LegiScan queries this run: {ls.queries_this_month - spent0} (month total {ls.queries_this_month}/{ls.monthly_budget})")
+    if not records:
+        return 1
+
+    os.makedirs("refinements", exist_ok=True)
+    dpath = f"refinements/rollcall-{state.lower()}-{time.strftime('%Y-%m-%d-%H%M')}.json"
+    json.dump({"_meta": {"author": "rollcall-engine", "date": today,
+                         "note": f"{state} roll-call-first scoring (LegiScan API; Qwen+Gemma-agreed bill mappings)"},
+               "reset_unspecified": False, "records": records}, open(dpath, "w"), indent=1)
+    print(f"dossier: {dpath}")
+    if apply_now:
+        return subprocess.call(["/opt/homebrew/bin/python3", "commit_refinement.py", dpath,
+                                f"rollcall({state}): {len(records)} legislators, {cells} cited floor votes (LegiScan)"])
+    print("dry run — review, then apply with commit_refinement.py")
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())

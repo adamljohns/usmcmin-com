@@ -92,8 +92,9 @@ def main():
                     cell = {"cat": cat_id, "q": qi, "v": v, "url": url, "status": None}
                     if url not in page_cache:
                         try:
-                            page_cache[url] = lpe.to_text(lpe.fetch(url))[:9000]
-                        except Exception as e:
+                            page_cache[url] = lpe.fetch_page_text(
+                                url, name=c.get("name"), state=c.get("state"))[:9000]
+                        except Exception:
                             page_cache[url] = None
                     txt = page_cache[url]
                     if txt is None:

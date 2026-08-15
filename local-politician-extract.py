@@ -203,6 +203,20 @@ def legiscan_api_page(url, name=None, state=None):
     return pub, text[:14000]
 
 
+def fetch_page_text(url, name=None, state=None, timeout=12):
+    """Fetch readable page text for QA/validator gates.
+
+    legiscan.com HTML is Cloudflare-blocked; person URLs resolve through the Public
+    API (same path as the grind). All other URLs use the plain HTTP fetcher."""
+    if "legiscan.com" in (url or ""):
+        hit = legiscan_api_page(url, name=name, state=state)
+        if not hit:
+            raise RuntimeError(f"legiscan API fetch failed: {url}")
+        _pub, text = hit
+        return text
+    return to_text(fetch(url, timeout=timeout))
+
+
 def gather_pages(bases, name=None, state=None):
     """Fetch each base's homepage + issue paths + discovered issue links, then rank by
     issue-richness so real position prose leads (and survives the combined-text cap) —

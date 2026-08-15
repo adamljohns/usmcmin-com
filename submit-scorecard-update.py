@@ -69,10 +69,10 @@ def main():
     records, report = {}, {"verified_cells": 0, "dropped": [], "status_fixes": 0, "skipped_records": []}
     page_cache = {}
 
-    def get_page(url):
+    def get_page(url, name=None, state=None):
         if url not in page_cache:
             try:
-                page_cache[url] = lpe.norm(lpe.to_text(lpe.fetch(url)))
+                page_cache[url] = lpe.norm(lpe.fetch_page_text(url, name=name, state=state))
             except Exception:
                 page_cache[url] = None
         return page_cache[url]
@@ -96,7 +96,7 @@ def main():
                 if quote_uses.get(nq, 0) >= lpe.MAX_CELLS_PER_QUOTE:
                     report["dropped"].append({"cell": where, "reason": "quote_overused (max 2 cells/quote)"})
                     continue
-                page = get_page(src)
+                page = get_page(src, name=cand.get("name"), state=cand.get("state"))
                 if page is None:
                     report["dropped"].append({"cell": where, "reason": f"source unreachable: {src}"})
                     continue
@@ -116,7 +116,7 @@ def main():
         if set_block:
             ssrc = entry.get("set_src")
             surname = (cand.get("name") or "").split()[-1].lower()
-            page = get_page(ssrc) if ssrc else None
+            page = get_page(ssrc, name=cand.get("name"), state=cand.get("state")) if ssrc else None
             if not ssrc or page is None or (surname and surname not in page):
                 report["skipped_records"].append(
                     {"key": key, "reason": "status fix rejected: set_src missing/unreachable/doesn't name candidate"})

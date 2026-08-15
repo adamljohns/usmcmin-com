@@ -99,11 +99,15 @@ def main():
     ls = LegiScanClient()
     spent0 = ls.queries_this_month
     sess = ls.pull("getSessionList", state=state).get("sessions") or []
-    cur = [s for s in sess if not s.get("sine_die")] or sess[:1]
-    if not cur:
+    if not sess:
         sys.exit(f"no sessions for {state}")
-    sid = cur[0]["session_id"]
-    print(f"session: {sid} {cur[0].get('session_name')}")
+    # Prefer the newest REGULAR session — special sessions are tiny/topical (GA's "2026
+    # Special Session" had 176 redistricting bills and zero rubric signal). Fall back to
+    # newest anything (TX-style odd-year states: the sine-died 2025 regular is the record).
+    regular = [s for s in sess if not s.get("special")]
+    pick = sorted(regular or sess, key=lambda s: (s.get("year_start") or 0, s.get("session_id")), reverse=True)[0]
+    sid = pick["session_id"]
+    print(f"session: {sid} {pick.get('session_name')}")
 
     bills = [v for v in (ls.pull("getMasterList", id=sid).get("masterlist") or {}).values()
              if isinstance(v, dict) and v.get("bill_id")]

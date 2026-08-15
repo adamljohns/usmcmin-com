@@ -384,7 +384,7 @@
       <span class="dot">·</span>
       <span id="wireEdition">daily</span>
       <span class="dot">·</span>
-      <span>Desk: Rush Sullivan</span>
+      <span>Rush Sullivan · national/tech · Sheriff Roy Caldwell · civic</span>
     </div>
     <p class="wire-disclosure" id="wireDisclosure"></p>
   </header>
@@ -465,16 +465,13 @@
       .replace(/"/g, '&quot;');
   }
 
-  /* The feed's own OG art is not an article image. The desk sets it as a
-     fallback when a source has no usable picture, and on 2026-08-10 that was 6
-     of 11 items — so the rail rendered as a column of identical RESOLUTE
-     Citizen tiles and read like a broken page. A card with no picture is
-     honest; six copies of the same picture is not. */
-  var GENERIC_ART = /\/assets\/og\/og-[a-z0-9-]+\.(jpe?g|png|webp)(\?|$)/i;
+  /* RSA-0814-WIRE-09: card thumbs use the JSON image. Brand OG is intentional
+     this cycle. Never promote vendor marketing banners (Contentful Frame.png). */
+  var VENDOR_BANNER = /ctfassets\.net|\/Frame\.png(\?|$)/i;
 
   function hasRealImage(it) {
     var img = it && it.image ? String(it.image).trim() : '';
-    return img && !GENERIC_ART.test(img) ? img : '';
+    return img && !VENDOR_BANNER.test(img) ? img : '';
   }
 
   function mediaThumb(it) {
@@ -570,6 +567,7 @@
         (lead.url ? (leadSrcBits.length ? ' · ' : '') + '<a href="' + esc(lead.url) + '" target="_blank" rel="noopener">Read source →</a>' : '');
       var leadMedia = document.getElementById('leadMedia');
       var limg = lead.image ? String(lead.image).trim() : '';
+      if (VENDOR_BANNER.test(limg)) limg = '';
       function setBrandLead() {
         leadMedia.classList.remove('has-image');
         leadMedia.innerHTML = '<div class="wire-brand-mark"><img src="assets/icons/shield-star.png" alt=""><span>RESOLUTE Wire</span></div>';

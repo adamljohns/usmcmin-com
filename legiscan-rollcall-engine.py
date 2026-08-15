@@ -185,8 +185,41 @@ def main():
             ccache[bkey] = cls
             json.dump(ccache, open(CLASS_CACHE, "w"), indent=1)
         if cls.get("skip"):
-            skipped["ambiguous_class"] += 1
-            continue
+            # SECOND-CHANCE CLASSIFICATION (the Missouri lesson): red states whose titles are
+            # low-info ("Modifies provisions relating to firearms") skip on title alone. For
+            # strong-signal bills only, spend one getBill and re-classify with the official
+            # description; same Qwen-proposes/Gemma-agrees bar. Cached like everything else.
+            dkey = bkey + ":desc"
+            cls2 = ccache.get(dkey)
+            if cls2 is None and STRONG.search(title_txt):
+                bill_pre = ls.pull("getBill", id=b["bill_id"]).get("bill") or {}
+                dtxt = (f"{bill_pre.get('bill_number')} — {bill_pre.get('title') or ''}\n"
+                        f"{(bill_pre.get('description') or '')[:600]}")
+                try:
+                    raw = lpe.chat(qwen, qmodel, CLASSIFY_SYS,
+                                   f"NUMBERED POSITIONS:\n{numbered}\n\nBILL:\n{dtxt}", max_tokens=60)
+                    v = lpe.extract_json(raw) or {}
+                except Exception:
+                    v = {}
+                if not isinstance(v, dict) or v.get("skip") or v.get("n") not in qmap or v.get("yea") not in ("support", "oppose"):
+                    cls2 = {"skip": True}
+                else:
+                    cat_i, q_i, q_t = qmap[v["n"]]
+                    pol = "SUPPORTS" if v["yea"] == "support" else "OPPOSES"
+                    try:
+                        ans = lpe.chat(gemma, gmodel, VERIFY_SYS.replace("{POLARITY}", pol),
+                                       f"POSITION: {q_t}\nBILL: {dtxt}", max_tokens=6).strip().upper()
+                    except Exception:
+                        ans = "NO"
+                    cls2 = ({"cat": cat_i, "q": q_i, "yea": v["yea"], "title": bill_pre.get("title")}
+                            if ans.startswith("YES") else {"skip": True})
+                ccache[dkey] = cls2
+                json.dump(ccache, open(CLASS_CACHE, "w"), indent=1)
+            if cls2 and not cls2.get("skip"):
+                cls = cls2
+            else:
+                skipped["ambiguous_class"] += 1
+                continue
 
         bill = ls.pull("getBill", id=b["bill_id"]).get("bill") or {}
         finals = [v for v in (bill.get("votes") or [])

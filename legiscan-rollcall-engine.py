@@ -137,7 +137,24 @@ def main():
 
     records, used_bills, skipped = {}, [], {"ambiguous_class": 0, "gemma_no": 0, "no_final_rc": 0,
                                            "no_match": 0, "ambiguous_name": 0}
+    # LOW-INFORMATION GATE (the TN caption-bill lesson): "AN ACT to amend Title 49, relative
+    # to public charter schools" says NOTHING about direction — models judged an unknowable
+    # and scored a progressive TRUE on school choice. A bill is judgeable from text only if
+    # its title carries a directional verb alongside the topic; caption boilerplate dies here.
+    DIRECTIONAL = re.compile(r"prohibit|ban\b|bann|require|requir|establish|repeal|expand|restrict|"
+                             r"eliminat|creat|authoriz|legaliz|criminal|prevent|protect|restor|"
+                             r"exempt|mandat|abolish|permit|allow|enact|prohibition|freedom|right",
+                             re.I)
+    CAPTION = re.compile(r"^an act to amend", re.I)
+
     for b in flagged[:max_bills]:
+        title_txt = b.get("title") or ""
+        if CAPTION.match(title_txt) and not DIRECTIONAL.search(title_txt):
+            skipped["caption_bill"] = skipped.get("caption_bill", 0) + 1
+            continue
+        if not DIRECTIONAL.search(title_txt):
+            skipped["no_direction_word"] = skipped.get("no_direction_word", 0) + 1
+            continue
         bkey = f"{state}:{b['bill_id']}"
         cls = ccache.get(bkey)
         if cls is None:

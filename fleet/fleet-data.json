@@ -1,5 +1,5 @@
 {
-  "generated": "2026-08-15T09:37:16.580312+00:00",
+  "generated": "2026-08-15T10:07:19.620866+00:00",
   "totals": {
     "agents": 16,
     "operational": 14,
@@ -12,9 +12,11 @@
   "health": {
     "cron": {
       "enabled": 100,
-      "ran26h": 57,
+      "ran26h": 58,
       "delivered": 53,
-      "fails": []
+      "fails": [
+        "Weekly Self-Audit (Sat 05:57 ET) (main)"
+      ]
     },
     "cron_source": "openclaw.sqlite + hermes/cron/jobs.json",
     "launchd": {
@@ -126,7 +128,7 @@
       "n_jobs": 25,
       "n_enabled": 13,
       "err": 1,
-      "last_ms": 1786784492422,
+      "last_ms": 1786787820038,
       "status": "degraded",
       "accomplishments": [
         {
@@ -331,6 +333,17 @@
       },
       "jobs": [
         {
+          "name": "Weekly Self-Audit (Sat 05:57 ET)",
+          "enabled": true,
+          "expr": "57 5 * * 6",
+          "tz": "America/New_York",
+          "channel": "discord",
+          "last_ms": 1786787820038,
+          "status": "error",
+          "errors": 2,
+          "dur_ms": 600601
+        },
+        {
           "name": "fleet-freshness-watchdog",
           "enabled": true,
           "expr": "0 * * * *",
@@ -450,17 +463,6 @@
           "status": "ok",
           "errors": 0,
           "dur_ms": 107588
-        },
-        {
-          "name": "Weekly Self-Audit (Sat 05:57 ET)",
-          "enabled": true,
-          "expr": "57 5 * * 6",
-          "tz": "America/New_York",
-          "channel": "discord",
-          "last_ms": 1786183020040,
-          "status": "error",
-          "errors": 1,
-          "dur_ms": 321915
         },
         {
           "name": "Review compaction policy (SuperGrok loosen)",
@@ -621,7 +623,7 @@
       "n_jobs": 11,
       "n_enabled": 11,
       "err": 0,
-      "last_ms": 1786757284901,
+      "last_ms": 1786787178647,
       "status": "operational",
       "accomplishments": [
         {
@@ -761,6 +763,17 @@
       },
       "jobs": [
         {
+          "name": "Infrastructure Readiness Check",
+          "enabled": true,
+          "expr": "45 5 * * *",
+          "tz": "",
+          "channel": "origin",
+          "last_ms": 1786787178647,
+          "status": "ok",
+          "errors": 0,
+          "dur_ms": null
+        },
+        {
           "name": "MOOP Command Nightly Reconciliation",
           "enabled": true,
           "expr": "15 21 * * *",
@@ -811,17 +824,6 @@
           "tz": "",
           "channel": "origin",
           "last_ms": 1786702750293,
-          "status": "ok",
-          "errors": 0,
-          "dur_ms": null
-        },
-        {
-          "name": "Infrastructure Readiness Check",
-          "enabled": true,
-          "expr": "45 5 * * *",
-          "tz": "",
-          "channel": "origin",
-          "last_ms": 1786700816064,
           "status": "ok",
           "errors": 0,
           "dur_ms": null
@@ -5360,5 +5362,5 @@
     "write-airbnb-reviews-for-listings",
     "you-are-an-expert-ai-agent"
   ],
-  "cowork_date": "2026-08-15T05:37:16-04:00"
+  "cowork_date": "2026-08-15T06:07:19-04:00"
 }

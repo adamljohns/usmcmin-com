@@ -36,7 +36,10 @@ CLASS_CACHE = os.path.expanduser("~/.openclaw/state/legiscan-bill-classification
 KW = re.compile(r"abortion|reproductive|firearm|gun|second amendment|marriage|gender|transgender|"
                 r"parent|school choice|charter|voucher|voter|election|ballot|immigra|sanctuary|"
                 r"bail|police|religio|prayer|obscen|library|puberty|minor|esg|gold|bullion", re.I)
-FINAL_RC = re.compile(r"third reading|final passage|passage|floor vote|concur", re.I)
+FINAL_RC = re.compile(r"third reading|final passage|passage|floor vote|concur|ought to pass", re.I)
+# NH kills bills with an "Inexpedient to Legislate" FLOOR vote — a final action with
+# REVERSED polarity: YEA on ITL = voting to kill the bill (i.e., against its policy).
+ITL_RC = re.compile(r"inexpedient to legislate", re.I)
 
 CLASSIFY_SYS = (
     "You map a state legislative BILL to a voter-scorecard POSITION. You are given numbered "
@@ -149,11 +152,11 @@ def main():
 
     for b in flagged[:max_bills]:
         title_txt = b.get("title") or ""
+        # The low-info skip is for CAPTION boilerplate (TN's "AN ACT to amend Title 49...").
+        # Descriptive titles (NH's "relative to X") proceed regardless — the classifier +
+        # dual-direction coherence gates still protect them.
         if CAPTION.match(title_txt) and not DIRECTIONAL.search(title_txt):
             skipped["caption_bill"] = skipped.get("caption_bill", 0) + 1
-            continue
-        if not DIRECTIONAL.search(title_txt):
-            skipped["no_direction_word"] = skipped.get("no_direction_word", 0) + 1
             continue
         bkey = f"{state}:{b['bill_id']}"
         cls = ccache.get(bkey)
@@ -186,10 +189,12 @@ def main():
             continue
 
         bill = ls.pull("getBill", id=b["bill_id"]).get("bill") or {}
-        finals = [v for v in (bill.get("votes") or []) if FINAL_RC.search(v.get("desc") or "")]
+        finals = [v for v in (bill.get("votes") or [])
+                  if FINAL_RC.search(v.get("desc") or "") or ITL_RC.search(v.get("desc") or "")]
         if not finals:
             skipped["no_final_rc"] += 1
             continue
+        is_itl = bool(ITL_RC.search(finals[-1].get("desc") or ""))
 
         # DUAL-DIRECTION COHERENCE GATE (the HB444 lesson): double-negative titles
         # ("Immigration Enforcement Agreements - Prohibition") invert polarity past a single
@@ -269,7 +274,9 @@ def main():
                 skipped["ambiguous_name"] += 1
                 continue
             c = matches[0]
-            supports = (cls["yea"] == "support") == (vt == "yea")
+            # ITL reverses: YEA on Inexpedient-to-Legislate = voting AGAINST the bill.
+            voted_for_bill = (vt == "yea") != is_itl
+            supports = (cls["yea"] == "support") == voted_for_bill
             key = f"{c['slug']}@{state}"
             rec = records.setdefault(key, {"profile": {
                 "confidence": "evidence_state",

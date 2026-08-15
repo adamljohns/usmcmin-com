@@ -2,615 +2,354 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <script>(function(){try{var s=localStorage.getItem('usmc-theme')||localStorage.getItem('theme');if(s!=='light')document.documentElement.setAttribute('data-theme','dark');}catch(e){}})();</script>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script>(function(){try{var s=localStorage.getItem('usmc-theme')||localStorage.getItem('theme');if(s!=='light')document.documentElement.setAttribute('data-theme','dark');}catch(e){}})();</script>
   <title>RESOLUTE Wire — Curated News for Citizens | U.S.M.C. Ministries</title>
-  <meta name="description" content="RESOLUTE Wire — a Drudge-style curated news board for citizens: political, civic, and tech/AI signals with short insight and links to original sources. Human-approved.">
+  <meta name="description" content="RESOLUTE Wire — national, global, and tech briefing for citizens and pastors. Source-led. Human-approved. Not Associated Press.">
   <link rel="canonical" href="https://usmcmin.com/wire.html">
   <meta property="og:site_name" content="RESOLUTE Wire">
   <meta property="og:title" content="RESOLUTE Wire — Curated News for Citizens">
-  <meta property="og:description" content="Political, civic, and tech/AI signals for informed citizens. Source-led. Human-approved. Not Associated Press.">
+  <meta property="og:description" content="National, global, and tech briefing. Civic week lives on RESOLUTE Local. Human-approved. Not Associated Press.">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://usmcmin.com/wire.html">
-  <meta property="og:image" content="https://usmcmin.com/assets/og/og-citizen.jpg">
-  <meta property="og:image:width" content="1200">
-  <meta property="og:image:height" content="630">
+  <meta property="og:image" content="https://usmcmin.com/assets/wire/dvids-768415-fitzgerald-sm3-2000w.jpg">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="RESOLUTE Wire">
-  <meta name="twitter:description" content="Curated news for citizens — political, civic, tech/AI. Human-approved.">
-  <meta name="twitter:image" content="https://usmcmin.com/assets/og/og-citizen.jpg">
+  <meta name="twitter:description" content="National, global, and tech briefing. Human-approved. Not Associated Press.">
+  <meta name="twitter:image" content="https://usmcmin.com/assets/wire/dvids-768415-fitzgerald-sm3-2000w.jpg">
   <meta name="robots" content="index,follow">
-  <link rel="stylesheet" href="assets/css/main.min.css">
   <link rel="icon" type="image/svg+xml" href="assets/icons/favicon.svg">
-  <link rel="icon" type="image/png" sizes="32x32" href="assets/icons/favicon-32.png">
-  <link rel="icon" type="image/png" sizes="16x16" href="assets/icons/favicon-16.png">
-  <link rel="apple-touch-icon" sizes="180x180" href="assets/icons/apple-touch-icon.png">
   <style>
-    .wire-wrap { max-width: 1100px; margin: 0 auto; padding: 20px 16px 48px; }
-    .wire-draft-banner {
-      background: rgba(248,113,113,0.12);
-      border: 1px solid rgba(248,113,113,0.45);
-      color: #fca5a5;
-      border-radius: 8px;
-      padding: 10px 14px;
-      font-size: 0.82rem;
-      font-weight: 700;
-      letter-spacing: 0.4px;
+    :root {
+      --bg: #0b0d11;
+      --bg-2: #12151b;
+      --card: #161a21;
+      --ink: #f3f4f6;
+      --muted: #9aa3b2;
+      --line: #2a303a;
+      --gold: #c9b37a;
+      --gold-dim: rgba(201,179,122,0.16);
+      --red: #c45b5b;
+      --blue: #7ea8d6;
+      --green: #7dba8e;
+      --serif: "Iowan Old Style", "Palatino Linotype", Palatino, "Times New Roman", serif;
+      --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+    }
+    html[data-theme="light"] {
+      --bg: #f6f3ec;
+      --bg-2: #fffdf8;
+      --card: #ffffff;
+      --ink: #1a1c1f;
+      --muted: #5b616b;
+      --line: #ddd6c8;
+      --gold: #8a7040;
+      --gold-dim: rgba(138,112,64,0.12);
+      --red: #9b3b3b;
+      --blue: #2f5f8a;
+      --green: #2f6b45;
+    }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; padding: 0; background: var(--bg); color: var(--ink); font-family: var(--sans); }
+    a { color: inherit; }
+    .wrap { max-width: 1180px; margin: 0 auto; padding: 18px 20px 64px; }
+    .proto-banner {
+      background: #7a1f1f;
+      color: #fff;
       text-align: center;
-      margin-bottom: 18px;
-    }
-    .wire-masthead {
-      text-align: center;
-      border-bottom: 3px double var(--border);
-      padding: 28px 8px 18px;
-      margin-bottom: 22px;
-    }
-    .wire-kicker {
       font-size: 0.72rem;
-      font-weight: 800;
-      letter-spacing: 2px;
-      text-transform: uppercase;
-      color: var(--accent);
-      margin-bottom: 8px;
-    }
-    .wire-masthead h1 {
-      font-size: clamp(2.1rem, 6vw, 3.4rem);
-      font-weight: 900;
-      color: var(--white);
-      margin: 0 0 8px;
-      letter-spacing: -0.5px;
-    }
-    .wire-masthead h1 .gold { color: var(--accent); }
-    .wire-sub {
-      color: var(--gray);
-      font-size: 0.95rem;
-      max-width: 640px;
-      margin: 0 auto 10px;
-      line-height: 1.55;
-    }
-    .wire-meta {
-      font-size: 0.78rem;
-      color: var(--gray);
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      justify-content: center;
-      align-items: center;
-    }
-    .wire-meta .dot { opacity: 0.45; }
-    .wire-disclosure {
-      margin-top: 10px;
-      font-size: 0.72rem;
-      color: var(--gray);
-      max-width: 720px;
-      margin-left: auto;
-      margin-right: auto;
-      line-height: 1.45;
-    }
-    .wire-lead {
-      display: grid;
-      grid-template-columns: 1.15fr 1fr;
-      gap: 20px;
-      background: var(--bg-card);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      overflow: hidden;
-      margin-bottom: 28px;
-    }
-    .wire-lead-media {
-      min-height: 220px;
-      background:
-        linear-gradient(135deg, rgba(30,58,95,0.55), rgba(212,175,55,0.12)),
-        radial-gradient(circle at 30% 30%, rgba(212,175,55,0.2), transparent 55%);
-      display: flex;
-      align-items: flex-end;
-      padding: 16px;
-    }
-    .wire-lead-media img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      display: block;
-    }
-    .wire-lead-body { padding: 22px 22px 20px; display: flex; flex-direction: column; gap: 10px; }
-    .wire-channel {
-      display: inline-block;
-      font-size: 0.68rem;
-      font-weight: 800;
-      letter-spacing: 1.2px;
-      text-transform: uppercase;
-      padding: 3px 8px;
-      border-radius: 999px;
-      border: 1px solid var(--border);
-      color: var(--accent);
-      width: fit-content;
-    }
-    .wire-channel.political { border-color: rgba(248,113,113,0.45); color: #fca5a5; }
-    .wire-channel.civic { border-color: rgba(212,175,55,0.5); color: #D4AF37; }
-    .wire-channel.tech { border-color: rgba(96,165,250,0.5); color: #93c5fd; }
-    .wire-channel.defense { border-color: rgba(74,222,128,0.4); color: #86efac; }
-    .wire-lead h2 {
-      font-size: clamp(1.35rem, 3vw, 1.85rem);
-      line-height: 1.25;
-      margin: 0;
-      color: var(--white);
-    }
-    .wire-lead h2 a { color: inherit; text-decoration: none; }
-    .wire-lead h2 a:hover { color: var(--accent); }
-    .wire-insight {
-      color: var(--gray);
-      font-size: 0.95rem;
-      line-height: 1.55;
-      margin: 0;
-    }
-    .wire-source {
-      font-size: 0.78rem;
-      color: var(--gray);
-      margin-top: auto;
-    }
-    .wire-source a { color: var(--accent); text-decoration: none; font-weight: 600; }
-    .wire-source a:hover { text-decoration: underline; }
-    .wire-rails {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 16px;
-      margin-bottom: 28px;
-    }
-    .wire-rail {
-      background: var(--bg-card);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 14px 14px 10px;
-      min-height: 160px;
-    }
-    .wire-rail h3 {
-      margin: 0 0 12px;
-      font-size: 0.78rem;
-      letter-spacing: 1.4px;
-      text-transform: uppercase;
-      color: var(--accent);
-      border-bottom: 1px solid var(--border);
-      padding-bottom: 8px;
-    }
-    .wire-item {
-      padding: 10px 0;
-      border-bottom: 1px solid rgba(168,176,188,0.12);
-    }
-    .wire-item:last-child { border-bottom: none; }
-    .wire-item a.hed {
-      display: block;
-      color: var(--white);
-      font-weight: 700;
-      font-size: 0.95rem;
-      line-height: 1.35;
-      text-decoration: none;
-      margin-bottom: 4px;
-    }
-    .wire-item a.hed:hover { color: var(--accent); }
-    .wire-item .blurb {
-      color: var(--gray);
-      font-size: 0.82rem;
-      line-height: 1.45;
-      margin: 0 0 4px;
-    }
-    .wire-item .src {
-      font-size: 0.72rem;
-      color: var(--gray);
-      opacity: 0.9;
-    }
-    .wire-item.placeholder {
-      opacity: 0.72;
-      border: 1px dashed rgba(168,176,188,0.35);
-      border-radius: 8px;
-      padding: 10px;
-      margin-bottom: 8px;
-    }
-    .wire-watch {
-      background: rgba(168,176,188,0.05);
-      border: 1px solid var(--border);
-      border-left: 4px solid var(--accent);
-      border-radius: 8px;
-      padding: 14px 16px;
-      margin-bottom: 28px;
-    }
-    .wire-watch h3 {
-      margin: 0 0 10px;
-      font-size: 0.75rem;
-      letter-spacing: 1.3px;
-      text-transform: uppercase;
-      color: var(--accent);
-    }
-    .wire-watch ul { margin: 0; padding-left: 18px; color: var(--gray); }
-    .wire-watch li { margin-bottom: 8px; line-height: 1.45; }
-    .wire-watch a { color: var(--white); font-weight: 600; text-decoration: none; }
-    .wire-watch a:hover { color: var(--accent); }
-    .wire-dock {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 14px;
-      margin-bottom: 20px;
-    }
-    .wire-dock a {
-      display: block;
-      text-decoration: none;
-      background: linear-gradient(135deg, rgba(212,175,55,0.10) 0%, rgba(168,176,188,0.06) 100%);
-      border: 1px solid rgba(212,175,55,0.30);
-      border-radius: 12px;
-      padding: 16px 18px;
-      color: var(--white);
-      transition: border-color 0.15s, transform 0.15s;
-    }
-    .wire-dock a:hover { border-color: var(--accent); transform: translateY(-2px); }
-    .wire-dock .k { font-size: 0.7rem; color: #D4AF37; font-weight: 800; letter-spacing: 1.2px; text-transform: uppercase; margin-bottom: 4px; }
-    .wire-dock .t { font-size: 1.05rem; font-weight: 800; margin-bottom: 4px; }
-    .wire-dock .d { font-size: 0.84rem; color: var(--gray); line-height: 1.45; }
-    .wire-empty {
-      color: var(--gray);
-      font-size: 0.85rem;
-      font-style: italic;
-      padding: 8px 0;
-    }
-    @media (max-width: 860px) {
-      .wire-lead { grid-template-columns: 1fr; }
-      .wire-lead-media { min-height: 140px; }
-      .wire-rails { grid-template-columns: 1fr; }
-      .wire-dock { grid-template-columns: 1fr; }
-    }
-
-    /* RSA-0809-WIRE-04 Wave A */
-    .main-nav .nav-cta {
-      white-space: nowrap;
-      flex-shrink: 0;
-      padding: 10px 16px;
-      font-size: 0.88rem;
-    }
-    .wire-lead-media {
-      background:
-        linear-gradient(145deg, rgba(30,58,95,0.92), rgba(12,18,28,0.96)),
-        url('assets/og/og-citizen.jpg') center/cover no-repeat;
-      position: relative;
-    }
-    .wire-lead-media.has-image {
-      background: #0c121c;
-    }
-    .wire-lead-media .wire-brand-mark {
-      position: absolute;
-      inset: 0;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-direction: column;
-      gap: 10px;
-      color: rgba(212,175,55,0.95);
-      font-weight: 700;
       letter-spacing: 0.12em;
       text-transform: uppercase;
-      font-size: 0.78rem;
-      pointer-events: none;
+      font-weight: 800;
+      padding: 8px 12px;
     }
-    .wire-lead-media .wire-brand-mark img {
-      width: 64px;
-      height: 64px;
-      opacity: 0.92;
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      padding: 14px 0 10px;
+      border-bottom: 1px solid var(--line);
     }
-    .wire-item {
+    .brand { display: flex; flex-direction: column; gap: 2px; }
+    .brand .kicker { font-size: 0.68rem; letter-spacing: 0.22em; text-transform: uppercase; color: var(--gold); font-weight: 800; }
+    .brand strong { font-family: var(--serif); font-size: 1.05rem; letter-spacing: 0.02em; }
+    .nav { display: flex; gap: 16px; align-items: center; flex-wrap: wrap; font-size: 0.82rem; }
+    .nav a { text-decoration: none; color: var(--muted); }
+    .nav a.active { color: var(--ink); font-weight: 700; }
+    .nav a.local { color: var(--gold); font-weight: 700; }
+    button.theme {
+      border: 1px solid var(--line);
+      background: var(--card);
+      color: var(--ink);
+      border-radius: 999px;
+      padding: 6px 10px;
+      font-size: 0.75rem;
+      cursor: pointer;
+    }
+    .mast {
+      text-align: center;
+      padding: 28px 0 22px;
+      border-bottom: 3px double var(--line);
+      margin-bottom: 22px;
+    }
+    .mast h1 {
+      font-family: var(--serif);
+      font-size: clamp(2.4rem, 7vw, 4.4rem);
+      line-height: 0.92;
+      margin: 0 0 10px;
+      letter-spacing: -0.03em;
+    }
+    .mast h1 em { font-style: normal; color: var(--gold); }
+    .dek { max-width: 640px; margin: 0 auto 10px; color: var(--muted); line-height: 1.55; }
+    .meta { font-size: 0.78rem; color: var(--muted); }
+    .hero {
       display: grid;
-      /* Thumbnail on the RIGHT so every headline starts at the same x. With it
-         on the left, cards that have no picture (most of them — the desk only
-         supplies art for some sources) started 72px further left than the ones
-         that do, and the rail read as a ragged zigzag. */
-      grid-template-columns: 1fr 72px;
-      gap: 12px;
-      align-items: start;
+      grid-template-columns: 1.35fr 0.85fr;
+      gap: 0;
+      background: var(--card);
+      border: 1px solid var(--line);
+      margin-bottom: 22px;
+      min-height: 420px;
     }
-    .wire-item .body { grid-column: 1; grid-row: 1; }
-    .wire-item .thumb { grid-column: 2; grid-row: 1; }
-    .wire-item.no-media { grid-template-columns: 1fr; }
-    .wire-item .thumb {
-      width: 72px;
-      height: 72px;
-      border-radius: 8px;
-      overflow: hidden;
-      /* Plain tint, not og-citizen.jpg. When a source image 404s the old
-         background revealed the very placeholder we are trying to avoid. */
-      background: linear-gradient(145deg, rgba(30,58,95,0.85), rgba(12,18,28,0.95));
-      flex-shrink: 0;
+    .hero-media { position: relative; min-height: 360px; background: #0c121c; }
+    .hero-media img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .hero-credit {
+      position: absolute;
+      left: 0; right: 0; bottom: 0;
+      padding: 28px 14px 10px;
+      background: linear-gradient(transparent, rgba(0,0,0,0.72));
+      color: #e8e4da;
+      font-size: 0.68rem;
+      letter-spacing: 0.02em;
     }
-    .wire-item .thumb img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
+    .hero-body { padding: 28px 28px 24px; display: flex; flex-direction: column; gap: 12px; }
+    .chip {
+      width: fit-content;
+      font-size: 0.68rem;
+      font-weight: 800;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      border: 1px solid var(--line);
+      padding: 4px 8px;
+      color: var(--blue);
+    }
+    .hero-body h2 { font-family: var(--serif); font-size: clamp(1.7rem, 3vw, 2.25rem); line-height: 1.15; margin: 0; }
+    .hero-body h2 a { text-decoration: none; }
+    .hero-body h2 a:hover { color: var(--gold); }
+    .insight { color: var(--muted); line-height: 1.6; margin: 0; font-size: 1.02rem; }
+    .src { margin-top: auto; font-size: 0.8rem; color: var(--muted); }
+    .src a { color: var(--gold); font-weight: 700; text-decoration: none; }
+    .rails { display: grid; grid-template-columns: 1.15fr 0.95fr 0.9fr; gap: 16px; margin-bottom: 22px; }
+    .rail { background: var(--card); border: 1px solid var(--line); padding: 14px; }
+    .rail h3 {
+      margin: 0 0 12px;
+      font-size: 0.74rem;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--gold);
+      border-bottom: 1px solid var(--line);
+      padding-bottom: 8px;
+    }
+    .item { display: grid; grid-template-columns: 1fr 92px; gap: 12px; padding: 12px 0; border-bottom: 1px solid var(--line); }
+    .item:last-child { border-bottom: 0; }
+    .item.no-media { grid-template-columns: 1fr; }
+    .item h4 { margin: 0 0 6px; font-family: var(--serif); font-size: 1.05rem; line-height: 1.25; }
+    .item h4 a { text-decoration: none; }
+    .item h4 a:hover { color: var(--gold); }
+    .item p { margin: 0 0 6px; color: var(--muted); font-size: 0.86rem; line-height: 1.45; }
+    .item .who { font-size: 0.72rem; color: var(--muted); letter-spacing: 0.04em; text-transform: uppercase; }
+    .thumb { width: 92px; height: 72px; overflow: hidden; background: var(--bg-2); }
+    .thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .local-card {
+      min-height: 220px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      background: var(--gold-dim);
+      border-color: var(--gold);
+    }
+    .local-card p { color: var(--muted); line-height: 1.5; }
+    .local-card a.cta {
+      display: inline-block;
+      margin-top: 12px;
+      color: var(--gold);
+      font-weight: 800;
+      text-decoration: none;
+      letter-spacing: 0.04em;
+    }
+    .watch { border-left: 4px solid var(--gold); background: var(--card); border: 1px solid var(--line); padding: 16px 18px; margin-bottom: 22px; }
+    .watch h3 { margin: 0 0 10px; font-size: 0.74rem; letter-spacing: 0.16em; text-transform: uppercase; color: var(--gold); }
+    .watch ul { margin: 0; padding-left: 18px; color: var(--muted); }
+    .watch li { margin: 0 0 8px; line-height: 1.45; }
+    .watch a { color: var(--ink); font-weight: 700; text-decoration: none; }
+    .dock { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; }
+    .dock a {
       display: block;
+      text-decoration: none;
+      border: 1px solid var(--line);
+      background: var(--card);
+      padding: 16px;
     }
-    .wire-item .body { min-width: 0; }
-    .wire-item a.hed { display: block; margin-bottom: 4px; }
-    .wire-item .blurb {
-      display: -webkit-box;
-      -webkit-line-clamp: 3;
-      -webkit-box-orient: vertical;
-      overflow: hidden;
+    .dock .k { color: var(--gold); font-size: 0.7rem; letter-spacing: 0.14em; text-transform: uppercase; font-weight: 800; margin-bottom: 4px; }
+    .dock .t { font-family: var(--serif); font-size: 1.15rem; margin-bottom: 4px; }
+    .dock .d { color: var(--muted); font-size: 0.84rem; line-height: 1.45; }
+    .fine { margin-top: 22px; text-align: center; font-size: 0.68rem; color: var(--muted); line-height: 1.5; max-width: 720px; margin-left: auto; margin-right: auto; }
+    @media (max-width: 900px) {
+      .hero, .rails, .dock { grid-template-columns: 1fr; }
+      .hero-media { min-height: 240px; }
     }
-    .wire-source, .wire-item .src {
-      font-size: 0.78rem;
-      color: var(--gray);
-    }
-    .wire-masthead { padding-top: 18px; }
-    .wire-sub { max-width: 46rem; margin-left: auto; margin-right: auto; }
-    @media (max-width: 640px) {
-      .wire-item { grid-template-columns: 1fr 56px; gap: 10px; }
-      .wire-item .thumb { width: 56px; height: 56px; }
-      .main-nav .nav-cta { padding: 8px 12px; font-size: 0.8rem; }
-    }
-  
-/* Clear the fixed masthead. `body > nav` is position:fixed and takes no space
-   in the flow, so this page's first block rendered behind it. --nav-clear is
-   defined once in assets/css/main.css; don't hard-code a pixel value here. */
-.wire-wrap { padding-top: var(--nav-clear); }
-</style>
+  </style>
 </head>
 <body>
-<a href="#main" class="skip-link">Skip to content</a>
-
-<nav class="main-nav" aria-label="Primary">
-  <a href="/" class="nav-brand" style="text-decoration:none">
-    <img src="assets/icons/shield-star.png" alt="" width="28" height="28">
-    <div class="nav-brand-text">
-      <strong>U.S.M.C. Ministries</strong>
-      <span>RESOLUTE Wire</span>
+  <div class="wrap">
+    <div class="topbar">
+      <div class="brand">
+        <span class="kicker">U.S.M.C. Ministries</span>
+        <strong>RESOLUTE Wire</strong>
+      </div>
+      <nav class="nav" aria-label="Primary">
+        <a href="mission.html">Mission</a>
+        <a href="citizen.html">Citizen</a>
+        <a class="active" href="#top">Wire</a>
+        <a class="local" href="https://adamljohns.github.io/resolute-local/">RESOLUTE Local</a>
+        <button class="theme" type="button" id="themeToggle">Light</button>
+      </nav>
     </div>
-  </a>
-  <ul class="nav-links">
-    <li><a href="mission.html">Mission</a></li>
-    <li><a href="citizen.html">Citizen</a></li>
-    <li><a href="wire.html" class="active" aria-current="page">Wire</a></li>
-    <li><a href="shop.html">Shop</a></li>
-    <li><a href="books.html">Books</a></li>
-    <li><a href="coaching.html">Coaching</a></li>
-    <li><a href="about.html">About</a></li>
-    <li><a href="https://usmcmin.org" target="_blank" rel="noopener">Ministry Site</a></li>
-  </ul>
-  <a href="coaching.html" class="btn nav-cta">Book a Session</a>
-  <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme" title="Switch light/dark mode">🌙</button>
-  <button class="nav-toggle" aria-label="Menu"><span></span><span></span><span></span></button>
-</nav>
 
-<main id="main" class="wire-wrap">
-  <header class="wire-masthead">
-    <div class="wire-kicker">RESOLUTE · Citizens Informed</div>
-    <h1><span class="gold">RESOLUTE</span> Wire</h1>
-    <p class="wire-sub">A curated board for citizens — political, civic, and tech/AI signals with short insight and a path to the original source.</p>
-    <div class="wire-meta">
-      <span id="wireDate">Loading edition…</span>
-      <span class="dot">·</span>
-      <span id="wireEdition">daily</span>
-      <span class="dot">·</span>
-      <span>Rush Sullivan · national/tech · Sheriff Roy Caldwell · civic</span>
-    </div>
-    <p class="wire-disclosure" id="wireDisclosure"></p>
-  </header>
+    <header class="mast" id="top">
+      <h1>RESOLUTE <em>Wire</em></h1>
+      <p class="dek">National, global, and tech briefing for citizens and pastors. Civic week lives on RESOLUTE Local.</p>
+      <div class="meta">Saturday, August 15, 2026 · AM edition · Rush Sullivan</div>
+    </header>
 
-  <section class="wire-lead" id="wireLead" aria-label="Lead story">
-    <div class="wire-lead-media" id="leadMedia" aria-hidden="true"></div>
-    <div class="wire-lead-body">
-      <span class="wire-channel tech" id="leadChannel">Tech / AI</span>
-      <h2 id="leadHed"><a href="#" id="leadLink">Loading…</a></h2>
-      <p class="wire-insight" id="leadInsight"></p>
-      <div class="wire-source" id="leadSource"></div>
-    </div>
-  </section>
+    <article class="hero">
+      <div class="hero-media">
+        <img src="assets/wire/dvids-768415-fitzgerald-sm3-2000w.jpg" alt="USS Fitzgerald launches an SM-3 interceptor">
+        <div class="hero-credit">U.S. Navy / DVIDS 768415 · VIRIN 121025-N-ZZ999-001 · Public domain</div>
+      </div>
+      <div class="hero-body">
+        <span class="chip">Defense / Industry</span>
+        <h2><a href="https://www.defensenews.com/industry/techwatch/2026/08/14/pentagon-inks-deals-with-boeing-rtx-to-boost-production-of-sm-3-components/" target="_blank" rel="noopener">Pentagon locks Boeing and RTX into seven years of SM-3 parts</a></h2>
+        <p class="insight">Defense News, with a matching Department of War release: Friday framework deals cover SM-3 Block IB and IIA avionics and ejector assemblies. No dollar figure and no quantity in either text. This is industrial tempo — not a new interceptor, and not a hull in the water.</p>
+        <div class="src">Defense News · <a href="https://www.defensenews.com/industry/techwatch/2026/08/14/pentagon-inks-deals-with-boeing-rtx-to-boost-production-of-sm-3-components/" target="_blank" rel="noopener">Read source →</a></div>
+      </div>
+    </article>
 
-  <section class="wire-rails" aria-label="Channel rails">
-    <div class="wire-rail" id="railPolitical">
-      <h3>Political</h3>
-      <div class="wire-empty">Loading…</div>
-    </div>
-    <div class="wire-rail" id="railCivic">
-      <h3>Civic / RESOLUTE</h3>
-      <div class="wire-empty">Loading…</div>
-    </div>
-    <div class="wire-rail" id="railTech">
-      <h3>Tech / AI</h3>
-      <div class="wire-empty">Loading…</div>
-    </div>
-  </section>
+    <section class="rails" aria-label="Channel rails">
+      <div class="rail">
+        <h3>Political</h3>
+        <article class="item">
+          <div>
+            <h4><a href="https://news.usni.org/2026/08/14/uss-benfold-was-stalled-in-the-south-china-sea-for-four-days-after-engineering-casualty" target="_blank" rel="noopener">USNI: USS Benfold sat four days without power in the South China Sea</a></h4>
+            <p>Overnight from USNI: guided-missile destroyer Benfold (DDG-65) lost power last month and drifted four days in the South China Sea. Seventh Fleet confirmed the casualty. This is a readiness story — not a combat report.</p>
+            <div class="who">USNI News</div>
+          </div>
+          <div class="thumb"><img src="assets/wire/dvids-9678705-benfold-2000w.jpg" alt=""></div>
+        </article>
+        <article class="item">
+          <div>
+            <h4><a href="https://news.usni.org/2026/08/13/new-white-house-memo-calls-for-foreign-built-warships-return-to-steam-catapults-on-ford-carriers" target="_blank" rel="noopener">USNI: White House memo floats foreign-built warships</a></h4>
+            <p>Aug 13 presidential memo, as reported by USNI: Pentagon to consider foreign-built warships and auxiliaries, plus steam catapults on future Ford-class carriers. Memo is direction. Watch Congress and the yards, not the headline alone.</p>
+            <div class="who">USNI News</div>
+          </div>
+          <div class="thumb"><img src="assets/wire/dvids-9615140-ford-flight-deck-2000w.jpg" alt=""></div>
+        </article>
+        <article class="item no-media">
+          <div>
+            <h4><a href="https://wng.org/articles/trump-makes-a-u-turn-on-ukraine-1786410637" target="_blank" rel="noopener">WORLD: Trump’s Ukraine posture shifts with the battlefield</a></h4>
+            <p>WORLD (Aug 13) frames a U-turn: more public backing for Kyiv after battlefield gains, including a symbolic Patriot-production license. Reporting, not a treaty. Stockpile math still sits under the photo-ops.</p>
+            <div class="who">WORLD News Group</div>
+          </div>
+        </article>
+        <article class="item no-media">
+          <div>
+            <h4><a href="https://www.heritage.org/education/commentary/applying-the-white-houses-higher-ed-compact-state-level" target="_blank" rel="noopener">Heritage: take the White House higher-ed compact to the states</a></h4>
+            <p>Heritage (Aug 13) argues the federal Compact for Academic Excellence should now be applied in state policy as the school year starts. Advocacy analysis — track actual state bills and university sign-ons, not the culture-war caption.</p>
+            <div class="who">Heritage Foundation</div>
+          </div>
+        </article>
+      </div>
 
-  <section class="wire-watch" id="wireWatch" hidden>
-    <h3>Watch</h3>
-    <ul id="watchList"></ul>
-  </section>
+      <div class="rail">
+        <h3>Tech / AI</h3>
+        <article class="item">
+          <div>
+            <h4><a href="https://www.centcom.mil/MEDIA/PUBLIC-RELEASES/Article/4573159/centcom-launches-first-ever-multinational-attack-drone-task-force/" target="_blank" rel="noopener">CENTCOM stands up a multinational one-way-drone task force</a></h4>
+            <p>CENTCOM’s Aug 13 release, reported Friday by Defense News: Task Force Falcon Strike will use one-way attack drones above, on, and below the sea with regional partners. Follow-on to Scorpion Strike — a command announcement, not a battle report.</p>
+            <div class="who">U.S. Central Command</div>
+          </div>
+          <div class="thumb"><img src="assets/wire/dvids-988415-lucas-owas-1000w.jpg" alt=""></div>
+        </article>
+        <article class="item no-media">
+          <div>
+            <h4><a href="https://newsroom.ibm.com/2026-08-13-ibm-partners-with-openai-to-accelerate-secure-ai-deployment-for-enterprises-across-core-operations" target="_blank" rel="noopener">IBM: OpenAI models go into the consulting stack</a></h4>
+            <p>IBM’s Aug 13 release says it will embed GPT-5.6 and related products in IBM Consulting Advantage, stand up an OpenAI Practice, and lean on Daybreak cyber work. Vendor partnership announcement — not a measured enterprise outcome.</p>
+            <div class="who">IBM Newsroom</div>
+          </div>
+        </article>
+        <article class="item no-media">
+          <div>
+            <h4><a href="https://techcrunch.com/2026/08/13/microsoft-kills-off-unsuccessful-ai-features-while-merging-its-separate-copilot-apps/" target="_blank" rel="noopener">Microsoft merges Copilot apps and kills weak features</a></h4>
+            <p>TechCrunch, citing Microsoft support docs: consumer Copilot and Microsoft 365 Copilot merge. Group Chats, AI podcasts, Copilot Labs, and Deep Research go away for consumers. Product consolidation, not a new model drop.</p>
+            <div class="who">TechCrunch</div>
+          </div>
+        </article>
+      </div>
 
-  <section class="wire-dock" aria-label="RESOLUTE siblings">
-    <a href="citizen.html">
-      <div class="k">Scorecard</div>
-      <div class="t">RESOLUTE Citizen</div>
-      <div class="d">Magistrates scored. Know who represents you before you vote.</div>
-    </a>
-    <a href="mission.html">
-      <div class="k">Mission Control</div>
-      <div class="t">HAPPY · FULFILLED · RESOLUTE</div>
-      <div class="d">The three modules of U.S.M.C. Ministries — husband, father, citizen.</div>
-    </a>
-  </section>
-</main>
+      <div class="rail local-card">
+        <div>
+          <h3>RESOLUTE Local</h3>
+          <p>Fredericksburg civic week is a separate porch — packet-first, not jammed onto this masthead. Afternoon update lives there.</p>
+          <p>Official minutes, posted packets, and Council dates. No hallway recap as the lead.</p>
+        </div>
+        <a class="cta" href="https://adamljohns.github.io/resolute-local/">Open RESOLUTE Local →</a>
+      </div>
+    </section>
 
-<footer>
-  <p><strong>U.S.M.C. Ministries</strong> &mdash; Warriors Equipped. Kingdom Advancing.</p>
-  <p style="margin-top:6px;font-size:0.75rem;color:var(--gray);">
-    <a href="citizen.html">Citizen</a> |
-    <a href="mission.html">Mission</a> |
-    <a href="https://usmcmin.org">usmcmin.org</a> |
-    <a href="sitemap.html">Sitemap</a> |
-    <a href="about.html">About</a>
-  </p>
-  <p style="margin-top:8px;font-size:0.7rem;color:var(--gray);max-width:640px;margin-left:auto;margin-right:auto;line-height:1.45;">
-    RESOLUTE Wire links out. Insights are brief commentary, not republication of full articles.
-  </p>
-</footer>
+    <section class="watch">
+      <h3>Watch</h3>
+      <ul>
+        <li><a href="https://www.defensenews.com/global/europe/2026/08/14/patriot-makers-hedge-on-ukraine-production-deal-as-officials-question-cause-of-hold-up/" target="_blank" rel="noopener">Patriot makers hedge on the Ukraine production license.</a> Promise is not a factory.</li>
+        <li><a href="https://openai.com/index/responding-next-frontier-critical-cyber-capabilities/" target="_blank" rel="noopener">OpenAI Astra “Critical” cyber note</a> is a week old. Still a pin, no longer the front page.</li>
+      </ul>
+    </section>
 
-<script>
-(function () {
-  const CHANNEL_LABEL = {
-    political: 'Political',
-    civic: 'Civic / RESOLUTE',
-    tech: 'Tech / AI',
-    defense: 'Defense',
-    watch: 'Watch'
-  };
+    <section class="dock">
+      <a href="https://adamljohns.github.io/resolute-local/">
+        <div class="k">Civic porch</div>
+        <div class="t">RESOLUTE Local</div>
+        <div class="d">Packet-first Fredericksburg briefing for citizens and pastors.</div>
+      </a>
+      <a href="citizen.html">
+        <div class="k">Scorecard</div>
+        <div class="t">RESOLUTE Citizen</div>
+        <div class="d">Magistrates scored. Know who represents you before you vote.</div>
+      </a>
+      <a href="mission.html">
+        <div class="k">Mission Control</div>
+        <div class="t">HAPPY · FULFILLED · RESOLUTE</div>
+        <div class="d">Husband, father, citizen — the three modules.</div>
+      </a>
+    </section>
 
-  function esc(s) {
-    return String(s == null ? '' : s)
-      .replace(/&/g, '&amp;')
-      .replace(/</g, '&lt;')
-      .replace(/>/g, '&gt;')
-      .replace(/"/g, '&quot;');
-  }
-
-  /* RSA-0814-WIRE-09: card thumbs use the JSON image. Brand OG is intentional
-     this cycle. Never promote vendor marketing banners (Contentful Frame.png). */
-  var VENDOR_BANNER = /ctfassets\.net|\/Frame\.png(\?|$)/i;
-
-  function hasRealImage(it) {
-    var img = it && it.image ? String(it.image).trim() : '';
-    return img && !VENDOR_BANNER.test(img) ? img : '';
-  }
-
-  function mediaThumb(it) {
-    var img = hasRealImage(it);
-    if (!img) return '';
-    return '<div class="thumb"><img src="' + esc(img) + '" alt="" loading="lazy" decoding="async" onerror="this.closest(\'.wire-item\').classList.add(\'no-media\'); this.parentNode.remove();"></div>';
-  }
-
-  function itemHTML(it) {
-    const ph = it.placeholder ? ' placeholder' : '';
-    const hed = esc(it.hed || 'Untitled');
-    const url = it.url ? esc(it.url) : '';
-    const insight = esc(it.insight || '');
-    const src = esc(it.source || '');
-    // RSA-0809-WIRE-04: never print schema enums (LINK_FAIR_USE / PUBLIC_RECORD / source_tier)
-    const link = url
-      ? '<a class="hed" href="' + url + '" target="_blank" rel="noopener">' + hed + '</a>'
-      : '<span class="hed" style="color:var(--white);font-weight:700">' + hed + '</span>';
-    const srcLine = src || '';
-    const media = mediaThumb(it);
-    return '<article class="wire-item' + ph + (media ? '' : ' no-media') + '">' +
-      media +
-      '<div class="body">' + link +
-      '<p class="blurb">' + insight + '</p>' +
-      (srcLine ? '<div class="src">' + srcLine + '</div>' : '') +
-      '</div></article>';
-  }
-
-  function fillRail(el, items) {
-    var h3 = el.querySelector('h3');
-    var title = h3 ? h3.outerHTML : '';
-    if (!items || !items.length) {
-      el.innerHTML = title + '<div class="wire-empty">No items this edition.</div>';
-      return;
-    }
-    el.innerHTML = title + items.map(itemHTML).join('');
-  }
-
-  function isDraft(board) {
-    var st = ((board.publish && board.publish.state) || board.status || '').toUpperCase();
-    return st.indexOf('DRAFT') !== -1 || st.indexOf('PENDING') !== -1 || st.indexOf('REVIEW') !== -1 || st === '' || st === 'EXPIRED';
-  }
-
-  function normalizeItems(board) {
-    // Prefer schema v1 rails; fall back to flat items[]
-    if (board.rails && typeof board.rails === 'object') {
-      return {
-        political: board.rails.political || [],
-        civic: (board.rails.civic || []).concat(Array.isArray(board.civic) ? board.civic : []),
-        tech: (board.rails.tech || []).concat(board.rails.defense || [])
-      };
-    }
-    var items = Array.isArray(board.items) ? board.items : [];
-    return {
-      political: items.filter(function (i) { return (i.channel || '') === 'political'; }),
-      civic: items.filter(function (i) { return (i.channel || '') === 'civic'; }),
-      tech: items.filter(function (i) {
-        var c = i.channel || '';
-        return c === 'tech' || c === 'defense';
-      })
-    };
-  }
-
-  fetch('data/wire-latest.json', { cache: 'no-store' })
-    .then(function (r) { if (!r.ok) throw new Error('board fetch ' + r.status); return r.json(); })
-    .then(function (board) {
-      // Public ship: page is indexable; board status still filters expired/pending items via isDraft helpers if needed later.
-      var robots = document.querySelector('meta[name="robots"]');
-      if (robots) robots.setAttribute('content', 'index,follow');
-
-      var dateBits = [board.board_date || '', board.ts_local || ''].filter(Boolean);
-      document.getElementById('wireDate').textContent = dateBits[0] || board.ts_local || '';
-      document.getElementById('wireEdition').textContent = board.edition || 'daily';
-      document.getElementById('wireDisclosure').textContent = board.disclosure || '';
-      if (board.dek) {
-        var sub = document.querySelector('.wire-sub');
-        if (sub) sub.textContent = board.dek;
+    <p class="fine">AI news desk for USMC Ministries / RESOLUTE. Human-approved before public. Not Associated Press. Links out to sources; short insights are fair-use commentary, not full reprints.</p>
+  </div>
+  <script>
+    (function () {
+      var root = document.documentElement;
+      var btn = document.getElementById('themeToggle');
+      function paint() {
+        var light = root.getAttribute('data-theme') === 'light';
+        btn.textContent = light ? 'Dark' : 'Light';
       }
-
-      var lead = board.lead || {};
-      var ch = (lead.channel || 'tech').toLowerCase();
-      var leadCh = document.getElementById('leadChannel');
-      leadCh.textContent = CHANNEL_LABEL[ch] || ch;
-      leadCh.className = 'wire-channel ' + (CHANNEL_LABEL[ch] ? ch : 'tech');
-      document.getElementById('leadHed').innerHTML = lead.url
-        ? '<a id="leadLink" href="' + esc(lead.url) + '" target="_blank" rel="noopener">' + esc(lead.hed || '') + '</a>'
-        : esc(lead.hed || '');
-      document.getElementById('leadInsight').textContent = lead.insight || '';
-      var leadSrcBits = [];
-      if (lead.source) leadSrcBits.push(esc(lead.source));
-      // no rights / source_tier enums on public face
-      document.getElementById('leadSource').innerHTML = leadSrcBits.join(' · ') +
-        (lead.url ? (leadSrcBits.length ? ' · ' : '') + '<a href="' + esc(lead.url) + '" target="_blank" rel="noopener">Read source →</a>' : '');
-      var leadMedia = document.getElementById('leadMedia');
-      var limg = lead.image ? String(lead.image).trim() : '';
-      if (VENDOR_BANNER.test(limg)) limg = '';
-      function setBrandLead() {
-        leadMedia.classList.remove('has-image');
-        leadMedia.innerHTML = '<div class="wire-brand-mark"><img src="assets/icons/shield-star.png" alt=""><span>RESOLUTE Wire</span></div>';
-      }
-      if (limg) {
-        leadMedia.classList.add('has-image');
-        var im = document.createElement('img');
-        im.alt = '';
-        im.src = limg;
-        im.onerror = function () { setBrandLead(); };
-        leadMedia.innerHTML = '';
-        leadMedia.appendChild(im);
-      } else {
-        setBrandLead();
-      }
-
-      var rails = normalizeItems(board);
-      fillRail(document.getElementById('railPolitical'), rails.political);
-      fillRail(document.getElementById('railCivic'), rails.civic);
-      fillRail(document.getElementById('railTech'), rails.tech);
-
-      var watch = Array.isArray(board.watch) ? board.watch : [];
-      if (watch.length) {
-        document.getElementById('wireWatch').hidden = false;
-        document.getElementById('watchList').innerHTML = watch.map(function (w) {
-          var hed = esc(w.hed || '');
-          var link = w.url ? '<a href="' + esc(w.url) + '" target="_blank" rel="noopener">' + hed + '</a>' : hed;
-          return '<li>' + link + (w.insight ? ' — ' + esc(w.insight) : '') +
-            (w.source ? ' <em>(' + esc(w.source) + ')</em>' : '') + '</li>';
-        }).join('');
-      }
-    })
-    .catch(function (err) {
-      document.getElementById('leadHed').textContent = 'Board unavailable';
-      document.getElementById('leadInsight').textContent = String(err && err.message ? err.message : err);
-      ['railPolitical', 'railCivic', 'railTech'].forEach(function (id) {
-        var el = document.getElementById(id);
-        el.innerHTML = el.querySelector('h3').outerHTML + '<div class="wire-empty">Could not load data/wire-latest.json</div>';
+      btn.addEventListener('click', function () {
+        var next = root.getAttribute('data-theme') === 'light' ? 'dark' : 'light';
+        root.setAttribute('data-theme', next);
+        try { localStorage.setItem('usmc-theme', next); localStorage.setItem('theme', next); } catch (e) {}
+        paint();
       });
-    });
-})();
-</script>
-<script data-goatcounter="https://usmcmin.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
-<script src="assets/js/main.js" defer></script>
+      paint();
+    })();
+  </script>
 </body>
 </html>

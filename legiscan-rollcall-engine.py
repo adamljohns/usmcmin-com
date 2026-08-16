@@ -222,8 +222,11 @@ def main():
                 continue
 
         bill = ls.pull("getBill", id=b["bill_id"]).get("bill") or {}
+        # "Amendments NOT Concurred" is a procedural concurrence dispute, not passage — MT's
+        # HB818 not-concur vote marked 48 R's FALSE on their own bill before this was vetoed.
         finals = [v for v in (bill.get("votes") or [])
-                  if FINAL_RC.search(v.get("desc") or "") or ITL_RC.search(v.get("desc") or "")]
+                  if (FINAL_RC.search(v.get("desc") or "") or ITL_RC.search(v.get("desc") or ""))
+                  and not re.search(r"not\s+concur", v.get("desc") or "", re.I)]
         if not finals:
             skipped["no_final_rc"] += 1
             continue

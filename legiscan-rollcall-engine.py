@@ -73,6 +73,7 @@ def surname(s):
 def main():
     state = sys.argv[1].upper()
     max_bills = int(sys.argv[sys.argv.index("--max-bills") + 1]) if "--max-bills" in sys.argv else 40
+    prior = "--prior" in sys.argv   # sweep the PREVIOUS regular session (2025 meat for states whose 2026 is young)
     apply_now = "--apply" in sys.argv
     today = time.strftime("%Y-%m-%d")
 
@@ -107,10 +108,12 @@ def main():
     # Prefer the newest REGULAR session — special sessions are tiny/topical (GA's "2026
     # Special Session" had 176 redistricting bills and zero rubric signal). Fall back to
     # newest anything (TX-style odd-year states: the sine-died 2025 regular is the record).
-    regular = [s for s in sess if not s.get("special")]
-    pick = sorted(regular or sess, key=lambda s: (s.get("year_start") or 0, s.get("session_id")), reverse=True)[0]
+    regular = sorted([s for s in sess if not s.get("special")] or sess,
+                     key=lambda s: (s.get("year_start") or 0, s.get("session_id")), reverse=True)
+    idx = 1 if (prior and len(regular) > 1) else 0
+    pick = regular[idx]
     sid = pick["session_id"]
-    print(f"session: {sid} {pick.get('session_name')}")
+    print(f"session: {sid} {pick.get('session_name')}" + (" [PRIOR]" if idx else ""))
 
     bills = [v for v in (ls.pull("getMasterList", id=sid).get("masterlist") or {}).values()
              if isinstance(v, dict) and v.get("bill_id")]

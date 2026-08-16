@@ -1,29 +1,31 @@
 {
-  "generated": "2026-08-16T21:15:17.356605+00:00",
+  "generated": "2026-08-16T23:16:27.973316+00:00",
   "totals": {
     "agents": 16,
     "operational": 14,
     "degraded": 2,
     "jobs": 129,
     "enabled": 99,
-    "accomplishments": 404,
+    "accomplishments": 405,
     "cowork": 41
   },
   "health": {
     "cron": {
       "enabled": 99,
-      "ran26h": 43,
-      "delivered": 37,
+      "ran26h": 47,
+      "delivered": 41,
       "fails": [
-        "Skill: airbnb-host (sally)",
-        "Nutrition log ping 19:00 \u2014 Coach Arnie (coach-arnie)"
+        "Pops Spirit Front Weekly SITREP (Sun 1900) (pops)",
+        "Skill: airbnb-host (sally)"
       ]
     },
     "cron_source": "openclaw.sqlite + hermes/cron/jobs.json",
     "launchd": {
-      "healthy": 71,
+      "healthy": 69,
       "fails": [
-        "com.moop.evening-wrap: exit 1"
+        "com.moop.chatgpt-export-watcher: exit 2",
+        "com.moop.calendar-invite-watcher: exit 2",
+        "com.moop.evening-wrap: exit -9"
       ]
     }
   },
@@ -37,7 +39,7 @@
     {
       "label": "Command Surface Sync",
       "purpose": "Command DB \u2192 Obsidian / TACC / workflows",
-      "last": "2026-08-16T17:13:10-04:00",
+      "last": "2026-08-16T19:01:22-04:00",
       "status": "local-only"
     },
     {
@@ -124,7 +126,7 @@
       "n_jobs": 25,
       "n_enabled": 13,
       "err": 0,
-      "last_ms": 1786914169593,
+      "last_ms": 1786921506223,
       "status": "operational",
       "accomplishments": [
         {
@@ -334,10 +336,10 @@
           "expr": "0 * * * *",
           "tz": "",
           "channel": "last",
-          "last_ms": 1786914169593,
+          "last_ms": 1786921506223,
           "status": "ok",
           "errors": 0,
-          "dur_ms": 74
+          "dur_ms": 124
         },
         {
           "name": "Skill: psa-skill-honing (weekly audit)",
@@ -619,7 +621,7 @@
       "n_jobs": 11,
       "n_enabled": 11,
       "err": 0,
-      "last_ms": 1786896519281,
+      "last_ms": 1786919895446,
       "status": "operational",
       "accomplishments": [
         {
@@ -759,6 +761,17 @@
       },
       "jobs": [
         {
+          "name": "Weekly Automation Review",
+          "enabled": true,
+          "expr": "30 18 * * 0",
+          "tz": "",
+          "channel": "origin",
+          "last_ms": 1786919895446,
+          "status": "ok",
+          "errors": 0,
+          "dur_ms": null
+        },
+        {
           "name": "MOOP Command Noon Capture",
           "enabled": true,
           "expr": "0 12 * * *",
@@ -858,17 +871,6 @@
           "dur_ms": null
         },
         {
-          "name": "Weekly Automation Review",
-          "enabled": true,
-          "expr": "30 18 * * 0",
-          "tz": "",
-          "channel": "origin",
-          "last_ms": 1786315029934,
-          "status": "ok",
-          "errors": 0,
-          "dur_ms": null
-        },
-        {
           "name": "Semiannual Email Archive Review",
           "enabled": true,
           "expr": "0 9 27 1,7 *",
@@ -892,7 +894,7 @@
       "n_jobs": 0,
       "n_enabled": 0,
       "err": 0,
-      "last_ms": 1786908909578,
+      "last_ms": 1786921336127,
       "status": "operational",
       "accomplishments": [
         {
@@ -989,7 +991,7 @@
       "n_jobs": 0,
       "n_enabled": 0,
       "err": 0,
-      "last_ms": 1786906414607,
+      "last_ms": 1786922149981,
       "status": "operational",
       "accomplishments": [
         {
@@ -2889,9 +2891,9 @@
       ],
       "n_jobs": 7,
       "n_enabled": 6,
-      "err": 1,
-      "last_ms": 1786896900039,
-      "status": "degraded",
+      "err": 0,
+      "last_ms": 1786921564114,
+      "status": "operational",
       "accomplishments": [
         {
           "date": "2026-08-16",
@@ -3035,7 +3037,7 @@
         "lane": "Garmin/fit20",
         "browser_profile": "garmin / fit20",
         "files": {
-          "AGENTS.md": 20984,
+          "AGENTS.md": 22219,
           "MEMORY.md": 22903,
           "HEARTBEAT.md": 1238
         },
@@ -3106,6 +3108,17 @@
       },
       "jobs": [
         {
+          "name": "Nutrition log ping 19:00 \u2014 Coach Arnie",
+          "enabled": true,
+          "expr": "0 19 * * *",
+          "tz": "America/New_York",
+          "channel": "telegram",
+          "last_ms": 1786921564114,
+          "status": "ok",
+          "errors": 0,
+          "dur_ms": 367815
+        },
+        {
           "name": "Coach Midday Garmin Read (12:15 EDT)",
           "enabled": true,
           "expr": "15 12 * * *",
@@ -3126,17 +3139,6 @@
           "status": "ok",
           "errors": 0,
           "dur_ms": 111172
-        },
-        {
-          "name": "Nutrition log ping 19:00 \u2014 Coach Arnie",
-          "enabled": true,
-          "expr": "0 19 * * *",
-          "tz": "America/New_York",
-          "channel": "telegram",
-          "last_ms": 1786834800008,
-          "status": "error",
-          "errors": 1,
-          "dur_ms": 25150
         },
         {
           "name": "Liberty Brief (Fri 11:46) \u2014 Coach Arnold Briggs",
@@ -3527,9 +3529,14 @@
       "n_jobs": 7,
       "n_enabled": 6,
       "err": 0,
-      "last_ms": 1786848600070,
+      "last_ms": 1786919400042,
       "status": "operational",
       "accomplishments": [
+        {
+          "date": "2026-08-16",
+          "title": "North Texas civic action brief for Michael \u2014 2 pages, lawful only",
+          "detail": "PDF shipped via psa-send-pdf.sh \u00b7 file=2026-08-16-michael-glen-rose-action"
+        },
         {
           "date": "2026-08-08",
           "title": "Roy \u2014 Aug 10\u201325 civic cluster brief + Telegram QR footer",
@@ -3679,6 +3686,17 @@
       },
       "jobs": [
         {
+          "name": "Evening Civic Watch (6:30 PM) \u2014 Sheriff Roy",
+          "enabled": true,
+          "expr": "30 18 * * *",
+          "tz": "America/New_York",
+          "channel": "discord",
+          "last_ms": 1786919400042,
+          "status": "ok",
+          "errors": 0,
+          "dur_ms": 161941
+        },
+        {
           "name": "Dev Loop: sheriff-roy daily reflection (implement-or-escalate)",
           "enabled": true,
           "expr": "50 22 * * *",
@@ -3688,17 +3706,6 @@
           "status": "ok",
           "errors": 0,
           "dur_ms": 74518
-        },
-        {
-          "name": "Evening Civic Watch (6:30 PM) \u2014 Sheriff Roy",
-          "enabled": true,
-          "expr": "30 18 * * *",
-          "tz": "America/New_York",
-          "channel": "discord",
-          "last_ms": 1786833000039,
-          "status": "ok",
-          "errors": 0,
-          "dur_ms": 154933
         },
         {
           "name": "Liberty Brief (Fri 11:51) \u2014 Sheriff Roy Caldwell",
@@ -4369,9 +4376,9 @@
       ],
       "n_jobs": 11,
       "n_enabled": 10,
-      "err": 0,
-      "last_ms": 1786910400049,
-      "status": "operational",
+      "err": 1,
+      "last_ms": 1786921200091,
+      "status": "degraded",
       "accomplishments": [
         {
           "date": "2026-08-12",
@@ -4671,6 +4678,28 @@
       },
       "jobs": [
         {
+          "name": "Pops Spirit Front Weekly SITREP (Sun 1900)",
+          "enabled": true,
+          "expr": "0 19 * * 0",
+          "tz": "America/New_York",
+          "channel": "telegram",
+          "last_ms": 1786921200091,
+          "status": "error",
+          "errors": 1,
+          "dur_ms": 24161
+        },
+        {
+          "name": "Skill: calendar-apple (Sun family week)",
+          "enabled": true,
+          "expr": "0 18 * * 0",
+          "tz": "America/New_York",
+          "channel": "telegram",
+          "last_ms": 1786917600044,
+          "status": "ok",
+          "errors": 0,
+          "dur_ms": 48925
+        },
+        {
           "name": "Pops Sunday Family Huddle Agenda Draft (Sun 4 PM)",
           "enabled": true,
           "expr": "0 16 * * 0",
@@ -4746,28 +4775,6 @@
           "status": "ok",
           "errors": 0,
           "dur_ms": 278699
-        },
-        {
-          "name": "Pops Spirit Front Weekly SITREP (Sun 1900)",
-          "enabled": true,
-          "expr": "0 19 * * 0",
-          "tz": "America/New_York",
-          "channel": "telegram",
-          "last_ms": 1786316400074,
-          "status": "ok",
-          "errors": 0,
-          "dur_ms": 40800
-        },
-        {
-          "name": "Skill: calendar-apple (Sun family week)",
-          "enabled": true,
-          "expr": "0 18 * * 0",
-          "tz": "America/New_York",
-          "channel": "telegram",
-          "last_ms": 1786312800044,
-          "status": "ok",
-          "errors": 0,
-          "dur_ms": 42484
         },
         {
           "name": "Pops Spirit Front Monthly Pulse + Vision-Read (1st 0700)",
@@ -5104,7 +5111,7 @@
       "n_jobs": 6,
       "n_enabled": 5,
       "err": 0,
-      "last_ms": 1786914000036,
+      "last_ms": 1786917600043,
       "status": "operational",
       "accomplishments": [
         {
@@ -5266,6 +5273,17 @@
       },
       "jobs": [
         {
+          "name": "Gus Sunday Reading List + Reflection (Sun 6PM)",
+          "enabled": true,
+          "expr": "0 18 * * 0",
+          "tz": "America/New_York",
+          "channel": "telegram",
+          "last_ms": 1786917600043,
+          "status": "ok",
+          "errors": 0,
+          "dur_ms": 256140
+        },
+        {
           "name": "Skill: theology-research (Sun prep)",
           "enabled": true,
           "expr": "0 17 * * 0",
@@ -5308,17 +5326,6 @@
           "status": "ok",
           "errors": 0,
           "dur_ms": 121126
-        },
-        {
-          "name": "Gus Sunday Reading List + Reflection (Sun 6PM)",
-          "enabled": true,
-          "expr": "0 18 * * 0",
-          "tz": "America/New_York",
-          "channel": "telegram",
-          "last_ms": 1786312800039,
-          "status": "ok",
-          "errors": 0,
-          "dur_ms": 79682
         },
         {
           "name": "Stand-up 07:41 \u2014 BG Gus Hartwell",
@@ -5377,5 +5384,5 @@
     "write-airbnb-reviews-for-listings",
     "you-are-an-expert-ai-agent"
   ],
-  "cowork_date": "2026-08-16T17:15:17-04:00"
+  "cowork_date": "2026-08-16T19:16:27-04:00"
 }

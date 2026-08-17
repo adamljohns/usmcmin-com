@@ -74,6 +74,12 @@ def main():
     state = sys.argv[1].upper()
     max_bills = int(sys.argv[sys.argv.index("--max-bills") + 1]) if "--max-bills" in sys.argv else 40
     prior = "--prior" in sys.argv   # sweep the PREVIOUS regular session (2025 meat for states whose 2026 is young)
+    # --bills HB10,HB148: work ONLY these bill numbers, bypassing the keyword/marquee sort.
+    # For chambers like NH where the classifier skips en masse but a single big contested
+    # floor vote can score hundreds, hand-picking the marquee bills is far cheaper than
+    # classifying 200 to find 2.
+    only_bills = ([b.strip().upper() for b in sys.argv[sys.argv.index("--bills") + 1].split(",")]
+                  if "--bills" in sys.argv else None)
     apply_now = "--apply" in sys.argv
     today = time.strftime("%Y-%m-%d")
 
@@ -117,7 +123,8 @@ def main():
 
     bills = [v for v in (ls.pull("getMasterList", id=sid).get("masterlist") or {}).values()
              if isinstance(v, dict) and v.get("bill_id")]
-    flagged = [b for b in bills if KW.search(b.get("title") or "")]
+    flagged = ([b for b in bills if (b.get("number") or "").upper() in only_bills] if only_bills
+               else [b for b in bills if KW.search(b.get("title") or "")])
     # Marquee-first: burn the per-bill budget on the strongest rubric signals, not on
     # bill-number order (grandparent visitation before the Heartbeat Bill = wasted spend).
     STRONG = re.compile(r"abortion|reproductive|heartbeat|firearm|handgun|assault weapon|red flag|"

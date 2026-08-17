@@ -153,7 +153,18 @@ def main():
                              re.I)
     CAPTION = re.compile(r"^an act to amend", re.I)
 
+    # PERMANENT VETOES — a bill an inspection rejected must never be re-proposed by a later
+    # sweep (OK HB2154 returned the day after its first veto). Repo-tracked so every agent
+    # and every future run honors the same rejections.
+    try:
+        VETOED = json.load(open("rollcall-vetoes.json")).get("vetoed") or {}
+    except Exception:
+        VETOED = {}
+
     for b in flagged[:max_bills]:
+        if f"{state}:{b.get('number')}" in VETOED:
+            skipped["vetoed_bill"] = skipped.get("vetoed_bill", 0) + 1
+            continue
         title_txt = b.get("title") or ""
         # The low-info skip is for CAPTION boilerplate (TN's "AN ACT to amend Title 49...").
         # Descriptive titles (NH's "relative to X") proceed regardless — the classifier +

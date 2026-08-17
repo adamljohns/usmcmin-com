@@ -244,8 +244,6 @@ def main():
         if not finals:
             skipped["no_final_rc"] += 1
             continue
-        is_itl = bool(ITL_RC.search(finals[-1].get("desc") or ""))
-
         # DUAL-DIRECTION COHERENCE GATE (the HB444 lesson): double-negative titles
         # ("Immigration Enforcement Agreements - Prohibition") invert polarity past a single
         # yes/no verify — that run scored 30 Democrats TRUE on sanctuary PREEMPTION. So with
@@ -276,74 +274,83 @@ def main():
                 (coherent_oppose and cls["yea"] == "oppose")):
             skipped["incoherent_polarity"] = skipped.get("incoherent_polarity", 0) + 1
             continue
-        rc = ls.pull("getRollCall", id=finals[-1]["roll_call_id"]).get("roll_call") or {}
+        # MULTI-CHAMBER: a bill that passed both houses has a final roll call in EACH, and a
+        # legislator sits in only one. Scoring just finals[-1] left an entire chamber uncounted
+        # on every bill (AL SB79 reached 88 of 138). Take the last final vote PER CHAMBER.
+        by_chamber = {}
+        for v in finals:
+            by_chamber[v.get("chamber") or v.get("chamber_id") or len(by_chamber)] = v
+        n_scored_this_bill = 0
+        src = bill.get("state_link") or bill.get("url") or f"https://legiscan.com/{state}/bill/{bill.get('bill_number')}"
 
-        # CONTESTED-VOTE GATE: a roll call only carries positional signal if it divided the
+        for _ch, fv in by_chamber.items():
+            rc = ls.pull("getRollCall", id=fv["roll_call_id"]).get("roll_call") or {}
+            is_itl = bool(ITL_RC.search(fv.get("desc") or ""))
+
+            # CONTESTED-VOTE GATE: a roll call only carries positional signal if it divided the
         # chamber. A 124-7 charter-FACILITIES vote is consensus housekeeping — scoring 88
         # Democrats TRUE on "school choice" from it is the misleading-credit trap the
         # methodology forbids. Keep a vote only if (a) the losing side is >=25% of yea+nay,
         # or (b) the parties genuinely diverged (majority of D's opposite majority of R's) —
         # the mechanical form of the runbook's "party-line marquee votes are HARD evidence."
-        yea_n, nay_n = int(rc.get("yea") or 0), int(rc.get("nay") or 0)
-        contested = (yea_n + nay_n) > 0 and min(yea_n, nay_n) / (yea_n + nay_n) >= 0.25
-        py = {"D": [0, 0], "R": [0, 0]}
-        for mv in (rc.get("votes") or []):
-            vt = (mv.get("vote_text") or "").strip().lower()
-            if vt not in ("yea", "nay"):
+            yea_n, nay_n = int(rc.get("yea") or 0), int(rc.get("nay") or 0)
+            contested = (yea_n + nay_n) > 0 and min(yea_n, nay_n) / (yea_n + nay_n) >= 0.25
+            py = {"D": [0, 0], "R": [0, 0]}
+            for mv in (rc.get("votes") or []):
+                vt = (mv.get("vote_text") or "").strip().lower()
+                if vt not in ("yea", "nay"):
+                    continue
+                pp = (people.get(mv.get("people_id")) or {}).get("party") or ""
+                if pp in py:
+                    py[pp][0 if vt == "yea" else 1] += 1
+            def maj(side):
+                y, n = side
+                return None if (y + n) < 5 else (y > n)
+            dmaj, rmaj = maj(py["D"]), maj(py["R"])
+            party_divided = dmaj is not None and rmaj is not None and dmaj != rmaj
+            if not (contested or party_divided):
+                skipped["uncontested"] = skipped.get("uncontested", 0) + 1
                 continue
-            pp = (people.get(mv.get("people_id")) or {}).get("party") or ""
-            if pp in py:
-                py[pp][0 if vt == "yea" else 1] += 1
-        def maj(side):
-            y, n = side
-            return None if (y + n) < 5 else (y > n)
-        dmaj, rmaj = maj(py["D"]), maj(py["R"])
-        party_divided = dmaj is not None and rmaj is not None and dmaj != rmaj
-        if not (contested or party_divided):
-            skipped["uncontested"] = skipped.get("uncontested", 0) + 1
-            continue
 
-        src = bill.get("state_link") or bill.get("url") or f"https://legiscan.com/{state}/bill/{bill.get('bill_number')}"
-        tally = f"{rc.get('yea')}-{rc.get('nay')}"
-        n_scored_this_bill = 0
-        for mv in (rc.get("votes") or []):
-            vt = (mv.get("vote_text") or "").strip().lower()
-            if vt not in ("yea", "nay"):
-                continue                      # absent/excused/NV are never positions
-            p = people.get(mv.get("people_id")) or {}
-            nm = norm_name(p.get("name"))
-            matches = [c for c in {id(x): x for x in (by_name.get(nm, []) + by_name.get(surname(p.get("name")), []))}.values()]
-            # district tiebreak when >1
-            if len(matches) > 1 and p.get("district"):
-                dm = [c for c in matches if str(c.get("district") or "") and str(c.get("district")) in str(p.get("district"))]
-                matches = dm or matches
-            if not matches:
-                skipped["no_match"] += 1
-                continue
-            if len(matches) > 1:
-                skipped["ambiguous_name"] += 1
-                continue
-            c = matches[0]
-            # ITL reverses: YEA on Inexpedient-to-Legislate = voting AGAINST the bill.
-            voted_for_bill = (vt == "yea") != is_itl
-            supports = (cls["yea"] == "support") == voted_for_bill
-            key = f"{c['slug']}@{state}"
-            rec = records.setdefault(key, {"profile": {
-                "confidence": "evidence_state",
-                "confidence_note": f"Roll-call engine (LegiScan API, Qwen+Gemma-agreed bill mapping) {today}",
-                "last_refined": today, "grind_strikes": 0}, "evidence": {}, "sources_add": []})
-            cellq = str(cls["q"])
-            if cellq in rec["evidence"].get(cls["cat"], {}):
-                continue                      # first recorded final vote wins; don't churn
-            rec["evidence"].setdefault(cls["cat"], {})[cellq] = {
-                "v": bool(supports),
-                "src": [src],
-                "note": (f"Voted {vt.upper()} on {bill.get('bill_number')} — "
-                         f"{(cls.get('title') or '')[:150]} ({rc.get('desc')}, {rc.get('date')}, {tally}).")[:400],
-            }
-            if src not in rec["sources_add"]:
-                rec["sources_add"].append(src)
-            n_scored_this_bill += 1
+            tally = f"{rc.get('yea')}-{rc.get('nay')}"
+            for mv in (rc.get("votes") or []):
+                vt = (mv.get("vote_text") or "").strip().lower()
+                if vt not in ("yea", "nay"):
+                    continue                      # absent/excused/NV are never positions
+                p = people.get(mv.get("people_id")) or {}
+                nm = norm_name(p.get("name"))
+                matches = [c for c in {id(x): x for x in (by_name.get(nm, []) + by_name.get(surname(p.get("name")), []))}.values()]
+                # district tiebreak when >1
+                if len(matches) > 1 and p.get("district"):
+                    dm = [c for c in matches if str(c.get("district") or "") and str(c.get("district")) in str(p.get("district"))]
+                    matches = dm or matches
+                if not matches:
+                    skipped["no_match"] += 1
+                    continue
+                if len(matches) > 1:
+                    skipped["ambiguous_name"] += 1
+                    continue
+                c = matches[0]
+                # ITL reverses: YEA on Inexpedient-to-Legislate = voting AGAINST the bill.
+                voted_for_bill = (vt == "yea") != is_itl
+                supports = (cls["yea"] == "support") == voted_for_bill
+                key = f"{c['slug']}@{state}"
+                rec = records.setdefault(key, {"profile": {
+                    "confidence": "evidence_state",
+                    "confidence_note": f"Roll-call engine (LegiScan API, Qwen+Gemma-agreed bill mapping) {today}",
+                    "last_refined": today, "grind_strikes": 0}, "evidence": {}, "sources_add": []})
+                cellq = str(cls["q"])
+                if cellq in rec["evidence"].get(cls["cat"], {}):
+                    continue                      # first recorded final vote wins; don't churn
+                rec["evidence"].setdefault(cls["cat"], {})[cellq] = {
+                    "v": bool(supports),
+                    "src": [src],
+                    "note": (f"Voted {vt.upper()} on {bill.get('bill_number')} — "
+                             f"{(cls.get('title') or '')[:150]} ({rc.get('desc')}, {rc.get('date')}, {tally}).")[:400],
+                }
+                if src not in rec["sources_add"]:
+                    rec["sources_add"].append(src)
+                n_scored_this_bill += 1
         if n_scored_this_bill:
             used_bills.append(f"{bill.get('bill_number')} -> {cls['cat']}[{cls['q']}] ({n_scored_this_bill} legislators)")
 

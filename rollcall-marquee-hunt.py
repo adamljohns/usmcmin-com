@@ -17,7 +17,8 @@ STRONG = re.compile(r"abortion|reproduct|heartbeat|firearm|handgun|assault weapo
                     r"transgender|gender|marriage|school choice|voucher|charter|parental right|"
                     r"parents|voter|election|ballot|citizenship|immigra|sanctuary|bail|religio|"
                     r"prayer|obscen|puberty|biological sex|born alive|life", re.I)
-FINAL = re.compile(r"third reading|final passage|passage|floor vote|concur|ought to pass|\botpa?\b", re.I)
+FINAL = re.compile(r"third reading|final passage|final action|passage|floor vote|concur|"
+                   r"ought to pass|\botpa?\b|second reading|2nd reading", re.I)
 ITL = re.compile(r"inexpedient to legislate|\bitl\b", re.I)
 TABLE = re.compile(r"\btable\b|\blay on\b", re.I)
 
@@ -53,7 +54,9 @@ def main():
             y, n = int(rc.get("yea") or 0), int(rc.get("nay") or 0)
             if y + n < minv:
                 continue
-            if min(y, n) / (y + n) < 0.25:       # must be contested (mirrors the engine gate)
+            # Surface anything with a real minority; the ENGINE applies the true gate
+            # (>=25% losing side OR genuine party divergence, which needs member data).
+            if min(y, n) < 6:
                 continue
             hits.append((y + n, b.get("number"), (b.get("title") or "")[:70], f"{y}-{n}", desc[:28]))
             break

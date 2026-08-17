@@ -260,7 +260,7 @@ tr:last-child td{border-bottom:0}
 
 <section class="card"><div class="card-h"><h2>Studio Operations Checklist</h2><span class="chip">FRANCHISE WELL FITNESS</span></div>
 <div class="card-b">
-<p class="copy" style="margin-top:0">One official Franchise Well list. Parent headers check. Children indent, two columns. Tap: blank → <b>done</b> → <b>N/A</b>.</p>
+<p class="copy" style="margin-top:0">One official Franchise Well list. Parent headers check. Children indent, two columns. Tap: blank → <b>done</b> → <b>N/A</b>. <b>Coach seed:</b> a voice dump can tick these on the next pack. Hard-refresh after Max ships.</p>
 <div class="day-roll" id="dayRoll"><b>Heads up:</b> this checklist state is from <span id="dayRollDate">—</span>. <span style="white-space:nowrap"><button class="btn" type="button" id="dayRollReset" style="min-height:36px;padding:6px 10px">Reset for today</button> <button class="btn" type="button" id="dayRollKeep" style="min-height:36px;padding:6px 10px">Keep</button></span></div>
 <div class="chk-meta">
   <div><label for="chkShift">Shift</label><select id="chkShift" data-k="fw_aqu_shift"><option value="AM" selected>AM</option><option value="MID">Mid</option><option value="PM">PM</option></select></div>
@@ -272,6 +272,7 @@ tr:last-child td{border-bottom:0}
 <div class="chk-close"><label for="chkCloseNote" style="display:block;font-size:10px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin-bottom:3px">Close the studio — note needs</label><textarea id="chkCloseNote" data-k="fw_aqu_close_note" placeholder="What the next trainer needs for close / restock"></textarea></div>
 <div class="chk-actions">
   <button class="btn" type="button" id="chkReset">Reset to fresh shift</button>
+  <button class="btn" type="button" id="chkApplyPack">Apply Coach seed</button>
   <button class="btn" type="button" id="chkCloseNA">Wrap-up N/A (no close)</button>
   <button class="btn primary" type="button" id="chkCopy">Copy shift summary</button>
   <a class="btn" href="https://docs.google.com/spreadsheets/d/1XwmIK5JqMGKyCg_El5wPUnaM9We6U5rGs0hlAQDM-fY/edit" target="_blank" rel="noopener">Block Recap ↗</a>
@@ -558,7 +559,8 @@ document.getElementById("noteAdd").addEventListener("click",()=>{
   const text=(t.value||"").trim(); if(!text) return;
   const arr=JSON.parse(localStorage.getItem(NOTES_KEY)||"[]");
   arr.push({ts:new Date().toLocaleString("en-US",{timeZone:TZ,month:"numeric",day:"numeric",hour:"numeric",minute:"2-digit"}),author:(a.value||"trainer").trim(),text:text,pinned:false,source:"manual"});
-  saveLocalNotes(arr); t.value=""; 
+  saveLocalNotes(arr); t.value=""; renderNotes();
+});
 /* ---------- paused / leaving ---------- */
 (function(){
   const el=document.getElementById("pausedList");
@@ -612,8 +614,6 @@ document.getElementById("noteAdd").addEventListener("click",()=>{
   });
 })();
 
-renderNotes();
-});
 document.getElementById("notesCopy").addEventListener("click",()=>{
   const all=loadNotes();
   const txt="Aquia Park pass-down · "+todayISO()+"\n"+all.map(n=>"- "+n.text+" ("+(n.author||"?")+(n.ts?" · "+n.ts:"")+")").join("\n");
@@ -649,6 +649,8 @@ function chkBtn(it,cls){
   const stampEl=document.getElementById("chkStamp");
   const stampShift=document.getElementById("shiftStamp");
   const SEED_FLAG=CHKP+"seeded_v32";
+  const PACK_SEED_KEY=CHKP+"pack_seed_id";
+  const packState=SSOT.fw_state||null;
   function applySeed(){
     btns.forEach(b=>localStorage.setItem(b.dataset.k,"0"));
     localStorage.setItem(CHKP+"shift","AM");
@@ -658,7 +660,27 @@ function chkBtn(it,cls){
     localStorage.setItem(CHKP+"close_note","");
     localStorage.setItem(SEED_FLAG,"1");
   }
-  if(localStorage.getItem(SEED_FLAG)!=="1") applySeed();
+  function applyPackState(state){
+    if(!state) return false;
+    const items=state.items||{};
+    btns.forEach(b=>{
+      const short=b.dataset.k.slice(CHKP.length);
+      if(Object.prototype.hasOwnProperty.call(items,short)) localStorage.setItem(b.dataset.k,String(items[short]));
+    });
+    if(state.shift) localStorage.setItem(CHKP+"shift",state.shift);
+    if(state.temp!=null) localStorage.setItem(CHKP+"temp",state.temp);
+    if(state.trainer) localStorage.setItem(CHKP+"trainer",state.trainer);
+    if(state.date) localStorage.setItem(CHKP+"date",state.date);
+    if(state.close_note!=null) localStorage.setItem(CHKP+"close_note",state.close_note);
+    localStorage.setItem(SEED_FLAG,"1");
+    if(state.seed_id) localStorage.setItem(PACK_SEED_KEY,state.seed_id);
+    return true;
+  }
+  if(localStorage.getItem(SEED_FLAG)!=="1"){
+    if(!(packState&&applyPackState(packState))) applySeed();
+  } else if(packState&&packState.seed_id&&localStorage.getItem(PACK_SEED_KEY)!==packState.seed_id){
+    applyPackState(packState);
+  }
   function glyph(v){ return v==="1"?"✓":(v==="2"?"N/A":""); }
   function refresh(){
     let done=0,na=0;
@@ -672,7 +694,8 @@ function chkBtn(it,cls){
     const sh=localStorage.getItem(CHKP+"shift")||"AM";
     if(stampShift) stampShift.textContent=sh;
     const applicable=btns.length-na;
-    if(stampEl) stampEl.textContent=done+" / "+applicable+" applicable done ("+na+" N/A) · Franchise Well Fitness · this device · "+new Date().toLocaleString("en-US",{timeZone:TZ});
+    const seedMark=localStorage.getItem(PACK_SEED_KEY);
+    if(stampEl) stampEl.textContent=done+" / "+applicable+" applicable done ("+na+" N/A) · Franchise Well Fitness · "+(seedMark?("Coach seed "+seedMark+" · "):"this device · ")+new Date().toLocaleString("en-US",{timeZone:TZ});
   }
   btns.forEach(b=>b.addEventListener("click",()=>{
     const cur=localStorage.getItem(b.dataset.k)||"0";
@@ -684,6 +707,11 @@ function chkBtn(it,cls){
     f.addEventListener("input",()=>{ localStorage.setItem(f.dataset.k,f.value||""); });
   });
   document.getElementById("chkReset").addEventListener("click",()=>{ applySeed(); refresh(); });
+  const applyBtn=document.getElementById("chkApplyPack");
+  if(applyBtn){
+    if(!(packState&&packState.seed_id)) applyBtn.style.display="none";
+    applyBtn.addEventListener("click",()=>{ applyPackState(packState); refresh(); });
+  }
   document.getElementById("chkCloseNA").addEventListener("click",()=>{
     const wrap=FW.find(s=>s.k==="wrap");
     if(wrap){ localStorage.setItem(CHKP+wrap.k,"2"); (wrap.items||[]).forEach(it=>localStorage.setItem(CHKP+it.k,"2")); }

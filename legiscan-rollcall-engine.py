@@ -179,10 +179,11 @@ def main():
             skipped["vetoed_bill"] = skipped.get("vetoed_bill", 0) + 1
             continue
         title_txt = b.get("title") or ""
-        # The low-info skip is for CAPTION boilerplate (TN's "AN ACT to amend Title 49...").
-        # Descriptive titles (NH's "relative to X") proceed regardless — the classifier +
-        # dual-direction coherence gates still protect them.
-        if CAPTION.match(title_txt) and not DIRECTIONAL.search(title_txt):
+        # CAPTION boilerplate ("AN ACT to amend Title 49...") carries no direction in the
+        # title — but if it's a STRONG-signal subject, the official DESCRIPTION usually does,
+        # and the second-chance classifier below reads it. Skipping outright here starved TN
+        # (110 caption skips in one run). Only drop captions with no strong signal at all.
+        if CAPTION.match(title_txt) and not DIRECTIONAL.search(title_txt) and not STRONG.search(title_txt):
             skipped["caption_bill"] = skipped.get("caption_bill", 0) + 1
             continue
         bkey = f"{state}:{b['bill_id']}"

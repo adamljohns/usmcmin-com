@@ -195,7 +195,7 @@
 
   <div class="bb-mode" role="tablist" aria-label="Battle Brother modules">
     <button type="button" class="bb-mode-btn active" id="modeForm" data-mode="form" role="tab" aria-selected="true">Weekly Form</button>
-    <button type="button" class="bb-mode-btn" id="modeHabits" data-mode="habits" role="tab" aria-selected="false">Habit Board</button>
+    <button type="button" class="bb-mode-btn" id="modeHabits" data-mode="habits" role="tab" aria-selected="false">Habit Board · Share</button>
   </div>
 
   <div class="memory-bar">
@@ -231,11 +231,12 @@
 
     <div class="bb-card">
       <h2 class="section-bar">Share with Battle Brother</h2>
-      <div class="bb-card-body">
-        <p class="bb-hint" style="margin-top:0;">Export only habits marked Share. Your brother pastes the pack into his Habit Board. No account required yet — swap files or paste text.</p>
+      <div class="bb-card-body" id="sharePackSection">
+        <p class="bb-hint" style="margin-top:0;">Mark habits <strong>Shared</strong> above, then send this pack to your Battle Brother. He opens Habit Board &rarr; Import. Only Shared habits are included — Private stays private.</p>
         <div class="brother-pack">
-          <button type="button" class="btn-ghost" id="btnCopySharePack" style="flex:1;">Copy share pack</button>
-          <button type="button" class="btn-ghost" id="btnDownloadSharePack" style="flex:1;">Download share pack</button>
+          <button type="button" class="btn-primary" id="btnCopySharePack" style="flex:1;">Copy share pack</button>
+          <button type="button" class="btn-ghost" id="btnNativeSharePack" style="flex:1;">Share&hellip;</button>
+          <button type="button" class="btn-ghost" id="btnDownloadSharePack" style="flex:1;">Download JSON</button>
         </div>
         <div class="bb-field" style="margin-top:16px;margin-bottom:0;">
           <label for="importSharePack">Import brother&rsquo;s share pack</label>
@@ -261,9 +262,10 @@
   <div id="doneShell" hidden>
     <h2>Your response has been recorded.</h2>
     <p><span class="done-meta" id="doneName"></span> &mdash; <span id="doneWeek"></span></p>
-    <p class="bb-hint">A copy was emailed to the TFC team. Your browser also kept the full history locally.</p>
-    <div class="btn-row" style="justify-content:center;max-width:400px;margin:24px auto 0;">
+    <p class="bb-hint">A copy was emailed to the TFC team. Your browser also kept the full history locally. Battle Brother / Armada call checks were logged on your Habit Board.</p>
+    <div class="btn-row" style="justify-content:center;max-width:440px;margin:24px auto 0;">
       <button type="button" class="btn-primary" id="btnAnother">Submit another response</button>
+      <button type="button" class="btn-ghost" id="btnGoHabits">Open Habit Board · Share</button>
     </div>
   </div>
 

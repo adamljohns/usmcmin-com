@@ -327,6 +327,15 @@
     };
   }
 
+  function sharePackOrWarn() {
+    var pack = buildSharePack();
+    if (!pack.items.length) {
+      flash('Mark at least one habit Shared before sending a pack.');
+      return null;
+    }
+    return pack;
+  }
+
   function syncHabitsFromSubmission(payload) {
     var store = ensureHabits(loadStore());
     var mon = ymd(mondayOf(new Date(payload.submittedAt || Date.now())));
@@ -349,28 +358,64 @@
   }
 
   function copySharePack() {
-    var pack = JSON.stringify(buildSharePack(), null, 2);
+    var pack = sharePackOrWarn();
+    if (!pack) return;
+    var text = JSON.stringify(pack, null, 2);
     if (navigator.clipboard && navigator.clipboard.writeText) {
-      navigator.clipboard.writeText(pack).then(function () {
-        flash('Share pack copied — send it to your Battle Brother.');
+      navigator.clipboard.writeText(text).then(function () {
+        flash('Share pack copied — text/email it to your Battle Brother.');
       }).catch(function () {
-        el('importSharePack').value = pack;
+        el('importSharePack').value = text;
         flash('Copy failed — pack pasted into the import box so you can select it.');
       });
     } else {
-      el('importSharePack').value = pack;
+      el('importSharePack').value = text;
       flash('Clipboard unavailable — pack pasted into the import box.');
     }
   }
 
   function downloadSharePack() {
-    var pack = buildSharePack();
+    var pack = sharePackOrWarn();
+    if (!pack) return;
     var blob = new Blob([JSON.stringify(pack, null, 2)], { type: 'application/json' });
     var a = document.createElement('a');
     a.href = URL.createObjectURL(blob);
     a.download = 'battle-brother-share-pack.json';
     a.click();
     URL.revokeObjectURL(a.href);
+    flash('Share pack downloaded.');
+  }
+
+  function nativeSharePack() {
+    var pack = sharePackOrWarn();
+    if (!pack) return;
+    var text = JSON.stringify(pack, null, 2);
+    var title = 'Battle Brother share pack — ' + (pack.name || 'Captain');
+    if (navigator.share) {
+      var sharePromise;
+      if (navigator.canShare) {
+        try {
+          var file = new File([text], 'battle-brother-share-pack.json', { type: 'application/json' });
+          var withFile = { title: title, text: 'My Shared captain habits for this Armada week.', files: [file] };
+          if (navigator.canShare(withFile)) {
+            sharePromise = navigator.share(withFile);
+          }
+        } catch (e) {}
+      }
+      if (!sharePromise) {
+        sharePromise = navigator.share({
+          title: title,
+          text: 'Battle Brother share pack (paste into Habit Board → Import):\n\n' + text
+        });
+      }
+      sharePromise.then(function () {
+        flash('Share sheet sent.');
+      }).catch(function () {
+        copySharePack();
+      });
+      return;
+    }
+    copySharePack();
   }
 
   function importSharePack() {
@@ -392,7 +437,7 @@
       saveStore(store);
       setVal('importSharePack', '');
       renderHabitBoard();
-      flash('Brother pack imported.');
+      flash('Brother pack imported — his Shared habits are below.');
     } catch (e) {
       flash('Could not parse that pack — check the JSON.');
     }
@@ -404,6 +449,14 @@
     saveStore(store);
     renderHabitBoard();
     flash('Brother board cleared.');
+  }
+
+  function openHabitsShare() {
+    setMode('habits');
+    setTimeout(function () {
+      var section = el('sharePackSection');
+      if (section) section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }, 60);
   }
 
   function loadStore() {
@@ -841,8 +894,11 @@
     });
     el('btnCopySharePack').addEventListener('click', copySharePack);
     el('btnDownloadSharePack').addEventListener('click', downloadSharePack);
+    el('btnNativeSharePack').addEventListener('click', nativeSharePack);
     el('btnImportSharePack').addEventListener('click', importSharePack);
     el('btnClearBrotherPack').addEventListener('click', clearBrotherPack);
+    var goHabits = el('btnGoHabits');
+    if (goHabits) goHabits.addEventListener('click', openHabitsShare);
 
     el('btnNext').addEventListener('click', function () {
       var err = validateStep();
@@ -869,7 +925,11 @@
     });
 
     var params = new URLSearchParams(window.location.search);
-    if ((params.get('mode') || '').toLowerCase() === 'habits') setMode('habits');
+    var mode = (params.get('mode') || '').toLowerCase();
+    if (mode === 'habits' || mode === 'share' || params.get('share') === '1') {
+      if (params.get('share') === '1' || mode === 'share') openHabitsShare();
+      else setMode('habits');
+    }
   }
 
   if (document.readyState === 'loading') {

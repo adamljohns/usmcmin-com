@@ -36,10 +36,16 @@ CLASS_CACHE = os.path.expanduser("~/.openclaw/state/legiscan-bill-classification
 KW = re.compile(r"abortion|reproductive|firearm|gun|second amendment|marriage|gender|transgender|"
                 r"parent|school choice|charter|voucher|voter|election|ballot|immigra|sanctuary|"
                 r"bail|police|religio|prayer|obscen|library|puberty|minor|esg|gold|bullion", re.I)
-FINAL_RC = re.compile(r"third reading|final passage|passage|floor vote|concur|ought to pass", re.I)
+FINAL_RC = re.compile(r"third reading|final passage|passage|floor vote|concur|ought to pass"
+                      r"|^otpa?$|\botpa?\b", re.I)
 # NH kills bills with an "Inexpedient to Legislate" FLOOR vote — a final action with
 # REVERSED polarity: YEA on ITL = voting to kill the bill (i.e., against its policy).
-ITL_RC = re.compile(r"inexpedient to legislate", re.I)
+# NH's House abbreviates its floor actions (OTP/OTPA = Ought To Pass [as Amended], ITL);
+# matching only the spelled-out forms caught NH's 24-member SENATE votes while missing
+# every 398-member HOUSE vote — the reason NH looked barren despite 364 matchable members.
+ITL_RC = re.compile(r"inexpedient to legislate|^itl$|\bitl\b", re.I)
+# Motions to table are procedural maneuvers, not a recorded position on the policy.
+TABLE_RC = re.compile(r"\btable\b|\blay on\b", re.I)
 
 CLASSIFY_SYS = (
     "You map a state legislative BILL to a voter-scorecard POSITION. You are given numbered "
@@ -247,7 +253,8 @@ def main():
         # HB818 not-concur vote marked 48 R's FALSE on their own bill before this was vetoed.
         finals = [v for v in (bill.get("votes") or [])
                   if (FINAL_RC.search(v.get("desc") or "") or ITL_RC.search(v.get("desc") or ""))
-                  and not re.search(r"not\s+concur", v.get("desc") or "", re.I)]
+                  and not re.search(r"not\s+concur", v.get("desc") or "", re.I)
+                  and not TABLE_RC.search(v.get("desc") or "")]
         if not finals:
             skipped["no_final_rc"] += 1
             continue

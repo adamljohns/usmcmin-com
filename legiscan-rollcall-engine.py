@@ -36,8 +36,12 @@ CLASS_CACHE = os.path.expanduser("~/.openclaw/state/legiscan-bill-classification
 KW = re.compile(r"abortion|reproductive|firearm|gun|second amendment|marriage|gender|transgender|"
                 r"parent|school choice|charter|voucher|voter|election|ballot|immigra|sanctuary|"
                 r"bail|police|religio|prayer|obscen|library|puberty|minor|esg|gold|bullion", re.I)
-FINAL_RC = re.compile(r"third reading|final passage|passage|floor vote|concur|ought to pass"
+FINAL_RC = re.compile(r"third reading|final passage|final action|passage|floor vote|concur|ought to pass"
                       r"|^otpa?$|\botpa?\b", re.I)
+# Some chambers take their decisive floor vote on SECOND reading and never hold a third
+# (North Dakota). Treating 2nd reading as final everywhere would swallow procedural votes,
+# so it is used ONLY as a fallback when a bill has no other final-type roll call.
+SECOND_RC = re.compile(r"second reading|2nd reading", re.I)
 # NH kills bills with an "Inexpedient to Legislate" FLOOR vote — a final action with
 # REVERSED polarity: YEA on ITL = voting to kill the bill (i.e., against its policy).
 # NH's House abbreviates its floor actions (OTP/OTPA = Ought To Pass [as Amended], ITL);
@@ -252,10 +256,13 @@ def main():
         bill = ls.pull("getBill", id=b["bill_id"]).get("bill") or {}
         # "Amendments NOT Concurred" is a procedural concurrence dispute, not passage — MT's
         # HB818 not-concur vote marked 48 R's FALSE on their own bill before this was vetoed.
+        def usable(v):
+            d = v.get("desc") or ""
+            return not TABLE_RC.search(d) and not re.search(r"not\s+concur", d, re.I)
         finals = [v for v in (bill.get("votes") or [])
-                  if (FINAL_RC.search(v.get("desc") or "") or ITL_RC.search(v.get("desc") or ""))
-                  and not re.search(r"not\s+concur", v.get("desc") or "", re.I)
-                  and not TABLE_RC.search(v.get("desc") or "")]
+                  if usable(v) and (FINAL_RC.search(v.get("desc") or "") or ITL_RC.search(v.get("desc") or ""))]
+        if not finals:   # ND-style chambers: the second-reading vote IS the decisive one
+            finals = [v for v in (bill.get("votes") or []) if usable(v) and SECOND_RC.search(v.get("desc") or "")]
         if not finals:
             skipped["no_final_rc"] += 1
             continue

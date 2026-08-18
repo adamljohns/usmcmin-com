@@ -8,11 +8,10 @@
   var STORAGE_KEY = 'fc_battle_brother_v1';
   var FORMSUBMIT_URL = 'https://formsubmit.co/ajax/usmcministries2022@gmail.com';
 
-  // Armada weeks run Mon–Sun. Anchor = Monday of a known Sabbath week
-  // (Finance was the week before: Mon 2026-06-29). After Sabbath the
-  // cycle rolls to Vision and repeats. Override anytime with ?week=N
-  // or ?theme=key, or by tapping a week chip.
-  var ARMADA_ANCHOR = { y: 2026, m: 6, d: 6 }; // month is 0-indexed → Jul 6, 2026
+  // Armada theme weeks run Sun–Sat (Wed Armada call sits mid-week).
+  // Anchor = Sunday opening a known Sabbath week (Jul 5, 2026).
+  // Override anytime with ?week=N or ?theme=key, or by tapping a week chip.
+  var ARMADA_ANCHOR = { y: 2026, m: 6, d: 5 }; // month is 0-indexed → Sun Jul 5, 2026
   var ARMADA_ANCHOR_WEEK = 7; // Sabbath
 
   var THEMES = [
@@ -63,10 +62,10 @@
   }
 
   function weekDates(ref) {
-    var mon = mondayOf(ref || new Date());
+    var sun = sundayOf(ref || new Date());
     var days = [];
     for (var i = 0; i < 7; i++) {
-      var d = new Date(mon.getFullYear(), mon.getMonth(), mon.getDate() + i);
+      var d = new Date(sun.getFullYear(), sun.getMonth(), sun.getDate() + i);
       days.push(d);
     }
     return days;
@@ -105,7 +104,7 @@
     var cursor = new Date();
     cursor.setHours(0, 0, 0, 0);
     if (habit.cadence === 'weekly') {
-      cursor = mondayOf(cursor);
+      cursor = sundayOf(cursor);
       while (streak < 520) {
         if (!isChecked(store, habit.id, ymd(cursor))) break;
         streak += 1;
@@ -192,7 +191,7 @@
     var head = el(targetId);
     if (!head) return;
     var today = ymd(new Date());
-    var labels = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+    var labels = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
     head.innerHTML = '<span class="hd-name">Habit</span>' + days.map(function (d, i) {
       var cls = ymd(d) === today ? ' hd-today' : '';
       return '<span class="' + cls.trim() + '">' + labels[i] + '</span>';
@@ -205,7 +204,7 @@
     opts = opts || {};
     var readonly = !!opts.readonly;
     var days = weekDates(new Date());
-    var monKey = ymd(days[0]);
+    var weekStartKey = ymd(days[0]);
     if (!items.length) {
       wrap.innerHTML = '<p class="habit-empty">' + (opts.empty || 'No habits yet.') + '</p>';
       return;
@@ -214,9 +213,9 @@
       var streak = streakFor(store, habit);
       var cells = days.map(function (d) {
         var key = ymd(d);
-        var activeKey = habit.cadence === 'weekly' ? monKey : key;
+        var activeKey = habit.cadence === 'weekly' ? weekStartKey : key;
         var on = isChecked(store, habit.id, activeKey);
-        var isWeeklyCell = habit.cadence === 'weekly' && key !== monKey;
+        var isWeeklyCell = habit.cadence === 'weekly' && key !== weekStartKey;
         if (isWeeklyCell) {
           return '<button type="button" class="habit-check weekly-slot' + (on ? ' on' : '') + '" disabled aria-hidden="true">' + (on ? '✓' : '') + '</button>';
         }
@@ -338,9 +337,9 @@
 
   function syncHabitsFromSubmission(payload) {
     var store = ensureHabits(loadStore());
-    var mon = ymd(mondayOf(new Date(payload.submittedAt || Date.now())));
-    if (payload.battleBrotherCall === 'Yes') setChecked(store, 'bb_call', mon, true);
-    if (payload.armadaCall === 'Yes') setChecked(store, 'armada_call', mon, true);
+    var weekStart = ymd(sundayOf(new Date(payload.submittedAt || Date.now())));
+    if (payload.battleBrotherCall === 'Yes') setChecked(store, 'bb_call', weekStart, true);
+    if (payload.armadaCall === 'Yes') setChecked(store, 'armada_call', weekStart, true);
     saveStore(store);
   }
 
@@ -477,27 +476,25 @@
     return THEMES.find(function (t) { return t.week === n; }) || THEMES[6];
   }
 
-  /** Monday 00:00 local of the calendar week containing `date`. */
-  function mondayOf(date) {
+  /** Sunday 00:00 local — start of the Armada theme week (Sun–Sat). */
+  function sundayOf(date) {
     var d = new Date(date.getFullYear(), date.getMonth(), date.getDate());
-    var day = d.getDay(); // 0=Sun … 6=Sat
-    var offset = day === 0 ? -6 : 1 - day;
-    d.setDate(d.getDate() + offset);
+    d.setDate(d.getDate() - d.getDay());
     d.setHours(0, 0, 0, 0);
     return d;
   }
 
   /**
-   * Current Armada week from the calendar (Mon–Sun cycle).
-   * Anchored to the known Sabbath week starting Mon 2026-07-06.
+   * Current Armada week from the calendar (Sun–Sat cycle).
+   * Anchored to Sabbath week opening Sun 2026-07-05.
    */
   function calendarWeek(now) {
     var today = now || new Date();
-    var thisMon = mondayOf(today);
+    var thisSun = sundayOf(today);
     var anchor = new Date(ARMADA_ANCHOR.y, ARMADA_ANCHOR.m, ARMADA_ANCHOR.d);
-    anchor = mondayOf(anchor);
+    anchor = sundayOf(anchor);
     var msPerWeek = 7 * 24 * 60 * 60 * 1000;
-    var elapsed = Math.floor((thisMon - anchor) / msPerWeek);
+    var elapsed = Math.floor((thisSun - anchor) / msPerWeek);
     var idx = ((ARMADA_ANCHOR_WEEK - 1) + elapsed) % 7;
     if (idx < 0) idx += 7;
     return idx + 1;

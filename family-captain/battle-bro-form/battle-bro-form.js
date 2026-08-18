@@ -286,14 +286,15 @@
     var brother = store.brotherPack || null;
     var hint = el('brotherHabitsHint');
     if (!brother || !brother.items || !brother.items.length) {
-      if (hint) hint.textContent = 'No brother pack imported yet.';
-      renderHabitRows('brotherHabitRows', [], store, { empty: 'Import his share pack to see the habits he marked Shared.' });
+      if (hint) hint.textContent = 'No brother pack yet — pair by email above, or import a JSON pack.';
+      renderHabitRows('brotherHabitRows', [], store, { empty: 'Pair or import to see the habits he marked Shared.' });
       return;
     }
     if (hint) {
       hint.textContent = (brother.name ? brother.name + ' · ' : '') +
-        'Imported ' + (brother.importedAt ? new Date(brother.importedAt).toLocaleDateString() : 'recently') +
-        '. Read-only — his checks as of the pack he sent.';
+        (brother.live ? 'Live from cloud' : 'Imported') +
+        (brother.importedAt ? ' · ' + new Date(brother.importedAt).toLocaleString() : '') +
+        '. Read-only Shared habits.';
     }
     var brotherStore = {
       habits: {
@@ -470,6 +471,259 @@
     try {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(store));
     } catch (e) {}
+    scheduleCloudPush();
+  }
+
+  var cloudPushTimer = null;
+  var cloudUpdatedAt = null;
+  var cloudAvailable = false;
+
+  function scheduleCloudPush() {
+    if (!window.BBCloud) return;
+    var sess = BBCloud.loadSession();
+    if (!sess || !sess.sessionToken) return;
+    clearTimeout(cloudPushTimer);
+    cloudPushTimer = setTimeout(function () { pushCloudState(false); }, 900);
+  }
+
+  function cloudStatePayload() {
+    var store = loadStore();
+    return {
+      profile: store.profile || {},
+      habits: store.habits || { items: [], checks: {} },
+      submissions: (store.submissions || []).slice(0, 52),
+      brotherPack: store.brotherPack || null,
+    };
+  }
+
+  function applyCloudState(state, updatedAt) {
+    if (!state || typeof state !== 'object') return;
+    var store = loadStore();
+    if (state.profile) store.profile = state.profile;
+    if (state.habits) store.habits = state.habits;
+    if (Array.isArray(state.submissions)) store.submissions = state.submissions.slice(0, 52);
+    if (state.brotherPack) store.brotherPack = state.brotherPack;
+    cloudUpdatedAt = updatedAt || cloudUpdatedAt;
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(store));
+    } catch (e) {}
+    if (store.profile && store.profile.name && !val('reporterName')) {
+      setVal('reporterName', store.profile.name);
+    }
+    renderHistory();
+    if (currentMode === 'habits') renderHabitBoard();
+  }
+
+  async function pushCloudState(manual) {
+    if (!window.BBCloud) return;
+    var sess = BBCloud.loadSession();
+    if (!sess || !sess.sessionToken) return;
+    setCloudStatus(manual ? 'Syncing…' : '');
+    try {
+      var r = await BBCloud.pushSync(cloudStatePayload(), cloudUpdatedAt);
+      if (r.status === 409 && r.data && r.data.state) {
+        applyCloudState(r.data.state, r.data.updatedAt);
+        setCloudStatus('Server had newer data — loaded from cloud.');
+        flash('Cloud had a newer copy — board refreshed.');
+        return;
+      }
+      if (r.ok && r.data && r.data.updatedAt) {
+        cloudUpdatedAt = r.data.updatedAt;
+        setCloudStatus('Synced ' + new Date(cloudUpdatedAt).toLocaleString());
+        if (manual) flash('Synced to cloud.');
+        await refreshBrotherFromCloud();
+        return;
+      }
+      if (r.status === 401) {
+        await renderAccountUI();
+        setCloudStatus('Session expired — sign in again.');
+        return;
+      }
+      setCloudStatus('Sync failed' + (r.data && r.data.error ? ' (' + r.data.error + ')' : '') + '.');
+    } catch (e) {
+      setCloudStatus('Sync offline — local save still works.');
+    }
+  }
+
+  async function pullCloudState(manual) {
+    if (!window.BBCloud) return;
+    var sess = BBCloud.loadSession();
+    if (!sess || !sess.sessionToken) return;
+    try {
+      var r = await BBCloud.pullSync();
+      if (r.ok && r.data && r.data.state) {
+        applyCloudState(r.data.state, r.data.updatedAt);
+        setCloudStatus('Loaded from cloud' + (cloudUpdatedAt ? ' · ' + new Date(cloudUpdatedAt).toLocaleString() : ''));
+        if (manual) flash('Loaded cloud memory.');
+      } else if (r.ok && r.data && !r.data.state) {
+        // First sign-in — push local up.
+        await pushCloudState(manual);
+      } else if (r.status === 401) {
+        await renderAccountUI();
+      }
+      await refreshBrotherFromCloud();
+    } catch (e) {
+      setCloudStatus('Could not reach cloud.');
+    }
+  }
+
+  async function refreshBrotherFromCloud() {
+    if (!window.BBCloud) return;
+    var sess = BBCloud.loadSession();
+    if (!sess || !sess.sessionToken) return;
+    try {
+      var r = await BBCloud.fetchBrotherPack();
+      if (!r.ok || !r.data) return;
+      var store = loadStore();
+      if (r.data.pack && r.data.pack.items) {
+        store.brotherPack = {
+          name: (r.data.brother && (r.data.brother.name || r.data.brother.email)) || r.data.pack.name || 'Battle Brother',
+          importedAt: r.data.updatedAt || new Date().toISOString(),
+          items: r.data.pack.items,
+          checks: r.data.pack.checks || {},
+          live: true,
+        };
+        try { localStorage.setItem(STORAGE_KEY, JSON.stringify(store)); } catch (e) {}
+        if (currentMode === 'habits') renderHabitBoard();
+      }
+    } catch (e) {}
+  }
+
+  function setCloudStatus(msg) {
+    var node = el('cloudStatus');
+    if (node) node.textContent = msg || '';
+    var bar = el('memoryBarText');
+    if (bar) {
+      var sess = window.BBCloud && BBCloud.loadSession();
+      bar.textContent = sess && sess.sessionToken
+        ? 'Signed in — local + cloud sync.'
+        : 'Saved locally — sign in above to sync across devices.';
+    }
+  }
+
+  async function renderAccountUI() {
+    var signedOut = el('accountSignedOut');
+    var signedIn = el('accountSignedIn');
+    var who = el('accountWho');
+    var unlink = el('btnPairUnlink');
+    var pairStatus = el('pairStatus');
+    var hint = el('accountHint');
+    if (!window.BBCloud) {
+      if (hint) hint.textContent = 'Cloud client missing.';
+      return;
+    }
+    var sess = BBCloud.loadSession();
+    if (!sess || !sess.sessionToken) {
+      if (signedOut) signedOut.hidden = false;
+      if (signedIn) signedIn.hidden = true;
+      if (hint) hint.textContent = 'Sign in with a magic link to keep habits and history on every device. Local save still works offline.';
+      setCloudStatus(cloudAvailable ? 'Cloud API reachable — sign in to sync.' : 'Cloud API not deployed yet — local + pack sharing still work.');
+      return;
+    }
+    if (signedOut) signedOut.hidden = true;
+    if (signedIn) signedIn.hidden = false;
+    var label = (sess.user && (sess.user.name || sess.user.email)) || 'Captain';
+    if (sess.brother) {
+      label += ' · paired with ' + (sess.brother.name || sess.brother.email);
+      if (unlink) unlink.hidden = false;
+      if (pairStatus) pairStatus.textContent = 'Live Shared habits pull from your brother when you sync.';
+    } else {
+      if (unlink) unlink.hidden = true;
+      if (pairStatus) pairStatus.textContent = 'Invite your Battle Brother by email, or accept his code.';
+    }
+    if (who) who.textContent = label;
+    if (hint) hint.textContent = 'Signed in. Habits sync to the cloud; Shared habits appear for your paired brother.';
+  }
+
+  async function handleMagicLinkClick() {
+    var email = val('authEmail');
+    if (!email) { flash('Enter your email.'); return; }
+    var status = el('authStatus');
+    if (status) status.textContent = 'Sending magic link…';
+    try {
+      var r = await BBCloud.requestMagicLink(email);
+      if (!r.ok) {
+        if (status) status.textContent = 'Could not request link' + (r.data && r.data.error ? ': ' + r.data.error : '');
+        return;
+      }
+      if (r.data && r.data.emailed) {
+        if (status) status.textContent = 'Check your email for the sign-in link (expires in 20 minutes).';
+        flash('Magic link sent.');
+      } else if (r.data && r.data.devMagicUrl) {
+        if (status) status.textContent = 'Email not configured on the API yet. Dev link ready — opening…';
+        window.location.href = r.data.devMagicUrl;
+      } else {
+        if (status) status.textContent = r.data && r.data.message ? r.data.message : 'Request sent.';
+      }
+    } catch (e) {
+      if (status) status.textContent = 'Cloud API unreachable. Deploy workers/battle-bro-sync (see README).';
+      flash('Cloud API offline.');
+    }
+  }
+
+  async function completeMagicFromUrl() {
+    var params = new URLSearchParams(window.location.search);
+    var magic = params.get('magic');
+    if (!magic || !window.BBCloud) return;
+    flash('Signing in…');
+    var r = await BBCloud.verifyMagic(magic, val('reporterName'));
+    if (r.ok) {
+      // Strip magic from URL
+      try {
+        params.delete('magic');
+        var qs = params.toString();
+        window.history.replaceState({}, '', window.location.pathname + (qs ? '?' + qs : '') + window.location.hash);
+      } catch (e) {}
+      await renderAccountUI();
+      await pullCloudState(false);
+      flash('Signed in. Cloud sync is on.');
+    } else {
+      flash('Sign-in link invalid or expired. Request a new one.');
+    }
+  }
+
+  async function handleInviteFromUrl() {
+    var params = new URLSearchParams(window.location.search);
+    var invite = params.get('invite');
+    if (!invite) return;
+    setVal('pairCode', invite);
+    setMode('habits');
+    var sess = window.BBCloud && BBCloud.loadSession();
+    if (sess && sess.sessionToken) {
+      // auto-attempt accept
+      await handlePairAccept();
+    } else {
+      flash('Sign in with the invited email, then accept the code.');
+    }
+  }
+
+  async function handlePairInvite() {
+    var email = val('pairEmail');
+    if (!email) { flash('Enter your brother\'s email.'); return; }
+    var r = await BBCloud.inviteBrother(email);
+    var status = el('pairStatus');
+    if (r.ok && r.data) {
+      if (status) {
+        status.textContent = 'Invite code ' + r.data.code + ' — send it to him, or share ' + r.data.acceptUrl;
+      }
+      flash('Invite created' + (r.data.code ? ': ' + r.data.code : ''));
+    } else {
+      flash((r.data && r.data.error) || 'Invite failed.');
+    }
+  }
+
+  async function handlePairAccept() {
+    var code = val('pairCode');
+    if (!code) { flash('Enter the invite code.'); return; }
+    var r = await BBCloud.acceptInvite(code);
+    if (r.ok) {
+      await BBCloud.me();
+      await renderAccountUI();
+      await refreshBrotherFromCloud();
+      flash('Paired. Shared habits will sync live.');
+    } else {
+      flash((r.data && r.data.error) || 'Could not accept invite.');
+    }
   }
 
   function themeByWeek(n) {
@@ -927,6 +1181,42 @@
       if (params.get('share') === '1' || mode === 'share') openHabitsShare();
       else setMode('habits');
     }
+
+    // Cloud account wiring
+    if (el('btnMagicLink')) el('btnMagicLink').addEventListener('click', handleMagicLinkClick);
+    if (el('authEmail')) el('authEmail').addEventListener('keydown', function (e) {
+      if (e.key === 'Enter') { e.preventDefault(); handleMagicLinkClick(); }
+    });
+    if (el('btnLogout')) el('btnLogout').addEventListener('click', async function () {
+      await BBCloud.logout();
+      await renderAccountUI();
+      flash('Signed out. Local memory stays on this device.');
+    });
+    if (el('btnSyncNow')) el('btnSyncNow').addEventListener('click', async function () {
+      await pushCloudState(true);
+      await pullCloudState(false);
+    });
+    if (el('btnPairInvite')) el('btnPairInvite').addEventListener('click', handlePairInvite);
+    if (el('btnPairAccept')) el('btnPairAccept').addEventListener('click', handlePairAccept);
+    if (el('btnPairUnlink')) el('btnPairUnlink').addEventListener('click', async function () {
+      await BBCloud.unlinkBrother();
+      await BBCloud.me();
+      await renderAccountUI();
+      flash('Unlinked.');
+    });
+
+    (async function bootCloud() {
+      if (!window.BBCloud) return;
+      cloudAvailable = await BBCloud.health();
+      if (BBCloud.loadSession()) {
+        var me = await BBCloud.me();
+        if (me.status === 401) BBCloud.saveSession(null);
+      }
+      await renderAccountUI();
+      await completeMagicFromUrl();
+      if (BBCloud.loadSession()) await pullCloudState(false);
+      await handleInviteFromUrl();
+    })();
   }
 
   if (document.readyState === 'loading') {

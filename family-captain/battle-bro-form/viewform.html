@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="canonical" href="https://usmcmin.com/family-captain/battle-bro-form/viewform.html">
   <title>Battle Brother Form — The Family Captain</title>
-  <meta name="description" content="Weekly Battle Brother check-in plus HabitShare-style captain habit board — streaks, shared habits with your Battle Brother, and local memory for the Armada year.">
+  <meta name="description" content="Weekly Battle Brother check-in with HabitShare-style board, email magic-link sign-in, and cloud sync across devices.">
   <meta name="robots" content="noindex,nofollow">
   <link rel="stylesheet" href="../../assets/css/main.css">
   <link rel="icon" type="image/svg+xml" href="../../assets/icons/favicon.svg">
@@ -187,11 +187,51 @@
 <section class="bb-hero">
   <div class="bb-kicker">Weekly Accountability</div>
   <h1>Battle Brother Form</h1>
-  <p>Weekly Armada check-in plus a HabitShare-style board — streaks, selective sharing with your Battle Brother, and memory that stays in this browser until a year-long backend lands.</p>
+  <p>Weekly Armada check-in plus a HabitShare-style board. Sign in with email to sync habits across devices and pair your Battle Brother live.</p>
 </section>
 
 <div class="bb-wrap">
   <div id="bbFlash" hidden role="status"></div>
+
+  <div class="bb-card" id="accountCard" style="margin-bottom:16px;">
+    <h2 class="section-bar">Account · Cloud Sync</h2>
+    <div class="bb-card-body">
+      <p class="bb-hint" style="margin-top:0;" id="accountHint">Sign in with a magic link to keep habits and history on every device. Local save still works offline.</p>
+      <div id="accountSignedOut">
+        <div class="habit-add">
+          <input type="email" id="authEmail" placeholder="you@email.com" autocomplete="email">
+          <button type="button" class="btn-primary" id="btnMagicLink">Email magic link</button>
+        </div>
+        <p class="bb-hint" id="authStatus"></p>
+      </div>
+      <div id="accountSignedIn" hidden>
+        <p style="margin:0 0 10px;color:var(--navy);font-weight:600;" id="accountWho"></p>
+        <div class="btn-row" style="margin-top:0;">
+          <button type="button" class="btn-ghost" id="btnSyncNow" style="flex:1;">Sync now</button>
+          <button type="button" class="btn-ghost" id="btnLogout" style="flex:1;">Sign out</button>
+        </div>
+        <div class="bb-field" style="margin-top:16px;margin-bottom:0;">
+          <label for="pairEmail">Pair Battle Brother (his email)</label>
+          <div class="habit-add">
+            <input type="email" id="pairEmail" placeholder="brother@email.com" autocomplete="off">
+            <button type="button" class="btn-primary" id="btnPairInvite">Send invite</button>
+          </div>
+        </div>
+        <div class="bb-field" style="margin-top:12px;margin-bottom:0;">
+          <label for="pairCode">Accept invite code</label>
+          <div class="habit-add">
+            <input type="text" id="pairCode" placeholder="8-character code" maxlength="16" autocomplete="off">
+            <button type="button" class="btn-primary" id="btnPairAccept">Accept</button>
+          </div>
+        </div>
+        <p class="bb-hint" id="pairStatus"></p>
+        <div class="btn-row" style="margin-top:8px;">
+          <button type="button" class="btn-ghost" id="btnPairUnlink" hidden>Unlink Battle Brother</button>
+        </div>
+      </div>
+      <p class="bb-hint" id="cloudStatus" style="margin-bottom:0;"></p>
+    </div>
+  </div>
 
   <div class="bb-mode" role="tablist" aria-label="Battle Brother modules">
     <button type="button" class="bb-mode-btn active" id="modeForm" data-mode="form" role="tab" aria-selected="true">Weekly Form</button>
@@ -199,7 +239,7 @@
   </div>
 
   <div class="memory-bar">
-    <span>Saved locally in this browser — drafts and habit checks auto-save.</span>
+    <span id="memoryBarText">Saved locally — sign in above to sync across devices.</span>
     <span>
       <button type="button" id="btnExport">Export memory</button>
       <button type="button" id="btnClearDraft">Clear draft</button>
@@ -232,14 +272,14 @@
     <div class="bb-card">
       <h2 class="section-bar">Share with Battle Brother</h2>
       <div class="bb-card-body" id="sharePackSection">
-        <p class="bb-hint" style="margin-top:0;">Mark habits <strong>Shared</strong> above, then send this pack to your Battle Brother. He opens Habit Board &rarr; Import. Only Shared habits are included — Private stays private.</p>
+        <p class="bb-hint" style="margin-top:0;">Signed-in brothers see Shared habits live after pairing. Packs below remain as an offline / unauthenticated fallback — same HabitShare privacy model.</p>
         <div class="brother-pack">
           <button type="button" class="btn-primary" id="btnCopySharePack" style="flex:1;">Copy share pack</button>
           <button type="button" class="btn-ghost" id="btnNativeSharePack" style="flex:1;">Share&hellip;</button>
           <button type="button" class="btn-ghost" id="btnDownloadSharePack" style="flex:1;">Download JSON</button>
         </div>
         <div class="bb-field" style="margin-top:16px;margin-bottom:0;">
-          <label for="importSharePack">Import brother&rsquo;s share pack</label>
+          <label for="importSharePack">Import brother&rsquo;s share pack (offline)</label>
           <textarea id="importSharePack" placeholder='Paste his JSON pack here, then tap Import'></textarea>
         </div>
         <div class="btn-row" style="margin-top:10px;">
@@ -401,6 +441,7 @@
   <p style="margin-top:6px;">&copy; 2026 U.S.M.C. Ministries</p>
 </footer>
 
+<script src="battle-bro-cloud.js"></script>
 <script src="battle-bro-form.js"></script>
 </body>
 </html>

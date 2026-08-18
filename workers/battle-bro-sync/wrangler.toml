@@ -1,0 +1,31 @@
+# Battle Brother sync API — magic-link auth + habit cloud store
+# Deploy: cd workers/battle-bro-sync && npx wrangler deploy
+#
+# Required secrets:
+#   npx wrangler secret put RESEND_API_KEY
+#   npx wrangler secret put SESSION_SECRET   # long random string
+#
+# Optional vars (set below or via dashboard):
+#   EMAIL_FROM = "The Family Captain <noreply@usmcmin.com>"
+#   APP_ORIGIN = "https://usmcmin.com"
+
+name = "usmcmin-battle-bro-sync"
+main = "src/index.js"
+compatibility_date = "2026-07-01"
+workers_dev = true
+
+# Custom domain + workers.dev fallback so health stays reachable during DNS.
+[[routes]]
+pattern = "bb.usmcmin.com"
+custom_domain = true
+
+[[d1_databases]]
+binding = "DB"
+database_name = "usmcmin-battle-bro"
+database_id = "61082388-a812-40f2-9b0d-641f43ec4ce8"
+
+[vars]
+APP_ORIGIN = "https://usmcmin.com"
+EMAIL_FROM = "The Family Captain <noreply@usmcmin.com>"
+# Comma-separated origins allowed for CORS (form page)
+CORS_ORIGINS = "https://usmcmin.com,http://127.0.0.1:8888,http://localhost:8888"

@@ -12,17 +12,17 @@
 name = "usmcmin-battle-bro-sync"
 main = "src/index.js"
 compatibility_date = "2026-07-01"
+workers_dev = true
 
-# Custom domain (after DNS): bb.usmcmin.com → this worker
-# Or use workers.dev URL and set window.BB_API_BASE on the form page.
-# [[routes]]
-# pattern = "bb.usmcmin.com/*"
-# zone_name = "usmcmin.com"
+# Custom domain + workers.dev fallback so health stays reachable during DNS.
+[[routes]]
+pattern = "bb.usmcmin.com"
+custom_domain = true
 
 [[d1_databases]]
 binding = "DB"
 database_name = "usmcmin-battle-bro"
-database_id = "REPLACE_AFTER_CREATE" # npx wrangler d1 create usmcmin-battle-bro
+database_id = "61082388-a812-40f2-9b0d-641f43ec4ce8"
 
 [vars]
 APP_ORIGIN = "https://usmcmin.com"

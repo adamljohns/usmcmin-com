@@ -1,15 +1,56 @@
 /**
  * Battle Brother cloud client — magic-link auth + D1 sync.
- * Expects API at window.BB_API_BASE (default https://bb.usmcmin.com).
+ * Tries https://bb.usmcmin.com first, then the workers.dev fallback
+ * (some local DNS stubs still NXDOMAIN on the custom domain).
  */
 (function (global) {
   'use strict';
 
   var SESSION_KEY = 'fc_bb_session_v1';
-  var DEFAULT_BASE = 'https://bb.usmcmin.com';
+  var PRIMARY_BASE = 'https://bb.usmcmin.com';
+  var FALLBACK_BASE = 'https://usmcmin-battle-bro-sync.usmcministries2022.workers.dev';
+  var resolvedBase = null;
+
+  function configuredBase() {
+    if (global.BB_API_BASE) return String(global.BB_API_BASE).replace(/\/$/, '');
+    return null;
+  }
 
   function apiBase() {
-    return String(global.BB_API_BASE || DEFAULT_BASE).replace(/\/$/, '');
+    return resolvedBase || configuredBase() || PRIMARY_BASE;
+  }
+
+  async function probe(base) {
+    try {
+      var res = await fetch(base + '/api/bb/health', {
+        method: 'GET',
+        headers: { Accept: 'application/json' },
+      });
+      if (!res.ok) return false;
+      var data = await res.json();
+      return !!(data && data.ok);
+    } catch (e) {
+      return false;
+    }
+  }
+
+  async function ensureBase() {
+    if (resolvedBase) return resolvedBase;
+    var forced = configuredBase();
+    if (forced) {
+      resolvedBase = forced;
+      return resolvedBase;
+    }
+    if (await probe(PRIMARY_BASE)) {
+      resolvedBase = PRIMARY_BASE;
+      return resolvedBase;
+    }
+    if (await probe(FALLBACK_BASE)) {
+      resolvedBase = FALLBACK_BASE;
+      return resolvedBase;
+    }
+    resolvedBase = PRIMARY_BASE;
+    return resolvedBase;
   }
 
   function loadSession() {
@@ -29,22 +70,43 @@
 
   async function request(path, options) {
     options = options || {};
+    await ensureBase();
     var headers = Object.assign({ Accept: 'application/json' }, options.headers || {});
     if (options.body && !headers['Content-Type']) headers['Content-Type'] = 'application/json';
     var sess = loadSession();
     if (sess && sess.sessionToken) headers.Authorization = 'Bearer ' + sess.sessionToken;
-    var res = await fetch(apiBase() + path, {
-      method: options.method || 'GET',
-      headers: headers,
-      body: options.body ? JSON.stringify(options.body) : undefined,
-    });
-    var data = null;
-    try { data = await res.json(); } catch (e) { data = null; }
-    return { ok: res.ok, status: res.status, data: data };
+
+    async function once(base) {
+      var res = await fetch(base + path, {
+        method: options.method || 'GET',
+        headers: headers,
+        body: options.body ? JSON.stringify(options.body) : undefined,
+      });
+      var data = null;
+      try { data = await res.json(); } catch (e) { data = null; }
+      return { ok: res.ok, status: res.status, data: data, base: base };
+    }
+
+    try {
+      return await once(apiBase());
+    } catch (e) {
+      // Custom domain DNS failure → try workers.dev once
+      if (apiBase() !== FALLBACK_BASE && !configuredBase()) {
+        try {
+          var alt = await once(FALLBACK_BASE);
+          resolvedBase = FALLBACK_BASE;
+          return alt;
+        } catch (e2) {
+          throw e;
+        }
+      }
+      throw e;
+    }
   }
 
   async function health() {
     try {
+      await ensureBase();
       var r = await request('/api/bb/health');
       return !!(r.ok && r.data && r.data.ok);
     } catch (e) {
@@ -117,6 +179,7 @@
 
   global.BBCloud = {
     apiBase: apiBase,
+    ensureBase: ensureBase,
     loadSession: loadSession,
     saveSession: saveSession,
     health: health,

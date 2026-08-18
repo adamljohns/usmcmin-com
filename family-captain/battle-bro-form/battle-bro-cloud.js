@@ -1,15 +1,20 @@
 /**
  * Battle Brother cloud client — magic-link auth + D1 sync.
- * Tries https://bb.usmcmin.com first, then the workers.dev fallback
- * (some local DNS stubs still NXDOMAIN on the custom domain).
+ *
+ * Prefer workers.dev (reliable), then custom domain bb.usmcmin.com.
+ * Some Mac stub resolvers still NXDOMAIN the custom domain; a hung DNS
+ * lookup used to make the "Email magic link" button look dead.
  */
 (function (global) {
   'use strict';
 
   var SESSION_KEY = 'fc_bb_session_v1';
-  var PRIMARY_BASE = 'https://bb.usmcmin.com';
-  var FALLBACK_BASE = 'https://usmcmin-battle-bro-sync.usmcministries2022.workers.dev';
+  var PRIMARY_BASE = 'https://usmcmin-battle-bro-sync.usmcministries2022.workers.dev';
+  var ALT_BASE = 'https://bb.usmcmin.com';
+  var PROBE_MS = 4000;
+  var REQUEST_MS = 12000;
   var resolvedBase = null;
+  var lastError = null;
 
   function configuredBase() {
     if (global.BB_API_BASE) return String(global.BB_API_BASE).replace(/\/$/, '');
@@ -20,17 +25,36 @@
     return resolvedBase || configuredBase() || PRIMARY_BASE;
   }
 
+  function withTimeout(ms, label) {
+    var ctrl = typeof AbortController !== 'undefined' ? new AbortController() : null;
+    var timer = null;
+    if (ctrl) {
+      timer = setTimeout(function () {
+        try { ctrl.abort(); } catch (e) {}
+      }, ms);
+    }
+    return {
+      signal: ctrl ? ctrl.signal : undefined,
+      clear: function () { if (timer) clearTimeout(timer); },
+      label: label || 'timeout',
+    };
+  }
+
   async function probe(base) {
+    var t = withTimeout(PROBE_MS, 'probe');
     try {
       var res = await fetch(base + '/api/bb/health', {
         method: 'GET',
         headers: { Accept: 'application/json' },
+        signal: t.signal,
       });
       if (!res.ok) return false;
       var data = await res.json();
       return !!(data && data.ok);
     } catch (e) {
       return false;
+    } finally {
+      t.clear();
     }
   }
 
@@ -41,15 +65,18 @@
       resolvedBase = forced;
       return resolvedBase;
     }
+    // workers.dev first — custom domain DNS is flaky on some Macs.
     if (await probe(PRIMARY_BASE)) {
       resolvedBase = PRIMARY_BASE;
       return resolvedBase;
     }
-    if (await probe(FALLBACK_BASE)) {
-      resolvedBase = FALLBACK_BASE;
+    if (await probe(ALT_BASE)) {
+      resolvedBase = ALT_BASE;
       return resolvedBase;
     }
+    // Last resort: still point at workers.dev so errors are actionable.
     resolvedBase = PRIMARY_BASE;
+    lastError = 'health_probe_failed';
     return resolvedBase;
   }
 
@@ -77,26 +104,37 @@
     if (sess && sess.sessionToken) headers.Authorization = 'Bearer ' + sess.sessionToken;
 
     async function once(base) {
-      var res = await fetch(base + path, {
-        method: options.method || 'GET',
-        headers: headers,
-        body: options.body ? JSON.stringify(options.body) : undefined,
-      });
-      var data = null;
-      try { data = await res.json(); } catch (e) { data = null; }
-      return { ok: res.ok, status: res.status, data: data, base: base };
+      var t = withTimeout(REQUEST_MS, 'request');
+      try {
+        var res = await fetch(base + path, {
+          method: options.method || 'GET',
+          headers: headers,
+          body: options.body ? JSON.stringify(options.body) : undefined,
+          signal: t.signal,
+        });
+        var data = null;
+        try { data = await res.json(); } catch (e) { data = null; }
+        return { ok: res.ok, status: res.status, data: data, base: base };
+      } finally {
+        t.clear();
+      }
     }
 
     try {
-      return await once(apiBase());
+      var first = await once(apiBase());
+      lastError = null;
+      return first;
     } catch (e) {
-      // Custom domain DNS failure → try workers.dev once
-      if (apiBase() !== FALLBACK_BASE && !configuredBase()) {
+      lastError = String(e && e.name === 'AbortError' ? 'timeout' : (e && e.message) || e);
+      var other = apiBase() === PRIMARY_BASE ? ALT_BASE : PRIMARY_BASE;
+      if (!configuredBase() && other !== apiBase()) {
         try {
-          var alt = await once(FALLBACK_BASE);
-          resolvedBase = FALLBACK_BASE;
+          var alt = await once(other);
+          resolvedBase = other;
+          lastError = null;
           return alt;
         } catch (e2) {
+          lastError = String(e2 && e2.name === 'AbortError' ? 'timeout' : (e2 && e2.message) || e2);
           throw e;
         }
       }
@@ -110,6 +148,7 @@
       var r = await request('/api/bb/health');
       return !!(r.ok && r.data && r.data.ok);
     } catch (e) {
+      lastError = String(e && e.message || e);
       return false;
     }
   }
@@ -180,6 +219,7 @@
   global.BBCloud = {
     apiBase: apiBase,
     ensureBase: ensureBase,
+    lastError: function () { return lastError; },
     loadSession: loadSession,
     saveSession: saveSession,
     health: health,

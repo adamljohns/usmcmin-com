@@ -52,7 +52,7 @@
 
 ## Part A — Resend (browser; tab already open)
 
-**Adam already created the account and copied an API key to the clipboard (2026-08-18).**
+**Adam already created the Resend account and stored the API key in the note starting with `Sally AnneOCA…` (label `Resend API key:`).**
 
 1. ~~In the Resend dashboard, go to **API Keys**.~~ *(key created)*
 2. ~~Create key~~ — **DONE**; name may vary.

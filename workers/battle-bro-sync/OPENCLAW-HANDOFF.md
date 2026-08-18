@@ -17,9 +17,10 @@
 |------|--------|-------|
 | Resend account | **DONE** | Adam created account |
 | Resend API key | **IN NOTE (not chat)** | Note title starts with **`Sally AnneOCA…`** — field/label: **`Resend API key:`** |
-| Resend domain `usmcmin.com` verified | **UNKNOWN — DO NEXT** | Add domain + DNS in Cloudflare if not done |
+| Resend domain `usmcmin.com` | **DONE** | Adam added, configured, authorized |
+| Resend domain `usmcmin.org` | **DONE** | Adam added, configured, authorized |
 | Cloudflare login | **DONE** (Adam signed in) | Drive his open tab |
-| D1 + Worker deploy | **NOT DONE** | Part C |
+| D1 + Worker deploy | **NOT DONE** | Part C — **Max do this next** |
 | `bb.usmcmin.com` route | **NOT DONE** | Part B2 / Custom Domain |
 | PR #61 merged to main | **CHECK** | Needed for Account panel on live site |
 | Magic-link E2E test | **NOT DONE** | Part E |
@@ -30,9 +31,9 @@
 1. **Open the note whose title starts with `Sally AnneOCA`** (1Password / Notes — wherever Adam keeps it). Read the line labeled **`Resend API key:`**.  
    - Store/copy into 1Password item `Resend · usmcmin Battle Brother` → `api_key` if not already there.  
    - **Do not** paste the raw key into GitHub, Slack, or git commits.
-2. In Resend: confirm **Domains → usmcmin.com** is added and **Verified**. If not, add DNS records in Cloudflare (Part A/B).
-3. Deploy Worker (Part C) using that key as `RESEND_API_KEY` (`npx wrangler secret put RESEND_API_KEY` → paste from the note).
-4. Attach `bb.usmcmin.com`, merge PR if needed, run Part E test.
+2. ~~Resend domains~~ — **DONE** (`usmcmin.com` + `usmcmin.org`). Prefer From: `The Family Captain <noreply@usmcmin.com>` (matches Worker). `noreply@usmcmin.org` is also fine if you change `EMAIL_FROM`.
+3. **Deploy Worker now (Part C)** using that key as `RESEND_API_KEY` (`npx wrangler secret put RESEND_API_KEY` → paste from the note).
+4. Attach `bb.usmcmin.com`, merge PR #61 if needed, run Part E test.
 
 ---
 

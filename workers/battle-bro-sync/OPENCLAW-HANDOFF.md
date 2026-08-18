@@ -16,7 +16,7 @@
 | Step | Status | Notes |
 |------|--------|-------|
 | Resend account | **DONE** | Adam created account |
-| Resend API key | **ON ADAM’S CLIPBOARD** | Max: read clipboard OR Adam pastes into secure store — do **not** commit to git |
+| Resend API key | **IN NOTE (not chat)** | Note title starts with **`Sally AnneOCA…`** — field/label: **`Resend API key:`** |
 | Resend domain `usmcmin.com` verified | **UNKNOWN — DO NEXT** | Add domain + DNS in Cloudflare if not done |
 | Cloudflare login | **DONE** (Adam signed in) | Drive his open tab |
 | D1 + Worker deploy | **NOT DONE** | Part C |
@@ -27,10 +27,11 @@
 
 ### Max — immediate actions (in order)
 
-1. **Capture the API key from clipboard now** (before it gets overwritten). Store in 1Password:  
-   `Resend · usmcmin Battle Brother` → field `api_key`
+1. **Open the note whose title starts with `Sally AnneOCA`** (1Password / Notes — wherever Adam keeps it). Read the line labeled **`Resend API key:`**.  
+   - Store/copy into 1Password item `Resend · usmcmin Battle Brother` → `api_key` if not already there.  
+   - **Do not** paste the raw key into GitHub, Slack, or git commits.
 2. In Resend: confirm **Domains → usmcmin.com** is added and **Verified**. If not, add DNS records in Cloudflare (Part A/B).
-3. Deploy Worker (Part C) using that key as `RESEND_API_KEY`.
+3. Deploy Worker (Part C) using that key as `RESEND_API_KEY` (`npx wrangler secret put RESEND_API_KEY` → paste from the note).
 4. Attach `bb.usmcmin.com`, merge PR if needed, run Part E test.
 
 ---
@@ -55,9 +56,10 @@
 
 1. ~~In the Resend dashboard, go to **API Keys**.~~ *(key created)*
 2. ~~Create key~~ — **DONE**; name may vary.
-3. **Max: read clipboard immediately** → store in 1Password as:
+3. **Max: read key from Adam’s note** (title starts with **`Sally AnneOCA`**, label **`Resend API key:`**) → optionally mirror into 1Password as:
    - Vault item: `Resend · usmcmin Battle Brother`
    - Field: `api_key`
+   - **Never commit the key to git or paste into PR comments.**
 4. Go to **Domains** → Add **`usmcmin.com`** if missing.
 5. Add the DNS records Resend shows (SPF/DKIM/etc.) in Cloudflare DNS for `usmcmin.com` (Part B).
 6. Wait until domain status is **Verified**.
@@ -67,7 +69,7 @@
 
 If domain verification is blocked, stop and report which DNS records are pending. Do not invent records.
 
-**If clipboard was overwritten before Max grabbed it:** Adam regenerates a Resend API key and copies again (or pastes once into the Cursor/OpenClaw chat that is allowed to hold secrets).
+**If the note is missing or the label changed:** Adam regenerates a Resend API key and updates the `Sally AnneOCA…` note (or tells Max the new note title). Do not ask him to paste the key into public chat.
 
 ---
 

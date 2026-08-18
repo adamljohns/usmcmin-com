@@ -343,6 +343,9 @@ def build_election_html(candidate, elections_data):
     next_date = profile.get('next_election_date')
     next_type = profile.get('next_election_type') or 'general'
     seat_up = profile.get('seat_up_next')
+    # Special / named next_election_type means they are on that ballot.
+    if seat_up is None and str(next_type).lower() in ('special', 'primary', 'runoff'):
+        seat_up = True
     state = (candidate.get('state') or '').upper()
 
     if not next_date:
@@ -393,9 +396,14 @@ def build_election_html(candidate, elections_data):
         ev_note = early_voting.get('note', '')
         ev_note_html = f' <span style="opacity:0.7;">({ev_note})</span>' if ev_note else ''
         admin_parts.append(f'<div class="prof-election-side-item"><strong>Early voting:</strong> {early_voting["start"]} &ndash; {early_voting["end"]}{ev_note_html}</div>')
-    if admin.get('phone'):
+    local_elections = profile.get('local_elections_office') or {}
+    if local_elections.get('phone'):
+        tel = 'tel:' + str(local_elections['phone'])
+        label = local_elections.get('name') or 'County registrar'
+        admin_parts.append(f'<div class="prof-election-side-item"><strong>{label}:</strong> <a href="{tel}">{local_elections["phone"]}</a></div>')
+    elif admin.get('phone'):
         tel = 'tel:' + admin["phone"]
-        admin_parts.append(f'<div class="prof-election-side-item"><strong>Elections office:</strong> <a href="{tel}">{admin["phone"]}</a></div>')
+        admin_parts.append(f'<div class="prof-election-side-item"><strong>State elections office:</strong> <a href="{tel}">{admin["phone"]}</a></div>')
     if admin.get('voter_info_lookup'):
         admin_parts.append(f'<div class="prof-election-side-item"><strong>Voter status:</strong> <a href="{admin["voter_info_lookup"]}" target="_blank" rel="noopener">Check registration</a></div>')
     if admin.get('website'):
@@ -1607,7 +1615,8 @@ def generate_profile(candidate, categories, meta, nav=None):
     fields = [
         ('Religion', profile.get('religion')),
         ('Education', profile.get('education')),
-        ('Birthplace', profile.get('birthplace')),
+        ('Residence' if profile.get('residence') else 'Birthplace',
+         profile.get('residence') or profile.get('birthplace')),
         ('Background', profile.get('background')),
         ('Net Worth', profile.get('net_worth')),
         ('NRA Rating', profile.get('nra_rating')),
@@ -1628,7 +1637,15 @@ def generate_profile(candidate, categories, meta, nav=None):
 
     contenders = profile.get('next_election_contenders', [])
     if contenders:
-        profile_html += f'<div class="prof-detail"><strong>Upcoming Contenders:</strong> {", ".join(contenders)}</div>'
+        slug_to_name = (meta.get('_slug_to_name') or {})
+        pretty = []
+        for item in contenders:
+            if not item:
+                continue
+            pretty.append(slug_to_name.get(item, item) if isinstance(item, str) and '-' in item and item.islower() else item)
+        # If we only have slugs and no name map, skip rather than print kebab.
+        if pretty and not all(p == s and '-' in str(s) for p, s in zip(pretty, contenders)):
+            profile_html += f'<div class="prof-detail"><strong>Upcoming Contenders:</strong> {", ".join(pretty)}</div>'
 
     notes = c.get('notes', '')
     website = c.get('website', '')
@@ -2133,7 +2150,11 @@ def main():
     rank_rows = []
     for c in data['candidates']:
         scores = c.get('scores') or {}
-        any_scored = any(isinstance(v, list) and any(a is not None for a in v) for v in scores.values())
+        # Only True/FALSE count as scored answers. N/A / null must not rank.
+        any_scored = any(
+            isinstance(v, list) and any(a is True or a is False for a in v)
+            for v in scores.values()
+        )
         if not any_scored:
             continue
         tot = calc_total(scores, categories, classify_office_tier(c) or 'federal')['score']
@@ -2145,6 +2166,11 @@ def main():
     for i, (slug, _) in enumerate(rank_rows):
         rank_map[slug] = (i + 1, total_ranked)
     meta['_rank_map'] = rank_map
+    meta['_slug_to_name'] = {
+        c.get('slug'): c.get('name')
+        for c in data['candidates']
+        if c.get('slug') and c.get('name')
+    }
 
     for candidate in data['candidates']:
         slug = candidate.get('slug', '')

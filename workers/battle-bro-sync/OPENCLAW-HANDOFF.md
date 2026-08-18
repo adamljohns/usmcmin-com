@@ -1,14 +1,37 @@
 # OpenClaw / Max — Wire Battle Brother magic-link sync (do it for Adam)
 
 **Priority:** high  
-**Goal:** Deploy the Battle Brother cloud sync API, turn on Resend email magic links, point DNS, verify sign-in works, leave an agent-callable API.  
-**Adam’s state:** He already has **resend.com** and **Cloudflare** open/signed in in Chrome. Drive those tabs. Do not make him click around.
+**Goal:** Deploy the Battle Brother cloud sync API, turn on Resend email magic links, point DNS, verify sign-in works, leave an agent-callable API.
 
 **Repo:** `adamljohns/usmcmin-com`  
 **Branch / PR:** `cursor/battle-bro-magic-link-sync-127b` · https://github.com/adamljohns/usmcmin-com/pull/61  
 **Form URL:** https://usmcmin.com/family-captain/battle-bro-form/viewform.html  
 **Worker package:** `workers/battle-bro-sync/`  
 **Desired API host:** `https://bb.usmcmin.com`
+
+---
+
+## STATUS (updated 2026-08-18)
+
+| Step | Status | Notes |
+|------|--------|-------|
+| Resend account | **DONE** | Adam created account |
+| Resend API key | **ON ADAM’S CLIPBOARD** | Max: read clipboard OR Adam pastes into secure store — do **not** commit to git |
+| Resend domain `usmcmin.com` verified | **UNKNOWN — DO NEXT** | Add domain + DNS in Cloudflare if not done |
+| Cloudflare login | **DONE** (Adam signed in) | Drive his open tab |
+| D1 + Worker deploy | **NOT DONE** | Part C |
+| `bb.usmcmin.com` route | **NOT DONE** | Part B2 / Custom Domain |
+| PR #61 merged to main | **CHECK** | Needed for Account panel on live site |
+| Magic-link E2E test | **NOT DONE** | Part E |
+| Agent session / service token | **NOT DONE** | Part F |
+
+### Max — immediate actions (in order)
+
+1. **Capture the API key from clipboard now** (before it gets overwritten). Store in 1Password:  
+   `Resend · usmcmin Battle Brother` → field `api_key`
+2. In Resend: confirm **Domains → usmcmin.com** is added and **Verified**. If not, add DNS records in Cloudflare (Part A/B).
+3. Deploy Worker (Part C) using that key as `RESEND_API_KEY`.
+4. Attach `bb.usmcmin.com`, merge PR if needed, run Part E test.
 
 ---
 
@@ -28,11 +51,11 @@
 
 ## Part A — Resend (browser; tab already open)
 
-1. In the Resend dashboard, go to **API Keys**.
-2. Create key:
-   - Name: `usmcmin-battle-bro-sync`
-   - Permission: sending access
-3. **Copy the key once** → store in 1Password as:
+**Adam already created the account and copied an API key to the clipboard (2026-08-18).**
+
+1. ~~In the Resend dashboard, go to **API Keys**.~~ *(key created)*
+2. ~~Create key~~ — **DONE**; name may vary.
+3. **Max: read clipboard immediately** → store in 1Password as:
    - Vault item: `Resend · usmcmin Battle Brother`
    - Field: `api_key`
 4. Go to **Domains** → Add **`usmcmin.com`** if missing.
@@ -43,6 +66,8 @@
    (matches Worker `EMAIL_FROM` / `wrangler.toml`).
 
 If domain verification is blocked, stop and report which DNS records are pending. Do not invent records.
+
+**If clipboard was overwritten before Max grabbed it:** Adam regenerates a Resend API key and copies again (or pastes once into the Cursor/OpenClaw chat that is allowed to hold secrets).
 
 ---
 

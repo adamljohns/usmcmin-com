@@ -12,6 +12,7 @@
   <meta property="og:description" content="Fredericksburg, Virginia — National Weather Service. Readiness, not climate talk.">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://usmcmin.com/weather.html">
+  <meta property="og:image" content="https://usmcmin.com/assets/weather/klwx-radar-latest.gif">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="robots" content="index,follow">
   <link rel="icon" type="image/svg+xml" href="assets/icons/favicon.svg">
@@ -93,8 +94,10 @@
     .dock .t { font-family: var(--serif); margin: 6px 0; }
     .dock .d { color: var(--muted); font-size: 0.86rem; }
     .fine { color: var(--muted); font-size: 0.75rem; line-height: 1.45; }
-    .period { padding: 10px 0; border-top: 1px solid var(--line); }
+    .period { padding: 10px 0; border-top: 1px solid var(--line); display: grid; grid-template-columns: 56px 1fr; gap: 12px; align-items: start; }
     .period strong { display: block; margin-bottom: 4px; }
+    .period-icon { width: 56px; height: 56px; object-fit: contain; background: var(--bg-2); }
+    .period.no-icon { grid-template-columns: 1fr; }
     .actions { margin: 8px 0 0 18px; color: var(--muted); }
     @media (max-width: 860px) {
       .hero, .rails, .dock { grid-template-columns: 1fr; }
@@ -123,7 +126,11 @@
       <p class="dek">Fredericksburg, Virginia — National Weather Service. Readiness, not climate talk.</p>
       <div class="meta">Tuesday, August 18, 2026 · AM edition · J-5 Fredericksburg NWS · RSA-0818-WIRE-14</div>
     </header>
-    <article class="hero no-media">
+    <article class="hero">
+      <div class="hero-media">
+        <img src="assets/weather/klwx-radar-latest.gif" alt="Sterling (KLWX) radar — what the sky is doing now">
+        <div class="hero-credit">Official NWS KLWX radar loop. Live picture, not a vibe graphic.</div>
+      </div>
       <div class="hero-body">
         <span class="chip">NWS / Readiness</span>
         <h2>Mild today. Isolated late-day storm chance. Thursday is the wet file.</h2>
@@ -134,7 +141,8 @@
     </article>
     <section class="watch">
       <h3>Forecast</h3>
-      <div class="period"><strong>Today</strong><p class="insight">Isolated showers and thunderstorms after 4 p.m. Partly sunny, high near 88. North wind 2 to 6 mph. Precipitation chance 20%.</p></div><div class="period"><strong>Tonight</strong><p class="insight">Partly cloudy, low around 68. North wind 0 to 3 mph.</p></div><div class="period"><strong>Wednesday</strong><p class="insight">Sunny, high near 90. Northwest wind around 3 mph. Wednesday night slight chance of showers after 2 a.m., low around 71, 20%.</p></div><div class="period"><strong>Thursday</strong><p class="insight">Showers and thunderstorms likely. Partly sunny, high near 89. Chance of precipitation 70%. Thursday night storms likely before 2 a.m., low around 68, 70%.</p></div><div class="period"><strong>Friday–Saturday</strong><p class="insight">Friday: chance of storms after 2 p.m., high near 85, 50%. Saturday: storms likely, high near 84, 60%.</p></div>
+      <div class="period"><img class="period-icon" src="assets/weather/nws-today-sct-tsra.png" alt=""><div><strong>Today</strong><p class="insight">Isolated showers and thunderstorms after 4 p.m. Partly sunny, high near 88. North wind 2 to 6 mph. Precipitation chance 20%.</p></div></div><div class="period"><img class="period-icon" src="assets/weather/nws-tonight-sct.png" alt=""><div><strong>Tonight</strong><p class="insight">Partly cloudy, low around 68. North wind 0 to 3 mph.</p></div></div><div class="period"><img class="period-icon" src="assets/weather/nws-wednesday-few.png" alt=""><div><strong>Wednesday</strong><p class="insight">Sunny, high near 90. Northwest wind around 3 mph. Wednesday night slight chance of showers after 2 a.m., low around 71, 20%.</p></div></div><div class="period"><img class="period-icon" src="assets/weather/nws-thursday-tsra.png" alt=""><div><strong>Thursday</strong><p class="insight">Showers and thunderstorms likely. Partly sunny, high near 89. Chance of precipitation 70%. Thursday night storms likely before 2 a.m., low around 68, 70%.</p></div></div><div class="period"><img class="period-icon" src="https://api.weather.gov/icons/land/day/bkn/tsra_sct,50?size=medium" alt=""><div><strong>Friday–Saturday</strong><p class="insight">Friday: chance of storms after 2 p.m., high near 85, 50%. Saturday: storms likely, high near 84, 60%.</p></div></div>
+      <div class="period"><img class="period-icon" src="assets/weather/goes19-conus-thumb.jpg" alt=""><div><strong>GOES-19 CONUS — the bigger picture</strong><p class="insight">NOAA GOES-19 GeoColor thumbnail. Official satellite, not a brand tile.</p></div></div>
     </section>
     <section class="dock">
       <a href="wire.html"><div class="k">National</div><div class="t">RESOLUTE Wire</div><div class="d">National, global, and tech briefing.</div></a>

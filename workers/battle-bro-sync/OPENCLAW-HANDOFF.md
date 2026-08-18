@@ -16,7 +16,7 @@
 | Step | Status | Notes |
 |------|--------|-------|
 | Resend account | **DONE** | Adam created account |
-| Resend API key | **IN NOTE (not chat)** | Note title starts with **`Sally AnneOCA…`** — field/label: **`Resend API key:`** |
+| Resend API key | **IN LOCAL NOTE / TEXTEDIT** | Prefer TextEdit window titled **`resend API key`**. Fallback: note starting with **`Sally AnneOCA…`** label **`Resend API key:`** |
 | Resend domain `usmcmin.com` | **DONE** | Adam added, configured, authorized |
 | Resend domain `usmcmin.org` | **DONE** | Adam added, configured, authorized |
 | Cloudflare login | **DONE** (Adam signed in) | Drive his open tab |
@@ -61,12 +61,12 @@
    - Vault item: `Resend · usmcmin Battle Brother`
    - Field: `api_key`
    - **Never commit the key to git or paste into PR comments.**
-4. Go to **Domains** → Add **`usmcmin.com`** if missing.
-5. Add the DNS records Resend shows (SPF/DKIM/etc.) in Cloudflare DNS for `usmcmin.com` (Part B).
-6. Wait until domain status is **Verified**.
+4. ~~Go to **Domains** → Add **`usmcmin.com`**~~ — **DONE** (also **`usmcmin.org`** authorized).
+5. ~~Add the DNS records…~~ — **DONE** (Adam configured/authorized both domains).
+6. ~~Wait until domain status is **Verified**.~~ — **DONE**.
 7. Confirm From address will be:  
    `The Family Captain <noreply@usmcmin.com>`  
-   (matches Worker `EMAIL_FROM` / `wrangler.toml`).
+   (matches Worker `EMAIL_FROM` / `wrangler.toml`). `usmcmin.org` is available as alternate if needed.
 
 If domain verification is blocked, stop and report which DNS records are pending. Do not invent records.
 

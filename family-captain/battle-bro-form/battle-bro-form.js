@@ -684,27 +684,58 @@
 
   async function handleMagicLinkClick() {
     var email = val('authEmail');
-    if (!email) { flash('Enter your email.'); return; }
     var status = el('authStatus');
-    if (status) status.textContent = 'Sending magic link…';
+    var btn = el('btnMagicLink');
+    if (!email) {
+      if (status) status.textContent = 'Enter your email above first.';
+      flash('Enter your email first.');
+      var input = el('authEmail');
+      if (input) input.focus();
+      return;
+    }
+    if (!window.BBCloud) {
+      if (status) status.textContent = 'Cloud script failed to load. Hard-refresh the page.';
+      flash('Cloud script missing — hard-refresh.');
+      return;
+    }
+    if (btn) {
+      btn.disabled = true;
+      btn.textContent = 'Sending…';
+    }
+    if (status) status.textContent = 'Contacting cloud…';
     try {
       var r = await BBCloud.requestMagicLink(email);
       if (!r.ok) {
-        if (status) status.textContent = 'Could not request link' + (r.data && r.data.error ? ': ' + r.data.error : '');
+        if (status) status.textContent = 'Could not request link' + (r.data && r.data.error ? ': ' + r.data.error : ' (HTTP ' + r.status + ')');
+        flash('Magic link request failed.');
         return;
       }
       if (r.data && r.data.emailed) {
         if (status) status.textContent = 'Check your email for the sign-in link (expires in 20 minutes).';
-        flash('Magic link sent.');
-      } else if (r.data && r.data.devMagicUrl) {
-        if (status) status.textContent = 'Email not configured on the API yet. Dev link ready — opening…';
-        window.location.href = r.data.devMagicUrl;
-      } else {
-        if (status) status.textContent = r.data && r.data.message ? r.data.message : 'Request sent.';
+        flash('Magic link sent — check your inbox.');
+        return;
       }
+      // Resend secret not loading yet — still give a working sign-in path.
+      if (r.data && r.data.devMagicUrl) {
+        if (status) {
+          status.innerHTML = 'Email send is not wired on the Worker yet (Resend secret). ' +
+            '<a href="' + r.data.devMagicUrl + '">Click here to sign in now</a>.';
+        }
+        flash('Resend not sending yet — use the sign-in link below.');
+        return;
+      }
+      if (status) status.textContent = r.data && r.data.message ? r.data.message : 'Request sent.';
     } catch (e) {
-      if (status) status.textContent = 'Cloud API unreachable. Deploy workers/battle-bro-sync (see README).';
-      flash('Cloud API offline.');
+      if (status) {
+        status.textContent = 'Could not reach the cloud API from this browser (DNS/network). ' +
+          'Try again, or ask Max to confirm bb.usmcmin.com resolves.';
+      }
+      flash('Cloud API unreachable from this browser.');
+    } finally {
+      if (btn) {
+        btn.disabled = false;
+        btn.textContent = 'Email magic link';
+      }
     }
   }
 

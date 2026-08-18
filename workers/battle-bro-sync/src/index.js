@@ -170,14 +170,15 @@ async function ensureUser(env, email, name) {
 }
 
 async function sendMagicEmail(env, to, magicUrl) {
-  if (!env.RESEND_API_KEY) {
+  const key = (env.RESEND_API_KEY || '').trim();
+  if (!key) {
     return { sent: false, reason: 'resend_not_configured' };
   }
   const from = env.EMAIL_FROM || 'The Family Captain <noreply@usmcmin.com>';
   const res = await fetch('https://api.resend.com/emails', {
     method: 'POST',
     headers: {
-      Authorization: `Bearer ${env.RESEND_API_KEY}`,
+      Authorization: `Bearer ${key}`,
       'Content-Type': 'application/json',
     },
     body: JSON.stringify({
@@ -199,7 +200,7 @@ async function sendMagicEmail(env, to, magicUrl) {
   if (!res.ok) {
     const body = await res.text();
     console.error('resend error', res.status, body);
-    return { sent: false, reason: 'resend_' + res.status };
+    return { sent: false, reason: 'resend_' + res.status, detail: body.slice(0, 300) };
   }
   return { sent: true };
 }
@@ -226,8 +227,11 @@ async function authRequest(request, env) {
       ? 'Check your email for the sign-in link.'
       : 'Sign-in link created. Email delivery is not configured yet — use the returned link in development.',
   };
-  // Only expose the raw link when Resend is not configured (local/dev).
-  if (!mail.sent) out.devMagicUrl = magicUrl;
+  // Only expose the raw link when Resend did not send (misconfigured secret / send failure).
+  if (!mail.sent) {
+    out.devMagicUrl = magicUrl;
+    out.emailReason = mail.reason || 'unknown';
+  }
   return json(out);
 }
 

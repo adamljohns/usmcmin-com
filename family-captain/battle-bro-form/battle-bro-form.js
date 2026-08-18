@@ -42,15 +42,20 @@
     confidentialComments: ''
   };
 
+  // Canonical Captain habit board (order matters). Users can still add customs below.
+  var HABITS_SCHEMA_V = 2;
   var DEFAULT_HABITS = [
-    { id: 'creed', name: 'Read Creed', cadence: 'daily', shared: true },
-    { id: 'word', name: 'Word / prayer', cadence: 'daily', shared: true },
-    { id: 'body', name: 'Body line', cadence: 'daily', shared: false },
+    { id: 'creed', name: 'Review Creed', cadence: 'daily', shared: true },
+    { id: 'prayer_525', name: '5:25 Prayer', cadence: 'daily', shared: true },
+    { id: 'captains_log', name: "Captain's Log", cadence: 'daily', shared: true },
     { id: 'saca', name: 'Complete my SACA', cadence: 'weekly', shared: true },
-    { id: 'bb_call', name: 'Battle Brother call', cadence: 'weekly', shared: true },
-    { id: 'armada_call', name: 'Armada call', cadence: 'weekly', shared: true },
-    { id: 'family_meeting', name: 'Family meeting', cadence: 'weekly', shared: false }
+    { id: 'bb_call', name: 'Battle Brother call / His SACA complete', cadence: 'weekly', shared: true },
+    { id: 'armada_call', name: 'Armada call', cadence: 'weekly', shared: true }
   ];
+  var LEGACY_DEFAULT_IDS = {
+    creed: true, word: true, prayer_525: true, body: true, captains_log: true,
+    saca: true, bb_call: true, armada_call: true, family_meeting: true
+  };
 
   var currentMode = 'form';
 
@@ -72,15 +77,56 @@
   }
 
   function ensureHabits(store) {
-    if (!store.habits) store.habits = { items: [], checks: {} };
+    if (!store.habits) store.habits = { items: [], checks: {}, v: 0 };
     if (!Array.isArray(store.habits.items)) store.habits.items = [];
     if (!store.habits.checks || typeof store.habits.checks !== 'object') store.habits.checks = {};
+    migrateHabits(store);
     if (!store.habits.items.length) {
       store.habits.items = DEFAULT_HABITS.map(function (h) {
         return Object.assign({}, h);
       });
+      store.habits.v = HABITS_SCHEMA_V;
     }
     return store;
+  }
+
+  function migrateHabits(store) {
+    if ((store.habits.v || 0) >= HABITS_SCHEMA_V) return;
+
+    // Preserve checks when renaming Word / prayer → 5:25 Prayer.
+    var checks = store.habits.checks;
+    var remapped = {};
+    Object.keys(checks).forEach(function (key) {
+      if (key.indexOf('word|') === 0) remapped['prayer_525|' + key.slice(5)] = checks[key];
+      else remapped[key] = checks[key];
+    });
+    store.habits.checks = remapped;
+
+    var byId = {};
+    store.habits.items.forEach(function (h) {
+      if (h && h.id) byId[h.id] = h;
+    });
+    if (byId.word && !byId.prayer_525) {
+      byId.prayer_525 = Object.assign({}, byId.word, { id: 'prayer_525', name: '5:25 Prayer' });
+    }
+
+    var custom = store.habits.items.filter(function (h) {
+      return h && h.id && !LEGACY_DEFAULT_IDS[h.id];
+    });
+
+    store.habits.items = DEFAULT_HABITS.map(function (def) {
+      var prev = byId[def.id] || null;
+      return {
+        id: def.id,
+        name: def.name,
+        cadence: def.cadence,
+        shared: prev && typeof prev.shared === 'boolean' ? prev.shared : def.shared
+      };
+    }).concat(custom.map(function (h) {
+      return Object.assign({}, h);
+    }));
+
+    store.habits.v = HABITS_SCHEMA_V;
   }
 
   function habitCheckKey(habitId, dateStr) {
@@ -194,8 +240,8 @@
     var labels = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
     head.innerHTML = '<span class="hd-name">Habit</span>' + days.map(function (d, i) {
       var cls = ymd(d) === today ? ' hd-today' : '';
-      return '<span class="' + cls.trim() + '">' + labels[i] + '</span>';
-    }).join('') + '<span>Share</span>';
+      return '<span class="hd-day' + cls + '"><span class="hd-date">' + d.getDate() + '</span><span class="hd-dow">' + labels[i] + '</span></span>';
+    }).join('') + '<span class="hd-share">Share</span>';
   }
 
   function renderHabitRows(targetId, items, store, opts) {
@@ -503,6 +549,7 @@
     if (state.habits) store.habits = state.habits;
     if (Array.isArray(state.submissions)) store.submissions = state.submissions.slice(0, 52);
     if (state.brotherPack) store.brotherPack = state.brotherPack;
+    ensureHabits(store);
     cloudUpdatedAt = updatedAt || cloudUpdatedAt;
     try {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(store));

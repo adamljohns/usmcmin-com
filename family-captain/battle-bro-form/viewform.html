@@ -163,6 +163,13 @@
   .habit-check.on { background: var(--gold); border-color: var(--gold); color: #FFF; font-weight: 700; }
   .habit-check:disabled { opacity: 0.45; cursor: default; }
   .habit-check.weekly-slot { border-style: dashed; }
+  .habit-check.weekly-spacer {
+    visibility: hidden; pointer-events: none; border-color: transparent; background: transparent;
+  }
+  .habit-row.weekly-row .habit-check.on { background: var(--gold); border-color: var(--gold); color: #FFF; font-weight: 700; }
+  #cloudStatus { min-height: 1.2em; }
+  .auth-toggle { font-size: 0.82rem; color: var(--gold); cursor: pointer; background: none; border: 0; padding: 0; font-family: inherit; text-decoration: underline; margin-top: 8px; }
+  .auth-panel[hidden], .pair-when-unlinked[hidden], #sharePackSection[hidden] { display: none !important; }
   .habit-share-btn {
     border: 1px solid var(--border); background: #FFF; font-size: 0.65rem; font-weight: 700; text-transform: uppercase;
     letter-spacing: 0.03em; padding: 6px 4px; cursor: pointer; color: var(--gray); font-family: inherit; width: 100%;
@@ -211,12 +218,51 @@
   <div class="bb-card" id="accountCard" style="margin-bottom:16px;">
     <h2 class="section-bar">Account · Cloud Sync</h2>
     <div class="bb-card-body">
-      <p class="bb-hint" style="margin-top:0;" id="accountHint">Sign in with a magic link to keep habits and history on every device. Local save still works offline.</p>
+      <p class="bb-hint" style="margin-top:0;" id="accountHint">Sign in with email + PIN to sync habits across devices. Works in the installed app — no magic link required.</p>
       <div id="accountSignedOut">
-        <div class="habit-add">
-          <input type="email" id="authEmail" placeholder="you@email.com" autocomplete="email">
-          <button type="button" class="btn-primary" id="btnMagicLink">Email magic link</button>
+        <div id="authSignInPanel" class="auth-panel">
+          <div class="habit-add">
+            <input type="email" id="authEmail" placeholder="you@email.com" autocomplete="email">
+            <input type="password" id="authPin" placeholder="PIN (6+ chars)" autocomplete="current-password" inputmode="text">
+          </div>
+          <div class="btn-row" style="margin-top:10px;">
+            <button type="button" class="btn-primary" id="btnSignIn" style="flex:1;">Sign in</button>
+            <button type="button" class="btn-ghost" id="btnShowRegister" style="flex:1;">Create account</button>
+          </div>
+          <button type="button" class="auth-toggle" id="btnShowReset">Forgot PIN?</button>
         </div>
+        <div id="authRegisterPanel" class="auth-panel" hidden>
+          <div class="bb-field" style="margin-bottom:12px;">
+            <label for="authName">Your name</label>
+            <input type="text" id="authName" placeholder="Adam Johns" autocomplete="name">
+          </div>
+          <div class="habit-add">
+            <input type="email" id="authEmailReg" placeholder="you@email.com" autocomplete="email">
+            <input type="password" id="authPinReg" placeholder="Choose PIN (6+ chars)" autocomplete="new-password">
+          </div>
+          <div class="btn-row" style="margin-top:10px;">
+            <button type="button" class="btn-primary" id="btnRegister" style="flex:1;">Create account</button>
+            <button type="button" class="btn-ghost" id="btnShowSignIn" style="flex:1;">Back to sign in</button>
+          </div>
+        </div>
+        <div id="authResetPanel" class="auth-panel" hidden>
+          <div class="habit-add">
+            <input type="email" id="authEmailReset" placeholder="you@email.com" autocomplete="email">
+            <input type="text" id="authResetCode" placeholder="Reset code from email" maxlength="16" autocomplete="one-time-code">
+          </div>
+          <div class="habit-add" style="margin-top:8px;">
+            <input type="password" id="authPinReset" placeholder="New PIN (6+ chars)" autocomplete="new-password">
+            <button type="button" class="btn-primary" id="btnConfirmReset">Set new PIN</button>
+          </div>
+          <button type="button" class="auth-toggle" id="btnRequestResetCode">Email me a reset code</button>
+          <button type="button" class="auth-toggle" id="btnResetBack" style="margin-left:12px;">Back</button>
+        </div>
+        <details style="margin-top:12px;font-size:0.82rem;color:var(--gray);">
+          <summary>Browser only: email magic link</summary>
+          <div class="btn-row" style="margin-top:8px;">
+            <button type="button" class="btn-ghost" id="btnMagicLink" style="flex:1;">Email magic link</button>
+          </div>
+        </details>
         <p class="bb-hint" id="authStatus"></p>
       </div>
       <div id="accountSignedIn" hidden>
@@ -225,18 +271,20 @@
           <button type="button" class="btn-ghost" id="btnSyncNow" style="flex:1;">Sync now</button>
           <button type="button" class="btn-ghost" id="btnLogout" style="flex:1;">Sign out</button>
         </div>
-        <div class="bb-field" style="margin-top:16px;margin-bottom:0;">
-          <label for="pairEmail">Pair Battle Brother (his email)</label>
-          <div class="habit-add">
-            <input type="email" id="pairEmail" placeholder="brother@email.com" autocomplete="off">
-            <button type="button" class="btn-primary" id="btnPairInvite">Send invite</button>
+        <div id="pairWhenUnlinked" class="pair-when-unlinked">
+          <div class="bb-field" style="margin-top:16px;margin-bottom:0;">
+            <label for="pairEmail">Pair Battle Brother (his email)</label>
+            <div class="habit-add">
+              <input type="email" id="pairEmail" placeholder="brother@email.com" autocomplete="off">
+              <button type="button" class="btn-primary" id="btnPairInvite">Send invite</button>
+            </div>
           </div>
-        </div>
-        <div class="bb-field" style="margin-top:12px;margin-bottom:0;">
-          <label for="pairCode">Accept invite code</label>
-          <div class="habit-add">
-            <input type="text" id="pairCode" placeholder="8-character code" maxlength="16" autocomplete="off">
-            <button type="button" class="btn-primary" id="btnPairAccept">Accept</button>
+          <div class="bb-field" style="margin-top:12px;margin-bottom:0;">
+            <label for="pairCode">Accept invite code</label>
+            <div class="habit-add">
+              <input type="text" id="pairCode" placeholder="8-character code" maxlength="16" autocomplete="off">
+              <button type="button" class="btn-primary" id="btnPairAccept">Accept</button>
+            </div>
           </div>
         </div>
         <p class="bb-hint" id="pairStatus"></p>
@@ -429,10 +477,10 @@
       <div class="bb-card">
         <h2 class="section-bar">Confidential Comments to TFC Team</h2>
         <div class="bb-card-body">
-          <p class="bb-hint" style="margin-top:0;">These additional comments can be <strong>anything</strong> related to your armada, battle brother, and anything else. Comments are confidential and seen only by JM and his team. They are reviewed weekly, and action is taken immediately.</p>
+          <p class="bb-hint" style="margin-top:0;">These additional comments can be <strong>anything</strong> related to your armada, battle brother, and anything else. Comments are confidential and seen only by JM and Alan. They are reviewed weekly, and action is taken immediately.</p>
           <div class="bb-field">
             <label for="confidentialComments">Any additional comments? <span class="req">*</span></label>
-            <textarea id="confidentialComments" name="confidentialComments" placeholder="A short note for JM and his team…"></textarea>
+            <textarea id="confidentialComments" name="confidentialComments" placeholder="Praying for Alan's transition and JM as things get re-organized…"></textarea>
           </div>
         </div>
       </div>
@@ -456,7 +504,7 @@
   <p style="margin-top:6px;">&copy; 2026 U.S.M.C. Ministries</p>
 </footer>
 
-<script src="battle-bro-cloud.js?v=20260818-habits"></script>
-<script src="battle-bro-form.js?v=20260818-habits"></script>
+<script src="battle-bro-cloud.js?v=20260819-pin"></script>
+<script src="battle-bro-form.js?v=20260819-pin"></script>
 </body>
 </html>

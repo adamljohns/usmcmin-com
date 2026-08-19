@@ -5,9 +5,17 @@ CREATE TABLE IF NOT EXISTS users (
   email TEXT NOT NULL UNIQUE COLLATE NOCASE,
   name TEXT NOT NULL DEFAULT '',
   brother_id TEXT,
+  password_hash TEXT,
   created_at TEXT NOT NULL,
   updated_at TEXT NOT NULL,
   FOREIGN KEY (brother_id) REFERENCES users(id)
+);
+
+CREATE TABLE IF NOT EXISTS reset_tokens (
+  token_hash TEXT PRIMARY KEY,
+  email TEXT NOT NULL COLLATE NOCASE,
+  expires_at TEXT NOT NULL,
+  used_at TEXT
 );
 
 CREATE TABLE IF NOT EXISTS magic_tokens (

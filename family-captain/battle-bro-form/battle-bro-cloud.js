@@ -52,6 +52,51 @@
     }
   }
 
+  async function register(email, pin, name) {
+    var r = await request('/api/bb/auth/register', {
+      method: 'POST',
+      body: { email: email, pin: pin, name: name || '' },
+    });
+    if (r.ok && r.data && r.data.sessionToken) {
+      saveSession({
+        sessionToken: r.data.sessionToken,
+        user: r.data.user,
+        signedInAt: new Date().toISOString(),
+      });
+    }
+    return r;
+  }
+
+  async function login(email, pin) {
+    var r = await request('/api/bb/auth/login', {
+      method: 'POST',
+      body: { email: email, pin: pin },
+    });
+    if (r.ok && r.data && r.data.sessionToken) {
+      saveSession({
+        sessionToken: r.data.sessionToken,
+        user: r.data.user,
+        signedInAt: new Date().toISOString(),
+      });
+    }
+    return r;
+  }
+
+  async function setPin(pin) {
+    return request('/api/bb/auth/set-pin', { method: 'POST', body: { pin: pin } });
+  }
+
+  async function requestPinReset(email) {
+    return request('/api/bb/auth/reset-request', { method: 'POST', body: { email: email } });
+  }
+
+  async function confirmPinReset(email, code, pin) {
+    return request('/api/bb/auth/reset', {
+      method: 'POST',
+      body: { email: email, code: code, pin: pin },
+    });
+  }
+
   async function requestMagicLink(email) {
     return request('/api/bb/auth/request', { method: 'POST', body: { email: email } });
   }
@@ -120,6 +165,11 @@
     loadSession: loadSession,
     saveSession: saveSession,
     health: health,
+    register: register,
+    login: login,
+    setPin: setPin,
+    requestPinReset: requestPinReset,
+    confirmPinReset: confirmPinReset,
     requestMagicLink: requestMagicLink,
     verifyMagic: verifyMagic,
     logout: logout,

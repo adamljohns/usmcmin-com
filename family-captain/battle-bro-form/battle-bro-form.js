@@ -44,6 +44,7 @@
 
   // Canonical Captain habit board (order matters). Users can still add customs below.
   var HABITS_SCHEMA_V = 2;
+  var WEEKLY_CHECK_COL = 3; // Wed — single middle check for weekly habits
   var DEFAULT_HABITS = [
     { id: 'creed', name: 'Review Creed', cadence: 'daily', shared: true },
     { id: 'prayer_525', name: '5:25 Prayer', cadence: 'daily', shared: true },
@@ -257,24 +258,32 @@
     }
     wrap.innerHTML = items.map(function (habit) {
       var streak = streakFor(store, habit);
-      var cells = days.map(function (d) {
-        var key = ymd(d);
-        var activeKey = habit.cadence === 'weekly' ? weekStartKey : key;
-        var on = isChecked(store, habit.id, activeKey);
-        var isWeeklyCell = habit.cadence === 'weekly' && key !== weekStartKey;
-        if (isWeeklyCell) {
-          return '<button type="button" class="habit-check weekly-slot' + (on ? ' on' : '') + '" disabled aria-hidden="true">' + (on ? '✓' : '') + '</button>';
-        }
-        var disabled = readonly ? ' disabled' : '';
-        return '<button type="button" class="habit-check' + (on ? ' on' : '') + '" data-habit="' + habit.id + '" data-day="' + activeKey + '"' + disabled + ' aria-pressed="' + (on ? 'true' : 'false') + '" aria-label="' + habit.name + ' ' + activeKey + '">' + (on ? '✓' : '') + '</button>';
-      }).join('');
+      var isWeekly = habit.cadence === 'weekly';
+      var cells;
+      if (isWeekly) {
+        var on = isChecked(store, habit.id, weekStartKey);
+        cells = days.map(function (d, i) {
+          if (i === WEEKLY_CHECK_COL) {
+            var disabled = readonly ? ' disabled' : '';
+            return '<button type="button" class="habit-check' + (on ? ' on' : '') + '" data-habit="' + habit.id + '" data-day="' + weekStartKey + '"' + disabled + ' aria-pressed="' + (on ? 'true' : 'false') + '" aria-label="' + habit.name + ' this week">' + (on ? '✓' : '') + '</button>';
+          }
+          return '<span class="habit-check weekly-spacer" aria-hidden="true"></span>';
+        }).join('');
+      } else {
+        cells = days.map(function (d) {
+          var key = ymd(d);
+          var on = isChecked(store, habit.id, key);
+          var disabled = readonly ? ' disabled' : '';
+          return '<button type="button" class="habit-check' + (on ? ' on' : '') + '" data-habit="' + habit.id + '" data-day="' + key + '"' + disabled + ' aria-pressed="' + (on ? 'true' : 'false') + '" aria-label="' + habit.name + ' ' + key + '">' + (on ? '✓' : '') + '</button>';
+        }).join('');
+      }
       var shareBtn = readonly
         ? '<span class="habit-share-btn shared">Shared</span>'
         : '<button type="button" class="habit-share-btn' + (habit.shared ? ' shared' : '') + '" data-share="' + habit.id + '">' + (habit.shared ? 'Shared' : 'Private') + '</button>';
-      return '<div class="habit-row" data-habit-row="' + habit.id + '">' +
+      return '<div class="habit-row' + (isWeekly ? ' weekly-row' : '') + '" data-habit-row="' + habit.id + '">' +
         '<div class="hr-meta"><div class="hr-name">' + escapeHtml(habit.name) + '</div>' +
-        '<div class="hr-sub">' + (habit.cadence === 'weekly' ? 'Weekly' : 'Daily') +
-        (streak ? ' · <span class="hr-streak">' + streak + (habit.cadence === 'weekly' ? '-week' : '-day') + ' streak</span>' : '') + '</div></div>' +
+        '<div class="hr-sub">' + (isWeekly ? 'Weekly' : 'Daily') +
+        (streak ? ' · <span class="hr-streak">' + streak + (isWeekly ? '-week' : '-day') + ' streak</span>' : '') + '</div></div>' +
         cells + shareBtn + '</div>';
     }).join('');
 
@@ -322,7 +331,6 @@
 
   function renderHabitBoard() {
     var store = ensureHabits(loadStore());
-    saveStore(store);
     var days = weekDates(new Date());
     renderDayHead('habitDayHead', days);
     renderDayHead('brotherDayHead', days);
@@ -339,7 +347,7 @@
     if (hint) {
       hint.textContent = (brother.name ? brother.name + ' · ' : '') +
         (brother.live ? 'Live from cloud' : 'Imported') +
-        (brother.importedAt ? ' · ' + new Date(brother.importedAt).toLocaleString() : '') +
+        (brother.importedAt ? ' · ' + formatSyncTime(brother.importedAt) : '') +
         '. Read-only Shared habits.';
     }
     var brotherStore = {
@@ -523,13 +531,34 @@
   var cloudPushTimer = null;
   var cloudUpdatedAt = null;
   var cloudAvailable = false;
+  var lastCloudStatusText = '';
+  var lastPushedFingerprint = '';
+  var lastBrotherFingerprint = '';
+
+  function formatSyncTime(iso) {
+    if (!iso) return '';
+    var d = new Date(iso);
+    return d.toLocaleDateString() + ', ' + d.toLocaleTimeString(undefined, { hour: 'numeric', minute: '2-digit' });
+  }
+
+  function cloudStateFingerprint() {
+    try {
+      return JSON.stringify(cloudStatePayload());
+    } catch (e) {
+      return '';
+    }
+  }
 
   function scheduleCloudPush() {
     if (!window.BBCloud) return;
     var sess = BBCloud.loadSession();
     if (!sess || !sess.sessionToken) return;
     clearTimeout(cloudPushTimer);
-    cloudPushTimer = setTimeout(function () { pushCloudState(false); }, 900);
+    cloudPushTimer = setTimeout(function () {
+      var fp = cloudStateFingerprint();
+      if (fp && fp === lastPushedFingerprint) return;
+      pushCloudState(false);
+    }, 2500);
   }
 
   function cloudStatePayload() {
@@ -576,7 +605,8 @@
       }
       if (r.ok && r.data && r.data.updatedAt) {
         cloudUpdatedAt = r.data.updatedAt;
-        setCloudStatus('Synced ' + new Date(cloudUpdatedAt).toLocaleString());
+        lastPushedFingerprint = cloudStateFingerprint();
+        setCloudStatus('Synced · ' + formatSyncTime(cloudUpdatedAt));
         if (manual) flash('Synced to cloud.');
         await refreshBrotherFromCloud();
         return;
@@ -600,7 +630,8 @@
       var r = await BBCloud.pullSync();
       if (r.ok && r.data && r.data.state) {
         applyCloudState(r.data.state, r.data.updatedAt);
-        setCloudStatus('Loaded from cloud' + (cloudUpdatedAt ? ' · ' + new Date(cloudUpdatedAt).toLocaleString() : ''));
+        lastPushedFingerprint = cloudStateFingerprint();
+        setCloudStatus('Loaded from cloud' + (cloudUpdatedAt ? ' · ' + formatSyncTime(cloudUpdatedAt) : ''));
         if (manual) flash('Loaded cloud memory.');
       } else if (r.ok && r.data && !r.data.state) {
         // First sign-in — push local up.
@@ -623,6 +654,13 @@
       if (!r.ok || !r.data) return;
       var store = loadStore();
       if (r.data.pack && r.data.pack.items) {
+        var fp = JSON.stringify({
+          items: r.data.pack.items,
+          checks: r.data.pack.checks || {},
+          updatedAt: r.data.updatedAt || '',
+        });
+        if (fp === lastBrotherFingerprint) return;
+        lastBrotherFingerprint = fp;
         store.brotherPack = {
           name: (r.data.brother && (r.data.brother.name || r.data.brother.email)) || r.data.pack.name || 'Battle Brother',
           importedAt: r.data.updatedAt || new Date().toISOString(),
@@ -637,8 +675,11 @@
   }
 
   function setCloudStatus(msg) {
+    msg = msg || '';
+    if (msg === lastCloudStatusText) return;
+    lastCloudStatusText = msg;
     var node = el('cloudStatus');
-    if (node) node.textContent = msg || '';
+    if (node) node.textContent = msg;
     var bar = el('memoryBarText');
     if (bar) {
       var sess = window.BBCloud && BBCloud.loadSession();
@@ -648,12 +689,21 @@
     }
   }
 
+  function showAuthPanel(panel) {
+    ['authSignInPanel', 'authRegisterPanel', 'authResetPanel'].forEach(function (id) {
+      var node = el(id);
+      if (node) node.hidden = id !== panel;
+    });
+  }
+
   async function renderAccountUI() {
     var signedOut = el('accountSignedOut');
     var signedIn = el('accountSignedIn');
     var who = el('accountWho');
     var unlink = el('btnPairUnlink');
     var pairStatus = el('pairStatus');
+    var pairWhenUnlinked = el('pairWhenUnlinked');
+    var sharePack = el('sharePackSection');
     var hint = el('accountHint');
     if (!window.BBCloud) {
       if (hint) hint.textContent = 'Cloud client missing.';
@@ -663,23 +713,113 @@
     if (!sess || !sess.sessionToken) {
       if (signedOut) signedOut.hidden = false;
       if (signedIn) signedIn.hidden = true;
-      if (hint) hint.textContent = 'Sign in with a magic link to keep habits and history on every device. Local save still works offline.';
+      if (sharePack) sharePack.hidden = false;
+      if (hint) hint.textContent = 'Sign in with email + PIN to keep habits on every device. Local save still works offline.';
       setCloudStatus(cloudAvailable ? 'Cloud API reachable — sign in to sync.' : 'Cloud API not deployed yet — local + pack sharing still work.');
       return;
     }
     if (signedOut) signedOut.hidden = true;
     if (signedIn) signedIn.hidden = false;
     var label = (sess.user && (sess.user.name || sess.user.email)) || 'Captain';
-    if (sess.brother) {
+    var paired = !!(sess.brother && (sess.brother.email || sess.brother.name));
+    if (paired) {
       label += ' · paired with ' + (sess.brother.name || sess.brother.email);
       if (unlink) unlink.hidden = false;
-      if (pairStatus) pairStatus.textContent = 'Live Shared habits pull from your brother when you sync.';
+      if (pairWhenUnlinked) pairWhenUnlinked.hidden = true;
+      if (pairStatus) pairStatus.textContent = 'Live Shared habits sync with your brother.';
+      if (sharePack) sharePack.hidden = true;
     } else {
       if (unlink) unlink.hidden = true;
+      if (pairWhenUnlinked) pairWhenUnlinked.hidden = false;
       if (pairStatus) pairStatus.textContent = 'Invite your Battle Brother by email, or accept his code.';
+      if (sharePack) sharePack.hidden = false;
     }
     if (who) who.textContent = label;
     if (hint) hint.textContent = 'Signed in. Habits sync to the cloud; Shared habits appear for your paired brother.';
+  }
+
+  async function handleSignIn() {
+    var email = val('authEmail');
+    var pin = val('authPin');
+    if (!email || !pin) { flash('Enter email and PIN.'); return; }
+    var status = el('authStatus');
+    if (status) status.textContent = 'Signing in…';
+    try {
+      var r = await BBCloud.login(email, pin);
+      if (!r.ok) {
+        var err = (r.data && (r.data.message || r.data.error)) || 'Sign-in failed';
+        if (status) status.textContent = err;
+        if (r.data && r.data.error === 'no_pin_set') {
+          flash('No PIN yet — use magic link once in a browser, then set a PIN.');
+        }
+        return;
+      }
+      await BBCloud.me();
+      await renderAccountUI();
+      await pullCloudState(false);
+      if (status) status.textContent = '';
+      flash('Signed in.');
+    } catch (e) {
+      if (status) status.textContent = 'Cloud API unreachable.';
+    }
+  }
+
+  async function handleRegister() {
+    var email = val('authEmailReg') || val('authEmail');
+    var pin = val('authPinReg');
+    var name = val('authName') || val('reporterName');
+    if (!email || !pin) { flash('Enter email and choose a PIN (6+ characters).'); return; }
+    if (pin.length < 6) { flash('PIN must be at least 6 characters.'); return; }
+    var status = el('authStatus');
+    if (status) status.textContent = 'Creating account…';
+    try {
+      var r = await BBCloud.register(email, pin, name);
+      if (!r.ok) {
+        if (status) status.textContent = (r.data && (r.data.message || r.data.error)) || 'Could not create account';
+        return;
+      }
+      await BBCloud.me();
+      await renderAccountUI();
+      await pushCloudState(true);
+      if (status) status.textContent = '';
+      flash('Account created — signed in.');
+      showAuthPanel('authSignInPanel');
+    } catch (e) {
+      if (status) status.textContent = 'Cloud API unreachable.';
+    }
+  }
+
+  async function handleRequestResetCode() {
+    var email = val('authEmailReset') || val('authEmail');
+    if (!email) { flash('Enter your email.'); return; }
+    var status = el('authStatus');
+    try {
+      var r = await BBCloud.requestPinReset(email);
+      if (status) status.textContent = (r.data && r.data.message) || 'Reset code sent if account exists.';
+      if (r.data && r.data.devResetCode) {
+        setVal('authResetCode', r.data.devResetCode);
+        flash('Dev reset code filled in (email not configured).');
+      }
+    } catch (e) {
+      if (status) status.textContent = 'Could not reach cloud API.';
+    }
+  }
+
+  async function handleConfirmReset() {
+    var email = val('authEmailReset') || val('authEmail');
+    var code = val('authResetCode');
+    var pin = val('authPinReset');
+    if (!email || !code || !pin) { flash('Email, reset code, and new PIN required.'); return; }
+    if (pin.length < 6) { flash('PIN must be at least 6 characters.'); return; }
+    var r = await BBCloud.confirmPinReset(email, code, pin);
+    if (r.ok) {
+      flash('PIN updated — sign in now.');
+      showAuthPanel('authSignInPanel');
+      setVal('authEmail', email);
+      setVal('authPin', '');
+    } else {
+      flash((r.data && (r.data.message || r.data.error)) || 'Reset failed.');
+    }
   }
 
   async function handleMagicLinkClick() {
@@ -724,6 +864,17 @@
       await renderAccountUI();
       await pullCloudState(false);
       flash('Signed in. Cloud sync is on.');
+      // Prompt magic-link users to set a PIN for PWA re-login
+      if (r.data && r.data.user && !r.data.user.hasPin) {
+        setTimeout(function () {
+          var pin = window.prompt('Set a PIN (6+ characters) for sign-in on this app — no magic link needed next time:');
+          if (pin && pin.length >= 6) {
+            BBCloud.setPin(pin).then(function (res) {
+              if (res.ok) flash('PIN saved — use email + PIN to sign in.');
+            });
+          }
+        }, 400);
+      }
     } else {
       flash('Sign-in link invalid or expired. Request a new one.');
     }
@@ -1230,10 +1381,18 @@
     }
 
     // Cloud account wiring
-    if (el('btnMagicLink')) el('btnMagicLink').addEventListener('click', handleMagicLinkClick);
-    if (el('authEmail')) el('authEmail').addEventListener('keydown', function (e) {
-      if (e.key === 'Enter') { e.preventDefault(); handleMagicLinkClick(); }
+    if (el('btnSignIn')) el('btnSignIn').addEventListener('click', handleSignIn);
+    if (el('btnRegister')) el('btnRegister').addEventListener('click', handleRegister);
+    if (el('btnShowRegister')) el('btnShowRegister').addEventListener('click', function () { showAuthPanel('authRegisterPanel'); });
+    if (el('btnShowSignIn')) el('btnShowSignIn').addEventListener('click', function () { showAuthPanel('authSignInPanel'); });
+    if (el('btnShowReset')) el('btnShowReset').addEventListener('click', function () { showAuthPanel('authResetPanel'); });
+    if (el('btnResetBack')) el('btnResetBack').addEventListener('click', function () { showAuthPanel('authSignInPanel'); });
+    if (el('btnRequestResetCode')) el('btnRequestResetCode').addEventListener('click', handleRequestResetCode);
+    if (el('btnConfirmReset')) el('btnConfirmReset').addEventListener('click', handleConfirmReset);
+    if (el('authPin')) el('authPin').addEventListener('keydown', function (e) {
+      if (e.key === 'Enter') { e.preventDefault(); handleSignIn(); }
     });
+    if (el('btnMagicLink')) el('btnMagicLink').addEventListener('click', handleMagicLinkClick);
     if (el('btnLogout')) el('btnLogout').addEventListener('click', async function () {
       await BBCloud.logout();
       await renderAccountUI();

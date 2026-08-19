@@ -27,6 +27,21 @@ export default {
       if (request.method === 'POST' && path === '/api/bb/auth/logout') {
         return cors(env, request, await authLogout(request, env));
       }
+      if (request.method === 'POST' && path === '/api/bb/auth/register') {
+        return cors(env, request, await authRegister(request, env));
+      }
+      if (request.method === 'POST' && path === '/api/bb/auth/login') {
+        return cors(env, request, await authLogin(request, env));
+      }
+      if (request.method === 'POST' && path === '/api/bb/auth/set-pin') {
+        return cors(env, request, await authSetPin(request, env));
+      }
+      if (request.method === 'POST' && path === '/api/bb/auth/reset-request') {
+        return cors(env, request, await authResetRequest(request, env));
+      }
+      if (request.method === 'POST' && path === '/api/bb/auth/reset') {
+        return cors(env, request, await authResetConfirm(request, env));
+      }
       if (request.method === 'GET' && path === '/api/bb/me') {
         return cors(env, request, await me(request, env));
       }
@@ -130,7 +145,7 @@ async function requireUser(request, env) {
   if (!token) return { error: json({ error: 'unauthorized' }, 401) };
   const tokenHash = await sha256Hex(token);
   const row = await env.DB.prepare(
-    `SELECT s.user_id, s.expires_at, u.email, u.name, u.brother_id
+    `SELECT s.user_id, s.expires_at, u.email, u.name, u.brother_id, u.password_hash
      FROM sessions s JOIN users u ON u.id = s.user_id
      WHERE s.token_hash = ?`
   ).bind(tokenHash).first();
@@ -145,13 +160,44 @@ async function requireUser(request, env) {
       email: row.email,
       name: row.name || '',
       brotherId: row.brother_id || null,
+      hasPin: !!row.password_hash,
     },
     tokenHash,
   };
 }
 
+async function hashPassword(password, email, env) {
+  const secret = env.SESSION_SECRET || 'dev-insecure';
+  return sha256Hex(secret + ':' + normalizeEmail(email) + ':' + String(password || ''));
+}
+
+function validPinOrPassword(value) {
+  const s = String(value || '');
+  if (s.length >= 6 && s.length <= 64) return true;
+  return false;
+}
+
+async function mintSession(env, user) {
+  const sessionToken = randomToken(32);
+  const sessionHash = await sha256Hex(sessionToken);
+  await env.DB.prepare(
+    'INSERT INTO sessions (token_hash, user_id, expires_at, created_at) VALUES (?, ?, ?, ?)'
+  ).bind(sessionHash, user.id, plusMs(SESSION_TTL_MS), nowIso()).run();
+  return sessionToken;
+}
+
+function sessionUserPayload(user) {
+  return {
+    id: user.id,
+    email: user.email,
+    name: user.name || '',
+    brotherId: user.brother_id || null,
+    hasPin: !!user.password_hash,
+  };
+}
+
 async function ensureUser(env, email, name) {
-  const existing = await env.DB.prepare('SELECT id, email, name, brother_id FROM users WHERE email = ?')
+  const existing = await env.DB.prepare('SELECT id, email, name, brother_id, password_hash FROM users WHERE email = ?')
     .bind(email).first();
   if (existing) {
     if (name && name !== existing.name) {
@@ -164,9 +210,129 @@ async function ensureUser(env, email, name) {
   const id = 'u_' + randomToken(8);
   const ts = nowIso();
   await env.DB.prepare(
-    'INSERT INTO users (id, email, name, brother_id, created_at, updated_at) VALUES (?, ?, ?, NULL, ?, ?)'
+    'INSERT INTO users (id, email, name, brother_id, password_hash, created_at, updated_at) VALUES (?, ?, ?, NULL, NULL, ?, ?)'
   ).bind(id, email, name || '', ts, ts).run();
-  return { id, email, name: name || '', brother_id: null };
+  return { id, email, name: name || '', brother_id: null, password_hash: null };
+}
+
+async function authRegister(request, env) {
+  const body = await readJson(request);
+  const email = normalizeEmail(body.email);
+  const pin = String(body.pin || body.password || '').trim();
+  const name = String(body.name || '').trim().slice(0, 120);
+  if (!validEmail(email)) return json({ error: 'invalid_email' }, 400);
+  if (!validPinOrPassword(pin)) return json({ error: 'pin_too_short', message: 'Use at least 6 characters.' }, 400);
+
+  const existing = await env.DB.prepare('SELECT id FROM users WHERE email = ?').bind(email).first();
+  if (existing) return json({ error: 'email_taken', message: 'Account exists — sign in or reset your PIN.' }, 409);
+
+  const id = 'u_' + randomToken(8);
+  const ts = nowIso();
+  const passwordHash = await hashPassword(pin, email, env);
+  await env.DB.prepare(
+    'INSERT INTO users (id, email, name, brother_id, password_hash, created_at, updated_at) VALUES (?, ?, ?, NULL, ?, ?, ?)'
+  ).bind(id, email, name, passwordHash, ts, ts).run();
+
+  const user = { id, email, name, brother_id: null, password_hash: passwordHash };
+  const sessionToken = await mintSession(env, user);
+  return json({ ok: true, sessionToken, user: sessionUserPayload(user) });
+}
+
+async function authLogin(request, env) {
+  const body = await readJson(request);
+  const email = normalizeEmail(body.email);
+  const pin = String(body.pin || body.password || '').trim();
+  if (!validEmail(email)) return json({ error: 'invalid_email' }, 400);
+  if (!pin) return json({ error: 'missing_pin' }, 400);
+
+  const user = await env.DB.prepare('SELECT id, email, name, brother_id, password_hash FROM users WHERE email = ?')
+    .bind(email).first();
+  if (!user) return json({ error: 'invalid_credentials' }, 401);
+  if (!user.password_hash) {
+    return json({ error: 'no_pin_set', message: 'No PIN on file — use magic link once, then set a PIN.' }, 401);
+  }
+  const hash = await hashPassword(pin, email, env);
+  if (hash !== user.password_hash) return json({ error: 'invalid_credentials' }, 401);
+
+  const sessionToken = await mintSession(env, user);
+  return json({ ok: true, sessionToken, user: sessionUserPayload(user) });
+}
+
+async function authSetPin(request, env) {
+  const auth = await requireUser(request, env);
+  if (auth.error) return auth.error;
+  const body = await readJson(request);
+  const pin = String(body.pin || body.password || '').trim();
+  if (!validPinOrPassword(pin)) return json({ error: 'pin_too_short' }, 400);
+
+  const passwordHash = await hashPassword(pin, auth.user.email, env);
+  await env.DB.prepare('UPDATE users SET password_hash = ?, updated_at = ? WHERE id = ?')
+    .bind(passwordHash, nowIso(), auth.user.id).run();
+  return json({ ok: true, message: 'PIN saved. Use email + PIN to sign in on any device.' });
+}
+
+async function authResetRequest(request, env) {
+  const body = await readJson(request);
+  const email = normalizeEmail(body.email);
+  if (!validEmail(email)) return json({ error: 'invalid_email' }, 400);
+
+  const user = await env.DB.prepare('SELECT id FROM users WHERE email = ?').bind(email).first();
+  if (!user) {
+    // Don't leak whether email exists
+    return json({ ok: true, message: 'If that email is registered, a reset code was sent.' });
+  }
+
+  const code = randomToken(3).slice(0, 8).toUpperCase();
+  const tokenHash = await sha256Hex(code + ':' + email);
+  await env.DB.prepare(
+    'INSERT INTO reset_tokens (token_hash, email, expires_at, used_at) VALUES (?, ?, ?, NULL)'
+  ).bind(tokenHash, email, plusMs(MAGIC_TTL_MS)).run();
+
+  if (env.RESEND_API_KEY) {
+    await fetch('https://api.resend.com/emails', {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${env.RESEND_API_KEY}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        from: env.EMAIL_FROM || 'The Family Captain <noreply@usmcmin.com>',
+        to: [email],
+        subject: 'Battle Brother PIN reset code',
+        text: 'Your PIN reset code: ' + code + '\n\nEnter it in the app to set a new PIN. Expires in 20 minutes.\n',
+      }),
+    }).catch(() => {});
+  }
+
+  const out = { ok: true, message: 'If that email is registered, a reset code was sent.' };
+  if (!env.RESEND_API_KEY) out.devResetCode = code;
+  return json(out);
+}
+
+async function authResetConfirm(request, env) {
+  const body = await readJson(request);
+  const email = normalizeEmail(body.email);
+  const code = String(body.code || '').trim().toUpperCase();
+  const pin = String(body.pin || body.password || '').trim();
+  if (!validEmail(email) || !code) return json({ error: 'invalid_request' }, 400);
+  if (!validPinOrPassword(pin)) return json({ error: 'pin_too_short' }, 400);
+
+  const tokenHash = await sha256Hex(code + ':' + email);
+  const row = await env.DB.prepare(
+    'SELECT email, expires_at, used_at FROM reset_tokens WHERE token_hash = ?'
+  ).bind(tokenHash).first();
+  if (!row || normalizeEmail(row.email) !== email) return json({ error: 'invalid_code' }, 400);
+  if (row.used_at) return json({ error: 'code_used' }, 400);
+  if (row.expires_at < nowIso()) return json({ error: 'code_expired' }, 400);
+
+  const passwordHash = await hashPassword(pin, email, env);
+  const ts = nowIso();
+  await env.DB.batch([
+    env.DB.prepare('UPDATE reset_tokens SET used_at = ? WHERE token_hash = ?').bind(ts, tokenHash),
+    env.DB.prepare('UPDATE users SET password_hash = ?, updated_at = ? WHERE email = ?')
+      .bind(passwordHash, ts, email),
+  ]);
+  return json({ ok: true, message: 'PIN updated — sign in with your new PIN.' });
 }
 
 async function sendMagicEmail(env, to, magicUrl) {
@@ -247,21 +413,12 @@ async function authVerify(request, env) {
     .bind(nowIso(), tokenHash).run();
 
   const user = await ensureUser(env, row.email, body.name || '');
-  const sessionToken = randomToken(32);
-  const sessionHash = await sha256Hex(sessionToken);
-  await env.DB.prepare(
-    'INSERT INTO sessions (token_hash, user_id, expires_at, created_at) VALUES (?, ?, ?, ?)'
-  ).bind(sessionHash, user.id, plusMs(SESSION_TTL_MS), nowIso()).run();
+  const sessionToken = await mintSession(env, user);
 
   return json({
     ok: true,
     sessionToken,
-    user: {
-      id: user.id,
-      email: user.email,
-      name: user.name || '',
-      brotherId: user.brother_id || null,
-    },
+    user: sessionUserPayload(user),
   });
 }
 

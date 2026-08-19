@@ -736,6 +736,9 @@
     }
     if (who) who.textContent = label;
     if (hint) hint.textContent = 'Signed in. Habits sync to the cloud; Shared habits appear for your paired brother.';
+    var setPinBlock = el('setPinBlock');
+    var hasPin = sess.user && sess.user.hasPin;
+    if (setPinBlock) setPinBlock.hidden = !!hasPin;
   }
 
   async function handleSignIn() {
@@ -1389,6 +1392,19 @@
     if (el('btnResetBack')) el('btnResetBack').addEventListener('click', function () { showAuthPanel('authSignInPanel'); });
     if (el('btnRequestResetCode')) el('btnRequestResetCode').addEventListener('click', handleRequestResetCode);
     if (el('btnConfirmReset')) el('btnConfirmReset').addEventListener('click', handleConfirmReset);
+    if (el('btnSetPin')) el('btnSetPin').addEventListener('click', async function () {
+      var pin = val('authPinNew');
+      if (!pin || pin.length < 6) { flash('PIN must be at least 6 characters.'); return; }
+      var r = await BBCloud.setPin(pin);
+      if (r.ok) {
+        await BBCloud.me();
+        setVal('authPinNew', '');
+        await renderAccountUI();
+        flash('PIN saved — use email + PIN next time.');
+      } else {
+        flash((r.data && r.data.error) || 'Could not save PIN.');
+      }
+    });
     if (el('authPin')) el('authPin').addEventListener('keydown', function (e) {
       if (e.key === 'Enter') { e.preventDefault(); handleSignIn(); }
     });

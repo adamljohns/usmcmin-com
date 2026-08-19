@@ -903,12 +903,12 @@ def generate_profile(candidate, categories, meta, nav=None):
         pct_of_max = max(0, min(100, round((adjusted_score / MAX_TOTAL) * 100))) if MAX_TOTAL else 0
         grade_letter = '\u2014'  # em dash — grade withheld
     elif max_possible > 0:
-        # Cap pct floor at 0 — when adjustments (e.g., -50 Soros) exceed
-        # max_possible, raw pct goes negative which displays as nonsense
-        # like "-250%". Cap display at 0; the absolute negative score is
-        # still visible in the adjusted_score field for full transparency.
+        # Cap display at 0–100. Floor: negative adjustments (e.g. -50 Soros)
+        # used to print "-250%". Ceiling: positive AIPAC/CCP bonuses on a
+        # small dynamic max used to print 111/100 and 150/100 (RSA-0818-SCORE-CAP).
+        # Raw earned + adjustments stay visible in the caption / adj block.
         raw_pct = round((adjusted_score / max_possible) * 100)
-        pct_of_max = max(0, raw_pct)
+        pct_of_max = max(0, min(100, raw_pct))
         grade_letter = letter_grade(pct_of_max)
     else:
         pct_of_max = 0
@@ -1814,7 +1814,7 @@ def generate_profile(candidate, categories, meta, nav=None):
   <!-- Open Graph (Facebook, LinkedIn, iMessage previews) -->
   <meta property="og:site_name" content="RESOLUTE Citizen Scorecard">
   <meta property="og:type" content="profile">
-  <meta property="og:title" content="{c['name']} — {total['score']}/{MAX_TOTAL} on the RESOLUTE Citizen Scorecard">
+  <meta property="og:title" content="{c['name']} — {pct_of_max}/100 ({grade_letter}) on the RESOLUTE Citizen Scorecard">
   <meta property="og:description" content="{party_label(c['party'])} · {c['office']}, {c['jurisdiction']}. Score {pct_of_max}/100 ({grade_letter}) on the RESOLUTE Citizen {candidate_tier} rubric. Click to see voting record + sources.">
   <meta property="og:url" content="https://usmcmin.com/candidates/{state_code.lower()}/{c.get('slug','')}.html">
   <meta property="og:image" content="{('https://usmcmin.com/' + photo_path) if photo_path else 'https://usmcmin.com/assets/og/og-citizen.jpg'}">
@@ -1822,7 +1822,7 @@ def generate_profile(candidate, categories, meta, nav=None):
 
   <!-- Twitter / X Card -->
   <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="{c['name']} — {total['score']}/{MAX_TOTAL}">
+  <meta name="twitter:title" content="{c['name']} — {pct_of_max}/100 ({grade_letter})">
   <meta name="twitter:description" content="{party_label(c['party'])} · {c['office']}. RESOLUTE Citizen Scorecard.">
   <meta name="twitter:image" content="{('https://usmcmin.com/' + photo_path) if photo_path else 'https://usmcmin.com/assets/og/og-citizen.jpg'}">
 

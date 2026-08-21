@@ -317,12 +317,16 @@
       gap: 4px;
     }
     .sc-legend-item img { opacity: 0.6; }
-    .sc-legend-item abbr {
+    .sc-legend-item a {
       font-weight: 600;
       color: var(--accent);
       text-decoration: none;
       border-bottom: 1px dotted var(--gray);
-      cursor: help;
+    }
+    .sc-legend-item a:hover,
+    .sc-legend-item a:focus {
+      border-bottom-style: solid;
+      border-bottom-color: var(--accent);
     }
 
     /* Scoring colors */
@@ -1412,11 +1416,23 @@ function getScoreColor(score, max) {
 
 // buildJurisdictionFilter removed — replaced by View dropdown
 
+// Category ids in scorecard.json use underscores; explainer pages use hyphens.
+// self_defense is the only slug that does not map 1:1 (page is self-defense-2a).
+function categoryExplainerUrl(cat) {
+  var id = String((cat && cat.id) || '');
+  var special = { self_defense: 'self-defense-2a' };
+  var slug = special[id] || id.replace(/_/g, '-');
+  return 'citizen/' + slug + '.html';
+}
+
 function buildLegend() {
   var el = document.getElementById('categoryLegend');
   var html = '';
   DATA.categories.forEach(function(cat) {
-    html += '<span class="sc-legend-item"><img src="assets/icons/' + cat.icon + '" alt="" width="14" height="14"> <abbr title="' + cat.description + '">' + cat.label + '</abbr></span>';
+    var href = categoryExplainerUrl(cat);
+    var label = esc(cat.label);
+    var title = esc(cat.description || cat.label);
+    html += '<span class="sc-legend-item"><a href="' + href + '" title="' + title + ' — open explanation"><img src="assets/icons/' + cat.icon + '" alt="" width="14" height="14"> ' + label + '</a></span>';
   });
   el.innerHTML = html;
 }

@@ -79,6 +79,30 @@ CIVIC_TOOL_MAP = {
     'City of Fredericksburg': 'https://adamljohns.github.io/resolute-local/city/fredericksburg.html',
 }
 
+def backed_answer_count(c):
+    """How many ANSWERED cells actually carry documentation — a footnote reference
+    (grind/roll-call records) OR a claims[] entry (frontier enrich-batch records).
+
+    This is the honest denominator for "can we back this grade up?". A record can
+    carry 35 answered cells inherited from party-default scaffolding while only 1
+    is documented; grading that as an A presents a party heuristic as a verified
+    finding. (Audit 2026-08-18: 2,499 A-grade profiles had <5 documented answers
+    while averaging 35.8 answered cells.)"""
+    sc = c.get('scores') or {}
+    backed = set()
+    for cat, refs_per_q in (c.get('answer_footnotes') or {}).items():
+        arr = sc.get(cat) or []
+        for qi, refs in enumerate(refs_per_q or []):
+            if refs and qi < len(arr) and arr[qi] in (True, False):
+                backed.add((cat, qi))
+    for cl in (c.get('claims') or []):
+        cat, qi = cl.get('category'), cl.get('question_idx')
+        arr = sc.get(cat) or []
+        if cat is not None and isinstance(qi, int) and qi < len(arr) and arr[qi] in (True, False):
+            backed.add((cat, qi))
+    return len(backed)
+
+
 def letter_grade(pct):
     """A 90+, B 80, C 70, D 60, F <60 — standard report-card scale.
     Takes a 0-100 percentage. Per Adam's 2026-05-18 directive, candidates
@@ -898,7 +922,13 @@ def generate_profile(candidate, categories, meta, nav=None):
     # Below MIN_ANSWERED_FOR_DYNAMIC_GRADE we show absolute /100 (2 pts × global max)
     # and suppress the letter grade so thin seeds cannot look like full A's.
     MIN_ANSWERED_FOR_DYNAMIC_GRADE = 10
-    thin_record = answered_count < MIN_ANSWERED_FOR_DYNAMIC_GRADE
+    # A letter grade must be backed by DOCUMENTED answers, not by party-default
+    # scaffolding a record inherited. Counting merely-answered cells let records
+    # with ~36 answers but 1 citation display a clean A (2026-08-18 audit).
+    MIN_BACKED_FOR_GRADE = 5
+    backed_count = backed_answer_count(c)
+    thin_record = (answered_count < MIN_ANSWERED_FOR_DYNAMIC_GRADE
+                   or backed_count < MIN_BACKED_FOR_GRADE)
     if thin_record:
         pct_of_max = max(0, min(100, round((adjusted_score / MAX_TOTAL) * 100))) if MAX_TOTAL else 0
         grade_letter = '\u2014'  # em dash — grade withheld
@@ -916,13 +946,14 @@ def generate_profile(candidate, categories, meta, nav=None):
 
     if thin_record:
         thin_score_title = (
-            f'Thin evidence seed \u2014 {answered_count} questions answered. '
+            f'Thin evidence \u2014 {answered_count} answered, {backed_count} documented with a cited source. '
             f'Showing absolute {adjusted_score}/100 (not dynamic-max %). '
             f'Letter grade suppressed until \u2265{MIN_ANSWERED_FOR_DYNAMIC_GRADE} answered cells. '
             f'Raw dynamic max would be {max_possible} pts ({answered_count}\u00d72).'
         )
         grade_aria = (
-            f'Thin seed \u2014 letter grade withheld until \u2265{MIN_ANSWERED_FOR_DYNAMIC_GRADE} answered questions'
+            f'Thin evidence \u2014 letter grade withheld until \u2265{MIN_ANSWERED_FOR_DYNAMIC_GRADE} answered '
+            f'and \u2265{MIN_BACKED_FOR_GRADE} documented questions ({backed_count} documented now)'
         )
     else:
         thin_score_title = (
@@ -958,7 +989,7 @@ def generate_profile(candidate, categories, meta, nav=None):
         for cat in _scores_dict
     ) if _scores_dict else True
     _has_claims = bool(c.get('claims'))
-    if confidence == 'party_default':
+    if confidence == 'party_default' or 'party_default' in confidence or 'archetype' in confidence:
         confidence_chip_html = (
             '<div class="prof-confidence-banner" role="note" aria-label="Scoring confidence">'
             '<span class="prof-confidence-chip prof-conf-party-default">Party-default scoring</span>'

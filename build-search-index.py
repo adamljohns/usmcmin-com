@@ -42,6 +42,24 @@ SRC = 'data/scorecard.json'
 OUT = 'data/search-index.json'
 
 
+def backed_answer_count(c):
+    """Documented answers (footnote ref OR claims[] entry). Mirrors
+    generate-profiles.backed_answer_count — keep in sync."""
+    sc = c.get('scores') or {}
+    backed = set()
+    for cat, refs_per_q in (c.get('answer_footnotes') or {}).items():
+        arr = sc.get(cat) or []
+        for qi, refs in enumerate(refs_per_q or []):
+            if refs and qi < len(arr) and arr[qi] in (True, False):
+                backed.add((cat, qi))
+    for cl in (c.get('claims') or []):
+        cat, qi = cl.get('category'), cl.get('question_idx')
+        arr = sc.get(cat) or []
+        if cat is not None and isinstance(qi, int) and qi < len(arr) and arr[qi] in (True, False):
+            backed.add((cat, qi))
+    return len(backed)
+
+
 def letter_grade(pct):
     """A 90+, B 80, C 70, D 60, F <60 — standard report-card scale.
     Takes a 0-100 percentage so it works for both absolute and dynamic-max."""
@@ -124,7 +142,10 @@ def main():
             'af':  af,
             'mp':  max_possible,
             'pct': pct,
-            'lg':  letter_grade(pct),
+            # withhold the letter when the grade isn't documented — the table and
+            # rankings must agree with the profile page's thin-evidence guard
+            'lg':  (letter_grade(pct) if (answered >= 10 and backed_answer_count(c) >= 5) else '\u2014'),
+            'bk':  backed_answer_count(c),
             'ans': answered,
             'na':  na,
             'sts': c.get('status') or 'active',

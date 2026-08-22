@@ -105,16 +105,46 @@ def main():
     qmap = {n + 1: qlist[n] for n in range(len(qlist))}
     numbered = "\n".join(f"{n}. {q}" for n, (_, _, q) in qmap.items())
 
-    # --- candidates we can score: this state's unscored active state legislators ---
+    # --- candidates we can score ---
     def evid(c): return ((c.get("profile") or {}).get("confidence") or "").startswith("evidence")
-    pool = [c for c in sc["candidates"]
+
+    def backed_count(c):
+        """Answered cells carrying documentation (footnote ref OR claims[] entry).
+        Mirrors generate-profiles.backed_answer_count — the site withholds a letter
+        grade below MIN_BACKED_FOR_GRADE(5), so this is the enrichment target."""
+        sc_ = c.get("scores") or {}
+        s_ = set()
+        for cat_, rp in (c.get("answer_footnotes") or {}).items():
+            arr_ = sc_.get(cat_) or []
+            for qi_, refs_ in enumerate(rp or []):
+                if refs_ and qi_ < len(arr_) and arr_[qi_] in (True, False):
+                    s_.add((cat_, qi_))
+        for cl_ in (c.get("claims") or []):
+            cat_, qi_ = cl_.get("category"), cl_.get("question_idx")
+            arr_ = sc_.get(cat_) or []
+            if cat_ is not None and isinstance(qi_, int) and qi_ < len(arr_) and arr_[qi_] in (True, False):
+                s_.add((cat_, qi_))
+        return len(s_)
+
+    # DEFAULT: only UNSCORED candidates (coverage mode — find new people).
+    # --enrich: ALSO include already-evidence records that are UNDER-DOCUMENTED
+    # (<5 backed cells). Those are exactly the records whose letter grade the site
+    # now withholds; without this they were skipped as "no_match" and the 2026-08-18
+    # enrichment sweep returned ~55 candidates while reporting 682 unmatched in NH.
+    enrich = "--enrich" in sys.argv
+    base = [c for c in sc["candidates"]
             if (c.get("state") or "").upper() == state and c.get("level") == "state"
-            and (c.get("status") or "active") not in ("lost", "former", "deceased") and not evid(c)]
+            and (c.get("status") or "active") not in ("lost", "former", "deceased")]
+    pool = [c for c in base if (not evid(c)) or (enrich and backed_count(c) < 5)]
     by_name = {}
     for c in pool:
         by_name.setdefault(norm_name(c.get("name")), []).append(c)
         by_name.setdefault(surname(c.get("name")), []).append(c)
-    print(f"{state}: {len(pool)} unscored active state legislators in scorecard")
+    if enrich:
+        _new = sum(1 for c in pool if not evid(c))
+        print(f"{state}: {len(pool)} targets ({_new} unscored + {len(pool)-_new} under-documented) [ENRICH]")
+    else:
+        print(f"{state}: {len(pool)} unscored active state legislators in scorecard")
 
     ls = LegiScanClient()
     spent0 = ls.queries_this_month
@@ -358,7 +388,7 @@ def main():
                 supports = (cls["yea"] == "support") == voted_for_bill
                 key = f"{c['slug']}@{state}"
                 rec = records.setdefault(key, {"profile": {
-                    "confidence": "evidence_state",
+                    "confidence": (c.get("profile") or {}).get("confidence") or "evidence_state",
                     "confidence_note": f"Roll-call engine (LegiScan API, Qwen+Gemma-agreed bill mapping) {today}",
                     "last_refined": today, "grind_strikes": 0}, "evidence": {}, "sources_add": []})
                 cellq = str(cls["q"])

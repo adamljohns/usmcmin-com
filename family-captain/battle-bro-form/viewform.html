@@ -43,10 +43,30 @@
   .memory-bar button { background: #FFF; border: 1px solid var(--border); color: var(--text); padding: 6px 12px; cursor: pointer; font-size: 0.78rem; font-weight: 600; font-family: inherit; }
   .memory-bar button:hover { border-color: var(--gold); color: #8B5A1F; }
 
-  #weekPicker { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 20px; }
-  .week-chip { display: inline-flex; align-items: center; gap: 6px; padding: 8px 12px; border: 1px solid var(--border); background: #FFF; cursor: pointer; font-size: 0.8rem; color: var(--text); font-family: inherit; }
-  .week-chip.active { border-color: var(--chip-color, var(--gold)); background: color-mix(in srgb, var(--chip-color, var(--gold)) 12%, white); font-weight: 700; }
+  #weekPicker { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 8px; }
+  .week-picker-hint { font-size: 0.78rem; color: var(--gray); margin: 0 0 14px; font-weight: 600; }
+  .week-chip {
+    display: inline-flex; align-items: center; gap: 6px; padding: 10px 14px;
+    border: 2px solid var(--border); background: #FFF; cursor: pointer; font-size: 0.8rem;
+    color: var(--text); font-family: inherit; box-shadow: 0 1px 0 rgba(15,23,42,0.04);
+  }
+  .week-chip:hover { border-color: var(--chip-color, var(--gold)); }
+  .week-chip.active {
+    border-color: var(--chip-color, var(--gold));
+    background: color-mix(in srgb, var(--chip-color, var(--gold)) 14%, white);
+    font-weight: 700; box-shadow: inset 0 0 0 1px var(--chip-color, var(--gold));
+  }
   .week-chip .wc-now { color: var(--gold); font-weight: 700; letter-spacing: 0.02em; }
+
+  .bb-mode { display: flex; gap: 0; margin-bottom: 18px; border: 2px solid var(--navy); background: #FFF; }
+  .bb-mode-btn {
+    flex: 1; padding: 14px 12px; border: 0; background: #FFF; color: var(--navy); cursor: pointer;
+    font-family: inherit; font-weight: 700; font-size: 0.88rem; text-transform: uppercase; letter-spacing: 0.04em;
+  }
+  .bb-mode-btn + .bb-mode-btn { border-left: 2px solid var(--navy); }
+  .bb-mode-btn.active { background: var(--navy); color: #FFF; }
+  .bb-mode-btn:not(.active):hover { background: #FFF8EE; }
+  .bb-mode-btn:focus-visible { outline: 2px solid var(--gold); outline-offset: -2px; }
 
   #themeBanner { background: color-mix(in srgb, var(--theme-color, var(--gold)) 14%, white); border-left: 4px solid var(--theme-color, var(--gold)); padding: 14px 18px; margin-bottom: 20px; }
   #themeBanner .tb-kicker { display: block; font-size: 0.68rem; letter-spacing: 2px; color: var(--gray); font-weight: 700; text-transform: uppercase; }
@@ -60,20 +80,45 @@
   .bb-step { display: none; }
   .bb-step.active { display: block; }
   .bb-card { background: #FFF; border: 1px solid var(--border); margin-bottom: 16px; overflow: hidden; }
-  .section-bar { font-family: var(--font-main); background: var(--navy); color: #FFF; padding: 12px 18px; font-size: 1.05rem; margin: 0; font-weight: 500; }
+  .section-bar { font-family: var(--font-main); background: var(--navy); color: #FFF; padding: 12px 18px; font-size: 1.05rem; margin: 0; font-weight: 500; display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+  .section-bar .section-pct {
+    font-family: var(--font-body); font-size: 0.95rem; font-weight: 700; letter-spacing: 0.04em;
+    color: var(--gold); background: rgba(255,255,255,0.08); border: 1px solid rgba(206,142,49,0.55);
+    padding: 4px 10px; min-width: 3.2em; text-align: center; flex: 0 0 auto;
+  }
   .bb-card-body { padding: 20px 18px 22px; }
   .bb-field { margin-bottom: 18px; }
   .bb-field label { display: block; font-weight: 600; color: var(--navy); margin-bottom: 6px; font-size: 0.95rem; }
   .bb-field label .req { color: #B85042; }
   .bb-field input, .bb-field textarea, .bb-field select {
-    width: 100%; border: 1px solid var(--border); padding: 12px; font-size: 0.95rem; color: var(--navy); background: #FFF; font-family: inherit;
+    width: 100%; border: 2px solid var(--border); padding: 12px; font-size: 0.95rem; color: var(--navy); background: #FFF; font-family: inherit;
+  }
+  .bb-field select {
+    appearance: none; -webkit-appearance: none;
+    background-image: linear-gradient(45deg, transparent 50%, var(--navy) 50%), linear-gradient(135deg, var(--navy) 50%, transparent 50%);
+    background-position: calc(100% - 18px) calc(50% - 3px), calc(100% - 12px) calc(50% - 3px);
+    background-size: 6px 6px, 6px 6px; background-repeat: no-repeat;
+    padding-right: 36px; cursor: pointer; font-weight: 600;
   }
   .bb-field textarea { min-height: 96px; resize: vertical; line-height: 1.5; }
-  .bb-field input:focus, .bb-field textarea:focus, .bb-field select:focus { outline: none; border-color: var(--gold); }
+  .bb-field input:focus, .bb-field textarea:focus, .bb-field select:focus { outline: none; border-color: var(--gold); box-shadow: 0 0 0 3px rgba(206,142,49,0.18); }
   .bb-hint { font-size: 0.82rem; color: var(--gray); margin-top: 6px; line-height: 1.5; }
   .bb-list { margin: 10px 0 0 20px; color: #475569; font-size: 0.9rem; line-height: 1.55; }
 
-  .star-row { display: flex; gap: 6px; align-items: center; flex-wrap: wrap; margin-top: 8px; }
+  .choice-row { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 4px; }
+  .choice-btn {
+    flex: 1; min-width: 96px; padding: 12px 14px; border: 2px solid var(--border); background: #FFF;
+    color: var(--navy); font-weight: 700; font-size: 0.92rem; cursor: pointer; font-family: inherit;
+    text-align: center;
+  }
+  .choice-btn:hover { border-color: var(--gold); }
+  .choice-btn.selected { border-color: var(--gold); background: #FFF8EE; color: #8B5A1F; box-shadow: inset 0 0 0 1px var(--gold); }
+  .choice-btn:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
+
+  .star-row {
+    display: flex; gap: 6px; align-items: center; flex-wrap: wrap; margin-top: 8px;
+    border: 2px dashed var(--border); padding: 10px 12px; background: #FAFBFC;
+  }
   .star-btn { background: transparent; border: 0; font-size: 2rem; line-height: 1; cursor: pointer; color: #D1D5DB; padding: 0 2px; }
   .star-btn.selected { color: var(--gold); }
   .rating-rubric { margin-top: 14px; font-size: 0.84rem; color: #475569; line-height: 1.55; }
@@ -109,16 +154,6 @@
   .bb-footer { background: var(--navy); color: #9CA3AF; text-align: center; padding: 20px 16px; font-size: 0.82rem; }
   .bb-footer a { color: var(--gold); }
 
-  .bb-mode { display: flex; gap: 0; margin-bottom: 18px; border: 1px solid var(--border); background: #FFF; }
-  .bb-mode-btn {
-    flex: 1; padding: 12px 10px; border: 0; background: transparent; cursor: pointer;
-    font-family: inherit; font-weight: 700; font-size: 0.82rem; letter-spacing: 0.04em;
-    text-transform: uppercase; color: var(--gray);
-  }
-  .bb-mode-btn + .bb-mode-btn { border-left: 1px solid var(--border); }
-  .bb-mode-btn.active { background: var(--navy); color: #FFF; }
-  .bb-mode-btn:focus-visible { outline: 2px solid var(--gold); outline-offset: -2px; }
-
   .habit-stats { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 16px; }
   .habit-stat {
     flex: 1; min-width: 120px; background: #FFF; border: 1px solid var(--border);
@@ -126,6 +161,7 @@
   }
   .habit-stat .hs-label { display: block; font-size: 0.68rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--gray); font-weight: 700; }
   .habit-stat .hs-value { font-family: var(--font-main); font-size: 1.6rem; color: var(--navy); font-weight: 500; line-height: 1.1; margin-top: 4px; }
+  .habit-legend { width: 100%; margin: 4px 0 0; font-size: 0.78rem; color: var(--gray); font-weight: 600; }
 
   .habit-day-head { display: grid; grid-template-columns: minmax(110px, 1.4fr) repeat(7, 1fr) 52px; gap: 4px; align-items: end; margin-bottom: 8px; padding: 0 4px; }
   .habit-day-head .hd-name,
@@ -157,19 +193,34 @@
   .habit-row .hr-streak { font-size: 0.72rem; color: #8B5A1F; font-weight: 700; }
   .habit-check {
     width: 100%; aspect-ratio: 1; max-width: 36px; margin: 0 auto; display: flex; align-items: center; justify-content: center;
-    border: 1.5px solid var(--border); background: #FFF; cursor: pointer; font-size: 0.85rem; color: transparent; padding: 0;
-    font-family: inherit;
+    border: 2px solid var(--border); background: #FFF; cursor: pointer; font-size: 0.85rem; color: transparent; padding: 0;
+    font-family: inherit; font-weight: 700;
   }
-  .habit-check.on { background: var(--gold); border-color: var(--gold); color: #FFF; font-weight: 700; }
+  .habit-check.state-empty { color: transparent; }
+  .habit-check.state-done,
+  .habit-check.on { background: var(--gold); border-color: var(--gold); color: #FFF; }
+  .habit-check.state-skip { background: #EEF2F7; border-color: #94A3B8; color: #475569; }
+  .habit-check.state-missed { background: #F8E8E6; border-color: #B85042; color: #B85042; }
   .habit-check:disabled { opacity: 0.45; cursor: default; }
   .habit-check.weekly-slot { border-style: dashed; }
   .habit-check.weekly-spacer {
     visibility: hidden; pointer-events: none; border-color: transparent; background: transparent;
   }
+  .habit-row.weekly-row .habit-check.state-done,
   .habit-row.weekly-row .habit-check.on { background: var(--gold); border-color: var(--gold); color: #FFF; font-weight: 700; }
   #cloudStatus { min-height: 1.2em; }
   .auth-toggle { font-size: 0.82rem; color: var(--gold); cursor: pointer; background: none; border: 0; padding: 0; font-family: inherit; text-decoration: underline; margin-top: 8px; }
-  .auth-panel[hidden], .pair-when-unlinked[hidden], #sharePackSection[hidden] { display: none !important; }
+  .auth-panel[hidden], .pair-when-unlinked[hidden], #sharePackSection[hidden], #pairManageDetails[hidden] { display: none !important; }
+  .pair-manage {
+    margin-top: 12px; border: 1px solid var(--border); background: #FAFBFC; padding: 0 12px 10px;
+  }
+  .pair-manage > summary {
+    cursor: pointer; font-weight: 700; color: var(--navy); padding: 10px 0; list-style: none;
+    font-size: 0.88rem;
+  }
+  .pair-manage > summary::-webkit-details-marker { display: none; }
+  .pair-manage > summary::before { content: '▸ '; color: var(--gold); }
+  .pair-manage[open] > summary::before { content: '▾ '; }
   .habit-share-btn {
     border: 1px solid var(--border); background: #FFF; font-size: 0.65rem; font-weight: 700; text-transform: uppercase;
     letter-spacing: 0.03em; padding: 6px 4px; cursor: pointer; color: var(--gray); font-family: inherit; width: 100%;
@@ -291,6 +342,17 @@
         <div class="btn-row" style="margin-top:8px;">
           <button type="button" class="btn-ghost" id="btnPairUnlink" hidden>Unlink Battle Brother</button>
         </div>
+        <details id="pairManageDetails" class="pair-manage" hidden>
+          <summary>Show pairing options</summary>
+          <p class="bb-hint" style="margin-top:0;">Invite fields stay hidden while you&rsquo;re paired. Open only if you need to re-invite or change brothers after unlinking.</p>
+          <div class="bb-field" style="margin-bottom:0;">
+            <label for="pairEmailManage">Re-invite by email</label>
+            <div class="habit-add">
+              <input type="email" id="pairEmailManage" placeholder="brother@email.com" autocomplete="off">
+              <button type="button" class="btn-primary" id="btnPairInviteManage">Send invite</button>
+            </div>
+          </div>
+        </details>
         <div id="setPinBlock" class="bb-field pair-when-unlinked" style="margin-top:12px;margin-bottom:0;" hidden>
           <label for="authPinNew">Set a PIN for app sign-in</label>
           <div class="habit-add">
@@ -318,15 +380,16 @@
   </div>
 
   <div id="weekPicker" aria-label="Select Armada week theme"></div>
+  <p class="week-picker-hint">Tap a week chip to select the Armada theme (gold outline = selected).</p>
   <div id="themeBanner"></div>
 
   <div id="habitShell" hidden>
     <div class="habit-stats" id="habitStats"></div>
 
     <div class="bb-card">
-      <h2 class="section-bar">Your Captain Habits</h2>
+      <h2 class="section-bar"><span>Your Captain Habits</span><span class="section-pct" id="myHabitsPct" aria-label="My habits completion">0%</span></h2>
       <div class="bb-card-body">
-        <p class="bb-hint" style="margin-top:0;">Tap a cell to check today&rsquo;s work. Theme weeks run Sun&ndash;Sat (Wed Armada call mid-week). Weekly habits fill on Sunday. Toggle <strong>Share</strong> to include a habit in the pack you send your Battle Brother — HabitShare-style privacy, one brother at a time.</p>
+        <p class="bb-hint" style="margin-top:0;">Tap a cell to cycle empty → done → skip → missed. Theme weeks run Sun&ndash;Sat (Wed Armada call mid-week). Weekly habits fill on Wednesday. Toggle <strong>Share</strong> to include a habit in the pack you send your Battle Brother.</p>
         <div class="habit-day-head" id="habitDayHead"></div>
         <div id="habitRows"></div>
         <div class="habit-add">
@@ -361,7 +424,7 @@
     </div>
 
     <div class="bb-card" id="brotherHabitsCard">
-      <h2 class="section-bar">Brother&rsquo;s Shared Habits</h2>
+      <h2 class="section-bar"><span>Brother&rsquo;s Shared Habits</span><span class="section-pct" id="brotherHabitsPct" aria-label="Brother habits completion">0%</span></h2>
       <div class="bb-card-body">
         <p class="bb-hint" style="margin-top:0;" id="brotherHabitsHint">No brother pack imported yet.</p>
         <div class="habit-day-head" id="brotherDayHead"></div>
@@ -402,7 +465,11 @@
           </div>
           <div class="bb-field">
             <label for="sacaPassFail">Did he complete his SACA? (Pass/Fail) <span class="req">*</span></label>
-            <select id="sacaPassFail" name="sacaPassFail">
+            <div class="choice-row" data-choice-for="sacaPassFail" role="group" aria-label="SACA Pass or Fail">
+              <button type="button" class="choice-btn" data-value="Pass">Pass</button>
+              <button type="button" class="choice-btn" data-value="Fail">Fail</button>
+            </div>
+            <select id="sacaPassFail" name="sacaPassFail" hidden>
               <option value="">Choose</option>
               <option value="Pass">Pass</option>
               <option value="Fail">Fail</option>
@@ -422,7 +489,11 @@
         <div class="bb-card-body">
           <div class="bb-field">
             <label for="battleBrotherCall">Did you have your Battle Brother call? <span class="req">*</span></label>
-            <select id="battleBrotherCall" name="battleBrotherCall">
+            <div class="choice-row" data-choice-for="battleBrotherCall" role="group" aria-label="Battle Brother call">
+              <button type="button" class="choice-btn" data-value="Yes">Yes</button>
+              <button type="button" class="choice-btn" data-value="No">No</button>
+            </div>
+            <select id="battleBrotherCall" name="battleBrotherCall" hidden>
               <option value="">Choose</option>
               <option value="Yes">Yes</option>
               <option value="No">No</option>
@@ -430,7 +501,11 @@
           </div>
           <div class="bb-field">
             <label for="threeQuestionsAsked">Did your Battle Brother ask you the required 3 questions below? (Yes/No) <span class="req">*</span></label>
-            <select id="threeQuestionsAsked" name="threeQuestionsAsked">
+            <div class="choice-row" data-choice-for="threeQuestionsAsked" role="group" aria-label="Three questions asked">
+              <button type="button" class="choice-btn" data-value="Yes">Yes</button>
+              <button type="button" class="choice-btn" data-value="No">No</button>
+            </div>
+            <select id="threeQuestionsAsked" name="threeQuestionsAsked" hidden>
               <option value="">Choose</option>
               <option value="Yes">Yes</option>
               <option value="No">No</option>
@@ -451,7 +526,11 @@
         <div class="bb-card-body">
           <div class="bb-field">
             <label for="armadaCall">Did you have your Armada call? <span class="req">*</span></label>
-            <select id="armadaCall" name="armadaCall">
+            <div class="choice-row" data-choice-for="armadaCall" role="group" aria-label="Armada call">
+              <button type="button" class="choice-btn" data-value="Yes">Yes</button>
+              <button type="button" class="choice-btn" data-value="No">No</button>
+            </div>
+            <select id="armadaCall" name="armadaCall" hidden>
               <option value="">Choose</option>
               <option value="Yes">Yes</option>
               <option value="No">No</option>
@@ -512,7 +591,7 @@
   <p style="margin-top:6px;">&copy; 2026 U.S.M.C. Ministries</p>
 </footer>
 
-<script src="battle-bro-cloud.js?v=20260819-pin"></script>
-<script src="battle-bro-form.js?v=20260819-pin"></script>
+<script src="battle-bro-cloud.js?v=20260822-habit-states"></script>
+<script src="battle-bro-form.js?v=20260822-habit-states"></script>
 </body>
 </html>

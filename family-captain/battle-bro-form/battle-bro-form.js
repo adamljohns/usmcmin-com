@@ -130,19 +130,53 @@
     store.habits.v = HABITS_SCHEMA_V;
   }
 
+  // Cell cycle: empty → done → skip → missed → empty
+  var CELL_STATES = ['empty', 'done', 'skip', 'missed'];
+  var CELL_MARK = { empty: '', done: '✓', skip: '–', missed: '✕' };
+  var CELL_LABEL = { empty: 'empty', done: 'done', skip: 'skipped', missed: 'missed' };
+
   function habitCheckKey(habitId, dateStr) {
     return habitId + '|' + dateStr;
   }
 
+  function normalizeCellState(raw) {
+    if (raw === true || raw === 'done' || raw === 'on' || raw === 1) return 'done';
+    if (raw === 'skip' || raw === 'skipped') return 'skip';
+    if (raw === 'missed' || raw === 'miss' || raw === 'fail') return 'missed';
+    return 'empty';
+  }
+
+  function getCellState(checks, habitId, dateStr) {
+    if (!checks || typeof checks !== 'object') return 'empty';
+    return normalizeCellState(checks[habitCheckKey(habitId, dateStr)]);
+  }
+
   function isChecked(store, habitId, dateStr) {
-    return !!(store.habits && store.habits.checks && store.habits.checks[habitCheckKey(habitId, dateStr)]);
+    return getCellState(store.habits && store.habits.checks, habitId, dateStr) === 'done';
+  }
+
+  function setCellState(checks, habitId, dateStr, state) {
+    var key = habitCheckKey(habitId, dateStr);
+    state = normalizeCellState(state);
+    if (state === 'empty') delete checks[key];
+    else checks[key] = state;
   }
 
   function setChecked(store, habitId, dateStr, on) {
     ensureHabits(store);
-    var key = habitCheckKey(habitId, dateStr);
-    if (on) store.habits.checks[key] = true;
-    else delete store.habits.checks[key];
+    setCellState(store.habits.checks, habitId, dateStr, on ? 'done' : 'empty');
+  }
+
+  function cycleCellState(state) {
+    var i = CELL_STATES.indexOf(normalizeCellState(state));
+    if (i < 0) i = 0;
+    return CELL_STATES[(i + 1) % CELL_STATES.length];
+  }
+
+  function ensureBrotherMarks(store) {
+    if (!store.brotherMarks || typeof store.brotherMarks !== 'object') store.brotherMarks = { checks: {} };
+    if (!store.brotherMarks.checks || typeof store.brotherMarks.checks !== 'object') store.brotherMarks.checks = {};
+    return store.brotherMarks;
   }
 
   function streakFor(store, habit) {
@@ -153,14 +187,14 @@
     if (habit.cadence === 'weekly') {
       cursor = sundayOf(cursor);
       while (streak < 520) {
-        if (!isChecked(store, habit.id, ymd(cursor))) break;
+        if (getCellState(store.habits.checks, habit.id, ymd(cursor)) !== 'done') break;
         streak += 1;
         cursor.setDate(cursor.getDate() - 7);
       }
       return streak;
     }
     while (streak < 800) {
-      if (!isChecked(store, habit.id, ymd(cursor))) break;
+      if (getCellState(store.habits.checks, habit.id, ymd(cursor)) !== 'done') break;
       streak += 1;
       cursor.setDate(cursor.getDate() - 1);
     }
@@ -169,20 +203,29 @@
 
   function weekHitRate(store) {
     ensureHabits(store);
+    return hitRateFor(store.habits.items, store.habits.checks);
+  }
+
+  function hitRateFor(items, checks) {
     var days = weekDates(new Date());
     var today = ymd(new Date());
+    var weekStartKey = ymd(days[0]);
     var due = 0;
     var hit = 0;
-    store.habits.items.forEach(function (habit) {
+    (items || []).forEach(function (habit) {
       if (habit.cadence === 'weekly') {
+        var st = getCellState(checks, habit.id, weekStartKey);
+        if (st === 'skip') return; // skipped weeks don't count against %
         due += 1;
-        if (isChecked(store, habit.id, ymd(days[0]))) hit += 1;
+        if (st === 'done') hit += 1;
       } else {
         days.forEach(function (d) {
           var key = ymd(d);
           if (key > today) return;
+          var st = getCellState(checks, habit.id, key);
+          if (st === 'skip') return;
           due += 1;
-          if (isChecked(store, habit.id, key)) hit += 1;
+          if (st === 'done') hit += 1;
         });
       }
     });
@@ -245,11 +288,23 @@
     }).join('') + '<span class="hd-share">Share</span>';
   }
 
+  function cellButtonHtml(habit, dayKey, state, opts) {
+    opts = opts || {};
+    var st = normalizeCellState(state);
+    var disabled = opts.disabled ? ' disabled' : '';
+    var cls = 'habit-check state-' + st + (st === 'done' ? ' on' : '');
+    var mark = CELL_MARK[st] || '';
+    var label = habit.name + ' ' + dayKey + ' — ' + CELL_LABEL[st] + '. Tap to cycle.';
+    return '<button type="button" class="' + cls + '" data-habit="' + habit.id + '" data-day="' + dayKey + '"' +
+      disabled + ' aria-label="' + escapeHtml(label) + '" title="' + escapeHtml(CELL_LABEL[st] + ' — tap to change') + '">' + mark + '</button>';
+  }
+
   function renderHabitRows(targetId, items, store, opts) {
     var wrap = el(targetId);
     if (!wrap) return;
     opts = opts || {};
     var readonly = !!opts.readonly;
+    var checks = opts.checks || (store.habits && store.habits.checks) || {};
     var days = weekDates(new Date());
     var weekStartKey = ymd(days[0]);
     if (!items.length) {
@@ -257,29 +312,28 @@
       return;
     }
     wrap.innerHTML = items.map(function (habit) {
-      var streak = streakFor(store, habit);
+      var streak = streakFor({ habits: { items: items, checks: checks } }, habit);
       var isWeekly = habit.cadence === 'weekly';
       var cells;
       if (isWeekly) {
-        var on = isChecked(store, habit.id, weekStartKey);
+        var st = getCellState(checks, habit.id, weekStartKey);
         cells = days.map(function (d, i) {
           if (i === WEEKLY_CHECK_COL) {
-            var disabled = readonly ? ' disabled' : '';
-            return '<button type="button" class="habit-check' + (on ? ' on' : '') + '" data-habit="' + habit.id + '" data-day="' + weekStartKey + '"' + disabled + ' aria-pressed="' + (on ? 'true' : 'false') + '" aria-label="' + habit.name + ' this week">' + (on ? '✓' : '') + '</button>';
+            return cellButtonHtml(habit, weekStartKey, st, { disabled: readonly });
           }
           return '<span class="habit-check weekly-spacer" aria-hidden="true"></span>';
         }).join('');
       } else {
         cells = days.map(function (d) {
           var key = ymd(d);
-          var on = isChecked(store, habit.id, key);
-          var disabled = readonly ? ' disabled' : '';
-          return '<button type="button" class="habit-check' + (on ? ' on' : '') + '" data-habit="' + habit.id + '" data-day="' + key + '"' + disabled + ' aria-pressed="' + (on ? 'true' : 'false') + '" aria-label="' + habit.name + ' ' + key + '">' + (on ? '✓' : '') + '</button>';
+          return cellButtonHtml(habit, key, getCellState(checks, habit.id, key), { disabled: readonly });
         }).join('');
       }
-      var shareBtn = readonly
+      var shareBtn = opts.hideShare
         ? '<span class="habit-share-btn shared">Shared</span>'
-        : '<button type="button" class="habit-share-btn' + (habit.shared ? ' shared' : '') + '" data-share="' + habit.id + '">' + (habit.shared ? 'Shared' : 'Private') + '</button>';
+        : readonly
+          ? '<span class="habit-share-btn shared">Shared</span>'
+          : '<button type="button" class="habit-share-btn' + (habit.shared ? ' shared' : '') + '" data-share="' + habit.id + '">' + (habit.shared ? 'Shared' : 'Private') + '</button>';
       return '<div class="habit-row' + (isWeekly ? ' weekly-row' : '') + '" data-habit-row="' + habit.id + '">' +
         '<div class="hr-meta"><div class="hr-name">' + escapeHtml(habit.name) + '</div>' +
         '<div class="hr-sub">' + (isWeekly ? 'Weekly' : 'Daily') +
@@ -293,7 +347,21 @@
           var s = ensureHabits(loadStore());
           var id = btn.dataset.habit;
           var day = btn.dataset.day;
-          setChecked(s, id, day, !isChecked(s, id, day));
+          var targetChecks;
+          var current;
+          if (opts.markBoard === 'brother') {
+            targetChecks = ensureBrotherMarks(s).checks;
+            current = getCellState(targetChecks, id, day);
+            if (current === 'empty') {
+              var packChecks = (s.brotherPack && s.brotherPack.checks) || {};
+              current = getCellState(packChecks, id, day);
+            }
+          } else {
+            targetChecks = s.habits.checks;
+            current = getCellState(targetChecks, id, day);
+          }
+          var next = cycleCellState(current);
+          setCellState(targetChecks, id, day, next);
           saveStore(s);
           renderHabitBoard();
         });
@@ -317,6 +385,11 @@
     });
   }
 
+  function setSectionPct(id, pct) {
+    var node = el(id);
+    if (node) node.textContent = pct + '%';
+  }
+
   function renderHabitStats(store) {
     var box = el('habitStats');
     if (!box) return;
@@ -326,7 +399,9 @@
     box.innerHTML =
       '<div class="habit-stat"><span class="hs-label">This week</span><span class="hs-value">' + rate.pct + '%</span></div>' +
       '<div class="habit-stat"><span class="hs-label">Shared habits</span><span class="hs-value">' + shared + '</span></div>' +
-      '<div class="habit-stat"><span class="hs-label">Best shared streak</span><span class="hs-value">' + best + '</span></div>';
+      '<div class="habit-stat"><span class="hs-label">Best shared streak</span><span class="hs-value">' + best + '</span></div>' +
+      '<p class="habit-legend">Tap a box to cycle: empty → done (✓) → skip (–) → missed (✕).</p>';
+    setSectionPct('myHabitsPct', rate.pct);
   }
 
   function renderHabitBoard() {
@@ -341,6 +416,7 @@
     var hint = el('brotherHabitsHint');
     if (!brother || !brother.items || !brother.items.length) {
       if (hint) hint.textContent = 'No brother pack yet — pair by email above, or import a JSON pack.';
+      setSectionPct('brotherHabitsPct', 0);
       renderHabitRows('brotherHabitRows', [], store, { empty: 'Pair or import to see the habits he marked Shared.' });
       return;
     }
@@ -348,15 +424,24 @@
       hint.textContent = (brother.name ? brother.name + ' · ' : '') +
         (brother.live ? 'Live from cloud' : 'Imported') +
         (brother.importedAt ? ' · ' + formatSyncTime(brother.importedAt) : '') +
-        '. Read-only Shared habits.';
+        '. Tap his cells to mark done / skip / missed (saved on this device).';
     }
+    var marks = ensureBrotherMarks(store);
+    var mergedChecks = Object.assign({}, brother.checks || {}, marks.checks || {});
+    var brotherRate = hitRateFor(brother.items, mergedChecks);
+    setSectionPct('brotherHabitsPct', brotherRate.pct);
     var brotherStore = {
       habits: {
         items: brother.items,
-        checks: brother.checks || {}
+        checks: mergedChecks
       }
     };
-    renderHabitRows('brotherHabitRows', brother.items, brotherStore, { readonly: true });
+    renderHabitRows('brotherHabitRows', brother.items, brotherStore, {
+      readonly: false,
+      markBoard: 'brother',
+      checks: mergedChecks,
+      hideShare: true
+    });
   }
 
   function buildSharePack() {
@@ -366,11 +451,12 @@
     Object.keys(store.habits.checks).forEach(function (key) {
       var habitId = key.split('|')[0];
       if (sharedItems.some(function (h) { return h.id === habitId; })) {
-        checks[key] = true;
+        var st = normalizeCellState(store.habits.checks[key]);
+        if (st !== 'empty') checks[key] = st;
       }
     });
     return {
-      v: 1,
+      v: 2,
       type: 'fc_battle_brother_share',
       name: (store.profile && store.profile.name) || val('reporterName') || '',
       exportedAt: new Date().toISOString(),
@@ -703,6 +789,7 @@
     var unlink = el('btnPairUnlink');
     var pairStatus = el('pairStatus');
     var pairWhenUnlinked = el('pairWhenUnlinked');
+    var pairManage = el('pairManageDetails');
     var sharePack = el('sharePackSection');
     var hint = el('accountHint');
     if (!window.BBCloud) {
@@ -714,6 +801,7 @@
       if (signedOut) signedOut.hidden = false;
       if (signedIn) signedIn.hidden = true;
       if (sharePack) sharePack.hidden = false;
+      if (pairManage) pairManage.hidden = true;
       if (hint) hint.textContent = 'Sign in with email + PIN to keep habits on every device. Local save still works offline.';
       setCloudStatus(cloudAvailable ? 'Cloud API reachable — sign in to sync.' : 'Cloud API not deployed yet — local + pack sharing still work.');
       return;
@@ -726,11 +814,16 @@
       label += ' · paired with ' + (sess.brother.name || sess.brother.email);
       if (unlink) unlink.hidden = false;
       if (pairWhenUnlinked) pairWhenUnlinked.hidden = true;
-      if (pairStatus) pairStatus.textContent = 'Live Shared habits sync with your brother.';
+      if (pairManage) {
+        pairManage.hidden = false;
+        pairManage.open = false;
+      }
+      if (pairStatus) pairStatus.textContent = 'Live Shared habits sync with your brother. Pairing fields stay collapsed unless you open them below.';
       if (sharePack) sharePack.hidden = true;
     } else {
       if (unlink) unlink.hidden = true;
       if (pairWhenUnlinked) pairWhenUnlinked.hidden = false;
+      if (pairManage) pairManage.hidden = true;
       if (pairStatus) pairStatus.textContent = 'Invite your Battle Brother by email, or accept his code.';
       if (sharePack) sharePack.hidden = false;
     }
@@ -899,7 +992,7 @@
   }
 
   async function handlePairInvite() {
-    var email = val('pairEmail');
+    var email = val('pairEmail') || val('pairEmailManage');
     if (!email) { flash('Enter your brother\'s email.'); return; }
     var r = await BBCloud.inviteBrother(email);
     var status = el('pairStatus');
@@ -1026,6 +1119,44 @@
     setVal('armadaCall', data.armadaCall);
     setVal('confidentialComments', data.confidentialComments);
     setStar(data.armadaRating || 0);
+    syncAllChoiceRows();
+  }
+
+  function syncChoiceRow(selectId) {
+    var sel = el(selectId);
+    var row = document.querySelector('.choice-row[data-choice-for="' + selectId + '"]');
+    if (!sel || !row) return;
+    var current = sel.value || '';
+    row.querySelectorAll('.choice-btn').forEach(function (btn) {
+      var on = btn.getAttribute('data-value') === current;
+      btn.classList.toggle('selected', on);
+      btn.setAttribute('aria-pressed', on ? 'true' : 'false');
+    });
+  }
+
+  function syncAllChoiceRows() {
+    ['sacaPassFail', 'battleBrotherCall', 'threeQuestionsAsked', 'armadaCall'].forEach(syncChoiceRow);
+  }
+
+  function wireChoiceRows() {
+    document.querySelectorAll('.choice-row[data-choice-for]').forEach(function (row) {
+      var selectId = row.getAttribute('data-choice-for');
+      row.querySelectorAll('.choice-btn').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          var sel = el(selectId);
+          if (!sel) return;
+          var value = btn.getAttribute('data-value') || '';
+          if (sel.value === value) {
+            sel.value = '';
+          } else {
+            sel.value = value;
+          }
+          syncChoiceRow(selectId);
+          saveDraft();
+        });
+      });
+      syncChoiceRow(selectId);
+    });
   }
 
   function saveDraft() {
@@ -1334,6 +1465,7 @@
     restoreProfile();
     bindStars();
     bindInputs();
+    wireChoiceRows();
     ensureHabits(loadStore());
     renderHistory();
     showStep(currentStep);
@@ -1419,6 +1551,7 @@
       await pullCloudState(false);
     });
     if (el('btnPairInvite')) el('btnPairInvite').addEventListener('click', handlePairInvite);
+    if (el('btnPairInviteManage')) el('btnPairInviteManage').addEventListener('click', handlePairInvite);
     if (el('btnPairAccept')) el('btnPairAccept').addEventListener('click', handlePairAccept);
     if (el('btnPairUnlink')) el('btnPairUnlink').addEventListener('click', async function () {
       await BBCloud.unlinkBrother();

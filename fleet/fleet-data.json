@@ -1,34 +1,31 @@
 {
-  "generated": "2026-08-17T21:48:01.288515+00:00",
+  "generated": "2026-08-22T01:29:45.316946+00:00",
   "totals": {
     "agents": 16,
-    "operational": 13,
-    "degraded": 3,
-    "jobs": 135,
-    "enabled": 103,
-    "accomplishments": 410,
+    "operational": 12,
+    "degraded": 4,
+    "jobs": 143,
+    "enabled": 84,
+    "accomplishments": 365,
     "cowork": 41
   },
   "health": {
     "cron": {
-      "enabled": 103,
-      "ran26h": 63,
-      "delivered": 51,
+      "enabled": 84,
+      "ran26h": 44,
+      "delivered": 37,
       "fails": [
         "Daily Strategic Note (10:00 AM) \u2014 Gus (bg-hartwell)",
-        "Pops Spirit Front Weekly SITREP (Sun 1900) (pops)",
-        "Skill: airbnb-host (sally)"
+        "Dev Loop: prof-x daily reflection (implement-or-escalate) (prof-x)"
       ]
     },
     "cron_source": "openclaw.sqlite + hermes/cron/jobs.json",
     "launchd": {
-      "healthy": 69,
+      "healthy": 74,
       "fails": [
-        "com.moop.garmin-rounds: exit 1",
-        "com.moop.finance-sitrep: exit -9",
+        "com.moop.scorecard-refine-local: exit 1",
         "com.moop.chatgpt-export-watcher: exit 2",
-        "com.moop.calendar-invite-watcher: exit 2",
-        "com.moop.masculinity-series-drip: exit 78"
+        "com.moop.calendar-invite-watcher: exit 2"
       ]
     }
   },
@@ -42,14 +39,14 @@
     {
       "label": "Command Surface Sync",
       "purpose": "Command DB \u2192 Obsidian / TACC / workflows",
-      "last": "2026-08-17T17:37:08-04:00",
+      "last": "2026-08-21T21:25:43-04:00",
       "status": "local-only"
     },
     {
       "label": "Morning Intel",
       "purpose": "Calendar, mail, house, body, wire",
-      "last": "2026-08-17-morning-brief",
-      "status": "current"
+      "last": "2026-08-21-morning-brief",
+      "status": "stale"
     },
     {
       "label": "Daily Command Brief",
@@ -66,7 +63,7 @@
     {
       "label": "Evening AAR",
       "purpose": "Wins, slips, release, tomorrow",
-      "last": "2026-08-16-evening-wrap",
+      "last": "2026-08-21-evening-wrap",
       "status": "current"
     },
     {
@@ -129,12 +126,17 @@
         "scorecard-enrichment",
         "resolute-local"
       ],
-      "n_jobs": 27,
-      "n_enabled": 15,
+      "n_jobs": 33,
+      "n_enabled": 12,
       "err": 0,
-      "last_ms": 1787000492424,
+      "last_ms": 1787328092448,
       "status": "operational",
       "accomplishments": [
+        {
+          "date": "2026-08-18",
+          "title": "Battle Bro merged script \u2014 mark this up, then I produce",
+          "detail": "PDF shipped via psa-send-pdf.sh \u00b7 file=2026-08-18-battle-bro-merged-script"
+        },
         {
           "date": "2026-08-09",
           "title": "Luanne packet (Doc + Mac sync) \u2014 download, text Mom, print.",
@@ -337,26 +339,37 @@
       },
       "jobs": [
         {
-          "name": "fleet-freshness-watchdog",
+          "name": "Liberty Brief \u2014 HOLIDAY WEEKENDS ONLY (consolidated, replaces 13 per-agent briefs)",
           "enabled": true,
-          "expr": "0 * * * *",
+          "expr": "45 11 * * 5",
           "tz": "",
-          "channel": "last",
-          "last_ms": 1787000492424,
+          "channel": "discord",
+          "last_ms": 1787327100070,
           "status": "ok",
           "errors": 0,
-          "dur_ms": 73
+          "dur_ms": 12938
         },
         {
-          "name": "RESOLUTE PM website publish",
+          "name": "Fleet Morning SITREP (consolidated stand-up)",
           "enabled": true,
-          "expr": "45 16 * * *",
+          "expr": "45 7 * * 1-5",
           "tz": "America/New_York",
-          "channel": "last",
-          "last_ms": 1786999500040,
+          "channel": "discord",
+          "last_ms": 1787312700038,
           "status": "ok",
           "errors": 0,
-          "dur_ms": 13123
+          "dur_ms": 109692
+        },
+        {
+          "name": "Dev Loop: main daily reflection (implement-or-escalate)",
+          "enabled": true,
+          "expr": "05 22 * * *",
+          "tz": "America/New_York",
+          "channel": "discord",
+          "last_ms": 1787277900032,
+          "status": "ok",
+          "errors": 0,
+          "dur_ms": 176960
         },
         {
           "name": "Skill: agent-self-introspect",
@@ -370,39 +383,6 @@
           "dur_ms": 154562
         },
         {
-          "name": "RESOLUTE AM website publish",
-          "enabled": true,
-          "expr": "0 8 * * *",
-          "tz": "America/New_York",
-          "channel": "last",
-          "last_ms": 1786968000044,
-          "status": "ok",
-          "errors": 0,
-          "dur_ms": 12427
-        },
-        {
-          "name": "Fleet Morning SITREP (consolidated stand-up)",
-          "enabled": true,
-          "expr": "45 7 * * 1-5",
-          "tz": "America/New_York",
-          "channel": "discord",
-          "last_ms": 1786967100046,
-          "status": "ok",
-          "errors": 0,
-          "dur_ms": 162527
-        },
-        {
-          "name": "Skill: briefing",
-          "enabled": true,
-          "expr": "10 6 * * *",
-          "tz": "America/New_York",
-          "channel": "discord",
-          "last_ms": 1786961400044,
-          "status": "ok",
-          "errors": 0,
-          "dur_ms": 26160
-        },
-        {
           "name": "Skill: session-primer (Mon smoke)",
           "enabled": true,
           "expr": "5 6 * * 1",
@@ -412,17 +392,6 @@
           "status": "ok",
           "errors": 0,
           "dur_ms": 135506
-        },
-        {
-          "name": "Dev Loop: main daily reflection (implement-or-escalate)",
-          "enabled": true,
-          "expr": "05 22 * * *",
-          "tz": "America/New_York",
-          "channel": "discord",
-          "last_ms": 1786932300028,
-          "status": "ok",
-          "errors": 0,
-          "dur_ms": 65687
         },
         {
           "name": "Skill: week-ahead-calendar (gog)",
@@ -480,17 +449,6 @@
           "dur_ms": 467281
         },
         {
-          "name": "Liberty Brief (Fri 12:00) \u2014 CO's Brief (Max)",
-          "enabled": true,
-          "expr": "0 12 * * 5",
-          "tz": "America/New_York",
-          "channel": "discord",
-          "last_ms": 1786723200048,
-          "status": "ok",
-          "errors": 0,
-          "dur_ms": 21385
-        },
-        {
           "name": "Review compaction policy (SuperGrok loosen)",
           "enabled": true,
           "expr": "",
@@ -500,6 +458,127 @@
           "status": "\u2014",
           "errors": 0,
           "dur_ms": null
+        },
+        {
+          "name": "LongCat MLX download check + demo smoke",
+          "enabled": true,
+          "expr": "",
+          "tz": "",
+          "channel": "",
+          "last_ms": null,
+          "status": "\u2014",
+          "errors": 0,
+          "dur_ms": null
+        },
+        {
+          "name": "fleet-freshness-watchdog",
+          "enabled": false,
+          "expr": "0 * * * *",
+          "tz": "",
+          "channel": "last",
+          "last_ms": 1787328092448,
+          "status": "ok",
+          "errors": 0,
+          "dur_ms": 175
+        },
+        {
+          "name": "RESOLUTE AM website publish",
+          "enabled": false,
+          "expr": "0 8 * * *",
+          "tz": "America/New_York",
+          "channel": "last",
+          "last_ms": 1787313600074,
+          "status": "ok",
+          "errors": 0,
+          "dur_ms": 26777
+        },
+        {
+          "name": "Skill: briefing",
+          "enabled": false,
+          "expr": "10 6 * * *",
+          "tz": "America/New_York",
+          "channel": "discord",
+          "last_ms": 1787307000053,
+          "status": "ok",
+          "errors": 0,
+          "dur_ms": 37628
+        },
+        {
+          "name": "DL-0820 HARD STOP 05:00 2026-08-21",
+          "enabled": false,
+          "expr": "",
+          "tz": "",
+          "channel": "telegram",
+          "last_ms": 1787302800072,
+          "status": "error",
+          "errors": 1,
+          "dur_ms": 143979
+        },
+        {
+          "name": "DL-0820 SITE PULSE 10m until 05:00 2026-08-21",
+          "enabled": false,
+          "expr": "*/10 21-23,0-4 * * *",
+          "tz": "America/New_York",
+          "channel": "",
+          "last_ms": 1787302200053,
+          "status": "ok",
+          "errors": 0,
+          "dur_ms": 14118
+        },
+        {
+          "name": "DL-0820 CONTROLLER 15m until 05:00 2026-08-21",
+          "enabled": false,
+          "expr": "*/15 21-23,0-4 * * *",
+          "tz": "America/New_York",
+          "channel": "",
+          "last_ms": 1787301900054,
+          "status": "ok",
+          "errors": 0,
+          "dur_ms": 53521
+        },
+        {
+          "name": "Adjutant Evening Pulse (Weekday)",
+          "enabled": false,
+          "expr": "0 21,23 * * 1-5",
+          "tz": "America/New_York",
+          "channel": "telegram",
+          "last_ms": 1787281200050,
+          "status": "ok",
+          "errors": 0,
+          "dur_ms": 52129
+        },
+        {
+          "name": "RESOLUTE PM website publish",
+          "enabled": false,
+          "expr": "45 16 * * *",
+          "tz": "America/New_York",
+          "channel": "last",
+          "last_ms": 1787258700049,
+          "status": "ok",
+          "errors": 0,
+          "dur_ms": 19767
+        },
+        {
+          "name": "Fleet Dream Loop HOURLY overnight 2026-08-19",
+          "enabled": false,
+          "expr": "0 23,0,1,2,3,4,5 * * *",
+          "tz": "America/New_York",
+          "channel": "",
+          "last_ms": 1787216400049,
+          "status": "ok",
+          "errors": 0,
+          "dur_ms": 139845
+        },
+        {
+          "name": "Liberty Brief (Fri 12:00) \u2014 CO's Brief (Max)",
+          "enabled": false,
+          "expr": "0 12 * * 5",
+          "tz": "America/New_York",
+          "channel": "discord",
+          "last_ms": 1786723200048,
+          "status": "ok",
+          "errors": 0,
+          "dur_ms": 21385
         },
         {
           "name": "DL-0808 hard stop 18:30",
@@ -621,17 +700,6 @@
           "status": "error",
           "errors": 1,
           "dur_ms": 166529
-        },
-        {
-          "name": "Adjutant Evening Pulse (Weekday)",
-          "enabled": false,
-          "expr": "0 21,23 * * 1-5",
-          "tz": "America/New_York",
-          "channel": "telegram",
-          "last_ms": 1783566000042,
-          "status": "ok",
-          "errors": 0,
-          "dur_ms": 7542
         }
       ]
     },
@@ -646,10 +714,10 @@
       "voice": null,
       "tools": [],
       "skills": [],
-      "n_jobs": 13,
+      "n_jobs": 14,
       "n_enabled": 11,
       "err": 0,
-      "last_ms": 1786982916103,
+      "last_ms": 1787358791844,
       "status": "operational",
       "accomplishments": [
         {
@@ -789,12 +857,23 @@
       },
       "jobs": [
         {
+          "name": "Email Autopilot After-Action Report",
+          "enabled": true,
+          "expr": "30 20 * * *",
+          "tz": "",
+          "channel": "origin",
+          "last_ms": 1787358791844,
+          "status": "ok",
+          "errors": 0,
+          "dur_ms": null
+        },
+        {
           "name": "MOOP Command Noon Capture",
           "enabled": true,
           "expr": "0 12 * * *",
           "tz": "",
           "channel": "origin",
-          "last_ms": 1786982916103,
+          "last_ms": 1787328288180,
           "status": "ok",
           "errors": 0,
           "dur_ms": null
@@ -805,7 +884,51 @@
           "expr": "0 12 * * *",
           "tz": "",
           "channel": "origin",
-          "last_ms": 1786982620674,
+          "last_ms": 1787328108961,
+          "status": "ok",
+          "errors": 0,
+          "dur_ms": null
+        },
+        {
+          "name": "Fleet Integrity Watch",
+          "enabled": true,
+          "expr": "15 6 * * *",
+          "tz": "",
+          "channel": "origin",
+          "last_ms": 1787307410035,
+          "status": "ok",
+          "errors": 0,
+          "dur_ms": null
+        },
+        {
+          "name": "Infrastructure Readiness Check",
+          "enabled": true,
+          "expr": "45 5 * * *",
+          "tz": "",
+          "channel": "origin",
+          "last_ms": 1787305645267,
+          "status": "ok",
+          "errors": 0,
+          "dur_ms": null
+        },
+        {
+          "name": "MOOP Command Nightly Reconciliation",
+          "enabled": true,
+          "expr": "15 21 * * *",
+          "tz": "",
+          "channel": "origin",
+          "last_ms": 1787276073789,
+          "status": "ok",
+          "errors": 0,
+          "dur_ms": null
+        },
+        {
+          "name": "Credential and OAuth Watch",
+          "enabled": true,
+          "expr": "0 6 * * 1,4",
+          "tz": "",
+          "channel": "origin",
+          "last_ms": 1787220123986,
           "status": "ok",
           "errors": 0,
           "dur_ms": null
@@ -817,61 +940,6 @@
           "tz": "",
           "channel": "origin",
           "last_ms": 1786971790905,
-          "status": "ok",
-          "errors": 0,
-          "dur_ms": null
-        },
-        {
-          "name": "Fleet Integrity Watch",
-          "enabled": true,
-          "expr": "15 6 * * *",
-          "tz": "",
-          "channel": "origin",
-          "last_ms": 1786961983026,
-          "status": "ok",
-          "errors": 0,
-          "dur_ms": null
-        },
-        {
-          "name": "Credential and OAuth Watch",
-          "enabled": true,
-          "expr": "0 6 * * 1,4",
-          "tz": "",
-          "channel": "origin",
-          "last_ms": 1786960899281,
-          "status": "ok",
-          "errors": 0,
-          "dur_ms": null
-        },
-        {
-          "name": "Infrastructure Readiness Check",
-          "enabled": true,
-          "expr": "45 5 * * *",
-          "tz": "",
-          "channel": "origin",
-          "last_ms": 1786959990894,
-          "status": "ok",
-          "errors": 0,
-          "dur_ms": null
-        },
-        {
-          "name": "MOOP Command Nightly Reconciliation",
-          "enabled": true,
-          "expr": "15 21 * * *",
-          "tz": "",
-          "channel": "origin",
-          "last_ms": 1786929788200,
-          "status": "ok",
-          "errors": 0,
-          "dur_ms": null
-        },
-        {
-          "name": "Email Autopilot After-Action Report",
-          "enabled": true,
-          "expr": "30 20 * * *",
-          "tz": "",
-          "channel": "origin",
-          "last_ms": 1786927006739,
           "status": "ok",
           "errors": 0,
           "dur_ms": null
@@ -910,6 +978,17 @@
           "dur_ms": null
         },
         {
+          "name": "ADT Safari keepalive (quiet)",
+          "enabled": false,
+          "expr": "every 8m",
+          "tz": "",
+          "channel": "origin",
+          "last_ms": 1787328592481,
+          "status": "ok",
+          "errors": 0,
+          "dur_ms": null
+        },
+        {
           "name": "Overnight slim morning SITREP + restart",
           "enabled": false,
           "expr": "once at 2026-08-17 06:45",
@@ -944,7 +1023,7 @@
       "n_jobs": 0,
       "n_enabled": 0,
       "err": 0,
-      "last_ms": 1786992082516,
+      "last_ms": 1787358853182,
       "status": "operational",
       "accomplishments": [
         {
@@ -1041,7 +1120,7 @@
       "n_jobs": 0,
       "n_enabled": 0,
       "err": 0,
-      "last_ms": 1786966133417,
+      "last_ms": 1787335533805,
       "status": "operational",
       "accomplishments": [
         {
@@ -1192,9 +1271,9 @@
         "video-production-preacher-john"
       ],
       "n_jobs": 6,
-      "n_enabled": 5,
+      "n_enabled": 4,
       "err": 0,
-      "last_ms": 1786960800041,
+      "last_ms": 1787306400048,
       "status": "operational",
       "accomplishments": [
         {
@@ -1380,11 +1459,11 @@
         "lane": "Bible/devotion",
         "browser_profile": "usmc",
         "files": {
-          "AGENTS.md": 25483,
-          "MEMORY.md": 10612,
+          "AGENTS.md": 27613,
+          "MEMORY.md": 19727,
           "HEARTBEAT.md": 3647
         },
-        "verified": "2026-08-17"
+        "verified": "2026-08-22"
       },
       "narration": {
         "voice": "bm_george",
@@ -1443,21 +1522,21 @@
           "expr": "0 6 * * *",
           "tz": "America/New_York",
           "channel": "discord",
-          "last_ms": 1786960800041,
+          "last_ms": 1787306400048,
           "status": "ok",
           "errors": 0,
-          "dur_ms": 322087
+          "dur_ms": 464655
         },
         {
           "name": "Dev Loop: preacher-john daily reflection (implement-or-escalate)",
           "enabled": true,
-          "expr": "35 22 * * *",
+          "expr": "20 22 * * *",
           "tz": "America/New_York",
           "channel": "discord",
-          "last_ms": 1786934100019,
+          "last_ms": 1787278800046,
           "status": "ok",
           "errors": 0,
-          "dur_ms": 180858
+          "dur_ms": 170693
         },
         {
           "name": "Skill: scripture-lookup (Sun BTE smoke)",
@@ -1483,7 +1562,7 @@
         },
         {
           "name": "Liberty Brief (Fri 11:49) \u2014 Preacher John",
-          "enabled": true,
+          "enabled": false,
           "expr": "49 11 * * 5",
           "tz": "America/New_York",
           "channel": "discord",
@@ -1563,9 +1642,19 @@
       "n_jobs": 6,
       "n_enabled": 4,
       "err": 0,
-      "last_ms": 1786934400041,
+      "last_ms": 1787340600051,
       "status": "operational",
       "accomplishments": [
+        {
+          "date": "2026-08-20",
+          "title": "Life Map Draft 1 \u2014 3 pages (cap 4). Adam only. Maria still blank.",
+          "detail": "PDF shipped via psa-send-pdf.sh \u00b7 file=reengage-life-map-adam-draft1-4pg-2026-08-20"
+        },
+        {
+          "date": "2026-08-20",
+          "title": "Life Map Draft 1 \u2014 Adam only. Maria still blank.",
+          "detail": "PDF shipped via psa-send-pdf.sh \u00b7 file=reengage-life-map-adam-draft1-2026-08-20"
+        },
         {
           "date": "2026-08-17",
           "title": "Daily Pure Heart Checkin Explainer \u2014 one page. Forward this second.",
@@ -2008,37 +2097,26 @@
       },
       "jobs": [
         {
-          "name": "Dev Loop: chaps daily reflection (implement-or-escalate)",
-          "enabled": true,
-          "expr": "40 22 * * *",
-          "tz": "America/New_York",
-          "channel": "discord",
-          "last_ms": 1786934400041,
-          "status": "ok",
-          "errors": 0,
-          "dur_ms": 89673
-        },
-        {
           "name": "Skill: pastoral-intake (Fri hygiene)",
           "enabled": true,
           "expr": "30 15 * * 5",
           "tz": "America/New_York",
           "channel": "discord",
-          "last_ms": 1786735800042,
+          "last_ms": 1787340600051,
           "status": "ok",
           "errors": 0,
-          "dur_ms": 114479
+          "dur_ms": 76825
         },
         {
-          "name": "Liberty Brief (Fri 11:50) \u2014 Chaplain Chuck",
+          "name": "Dev Loop: chaps daily reflection (implement-or-escalate)",
           "enabled": true,
-          "expr": "50 11 * * 5",
+          "expr": "35 22 * * *",
           "tz": "America/New_York",
           "channel": "discord",
-          "last_ms": 1786722631200,
+          "last_ms": 1787279942785,
           "status": "ok",
           "errors": 0,
-          "dur_ms": 79219
+          "dur_ms": 188758
         },
         {
           "name": "Chaps Weekly Counseling Sweep (Thu 5PM)",
@@ -2046,21 +2124,32 @@
           "expr": "0 17 * * 4",
           "tz": "America/New_York",
           "channel": "telegram",
-          "last_ms": 1786654800060,
+          "last_ms": 1787259600046,
           "status": "ok",
           "errors": 0,
-          "dur_ms": 21089
+          "dur_ms": 120241
         },
         {
           "name": "chaps-directory-qa",
-          "enabled": false,
+          "enabled": true,
           "expr": "0 16 */3 * *",
           "tz": "",
           "channel": "telegram",
-          "last_ms": 1785528000053,
+          "last_ms": 1787238545595,
           "status": "ok",
           "errors": 0,
-          "dur_ms": 91449
+          "dur_ms": 310555
+        },
+        {
+          "name": "Liberty Brief (Fri 11:50) \u2014 Chaplain Chuck",
+          "enabled": false,
+          "expr": "50 11 * * 5",
+          "tz": "America/New_York",
+          "channel": "discord",
+          "last_ms": 1786722631200,
+          "status": "ok",
+          "errors": 0,
+          "dur_ms": 79219
         },
         {
           "name": "Stand-up 07:35 \u2014 Chaplain Chuck",
@@ -2128,12 +2217,22 @@
         "psa-talking-head",
         "video-production-carnegie"
       ],
-      "n_jobs": 17,
-      "n_enabled": 15,
+      "n_jobs": 18,
+      "n_enabled": 9,
       "err": 0,
-      "last_ms": 1786984200065,
+      "last_ms": 1787329800060,
       "status": "operational",
       "accomplishments": [
+        {
+          "date": "2026-08-21",
+          "title": "Carnegie \u2014 September 2026 Working Budget \u2014 one page",
+          "detail": "PDF shipped via psa-send-pdf.sh \u00b7 file=2026-08-21-september-working-budget"
+        },
+        {
+          "date": "2026-08-21",
+          "title": "Melaleuca Monday board (2026-08-21)",
+          "detail": "Deterministic pipeline digest sent from Carnegie's bot; tracker snapshot refreshed."
+        },
         {
           "date": "2026-08-15",
           "title": "Carnegie \u2014 Twenty-Minute Capital Review \u2014 2026-08-15",
@@ -2198,111 +2297,6 @@
           "date": "2026-07-30",
           "title": "Liberty Funding Accelerator \u2014 Wade discussion 1-pager (print tomorrow). Warm intro only \u2014 no co-sign.",
           "detail": "PDF shipped via psa-send-pdf.sh \u00b7 file=2026-07-30-liberty-funding-accelerator-wade-discussion"
-        },
-        {
-          "date": "2026-07-29",
-          "title": "Carnegie \u2014 C5iSR Fiverr Controlled-Test One-Pager (review) \u2014 2026-07-20 draft",
-          "detail": "PDF shipped via psa-send-pdf.sh \u00b7 file=C5iSR_Fiverr_Controlled_Test_OnePager_2026-07-20"
-        },
-        {
-          "date": "2026-07-29",
-          "title": "Carnegie \u2014 Tim Dolan Brief (C5iSR clean, no logo screenshot) \u2014 2026-07-29",
-          "detail": "PDF shipped via psa-send-pdf.sh \u00b7 file=2026-07-29-tim-dolan-lending-decision-brief-c5isr"
-        },
-        {
-          "date": "2026-07-29",
-          "title": "Carnegie \u2014 Tim Dolan Lending Decision Brief (C5iSR rev) \u2014 2026-07-29",
-          "detail": "PDF shipped via psa-send-pdf.sh \u00b7 file=2026-07-29-tim-dolan-lending-decision-brief-c5isr"
-        },
-        {
-          "date": "2026-07-29",
-          "title": "Carnegie \u2014 Tim Dolan Lending Decision Brief \u2014 2026-07-29",
-          "detail": "PDF shipped via psa-send-pdf.sh \u00b7 file=2026-07-29-tim-dolan-lending-decision-brief"
-        },
-        {
-          "date": "2026-07-28",
-          "title": "Tim Dolan pre-call summary \u2014 8:00 AM ET Wed. Your 3 voice notes + his reply + why you reached out (100k / 0% cohort post).",
-          "detail": "PDF shipped via psa-send-pdf.sh \u00b7 file=Adam_Johns_Tim_Dolan_PreCall_Summary_2026-07-28"
-        },
-        {
-          "date": "2026-07-28",
-          "title": "Nimble Pre-Hire Associate Agreement \u2014 Draft 2.0 (clean 3-page PDF). Signature lines blank \u2014 send your mark and I\u2019ll drop it in.",
-          "detail": "PDF shipped via psa-send-pdf.sh \u00b7 file=Nimble_Station_PreHire_Associate_Agreement_Draft_2.0_2026-07-28"
-        },
-        {
-          "date": "2026-07-21",
-          "title": "Portfolio consistency check (2026-07-21)",
-          "detail": "portfolio consistent, 0 drifts"
-        },
-        {
-          "date": "2026-07-20",
-          "title": "Nimble deck FINAL clean (NIMBLE-004) \u2014 10 slides, our photo, roadmap, PFPs, QR. NOT Wade.",
-          "detail": "PDF shipped via psa-send-pdf.sh \u00b7 file=Nimble_Station_30Day_Deck_2026-07-20"
-        },
-        {
-          "date": "2026-07-20",
-          "title": "Nimble proposal FINAL clean (NIMBLE-004) \u2014 no header chrome. Full contact + credits + video QR. NOT Wade.",
-          "detail": "PDF shipped via psa-send-pdf.sh \u00b7 file=Nimble_Station_30Day_Partnership_Proposal_2026-07-20"
-        },
-        {
-          "date": "2026-07-20",
-          "title": "Nimble deck FINAL (NIMBLE-004): 10 slides \u2014 our photo, roadmap infographic, PFPs, model pills, video QR. NOT sent to Wade.",
-          "detail": "PDF shipped via psa-send-pdf.sh \u00b7 file=Nimble_Station_30Day_Deck_2026-07-20"
-        },
-        {
-          "date": "2026-07-20",
-          "title": "Nimble proposal FINAL (NIMBLE-004): full contact, dual-brand, credits+PFPs, models, video QR youtu.be/5kymYAPe3o0. NOT sent to Wade.",
-          "detail": "PDF shipped via psa-send-pdf.sh \u00b7 file=Nimble_Station_30Day_Partnership_Proposal_2026-07-20"
-        },
-        {
-          "date": "2026-07-20",
-          "title": "Nimble 9-slide deck DUAL-BRAND (NIMBLE-003). Navy/cyan client side + C5iSR forest/gold rail. NOT sent to Wade.",
-          "detail": "PDF shipped via psa-send-pdf.sh \u00b7 file=Nimble_Station_30Day_Deck_2026-07-20"
-        },
-        {
-          "date": "2026-07-20",
-          "title": "Nimble proposal DUAL-BRAND (NIMBLE-003): C5iSR forest/gold + Nimble navy/cyan from door-wrap photos. LinkedIn stamped. Phone/Email still open. NOT sent to Wade.",
-          "detail": "PDF shipped via psa-send-pdf.sh \u00b7 file=Nimble_Station_30Day_Partnership_Proposal_2026-07-20"
-        },
-        {
-          "date": "2026-07-20",
-          "title": "Nimble 9-slide deck REFRESH \u2014 LinkedIn stamped. Phone/Email still placeholders. NOT sent to Wade.",
-          "detail": "PDF shipped via psa-send-pdf.sh \u00b7 file=Nimble_Station_30Day_Deck_2026-07-20"
-        },
-        {
-          "date": "2026-07-20",
-          "title": "Nimble proposal REFRESH \u2014 LinkedIn stamped (linkedin.com/in/adamjohns78). Phone/Email still placeholders. NOT sent to Wade.",
-          "detail": "PDF shipped via psa-send-pdf.sh \u00b7 file=Nimble_Station_30Day_Partnership_Proposal_2026-07-20"
-        },
-        {
-          "date": "2026-07-20",
-          "title": "Nimble Station \u2014 9-slide deck (PDF). Speaker notes in HTML source. NOT sent to Wade.",
-          "detail": "PDF shipped via psa-send-pdf.sh \u00b7 file=Nimble_Station_30Day_Deck_2026-07-20"
-        },
-        {
-          "date": "2026-07-20",
-          "title": "Nimble Station \u2014 30-Day Partnership Proposal (client PDF). Placeholders [Phone]/[Email]/[LinkedIn] still open. NOT sent to Wade.",
-          "detail": "PDF shipped via psa-send-pdf.sh \u00b7 file=Nimble_Station_30Day_Partnership_Proposal_2026-07-20"
-        },
-        {
-          "date": "2026-07-20",
-          "title": "Melaleuca Monday board (2026-07-20)",
-          "detail": "Deterministic pipeline digest sent from Carnegie's bot; tracker snapshot refreshed."
-        },
-        {
-          "date": "2026-07-19",
-          "title": "C5iSR Resource Share PDF \u2014 Monthly Capital Council",
-          "detail": "Saturday share packaged as staff-brief PDF (five lanes, four questions, Prov 27:23-24, commander intent). Max rendered; Carnegie palette retained for Desk E."
-        },
-        {
-          "date": "2026-07-19",
-          "title": "Portfolio consistency check (2026-07-19)",
-          "detail": "portfolio consistent, 0 drifts"
-        },
-        {
-          "date": "2026-07-18",
-          "title": "Portfolio consistency check (2026-07-18)",
-          "detail": "portfolio consistent, 0 drifts"
         }
       ],
       "name": "Andrew Carnegie III",
@@ -2319,11 +2313,11 @@
         "lane": "C5iSR/capital",
         "browser_profile": "c5isr",
         "files": {
-          "AGENTS.md": 43248,
-          "MEMORY.md": 4782,
+          "AGENTS.md": 44077,
+          "MEMORY.md": 5349,
           "HEARTBEAT.md": 5705
         },
-        "verified": "2026-08-17"
+        "verified": "2026-08-22"
       },
       "narration": {
         "voice": "bm_lewis",
@@ -2388,10 +2382,54 @@
           "expr": "30 12 * * 1,3,5",
           "tz": "America/New_York",
           "channel": "discord",
-          "last_ms": 1786984200065,
+          "last_ms": 1787329800060,
           "status": "ok",
           "errors": 0,
-          "dur_ms": 189429
+          "dur_ms": 108288
+        },
+        {
+          "name": "Skill: finance-news",
+          "enabled": true,
+          "expr": "50 8 * * 1-5",
+          "tz": "America/New_York",
+          "channel": "discord",
+          "last_ms": 1787316600052,
+          "status": "ok",
+          "errors": 0,
+          "dur_ms": 130819
+        },
+        {
+          "name": "C5iSR PRE-WARMUP (Qwen 32B before daily post)",
+          "enabled": true,
+          "expr": "25 7 * * 1-6",
+          "tz": "America/New_York",
+          "channel": "",
+          "last_ms": 1787311500065,
+          "status": "ok",
+          "errors": 0,
+          "dur_ms": 3440
+        },
+        {
+          "name": "C5iSR Price Pre-Fetch (7:23AM Mon-Sat)",
+          "enabled": true,
+          "expr": "23 7 * * 1-6",
+          "tz": "",
+          "channel": "",
+          "last_ms": 1787311380078,
+          "status": "ok",
+          "errors": 0,
+          "dur_ms": 963
+        },
+        {
+          "name": "Dev Loop: carnegie daily reflection (implement-or-escalate)",
+          "enabled": true,
+          "expr": "06 23 * * 1,4",
+          "tz": "America/New_York",
+          "channel": "discord",
+          "last_ms": 1787281560054,
+          "status": "ok",
+          "errors": 0,
+          "dur_ms": 112073
         },
         {
           "name": "Melaleuca Monday Briefing",
@@ -2405,17 +2443,6 @@
           "dur_ms": 159008
         },
         {
-          "name": "Skill: finance-news",
-          "enabled": true,
-          "expr": "50 8 * * 1-5",
-          "tz": "America/New_York",
-          "channel": "discord",
-          "last_ms": 1786971000040,
-          "status": "ok",
-          "errors": 0,
-          "dur_ms": 144540
-        },
-        {
           "name": "Skill: personal-finance-v2 (Mon ledger)",
           "enabled": true,
           "expr": "45 7 * * 1",
@@ -2425,116 +2452,6 @@
           "status": "ok",
           "errors": 0,
           "dur_ms": 114597
-        },
-        {
-          "name": "C5iSR MONDAY \u2014 MARKET INTEL",
-          "enabled": true,
-          "expr": "30 7 * * 1",
-          "tz": "America/New_York",
-          "channel": "telegram",
-          "last_ms": 1786966200040,
-          "status": "ok",
-          "errors": 0,
-          "dur_ms": 53813
-        },
-        {
-          "name": "C5iSR PRE-WARMUP (Qwen 32B before daily post)",
-          "enabled": true,
-          "expr": "25 7 * * 1-6",
-          "tz": "America/New_York",
-          "channel": "",
-          "last_ms": 1786965900037,
-          "status": "ok",
-          "errors": 0,
-          "dur_ms": 5490
-        },
-        {
-          "name": "C5iSR Price Pre-Fetch (7:23AM Mon-Sat)",
-          "enabled": true,
-          "expr": "23 7 * * 1-6",
-          "tz": "",
-          "channel": "",
-          "last_ms": 1786965780040,
-          "status": "ok",
-          "errors": 0,
-          "dur_ms": 996
-        },
-        {
-          "name": "Dev Loop: carnegie daily reflection (implement-or-escalate)",
-          "enabled": true,
-          "expr": "10 22 * * *",
-          "tz": "America/New_York",
-          "channel": "discord",
-          "last_ms": 1786932600024,
-          "status": "ok",
-          "errors": 0,
-          "dur_ms": 170926
-        },
-        {
-          "name": "C5iSR SATURDAY \u2014 RESOURCE SHARE",
-          "enabled": true,
-          "expr": "30 7 * * 6",
-          "tz": "America/New_York",
-          "channel": "telegram",
-          "last_ms": 1786793400044,
-          "status": "ok",
-          "errors": 0,
-          "dur_ms": 56464
-        },
-        {
-          "name": "Liberty Brief (Fri 11:48) \u2014 Andrew Carnegie III",
-          "enabled": true,
-          "expr": "48 11 * * 5",
-          "tz": "America/New_York",
-          "channel": "discord",
-          "last_ms": 1786722505206,
-          "status": "ok",
-          "errors": 0,
-          "dur_ms": 39121
-        },
-        {
-          "name": "C5iSR FRIDAY \u2014 WEEKLY REPORT + PREDICTION",
-          "enabled": true,
-          "expr": "30 7 * * 5",
-          "tz": "America/New_York",
-          "channel": "telegram",
-          "last_ms": 1786707000052,
-          "status": "ok",
-          "errors": 0,
-          "dur_ms": 153000
-        },
-        {
-          "name": "C5iSR THURSDAY \u2014 KINGDOM FINANCE",
-          "enabled": true,
-          "expr": "30 7 * * 4",
-          "tz": "America/New_York",
-          "channel": "telegram",
-          "last_ms": 1786620600081,
-          "status": "ok",
-          "errors": 0,
-          "dur_ms": 43741
-        },
-        {
-          "name": "C5iSR WEDNESDAY \u2014 WISDOM",
-          "enabled": true,
-          "expr": "30 7 * * 3",
-          "tz": "America/New_York",
-          "channel": "telegram",
-          "last_ms": 1786534200052,
-          "status": "ok",
-          "errors": 0,
-          "dur_ms": 17831
-        },
-        {
-          "name": "C5iSR TUESDAY \u2014 STEWARDSHIP",
-          "enabled": true,
-          "expr": "30 7 * * 2",
-          "tz": "America/New_York",
-          "channel": "telegram",
-          "last_ms": 1786447800075,
-          "status": "ok",
-          "errors": 0,
-          "dur_ms": 23041
         },
         {
           "name": "Skill: tax-deadlines (monthly)",
@@ -2548,6 +2465,105 @@
           "dur_ms": 26398
         },
         {
+          "name": "C5iSR Daily Post \u2014 Carnegie (Mon-Sat 7:30AM, all six themes)",
+          "enabled": true,
+          "expr": "30 7 * * 1-6",
+          "tz": "America/New_York",
+          "channel": "telegram",
+          "last_ms": null,
+          "status": "\u2014",
+          "errors": 0,
+          "dur_ms": null
+        },
+        {
+          "name": "C5iSR FRIDAY \u2014 WEEKLY REPORT + PREDICTION",
+          "enabled": false,
+          "expr": "30 7 * * 5",
+          "tz": "America/New_York",
+          "channel": "telegram",
+          "last_ms": 1787311800053,
+          "status": "ok",
+          "errors": 0,
+          "dur_ms": 190967
+        },
+        {
+          "name": "C5iSR THURSDAY \u2014 KINGDOM FINANCE",
+          "enabled": false,
+          "expr": "30 7 * * 4",
+          "tz": "America/New_York",
+          "channel": "telegram",
+          "last_ms": 1787238334214,
+          "status": "ok",
+          "errors": 0,
+          "dur_ms": 49092
+        },
+        {
+          "name": "C5iSR WEDNESDAY \u2014 WISDOM",
+          "enabled": false,
+          "expr": "30 7 * * 3",
+          "tz": "America/New_York",
+          "channel": "telegram",
+          "last_ms": 1787238334213,
+          "status": "ok",
+          "errors": 0,
+          "dur_ms": 226936
+        },
+        {
+          "name": "C5iSR TUESDAY \u2014 STEWARDSHIP",
+          "enabled": false,
+          "expr": "30 7 * * 2",
+          "tz": "America/New_York",
+          "channel": "telegram",
+          "last_ms": 1787238334212,
+          "status": "ok",
+          "errors": 0,
+          "dur_ms": 220479
+        },
+        {
+          "name": "C5iSR Daily Post \u2014 Carnegie (Mon-Sat 7:30AM)",
+          "enabled": false,
+          "expr": "30 7 * * 1-6",
+          "tz": "America/New_York",
+          "channel": "telegram",
+          "last_ms": 1787238334205,
+          "status": "ok",
+          "errors": 0,
+          "dur_ms": 153300
+        },
+        {
+          "name": "C5iSR MONDAY \u2014 MARKET INTEL",
+          "enabled": false,
+          "expr": "30 7 * * 1",
+          "tz": "America/New_York",
+          "channel": "telegram",
+          "last_ms": 1786966200040,
+          "status": "ok",
+          "errors": 0,
+          "dur_ms": 53813
+        },
+        {
+          "name": "C5iSR SATURDAY \u2014 RESOURCE SHARE",
+          "enabled": false,
+          "expr": "30 7 * * 6",
+          "tz": "America/New_York",
+          "channel": "telegram",
+          "last_ms": 1786793400044,
+          "status": "ok",
+          "errors": 0,
+          "dur_ms": 56464
+        },
+        {
+          "name": "Liberty Brief (Fri 11:48) \u2014 Andrew Carnegie III",
+          "enabled": false,
+          "expr": "48 11 * * 5",
+          "tz": "America/New_York",
+          "channel": "discord",
+          "last_ms": 1786722505206,
+          "status": "ok",
+          "errors": 0,
+          "dur_ms": 39121
+        },
+        {
           "name": "Stand-up 07:33 \u2014 Andrew Carnegie III",
           "enabled": false,
           "expr": "33 7 * * 1-5",
@@ -2557,17 +2573,6 @@
           "status": "ok",
           "errors": 0,
           "dur_ms": 15846
-        },
-        {
-          "name": "C5iSR Daily Post \u2014 Carnegie (Mon-Sat 7:30AM)",
-          "enabled": false,
-          "expr": "30 7 * * 1-6",
-          "tz": "America/New_York",
-          "channel": "telegram",
-          "last_ms": 1778326200014,
-          "status": "ok",
-          "errors": 0,
-          "dur_ms": 138869
         }
       ]
     },
@@ -2628,10 +2633,10 @@
         "video-production-sally"
       ],
       "n_jobs": 9,
-      "n_enabled": 7,
-      "err": 1,
-      "last_ms": 1786989600067,
-      "status": "degraded",
+      "n_enabled": 5,
+      "err": 0,
+      "last_ms": 1787321700051,
+      "status": "operational",
       "accomplishments": [
         {
           "date": "2026-08-11",
@@ -2750,11 +2755,11 @@
         "lane": "Airbnb/studio",
         "browser_profile": "airbnb",
         "files": {
-          "AGENTS.md": 23226,
-          "MEMORY.md": 9068,
-          "HEARTBEAT.md": 5224
+          "AGENTS.md": 24227,
+          "MEMORY.md": 9729,
+          "HEARTBEAT.md": 5392
         },
-        "verified": "2026-08-17"
+        "verified": "2026-08-22"
       },
       "narration": {
         "voice": "bf_emma",
@@ -2810,26 +2815,15 @@
       },
       "jobs": [
         {
-          "name": "Skill: airbnb-host",
-          "enabled": true,
-          "expr": "0 14 * * *",
-          "tz": "America/New_York",
-          "channel": "discord",
-          "last_ms": 1786989600067,
-          "status": "error",
-          "errors": 3,
-          "dur_ms": 403417
-        },
-        {
           "name": "Skill: adt-codes (status pulse)",
           "enabled": true,
           "expr": "15 10 * * *",
           "tz": "America/New_York",
           "channel": "discord",
-          "last_ms": 1786976100052,
+          "last_ms": 1787321700051,
           "status": "ok",
           "errors": 0,
-          "dur_ms": 83534
+          "dur_ms": 178170
         },
         {
           "name": "Skill: airbnb-reader",
@@ -2837,32 +2831,21 @@
           "expr": "40 8 * * *",
           "tz": "America/New_York",
           "channel": "discord",
-          "last_ms": 1786970400047,
+          "last_ms": 1787316000048,
           "status": "ok",
           "errors": 0,
-          "dur_ms": 43133
+          "dur_ms": 55565
         },
         {
           "name": "Dev Loop: sally daily reflection (implement-or-escalate)",
           "enabled": true,
-          "expr": "25 22 * * *",
+          "expr": "12 23 * * 1,4",
           "tz": "America/New_York",
           "channel": "discord",
-          "last_ms": 1786933500021,
+          "last_ms": 1787281920075,
           "status": "ok",
           "errors": 0,
-          "dur_ms": 168679
-        },
-        {
-          "name": "Liberty Brief (Fri 11:47) \u2014 Sally Mae Thornton",
-          "enabled": true,
-          "expr": "47 11 * * 5",
-          "tz": "America/New_York",
-          "channel": "discord",
-          "last_ms": 1786722505186,
-          "status": "ok",
-          "errors": 0,
-          "dur_ms": 65171
+          "dur_ms": 161120
         },
         {
           "name": "Skill: airbnb-search",
@@ -2870,10 +2853,10 @@
           "expr": "30 14 * * 2",
           "tz": "America/New_York",
           "channel": "discord",
-          "last_ms": 1786490297626,
+          "last_ms": 1787238652982,
           "status": "ok",
           "errors": 0,
-          "dur_ms": 82872
+          "dur_ms": 475077
         },
         {
           "name": "Monthly Suzanne Check-in Reminder",
@@ -2885,6 +2868,28 @@
           "status": "ok",
           "errors": 0,
           "dur_ms": 32102
+        },
+        {
+          "name": "Skill: airbnb-host",
+          "enabled": false,
+          "expr": "0 14 * * *",
+          "tz": "America/New_York",
+          "channel": "discord",
+          "last_ms": 1787248800045,
+          "status": "error",
+          "errors": 5,
+          "dur_ms": 377885
+        },
+        {
+          "name": "Liberty Brief (Fri 11:47) \u2014 Sally Mae Thornton",
+          "enabled": false,
+          "expr": "47 11 * * 5",
+          "tz": "America/New_York",
+          "channel": "discord",
+          "last_ms": 1786722505186,
+          "status": "ok",
+          "errors": 0,
+          "dur_ms": 65171
         },
         {
           "name": "Stand-up 07:32 \u2014 Sally Mae Thornton",
@@ -2965,11 +2970,41 @@
         "video-production-coach-arnie"
       ],
       "n_jobs": 7,
-      "n_enabled": 6,
+      "n_enabled": 5,
       "err": 0,
-      "last_ms": 1786983300076,
+      "last_ms": 1787353200040,
       "status": "operational",
       "accomplishments": [
+        {
+          "date": "2026-08-21",
+          "title": "v3 \u2014 one more type bump, bigger cover logo, lime + charcoal heading boxes (no white 'next' tabs).",
+          "detail": "PDF shipped via psa-send-pdf.sh \u00b7 file=2026-08-21-core-membership-playbook-v3"
+        },
+        {
+          "date": "2026-08-21",
+          "title": "v2 \u2014 larger type, Liberty Place / Aquia Park / Cosner's Corner on the cover, no Telegram QR.",
+          "detail": "PDF shipped via psa-send-pdf.sh \u00b7 file=2026-08-21-core-membership-playbook-v2"
+        },
+        {
+          "date": "2026-08-21",
+          "title": "fit20 Core Membership Playbook \u2014 charcoal/lime rebrand, 7 pages. Source text unchanged; Gemini orange/navy swapped for studio brand.",
+          "detail": "PDF shipped via psa-send-pdf.sh \u00b7 file=2026-08-21-core-membership-playbook"
+        },
+        {
+          "date": "2026-08-19",
+          "title": "Redo: no Telegram QR. Website / studios / study QRs are live. Attach this one.",
+          "detail": "PDF shipped via psa-send-pdf.sh \u00b7 file=2026-08-19-valerie-turner-fit20-onepager"
+        },
+        {
+          "date": "2026-08-19",
+          "title": "fit20 one-pager for Valerie Turner \u2014 attach to the VA dental reply",
+          "detail": "PDF shipped via psa-send-pdf.sh \u00b7 file=2026-08-19-valerie-turner-fit20-onepager"
+        },
+        {
+          "date": "2026-08-18",
+          "title": "Official fit20 information for health care providers \u2014 for Paul Simpson",
+          "detail": "PDF shipped via psa-send-pdf.sh \u00b7 file=fit20-information-for-health-care-providers"
+        },
         {
           "date": "2026-08-16",
           "title": "KBBQ AYCE A taste card \u2014 check what you actually eat. HIT the beef/chicken first. One pass on starch.",
@@ -3112,16 +3147,17 @@
         "lane": "Garmin/fit20",
         "browser_profile": "garmin / fit20",
         "files": {
-          "AGENTS.md": 22219,
+          "AGENTS.md": 22579,
           "MEMORY.md": 22903,
           "HEARTBEAT.md": 1238
         },
-        "verified": "2026-08-17"
+        "verified": "2026-08-22"
       },
       "narration": {
-        "voice": "en_US-hfc_male-medium",
-        "engine": "piper",
-        "character": "US male deep deckplate coach (Piper hfc_male @ 1.25x \u2014 Principal 2026-07-17)",
+        "voice": "sentinel",
+        "engine": "commander",
+        "dsp": "clean",
+        "character": "Sentinel \u2014 machine-soldier commander class (from Coach Piper hfc_male)",
         "narrates": [
           "Hosea",
           "Joel",
@@ -3137,17 +3173,16 @@
           "Malachi",
           "James",
           "Jude"
-        ],
-        "speed": 1.25
+        ]
       },
       "greeting": {
         "agent": "coach-arnie",
-        "voice": "en_US-hfc_male-medium",
-        "engine": "piper",
-        "speed": 1.25,
+        "voice": "sentinel",
+        "engine": "commander",
+        "speed": 1.0,
         "text": "Coach Arnie. Structure beats discipline. Get under the bar, full range, no half reps. Let us earn the work.",
-        "mp3_local": "/Users/moop_bot_pro/.openclaw/workspace/media/fleet-greetings-2026-07-17/coach-arnie-greeting.mp3",
-        "mp3_bytes": 56677,
+        "mp3_local": "/tmp/usmcmin-com-greet-0821/fleet/audio/greetings/coach-arnie-greeting.mp3",
+        "mp3_bytes": 71468,
         "public_url": "https://usmcmin.com/fleet/audio/greetings/coach-arnie-greeting.mp3",
         "page": "coach-arnie.html",
         "page_wired": true,
@@ -3179,19 +3214,43 @@
             "text": "This is Coach. We build the man who can carry the calling. What is your next training block going to be?",
             "site_relative": "audio/greetings/coach-arnie-greeting-5.mp3"
           }
-        ]
+        ],
+        "dsp": "clean",
+        "generated_at": "2026-08-22T01:29:27.841040+00:00"
       },
       "jobs": [
+        {
+          "name": "Nutrition log ping 19:00 \u2014 Coach Arnie",
+          "enabled": true,
+          "expr": "0 19 * * *",
+          "tz": "America/New_York",
+          "channel": "telegram",
+          "last_ms": 1787353200040,
+          "status": "ok",
+          "errors": 0,
+          "dur_ms": 108745
+        },
         {
           "name": "Coach Midday Garmin Read (12:15 EDT)",
           "enabled": true,
           "expr": "15 12 * * *",
           "tz": "America/New_York",
           "channel": "telegram",
-          "last_ms": 1786983300076,
+          "last_ms": 1787328900052,
           "status": "ok",
           "errors": 0,
-          "dur_ms": 16161
+          "dur_ms": 33901
+        },
+        {
+          "name": "Dev Loop: coach-arnie daily reflection (implement-or-escalate)",
+          "enabled": true,
+          "expr": "24 23 * * 1,4",
+          "tz": "America/New_York",
+          "channel": "discord",
+          "last_ms": 1787282640053,
+          "status": "ok",
+          "errors": 0,
+          "dur_ms": 190738
         },
         {
           "name": "Skill: zoho-crm (fit20 Mon leads)",
@@ -3216,30 +3275,8 @@
           "dur_ms": 359472
         },
         {
-          "name": "Dev Loop: coach-arnie daily reflection (implement-or-escalate)",
-          "enabled": true,
-          "expr": "45 22 * * *",
-          "tz": "America/New_York",
-          "channel": "discord",
-          "last_ms": 1786934700035,
-          "status": "ok",
-          "errors": 0,
-          "dur_ms": 104119
-        },
-        {
-          "name": "Nutrition log ping 19:00 \u2014 Coach Arnie",
-          "enabled": true,
-          "expr": "0 19 * * *",
-          "tz": "America/New_York",
-          "channel": "telegram",
-          "last_ms": 1786921564114,
-          "status": "ok",
-          "errors": 0,
-          "dur_ms": 367815
-        },
-        {
           "name": "Liberty Brief (Fri 11:46) \u2014 Coach Arnold Briggs",
-          "enabled": true,
+          "enabled": false,
           "expr": "46 11 * * 5",
           "tz": "America/New_York",
           "channel": "discord",
@@ -3311,11 +3348,16 @@
         "video-production-doc"
       ],
       "n_jobs": 6,
-      "n_enabled": 3,
+      "n_enabled": 2,
       "err": 0,
-      "last_ms": 1786973817909,
+      "last_ms": 1787319300042,
       "status": "operational",
       "accomplishments": [
+        {
+          "date": "2026-08-18",
+          "title": "Garmin restored \u2014 Fair-sleep wire live",
+          "detail": "fit20 Connect signed in; garmin-rounds wrote ok/class=ok at 10:18 EDT. Sleep 69 Fair / 7h 12m. Proposed Max restore of disabled garmin-rounds + Doc 0800 cron; ADT-style keep-alive with Coach. No new cron from this desk."
+        },
         {
           "date": "2026-08-16",
           "title": "KEEP THIS \u2014 2-page memorize card for Maria. Audio already sent.",
@@ -3385,41 +3427,6 @@
           "date": "2026-07-09",
           "title": "Morning clinical read (2026-07-09)",
           "detail": "8/8 vitals captured"
-        },
-        {
-          "date": "2026-07-08",
-          "title": "Morning clinical read (2026-07-08)",
-          "detail": "8/8 vitals captured"
-        },
-        {
-          "date": "2026-07-07",
-          "title": "Morning clinical read (2026-07-07)",
-          "detail": "8/8 vitals captured"
-        },
-        {
-          "date": "2026-07-06",
-          "title": "Morning clinical read (2026-07-06)",
-          "detail": "8/8 vitals captured"
-        },
-        {
-          "date": "2026-07-05",
-          "title": "Morning clinical read (2026-07-05)",
-          "detail": "8/8 vitals captured"
-        },
-        {
-          "date": "2026-07-04",
-          "title": "Morning clinical read (2026-07-04)",
-          "detail": "8/8 vitals captured"
-        },
-        {
-          "date": "2026-07-03",
-          "title": "Morning clinical read (2026-07-03)",
-          "detail": "8/8 vitals captured"
-        },
-        {
-          "date": "2026-06-25",
-          "title": "Morning clinical read (2026-06-25)",
-          "detail": "8/8 vitals captured"
         }
       ],
       "name": "Doc Hartley",
@@ -3482,30 +3489,41 @@
       },
       "jobs": [
         {
-          "name": "Skill: garmin-reader",
+          "name": "Doc Morning Clinical Read (0800 EDT)",
           "enabled": true,
-          "expr": "35 9 * * *",
-          "tz": "America/New_York",
-          "channel": "discord",
-          "last_ms": 1786973817909,
+          "expr": "0 8 * * *",
+          "tz": "",
+          "channel": "telegram",
+          "last_ms": 1787313600065,
           "status": "ok",
           "errors": 0,
-          "dur_ms": 14982
+          "dur_ms": 83117
         },
         {
           "name": "Dev Loop: doc daily reflection (implement-or-escalate)",
           "enabled": true,
-          "expr": "20 22 * * *",
+          "expr": "00 23 * * 1,4",
           "tz": "America/New_York",
           "channel": "discord",
-          "last_ms": 1786933200022,
+          "last_ms": 1787281200051,
           "status": "ok",
           "errors": 0,
-          "dur_ms": 93892
+          "dur_ms": 136739
+        },
+        {
+          "name": "Skill: garmin-reader",
+          "enabled": false,
+          "expr": "35 9 * * *",
+          "tz": "America/New_York",
+          "channel": "discord",
+          "last_ms": 1787319300042,
+          "status": "ok",
+          "errors": 0,
+          "dur_ms": 79186
         },
         {
           "name": "Liberty Brief (Fri 11:45) \u2014 Doc Hartley",
-          "enabled": true,
+          "enabled": false,
           "expr": "45 11 * * 5",
           "tz": "America/New_York",
           "channel": "discord",
@@ -3535,17 +3553,6 @@
           "status": "ok",
           "errors": 0,
           "dur_ms": 10687
-        },
-        {
-          "name": "Doc Morning Clinical Read (0800 EDT)",
-          "enabled": false,
-          "expr": "0 8 * * *",
-          "tz": "",
-          "channel": "telegram",
-          "last_ms": 1783166400032,
-          "status": "ok",
-          "errors": 0,
-          "dur_ms": 19295
         }
       ]
     },
@@ -3603,11 +3610,16 @@
         "video-production-sheriff-roy"
       ],
       "n_jobs": 7,
-      "n_enabled": 6,
-      "err": 0,
-      "last_ms": 1786935000036,
-      "status": "operational",
+      "n_enabled": 5,
+      "err": 1,
+      "last_ms": 1787351400052,
+      "status": "degraded",
       "accomplishments": [
+        {
+          "date": "2026-08-17",
+          "title": "Middlesex sheriff field \u2014 four names, no fake scores",
+          "detail": "PDF shipped via psa-send-pdf.sh \u00b7 file=2026-08-17-middlesex-sheriff-dylan"
+        },
         {
           "date": "2026-08-16",
           "title": "North Texas civic action brief for Michael \u2014 2 pages, lawful only",
@@ -3705,9 +3717,9 @@
         "ingest-31-missing-state-slates"
       ],
       "narration": {
-        "voice": "en_US-ryan-high",
-        "engine": "piper",
-        "character": "US male deep (Piper ryan; old bm_lewis \u2192 Carnegie) @ 1.25x",
+        "voice": "am_onyx",
+        "engine": "kokoro",
+        "character": "US male deep gravitas (from General Hartwell; Ryan retired)",
         "narrates": [
           "Joshua",
           "Judges",
@@ -3716,17 +3728,16 @@
           "1\u20132 Chronicles",
           "Ezra",
           "Nehemiah"
-        ],
-        "speed": 1.25
+        ]
       },
       "greeting": {
         "agent": "sheriff-roy",
-        "voice": "en_US-ryan-high",
-        "engine": "piper",
-        "speed": 1.25,
+        "voice": "am_onyx",
+        "engine": "kokoro",
+        "speed": 1.0,
         "text": "Sheriff Roy Caldwell. Eyes on Fredericksburg and the civic picture. I will keep you informed and keep it clean.",
-        "mp3_local": "/Users/moop_bot_pro/.openclaw/workspace/media/fleet-greetings-2026-07-17/sheriff-roy-greeting.mp3",
-        "mp3_bytes": 47064,
+        "mp3_local": "/tmp/usmcmin-com-greet-0821/fleet/audio/greetings/sheriff-roy-greeting.mp3",
+        "mp3_bytes": 56108,
         "public_url": "https://usmcmin.com/fleet/audio/greetings/sheriff-roy-greeting.mp3",
         "page": "sheriff-roy.html",
         "page_wired": true,
@@ -3758,41 +3769,32 @@
             "text": "Roy here. Eyes on the city, hand on the record, and the scorecard tells no lies. What civic question needs an answer?",
             "site_relative": "audio/greetings/sheriff-roy-greeting-5.mp3"
           }
-        ]
+        ],
+        "dsp": null,
+        "generated_at": "2026-08-22T01:28:05.190827+00:00"
       },
       "jobs": [
-        {
-          "name": "Dev Loop: sheriff-roy daily reflection (implement-or-escalate)",
-          "enabled": true,
-          "expr": "50 22 * * *",
-          "tz": "America/New_York",
-          "channel": "discord",
-          "last_ms": 1786935000036,
-          "status": "ok",
-          "errors": 0,
-          "dur_ms": 102117
-        },
         {
           "name": "Evening Civic Watch (6:30 PM) \u2014 Sheriff Roy",
           "enabled": true,
           "expr": "30 18 * * *",
           "tz": "America/New_York",
           "channel": "discord",
-          "last_ms": 1786919400042,
+          "last_ms": 1787351400052,
           "status": "ok",
           "errors": 0,
-          "dur_ms": 161941
+          "dur_ms": 154522
         },
         {
-          "name": "Liberty Brief (Fri 11:51) \u2014 Sheriff Roy Caldwell",
+          "name": "Dev Loop: sheriff-roy daily reflection (implement-or-escalate)",
           "enabled": true,
-          "expr": "51 11 * * 5",
+          "expr": "18 23 * * 1,4",
           "tz": "America/New_York",
           "channel": "discord",
-          "last_ms": 1786722712538,
+          "last_ms": 1787282280052,
           "status": "ok",
           "errors": 0,
-          "dur_ms": 58594
+          "dur_ms": 129957
         },
         {
           "name": "Skill: fxbg-city-code (Wed code check)",
@@ -3800,10 +3802,10 @@
           "expr": "0 11 * * 3",
           "tz": "America/New_York",
           "channel": "discord",
-          "last_ms": 1786546800051,
+          "last_ms": 1787239797924,
           "status": "ok",
           "errors": 0,
-          "dur_ms": 50554
+          "dur_ms": 186165
         },
         {
           "name": "Skill: fxbg-council-monitor",
@@ -3811,10 +3813,10 @@
           "expr": "30 10 * * 3",
           "tz": "America/New_York",
           "channel": "discord",
-          "last_ms": 1786545000054,
+          "last_ms": 1787238672882,
           "status": "ok",
           "errors": 0,
-          "dur_ms": 94221
+          "dur_ms": 206722
         },
         {
           "name": "Sheriff Roy Fxbg Council Brief (Tue 6PM)",
@@ -3822,10 +3824,21 @@
           "expr": "0 18 * * 2",
           "tz": "America/New_York",
           "channel": "",
-          "last_ms": 1786490382613,
+          "last_ms": 1787238334207,
+          "status": "error",
+          "errors": 1,
+          "dur_ms": 436091
+        },
+        {
+          "name": "Liberty Brief (Fri 11:51) \u2014 Sheriff Roy Caldwell",
+          "enabled": false,
+          "expr": "51 11 * * 5",
+          "tz": "America/New_York",
+          "channel": "discord",
+          "last_ms": 1786722712538,
           "status": "ok",
           "errors": 0,
-          "dur_ms": 133815
+          "dur_ms": 58594
         },
         {
           "name": "Stand-up 07:36 \u2014 Sheriff Roy Caldwell",
@@ -3888,10 +3901,10 @@
         "video-production-prof-x"
       ],
       "n_jobs": 8,
-      "n_enabled": 7,
-      "err": 0,
-      "last_ms": 1786959000039,
-      "status": "operational",
+      "n_enabled": 6,
+      "err": 1,
+      "last_ms": 1787342400054,
+      "status": "degraded",
       "accomplishments": [
         {
           "date": "2026-08-08",
@@ -4055,26 +4068,37 @@
       },
       "jobs": [
         {
+          "name": "Prof X Weekly Synthesis (Fri 4PM)",
+          "enabled": true,
+          "expr": "0 16 * * 5",
+          "tz": "America/New_York",
+          "channel": "",
+          "last_ms": 1787342400054,
+          "status": "ok",
+          "errors": 0,
+          "dur_ms": 440765
+        },
+        {
           "name": "Newsletter Synthesis (5:30 AM) \u2014 Prof X",
           "enabled": true,
           "expr": "30 5 * * *",
           "tz": "America/New_York",
           "channel": "discord",
-          "last_ms": 1786959000039,
+          "last_ms": 1787304600052,
           "status": "ok",
           "errors": 0,
-          "dur_ms": 108276
+          "dur_ms": 119020
         },
         {
           "name": "Dev Loop: prof-x daily reflection (implement-or-escalate)",
           "enabled": true,
-          "expr": "55 22 * * *",
+          "expr": "30 23 * * 1,4",
           "tz": "America/New_York",
           "channel": "discord",
-          "last_ms": 1786935300041,
-          "status": "ok",
-          "errors": 0,
-          "dur_ms": 132700
+          "last_ms": 1787283000053,
+          "status": "error",
+          "errors": 1,
+          "dur_ms": 380793
         },
         {
           "name": "Skill: audio-transcribe",
@@ -4110,19 +4134,8 @@
           "dur_ms": 293177
         },
         {
-          "name": "Prof X Weekly Synthesis (Fri 4PM)",
-          "enabled": true,
-          "expr": "0 16 * * 5",
-          "tz": "America/New_York",
-          "channel": "",
-          "last_ms": 1786737600046,
-          "status": "ok",
-          "errors": 0,
-          "dur_ms": 289260
-        },
-        {
           "name": "Liberty Brief (Fri 11:54) \u2014 Professor Xavier Archimedes",
-          "enabled": true,
+          "enabled": false,
           "expr": "54 11 * * 5",
           "tz": "America/New_York",
           "channel": "discord",
@@ -4198,7 +4211,7 @@
       "n_jobs": 7,
       "n_enabled": 5,
       "err": 0,
-      "last_ms": 1786998600047,
+      "last_ms": 1787344200052,
       "status": "operational",
       "accomplishments": [
         {
@@ -4347,10 +4360,21 @@
           "expr": "30 16 * * *",
           "tz": "America/New_York",
           "channel": "last",
-          "last_ms": 1786998600047,
+          "last_ms": 1787344200052,
           "status": "ok",
           "errors": 0,
-          "dur_ms": 332981
+          "dur_ms": 598307
+        },
+        {
+          "name": "Daily News Brief (1:00 PM) \u2014 Rush",
+          "enabled": true,
+          "expr": "0 13 * * *",
+          "tz": "America/New_York",
+          "channel": "discord",
+          "last_ms": 1787332530464,
+          "status": "ok",
+          "errors": 0,
+          "dur_ms": 223397
         },
         {
           "name": "Daily Tech/AI Brief (08:30)",
@@ -4358,10 +4382,10 @@
           "expr": "30 8 * * *",
           "tz": "America/New_York",
           "channel": "telegram",
-          "last_ms": 1786969800047,
+          "last_ms": 1787315400050,
           "status": "ok",
           "errors": 0,
-          "dur_ms": 246908
+          "dur_ms": 152356
         },
         {
           "name": "RESOLUTE AM Wire draft (Rush)",
@@ -4369,25 +4393,25 @@
           "expr": "45 7 * * *",
           "tz": "America/New_York",
           "channel": "last",
-          "last_ms": 1786967100047,
+          "last_ms": 1787312700039,
           "status": "ok",
           "errors": 0,
-          "dur_ms": 372017
+          "dur_ms": 433029
         },
         {
           "name": "Dev Loop: rush daily reflection (implement-or-escalate)",
           "enabled": true,
-          "expr": "00 23 * * *",
+          "expr": "36 23 * * 1,4",
           "tz": "America/New_York",
           "channel": "discord",
-          "last_ms": 1786935600041,
+          "last_ms": 1787283420388,
           "status": "ok",
           "errors": 0,
-          "dur_ms": 115202
+          "dur_ms": 356260
         },
         {
           "name": "Liberty Brief (Fri 11:53) \u2014 Rush Sullivan",
-          "enabled": true,
+          "enabled": false,
           "expr": "53 11 * * 5",
           "tz": "America/New_York",
           "channel": "discord",
@@ -4395,17 +4419,6 @@
           "status": "ok",
           "errors": 0,
           "dur_ms": 75074
-        },
-        {
-          "name": "Daily News Brief (1:00 PM) \u2014 Rush",
-          "enabled": false,
-          "expr": "0 13 * * *",
-          "tz": "America/New_York",
-          "channel": "discord",
-          "last_ms": 1784912400039,
-          "status": "ok",
-          "errors": 0,
-          "dur_ms": 96170
         },
         {
           "name": "Stand-up 07:38 \u2014 Rush Sullivan",
@@ -4473,11 +4486,21 @@
         "video-production-pops"
       ],
       "n_jobs": 11,
-      "n_enabled": 10,
+      "n_enabled": 9,
       "err": 1,
-      "last_ms": 1786971600040,
+      "last_ms": 1787358600048,
       "status": "degraded",
       "accomplishments": [
+        {
+          "date": "2026-08-21",
+          "title": "Email back-brief (2026-08-21)",
+          "detail": "Personal-lane digest only (Gmail/iCloud/Yahoo) \u2014 B&A/fit20/USMC excluded per Principal 2026-07-17."
+        },
+        {
+          "date": "2026-08-20",
+          "title": "Email back-brief (2026-08-20)",
+          "detail": "Personal-lane digest only (Gmail/iCloud/Yahoo) \u2014 B&A/fit20/USMC excluded per Principal 2026-07-17."
+        },
         {
           "date": "2026-08-12",
           "title": "Zach return-offer brief v2 \u2014 dense cream/bronze + embedded profile pics. Review before share.",
@@ -4542,171 +4565,6 @@
           "date": "2026-08-05",
           "title": "Boaz one-page agreement \u2014 school \u00b7 phone \u00b7 lunch \u00b7 bed/wake (Aug 5)",
           "detail": "PDF shipped via psa-send-pdf.sh \u00b7 file=2026-08-05-boaz-school-phone-agreement"
-        },
-        {
-          "date": "2026-07-30",
-          "title": "Pops \u2014 Body-First Emotion Point Paper \u00b7 1p \u00b7 print/NotebookLM",
-          "detail": "PDF shipped via psa-send-pdf.sh \u00b7 file=2026-07-30-body-first-emotions"
-        },
-        {
-          "date": "2026-07-30",
-          "title": "Pops \u2014 Thursday ATO \u00b7 30 Jul 2026 \u00b7 print-ready",
-          "detail": "PDF shipped via psa-send-pdf.sh \u00b7 file=2026-07-30-thursday-ato"
-        },
-        {
-          "date": "2026-07-28",
-          "title": "Pops \u2014 ARMADA 3 Mentorship Brief (1-pager) \u2014 28 Jul 2026. Group-shareable synthesis of Stephen + Adam VMs + Brad close.",
-          "detail": "PDF shipped via psa-send-pdf.sh \u00b7 file=2026-07-28-armada3-mentorship-one-pager"
-        },
-        {
-          "date": "2026-07-27",
-          "title": "Pops \u2014 Jordan brother note FIXED \u00b7 hard 1-page \u00b7 27 Jul 2026",
-          "detail": "PDF shipped via psa-send-pdf.sh \u00b7 file=2026-07-27-jordan-followup-anger-fear"
-        },
-        {
-          "date": "2026-07-27",
-          "title": "Pops \u2014 Brother note for Jordan \u00b7 Anger/Fear unlock \u00b7 27 Jul 2026 (forward as you wish)",
-          "detail": "PDF shipped via psa-send-pdf.sh \u00b7 file=2026-07-27-jordan-followup-anger-fear"
-        },
-        {
-          "date": "2026-07-26",
-          "title": "Pops \u2014 Williamsburg window card for Maria \u00b7 Sat 8/1\u2013Tue 8/4",
-          "detail": "PDF shipped via psa-send-pdf.sh \u00b7 file=2026-07-26-va-trip-williamsburg-focus"
-        },
-        {
-          "date": "2026-07-26",
-          "title": "Pops \u2014 Ron & Yoko VA trip itinerary \u00b7 for Maria \u00b7 Jul 30\u2013Aug 6",
-          "detail": "PDF shipped via psa-send-pdf.sh \u00b7 file=2026-07-26-va-trip-itinerary-maria"
-        },
-        {
-          "date": "2026-07-26",
-          "title": "Pops \u2014 Sunday Family Huddle card \u00b7 26 Jul 2026 \u00b7 print & run tonight",
-          "detail": "PDF shipped via psa-send-pdf.sh \u00b7 file=2026-07-26-sunday-family-huddle"
-        },
-        {
-          "date": "2026-07-24",
-          "title": "Pops \u2014 Parents-only Meltdown Response Card \u00b7 thermostat",
-          "detail": "PDF shipped via psa-send-pdf.sh \u00b7 file=2026-07-24-parent-meltdown-response-card"
-        },
-        {
-          "date": "2026-07-24",
-          "title": "Pops \u2014 v3 Boaz Listen Sheet \u00b7 understand before fence",
-          "detail": "PDF shipped via psa-send-pdf.sh \u00b7 file=2026-07-24-boaz-listen-sheet-v3"
-        },
-        {
-          "date": "2026-07-24",
-          "title": "Pops \u2014 v3 House Fence (Boaz) \u00b7 Stephen/Zach rewrite \u2014 not a contract",
-          "detail": "PDF shipped via psa-send-pdf.sh \u00b7 file=2026-07-24-boaz-household-fence-v3"
-        },
-        {
-          "date": "2026-07-24",
-          "title": "Pops \u2014 2/2 One-Page Boaz Household Standard (v2) \u2014 24 Jul",
-          "detail": "PDF shipped via psa-send-pdf.sh \u00b7 file=2026-07-24-boaz-one-page-standard"
-        },
-        {
-          "date": "2026-07-24",
-          "title": "Pops \u2014 1/2 Parent Alignment Worksheet (v2 Maria convo) \u2014 24 Jul",
-          "detail": "PDF shipped via psa-send-pdf.sh \u00b7 file=2026-07-24-parent-alignment-worksheet"
-        },
-        {
-          "date": "2026-07-24",
-          "title": "Pops \u2014 3/3 Boaz Listen Sheet (3 questions) \u2014 24 Jul 2026",
-          "detail": "PDF shipped via psa-send-pdf.sh \u00b7 file=2026-07-24-boaz-listen-sheet"
-        },
-        {
-          "date": "2026-07-24",
-          "title": "Pops \u2014 2/3 Parent Clarity Paper-Slide (Adam+Maria) \u2014 24 Jul 2026",
-          "detail": "PDF shipped via psa-send-pdf.sh \u00b7 file=2026-07-24-parent-clarity-paper-slide"
-        },
-        {
-          "date": "2026-07-24",
-          "title": "Pops \u2014 1/3 Boaz Household Standard (contract redo) \u2014 24 Jul 2026",
-          "detail": "PDF shipped via psa-send-pdf.sh \u00b7 file=2026-07-24-boaz-household-standard-contract"
-        },
-        {
-          "date": "2026-07-24",
-          "title": "Pops \u2014 Six-Second Kiss point paper (cited) \u2014 24 Jul 2026",
-          "detail": "PDF shipped via psa-send-pdf.sh \u00b7 file=2026-07-24-six-second-kiss-point-paper"
-        },
-        {
-          "date": "2026-07-23",
-          "title": "Pops \u2014 Fathering Audio Journal Binder \u2014 2026-07-23",
-          "detail": "PDF shipped via psa-send-pdf.sh \u00b7 file=2026-07-23-fathering-audio-journal-binder"
-        },
-        {
-          "date": "2026-07-21",
-          "title": "Digital Constitution Film Nights \u2014 season card for fridge/binder. Watch \u2192 10-min debrief \u2192 one 7-day tweak.",
-          "detail": "PDF shipped via psa-send-pdf.sh \u00b7 file=digital-constitution-film-nights"
-        },
-        {
-          "date": "2026-07-21",
-          "title": "Gideon blog checklist \u2014 Read + Listened boxes for all usmcmin.org posts. Print or save PDF.",
-          "detail": "PDF shipped via psa-send-pdf.sh \u00b7 file=gideon-blog-checklist"
-        },
-        {
-          "date": "2026-07-21",
-          "title": "Email back-brief (2026-07-21)",
-          "detail": "Personal-lane digest only (Gmail/iCloud/Yahoo) \u2014 B&A/fit20/USMC excluded per Principal 2026-07-17."
-        },
-        {
-          "date": "2026-07-21",
-          "title": "Inbox sweep (2026-07-21)",
-          "detail": "inbox triaged \u2014 2 trashed, 1 to archive"
-        },
-        {
-          "date": "2026-07-20",
-          "title": "Email back-brief (2026-07-20)",
-          "detail": "Personal-lane digest only (Gmail/iCloud/Yahoo) \u2014 B&A/fit20/USMC excluded per Principal 2026-07-17."
-        },
-        {
-          "date": "2026-07-20",
-          "title": "Inbox sweep (2026-07-20)",
-          "detail": "inbox triaged \u2014 0 trashed, 0 to archive"
-        },
-        {
-          "date": "2026-07-19",
-          "title": "Email back-brief (2026-07-19)",
-          "detail": "Personal-lane digest only (Gmail/iCloud/Yahoo) \u2014 B&A/fit20/USMC excluded per Principal 2026-07-17."
-        },
-        {
-          "date": "2026-07-19",
-          "title": "Inbox sweep (2026-07-19)",
-          "detail": "inbox triaged \u2014 0 trashed, 0 to archive"
-        },
-        {
-          "date": "2026-07-18",
-          "title": "Email back-brief (2026-07-18)",
-          "detail": "Personal-lane digest only (Gmail/iCloud/Yahoo) \u2014 B&A/fit20/USMC excluded per Principal 2026-07-17."
-        },
-        {
-          "date": "2026-07-18",
-          "title": "Inbox sweep (2026-07-18)",
-          "detail": "inbox triaged \u2014 0 trashed, 0 to archive"
-        },
-        {
-          "date": "2026-07-17",
-          "title": "Email back-brief (2026-07-17)",
-          "detail": "Daily inbox digest sent from Pops' bot \u2014 action-required surfaced, junk/newsletters handled autonomously."
-        },
-        {
-          "date": "2026-07-17",
-          "title": "Inbox sweep (2026-07-17)",
-          "detail": "inbox triaged \u2014 0 trashed, 0 to archive"
-        },
-        {
-          "date": "2026-07-16",
-          "title": "Email back-brief (2026-07-16)",
-          "detail": "Daily inbox digest sent from Pops' bot \u2014 action-required surfaced, junk/newsletters handled autonomously."
-        },
-        {
-          "date": "2026-07-16",
-          "title": "Inbox sweep (2026-07-16)",
-          "detail": "inbox triaged \u2014 0 trashed, 0 to archive"
-        },
-        {
-          "date": "2026-07-15",
-          "title": "Email back-brief (2026-07-15)",
-          "detail": "Daily inbox digest sent from Pops' bot \u2014 action-required surfaced, junk/newsletters handled autonomously."
         }
       ],
       "name": "Pops Henderson",
@@ -4776,15 +4634,26 @@
       },
       "jobs": [
         {
+          "name": "Pops Spirit Front Evening Capture (2030)",
+          "enabled": true,
+          "expr": "30 20 * * *",
+          "tz": "America/New_York",
+          "channel": "telegram",
+          "last_ms": 1787358600048,
+          "status": "ok",
+          "errors": 0,
+          "dur_ms": 9746
+        },
+        {
           "name": "Daily Father Outreach Reminder (Pops)",
           "enabled": true,
           "expr": "0 9 * * 1-5",
           "tz": "America/New_York",
           "channel": "telegram",
-          "last_ms": 1786971600040,
+          "last_ms": 1787317200019,
           "status": "ok",
           "errors": 0,
-          "dur_ms": 195661
+          "dur_ms": 231861
         },
         {
           "name": "Pops Daily Wheelhouse Check-in (7:37 AM)",
@@ -4792,32 +4661,21 @@
           "expr": "43 7 * * *",
           "tz": "America/New_York",
           "channel": "telegram",
-          "last_ms": 1786966980033,
+          "last_ms": 1787312580033,
           "status": "ok",
           "errors": 0,
-          "dur_ms": 51961
+          "dur_ms": 63458
         },
         {
           "name": "Dev Loop: pops daily reflection (implement-or-escalate)",
           "enabled": true,
-          "expr": "30 22 * * *",
+          "expr": "50 22 * * *",
           "tz": "America/New_York",
           "channel": "discord",
-          "last_ms": 1786933800027,
+          "last_ms": 1787280600064,
           "status": "ok",
           "errors": 0,
-          "dur_ms": 117222
-        },
-        {
-          "name": "Pops Spirit Front Evening Capture (2030)",
-          "enabled": true,
-          "expr": "30 20 * * *",
-          "tz": "America/New_York",
-          "channel": "telegram",
-          "last_ms": 1786926600037,
-          "status": "ok",
-          "errors": 0,
-          "dur_ms": 8513
+          "dur_ms": 148747
         },
         {
           "name": "Pops Spirit Front Weekly SITREP (Sun 1900)",
@@ -4864,17 +4722,6 @@
           "dur_ms": 68360
         },
         {
-          "name": "Liberty Brief (Fri 11:55) \u2014 Pops Henderson",
-          "enabled": true,
-          "expr": "55 11 * * 5",
-          "tz": "America/New_York",
-          "channel": "discord",
-          "last_ms": 1786722970014,
-          "status": "ok",
-          "errors": 0,
-          "dur_ms": 72402
-        },
-        {
           "name": "Pops Spirit Front Monthly Pulse + Vision-Read (1st 0700)",
           "enabled": true,
           "expr": "20 7 1 * *",
@@ -4884,6 +4731,17 @@
           "status": "ok",
           "errors": 0,
           "dur_ms": 24014
+        },
+        {
+          "name": "Liberty Brief (Fri 11:55) \u2014 Pops Henderson",
+          "enabled": false,
+          "expr": "55 11 * * 5",
+          "tz": "America/New_York",
+          "channel": "discord",
+          "last_ms": 1786722970014,
+          "status": "ok",
+          "errors": 0,
+          "dur_ms": 72402
         },
         {
           "name": "Stand-up 07:40 \u2014 Pops Henderson",
@@ -4951,11 +4809,16 @@
         "video-production-sgt-maj-mac"
       ],
       "n_jobs": 5,
-      "n_enabled": 4,
+      "n_enabled": 3,
       "err": 0,
-      "last_ms": 1786973670304,
+      "last_ms": 1787319000039,
       "status": "operational",
       "accomplishments": [
+        {
+          "date": "2026-08-17",
+          "title": "Ideal week \u2014 Quantico by rail. 4 in / 1 flex. Contingency \u2014 no offer claimed.",
+          "detail": "PDF shipped via psa-send-pdf.sh \u00b7 file=2026-08-17-quantico-ideal-week"
+        },
         {
           "date": "2026-08-11",
           "title": "GS13 room card v3 \u2014 letters A\u2013H, bigger type, full acronyms",
@@ -5051,21 +4914,22 @@
       "blurb": "USMC (Ret.). Runs the daily standards check and military briefings \u2014 the voice that holds the line on discipline.",
       "projects": [],
       "narration": {
-        "voice": "en_US-joe-medium",
-        "engine": "piper",
-        "character": "US male deckplate (Piper joe \u2014 Principal)",
+        "voice": "warden",
+        "engine": "commander",
+        "dsp": "clean",
+        "character": "Warden \u2014 dry American gravel (from SgtMaj Piper joe)",
         "narrates": [
           "Matthew"
         ]
       },
       "greeting": {
         "agent": "sgt-maj-mac",
-        "voice": "en_US-joe-medium",
-        "engine": "piper",
+        "voice": "warden",
+        "engine": "commander",
         "speed": 1.0,
         "text": "Sergeant Major McAllister. Standards are the standard. Say the word and we execute with discipline.",
-        "mp3_local": "/Users/moop_bot_pro/.openclaw/workspace/media/fleet-greetings-2026-07-17/sgt-maj-mac-greeting.mp3",
-        "mp3_bytes": 52079,
+        "mp3_local": "/tmp/usmcmin-com-greet-0821/fleet/audio/greetings/sgt-maj-mac-greeting.mp3",
+        "mp3_bytes": 60716,
         "public_url": "https://usmcmin.com/fleet/audio/greetings/sgt-maj-mac-greeting.mp3",
         "page": "sgt-maj-mac.html",
         "page_wired": true,
@@ -5097,7 +4961,9 @@
             "text": "McAllister. High standards are a form of respect \u2014 for the mission and the man. Where do you want the bar set?",
             "site_relative": "audio/greetings/sgt-maj-mac-greeting-5.mp3"
           }
-        ]
+        ],
+        "dsp": "clean",
+        "generated_at": "2026-08-22T01:29:00.434393+00:00"
       },
       "jobs": [
         {
@@ -5106,21 +4972,21 @@
           "expr": "30 9 * * *",
           "tz": "America/New_York",
           "channel": "discord",
-          "last_ms": 1786973670304,
+          "last_ms": 1787319000039,
           "status": "ok",
           "errors": 0,
-          "dur_ms": 145548
+          "dur_ms": 194269
         },
         {
           "name": "Dev Loop: sgt-maj-mac daily reflection (implement-or-escalate)",
           "enabled": true,
-          "expr": "05 23 * * *",
+          "expr": "42 23 * * 1,4",
           "tz": "America/New_York",
           "channel": "discord",
-          "last_ms": 1786935900041,
+          "last_ms": 1787283778735,
           "status": "ok",
           "errors": 0,
-          "dur_ms": 118708
+          "dur_ms": 214772
         },
         {
           "name": "Mac Weekly VA + Military Briefing (Sat 7AM)",
@@ -5135,7 +5001,7 @@
         },
         {
           "name": "Liberty Brief (Fri 11:52) \u2014 SgtMaj Mac McAllister",
-          "enabled": true,
+          "enabled": false,
           "expr": "52 11 * * 5",
           "tz": "America/New_York",
           "channel": "discord",
@@ -5207,9 +5073,9 @@
         "video-production-bg-hartwell"
       ],
       "n_jobs": 6,
-      "n_enabled": 5,
+      "n_enabled": 4,
       "err": 1,
-      "last_ms": 1786975200053,
+      "last_ms": 1787320800019,
       "status": "degraded",
       "accomplishments": [
         {
@@ -5312,9 +5178,10 @@
       "blurb": "USMC (Ret.), Augustine scholar. Deep theology research and the Sunday reading lists \u2014 cites the Confessions by book and chapter.",
       "projects": [],
       "narration": {
-        "voice": "am_onyx",
-        "engine": "kokoro",
-        "character": "US male deep gravitas (from Carnegie)",
+        "voice": "commander",
+        "engine": "commander",
+        "dsp": "cinematic",
+        "character": "Commander Voice \u2014 cinematic general (Qwen3 VoiceDesign, original; not a Cullen clone)",
         "narrates": [
           "Romans",
           "1\u20132 Corinthians",
@@ -5330,12 +5197,12 @@
       },
       "greeting": {
         "agent": "bg-hartwell",
-        "voice": "am_onyx",
-        "engine": "kokoro",
+        "voice": "commander",
+        "engine": "commander",
         "speed": 1.0,
         "text": "Brigadier General Hartwell. Strategy, command intent, and the long fight. Report, and we will shape the plan.",
-        "mp3_local": "/Users/moop_bot_pro/.openclaw/workspace/media/fleet-greetings-2026-07-17/bg-hartwell-greeting.mp3",
-        "mp3_bytes": 56109,
+        "mp3_local": "/tmp/usmcmin-com-greet-0821/fleet/audio/greetings/bg-hartwell-greeting.mp3",
+        "mp3_bytes": 82220,
         "public_url": "https://usmcmin.com/fleet/audio/greetings/bg-hartwell-greeting.mp3",
         "page": "bg-hartwell.html",
         "page_wired": true,
@@ -5367,7 +5234,9 @@
             "text": "Gus Hartwell. Bring me the map and the constraint; I will bring you the plan. Where are we advancing next?",
             "site_relative": "audio/greetings/bg-hartwell-greeting-5.mp3"
           }
-        ]
+        ],
+        "dsp": "cinematic",
+        "generated_at": "2026-08-22T01:28:30.978091+00:00"
       },
       "jobs": [
         {
@@ -5376,21 +5245,21 @@
           "expr": "0 10 * * *",
           "tz": "America/New_York",
           "channel": "discord",
-          "last_ms": 1786975200053,
+          "last_ms": 1787320800019,
           "status": "error",
           "errors": 1,
-          "dur_ms": 395775
+          "dur_ms": 689129
         },
         {
           "name": "Dev Loop: bg-hartwell daily reflection (implement-or-escalate)",
           "enabled": true,
-          "expr": "10 23 * * *",
+          "expr": "48 23 * * 1,4",
           "tz": "America/New_York",
           "channel": "discord",
-          "last_ms": 1786936200055,
+          "last_ms": 1787284644115,
           "status": "ok",
           "errors": 0,
-          "dur_ms": 112376
+          "dur_ms": 170657
         },
         {
           "name": "Gus Sunday Reading List + Reflection (Sun 6PM)",
@@ -5416,7 +5285,7 @@
         },
         {
           "name": "Liberty Brief (Fri 11:56) \u2014 BG Gus Hartwell",
-          "enabled": true,
+          "enabled": false,
           "expr": "56 11 * * 5",
           "tz": "America/New_York",
           "channel": "discord",
@@ -5482,5 +5351,5 @@
     "write-airbnb-reviews-for-listings",
     "you-are-an-expert-ai-agent"
   ],
-  "cowork_date": "2026-08-17T17:48:01-04:00"
+  "cowork_date": "2026-08-21T21:26:54-04:00"
 }

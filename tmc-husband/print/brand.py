@@ -2,7 +2,7 @@
 """
 brand.py — the print brand kit for The Husband Course, in The Marriage Academy.
 
-Everything printable in this course (the field workbook, the seven module
+Everything printable in this course (the workbook, the seven module
 inserts, and the twenty-one reading PDFs) is drawn with these helpers, so the
 whole pack looks like one product and like usmcmin.com.
 

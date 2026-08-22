@@ -282,7 +282,7 @@
         cells = days.map(function (d, i) {
           if (i === WEEKLY_CHECK_COL) {
             var disabled = readonly ? ' disabled' : '';
-            return '<button type="button" class="habit-check' + (on ? ' on' : '') + '" data-habit="' + habit.id + '" data-day="' + weekStartKey + '"' + disabled + ' aria-pressed="' + (on ? 'true' : 'false') + '" aria-label="' + habit.name + ' this week">' + (on ? '✓' : '') + '</button>';
+            return '<button type="button" class="habit-check' + (on ? ' on' : '') + '" data-habit="' + habit.id + '" data-day="' + weekStartKey + '"' + disabled + ' aria-pressed="' + (on ? 'true' : 'false') + '" aria-label="' + escapeHtml(habit.name) + ' this week">' + (on ? '✓' : '') + '</button>';
           }
           return '<span class="habit-check weekly-spacer" aria-hidden="true"></span>';
         }).join('');
@@ -291,7 +291,7 @@
           var key = ymd(d);
           var on = isChecked(store, habit.id, key);
           var disabled = readonly ? ' disabled' : '';
-          return '<button type="button" class="habit-check' + (on ? ' on' : '') + '" data-habit="' + habit.id + '" data-day="' + key + '"' + disabled + ' aria-pressed="' + (on ? 'true' : 'false') + '" aria-label="' + habit.name + ' ' + key + '">' + (on ? '✓' : '') + '</button>';
+          return '<button type="button" class="habit-check' + (on ? ' on' : '') + '" data-habit="' + habit.id + '" data-day="' + key + '"' + disabled + ' aria-pressed="' + (on ? 'true' : 'false') + '" aria-label="' + escapeHtml(habit.name) + ' ' + key + '">' + (on ? '✓' : '') + '</button>';
         }).join('');
       }
       var shareBtn = readonly
@@ -741,9 +741,26 @@
       var r = await BBCloud.pullSync();
       if (r.ok && r.data && r.data.state) {
         applyCloudState(r.data.state, r.data.updatedAt);
-        lastPushedFingerprint = cloudStateFingerprint();
-        setCloudStatus('Loaded from cloud' + (cloudUpdatedAt ? ' · ' + formatSyncTime(cloudUpdatedAt) : ''));
-        if (manual) flash('Loaded cloud memory.');
+        var mergedFp = cloudStateFingerprint();
+        var remoteFp = '';
+        try {
+          remoteFp = JSON.stringify({
+            profile: r.data.state.profile || {},
+            habits: r.data.state.habits || { items: [], checks: {} },
+            submissions: (r.data.state.submissions || []).slice(0, 52),
+            brotherPack: r.data.state.brotherPack || null
+          });
+        } catch (e3) {}
+        if (mergedFp && remoteFp && mergedFp !== remoteFp) {
+          lastPushedFingerprint = '';
+          await pushCloudState(manual);
+          setCloudStatus('Merged local + cloud' + (cloudUpdatedAt ? ' · ' + formatSyncTime(cloudUpdatedAt) : ''));
+          if (manual) flash('Merged cloud + local — checks kept from both.');
+        } else {
+          lastPushedFingerprint = mergedFp;
+          setCloudStatus('Loaded from cloud' + (cloudUpdatedAt ? ' · ' + formatSyncTime(cloudUpdatedAt) : ''));
+          if (manual) flash('Loaded cloud memory.');
+        }
       } else if (r.ok && r.data && !r.data.state) {
         // First sign-in — push local up.
         await pushCloudState(manual);
@@ -1228,13 +1245,32 @@
     }).join('');
     wrap.querySelectorAll('.week-chip').forEach(function (btn) {
       btn.addEventListener('click', function () {
-        selectedWeek = parseInt(btn.dataset.week, 10);
+        var nextWeek = parseInt(btn.dataset.week, 10);
+        if (nextWeek === selectedWeek) return;
+        var prevWeek = selectedWeek;
+        if (formDirty) {
+          selectedWeek = prevWeek;
+          saveDraft();
+        }
+        selectedWeek = nextWeek;
         weekFromOverride = selectedWeek !== calendarWeek();
         syncWeekToUrl(selectedWeek);
         renderWeekPicker();
         updateThemeBanner();
-        prefillLastSaca();
-        if (formDirty) saveDraft();
+        var store = loadStore();
+        if (store.draft && store.draft.week === selectedWeek && store.draft.data) {
+          writeForm(store.draft.data);
+          if (typeof store.draft.step === 'number') currentStep = store.draft.step;
+          hideDraftOffer();
+          showStep(currentStep);
+        } else {
+          prefillLastSaca();
+          if (store.draft && store.draft.week !== selectedWeek) {
+            offerCrossWeekDraft(store.draft);
+          } else {
+            hideDraftOffer();
+          }
+        }
       });
     });
   }
@@ -1409,7 +1445,10 @@
       headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
       body: JSON.stringify(payload)
     });
-    if (!r.ok) throw new Error('formsubmit ' + r.status);
+    var data = null;
+    try { data = await r.json(); } catch (e) {}
+    var failed = !r.ok || (data && (data.success === false || data.success === 'false'));
+    if (failed) throw new Error('formsubmit ' + r.status);
     return r;
   }
 
@@ -1440,6 +1479,7 @@
     persistSubmission(payload);
     syncHabitsFromSubmission(payload);
     justSubmitted = true;
+    await retryPendingEmails();
     el('formShell').hidden = true;
     el('doneShell').hidden = false;
     el('doneWeek').textContent = 'Week ' + payload.week + ' · ' + payload.theme;
@@ -1485,6 +1525,7 @@
     var hit = (store.submissions || []).find(function (s) { return s.id === id; });
     if (!hit) return;
     editingId = id;
+    justSubmitted = false;
     selectedWeek = hit.week;
     writeForm(hit.data);
     renderWeekPicker();

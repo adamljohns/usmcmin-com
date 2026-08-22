@@ -37,7 +37,9 @@ KW = re.compile(r"abortion|reproductive|firearm|gun|second amendment|marriage|ge
                 r"parent|school choice|charter|voucher|voter|election|ballot|immigra|sanctuary|"
                 r"bail|police|religio|prayer|obscen|library|puberty|minor|esg|gold|bullion", re.I)
 FINAL_RC = re.compile(r"third reading|final passage|final action|passage|floor vote|concur|ought to pass"
-                      r"|^otpa?$|\botpa?\b", re.I)
+                      r"|^otpa?$|\botpa?\b|shall the bill pass|"
+                      r"roll call results (passed|failed)|read 3rd time|"
+                      r"house passed|senate passed|passed as amended|passed on final reading", re.I)
 # Some chambers take their decisive floor vote on SECOND reading and never hold a third
 # (North Dakota). Treating 2nd reading as final everywhere would swallow procedural votes,
 # so it is used ONLY as a fallback when a bill has no other final-type roll call.

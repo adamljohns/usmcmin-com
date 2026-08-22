@@ -18,7 +18,9 @@ STRONG = re.compile(r"abortion|reproduct|heartbeat|firearm|handgun|assault weapo
                     r"parents|voter|election|ballot|citizenship|immigra|sanctuary|bail|religio|"
                     r"prayer|obscen|puberty|biological sex|born alive|life", re.I)
 FINAL = re.compile(r"third reading|final passage|final action|passage|floor vote|concur|"
-                   r"ought to pass|\botpa?\b|second reading|2nd reading", re.I)
+                   r"ought to pass|\botpa?\b|second reading|2nd reading|"
+                   r"shall the bill pass|roll call results (passed|failed)|"
+                   r"read 3rd time|house passed|senate passed|passed as amended|passed on final reading", re.I)
 ITL = re.compile(r"inexpedient to legislate|\bitl\b", re.I)
 TABLE = re.compile(r"\btable\b|\blay on\b", re.I)
 

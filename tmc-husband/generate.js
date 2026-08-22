@@ -253,8 +253,8 @@ function printPack() {
       <p class="section-intro">Every sheet is a real fillable PDF: tap a box and type in Preview, Acrobat, GoodNotes or Notability &mdash; or print it and use a pen. Nothing you write is uploaded anywhere.</p>
       <div class="print-lead">
         <div>
-          <h3><a href="/downloads/tmc-husband/The_Husband_Course_FIELD_WORKBOOK.pdf">The Husband&rsquo;s Field Workbook</a></h3>
-          <p>The whole course in one volume &mdash; all seven modules, every task, every field action, with a box wherever the course asks you to do something. Start here.</p>
+          <h3><a href="/downloads/tmc-husband/The_Husband_Course_WORKBOOK.pdf">The Husband Course Workbook</a></h3>
+          <p>The whole course in one volume &mdash; all seven modules, every task, every required action, with a box wherever the course asks you to do something. Start here.</p>
           <p class="print-meta">PDF &middot; fillable &middot; works printed</p>
         </div>
         <div>

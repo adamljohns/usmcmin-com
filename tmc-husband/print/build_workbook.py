@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-build_workbook.py — The Husband's Field Workbook (the whole course, one PDF).
+build_workbook.py — The Husband Course Workbook (the whole course, one PDF).
 
     python3 tmc-husband/print/build_workbook.py
 
@@ -13,7 +13,7 @@ worth of paper without printing the book.
 Fields are real AcroForm fields over ruled boxes, so the same file works typed
 in Preview / Acrobat / GoodNotes or printed and written on with a pen.
 
-Output: downloads/tmc-husband/The_Husband_Course_FIELD_WORKBOOK.pdf
+Output: downloads/tmc-husband/The_Husband_Course_WORKBOOK.pdf
 """
 
 import json
@@ -34,7 +34,7 @@ from brand import (  # noqa: E402
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 OUT_DIR = os.path.join(REPO, "downloads", "tmc-husband")
-OUT_PATH = os.path.join(OUT_DIR, "The_Husband_Course_FIELD_WORKBOOK.pdf")
+OUT_PATH = os.path.join(OUT_DIR, "The_Husband_Course_WORKBOOK.pdf")
 
 HOW_TO = [
     "This PDF is fillable. Tap any shaded box and type — or print it and write. Whichever fits how you work.",
@@ -43,7 +43,7 @@ HOW_TO = [
     "Preview / Apple Books / Acrobat: tap a field and type; your work saves with the file.",
     "Printed: the boxes are ruled and sized for a pen.",
     "",
-    "One section per module. Each module ends with a field action that has a finish line your wife could",
+    "One section per module. Each module ends with a required action that has a finish line your wife could",
     "notice — the workbook is where you record what you actually did, not what you meant to do.",
 ]
 
@@ -59,18 +59,18 @@ def build():
     course = load()
 
     c = canvas.Canvas(OUT_PATH, pagesize=(W, H), pageCompression=1)
-    c.setTitle(f"{COURSE_NAME} — Field Workbook")
+    c.setTitle("The Husband Course Workbook")
     c.setAuthor(MINISTRY)
-    c.setSubject("Participant field workbook — seven modules, seven field actions")
+    c.setSubject("Participant workbook — seven modules, seven required actions")
 
-    sheet = Sheet(c, f"{COURSE_NAME} · Field Workbook · {MINISTRY}", accent=NEUTRAL_ACCENT)
+    sheet = Sheet(c, f"{COURSE_NAME} · Workbook · {MINISTRY}", accent=NEUTRAL_ACCENT)
 
     # ── Cover ──
     cover(
         sheet,
         f"{COURSE_NAME} · {MINISTRY}",
-        "The Husband's Field Workbook",
-        course.get("subtitle") or "Seven modules. One field action each week.",
+        "The Husband Course Workbook",
+        course.get("subtitle") or "Seven modules. One required action each week.",
         NEUTRAL_ACCENT,
     )
     sheet.panel("How to use this workbook", HOW_TO)
@@ -88,7 +88,7 @@ def build():
 
     sheet.heading("The seven modules", size=16, space_before=10)
     sheet.body(
-        "Each module asks one question and ends with one husband-owned field action. "
+        "Each module asks one question and ends with one husband-owned required action. "
         "Work them in order; the later modules assume the habits built in the earlier ones.",
         gap=10,
     )
@@ -146,10 +146,10 @@ def build():
                 sheet.space(2)
                 sheet.field("What I did", f"{mid}.task{task['number']}.did", rows=3)
 
-        # The field action.
+        # The required action.
         action = module.get("fieldAction") or {}
         if action:
-            sheet.kicker("Required field action")
+            sheet.kicker("Required action")
             sheet.subheading(action.get("title", ""))
             for idx, step in enumerate(action.get("steps", []), 1):
                 sheet.bullet(step, glyph=f"{idx}.", size=9.4)
@@ -186,7 +186,7 @@ def build():
     sheet.kicker("End of course")
     sheet.heading("Commissioned", size=22)
     sheet.body(
-        "Seven modules, seven field actions, done quietly and for the long haul. "
+        "Seven modules, seven required actions, done quietly and for the long haul. "
         "Before you close this workbook, write the part you want to still be doing a year from now.",
         gap=12,
     )

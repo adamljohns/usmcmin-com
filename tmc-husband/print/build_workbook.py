@@ -1,13 +1,13 @@
 #!/usr/bin/env python3
 """
-build_workbook.py — The Husband Course Workbook (the whole course, one PDF).
+build_workbook.py; The Husband Course Workbook (the whole course, one PDF).
 
     python3 tmc-husband/print/build_workbook.py
 
 This is the overview volume linked from the course landing page: the seven
 modules end to end, with a fillable box wherever the course asks a man to do
-something. The per-module detail sheets — media notes, quiz self-grade, reading
-notes — are separate inserts (build_inserts.py) so a man can print one module's
+something. The per-module detail sheets; media notes, quiz self-grade, reading
+notes; are separate inserts (build_inserts.py) so a man can print one module's
 worth of paper without printing the book.
 
 Fields are real AcroForm fields over ruled boxes, so the same file works typed
@@ -37,14 +37,14 @@ OUT_DIR = os.path.join(REPO, "downloads", "tmc-husband")
 OUT_PATH = os.path.join(OUT_DIR, "The_Husband_Course_WORKBOOK.pdf")
 
 HOW_TO = [
-    "This PDF is fillable. Tap any shaded box and type — or print it and write. Whichever fits how you work.",
+    "This PDF is fillable. Tap any shaded box and type; or print it and write. Whichever fits how you work.",
     "",
     "GoodNotes / Notability: import the PDF, then type in the fields or write over them with a pencil.",
     "Preview / Apple Books / Acrobat: tap a field and type; your work saves with the file.",
     "Printed: the boxes are ruled and sized for a pen.",
     "",
     "One section per module. Each module ends with a required action that has a finish line your wife could",
-    "notice — the workbook is where you record what you actually did, not what you meant to do.",
+    "notice; the workbook is where you record what you actually did, not what you meant to do.",
 ]
 
 
@@ -61,7 +61,7 @@ def build():
     c = canvas.Canvas(OUT_PATH, pagesize=(W, H), pageCompression=1)
     c.setTitle("The Husband Course Workbook")
     c.setAuthor(MINISTRY)
-    c.setSubject("Participant workbook — seven modules, seven required actions")
+    c.setSubject("Participant workbook; seven modules, seven required actions")
 
     sheet = Sheet(c, f"{COURSE_NAME} · Workbook · {MINISTRY}", accent=NEUTRAL_ACCENT)
 
@@ -126,12 +126,12 @@ def build():
         if module.get("finishLineHero"):
             sheet.panel("This week's finish line", [module["finishLineHero"]], accent=accent)
 
-        # Scripture — tick as you read.
+        # Scripture; tick as you read.
         if module.get("scripture"):
             sheet.kicker("Scripture anchor")
             sheet.body("Read each passage in its wider context. Tick it when you have.", size=9, color=GRAY, gap=8)
             for idx, item in enumerate(module["scripture"], 1):
-                sheet.checkbox_row(f"{mid}.scripture.{idx}", f"{item['reference']} — {item['note']}")
+                sheet.checkbox_row(f"{mid}.scripture.{idx}", f"{item['reference']}; {item['note']}")
             sheet.space(6)
 
         # Tasks.
@@ -177,7 +177,7 @@ def build():
             sheet.space(4)
 
         # Debrief.
-        sheet.field("Module debrief — what changed, and what she might have noticed",
+        sheet.field("Module debrief; what changed, and what she might have noticed",
                     f"{mid}.debrief", rows=4)
         sheet.new_page()
 
@@ -192,7 +192,7 @@ def build():
     )
     sheet.field("The habit I am keeping", "wb.keeping", rows=4)
     sheet.field("What I want my marriage to look like in a year", "wb.year", rows=5)
-    sheet.field("Where I still need help — and who I will ask", "wb.help", rows=4)
+    sheet.field("Where I still need help; and who I will ask", "wb.help", rows=4)
     sheet.panel("A word on finishing", [
         "Completing a course is not the same as loving your wife well. The course ends; the practice does not.",
         "Keep the weekly check-in. Keep the repairs specific. Keep inviting rather than demanding.",
@@ -201,7 +201,7 @@ def build():
     c.save()
 
     size_kb = os.path.getsize(OUT_PATH) // 1024
-    print(f"Wrote {os.path.relpath(OUT_PATH, REPO)} — {sheet.page} pages, {size_kb} KB")
+    print(f"Wrote {os.path.relpath(OUT_PATH, REPO)}; {sheet.page} pages, {size_kb} KB")
 
 
 if __name__ == "__main__":

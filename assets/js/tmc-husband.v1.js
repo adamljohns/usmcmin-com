@@ -82,7 +82,7 @@
 
   // Rank ladder — dignified Captain voice, no hype. Indexed by modules completed (0–7).
   const RANKS = Object.freeze([
-    { rank: 'Off the Wall', milestone: 'Not yet on watch. Begin Module 1 when you are ready.' },
+    { rank: 'Still in the Rack', milestone: 'Still in the rack. Begin Module 1 when you are ready.' },
     { rank: 'On the Wall', milestone: 'First action shipped. The hardest step is behind you.' },
     { rank: 'Keeping Watch', milestone: 'Two modules down. A rhythm is forming.' },
     { rank: 'Steady Watch', milestone: 'Halfway to the charter. The post is being kept.' },

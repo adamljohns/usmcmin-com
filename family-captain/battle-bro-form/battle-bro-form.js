@@ -154,12 +154,19 @@
     cursor.setHours(0, 0, 0, 0);
     if (habit.cadence === 'weekly') {
       cursor = sundayOf(cursor);
+      // Grace: this week unchecked still counts last week's run.
+      if (!isChecked(store, habit.id, ymd(cursor))) {
+        cursor.setDate(cursor.getDate() - 7);
+      }
       while (streak < 520) {
         if (!isChecked(store, habit.id, ymd(cursor))) break;
         streak += 1;
         cursor.setDate(cursor.getDate() - 7);
       }
       return streak;
+    }
+    if (!isChecked(store, habit.id, ymd(cursor))) {
+      cursor.setDate(cursor.getDate() - 1);
     }
     while (streak < 800) {
       if (!isChecked(store, habit.id, ymd(cursor))) break;
@@ -177,8 +184,12 @@
     var hit = 0;
     store.habits.items.forEach(function (habit) {
       if (habit.cadence === 'weekly') {
-        due += 1;
-        if (isChecked(store, habit.id, ymd(days[0]))) hit += 1;
+        var weekOn = isChecked(store, habit.id, ymd(days[0]));
+        // Weekly is due after Wednesday (its check column), or once checked.
+        if (weekOn || new Date().getDay() > WEEKLY_CHECK_COL) {
+          due += 1;
+          if (weekOn) hit += 1;
+        }
       } else {
         days.forEach(function (d) {
           var key = ymd(d);
@@ -223,6 +234,10 @@
       if (doneShell) doneShell.hidden = true;
       if (historyPanel) historyPanel.hidden = true;
       renderHabitBoard();
+    } else if (justSubmitted) {
+      if (formShell) formShell.hidden = true;
+      if (doneShell) doneShell.hidden = false;
+      renderHistory();
     } else {
       if (formShell) formShell.hidden = false;
       if (doneShell) doneShell.hidden = true;
@@ -298,6 +313,8 @@
           setChecked(s, id, day, !isChecked(s, id, day));
           saveStore(s);
           renderHabitBoard();
+          var restored = wrap.querySelector('.habit-check[data-habit="' + id + '"][data-day="' + day + '"]');
+          if (restored) restored.focus();
         });
       });
       wrap.querySelectorAll('.habit-share-btn[data-share]').forEach(function (btn) {
@@ -510,7 +527,11 @@
   function openHabitsShare() {
     setMode('habits');
     setTimeout(function () {
-      var section = el('sharePackSection');
+      var sess = window.BBCloud && BBCloud.loadSession();
+      var paired = !!(sess && sess.brother && (sess.brother.email || sess.brother.name));
+      var section = paired
+        ? (el('brotherHabitsCard') || el('pairWhenUnlinked') || el('accountCard'))
+        : el('sharePackSection');
       if (section) section.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }, 60);
   }
@@ -573,13 +594,93 @@
     };
   }
 
+  function mergeHabitChecks(local, remote) {
+    var out = {};
+    [local, remote].forEach(function (src) {
+      if (!src || typeof src !== 'object') return;
+      Object.keys(src).forEach(function (k) {
+        if (src[k]) out[k] = true;
+      });
+    });
+    return out;
+  }
+
+  function mergeHabitItems(localItems, remoteItems) {
+    var byId = {};
+    (localItems || []).forEach(function (h) {
+      if (h && h.id) byId[h.id] = Object.assign({}, h);
+    });
+    (remoteItems || []).forEach(function (h) {
+      if (!h || !h.id) return;
+      var prev = byId[h.id];
+      if (!prev) {
+        byId[h.id] = Object.assign({}, h);
+        return;
+      }
+      byId[h.id] = {
+        id: h.id,
+        name: h.name || prev.name,
+        cadence: h.cadence || prev.cadence,
+        shared: typeof h.shared === 'boolean' ? h.shared : prev.shared
+      };
+    });
+    var order = [];
+    var seen = {};
+    (remoteItems || []).concat(localItems || []).forEach(function (h) {
+      if (h && h.id && !seen[h.id] && byId[h.id]) {
+        order.push(byId[h.id]);
+        seen[h.id] = true;
+      }
+    });
+    return order;
+  }
+
+  function mergeSubmissions(localSubs, remoteSubs) {
+    var byId = {};
+    (localSubs || []).concat(remoteSubs || []).forEach(function (s) {
+      if (!s || !s.id) return;
+      var prev = byId[s.id];
+      if (!prev) {
+        byId[s.id] = s;
+        return;
+      }
+      var ta = Date.parse(s.submittedAt || '') || 0;
+      var tb = Date.parse(prev.submittedAt || '') || 0;
+      byId[s.id] = ta >= tb ? s : prev;
+    });
+    return Object.keys(byId).map(function (k) { return byId[k]; }).sort(function (a, b) {
+      return (Date.parse(b.submittedAt || '') || 0) - (Date.parse(a.submittedAt || '') || 0);
+    }).slice(0, 52);
+  }
+
+  function mergeCloudState(local, remote) {
+    var out = Object.assign({}, local);
+    var lp = (local && local.profile) || {};
+    var rp = (remote && remote.profile) || {};
+    out.profile = { name: rp.name || lp.name };
+    var lh = (local && local.habits) || { items: [], checks: {} };
+    var rh = (remote && remote.habits) || { items: [], checks: {} };
+    out.habits = {
+      items: mergeHabitItems(lh.items, rh.items),
+      checks: mergeHabitChecks(lh.checks, rh.checks),
+      v: Math.max(lh.v || 0, rh.v || 0)
+    };
+    out.submissions = mergeSubmissions(local && local.submissions, remote && remote.submissions);
+    var lb = local && local.brotherPack;
+    var rb = remote && remote.brotherPack;
+    if (rb || lb) {
+      var rAt = Date.parse((rb && rb.importedAt) || '') || 0;
+      var lAt = Date.parse((lb && lb.importedAt) || '') || 0;
+      out.brotherPack = rAt >= lAt ? (rb || lb) : (lb || rb);
+    }
+    if (local && local.pendingEmails) out.pendingEmails = local.pendingEmails;
+    if (local && local.draft) out.draft = local.draft;
+    return out;
+  }
+
   function applyCloudState(state, updatedAt) {
     if (!state || typeof state !== 'object') return;
-    var store = loadStore();
-    if (state.profile) store.profile = state.profile;
-    if (state.habits) store.habits = state.habits;
-    if (Array.isArray(state.submissions)) store.submissions = state.submissions.slice(0, 52);
-    if (state.brotherPack) store.brotherPack = state.brotherPack;
+    var store = mergeCloudState(loadStore(), state);
     ensureHabits(store);
     cloudUpdatedAt = updatedAt || cloudUpdatedAt;
     try {
@@ -601,8 +702,16 @@
       var r = await BBCloud.pushSync(cloudStatePayload(), cloudUpdatedAt);
       if (r.status === 409 && r.data && r.data.state) {
         applyCloudState(r.data.state, r.data.updatedAt);
-        setCloudStatus('Server had newer data — loaded from cloud.');
-        flash('Cloud had a newer copy — board refreshed.');
+        setCloudStatus('Merged with newer cloud copy.');
+        if (manual) flash('Merged cloud + local — checks kept from both.');
+        try {
+          var retry = await BBCloud.pushSync(cloudStatePayload(), cloudUpdatedAt);
+          if (retry.ok && retry.data && retry.data.updatedAt) {
+            cloudUpdatedAt = retry.data.updatedAt;
+            lastPushedFingerprint = cloudStateFingerprint();
+            setCloudStatus('Synced · ' + formatSyncTime(cloudUpdatedAt));
+          }
+        } catch (e2) {}
         return;
       }
       if (r.ok && r.data && r.data.updatedAt) {
@@ -893,7 +1002,11 @@
     setMode('habits');
     var sess = window.BBCloud && BBCloud.loadSession();
     if (sess && sess.sessionToken) {
-      // auto-attempt accept
+      var ok = window.confirm('Pair with the Battle Brother who sent this invite code (' + invite + ')? Shared habits will sync both ways.');
+      if (!ok) {
+        flash('Invite ignored. Code is still in the Accept box if you change your mind.');
+        return;
+      }
       await handlePairAccept();
     } else {
       flash('Sign in with the invited email, then accept the code.');
@@ -951,7 +1064,9 @@
     var anchor = new Date(ARMADA_ANCHOR.y, ARMADA_ANCHOR.m, ARMADA_ANCHOR.d);
     anchor = sundayOf(anchor);
     var msPerWeek = 7 * 24 * 60 * 60 * 1000;
-    var elapsed = Math.floor((thisSun - anchor) / msPerWeek);
+    // round, not floor: spring-forward shortens one week by 1h and would
+    // otherwise report the previous theme after 8 Mar 2027.
+    var elapsed = Math.round((thisSun - anchor) / msPerWeek);
     var idx = ((ARMADA_ANCHOR_WEEK - 1) + elapsed) % 7;
     if (idx < 0) idx += 7;
     return idx + 1;
@@ -1270,25 +1385,75 @@
     return entry.id;
   }
 
-  function emailPayload(payload) {
-    fetch(FORMSUBMIT_URL, {
+  function queuePendingEmail(payload) {
+    var store = loadStore();
+    store.pendingEmails = store.pendingEmails || [];
+    var exists = store.pendingEmails.some(function (p) {
+      return p && p.submittedAt === payload.submittedAt && p.week === payload.week;
+    });
+    if (!exists) store.pendingEmails.push(payload);
+    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(store)); } catch (e) {}
+  }
+
+  function dequeuePendingEmail(payload) {
+    var store = loadStore();
+    store.pendingEmails = (store.pendingEmails || []).filter(function (p) {
+      return !(p && p.submittedAt === payload.submittedAt && p.week === payload.week);
+    });
+    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(store)); } catch (e) {}
+  }
+
+  async function emailPayload(payload) {
+    var r = await fetch(FORMSUBMIT_URL, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
       body: JSON.stringify(payload)
-    }).catch(function () {});
+    });
+    if (!r.ok) throw new Error('formsubmit ' + r.status);
+    return r;
   }
 
-  function submitForm() {
+  function setDoneEmailNote(ok) {
+    var note = el('doneEmailNote');
+    if (!note) return;
+    note.textContent = ok
+      ? 'A copy was emailed to the TFC team. Your browser also kept the full history locally. Battle Brother / Armada call checks were logged on your Habit Board.'
+      : 'Saved locally — email to TFC failed, will retry. Your browser kept the full history. Battle Brother / Armada call checks were logged on your Habit Board.';
+  }
+
+  async function retryPendingEmails() {
+    var store = loadStore();
+    var queue = (store.pendingEmails || []).slice();
+    if (!queue.length) return;
+    for (var i = 0; i < queue.length; i++) {
+      try {
+        await emailPayload(queue[i]);
+        dequeuePendingEmail(queue[i]);
+      } catch (e) {}
+    }
+  }
+
+  async function submitForm() {
     var err = validateStep();
     if (err) { flash(err); return; }
     var payload = buildPayload();
     persistSubmission(payload);
     syncHabitsFromSubmission(payload);
-    emailPayload(payload);
+    justSubmitted = true;
     el('formShell').hidden = true;
     el('doneShell').hidden = false;
     el('doneWeek').textContent = 'Week ' + payload.week + ' · ' + payload.theme;
     el('doneName').textContent = payload.reporterName;
+    var emailed = false;
+    try {
+      await emailPayload(payload);
+      emailed = true;
+      dequeuePendingEmail(payload);
+    } catch (e) {
+      queuePendingEmail(payload);
+    }
+    setDoneEmailNote(emailed);
+    if (!emailed) flash('Saved locally — email to TFC failed, will retry.');
     window.scrollTo(0, 0);
   }
 
@@ -1307,7 +1472,7 @@
       var d = new Date(s.submittedAt);
       var when = d.toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' });
       return '<div class="hist-row">' +
-        '<div><strong>Wk ' + s.week + ' · ' + s.theme + '</strong><br><span class="hist-meta">' + when + ' — ' + (s.data.reporterName || '') + '</span></div>' +
+        '<div><strong>Wk ' + s.week + ' · ' + escapeHtml(s.theme) + '</strong><br><span class="hist-meta">' + when + ' — ' + escapeHtml((s.data && s.data.reporterName) || '') + '</span></div>' +
         '<button type="button" class="hist-edit" data-id="' + s.id + '">Edit</button></div>';
     }).join('');
     list.querySelectorAll('.hist-edit').forEach(function (btn) {
@@ -1346,6 +1511,7 @@
     writeForm(form);
     prefillLastSaca();
     formDirty = false;
+    justSubmitted = false;
     el('formShell').hidden = false;
     el('doneShell').hidden = true;
     showStep(0);
@@ -1378,6 +1544,7 @@
     ensureHabits(loadStore());
     renderHistory();
     showStep(currentStep);
+    retryPendingEmails();
 
     el('modeForm').addEventListener('click', function () { setMode('form'); });
     el('modeHabits').addEventListener('click', function () { setMode('habits'); });

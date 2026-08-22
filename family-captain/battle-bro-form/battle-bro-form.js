@@ -59,6 +59,8 @@
   };
 
   var currentMode = 'form';
+  var formDirty = false;
+  var justSubmitted = false;
 
   function ymd(date) {
     var y = date.getFullYear();
@@ -1029,6 +1031,7 @@
   }
 
   function saveDraft() {
+    if (!formDirty) return;
     readForm();
     var store = loadStore();
     store.draft = {
@@ -1040,14 +1043,48 @@
     saveStore(store);
   }
 
+  function hideDraftOffer() {
+    var box = el('draftOffer');
+    if (box) box.hidden = true;
+  }
+
+  function offerCrossWeekDraft(draft) {
+    var box = el('draftOffer');
+    var text = el('draftOfferText');
+    if (!box || !text || !draft) return;
+    text.textContent = 'You have an unfinished Week ' + draft.week + ' draft — Load it?';
+    box.hidden = false;
+  }
+
+  function loadCrossWeekDraft() {
+    var store = loadStore();
+    var draft = store.draft;
+    if (!draft || !draft.data) return;
+    selectedWeek = draft.week;
+    weekFromOverride = selectedWeek !== calendarWeek();
+    writeForm(draft.data);
+    if (typeof draft.step === 'number') currentStep = draft.step;
+    formDirty = true;
+    hideDraftOffer();
+    renderWeekPicker();
+    updateThemeBanner();
+    syncWeekToUrl(selectedWeek);
+    showStep(currentStep);
+    flash('Loaded Week ' + selectedWeek + ' draft.');
+  }
+
   function restoreProfile() {
     var store = loadStore();
     if (store.profile && store.profile.name && !val('reporterName')) {
       setVal('reporterName', store.profile.name);
     }
-    if (store.draft && store.draft.week === selectedWeek && store.draft.data) {
-      writeForm(store.draft.data);
-      if (typeof store.draft.step === 'number') currentStep = store.draft.step;
+    if (store.draft && store.draft.data) {
+      if (store.draft.week === selectedWeek) {
+        writeForm(store.draft.data);
+        if (typeof store.draft.step === 'number') currentStep = store.draft.step;
+      } else {
+        offerCrossWeekDraft(store.draft);
+      }
     }
     prefillLastSaca();
   }
@@ -1082,7 +1119,7 @@
         renderWeekPicker();
         updateThemeBanner();
         prefillLastSaca();
-        saveDraft();
+        if (formDirty) saveDraft();
       });
     });
   }
@@ -1160,6 +1197,7 @@
     document.querySelectorAll('.star-btn').forEach(function (btn) {
       btn.addEventListener('click', function () {
         setStar(parseInt(btn.dataset.value, 10));
+        formDirty = true;
         saveDraft();
       });
     });
@@ -1167,6 +1205,7 @@
     if (clear) clear.addEventListener('click', function (e) {
       e.preventDefault();
       setStar(0);
+      formDirty = true;
       saveDraft();
     });
   }
@@ -1225,6 +1264,7 @@
     }
     store.submissions = store.submissions.slice(0, 52);
     delete store.draft;
+    formDirty = false;
     saveStore(store);
     renderHistory();
     return entry.id;
@@ -1305,6 +1345,7 @@
     };
     writeForm(form);
     prefillLastSaca();
+    formDirty = false;
     el('formShell').hidden = false;
     el('doneShell').hidden = true;
     showStep(0);
@@ -1316,8 +1357,8 @@
     ].forEach(function (id) {
       var node = el(id);
       if (!node) return;
-      node.addEventListener('input', saveDraft);
-      node.addEventListener('change', saveDraft);
+      node.addEventListener('input', function () { formDirty = true; saveDraft(); });
+      node.addEventListener('change', function () { formDirty = true; saveDraft(); });
       if (id === 'reporterName') node.addEventListener('blur', function () {
         var store = loadStore();
         store.profile = { name: val('reporterName') };
@@ -1364,9 +1405,13 @@
       var store = loadStore();
       delete store.draft;
       saveStore(store);
+      formDirty = false;
+      hideDraftOffer();
       resetForm();
       flash('Draft cleared.');
     });
+    if (el('btnLoadDraft')) el('btnLoadDraft').addEventListener('click', loadCrossWeekDraft);
+    if (el('btnKeepWeek')) el('btnKeepWeek').addEventListener('click', hideDraftOffer);
     el('btnExport').addEventListener('click', function () {
       var blob = new Blob([JSON.stringify(loadStore(), null, 2)], { type: 'application/json' });
       var a = document.createElement('a');

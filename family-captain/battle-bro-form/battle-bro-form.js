@@ -591,6 +591,7 @@
       habits: store.habits || { items: [], checks: {} },
       submissions: (store.submissions || []).slice(0, 52),
       brotherPack: store.brotherPack || null,
+      myActions: store.myActions || {}
     };
   }
 
@@ -675,6 +676,33 @@
     }
     if (local && local.pendingEmails) out.pendingEmails = local.pendingEmails;
     if (local && local.draft) out.draft = local.draft;
+    out.myActions = mergeMyActions(local && local.myActions, remote && remote.myActions);
+    return out;
+  }
+
+  function mergeMyActions(localMap, remoteMap) {
+    var out = {};
+    [1, 2, 3, 4, 5, 6, 7].forEach(function (w) {
+      var la = (localMap && localMap[w]) || [];
+      var ra = (remoteMap && remoteMap[w]) || [];
+      var byKey = {};
+      la.concat(ra).forEach(function (row) {
+        if (!row || !row.text) return;
+        var key = (row.savedAt || '') + '|' + row.text;
+        var prev = byKey[key];
+        if (!prev) {
+          byKey[key] = {
+            text: row.text,
+            savedAt: row.savedAt || '',
+            cycle: row.cycle || 1,
+            sealed: !!row.sealed
+          };
+        }
+      });
+      out[w] = Object.keys(byKey).map(function (k) { return byKey[k]; }).sort(function (a, b) {
+        return (Date.parse(b.savedAt || '') || 0) - (Date.parse(a.savedAt || '') || 0);
+      }).slice(0, 12);
+    });
     return out;
   }
 
@@ -691,6 +719,7 @@
     }
     renderHistory();
     if (currentMode === 'habits') renderHabitBoard();
+    renderMyActionCard();
   }
 
   async function pushCloudState(manual) {
@@ -1219,6 +1248,109 @@
       }
     }
     prefillLastSaca();
+    renderMyActionCard();
+  }
+
+  function prevThemeWeek(week) {
+    return week <= 1 ? 7 : week - 1;
+  }
+
+  function formatActionWhen(iso) {
+    if (!iso) return '';
+    var d = new Date(iso);
+    if (isNaN(d.getTime())) return '';
+    return d.toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' });
+  }
+
+  function latestActionForWeek(store, week) {
+    var rows = store && store.myActions && store.myActions[week];
+    if (!rows || !rows.length) return null;
+    return rows[0];
+  }
+
+  function previousCycleAction(store, week) {
+    var rows = store && store.myActions && store.myActions[week];
+    if (!rows || rows.length < 2) return null;
+    return rows[1];
+  }
+
+  function setRecallBox(id, text, emptyCopy) {
+    var box = el(id);
+    if (!box) return;
+    if (text) {
+      box.textContent = text;
+      box.classList.remove('empty');
+    } else {
+      box.textContent = emptyCopy;
+      box.classList.add('empty');
+    }
+  }
+
+  function renderMyActionCard() {
+    var t = themeByWeek(selectedWeek);
+    var title = el('myActionTitle');
+    var label = el('myActionLabel');
+    var hint = el('myActionHint');
+    var lastWeekLabel = el('myActionLastWeekLabel');
+    var lastCycleLabel = el('myActionLastCycleLabel');
+    if (title) title.textContent = 'Your SACA · Week ' + t.week + ' — ' + t.title;
+    if (label) {
+      label.innerHTML = 'Your Self-Assigned Captain’s Action for ' + t.title + ' week <span class="req">*</span>';
+    }
+    if (hint) {
+      hint.textContent = 'One action for this theme. Tap a week chip to rotate. Last week and the last time you walked ' + t.title + ' stay on the card.';
+    }
+    var store = loadStore();
+    var current = latestActionForWeek(store, selectedWeek);
+    var node = el('myActionText');
+    if (node && document.activeElement !== node) {
+      node.value = current && current.text ? current.text : '';
+    }
+    var prevWeek = prevThemeWeek(selectedWeek);
+    var prevTheme = themeByWeek(prevWeek);
+    var lastWeek = latestActionForWeek(store, prevWeek);
+    if (lastWeekLabel) lastWeekLabel.textContent = 'Last week · Wk ' + prevWeek + ' ' + prevTheme.title;
+    setRecallBox(
+      'myActionLastWeek',
+      lastWeek ? lastWeek.text + (lastWeek.savedAt ? '\n(' + formatActionWhen(lastWeek.savedAt) + ')' : '') : '',
+      'No action saved for ' + prevTheme.title + ' week yet.'
+    );
+    var lastCycle = previousCycleAction(store, selectedWeek);
+    if (lastCycleLabel) lastCycleLabel.textContent = 'Last time through ' + t.title;
+    setRecallBox(
+      'myActionLastCycle',
+      lastCycle ? lastCycle.text + (lastCycle.savedAt ? '\n(' + formatActionWhen(lastCycle.savedAt) + ')' : '') : '',
+      current ? 'First saved pass through ' + t.title + ' on this device.' : 'First time through ' + t.title + ' on this device.'
+    );
+  }
+
+  function persistMyAction(text, savedAt, seal) {
+    var cleaned = String(text || '').trim();
+    var store = loadStore();
+    store.myActions = store.myActions || {};
+    var rows = (store.myActions[selectedWeek] || []).slice();
+    var now = savedAt || new Date().toISOString();
+    if (!cleaned) {
+      if (rows[0] && !rows[0].sealed) {
+        rows.shift();
+        store.myActions[selectedWeek] = rows;
+        saveStore(store);
+      }
+      return;
+    }
+    if (rows[0] && !rows[0].sealed) {
+      rows[0].text = cleaned;
+      rows[0].savedAt = now;
+      if (seal) rows[0].sealed = true;
+    } else if (rows[0] && rows[0].text === cleaned) {
+      rows[0].savedAt = now;
+      if (seal) rows[0].sealed = true;
+    } else {
+      rows.unshift({ text: cleaned, savedAt: now, cycle: rows.length + 1, sealed: !!seal });
+    }
+    store.myActions[selectedWeek] = rows.slice(0, 12);
+    saveStore(store);
+    if (seal) renderMyActionCard();
   }
 
   function prefillLastSaca() {
@@ -1247,6 +1379,7 @@
       btn.addEventListener('click', function () {
         var nextWeek = parseInt(btn.dataset.week, 10);
         if (nextWeek === selectedWeek) return;
+        persistMyAction(val('myActionText'));
         var prevWeek = selectedWeek;
         if (formDirty) {
           selectedWeek = prevWeek;
@@ -1271,6 +1404,7 @@
             hideDraftOffer();
           }
         }
+        renderMyActionCard();
       });
     });
   }
@@ -1287,6 +1421,7 @@
         '<span class="tb-title">' + t.icon + ' Week ' + t.week + ' — ' + t.title + '</span>';
     }
     document.title = 'Battle Brother Form · Week ' + t.week + ' ' + t.title + ' — The Family Captain';
+    renderMyActionCard();
   }
 
   function showStep(n) {
@@ -1317,6 +1452,7 @@
       if (!form.lastWeekSaca) return "What was your Battle Brother's SACA for last week?";
       if (!form.sacaPassFail) return 'Did he complete his SACA? (Pass/Fail)';
       if (!form.thisWeekSaca) return "What is your Battle Brother's SACA for this week?";
+      if (!val('myActionText')) return 'Write your own Self-Assigned Captain\'s Action for this theme week.';
     }
     if (currentStep === 1) {
       if (!form.battleBrotherCall) return 'Did you have your Battle Brother call?';
@@ -1380,7 +1516,8 @@
       armadaCall: form.armadaCall,
       armadaRating: form.armadaRating,
       armadaRatingLabel: ratingLabel(form.armadaRating),
-      confidentialComments: form.confidentialComments
+      confidentialComments: form.confidentialComments,
+      myAction: val('myActionText')
     };
   }
 
@@ -1417,6 +1554,7 @@
     delete store.draft;
     formDirty = false;
     saveStore(store);
+    persistMyAction(val('myActionText'), payload.submittedAt, true);
     renderHistory();
     return entry.id;
   }
@@ -1530,6 +1668,7 @@
     writeForm(hit.data);
     renderWeekPicker();
     updateThemeBanner();
+    renderMyActionCard();
     el('formShell').hidden = false;
     el('doneShell').hidden = true;
     showStep(0);
@@ -1551,6 +1690,7 @@
     };
     writeForm(form);
     prefillLastSaca();
+    renderMyActionCard();
     formDirty = false;
     justSubmitted = false;
     el('formShell').hidden = false;
@@ -1560,12 +1700,24 @@
 
   function bindInputs() {
     ['reporterName', 'lastWeekSaca', 'sacaPassFail', 'thisWeekSaca',
-      'battleBrotherCall', 'threeQuestionsAsked', 'armadaCall', 'confidentialComments'
+      'battleBrotherCall', 'threeQuestionsAsked', 'armadaCall', 'confidentialComments', 'myActionText'
     ].forEach(function (id) {
       var node = el(id);
       if (!node) return;
-      node.addEventListener('input', function () { formDirty = true; saveDraft(); });
-      node.addEventListener('change', function () { formDirty = true; saveDraft(); });
+      node.addEventListener('input', function () {
+        formDirty = true;
+        saveDraft();
+        if (id === 'myActionText') persistMyAction(val('myActionText'));
+      });
+      node.addEventListener('change', function () {
+        formDirty = true;
+        saveDraft();
+        if (id === 'myActionText') persistMyAction(val('myActionText'));
+      });
+      if (id === 'myActionText') node.addEventListener('blur', function () {
+        persistMyAction(val('myActionText'));
+        renderMyActionCard();
+      });
       if (id === 'reporterName') node.addEventListener('blur', function () {
         var store = loadStore();
         store.profile = { name: val('reporterName') };

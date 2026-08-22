@@ -40,6 +40,15 @@
   #bbFlash[hidden] { display: none !important; }
   #draftOffer { background: #FFF8EE; border: 1px solid var(--gold); color: var(--navy); padding: 12px 16px; margin-bottom: 16px; font-weight: 600; font-size: 0.92rem; }
   #draftOffer[hidden] { display: none !important; }
+  #myActionCard { margin-bottom: 20px; }
+  .my-action-recall { display: grid; gap: 10px; margin-top: 12px; }
+  @media (min-width: 560px) { .my-action-recall { grid-template-columns: 1fr 1fr; } }
+  .my-action-recall .bb-field { margin-bottom: 0; }
+  .my-action-recall .recall-box {
+    min-height: 72px; border: 1px solid var(--border); background: #F8FAFC; padding: 10px 12px;
+    color: var(--navy); font-size: 0.9rem; line-height: 1.45; white-space: pre-wrap;
+  }
+  .my-action-recall .recall-box.empty { color: var(--gray); font-style: italic; }
 
   .memory-bar { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; justify-content: space-between; margin-bottom: 18px; font-size: 0.82rem; color: var(--gray); }
   .memory-bar button { background: #FFF; border: 1px solid var(--border); color: var(--text); padding: 6px 12px; cursor: pointer; font-size: 0.78rem; font-weight: 600; font-family: inherit; }
@@ -329,6 +338,27 @@
   <div id="weekPicker" aria-label="Select Armada week theme"></div>
   <div id="themeBanner"></div>
 
+  <div class="bb-card" id="myActionCard">
+    <h2 class="section-bar" id="myActionTitle">Your Self-Assigned Captain&rsquo;s Action</h2>
+    <div class="bb-card-body">
+      <p class="bb-hint" style="margin-top:0;" id="myActionHint">One action for this theme week. The board rotates with the week chips so you can see last week and the last time you walked this theme.</p>
+      <div class="bb-field" style="margin-bottom:0;">
+        <label for="myActionText" id="myActionLabel">Your SACA this week <span class="req">*</span></label>
+        <textarea id="myActionText" name="myActionText" placeholder="One concrete action for this theme week…"></textarea>
+      </div>
+      <div class="my-action-recall">
+        <div class="bb-field">
+          <label id="myActionLastWeekLabel">Last week</label>
+          <div class="recall-box empty" id="myActionLastWeek">No action saved for last week yet.</div>
+        </div>
+        <div class="bb-field">
+          <label id="myActionLastCycleLabel">Last time through this theme</label>
+          <div class="recall-box empty" id="myActionLastCycle">First time through this theme on this device.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <div id="habitShell" hidden>
     <div class="habit-stats" id="habitStats"></div>
 
@@ -494,10 +524,10 @@
       <div class="bb-card">
         <h2 class="section-bar">Confidential Comments to TFC Team</h2>
         <div class="bb-card-body">
-          <p class="bb-hint" style="margin-top:0;">These additional comments can be <strong>anything</strong> related to your armada, battle brother, and anything else. Comments are confidential and seen only by JM and Alan. They are reviewed weekly, and action is taken immediately.</p>
+          <p class="bb-hint" style="margin-top:0;">These additional comments can be <strong>anything</strong> related to your armada, battle brother, and anything else. Comments are confidential and seen only by JM and The Family Captain Team. They are reviewed weekly, and action is taken immediately.</p>
           <div class="bb-field">
             <label for="confidentialComments">Any additional comments? <span class="req">*</span></label>
-            <textarea id="confidentialComments" name="confidentialComments" placeholder="Praying for Alan's transition and JM as things get re-organized…"></textarea>
+            <textarea id="confidentialComments" name="confidentialComments" placeholder="A short prayer, a win, or a need for the team…"></textarea>
           </div>
         </div>
       </div>
@@ -521,7 +551,7 @@
   <p style="margin-top:6px;">&copy; 2026 U.S.M.C. Ministries</p>
 </footer>
 
-<script src="battle-bro-cloud.js?v=20260822-p1b"></script>
-<script src="battle-bro-form.js?v=20260822-p1b"></script>
+<script src="battle-bro-cloud.js?v=20260822-p1c"></script>
+<script src="battle-bro-form.js?v=20260822-p1c"></script>
 </body>
 </html>

@@ -18,13 +18,13 @@ function esc(value) {
 // one family without either one going neon (CLAUDE.md: muted, no neon).
 const NEUTRAL_ACCENT = ['#4A5568', '#A8B0BC'];
 const MODULE_ACCENTS = {
-  m01: ['#8C5A1F', '#E0A45C'], // Foundation — bronze
-  m02: ['#2C6E8A', '#7FC0DC'], // Communication — harbor
-  m03: ['#4C6B2F', '#A6CE7E'], // Conflict — olive
-  m04: ['#9B4A3F', '#EDA093'], // Repair — clay
-  m05: ['#5B5A8C', '#B0AEE4'], // Family roots — slate violet
-  m06: ['#8A3F62', '#E29BBD'], // Intimacy — deep rose
-  m07: ['#1E4E6B', '#8FC3E0']  // Love in action — navy blue
+  m01: ['#8C5A1F', '#E0A45C'], // Foundation; bronze
+  m02: ['#2C6E8A', '#7FC0DC'], // Communication; harbor
+  m03: ['#4C6B2F', '#A6CE7E'], // Conflict; olive
+  m04: ['#9B4A3F', '#D97868'], // Repair; clay
+  m05: ['#4A3F8A', '#8E86D4'], // Family roots; violet
+  m06: ['#8B1E3F', '#D46A7A'], // Intimacy; crimson
+  m07: ['#1E4E6B', '#8FC3E0']  // Love in action; navy blue
 };
 
 function accentStyle(page) {
@@ -58,7 +58,7 @@ function siteNav() {
   </nav>`;
 }
 
-// Course rail — the one piece of chrome the shared nav can't carry: where you
+// Course rail; the one piece of chrome the shared nav can't carry: where you
 // are inside the course, and the live module count. Sits under the fixed nav.
 function courseRail(page) {
   const here = (target) => (page === target ? ' aria-current="page"' : '');
@@ -126,7 +126,7 @@ function siteFooter() {
   </footer>`;
 }
 
-// Pre-paint theme guard — identical contract to assets/js/main.js: dark by
+// Pre-paint theme guard; identical contract to assets/js/main.js: dark by
 // default, light only when the reader has opted in. Runs before first paint so
 // the course never flashes the opposite theme while main.js loads.
 const THEME_GUARD = `(function(){try{var s=localStorage.getItem('usmc-theme')||localStorage.getItem('theme');` +
@@ -147,7 +147,7 @@ function layout({ title, description, body, page = '', noindex = false }) {
   <link rel="icon" type="image/svg+xml" href="/assets/icons/favicon.svg">
   <link rel="icon" type="image/png" sizes="32x32" href="/assets/icons/favicon-32.png">
   <script src="/assets/js/main.js" defer></script>
-  <script src="/assets/js/tmc-husband.v1.js?v=20260822rack" defer></script>
+  <script src="/assets/js/tmc-husband.v1.js?v=20260822complete" defer></script>
   <link rel="manifest" href="tmc-husband.webmanifest">
   <meta name="theme-color" content="#1E3A5F">
   <link rel="apple-touch-icon" href="/assets/icons/apple-touch-icon.png">
@@ -179,7 +179,7 @@ function progressPanel() {
 
 // Nine ribbons (badges): first action, one per module (themed to its virtue), and commissioned.
 const BADGES = [
-  { id: 'first', name: 'First Action', desc: 'Shipped your first field action.', glyph: '★' },
+  { id: 'first', name: 'First Action', desc: 'Completed your first required action.', glyph: '★' },
   { id: 'm01', name: 'Foundation', desc: 'Built the foundation.', glyph: '1' },
   { id: 'm02', name: 'Understanding', desc: 'Listened to understand.', glyph: '2' },
   { id: 'm03', name: 'Peacemaker', desc: 'Fought the problem, not each other.', glyph: '3' },
@@ -210,7 +210,7 @@ function badgeGrid() {
     </li>`).join('\n');
   return `<section class="badges" aria-labelledby="badges-title">
     <div class="badges-head"><h2 id="badges-title">Ribbons</h2><p class="badge-count" data-badge-count>0 of 9 earned</p></div>
-    <p class="section-intro">Earned quietly, as you ship each field action. Nothing is shared or uploaded.</p>
+    <p class="section-intro">Earned quietly, as you ship each required action. Nothing is shared or uploaded.</p>
     <ul class="badge-grid">${items}</ul>
   </section>`;
 }
@@ -218,8 +218,8 @@ function badgeGrid() {
 function commissionCard() {
   return `<section class="commission-card" data-commission aria-hidden="true" aria-labelledby="commission-title">
     <p class="eyebrow">Charter complete</p>
-    <h2 id="commission-title">Commissioned — Watchman of the Home</h2>
-    <p>You completed all seven modules and shipped every field action — quietly, and for the long haul. That is a real thing you did. Well done.</p>
+    <h2 id="commission-title">Commissioned; Watchman of the Home</h2>
+    <p>You completed all seven modules and shipped every required action; quietly, and for the long haul. That is a real thing you did. Well done.</p>
   </section>`;
 }
 
@@ -236,7 +236,7 @@ function timePanel({ withReset = false } = {}) {
       <p class="time-total" data-time-total aria-live="polite">0:00:00</p>
       <p class="local-status" data-time-detail>No time recorded on this device yet.</p>
     </div>
-    <p class="time-note">Counted in hours, minutes, and seconds while a module page is open and you are actually working — the clock pauses on its own when you switch away or go idle for three minutes. It is a record of effort, not a target. Nothing is uploaded.</p>
+    <p class="time-note">Counted in hours, minutes, and seconds while a module page is open and you are actually working; the clock pauses on its own when you switch away or go idle for three minutes. It is a record of effort, not a target. Nothing is uploaded.</p>
     <p class="time-note">Would rather not be timed? Turn it off and nothing is recorded. Prefer the record without a clock in your eyeline? Leave it on and use <strong>Hide clock</strong> on any module.</p>
     <p class="time-actions"><button type="button" data-timing-toggle class="secondary">Turn time tracking off</button>${withReset ? '<button class="danger" type="button" data-reset-time>Clear recorded time</button>' : ''}</p>
   </aside>`;
@@ -244,17 +244,17 @@ function timePanel({ withReset = false } = {}) {
 
 // The printable pack. The workbook is the overview volume; each module also
 // has a detail insert (media notes, reading notes, self-graded knowledge check).
-// Built by tmc-husband/print/*.py — see that folder's README.
+// Built by tmc-husband/print/*.py; see that folder's README.
 function printPack() {
-  const inserts = course.modules.map((module) => `<li><a href="/downloads/tmc-husband/The_Husband_Course_Module_${String(module.number).padStart(2, '0')}_INSERT.pdf">Module ${module.number} insert &mdash; ${esc(module.title)}</a></li>`).join('\n');
+  const inserts = course.modules.map((module) => `<li><a href="/downloads/tmc-husband/The_Husband_Course_Module_${String(module.number).padStart(2, '0')}_INSERT.pdf">Module ${module.number} insert; ${esc(module.title)}</a></li>`).join('\n');
   return `<section class="print-pack" aria-labelledby="print-title">
       <p class="eyebrow">Work it on paper</p>
       <h2 id="print-title">The printable pack</h2>
-      <p class="section-intro">Every sheet is a real fillable PDF: tap a box and type in Preview, Acrobat, GoodNotes or Notability &mdash; or print it and use a pen. Nothing you write is uploaded anywhere.</p>
+      <p class="section-intro">Every sheet is a real fillable PDF: tap a box and type in Preview, Acrobat, GoodNotes or Notability; or print it and use a pen. Nothing you write is uploaded anywhere.</p>
       <div class="print-lead">
         <div>
           <h3><a href="/downloads/tmc-husband/The_Husband_Course_WORKBOOK.pdf">The Husband Course Workbook</a></h3>
-          <p>The whole course in one volume &mdash; all seven modules, every task, every required action, with a box wherever the course asks you to do something. Start here.</p>
+          <p>The whole course in one volume; all seven modules, every task, every required action, with a box wherever the course asks you to do something. Start here.</p>
           <p class="print-meta">PDF &middot; fillable &middot; works printed</p>
         </div>
         <div>
@@ -313,7 +313,7 @@ function renderLanding(checkTotals = {}) {
       </section>
       <section aria-labelledby="syllabus-title">
         <h2 id="syllabus-title">Course map</h2>
-        <p class="section-intro">Seven modules. Each ends with one husband-owned field action with a finish line your wife could notice.</p>
+        <p class="section-intro">Seven modules. Each ends with one husband-owned required action with a finish line your wife could notice.</p>
         <ol class="module-grid">${cards}</ol>
       </section>
       ${printPack()}
@@ -337,34 +337,34 @@ function renderAbout() {
         <span class="course-badge">The Marriage Academy &middot; U.S.M.C. Ministries</span>
         <p class="eyebrow">Background</p>
         <h1>About The Husband Course</h1>
-        <p class="lede">Method, boundaries, and what you will — and will not — find inside.</p>
+        <p class="lede">Method, boundaries, and what you will; and will not; find inside.</p>
       </header>
       <article>
         <section aria-labelledby="what-title"><h2 id="what-title">What this is</h2>
-          <p>A free, static, seven-module Christian formation course for husbands. Each module gives you a short lesson, numbered tasks with observable finish lines, one required field action, optional conversation prompts, and local progress tracking in your browser.</p>
+          <p>A free, static, seven-module Christian formation course for husbands. Each module gives you a short lesson, numbered tasks with observable finish lines, one required action, optional conversation prompts, and local progress tracking in your browser.</p>
           <p>Modules 1–3 include optional study aids (audio, video, slides, reports) generated through <strong>Notebook by Gemini</strong> from thematically related public research, plus a flashcard deck and a knowledge check built into the page itself. Modules 4–7 are original ministry prose without a media room.</p>
-          <p>Every checkbox in a module — Scripture passage, task, self-check question, field-action step, conversation prompt, flashcard deck, knowledge check — is counted toward that module’s progress. A clock records the hours, minutes, and seconds you actually spend with a module open; it pauses when you switch away or go idle for three minutes. It is a record of effort, not a target &mdash; and it is optional: turn time tracking off on the progress page and nothing is recorded, or keep the record and use <strong>Hide clock</strong> on any module if you would rather not watch a stopwatch. All of it stays in this browser.</p>
+          <p>Every checkbox in a module; Scripture passage, task, self-check question, field-action step, conversation prompt, flashcard deck, knowledge check; is counted toward that module’s progress. A clock records the hours, minutes, and seconds you actually spend with a module open; it pauses when you switch away or go idle for three minutes. It is a record of effort, not a target; and it is optional: turn time tracking off on the progress page and nothing is recorded, or keep the record and use <strong>Hide clock</strong> on any module if you would rather not watch a stopwatch. All of it stays in this browser.</p>
         </section>
         <section aria-labelledby="method-title"><h2 id="method-title">How it was made</h2>
           <p>Content was developed by U.S.M.C. Ministries using thematic research informed by marriage-formation literature, pastoral review, Scripture framing, and multi-model editorial critique. That research pipeline informed the teaching; it is not reproduced inside the learner path.</p>
-          <p>The site is generated from source files in this repository (<code>tmc-husband/course.v1.js</code> and <code>module-*.field-manual.js</code>) via <code>node tmc-husband/generate.js</code>. Progress is stored only in <code>localStorage</code> on your device — no account, no sync.</p>
+          <p>The site is generated from source files in this repository (<code>tmc-husband/course.v1.js</code> and <code>module-*.field-manual.js</code>) via <code>node tmc-husband/generate.js</code>. Progress is stored only in <code>localStorage</code> on your device; no account, no sync.</p>
         </section>
         <section aria-labelledby="not-title"><h2 id="not-title">What this is not</h2>
           <ul>
-            <li>Not a copy of The Marriage Course — no protected video, audio, transcripts, slides, or workbooks are hosted here.</li>
+            <li>Not a copy of The Marriage Course; no protected video, audio, transcripts, slides, or workbooks are hosted here.</li>
             <li>Not crisis care, clinical treatment, addiction recovery, or trauma therapy.</li>
             <li>Not an endorsement by The Marriage Course, Alpha, Google, or Gemini.</li>
-            <li>Not deployed publicly until the principal approves — this is a local content-complete build.</li>
+            <li>Not deployed publicly until the principal approves; this is a local content-complete build.</li>
           </ul>
         </section>
         <section aria-labelledby="rights-title"><h2 id="rights-title">Rights and study aids</h2>
           <p>Scripture quotations follow the ministry site’s established translation practices. Notebook by Gemini artifacts are optional study aids requiring human editorial review before any public deployment. Each hosted artifact needs a documented rights basis.</p>
         </section>
         <section id="safety" aria-labelledby="safety-title"><h2 id="safety-title">Safety guidance</h2>
-          <p>Every module assumes a basically safe marriage unless stated otherwise. This course is formation and practice — not counseling, crisis care, clinical treatment, addiction recovery, or trauma therapy. Abuse, coercion, threats, violence, active addiction, serious betrayal, or fear of retaliation require confidential individual help first — not a joint course exercise. A husband must never use Scripture, forgiveness, headship, money, children, or course completion to demand access, silence concern, or prevent help.</p>
+          <p>Every module assumes a basically safe marriage unless stated otherwise. This course is formation and practice; not counseling, crisis care, clinical treatment, addiction recovery, or trauma therapy. Abuse, coercion, threats, violence, active addiction, serious betrayal, or fear of retaliation require confidential individual help first; not a joint course exercise. A husband must never use Scripture, forgiveness, headship, money, children, or course completion to demand access, silence concern, or prevent help.</p>
           <ul>
             <li><strong>Immediate danger:</strong> Call or text <strong>911</strong> (United States), or your local emergency service.</li>
-            <li><strong>Abuse or coercive control:</strong> National Domestic Violence Hotline — <strong>1-800-799-7233</strong>, or text <strong>START</strong> to <strong>88788</strong> (confidential, 24/7).</li>
+            <li><strong>Abuse or coercive control:</strong> National Domestic Violence Hotline; <strong>1-800-799-7233</strong>, or text <strong>START</strong> to <strong>88788</strong> (confidential, 24/7).</li>
             <li><strong>Where fear is present:</strong> seek confidential individual support before any joint exercise in this course.</li>
           </ul>
         </section>
@@ -409,7 +409,7 @@ function renderModule(module) {
         <section id="fair-insight" aria-labelledby="insight-title"><h2 id="insight-title">What the source gets right</h2><p>${esc(module.fairInsight)}</p></section>
         <section id="caution-boundary" class="caution" aria-labelledby="caution-title"><h2 id="caution-title">Where caution is required</h2><p>${esc(module.caution)}</p></section>
         <section id="self-check" aria-labelledby="check-title"><h2 id="check-title">Husband’s self-check</h2><p>Reflect privately. Do not use these prompts to diagnose or score your wife.</p><ul class="check-list">${checks}</ul></section>
-        <section id="field-action" class="field-action" aria-labelledby="action-title"><p class="eyebrow">Required field action</p><h2 id="action-title">${esc(module.fieldAction.title)}</h2><ol>${actionSteps}</ol><p><strong>Observable finish line:</strong> ${esc(module.fieldAction.finishLine)}</p></section>
+        <section id="field-action" class="field-action" aria-labelledby="action-title"><p class="eyebrow">Required action</p><h2 id="action-title">${esc(module.fieldAction.title)}</h2><ol>${actionSteps}</ol><p><strong>Observable finish line:</strong> ${esc(module.fieldAction.finishLine)}</p></section>
         <section id="conversation-guide" aria-labelledby="conversation-title"><h2 id="conversation-title">Optional conversation guide</h2><p>Invite; do not assign. Your wife may decline, stop, or suggest another format without penalty.</p><ul>${conversation}</ul></section>
         <section id="support-boundary" class="support-callout" aria-labelledby="support-title"><h2 id="support-title">Support and safety boundary</h2><p>${esc(module.support)}</p></section>
         <section id="resources" aria-labelledby="resources-title"><h2 id="resources-title">Resources</h2><p>No protected Marriage Course media or unverified Notebook by Gemini artifacts are hosted here.</p><ul>${resources}</ul></section>
@@ -440,13 +440,13 @@ function renderProgress(checkTotals = {}) {
     description: 'Review and reset local progress for The Husband Course.',
     page: 'progress',
     body: `<main id="main-content">
-      <header class="page-header"><span class="course-badge">The Marriage Academy &middot; U.S.M.C. Ministries</span><p class="eyebrow">Your watch</p><h1>Your progress</h1><p class="lede">Seven field actions. One honest local record.</p></header>
+      <header class="page-header"><span class="course-badge">The Marriage Academy &middot; U.S.M.C. Ministries</span><p class="eyebrow">Your watch</p><h1>Your progress</h1><p class="lede">Seven required actions. One honest local record.</p></header>
       ${progressPanel()}
       ${timePanel({ withReset: true })}
       ${rankBanner()}
       ${commissionCard()}
       ${badgeGrid()}
-      <section aria-labelledby="module-progress-title"><h2 id="module-progress-title">Your watch</h2><p class="section-intro">Seven posts. Each one is a module you complete by shipping its field action.</p><ol class="voyage-map">${rows}</ol></section>
+      <section aria-labelledby="module-progress-title"><h2 id="module-progress-title">Your watch</h2><p class="section-intro">Seven posts. Each one is a module you complete by shipping its required action.</p><ol class="voyage-map">${rows}</ol></section>
       <section class="reset-panel" aria-labelledby="reset-title"><h2 id="reset-title">Reset this device</h2><p>This clears all seven completion flags and the last-module pointer from this browser only. It cannot be undone.</p><button class="danger" type="button" data-reset-progress>Reset all course progress</button><p data-reset-message aria-live="polite"></p></section>
     </main>`
   });

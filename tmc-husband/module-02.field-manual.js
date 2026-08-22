@@ -3,11 +3,11 @@
 const fieldManual = {
   timeEstimate: '45–60 minutes, plus one listen-back conversation',
   missionDurationMinutes: 45,
-  finishLineHero: 'Complete one 15-minute listen-back conversation on a low-to-moderate concern — restate her view accurately before you give yours.',
+  finishLineHero: 'Complete one 15-minute listen-back conversation on a low-to-moderate concern; restate her view accurately before you give yours.',
   opening: [
     'Listening is not silence while preparing a rebuttal. Your wife is asking whether her words reached you without being filtered through self-protection.',
     'Accurate restatement is not agreement. The win is proving that disagreement does not have to erase her voice or your self-control.',
-    'This week you practice once on a manageable concern — not the most explosive issue in your marriage.'
+    'This week you practice once on a manageable concern; not the most explosive issue in your marriage.'
   ],
   scripture: [
     { reference: 'James 1:19–20', note: 'Quick listening and slow anger are practices of righteousness, not tactics for winning an argument.' },
@@ -18,11 +18,11 @@ const fieldManual = {
     {
       number: '1',
       title: 'Name your listening failure',
-      tagline: 'Pick one habit. Replace it for this week.',
+      tagline: 'Pick one habit and replace it for this week.',
       actions: [
         'Write one observable habit: interrupting, fixing, reassuring too quickly, hijacking with your own story, withdrawing, or rehearsing a rebuttal.',
         'Choose one replacement behavior for this week.',
-        'Tell her which habit you are working on — with permission, not as a gotcha.'
+        'Tell her which habit you are working on; with permission, not as a gotcha.'
       ]
     },
     {
@@ -59,7 +59,7 @@ const fieldManual = {
       actions: [
         'Ask: "Would empathy, an idea, a specific action, or more time help most?"',
         'Do not smuggle advice into the question.',
-        'Write the action you own in your own task system — not her sensitive details.',
+        'Write the action you own in your own task system; not her sensitive details.',
         'Return with evidence of follow-through rather than making her raise the subject again.'
       ]
     }
@@ -78,7 +78,7 @@ const fieldManual = {
       'Restate content and significance in your own words.',
       'Ask what you missed and revise before responding.'
     ],
-    finishLine: 'Before giving your view, you restated her concern and its significance, asked what you missed, and revised until she said it was fair — without requiring agreement or reciprocal performance.'
+    finishLine: 'Before giving your view, you restated her concern and its significance, asked what you missed, and revised until she said it was fair; without requiring agreement or reciprocal performance.'
   },
   conversation: {
     intro: 'Invite; do not assign. Your wife may decline any prompt without penalty.',
@@ -89,7 +89,7 @@ const fieldManual = {
       'Would empathy, an idea, a specific action, or more time be most helpful?'
     ]
   },
-  caution: 'Communication methods assume enough safety for honest speech. They fail where disclosure is punished, monitored, or weaponized. Not every problem is a misunderstanding — sometimes the issue is deception, intimidation, addiction, or injustice.',
+  caution: 'Communication methods assume enough safety for honest speech. They fail where disclosure is punished, monitored, or weaponized. Not every problem is a misunderstanding; sometimes the issue is deception, intimidation, addiction, or injustice.',
   support: {
     lead: 'This course is formation for a basically safe marriage. It is not crisis care or a substitute for qualified help.',
     referrals: [
@@ -105,7 +105,7 @@ const fieldManual = {
       { key: 'video', heading: 'Watch', note: 'Video overviews.' },
       { key: 'audio', heading: 'Listen', note: 'Audio briefings.' },
       { key: 'slides', heading: 'Slide decks', note: 'PDF study decks.' },
-      { key: 'infographics', heading: 'Field graphics', note: 'Visual summaries.' },
+      { key: 'infographics', heading: 'Study graphics', note: 'Visual summaries.' },
       { key: 'reports', heading: 'Read', note: 'Study reports as clean, printable PDFs.' },
       { key: 'quiz', heading: 'Drill', note: 'Knowledge check.' },
       { key: 'flashcards', heading: 'Drill', note: 'Flashcard practice.' }
@@ -121,7 +121,7 @@ const fieldManual = {
     }
   },
   assessment: {
-    intro: 'Complete the quiz after working through the module tasks and field action.',
+    intro: 'Complete the quiz after working through the module tasks and required action.',
     quizHref: '../assets/media/tmc-husband/m02/quiz/communication-quiz.html',
     quizTitle: 'Module 2 Communication Quiz',
     flashcardsHref: '../assets/media/tmc-husband/m02/flashcards/marriage-flashcards.html',

@@ -3,9 +3,9 @@
 const fieldManual = {
   timeEstimate: '45–60 minutes, plus one conflict practice',
   missionDurationMinutes: 45,
-  finishLineHero: 'Name your conflict pattern, establish a pause-and-return rule while calm, and use it once — with a specific return time so pause cannot become avoidance.',
+  finishLineHero: 'Name your conflict pattern, establish a pause-and-return rule while calm, and use it once; with a specific return time so pause cannot become avoidance.',
   opening: [
-    'Conflict is not proof that a marriage is defective. The decisive question is what you do when pressure rises — not whether disagreement appears.',
+    'Conflict is not proof that a marriage is defective. The decisive question is what you do when pressure rises; not whether disagreement appears.',
     'Your assignment is to name the move you make first, negotiate a pause rule while calm, and address one moderate issue as a team against the problem.',
     'Team language becomes dangerous when it hides one-sided abuse. If there is fear, control, or harm, stop couple exercises and seek individual help.'
   ],
@@ -18,11 +18,11 @@ const fieldManual = {
     {
       number: '1',
       title: 'Name your move',
-      tagline: 'Behavior, not temperament.',
+      tagline: 'Name the behavior, not the temperament.',
       actions: [
-        'Write what you do first under pressure — raise your voice, interrupt, pursue, withdraw, explain, become sarcastic, surrender, or widen the argument.',
+        'Write what you do first under pressure; raise your voice, interrupt, pursue, withdraw, explain, become sarcastic, surrender, or widen the argument.',
         'Tell your wife in one sentence without naming her pattern.',
-        'Watch for contempt: mockery, sneering, hostile imitation — stop and repair specifically if it appears.'
+        'Watch for contempt: mockery, sneering, hostile imitation; stop and repair specifically if it appears.'
       ]
     },
     {
@@ -30,13 +30,13 @@ const fieldManual = {
       title: 'Set the pause rule while calm',
       actions: [
         'Agree on a phrase either spouse may use, a minimum pause length, a maximum return window, and how a new time will be communicated.',
-        'A pause without a return time is avoidance — not stewardship.',
+        'A pause without a return time is avoidance; not stewardship.',
         'No following room to room, blocking doors, taking phones, or forcing eye contact.',
         'If returning reliably is beyond your current skill, seek support before the next heated moment.'
       ],
       callout: {
         label: 'This is not a pause',
-        body: 'Leaving with no return time, blocking an exit, or requiring unsafe re-engagement. If you are afraid of your spouse, a safety exit is different from a conflict pause — you owe no return time.'
+        body: 'Leaving with no return time, blocking an exit, or requiring unsafe re-engagement. If you are afraid of your spouse, a safety exit is different from a conflict pause; you owe no return time.'
       }
     },
     {
@@ -46,7 +46,7 @@ const fieldManual = {
         'State the issue in one observable sentence before you say anything about her.',
         'Do not start in bed, late at night, while rushing, immediately after arriving home, before a special event, or in front of children.',
         'Name your own contribution before assigning hers.',
-        'Agree on the one decision that actually needs to be made — not ten years of history.'
+        'Agree on the one decision that actually needs to be made; not ten years of history.'
       ]
     },
     {
@@ -65,7 +65,7 @@ const fieldManual = {
       actions: [
         'Record who will do what, by when, and when you will review it.',
         'If you use the pause, return when promised. If the time becomes impossible, name a specific replacement time.',
-        'Repair conduct that happened during conflict — not only the original topic. Do not use apology to close the subject prematurely.'
+        'Repair conduct that happened during conflict; not only the original topic. Do not use apology to close the subject prematurely.'
       ]
     }
   ],
@@ -79,7 +79,7 @@ const fieldManual = {
     title: 'Establish and use your pause-and-return rule',
     steps: [
       'Name your own pattern in concrete behavior.',
-      'Negotiate the pause rule while calm — phrase, minimum pause, return window.',
+      'Negotiate the pause rule while calm; phrase, minimum pause, return window.',
       'Choose one moderate issue and work it as a team.',
       'Write the decision with a review date, or use the pause once with a honored return time.'
     ],
@@ -111,7 +111,7 @@ const fieldManual = {
       { key: 'video', heading: 'Watch', note: 'Short video overviews.' },
       { key: 'audio', heading: 'Listen', note: 'Audio briefings for deeper reflection.' },
       { key: 'slides', heading: 'Slide decks', note: 'PDF study decks.' },
-      { key: 'infographics', heading: 'Field graphics', note: 'Visual summaries — read against the caution above.' },
+      { key: 'infographics', heading: 'Study graphics', note: 'Visual summaries; read against the caution above.' },
       { key: 'reports', heading: 'Read', note: 'Study reports as clean, printable PDFs.' },
       { key: 'quiz', heading: 'Drill', note: 'Knowledge check.' },
       { key: 'flashcards', heading: 'Drill', note: 'Flashcard practice.' },
@@ -128,7 +128,7 @@ const fieldManual = {
     }
   },
   assessment: {
-    intro: 'Complete the quiz after working through the module tasks and field action.',
+    intro: 'Complete the quiz after working through the module tasks and required action.',
     quizHref: '../assets/media/tmc-husband/m03/quiz/marriage-quiz.html',
     quizTitle: 'Module 3 Marriage Quiz',
     flashcardsHref: '../assets/media/tmc-husband/m03/flashcards/marriage-flashcards.html',
@@ -144,12 +144,12 @@ const fieldManual = {
     { slug: "slides-the-marriage-blueprint", state: "local", group: "slides", kind: "PDF", title: "The Marriage Blueprint", summary: "Session overview deck.", href: "../assets/media/tmc-husband/m03/slides/the-marriage-blueprint.pdf", linkLabel: "Open slide deck" },
     { slug: "slides-marital-conflict-blueprint", state: "local", group: "slides", kind: "PDF", title: "Marital Conflict Blueprint", summary: "Four principles through five steps.", href: "../assets/media/tmc-husband/m03/slides/marital-conflict-blueprint.pdf", linkLabel: "Open slide deck" },
     { slug: "slides-engineering-us", state: "local", group: "slides", kind: "PDF", title: "Engineering Us", summary: "Systems view of marriage maintenance.", href: "../assets/media/tmc-husband/m03/slides/engineering-us.pdf", linkLabel: "Open slide deck" },
-    { slug: "infographic-marriage-conflict-resolution-field-guide", state: "local", group: "infographics", title: "Marriage Conflict Resolution Field Guide", summary: "Navigating the Waves Together — includes a red-flag panel.", href: "../assets/media/tmc-husband/m03/infographics/marriage-conflict-resolution-field-guide.png", alt: "Illustrated field guide titled Navigating the Waves Together with panels on teamwork, appreciation, and the five-step protocol." },
-    { slug: "infographic-marriage-conflict-and-teamwork-guide", state: "local", group: "infographics", title: "Marriage Conflict and Teamwork Guide", summary: "Navigating the Storm — includes a safety overlay.", href: "../assets/media/tmc-husband/m03/infographics/marriage-conflict-and-teamwork-guide.png", alt: "Illustrated guide titled Navigating the Storm with a conflict toolkit and a seven-day action plan." },
+    { slug: "infographic-marriage-conflict-resolution-field-guide", state: "local", group: "infographics", title: "Marriage Conflict Resolution Field Guide", summary: "Navigating the Waves Together; includes a red-flag panel.", href: "../assets/media/tmc-husband/m03/infographics/marriage-conflict-resolution-field-guide.png", alt: "Illustrated field guide titled Navigating the Waves Together with panels on teamwork, appreciation, and the five-step protocol." },
+    { slug: "infographic-marriage-conflict-and-teamwork-guide", state: "local", group: "infographics", title: "Marriage Conflict and Teamwork Guide", summary: "Navigating the Storm; includes a safety overlay.", href: "../assets/media/tmc-husband/m03/infographics/marriage-conflict-and-teamwork-guide.png", alt: "Illustrated guide titled Navigating the Storm with a conflict toolkit and a seven-day action plan." },
     { slug: "infographic-marriage-teamwork-guide", state: "local", group: "infographics", title: "Marriage Teamwork Guide", summary: "Five cards on appreciation, differences, timing, and support.", href: "../assets/media/tmc-husband/m03/infographics/marriage-teamwork-guide.png", alt: "Illustrated guide titled From Conflict to Connection showing five teamwork cards." },
-    { slug: "report-conflict-resolution-and-partnership-briefing", state: "local", group: "reports", title: "Conflict Resolution and Partnership", summary: "Executive briefing — best starting point.", href: "../assets/media/tmc-husband/m03/reports/conflict-resolution-and-partnership-briefing.pdf", linkLabel: "Read the report" },
+    { slug: "report-conflict-resolution-and-partnership-briefing", state: "local", group: "reports", title: "Conflict Resolution and Partnership", summary: "Executive briefing; best starting point.", href: "../assets/media/tmc-husband/m03/reports/conflict-resolution-and-partnership-briefing.pdf", linkLabel: "Read the report" },
     { slug: "report-from-clashing-oars-to-gliding-boats", state: "local", group: "reports", title: "From Clashing Oars to Gliding Boats", summary: "Systems-flavoured treatment of the rowing metaphor.", href: "../assets/media/tmc-husband/m03/reports/from-clashing-oars-to-gliding-boats.pdf", linkLabel: "Read the report" },
-    { slug: "report-why-your-biggest-disagreements-secret-weapon", state: "local", group: "reports", title: "Why Your Biggest Disagreements Might Be Your Secret Weapon", summary: "Popular-article register — the headline overclaims; read against the caution.", href: "../assets/media/tmc-husband/m03/reports/why-your-biggest-disagreements-secret-weapon.pdf", linkLabel: "Read the report" },
+    { slug: "report-why-your-biggest-disagreements-secret-weapon", state: "local", group: "reports", title: "Why Your Biggest Disagreements Might Be Your Secret Weapon", summary: "Popular-article register; the headline overclaims; read against the caution.", href: "../assets/media/tmc-husband/m03/reports/why-your-biggest-disagreements-secret-weapon.pdf", linkLabel: "Read the report" },
     { slug: "quiz-marriage-quiz", state: "local", group: "quiz", title: "Marriage Quiz", summary: "Knowledge check over this module.", href: "../assets/media/tmc-husband/m03/quiz/marriage-quiz.html", linkLabel: "Open the quiz" },
     { slug: "flashcards-marriage-flashcards", state: "local", group: "flashcards", title: "Marriage Flashcards", summary: "Flashcard drill over this module.", href: "../assets/media/tmc-husband/m03/flashcards/marriage-flashcards.html", linkLabel: "Open the flashcards" }
   ]

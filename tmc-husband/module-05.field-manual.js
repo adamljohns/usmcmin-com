@@ -6,7 +6,7 @@ const fieldManual = {
   opening: [
     'Every husband enters marriage with a working model of family, even if he has never described it. Childhood taught him what conflict sounds like, who handles money, whether affection is spoken, and what happens when someone fails.',
     'Family of origin is influence, not destiny. The point is neither to blame parents for every choice nor to romanticize endurance. It is to bring inherited assumptions into the light so they can be tested instead of obeyed automatically.',
-    'This week, identify one pattern to retain and one to replace. Write each as behavior, not a label. Tell your wife only your own findings — she may decline to participate.'
+    'This week, identify one pattern to retain and one to replace. Write each as behavior, not a label. Tell your wife only your own findings; she may decline to participate.'
   ],
   scripture: [
     { reference: 'Genesis 2:24', note: 'Marriage forms a new primary household allegiance. Leaving and holding fast do not require contempt for parents; honoring parents does not require unsafe access.' },
@@ -22,7 +22,7 @@ const fieldManual = {
         'Describe who made decisions in your home growing up, and how.',
         'Note whether apologies were common, rare, or demanded only from children.',
         'Ask what rule about men, emotion, money, conflict, or loyalty your childhood taught.',
-        'Describe patterns and effects — do not put relatives on trial.'
+        'Describe patterns and effects; do not put relatives on trial.'
       ]
     },
     {
@@ -41,7 +41,7 @@ const fieldManual = {
       title: 'Retain one gift intentionally',
       actions: [
         'Name one inherited strength that actually serves your marriage now.',
-        'Ask your wife whether she experiences it as a gift — she may see it differently.',
+        'Ask your wife whether she experiences it as a gift; she may see it differently.',
         'Even virtues can distort: loyalty can become secrecy, thrift can become control.',
         'Retaining a pattern intentionally is different from repeating it unconsciously.'
       ]
@@ -90,19 +90,19 @@ const fieldManual = {
   support: {
     lead: 'Ordinary family-pattern work may benefit from mature pastoral counsel or a licensed marriage and family therapist.',
     referrals: [
-      { label: 'Trauma or abuse history', body: 'Requires individual, trauma-informed help and careful safety planning — not couple processing of traumatic history in this course.' },
+      { label: 'Trauma or abuse history', body: 'Requires individual, trauma-informed help and careful safety planning; not couple processing of traumatic history in this course.' },
       { label: 'Immediate danger', body: 'Call or text 911 in the United States, or your local emergency service.' },
       { label: 'Mental-health crisis', body: 'In the U.S., call or text 988.', href: 'https://988lifeline.org/', linkLabel: '988lifeline.org' }
     ],
     close: 'This course does not require disclosure, renewed family contact, or couple processing of traumatic history.'
   },
   resources: {
-    intro: "Optional study aids from your Notebook by Gemini notebook. Listen, watch, read, or drill \u2014 then return to your field action.",
+    intro: "Optional study aids from your Notebook by Gemini notebook. Listen, watch, read, or drill \u2014 then return to your required action.",
     groups: [
       { key: "video", heading: "Watch", note: "Short video overviews." },
       { key: "audio", heading: "Listen", note: "Audio briefings for deeper reflection." },
       { key: "slides", heading: "Slide decks", note: "PDF study decks." },
-      { key: "infographics", heading: "Field graphics", note: "Single-page visual summaries." },
+      { key: "infographics", heading: "Study graphics", note: "Single-page visual summaries." },
       { key: "reports", heading: "Read", note: "Study reports as clean, printable PDFs." }
     ],
     withheldNotice: null,
@@ -124,9 +124,9 @@ const fieldManual = {
     { slug: "slides-the-marital-blueprint", state: "local", group: "slides", kind: "PDF", title: "The Marital Blueprint", summary: "Session overview deck.", href: "../assets/media/tmc-husband/m05/slides/the-marital-blueprint.pdf", linkLabel: "Open slide deck" },
     { slug: "infographic-navigating-the-family-tree-guide", state: "local", group: "infographics", title: "Navigating the Family Tree", summary: "Leaving as an emotional shift, inherited conflict styles, and a critical panel on when advice is not enough.", href: "../assets/media/tmc-husband/m05/infographics/navigating-the-family-tree-guide.png", alt: "Illustrated field guide titled Navigating the Family Tree: A Field Guide for Married Couples, with panels on creating a new centre of gravity, inherited conflict styles, evaluating your roots, a healing action plan, and a red-flag note to seek professional help." },
     { slug: "infographic-navigating-family-patterns-in-marriage", state: "local", group: "infographics", title: "Navigating Family Patterns in Marriage", summary: "Companion guide on inherited patterns and boundaries.", href: "../assets/media/tmc-husband/m05/infographics/navigating-family-patterns-in-marriage.png", alt: "Illustrated field guide titled The New Center of Gravity: Navigating Family Patterns in Marriage, with panels on shifting the couple's centre of gravity, inherited conflict styles, mapping a secure base, a boundaries rule, a forgiveness framework, a red safety-exceptions panel, and a seven-day action plan." },
-    { slug: "report-episode-5-the-marriage-course-the-impact-of-family-past-and-present", state: "local", group: "reports", title: "The Impact of Family: Past and Present", summary: "Executive briefing — best starting point for this module.", href: "../assets/media/tmc-husband/m05/reports/episode-5-the-marriage-course-the-impact-of-family-past-and-present.pdf", linkLabel: "Read the report" },
+    { slug: "report-episode-5-the-marriage-course-the-impact-of-family-past-and-present", state: "local", group: "reports", title: "The Impact of Family: Past and Present", summary: "Executive briefing; best starting point for this module.", href: "../assets/media/tmc-husband/m05/reports/episode-5-the-marriage-course-the-impact-of-family-past-and-present.pdf", linkLabel: "Read the report" },
     { slug: "report-the-ghost-at-the-dinner-table-navigating-family-baggage-and-in-law-dynamics", state: "local", group: "reports", title: "The Ghost at the Dinner Table", summary: "Longer treatment of in-law dynamics and inherited expectations.", href: "../assets/media/tmc-husband/m05/reports/the-ghost-at-the-dinner-table-navigating-family-baggage-and-in-law-dynamics.pdf", linkLabel: "Read the report" },
-    { slug: "report-why-your-in-laws-are-secretly-living-in-your-marriage-5-radical-shifts-for-every-couple", state: "local", group: "reports", title: "Why Your In-Laws Are Living in Your Marriage", summary: "Popular-article register — the headline overclaims; use as a prompt.", href: "../assets/media/tmc-husband/m05/reports/why-your-in-laws-are-secretly-living-in-your-marriage-5-radical-shifts-for-every-couple.pdf", linkLabel: "Read the report" },
+    { slug: "report-why-your-in-laws-are-secretly-living-in-your-marriage-5-radical-shifts-for-every-couple", state: "local", group: "reports", title: "Why Your In-Laws Are Living in Your Marriage", summary: "Popular-article register; the headline overclaims; use as a prompt.", href: "../assets/media/tmc-husband/m05/reports/why-your-in-laws-are-secretly-living-in-your-marriage-5-radical-shifts-for-every-couple.pdf", linkLabel: "Read the report" },
     { slug: "quiz-marriage-quiz", state: "local", group: "quiz", title: "Marriage Quiz", summary: "Knowledge check over this module.", href: "../assets/media/tmc-husband/m05/quiz/marriage-quiz.html", linkLabel: "Open the quiz" },
     { slug: "flashcards-marriage-flashcards", state: "local", group: "flashcards", title: "Marriage Flashcards", summary: "Flashcard drill over this module.", href: "../assets/media/tmc-husband/m05/flashcards/marriage-flashcards.html", linkLabel: "Open the flashcards" }
   ]

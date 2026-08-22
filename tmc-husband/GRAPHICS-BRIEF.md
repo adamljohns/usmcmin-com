@@ -1,4 +1,4 @@
-# Field graphics — regeneration brief
+# Study graphics — regeneration brief
 
 **Status:** ready to run. Nothing here is wired into the site yet; the current
 graphics stay live until replacements are approved.
@@ -39,8 +39,8 @@ inside a generated image is where the garbling always happens.
 
 - **Palette:** USMC navy `#1E3A5F` for headers and rules. One module accent per
   graphic, from the course palette — module 1 bronze `#8C5A1F`, 2 harbor
-  `#2C6E8A`, 3 olive `#4C6B2F`, 4 clay `#9B4A3F`, 5 slate violet `#5B5A8C`,
-  6 deep rose `#8A3F62`, 7 navy blue `#1E4E6B`. Neutrals: white, `#F4F5F7`
+  `#2C6E8A`, 3 olive `#4C6B2F`, 4 clay `#9B4A3F`, 5 slate violet `#4A3F8A`,
+  6 deep rose `#8B1E3F`, 7 navy blue `#1E4E6B`. Neutrals: white, `#F4F5F7`
   panels, `#D1D5DB` borders.
 - **Type:** Playfair Display for headings, a clean humanist sans for body.
   Static instances live in `tmc-husband/print/fonts/`.

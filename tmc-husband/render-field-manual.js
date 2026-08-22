@@ -5,7 +5,7 @@ const { loadDrills, jsonBlock } = require('./drills.js');
 
 /* Course media is served from R2 with `cache-control: immutable,
  * max-age=31536000` on filenames that never change, so replacing a graphic in
- * place is invisible to anyone who already loaded it — for a year. Stamping a
+ * place is invisible to anyone who already loaded it; for a year. Stamping a
  * version onto the media URLs is what actually retires the old file.
  *
  * The version is derived from tmc-husband/media-manifest.json, which is
@@ -28,7 +28,7 @@ const MEDIA_VERSION = (() => {
     const body = keys.map((k) => `${k}:${files[k]}`).join('\n');
     return crypto.createHash('sha1').update(body).digest('hex').slice(0, 10);
   } catch (err) {
-    // A missing manifest must not silently un-version every URL — that is the
+    // A missing manifest must not silently un-version every URL; that is the
     // exact failure this mechanism exists to prevent. Fail the build loudly.
     throw new Error(
       'MEDIA_VERSION: cannot read tmc-husband/media-manifest.json (' + err.message + '). ' +
@@ -37,7 +37,7 @@ const MEDIA_VERSION = (() => {
   }
 })();
 
-// Local media only — leave off-site links untouched.
+// Local media only; leave off-site links untouched.
 function mediaUrl(href) {
   if (!href || !/^\.\.\/assets\/media\//.test(href)) return href;
   return `${href}${href.includes('?') ? '&' : '?'}v=${MEDIA_VERSION}`;
@@ -47,13 +47,13 @@ function sectionCheckoff(sectionId, label = 'Done') {
   return `<div class="section-checkoff"><label class="section-checkoff-label"><input type="checkbox" data-section-complete="${sectionId}"> <span>${label}</span></label> <span class="section-tally" data-section-tally aria-live="polite"></span></div>`;
 }
 
-// One tracked line item — a Scripture passage, a self-check question, a step.
+// One tracked line item; a Scripture passage, a self-check question, a step.
 function checkItem(id, body, extra = '') {
   return `<li class="check-item"><label class="check-item-label"><input type="checkbox" data-item-complete="${id}"> <span class="check-item-body">${body}</span></label>${extra}</li>`;
 }
 
-/* The mission clock records time actually spent in the module — hours, minutes,
- * and seconds — rather than counting down from a guess. The ring fills toward
+/* The mission clock records time actually spent in the module; hours, minutes,
+ * and seconds; rather than counting down from a guess. The ring fills toward
  * the module's time estimate and keeps counting past it.
  */
 function missionHud(minutes) {
@@ -105,7 +105,7 @@ function renderResourceGroups(m, esc, inlinedSlugs = new Set(), nativeGroups = n
   const resourceGroups = m.resources.groups.map((group) => {
     // Anything we do not host is simply left off. A card that says "not hosted
     // here", or a notice counting what is missing, advertises an absence the
-    // reader can do nothing about — it reads as a gap in the course rather than
+    // reader can do nothing about; it reads as a gap in the course rather than
     // as a decision we made.
     const artifacts = remaining.filter((x) => x.group === group.key && x.state === 'local').map((x) => {
       let media = '';
@@ -134,7 +134,7 @@ function renderResourceGroups(m, esc, inlinedSlugs = new Set(), nativeGroups = n
   return `<section id="resources" aria-labelledby="resources-title" data-track-section="resources">
     <p class="eyebrow">Study library</p>
     <h2 id="resources-title">More study aids</h2>
-    <p>Optional extras beyond the media woven into the lesson above — go deeper if you want to.</p>
+    <p>Optional extras beyond the media woven into the lesson above; go deeper if you want to.</p>
     ${resourceGroups}
     ${withheldBlock}
     <div class="resource-actions">${notebookBlock}${journalBlock}</div>
@@ -148,10 +148,10 @@ function renderFlashcards(cards, esc, moduleNumber) {
   return `<section id="flashcards" class="drill-panel" aria-labelledby="flashcards-title" data-track-section="flashcards" data-flashcards>
       <p class="eyebrow">Drill first</p>
       <h2 id="flashcards-title">Flashcards</h2>
-      <p>${cards.length} cards from the Module ${moduleNumber} study material. Read the prompt, answer it in your head, then reveal. Mark a card known when you can answer it without help — the deck remembers on this device.</p>
+      <p>${cards.length} cards from the Module ${moduleNumber} study material. Read the prompt, answer it in your head, then reveal. Mark a card known when you can answer it without help; the deck remembers on this device.</p>
       <div class="flashcard-progress"><span class="flashcard-bar-track"><span class="flashcard-bar" data-card-bar></span></span> <span class="flashcard-tally" data-card-tally aria-live="polite">0 of ${cards.length} marked known (0%)</span></div>
       <div class="flashcard-stage">
-        <div class="flashcard" data-card-inner tabindex="0" role="button" aria-label="Flashcard — activate to reveal the answer">
+        <div class="flashcard" data-card-inner tabindex="0" role="button" aria-label="Flashcard; activate to reveal the answer">
           <p class="flashcard-face" data-card-face></p>
           <p class="flashcard-back" data-card-back></p>
         </div>
@@ -175,7 +175,7 @@ function renderQuiz(questions, esc, moduleNumber, intro) {
   return `<section id="quiz" class="drill-panel assessment-panel" aria-labelledby="quiz-title" data-track-section="quiz" data-quiz>
       <p class="eyebrow">Last step before you close the module</p>
       <h2 id="quiz-title">Knowledge check</h2>
-      <p>${esc(intro || `Take this after the tasks, the field action, and the flashcards. ${questions.length} questions — each answer explains itself, right or wrong. Your answers stay on this device.`)}</p>
+      <p>${esc(intro || `Take this after the tasks, the required action, and the flashcards. ${questions.length} questions; each answer explains itself, right or wrong. Your answers stay on this device.`)}</p>
       <div class="flashcard-progress"><span class="flashcard-bar-track"><span class="flashcard-bar" data-quiz-bar></span></span> <span class="flashcard-tally" data-quiz-score aria-live="polite">0 of ${questions.length} answered</span></div>
       <ol class="quiz-list" data-quiz-list></ol>
       <div class="drill-controls"><button type="button" class="mission-btn mission-btn-ghost" data-quiz-reset>Clear answers and retake</button></div>
@@ -288,12 +288,12 @@ function renderFieldManual({ module, course, layout, progressPanel, esc, prev, n
           <p class="eyebrow">This week</p>
           <h2 id="tasks-title">Your tasks</h2>
           <p>Work through these in order. Each task has an observable finish line.</p>
-          ${tasksGraphic ? inlineArtifact(tasksGraphic, esc, "This week's field guide") : ''}
+          ${tasksGraphic ? inlineArtifact(tasksGraphic, esc, "This week's study guide") : ''}
           ${tasks}
         </section>
         ${selfCheckItems ? `<section id="self-check" aria-labelledby="check-title" data-track-section="self-check"><h2 id="check-title">Private self-check</h2><p>Reflect alone, then check each one off. Do not use these to diagnose or score your wife.</p><ul class="check-list">${selfCheckItems}</ul>${reflectAudio ? inlineArtifact(reflectAudio, esc, 'Listen while you reflect') : ''}</section>` : ''}
         <section id="field-action" class="field-action" aria-labelledby="action-title" data-track-section="field-action">
-          <p class="eyebrow">Required field action</p>
+          <p class="eyebrow">Required action</p>
           <h2 id="action-title">${esc(m.fieldAction.title)}</h2>
           <ul class="check-list">${actionSteps}</ul>
           <p><strong>Observable finish line:</strong> ${esc(m.fieldAction.finishLine)}</p>

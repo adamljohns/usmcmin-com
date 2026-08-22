@@ -1,0 +1,825 @@
+/* The Father Course — FULFILLED Father — course layer for usmcmin.com (cloned from husband v2 chrome; same .tmc tokens)
+ * ==================================================
+ * Loads AFTER assets/css/main.css and consumes its design tokens, so a course
+ * page is a usmcmin.com page: same nav, same footer, same type scale, same
+ * light/dark themes driven by [data-theme] on <html>.
+ *
+ * v1 (2026-08-01) was a standalone stylesheet with its own paper/green/gold
+ * palette and `color-scheme: light` hard-wired. It had no dark rules at all,
+ * so flipping the site theme left the course glowing cream inside a black
+ * shell. v2 removes every fixed color and derives all of them from main.css.
+ *
+ * HOW COLOR WORKS HERE
+ *   - Neutrals (surface, text, borders) come straight from main.css tokens.
+ *   - Each module carries ONE accent, set inline on <body> as a light/dark
+ *     pair (--mod-l / --mod-d); this file picks the right one per theme. That
+ *     mirrors the Mission Log's per-block `--blk` treatment, which is the
+ *     established course pattern on this site.
+ *   - Semantic colors (caution, danger, complete) are theme pairs declared
+ *     once below. Nothing encodes meaning in hue alone — every state also
+ *     carries a label, a check glyph, or a border weight (CLAUDE.md rule).
+ *
+ * SCOPING
+ *   Everything is scoped under `.tmc` (set on <body>) or a course class name.
+ *   Bare-element rules — button, h2, section — MUST stay scoped: main.css
+ *   styles the shared nav and footer, and unscoped course rules would eat the
+ *   hamburger, the theme toggle, and the footer columns.
+ */
+
+/* ── Course tokens ─────────────────────────────────────────────────────── */
+.tmc {
+  /* Module accent: overridden per page by an inline --mod-l/--mod-d pair. */
+  --mod-l: #5B6470;
+  --mod-d: #A8B0BC;
+  --mod: var(--mod-l);
+  --mod-ink: #FFFFFF;              /* text on a filled accent chip */
+  --mod-wash: color-mix(in srgb, var(--mod) 8%, transparent);
+  --mod-edge: color-mix(in srgb, var(--mod) 40%, transparent);
+
+  /* Neutrals, mapped from main.css so both themes come along for free. */
+  --ink: var(--white);
+  --ink-muted: var(--gray);
+  --muted: var(--gray);
+  --paper: var(--bg-dark);
+  --surface: var(--bg-card);
+  --surface-2: var(--bg-card-2);
+  --line: var(--border);
+
+  /* Semantic pairs. */
+  --ok: #2F7A55;
+  --ok-wash: rgba(47, 122, 85, 0.10);
+  --warn: #8A6116;
+  --warn-wash: rgba(138, 97, 22, 0.10);
+  --warn-edge: rgba(138, 97, 22, 0.45);
+  --alert: #A03127;
+  --alert-wash: rgba(160, 49, 39, 0.09);
+
+  --shadow: 0 10px 30px rgba(15, 23, 42, 0.08);
+  --measure: 72ch;
+  --radius: 10px;
+}
+
+[data-theme="dark"] .tmc {
+  --mod: var(--mod-d);
+  --mod-ink: #0A0A0A;
+  --mod-wash: color-mix(in srgb, var(--mod) 12%, transparent);
+  --mod-edge: color-mix(in srgb, var(--mod) 45%, transparent);
+
+  --ok: #6FCB9A;
+  --ok-wash: rgba(111, 203, 154, 0.12);
+  --warn: #E0B457;
+  --warn-wash: rgba(224, 180, 87, 0.12);
+  --warn-edge: rgba(224, 180, 87, 0.40);
+  --alert: #F08C82;
+  --alert-wash: rgba(240, 140, 130, 0.12);
+
+  --shadow: 0 10px 30px rgba(0, 0, 0, 0.45);
+}
+
+/* Local accent scope. A custom property resolves where it is DECLARED, not
+   where it is used — so a card that sets its own --mod-l/--mod-d pair inline
+   must re-derive --mod (and the washes built from it) or it would keep
+   inheriting the page-level accent. Course map cards and voyage ports each
+   carry their module's color; everything else inherits the page accent. */
+.tmc .module-card,
+.tmc .voyage-port {
+  --mod: var(--mod-l);
+  --mod-wash: color-mix(in srgb, var(--mod) 8%, transparent);
+  --mod-edge: color-mix(in srgb, var(--mod) 40%, transparent);
+}
+[data-theme="dark"] .tmc .module-card,
+[data-theme="dark"] .tmc .voyage-port {
+  --mod: var(--mod-d);
+  --mod-wash: color-mix(in srgb, var(--mod) 12%, transparent);
+  --mod-edge: color-mix(in srgb, var(--mod) 45%, transparent);
+}
+
+/* color-mix has been in every current browser since Safari 16.2, but the
+   washes are decorative — give older engines a flat fallback first. */
+@supports not (background: color-mix(in srgb, red 10%, transparent)) {
+  .tmc { --mod-wash: transparent; --mod-edge: var(--line); }
+}
+
+/* ── Page frame ────────────────────────────────────────────────────────── */
+/* main.css fixes the nav at 70px tall; the course rail carries that clearance
+   for every page, so #main-content can use ordinary padding. */
+.tmc { overflow-wrap: break-word; }
+.tmc .course-rail {
+  margin-top: 70px;
+  border-bottom: 1px solid var(--line);
+  background: var(--bg-card);
+}
+.tmc .course-rail-inner {
+  display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between;
+  gap: 0.5rem 1rem;
+  width: min(100% - 2rem, 64rem); margin-inline: auto; padding: 0.6rem 0;
+}
+.tmc .course-rail-name {
+  color: var(--white); font-family: var(--font-main);
+  font-size: 0.98rem; font-weight: 700; text-decoration: none;
+}
+.tmc .course-rail-name:hover { color: var(--mod); }
+.tmc .course-rail-nav { display: flex; flex-wrap: wrap; align-items: center; gap: 1rem; }
+.tmc .course-rail-nav a { color: var(--gray-light); font-size: 0.85rem; font-weight: 600; text-decoration: none; white-space: nowrap; }
+.tmc .course-rail-nav a:hover { color: var(--mod); }
+.tmc .course-rail-nav a[aria-current="page"] { color: var(--mod); }
+.tmc .nav-progress {
+  display: inline-block; min-width: 2.6rem; padding: 0.05rem 0.45rem; margin-left: 0.15rem;
+  border: 1px solid var(--mod-edge); border-radius: 99rem; background: var(--mod-wash);
+  color: var(--mod); font-size: 0.78rem; font-weight: 700; text-align: center;
+}
+.tmc #main-content {
+  width: min(100% - 2rem, 64rem);
+  margin-inline: auto;
+  padding-block: 2rem 4rem;
+}
+/* One column width for the whole course: content, rail, and HUD share it,
+   so nothing steps out of line when a lesson page adds the HUD. */
+.tmc #main-content.lesson { width: min(100% - 2rem, 64rem); }
+
+/* main.css gives every <section> 5rem of padding for marketing pages; course
+   sections are documents, not landing bands. */
+.tmc #main-content section { padding: 0; }
+
+/* Typography defaults, wrapped in :where() so they carry no specificity — a
+   panel that wants a tight heading (`.progress-panel h2 { margin: 0 }`) must
+   be able to win with a single class. */
+.tmc :where(#main-content) :where(h1, h2, h3, h4) {
+  font-family: var(--font-main);
+  color: var(--white);
+  line-height: 1.17;
+  text-wrap: balance;
+}
+.tmc :where(#main-content) :where(h1) { margin: 0.2rem 0 1rem; font-size: clamp(2.1rem, 7vw, 3.4rem); letter-spacing: -0.02em; }
+.tmc :where(#main-content) :where(h2) { margin: 2.25rem 0 0.75rem; font-size: clamp(1.5rem, 4.5vw, 2.1rem); }
+.tmc :where(#main-content) :where(h3) { font-size: 1.12rem; }
+.tmc :where(#main-content) :where(p, li) { max-width: var(--measure); color: var(--gray-light); }
+/* main.css zeroes every margin for its marketing layouts; the course is prose
+   and needs its rhythm back. Component rules (single class) still win. */
+.tmc :where(#main-content) :where(p) { margin-bottom: 0.9rem; }
+.tmc :where(#main-content) :where(ul, ol) { margin: 0 0 1rem; padding-left: 1.3rem; }
+.tmc :where(#main-content) :where(li) { margin-bottom: 0.4rem; }
+.tmc :where(#main-content) :where(h2 + p, h3 + p) { margin-top: 0; }
+.tmc :where(#main-content) :where(strong) { color: var(--white); }
+
+.tmc .lede {
+  max-width: var(--measure);
+  color: var(--white);
+  font-size: clamp(1.1rem, 3.4vw, 1.4rem);
+  font-weight: 600;
+  line-height: 1.45;
+}
+.tmc .eyebrow {
+  margin: 0 0 0.5rem;
+  color: var(--mod);
+  font-size: 0.74rem;
+  font-weight: 800;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+.tmc .section-intro { max-width: 46rem; margin-bottom: 1rem; color: var(--gray); }
+
+/* Course badge — the Mission Log's pill, reused so the two courses read as
+   one family. */
+.tmc .course-badge {
+  display: inline-block;
+  margin-bottom: 1rem;
+  padding: 6px 16px;
+  border: 1px solid var(--mod-edge);
+  border-radius: 20px;
+  background: var(--mod-wash);
+  color: var(--mod);
+  font-size: 0.66rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+.tmc .course-hero, .tmc .page-header, .tmc .lesson-header { padding-block: 0.5rem 1.5rem; }
+.tmc .course-hero { max-width: 52rem; }
+.tmc .review-notice {
+  padding: 0.75rem 0.9rem;
+  border-left: 4px solid var(--warn-edge);
+  background: var(--warn-wash);
+  color: var(--white);
+  font-size: 0.92rem;
+}
+
+/* ── Buttons ───────────────────────────────────────────────────────────── */
+/* The base rule is wrapped in :where() so it contributes ZERO specificity.
+   That matters: variants (.secondary, .danger, .mission-btn) are single
+   classes, and a heavier base selector would out-rank every one of them and
+   paint the whole page in filled primaries. Exclusions keep main.css's nav
+   controls — the hamburger and the theme toggle — out of course styling. */
+.tmc .button-row { display: flex; flex-wrap: wrap; gap: 0.75rem; margin-top: 1.5rem; }
+.tmc :where(#main-content) :where(.button, button:not(.theme-toggle):not(.nav-toggle)) {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 2.85rem;
+  max-width: 100%;
+  padding: 0.7rem 1.1rem;
+  border: 1px solid var(--mod);
+  border-radius: 8px;
+  background: var(--mod);
+  color: var(--mod-ink);
+  font: inherit;
+  font-weight: 700;
+  line-height: 1.25;
+  text-align: center;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background var(--transition), border-color var(--transition), color var(--transition);
+}
+.tmc :where(#main-content) :where(.button, button:not(.theme-toggle):not(.nav-toggle)):hover {
+  background: transparent;
+  color: var(--mod);
+}
+/* Link-buttons need an explicit color: main.css's `[data-theme="dark"] a`
+   rule out-ranks the :where()-wrapped base above, which left the label
+   silver-on-silver. */
+.tmc #main-content a.button { color: var(--mod-ink); }
+.tmc #main-content a.button:hover { color: var(--mod); }
+.tmc #main-content a.button.secondary { color: var(--white); }
+.tmc #main-content a.button.secondary:hover { color: var(--mod); }
+
+.tmc .button.secondary,
+.tmc #main-content button.secondary {
+  background: transparent;
+  border-color: var(--border);
+  color: var(--white);
+}
+.tmc .button.secondary:hover,
+.tmc #main-content button.secondary:hover { border-color: var(--mod); color: var(--mod); }
+.tmc #main-content button[aria-pressed="true"] { background: var(--ok); border-color: var(--ok); color: var(--mod-ink); }
+.tmc #main-content button.danger { border-color: var(--alert); background: transparent; color: var(--alert); }
+.tmc #main-content button.danger:hover { background: var(--alert); color: var(--mod-ink); }
+
+.tmc :focus-visible { outline: 3px solid var(--mod); outline-offset: 3px; border-radius: 2px; }
+
+/* ── Progress panel ────────────────────────────────────────────────────── */
+.tmc .progress-panel {
+  display: grid;
+  gap: 0.75rem;
+  margin: 1rem 0 2.5rem;
+  padding: 1.1rem 1.25rem;
+  border: 1px solid var(--line);
+  border-top: 3px solid var(--mod);
+  border-radius: var(--radius);
+  background: var(--surface);
+}
+.tmc .progress-panel h2 { margin: 0; font-size: 1.25rem; }
+.tmc .progress-panel p { margin: 0.25rem 0 0; }
+.tmc .progress-track { height: 0.7rem; overflow: hidden; border-radius: 99rem; border: 1px solid var(--line); background: var(--surface-2); }
+.tmc .progress-track span {
+  display: block; width: var(--progress, 0%); height: 100%;
+  background: var(--mod); transition: width 240ms ease;
+}
+.tmc .local-status { color: var(--gray); font-size: 0.86rem; }
+
+/* ── Course map (landing) ──────────────────────────────────────────────── */
+.tmc .module-grid { display: grid; gap: 1rem; padding: 0; list-style: none; }
+.tmc .module-card {
+  min-width: 0;
+  padding: 1.15rem;
+  border: 1px solid var(--line);
+  border-top: 3px solid var(--mod);
+  border-radius: var(--radius);
+  background: var(--surface);
+  transition: border-color var(--transition), transform var(--transition);
+}
+.tmc .module-card:hover { border-color: var(--mod-edge); transform: translateY(-2px); }
+.tmc .module-card h2 { margin: 0.25rem 0; font-size: 1.35rem; }
+.tmc .module-card h2 a { color: var(--white); text-decoration: none; }
+.tmc .module-card h2 a:hover { color: var(--mod); }
+.tmc .module-card p { margin: 0.5rem 0; }
+.tmc .module-card.is-complete { border-color: var(--ok); background: var(--ok-wash); }
+.tmc .module-status { color: var(--gray); font-size: 0.88rem; font-weight: 700; }
+.tmc .is-complete .module-status { color: var(--ok); }
+.tmc .module-card-draft { opacity: 0.72; }
+.tmc .module-draft-tag { margin-inline-start: 0.35rem; color: var(--gray); font-size: 0.72em; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; }
+.tmc .module-field-action, .tmc .module-question { font-size: 0.95rem; }
+.tmc .module-question { font-style: italic; }
+.tmc .module-time { margin-top: 0.25rem; font-size: 0.85rem; color: var(--gray); }
+
+.tmc .module-meter { display: flex; gap: 0.5rem; align-items: center; margin: 0.5rem 0 0.25rem; }
+.tmc .module-meter-track { flex: 1 1 auto; height: 0.4rem; overflow: hidden; border-radius: 99rem; background: var(--surface-2); border: 1px solid var(--line); }
+.tmc .module-meter-bar { display: block; height: 100%; width: 0%; background: var(--mod); transition: width 240ms ease; }
+.tmc .module-meter-label { flex: 0 0 auto; color: var(--gray); font-size: 0.76rem; }
+.tmc .module-time-spent { margin: 0.15rem 0 0; color: var(--gray); font-size: 0.78rem; }
+.tmc .completion-tally { color: var(--gray); font-size: 0.85rem; }
+
+/* ── How it works ──────────────────────────────────────────────────────── */
+.tmc .how-it-works { margin-block: 2rem; }
+.tmc .how-steps { display: grid; gap: 1rem; margin: 0; padding: 0; list-style: none; }
+.tmc .how-step { padding: 1rem; border: 1px solid var(--line); border-radius: var(--radius); background: var(--surface); }
+.tmc .how-step-num {
+  display: inline-grid; place-items: center;
+  width: 1.75rem; height: 1.75rem; margin-right: 0.55rem;
+  border-radius: 50%; background: var(--mod); color: var(--mod-ink);
+  font-family: var(--font-sans); font-size: 0.9rem; font-weight: 700; vertical-align: -0.2em;
+}
+.tmc .how-step h3 { margin: 0 0 0.35rem; font-size: 1.05rem; line-height: 1.35; }
+.tmc .how-step p { margin: 0; font-size: 0.95rem; }
+
+/* ── Lesson body ───────────────────────────────────────────────────────── */
+.tmc .module-nav {
+  display: flex; justify-content: space-between; gap: 1rem;
+  padding-block: 0.6rem; border-bottom: 1px solid var(--line);
+}
+.tmc .module-nav:last-child { margin-top: 2rem; border-top: 1px solid var(--line); border-bottom: 0; }
+.tmc .module-nav a { color: var(--mod); font-weight: 700; text-decoration: none; }
+.tmc .module-nav a:hover { text-decoration: underline; }
+.tmc article > section { padding-block: 0.75rem 1.75rem; }
+.tmc article > section + section { border-top: 1px solid var(--line); }
+.tmc .scripture-list { padding-left: 1.2rem; }
+.tmc .scripture-list li { margin-bottom: 0.8rem; }
+.tmc .scripture-list h3 { margin-bottom: 0.25rem; }
+.tmc .scripture-list p { margin-top: 0; }
+.tmc .scripture-list h3 a { color: inherit; text-decoration: underline; text-decoration-color: var(--mod); text-underline-offset: 0.14em; }
+.tmc .scripture-list h3 a:hover { color: var(--mod); }
+.tmc .scripture-links { margin-top: 1rem; font-weight: 700; }
+
+/* Callout family — each keeps a distinct border weight AND a heading, so the
+   difference survives grayscale. */
+.tmc .field-action, .tmc .support-callout, .tmc .caution, .tmc .completion, .tmc .reset-panel {
+  margin-block: 1.5rem; padding: 1rem; border-radius: var(--radius);
+}
+.tmc .field-action { border: 2px solid var(--mod); background: var(--mod-wash); }
+.tmc .field-action h2, .tmc .completion h2, .tmc .reset-panel h2 { margin-top: 0.2rem; }
+.tmc .caution { border-left: 5px solid var(--warn); background: var(--warn-wash); }
+.tmc .support-callout { border-left: 5px solid var(--alert); background: var(--alert-wash); }
+.tmc .completion { border: 2px solid var(--line); background: var(--surface); }
+.tmc .reset-panel { border: 1px solid var(--alert); background: var(--alert-wash); }
+.tmc .end-state, .tmc .guardrail, .tmc .safety-line {
+  padding: 0.8rem 1rem; border-radius: 8px; background: var(--warn-wash);
+}
+
+/* Compact per-module safety note (full guidance lives on about.html#safety). */
+.tmc .module-safety {
+  margin: 1.25rem 0; padding: 0.85rem 1.1rem;
+  border: 1px solid var(--warn-edge); border-left: 4px solid var(--warn);
+  border-radius: var(--radius); background: var(--warn-wash);
+}
+.tmc .module-safety h2 { margin: 0 0 0.35rem; font-size: 1rem; }
+.tmc .module-safety p { margin: 0 0 0.4rem; font-size: 0.9rem; }
+.tmc .module-safety-link { margin: 0; }
+.tmc .module-safety-link a { color: var(--mod); font-weight: 700; }
+
+/* ── Tracked checks ────────────────────────────────────────────────────── */
+.tmc .check-list { padding-left: 0; list-style: none; }
+.tmc .check-item { margin-bottom: 0.6rem; }
+.tmc .check-item-label {
+  display: grid; grid-template-columns: auto 1fr; gap: 0.6rem; align-items: start;
+  padding: 0.5rem 0.6rem; border: 1px solid transparent; border-radius: 8px; cursor: pointer;
+}
+.tmc .check-item-label:hover { border-color: var(--line); background: var(--surface); }
+.tmc .check-item-label input { margin-top: 0.35rem; accent-color: var(--mod); }
+.tmc .check-item-body h3 { margin: 0 0 0.2rem; font-size: 1rem; }
+.tmc .check-item-body p { margin: 0; }
+.tmc .check-item.is-section-complete > .check-item-label { border-color: var(--ok); background: var(--ok-wash); }
+.tmc .check-item.is-section-complete .check-item-body { color: var(--gray); }
+
+.tmc .section-checkoff { margin-top: 1rem; padding-top: 0.75rem; border-top: 1px dashed var(--line); }
+.tmc .section-checkoff-label { display: inline-flex; gap: 0.5rem; align-items: center; font-weight: 700; cursor: pointer; }
+.tmc .section-checkoff-label input { accent-color: var(--mod); }
+.tmc .section-tally { margin-left: 0.6rem; color: var(--gray); font-size: 0.8rem; }
+.tmc section.is-section-complete { padding-left: 0.75rem; border-left: 4px solid var(--ok); }
+
+/* ── Mission HUD (time on task) ────────────────────────────────────────── */
+.tmc .mission-hud {
+  position: sticky; top: 70px; z-index: 15;
+  border-bottom: 1px solid var(--line);
+  background: var(--nav-bg);
+  backdrop-filter: blur(8px);
+}
+.tmc .mission-hud[hidden] { display: none !important; }
+.tmc .mission-hud-inner {
+  display: grid; grid-template-columns: auto 1fr auto; gap: 0.75rem; align-items: center;
+  width: min(100% - 2rem, 64rem); margin-inline: auto; padding: 0.65rem 0;
+}
+/* The ring fills toward the module's time estimate; it never empties. */
+.tmc .mission-timer-ring {
+  position: relative; display: grid; place-items: center;
+  width: 3.5rem; height: 3.5rem; border-radius: 50%;
+  color: var(--white); font-weight: 800; font-size: 0.72rem;
+  background: conic-gradient(var(--mod) var(--ring, 0%), var(--surface-2) 0);
+}
+.tmc .mission-timer-ring::after {
+  content: ""; position: absolute; inset: 3px; border-radius: 50%; background: var(--bg-dark);
+}
+.tmc .mission-timer-pct { position: relative; z-index: 1; }
+.tmc .mission-hud-title { margin: 0; color: var(--mod); font-size: 0.7rem; font-weight: 800; letter-spacing: 0.1em; text-transform: uppercase; }
+.tmc .mission-hud-state {
+  margin-left: 0.4rem; padding: 0.05rem 0.45rem; border-radius: 99rem;
+  background: var(--mod-wash); border: 1px solid var(--mod-edge);
+  color: var(--mod); font-size: 0.64rem; letter-spacing: 0.04em;
+}
+.tmc .mission-hud.is-paused .mission-hud-state { background: transparent; border-color: var(--line); color: var(--gray); }
+.tmc .mission-hud.is-paused .mission-hud-time { color: var(--gray); }
+.tmc .mission-hud.is-past-target .mission-timer-ring { background: conic-gradient(var(--ok) 100%, var(--ok) 0); }
+.tmc .mission-hud-time {
+  margin: 0.1rem 0; color: var(--white); font-family: var(--font-main);
+  font-size: 1.35rem; font-weight: 700; font-variant-numeric: tabular-nums;
+}
+.tmc .mission-hud-sub { margin: 0.25rem 0 0; color: var(--gray); font-size: 0.8rem; }
+.tmc .mission-xp-track { height: 0.5rem; margin-top: 0.35rem; overflow: hidden; border-radius: 99rem; background: var(--surface-2); }
+.tmc .mission-xp-track span { display: block; height: 100%; width: 0%; background: var(--mod); transition: width 240ms ease; }
+.tmc .mission-hud-controls { display: flex; flex-wrap: wrap; gap: 0.4rem; justify-content: flex-end; }
+.tmc .mission-btn {
+  min-height: 2.2rem; padding: 0.4rem 0.8rem;
+  border: 1px solid var(--line); border-radius: 6px;
+  background: transparent; color: var(--gray-light);
+  font: inherit; font-size: 0.82rem; font-weight: 700; cursor: pointer;
+}
+.tmc .mission-btn:hover { border-color: var(--mod); color: var(--mod); background: transparent; }
+/* One primary per control group: reveal the card. Everything else stays quiet
+   so "Clear deck" never looks like the next step. */
+.tmc .drill-controls .mission-btn[data-card-flip] {
+  border-color: var(--mod); background: var(--mod); color: var(--mod-ink);
+}
+.tmc .drill-controls .mission-btn[data-card-flip]:hover { background: transparent; color: var(--mod); }
+.tmc .mission-btn-ghost { color: var(--gray); }
+.tmc .mission-hud.mission-urgent { border-bottom-color: var(--alert); }
+.tmc .mission-hud.mission-urgent .mission-timer-ring { color: var(--alert); }
+
+/* ── Course-wide time on task ──────────────────────────────────────────── */
+.tmc .time-panel {
+  display: grid; gap: 0.6rem; margin: 1.5rem 0; padding: 1.1rem 1.25rem;
+  border: 1px solid var(--line); border-left: 4px solid var(--mod);
+  border-radius: var(--radius); background: var(--surface);
+}
+.tmc .time-panel h2 { margin: 0; font-size: 1.05rem; }
+.tmc .time-total {
+  margin: 0.2rem 0 0; color: var(--white); font-family: var(--font-main);
+  font-size: 2rem; font-weight: 700; font-variant-numeric: tabular-nums;
+}
+.tmc .time-note { margin: 0; color: var(--gray); font-size: 0.84rem; }
+.tmc .time-panel button { justify-self: start; }
+
+/* ── Rank, ribbons, commission ─────────────────────────────────────────── */
+.tmc .rank-banner {
+  display: flex; align-items: center; gap: 1rem; margin: 1.25rem 0; padding: 1.1rem 1.25rem;
+  border: 1px solid var(--line); border-left: 4px solid var(--mod);
+  border-radius: var(--radius); background: var(--surface);
+}
+.tmc .rank-medallion {
+  flex: 0 0 auto; display: grid; place-items: center;
+  width: 56px; height: 56px; border-radius: 99rem;
+  background: var(--mod-wash); border: 2px solid var(--mod); color: var(--mod); font-size: 1.5rem;
+}
+.tmc .rank-copy { min-width: 0; }
+.tmc .rank-copy h2 { margin: 0.1rem 0 0.15rem; font-size: 1.35rem; }
+.tmc .rank-milestone { margin: 0; color: var(--gray); }
+
+.tmc .badges { margin: 1.5rem 0; }
+.tmc .badges-head { display: flex; align-items: baseline; justify-content: space-between; gap: 0.75rem; flex-wrap: wrap; }
+.tmc .badge-count {
+  margin: 0; padding: 0.2rem 0.65rem; border-radius: 99rem;
+  border: 1px solid var(--mod-edge); background: var(--mod-wash);
+  color: var(--mod); font-size: 0.85rem; font-weight: 700;
+}
+.tmc .badge-grid {
+  display: grid; gap: 0.75rem; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  margin: 0.75rem 0 0; padding: 0; list-style: none;
+}
+.tmc .badge {
+  display: grid; grid-template-columns: auto 1fr; grid-template-rows: auto auto auto;
+  column-gap: 0.7rem; row-gap: 0.15rem; align-items: center;
+  padding: 0.8rem 0.9rem; border: 1px solid var(--line); border-radius: var(--radius);
+  background: var(--surface);
+}
+.tmc .badge-icon {
+  grid-row: 1 / 3; grid-column: 1; display: grid; place-items: center;
+  width: 40px; height: 40px; border-radius: 99rem;
+  background: var(--surface-2); color: var(--gray); font-weight: 700; font-size: 1.05rem;
+}
+.tmc .badge-name { grid-column: 2; grid-row: 1; color: var(--white); font-weight: 700; }
+.tmc .badge-desc { grid-column: 1 / 3; grid-row: 3; margin: 0.25rem 0 0; color: var(--gray); font-size: 0.82rem; }
+.tmc .badge-state { grid-column: 2; grid-row: 2; color: var(--gray); font-size: 0.72rem; letter-spacing: 0.03em; text-transform: uppercase; }
+.tmc .badge.locked { opacity: 0.6; border-style: dashed; }
+.tmc .badge.earned { border-color: var(--mod); background: var(--mod-wash); }
+.tmc .badge.earned .badge-icon { background: var(--mod); color: var(--mod-ink); }
+.tmc .badge.earned .badge-state { color: var(--mod); font-weight: 700; }
+
+.tmc .commission-card { display: none; }
+.tmc .commission-card.unlocked {
+  display: block; margin: 1.5rem 0; padding: 1.4rem 1.5rem;
+  border: 2px solid var(--mod); border-radius: var(--radius);
+  background: linear-gradient(180deg, var(--mod-wash), transparent);
+}
+.tmc .commission-card.unlocked h2 { margin: 0.15rem 0 0.5rem; }
+.tmc .commission-card.unlocked p { margin: 0; }
+
+/* ── Voyage map ────────────────────────────────────────────────────────── */
+.tmc .voyage-map { margin: 0.75rem 0 0; padding: 0; list-style: none; }
+.tmc .voyage-port {
+  position: relative; display: grid; grid-template-columns: auto auto 1fr;
+  align-items: start; column-gap: 0.75rem;
+  margin: 0 0 0.6rem; padding: 0.85rem 1rem;
+  border: 1px solid var(--line); border-left: 4px solid var(--line);
+  border-radius: var(--radius); background: var(--surface);
+}
+.tmc .voyage-port-num {
+  display: grid; place-items: center; width: 30px; height: 30px; border-radius: 99rem;
+  background: var(--mod-wash); border: 2px solid var(--mod);
+  color: var(--mod); font-size: 0.9rem; font-weight: 700;
+}
+.tmc .voyage-port-check { color: var(--gray); font-size: 1.15rem; line-height: 1.6; }
+.tmc .voyage-port-body { min-width: 0; }
+.tmc .voyage-port-body a { color: var(--white); font-weight: 700; text-decoration: none; }
+.tmc .voyage-port-body a:hover { color: var(--mod); text-decoration: underline; }
+.tmc .voyage-port-q { margin: 0.15rem 0 0.2rem; color: var(--gray); font-size: 0.85rem; }
+.tmc .voyage-port-status { margin: 0; color: var(--gray); font-size: 0.76rem; letter-spacing: 0.02em; text-transform: uppercase; }
+.tmc .voyage-port.is-complete { border-color: var(--ok); border-left-color: var(--ok); background: var(--ok-wash); }
+.tmc .voyage-port.is-complete .voyage-port-num { background: var(--ok); border-color: var(--ok); color: var(--mod-ink); }
+.tmc .voyage-port.is-complete .voyage-port-check,
+.tmc .voyage-port.is-complete .voyage-port-status { color: var(--ok); font-weight: 700; }
+
+/* ── Field manual (module briefs) ──────────────────────────────────────── */
+.tmc .field-manual-header { max-width: 54rem; }
+.tmc .brief-meta { display: grid; gap: 0.65rem; margin: 1.5rem 0; }
+.tmc .brief-meta div { padding: 0.8rem 0.9rem; border: 1px solid var(--line); border-radius: 8px; background: var(--surface); }
+.tmc .brief-meta dt { color: var(--mod); font-size: 0.7rem; font-weight: 800; letter-spacing: 0.1em; text-transform: uppercase; }
+.tmc .brief-meta dd { margin: 0.2rem 0 0; color: var(--gray-light); font-weight: 600; line-height: 1.45; }
+
+.tmc .section-nav {
+  display: flex; flex-wrap: wrap; gap: 0.5rem; margin: 0 0 2rem; padding: 0.75rem;
+  border: 1px solid var(--line); border-radius: var(--radius); background: var(--surface);
+}
+.tmc .section-nav a {
+  padding: 0.35rem 0.7rem; border-radius: 99rem; border: 1px solid var(--line);
+  background: transparent; color: var(--gray-light); font-size: 0.84rem; font-weight: 700; text-decoration: none;
+}
+.tmc .section-nav a:hover { border-color: var(--mod); color: var(--mod); }
+
+.tmc .task-block {
+  margin-bottom: 1.5rem; padding: 1.25rem 1.5rem;
+  border-left: 4px solid var(--mod); border-radius: 0 var(--radius) var(--radius) 0;
+  background: var(--surface);
+}
+.tmc .task-kicker { margin: 0 0 0.35rem; color: var(--mod); font-size: 0.7rem; font-weight: 800; letter-spacing: 0.12em; text-transform: uppercase; }
+.tmc .task-title { margin: 0 0 0.35rem; font-size: 1.35rem; }
+.tmc .task-tagline { margin: 0 0 0.75rem; color: var(--gray); font-style: italic; }
+.tmc .task-setup { margin: 0 0 0.75rem; }
+.tmc .task-actions-label { margin: 0.75rem 0 0.35rem; color: var(--white); font-size: 0.7rem; font-weight: 800; letter-spacing: 0.1em; text-transform: uppercase; }
+.tmc .task-actions { margin: 0; padding-left: 1.25rem; }
+.tmc .task-actions li { margin-bottom: 0.4rem; max-width: none; }
+.tmc .task-callout {
+  margin-top: 1rem; padding: 0.85rem 1rem;
+  border: 1px solid var(--line); border-left: 3px solid var(--warn);
+  border-radius: 8px; background: var(--bg-dark);
+}
+.tmc .task-callout-label { margin: 0 0 0.35rem; color: var(--warn); font-size: 0.7rem; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; }
+
+.tmc .principle-grid, .tmc .protocol-list, .tmc .posture-grid, .tmc .day-grid, .tmc .slogan-list {
+  display: grid; gap: 0.85rem; padding: 0; list-style: none;
+}
+.tmc .principle-card, .tmc .protocol-step, .tmc .posture-grid li, .tmc .day-grid li, .tmc .slogan-list li {
+  padding: 1rem; border: 1px solid var(--line); border-radius: 8px; background: var(--surface);
+}
+.tmc .principle-number {
+  display: inline-block; margin: 0; padding: 0.2rem 0.6rem; border-radius: 99rem;
+  background: var(--mod); color: var(--mod-ink); font-size: 0.74rem; font-weight: 800; letter-spacing: 0.08em;
+}
+.tmc .principle-card h3, .tmc .protocol-step h3, .tmc .posture-grid h4, .tmc .day-grid h3 { margin-top: 0.65rem; }
+.tmc .slogan-list blockquote { margin: 0 0 0.5rem; color: var(--white); font-family: var(--font-main); font-size: 1.15rem; font-weight: 700; }
+
+.tmc .provenance-block, .tmc .externalise-panel {
+  margin-block: 1rem; padding: 1rem; border-left: 4px solid var(--mod); background: var(--mod-wash);
+}
+.tmc .provenance-label { color: var(--mod); font-size: 0.74rem; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; }
+.tmc .source-stamp { color: var(--gray); font-size: 0.74rem; font-weight: 700; letter-spacing: 0.03em; }
+
+.tmc .inventory-panel {
+  margin-bottom: 1.5rem; padding: 1.25rem;
+  border: 1px solid var(--line); border-top: 4px solid var(--mod);
+  border-radius: var(--radius); background: var(--surface);
+}
+.tmc .inventory-panel h2 { margin-top: 0; }
+.tmc .inventory-counts { display: grid; gap: 0.65rem; padding: 0; list-style: none; }
+.tmc .inventory-counts li {
+  display: grid; grid-template-columns: auto 1fr; gap: 0 0.5rem; align-items: baseline;
+  padding: 0.75rem; border-radius: 8px; background: var(--surface-2);
+}
+.tmc .inventory-counts strong { color: var(--white); font-family: var(--font-main); font-size: 1.6rem; }
+.tmc .inventory-counts span { color: var(--mod); font-weight: 700; }
+.tmc .inventory-counts small { grid-column: 1 / -1; color: var(--gray); line-height: 1.4; }
+
+.tmc .source-ledger { display: grid; gap: 0.75rem; margin: 1rem 0 0; padding: 0; list-style: none; counter-reset: source; }
+.tmc .source-ledger li {
+  position: relative; padding: 1rem 1rem 1rem 3.2rem; counter-increment: source;
+  border: 1px solid var(--line); border-radius: 8px; background: var(--surface);
+}
+.tmc .source-ledger li::before {
+  content: counter(source); position: absolute; top: 1rem; left: 1rem;
+  width: 1.5rem; height: 1.5rem; border-radius: 50%;
+  background: var(--mod); color: var(--mod-ink);
+  font-size: 0.74rem; font-weight: 800; line-height: 1.5rem; text-align: center;
+}
+.tmc .source-ledger h3, .tmc .source-ledger p:last-child { margin-bottom: 0; }
+
+.tmc .resource-group { margin-block: 2rem; }
+.tmc .resource-group h3 { display: flex; justify-content: space-between; gap: 1rem; padding-bottom: 0.45rem; border-bottom: 2px solid var(--mod); }
+.tmc .resource-group h3 span { color: var(--mod); font-family: var(--font-sans); font-size: 0.78rem; }
+.tmc .artifact-grid, .tmc .resource-actions { display: grid; gap: 1rem; }
+.tmc .artifact-card, .tmc .resource-actions article {
+  min-width: 0; padding: 1rem; border: 1px solid var(--line); border-radius: 8px; background: var(--surface);
+}
+.tmc .artifact-card h4 { margin: 0.25rem 0 0.7rem; font-size: 1.1rem; }
+.tmc .artifact-card img { display: block; width: 100%; margin-top: 0.9rem; border: 1px solid var(--line); border-radius: 6px; background: var(--surface-2); }
+.tmc .artifact-link, .tmc .artifact-held { display: inline-block; margin-bottom: 0.5rem; font-weight: 700; }
+.tmc .artifact-link { color: var(--mod); }
+.tmc .artifact-held { color: var(--alert); font-size: 0.85rem; }
+.tmc .withheld-notice { margin: 2rem 0; padding: 1rem; border-left: 5px solid var(--warn); background: var(--warn-wash); }
+.tmc .withheld-notice h3, .tmc .resource-actions h3 { margin-top: 0; }
+
+/* ── Media woven into the lesson ───────────────────────────────────────── */
+.tmc .inline-media {
+  margin: 1.1rem 0; overflow: hidden;
+  border: 1px solid var(--line); border-radius: var(--radius); background: var(--surface);
+}
+.tmc .inline-media-cap { margin: 0; padding: 0.6rem 0.9rem 0; color: var(--white); font-weight: 700; }
+.tmc .inline-media-kick {
+  display: inline-block; margin-right: 0.45rem; padding: 0.12rem 0.55rem; vertical-align: middle;
+  border-radius: 99rem; border: 1px solid var(--mod-edge); background: var(--mod-wash);
+  color: var(--mod); font-size: 0.7rem; letter-spacing: 0.04em; text-transform: uppercase;
+}
+.tmc .inline-media .artifact-media { display: block; width: 100%; margin-top: 0.6rem; }
+.tmc .inline-media video.artifact-media { background: #000; }
+.tmc .inline-media audio.artifact-media { width: calc(100% - 1.8rem); margin: 0.6rem 0.9rem; }
+.tmc .inline-graphic { display: block; width: 100%; height: auto; margin-top: 0.6rem; }
+.tmc .inline-media-sum { margin: 0; padding: 0.5rem 0.9rem 0.85rem; color: var(--gray); font-size: 0.85rem; }
+.tmc .artifact-media { display: block; width: 100%; margin: 0.5rem 0; border-radius: 6px; background: #000; }
+
+/* ── Drills: flashcards, then the knowledge check ──────────────────────── */
+.tmc .drill-panel {
+  margin-block: 2rem; padding: 1.1rem 1.25rem;
+  border: 1px solid var(--line); border-top: 3px solid var(--mod);
+  border-radius: var(--radius); background: var(--surface);
+}
+.tmc .drill-panel h2 { margin-top: 0.2rem; }
+.tmc .drill-controls { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-top: 0.9rem; }
+.tmc .flashcard-progress { display: flex; gap: 0.6rem; align-items: center; margin: 0.9rem 0; }
+.tmc .flashcard-bar-track { flex: 1 1 auto; height: 0.5rem; overflow: hidden; border-radius: 99rem; background: var(--surface-2); border: 1px solid var(--line); }
+.tmc .flashcard-bar { display: block; height: 100%; width: 0%; background: var(--mod); transition: width 240ms ease; }
+.tmc .flashcard-tally { flex: 0 0 auto; color: var(--gray); font-size: 0.8rem; }
+.tmc .flashcard-stage { display: grid; }
+.tmc .flashcard {
+  display: grid; gap: 0.75rem; align-content: center; min-height: 11rem; padding: 1.25rem;
+  border: 1px solid var(--line); border-radius: var(--radius); background: var(--bg-dark);
+  cursor: pointer; text-align: center;
+}
+.tmc .flashcard:hover { border-color: var(--mod); }
+.tmc .flashcard-face { margin: 0; color: var(--white); font-family: var(--font-main); font-size: 1.15rem; font-weight: 700; }
+.tmc .flashcard-back { margin: 0; padding-top: 0.75rem; border-top: 1px solid var(--line); color: var(--gray-light); visibility: hidden; }
+.tmc .flashcard.is-flipped .flashcard-back { visibility: visible; }
+.tmc .flashcard-counter { margin: 0.6rem 0 0; color: var(--gray); font-size: 0.82rem; text-align: center; }
+.tmc .drill-panel.is-known .flashcard { border-color: var(--ok); background: var(--ok-wash); }
+
+.tmc .quiz-list { margin: 0; padding: 0; list-style: none; }
+.tmc .quiz-item {
+  margin-bottom: 1.4rem; padding: 0.9rem 1rem;
+  border: 1px solid var(--line); border-left: 4px solid var(--line);
+  border-radius: 8px; background: var(--bg-dark);
+}
+.tmc .quiz-item.is-right { border-left-color: var(--ok); }
+.tmc .quiz-item.is-wrong { border-left-color: var(--alert); }
+.tmc .quiz-question { margin: 0 0 0.7rem; color: var(--white); font-weight: 700; }
+.tmc .quiz-options { display: grid; gap: 0.35rem; }
+.tmc .quiz-option {
+  display: grid; grid-template-columns: auto 1fr; gap: 0.55rem; align-items: start;
+  padding: 0.5rem 0.6rem; border: 1px solid transparent; border-radius: 6px;
+  background: var(--surface); cursor: pointer;
+}
+.tmc .quiz-option:hover { border-color: var(--line); }
+.tmc .quiz-option input { margin-top: 0.3rem; accent-color: var(--mod); }
+.tmc .quiz-option.is-chosen { border-color: var(--mod); }
+.tmc .quiz-option.is-correct { border-color: var(--ok); background: var(--ok-wash); }
+.tmc .quiz-option.is-wrong { border-color: var(--alert); background: var(--alert-wash); }
+.tmc .quiz-feedback { margin: 0.7rem 0 0; padding-top: 0.6rem; border-top: 1px dashed var(--line); color: var(--gray); font-size: 0.9rem; }
+.tmc .quiz-item.is-right .quiz-feedback { color: var(--ok); }
+
+.tmc .assessment-panel { margin-block: 2rem; padding: 1rem; border: 1px solid var(--line); border-top: 3px solid var(--mod); border-radius: var(--radius); background: var(--surface); }
+.tmc .assessment-frame { display: block; width: 100%; min-height: 420px; margin: 0.75rem 0; border: 1px solid var(--line); border-radius: 6px; background: #fff; }
+
+/* ── Progress list (legacy view) ───────────────────────────────────────── */
+.tmc .progress-list { display: grid; gap: 0.65rem; padding: 0; list-style: none; }
+.tmc .progress-list li {
+  display: grid; grid-template-columns: 2rem 1fr; gap: 0.6rem; align-items: start;
+  padding: 0.9rem; border: 1px solid var(--line); border-radius: 8px; background: var(--surface);
+}
+.tmc .progress-list li.is-complete { border-color: var(--ok); background: var(--ok-wash); }
+.tmc .progress-list [data-progress-check] { color: var(--ok); font-size: 1.4rem; font-weight: 800; }
+.tmc .progress-list p { margin: 0.1rem 0 0; color: var(--gray); font-size: 0.88rem; }
+
+.tmc .finish-line-hero {
+  margin-top: 1rem; padding: 0.85rem 1rem;
+  border-left: 3px solid var(--mod); border-radius: 0 var(--radius) var(--radius) 0;
+  background: var(--surface);
+}
+
+/* ── Responsive ────────────────────────────────────────────────────────── */
+@media (min-width: 42rem) {
+  .tmc .brief-meta { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .tmc .inventory-counts { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .tmc .principle-grid, .tmc .posture-grid, .tmc .day-grid,
+  .tmc .artifact-grid, .tmc .resource-actions { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .tmc .module-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .tmc .progress-panel { grid-template-columns: minmax(13rem, 0.7fr) minmax(14rem, 1fr); align-items: center; }
+  .tmc .progress-panel .local-status { grid-column: 1 / -1; }
+  .tmc .field-action, .tmc .support-callout, .tmc .caution,
+  .tmc .completion, .tmc .reset-panel { padding: 1.5rem; }
+}
+
+@media (min-width: 66rem) {
+  .tmc .module-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+
+@media (max-width: 42rem) {
+  .tmc .mission-hud-inner { grid-template-columns: auto 1fr; }
+  .tmc .mission-hud-controls { grid-column: 1 / -1; justify-content: flex-start; }
+}
+
+/* The nav collapses to a hamburger at 1024px and loses its 70px fixed height
+   guarantee only below that; the HUD tracks the same offset. */
+@media (max-width: 1024px) {
+  .tmc .mission-hud { top: 70px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tmc *, .tmc *::before, .tmc *::after {
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+  }
+}
+
+@media print {
+  .tmc .mission-hud, .tmc .module-nav, .tmc .completion,
+  .tmc .button-row, body > nav, footer { display: none; }
+  .tmc { background: #fff; color: #000; font-size: 11pt; }
+  .tmc #main-content { width: 100%; padding-block: 0; }
+}
+
+/* ── The printable pack ────────────────────────────────────────────────── */
+/* The paper track: a workbook for the whole course, an insert per module.
+   Presented as a real part of the course, not a downloads dumping ground. */
+.tmc .print-pack { margin-block: 2.5rem 1rem; }
+.tmc .print-lead {
+  display: grid; gap: 1rem; margin-top: 0.5rem;
+}
+@media (min-width: 46rem) {
+  .tmc .print-lead { grid-template-columns: 1fr 1fr; gap: 1.25rem; }
+}
+.tmc .print-lead > div {
+  padding: 1.15rem 1.25rem;
+  border: 1px solid var(--line); border-top: 3px solid var(--mod);
+  border-radius: var(--radius); background: var(--surface);
+}
+.tmc .print-lead h3 { margin: 0 0 0.4rem; font-size: 1.15rem; }
+.tmc .print-lead h3 a { color: var(--white); text-decoration: none; }
+.tmc .print-lead h3 a:hover { color: var(--mod); }
+.tmc .print-meta {
+  margin: 0.5rem 0 0; color: var(--gray); font-size: 0.78rem;
+  letter-spacing: 0.04em; text-transform: uppercase;
+}
+.tmc .print-inserts { margin: 0.75rem 0 0; padding: 0; list-style: none; }
+.tmc .print-inserts li { margin-bottom: 0.35rem; }
+.tmc .print-inserts a { color: var(--mod); font-size: 0.92rem; font-weight: 600; text-decoration: none; }
+.tmc .print-inserts a:hover { text-decoration: underline; }
+
+.tmc .module-print {
+  margin-block: 2rem; padding: 1.15rem 1.25rem;
+  border: 1px solid var(--line); border-left: 4px solid var(--mod);
+  border-radius: var(--radius); background: var(--surface);
+}
+.tmc .module-print h2 { margin: 0 0 0.5rem; font-size: 1.2rem; }
+.tmc .module-print .button-row { margin-top: 1rem; }
+.tmc .module-print-alt { margin: 0.9rem 0 0; color: var(--gray); font-size: 0.86rem; }
+.tmc .module-print-alt a { color: var(--mod); font-weight: 600; }
+
+/* ── Timing controls ───────────────────────────────────────────────────── */
+/* Two independent choices: whether the course records time at all, and
+   whether the running clock is visible while you work. */
+.tmc .time-actions { display: flex; flex-wrap: wrap; gap: 0.6rem; margin: 0.25rem 0 0; }
+.tmc .mission-hud-off { display: none; }
+.tmc .mission-hud.is-timing-off .mission-hud-inner { display: none; }
+.tmc .mission-hud.is-timing-off .mission-hud-off {
+  display: block; width: min(100% - 2rem, 64rem); margin-inline: auto;
+  padding: 0.5rem 0; color: var(--gray); font-size: 0.84rem;
+}
+.tmc .mission-hud.is-timing-off .mission-hud-off a { color: var(--mod); font-weight: 600; }
+/* Clock hidden: the numbers and the ring go, the controls stay so it can come
+   back, and the checklist meter — which is progress, not time — stays too. */
+.tmc .mission-hud.is-clock-hidden .mission-timer-ring,
+.tmc .mission-hud.is-clock-hidden .mission-hud-time,
+.tmc .mission-hud.is-clock-hidden .mission-hud-state { display: none; }
+.tmc .mission-hud.is-clock-hidden .mission-hud-inner { grid-template-columns: 1fr auto; }
+.tmc .time-panel.is-timing-off .time-total { color: var(--gray); }
+/* On a phone the HUD is sticky, so it must stay one row. Pause and Hide are
+   the in-the-moment controls; "Turn timing off" is a decision you make once,
+   and it lives on the progress page with the copy that explains it. */
+@media (max-width: 34rem) {
+  .tmc .mission-hud [data-mission-off] { display: none; }
+}

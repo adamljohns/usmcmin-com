@@ -1,9 +1,9 @@
 {
-  "generated": "2026-08-24T06:07:38.452977+00:00",
+  "generated": "2026-08-24T10:07:49.806582+00:00",
   "totals": {
     "agents": 16,
-    "operational": 13,
-    "degraded": 3,
+    "operational": 12,
+    "degraded": 4,
     "jobs": 151,
     "enabled": 83,
     "accomplishments": 373,
@@ -12,9 +12,11 @@
   "health": {
     "cron": {
       "enabled": 83,
-      "ran26h": 39,
+      "ran26h": 40,
       "delivered": 35,
-      "fails": []
+      "fails": [
+        "The Watchman's Daily Devotional (preacher-john)"
+      ]
     },
     "cron_source": "openclaw.sqlite + hermes/cron/jobs.json",
     "launchd": {
@@ -778,7 +780,7 @@
       "n_jobs": 17,
       "n_enabled": 11,
       "err": 0,
-      "last_ms": 1787534569044,
+      "last_ms": 1787565761496,
       "status": "operational",
       "accomplishments": [
         {
@@ -918,6 +920,28 @@
       },
       "jobs": [
         {
+          "name": "Credential and OAuth Watch",
+          "enabled": true,
+          "expr": "0 6 * * 1,4",
+          "tz": "",
+          "channel": "origin",
+          "last_ms": 1787565761496,
+          "status": "ok",
+          "errors": 0,
+          "dur_ms": null
+        },
+        {
+          "name": "Infrastructure Readiness Check",
+          "enabled": true,
+          "expr": "45 5 * * *",
+          "tz": "",
+          "channel": "origin",
+          "last_ms": 1787564870871,
+          "status": "ok",
+          "errors": 0,
+          "dur_ms": null
+        },
+        {
           "name": "MOOP Command Nightly Reconciliation",
           "enabled": true,
           "expr": "15 21 * * *",
@@ -984,34 +1008,12 @@
           "dur_ms": null
         },
         {
-          "name": "Infrastructure Readiness Check",
-          "enabled": true,
-          "expr": "45 5 * * *",
-          "tz": "",
-          "channel": "origin",
-          "last_ms": 1787478532380,
-          "status": "ok",
-          "errors": 0,
-          "dur_ms": null
-        },
-        {
           "name": "Weekly Fleet Currency Review",
           "enabled": true,
           "expr": "0 0 * * 0",
           "tz": "",
           "channel": "origin",
           "last_ms": 1787457970802,
-          "status": "ok",
-          "errors": 0,
-          "dur_ms": null
-        },
-        {
-          "name": "Credential and OAuth Watch",
-          "enabled": true,
-          "expr": "0 6 * * 1,4",
-          "tz": "",
-          "channel": "origin",
-          "last_ms": 1787220123986,
           "status": "ok",
           "errors": 0,
           "dur_ms": null
@@ -1366,9 +1368,9 @@
       ],
       "n_jobs": 6,
       "n_enabled": 4,
-      "err": 0,
-      "last_ms": 1787538000055,
-      "status": "operational",
+      "err": 1,
+      "last_ms": 1787565602086,
+      "status": "degraded",
       "accomplishments": [
         {
           "date": "2026-08-16",
@@ -1611,6 +1613,17 @@
       },
       "jobs": [
         {
+          "name": "The Watchman's Daily Devotional",
+          "enabled": true,
+          "expr": "0 6 * * *",
+          "tz": "America/New_York",
+          "channel": "discord",
+          "last_ms": 1787565602086,
+          "status": "error",
+          "errors": 1,
+          "dur_ms": 404563
+        },
+        {
           "name": "Dev Loop: preacher-john daily reflection (implement-or-escalate)",
           "enabled": true,
           "expr": "20 22 * * *",
@@ -1642,17 +1655,6 @@
           "status": "ok",
           "errors": 0,
           "dur_ms": 67055
-        },
-        {
-          "name": "The Watchman's Daily Devotional",
-          "enabled": true,
-          "expr": "0 6 * * *",
-          "tz": "America/New_York",
-          "channel": "discord",
-          "last_ms": 1787479200029,
-          "status": "ok",
-          "errors": 0,
-          "dur_ms": 352797
         },
         {
           "name": "Liberty Brief (Fri 11:49) \u2014 Preacher John",
@@ -4022,7 +4024,7 @@
       "n_jobs": 8,
       "n_enabled": 6,
       "err": 1,
-      "last_ms": 1787477400027,
+      "last_ms": 1787563800063,
       "status": "degraded",
       "accomplishments": [
         {
@@ -4192,10 +4194,10 @@
           "expr": "30 5 * * *",
           "tz": "America/New_York",
           "channel": "discord",
-          "last_ms": 1787477400027,
+          "last_ms": 1787563800063,
           "status": "ok",
           "errors": 0,
-          "dur_ms": 62875
+          "dur_ms": 66145
         },
         {
           "name": "Skill: audio-transcribe",
@@ -5475,5 +5477,5 @@
     "write-airbnb-reviews-for-listings",
     "you-are-an-expert-ai-agent"
   ],
-  "cowork_date": "2026-08-24T02:07:38-04:00"
+  "cowork_date": "2026-08-24T06:07:49-04:00"
 }

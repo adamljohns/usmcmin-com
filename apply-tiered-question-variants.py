@@ -63,8 +63,8 @@ QUESTION_VARIANTS = {
         None,
     ),
     ('sanctity_of_life', 4): (
-        # Federal: "Candidate has never accepted Planned Parenthood, NARAL, EMILY's List, or abortion-industry PAC funding"
-        "Candidate has never accepted abortion-industry PAC funding for state-legislative or statewide-office campaigns",
+        # Federal: FEC / OpenSecrets search found no abortion-industry PAC contributions
+        "FEC / state campaign-finance search found no abortion-industry PAC contributions for state-legislative or statewide-office campaigns (as of the cited search date)",
         None,  # local candidates typically don't get these PACs
     ),
 
@@ -272,8 +272,8 @@ QUESTION_VARIANTS = {
         None, None,
     ),
     ('foreign_policy_restraint', 3): (
-        # Federal: "Candidate has never accepted donations from foreign-backed lobbies (e.g., AIPAC) or foreign-linked PACs"
-        "Candidate has never accepted donations from foreign-backed lobbies (AIPAC) or foreign-linked PACs for state-legislative or statewide campaigns",
+        # Federal: TrackAIPAC / FEC / OpenSecrets search found no foreign-linked PAC contributions
+        "TrackAIPAC / FEC / state campaign-finance search found no AIPAC, pro-Israel-lobby, or foreign-linked PAC contributions for state-legislative or statewide campaigns (as of the cited search date)",
         None,  # local typically out of scope
     ),
     ('foreign_policy_restraint', 4): (

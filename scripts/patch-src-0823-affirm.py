@@ -44,11 +44,27 @@ def patch_categories(data):
             cat["questions_state"] = qss
 
 
+def patch_kiggans(data):
+    for cand in data.get("candidates", []):
+        if cand.get("slug") != "jen-kiggans":
+            continue
+        scores = cand.setdefault("scores", {})
+        fpr = list(scores.get("foreign_policy_restraint") or [None] * 5)
+        while len(fpr) < 5:
+            fpr.append(None)
+        fpr[3] = False
+        scores["foreign_policy_restraint"] = fpr
+        return
+    raise SystemExit("jen-kiggans not found in scorecard.json")
+
+
 def main():
     data = json.loads(SCORECARD.read_text())
     patch_categories(data)
-    SCORECARD.write_text(json.dumps(data, indent=2))
+    patch_kiggans(data)
+    SCORECARD.write_text(json.dumps(data, indent=2, ensure_ascii=False) + "\n")
     print("Patched scorecard.json category questions (sanctity_of_life q5, foreign_policy_restraint q4)")
+    print("Patched jen-kiggans foreign_policy_restraint[3] = False")
 
 
 if __name__ == "__main__":

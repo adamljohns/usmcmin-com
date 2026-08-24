@@ -47,6 +47,16 @@ When no individual or affiliated-source evidence exists for a cell, score from t
 **Reference data:** `data/party-platforms.json` — one scored rubric mapping per official platform document. Enrichment scripts read this file; do not re-derive platform positions ad hoc.
 
 
+## Affirmative search / no-hit (2026-08-23 — SRC-0823-AFFIRM)
+
+PAC-hygiene and foreign-lobby cells use **affirmative database searches**, not “has never accepted…” negatives you cannot prove.
+
+- **TRUE** = documented no-hit in FEC / OpenSecrets / TrackAIPAC (or state equivalent) with source URL + search date
+- **FALSE** = documented hit (e.g. AIPAC dollars on record)
+- **null** = search not run yet — “Not yet verified” / “Search not run”
+
+A documented no-hit **is evidence** and may take a grade. Silence on a **conviction** question (marriage, abolition, personhood) stays null unless the person actually said or voted it.
+
 ## Honesty lock (2026-08-21 — SRC-0821-TX-100)
 
 Party-platform inherit (`use_platform` / tier-3 RNC-DNC fill) is allowed **only** when `data.party` is a real R/D (or equivalent) **and** the official platform page is cited with `kind: party_platform`. `party: null` / nonpartisan locals MUST NOT headline 100, A, or any letter grade off RNC spray. Banner and math must match — “not scored” + 100/A is a FAIL. Allowed UI: amber “not individually reviewed” or honest blank/null cells with **no letter grade / no 100**.

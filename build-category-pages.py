@@ -88,7 +88,7 @@ CATEGORIES = [
             'Candidate has voted for or actively advocates abortion abolition (not merely restrictions)',
             'Candidate opposes embryonic stem-cell research, IVF embryo discard, and chimeric experimentation',
             'Candidate opposes euthanasia, physician-assisted suicide, and quality-of-life rationing',
-            'Candidate has never accepted Planned Parenthood, NARAL, EMILY\'s List, or abortion-industry PAC funding',
+            'FEC / OpenSecrets search found no Planned Parenthood, NARAL, EMILY\'s List, or abortion-industry PAC contributions (as of the cited search date)',
         ],
         'key_bills': [
             ('Hyde Amendment', 'Annual rider banning federal funding of elective abortion. We track every vote since 1976.'),
@@ -445,7 +445,7 @@ CATEGORIES = [
             'Candidate supports Article I congressional war-powers requirement before any U.S. military action',
             'Candidate supports immediate withdrawal from forever wars and repeal of standing AUMFs',
             'Candidate opposes foreign aid to nations hostile to U.S. interests or actively persecuting Christians',
-            'Candidate has never accepted donations from foreign-backed lobbies (e.g., AIPAC) or foreign-linked PACs',
+            'TrackAIPAC / FEC / OpenSecrets search found no AIPAC, pro-Israel-lobby, or foreign-linked PAC contributions (as of the cited search date)',
             'Candidate opposes U.S. participation in WHO, U.N. governance overreach, NATO expansion, and supranational governance',
         ],
         'key_bills': [

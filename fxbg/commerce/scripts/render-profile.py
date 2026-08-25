@@ -171,6 +171,7 @@ def render_profile(biz: dict) -> str:
   <nav class="site-nav">
     <a href="../index.html">Hub</a>
     <a href="../directory.html">Directory</a>
+    <a href="../categories/index.html">Categories</a>
     <a href="../methodology.html">Methodology</a>
     <a href="../about.html">About</a>
     <a href="../suggest.html">Suggest</a>

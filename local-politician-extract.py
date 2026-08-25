@@ -364,6 +364,12 @@ def main():
             if not isinstance(p, dict):
                 continue
             n, stance, quote = p.get("n"), p.get("stance"), p.get("quote")
+            if isinstance(n, list):
+                n = n[0] if n else None
+            try:
+                n = int(n)
+            except (TypeError, ValueError):
+                continue
             if n not in qmap or stance not in ("support", "oppose") or not quote:
                 continue
             cat_id, q_idx, q_text = qmap[n]
@@ -411,9 +417,18 @@ def main():
 
     # 4-wide: page-fetching overlaps (the big wall-clock win); LLM calls simply queue at the
     # servers. Gates are per-candidate and share no mutable state, so quality is unchanged.
+    def process_candidate_safe(c):
+        try:
+            return process_candidate(c)
+        except Exception as e:
+            slug = (c or {}).get("slug") or "?"
+            rec = {"slug": slug, "name": (c or {}).get("name"), "status": "extract_error",
+                   "error": str(e)[:200], "findings": [], "held": [], "sources_fetched": []}
+            return rec, f"{slug}: crashed {type(e).__name__}: {str(e)[:80]}"
+
     from concurrent.futures import ThreadPoolExecutor
     with ThreadPoolExecutor(max_workers=4) as ex:
-        for i, (rec, line) in enumerate(ex.map(process_candidate, batch), 1):
+        for i, (rec, line) in enumerate(ex.map(process_candidate_safe, batch), 1):
             results.append(rec)
             print(f"  [{i}/{len(batch)}] {line}", flush=True)
 

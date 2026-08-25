@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <script>(function(){try{var s=localStorage.getItem('usmc-theme')||localStorage.getItem('theme');if(s!=='light')document.documentElement.setAttribute('data-theme','dark');}catch(e){}})();</script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RESOLUTE Local — San Marcos civic door</title>
+  <meta name="description" content="RESOLUTE Local San Marcos door. Official AgendaCenter first. Last posted packet is not this week’s live week.">
+  <style>
+    :root {
+      --bg: #0b0d11; --bg-2: #12151b; --card: #161a21; --ink: #f3f4f6;
+      --muted: #9aa3b2; --line: #2a303a; --gold: #c9b37a;
+      --gold-dim: rgba(201,179,122,0.16); --blue: #7ea8d6; --red: #c45b5b;
+      --serif: "Iowan Old Style", "Palatino Linotype", Palatino, "Times New Roman", serif;
+      --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+    }
+    html[data-theme="light"] {
+      --bg: #f6f3ec; --bg-2: #fffdf8; --card: #ffffff; --ink: #1a1c1f;
+      --muted: #5b616b; --line: #ddd6c8; --gold: #8a7040;
+      --gold-dim: rgba(138,112,64,0.12); --blue: #2f5f8a; --red: #9b3b3b;
+    }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; padding: 0; background: var(--bg); color: var(--ink); font-family: var(--sans); }
+    a { color: inherit; }
+    .wrap { max-width: 1180px; margin: 0 auto; padding: 18px 20px 64px; }
+    .topbar { display: flex; justify-content: space-between; align-items: center; gap: 16px; padding: 14px 0 10px; border-bottom: 1px solid var(--line); }
+    .brand { display: flex; flex-direction: column; gap: 2px; }
+    .brand .kicker { font-size: 0.68rem; letter-spacing: 0.22em; text-transform: uppercase; color: var(--gold); font-weight: 800; }
+    .brand strong { font-family: var(--serif); font-size: 1.05rem; }
+    .nav { display: flex; gap: 16px; align-items: center; flex-wrap: wrap; font-size: 0.82rem; }
+    .nav a { text-decoration: none; color: var(--muted); }
+    .nav a.active { color: var(--ink); font-weight: 700; }
+    .nav a.wire { color: var(--gold); font-weight: 700; }
+    button.theme { border: 1px solid var(--line); background: var(--card); color: var(--ink); border-radius: 999px; padding: 6px 10px; font-size: 0.75rem; cursor: pointer; }
+    .mast { text-align: center; padding: 28px 0 22px; border-bottom: 3px double var(--line); margin-bottom: 22px; }
+    .mast h1 { font-family: var(--serif); font-size: clamp(2.2rem, 6vw, 3.8rem); line-height: 0.95; margin: 0 0 10px; letter-spacing: -0.03em; }
+    .mast h1 em { font-style: normal; color: var(--gold); }
+    .dek { max-width: 680px; margin: 0 auto 10px; color: var(--muted); line-height: 1.55; }
+    .meta { font-size: 0.78rem; color: var(--muted); }
+    .hero { display: grid; grid-template-columns: 1fr; background: var(--card); border: 1px solid var(--line); margin-bottom: 22px; }
+    .hero-body { padding: 28px 28px 24px; display: flex; flex-direction: column; gap: 12px; }
+    .chip { width: fit-content; font-size: 0.68rem; font-weight: 800; letter-spacing: 0.14em; text-transform: uppercase; border: 1px solid var(--line); padding: 4px 8px; color: var(--blue); }
+    .hero-body h2 { font-family: var(--serif); font-size: clamp(1.6rem, 3vw, 2.1rem); line-height: 1.15; margin: 0; }
+    .hero-body h2 a { text-decoration: none; }
+    .hero-body h2 a:hover { color: var(--gold); }
+    .insight { color: var(--muted); line-height: 1.6; margin: 0; font-size: 1.02rem; }
+    .src { margin-top: 8px; font-size: 0.8rem; color: var(--muted); }
+    .src a { color: var(--gold); font-weight: 700; text-decoration: none; }
+    .rails { display: grid; grid-template-columns: 1.15fr 0.95fr 0.9fr; gap: 16px; margin-bottom: 22px; }
+    .rail { background: var(--card); border: 1px solid var(--line); padding: 14px; }
+    .rail h3 { margin: 0 0 12px; font-size: 0.74rem; letter-spacing: 0.16em; text-transform: uppercase; color: var(--gold); border-bottom: 1px solid var(--line); padding-bottom: 8px; }
+    .item { padding: 10px 0; border-bottom: 1px solid var(--line); }
+    .item:last-child { border-bottom: 0; }
+    .item h4 { margin: 0 0 6px; font-family: var(--serif); font-size: 1.02rem; line-height: 1.25; }
+    .item p { margin: 0; color: var(--muted); font-size: 0.86rem; line-height: 1.45; }
+    .who { font-size: 0.72rem; color: var(--muted); letter-spacing: 0.04em; text-transform: uppercase; margin-top: 6px; }
+    .council { display: grid; gap: 8px; }
+    .seat { display: flex; justify-content: space-between; gap: 10px; padding: 8px 0; border-bottom: 1px solid var(--line); font-size: 0.88rem; }
+    .seat:last-child { border-bottom: 0; }
+    .seat span { color: var(--muted); font-size: 0.75rem; letter-spacing: 0.04em; text-transform: uppercase; }
+    .dock { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; }
+    .dock a { display: block; text-decoration: none; border: 1px solid var(--line); background: var(--card); padding: 16px; }
+    .dock .k { color: var(--gold); font-size: 0.7rem; letter-spacing: 0.14em; text-transform: uppercase; font-weight: 800; margin-bottom: 4px; }
+    .dock .t { font-family: var(--serif); font-size: 1.15rem; margin-bottom: 4px; }
+    .dock .d { color: var(--muted); font-size: 0.84rem; line-height: 1.45; }
+    .fine { margin-top: 22px; text-align: center; font-size: 0.68rem; color: var(--muted); line-height: 1.5; max-width: 760px; margin-left: auto; margin-right: auto; }
+    @media (max-width: 900px) { .rails, .dock { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="topbar">
+      <div class="brand">
+        <span class="kicker">U.S.M.C. Ministries</span>
+        <strong>RESOLUTE Local</strong>
+      </div>
+      <nav class="nav" aria-label="Primary">
+        <a href="https://usmcmin.com/mission.html">Mission</a>
+        <a href="https://usmcmin.com/citizen.html">Citizen</a>
+        <a class="wire" href="https://usmcmin.com/wire.html">Wire</a>
+        <a href="https://usmcmin.com/local.html">Local</a>
+        <a class="active" href="#top">San Marcos</a>
+        <button class="theme" type="button" id="themeToggle">Light</button>
+      </nav>
+    </div>
+
+    <header class="mast" id="top">
+      <h1>San Marcos <em>door</em></h1>
+      <p class="dek">Brother city. AgendaCenter first. Last posted Regular is on the record. It is not this week’s live week until a newer packet posts.</p>
+      <div class="meta">Filed Monday, August 24, 2026 · last posted Regular Aug 5 · no newer Council packet this fetch</div>
+    </header>
+
+    <article class="hero">
+      <div class="hero-body">
+        <span class="chip">Last posted packet · Aug 5</span>
+        <h2><a href="https://www.sanmarcostx.gov/AgendaCenter/ViewFile/Agenda/_08052026-5110" target="_blank" rel="noopener">August 5 Regular is the newest Clerk file this desk pulled — PIDs, impact fees, and a judge appointment</a></h2>
+        <p class="insight">Wednesday, August 5, 2026, 6:00 p.m., City Council Chambers, 630 E. Hopkins. That night is past. Keep it on the door so a neighbor can still open the official file. Do not pretend it is next Tuesday. A live San Marcos week ships only when AgendaCenter posts a newer City Council `_MMDDYYYY-*` with Clerk titles on the same fetch.</p>
+        <div class="src">City of San Marcos AgendaCenter · <a href="https://www.sanmarcostx.gov/AgendaCenter/City-Council-4" target="_blank" rel="noopener">Official portal →</a></div>
+      </div>
+    </article>
+
+    <section class="rails" aria-label="San Marcos rails">
+      <div class="rail">
+        <h3>Aug 5 Regular — last posted, not this week</h3>
+        <article class="item">
+          <h4>Public hearing: River Bridge Ranch PID assessments</h4>
+          <p>Clerk title: Ordinance 2026-28 levying special assessments within Improvement Area #1 for the River Bridge Ranch Public Improvement District.</p>
+          <div class="who">AgendaCenter · 5 Aug Regular · Item 7</div>
+        </article>
+        <article class="item">
+          <h4>Public hearing: water / wastewater impact fees</h4>
+          <p>Independent financial audit of water and wastewater impact fees, then Ordinance 2026-29 updating those fees on first of two readings.</p>
+          <div class="who">AgendaCenter · 5 Aug Regular · Items 8–9</div>
+        </article>
+        <article class="item">
+          <h4>Also on that file</h4>
+          <p>Consent included STR/HOT payment-processing fees, appointing William Henry as Presiding Municipal Court Judge, Hunter Water Main design at $900,000, Aetna administration, and a five-year security-software contract. Non-consent opened Ordinance 2026-30, Whisper South PID annual service-plan update.</p>
+        </article>
+      </div>
+
+      <div class="rail">
+        <h3>How to speak / write</h3>
+        <article class="item">
+          <h4>Citizen comment</h4>
+          <p>Three minutes. Remote: sign up at sanmarcostx.gov/citizencomment by noon the day of the meeting. In person: online or at the Clerk kiosk until 5:30 p.m. Regular night. Be on the line or in the room at 6:00 p.m.</p>
+        </article>
+        <article class="item">
+          <h4>Public hearing</h4>
+          <p>Remote still needs noon signup. In the chamber you may simply show up for the hearing item — no signup required. Say the agenda number you are for or against. Written comments go to Council through the Clerk.</p>
+        </article>
+        <article class="item">
+          <h4>Clerk</h4>
+          <p>512-393-8090 · cityclerk@sanmarcostx.gov. Work session remote signup is also noon; in-person work-session signup closes 2:00 p.m.</p>
+          <div class="who"><a href="https://www.sanmarcostx.gov/410/Citizen-Comments-at-Council-Meetings" style="color:var(--gold);text-decoration:none;font-weight:700;">Citizen comments →</a></div>
+        </article>
+      </div>
+
+      <div class="rail">
+        <h3>Who sits — San Marcos</h3>
+        <div class="council">
+          <div class="seat">Jane Hughson <span>Mayor</span></div>
+          <div class="seat">Matthew Mendoza <span>Place 1</span></div>
+          <div class="seat">Josh Paselk <span>Place 2</span></div>
+          <div class="seat">Alyssa Garza <span>Place 3</span></div>
+          <div class="seat">Shane Scott <span>Place 4</span></div>
+          <div class="seat">Lorenzo Gonzalez <span>Place 5</span></div>
+          <div class="seat">Amanda Rodriguez <span>Place 6</span></div>
+        </div>
+        <p class="who" style="margin-top:12px;">Mayor at-large, two-year term. Six places at-large, staggered three-year terms. Official member pages this turn · <a href="https://www.sanmarcostx.gov/149/City-Council" style="color:var(--gold);text-decoration:none;font-weight:700;">City Council →</a> · <a href="https://usmcmin.com/citizen.html" style="color:var(--gold);text-decoration:none;font-weight:700;">Scorecard →</a></p>
+      </div>
+    </section>
+
+    <section class="dock">
+      <a href="https://usmcmin.com/local.html">
+        <div class="k">Home porch</div>
+        <div class="t">Fredericksburg</div>
+        <div class="d">Only live week right now. Brother city stays packet-honest.</div>
+      </a>
+      <a href="https://www.sanmarcostx.gov/AgendaCenter/City-Council-4">
+        <div class="k">Official portal</div>
+        <div class="t">AgendaCenter</div>
+        <div class="d">Primary source. Newer `_MMDDYYYY-*` = next live week.</div>
+      </a>
+      <a href="https://www.sanmarcostx.gov/410/Citizen-Comments-at-Council-Meetings">
+        <div class="k">How to speak</div>
+        <div class="t">Citizen comments</div>
+        <div class="d">Three minutes. Noon remote clock. Hearing: show up if you are in the room.</div>
+      </a>
+    </section>
+
+    <p class="fine">AI civic desk for USMC Ministries / RESOLUTE. Human-approved before public. Not Associated Press. Official packets first. Last posted ≠ this week. Public door: https://usmcmin.com/local-san-marcos.html</p>
+  </div>
+  <script>
+    (function () {
+      var root = document.documentElement;
+      var btn = document.getElementById('themeToggle');
+      if (location.search.indexOf('theme=light') !== -1) root.setAttribute('data-theme', 'light');
+      function paint() { btn.textContent = root.getAttribute('data-theme') === 'light' ? 'Dark' : 'Light'; }
+      btn.addEventListener('click', function () {
+        var next = root.getAttribute('data-theme') === 'light' ? 'dark' : 'light';
+        root.setAttribute('data-theme', next);
+        try { localStorage.setItem('usmc-theme', next); localStorage.setItem('theme', next); } catch (e) {}
+        paint();
+      });
+      paint();
+    })();
+  </script>
+</body>
+</html>

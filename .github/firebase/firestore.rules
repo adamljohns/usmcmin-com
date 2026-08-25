@@ -1,0 +1,88 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function owns(uid) {
+      return request.auth != null && request.auth.uid == uid;
+    }
+
+    function exactKeys(data, keys) {
+      return data.keys().hasAll(keys) && data.keys().hasOnly(keys);
+    }
+
+    function validUser(data) {
+      return exactKeys(data, ['schemaVersion', 'createdAt', 'lastSeenAt', 'authKind'])
+        && data.schemaVersion == 1
+        && data.createdAt is timestamp
+        && data.lastSeenAt is timestamp
+        && data.authKind is string
+        && data.authKind in ['anonymous', 'google'];
+    }
+
+    function validModules(modules) {
+      return modules is map
+        && exactKeys(modules, ['m01', 'm02', 'm03', 'm04', 'm05', 'm06', 'm07'])
+        && modules.m01 is bool
+        && modules.m02 is bool
+        && modules.m03 is bool
+        && modules.m04 is bool
+        && modules.m05 is bool
+        && modules.m06 is bool
+        && modules.m07 is bool;
+    }
+
+    function validLastModule(value) {
+      return value == null || (value is string && value in ['m01', 'm02', 'm03', 'm04', 'm05', 'm06', 'm07']);
+    }
+
+    function validProgress(data) {
+      return exactKeys(data, ['courseId', 'contentVersion', 'modules', 'lastModule', 'startedAt', 'updatedAt', 'completedAt'])
+        && data.courseId == 'tmc-husband-v1'
+        && data.contentVersion == 1
+        && validModules(data.modules)
+        && validLastModule(data.lastModule)
+        && data.startedAt is timestamp
+        && data.updatedAt is timestamp
+        && (data.completedAt == null || data.completedAt is timestamp);
+    }
+
+    function validEmail(email) {
+      return email is string
+        && email.size() >= 3
+        && email.size() <= 254
+        && email.matches('^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$');
+    }
+
+    function validConsent(data) {
+      return exactKeys(data, ['email', 'subscribed', 'consentVersion', 'source', 'consentedAt', 'unsubscribedAt'])
+        && validEmail(data.email)
+        && data.subscribed is bool
+        && data.consentVersion == 1
+        && data.source == 'tmc-husband-course'
+        && data.consentedAt is timestamp
+        && ((data.subscribed == true && data.unsubscribedAt == null)
+          || (data.subscribed == false && data.unsubscribedAt is timestamp));
+    }
+
+    match /users/{uid} {
+      // Deliberately use get rather than read: authenticated clients cannot list users.
+      allow get: if owns(uid);
+      allow create, update: if owns(uid) && validUser(request.resource.data);
+
+      match /courseProgress/tmc-husband-v1 {
+        allow get: if owns(uid);
+        allow create, update: if owns(uid) && validProgress(request.resource.data);
+      }
+
+      match /consents/field-brief {
+        // No collection read/list is granted; subscriber enumeration remains admin-only.
+        allow get: if owns(uid);
+        allow create, update: if owns(uid) && validConsent(request.resource.data);
+      }
+    }
+
+    // Any path not named above, including admin/subscriber paths, is client-inaccessible.
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

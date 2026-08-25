@@ -1,5 +1,5 @@
 {
-  "generated": "2026-08-25T11:40:31.750734+00:00",
+  "generated": "2026-08-25T12:10:35.356355+00:00",
   "totals": {
     "agents": 16,
     "operational": 8,
@@ -12,8 +12,8 @@
   "health": {
     "cron": {
       "enabled": 83,
-      "ran26h": 56,
-      "delivered": 42,
+      "ran26h": 54,
+      "delivered": 41,
       "fails": [
         "Melaleuca Monday Briefing (carnegie)",
         "Daily Standards Check (9:30 AM) \u2014 Mac (sgt-maj-mac)",
@@ -23,16 +23,16 @@
         "Daily Father Outreach Reminder (Pops) (pops)",
         "Skill: agent-self-introspect (main)",
         "C5iSR social draft (M/W/F) (carnegie)",
-        "Skill: adt-codes (status pulse) (sally)",
-        "Skill: session-primer (Mon smoke) (main)"
+        "Skill: adt-codes (status pulse) (sally)"
       ]
     },
     "cron_source": "openclaw.sqlite + hermes/cron/jobs.json",
     "launchd": {
-      "healthy": 76,
+      "healthy": 75,
       "fails": [
         "com.moop.garmin-rounds: exit 1",
-        "com.moop.approval-gate-audit: exit 1"
+        "com.moop.approval-gate-audit: exit 1",
+        "com.moop.resolute-wire-publish: exit 7"
       ]
     }
   },
@@ -136,7 +136,7 @@
       "n_jobs": 38,
       "n_enabled": 11,
       "err": 3,
-      "last_ms": 1787623500045,
+      "last_ms": 1787658300052,
       "status": "degraded",
       "accomplishments": [
         {
@@ -366,6 +366,17 @@
       },
       "jobs": [
         {
+          "name": "Fleet Morning SITREP (consolidated stand-up)",
+          "enabled": true,
+          "expr": "45 7 * * 1-5",
+          "tz": "America/New_York",
+          "channel": "discord",
+          "last_ms": 1787658300052,
+          "status": "ok",
+          "errors": 0,
+          "dur_ms": 179680
+        },
+        {
           "name": "Dev Loop: main daily reflection (implement-or-escalate)",
           "enabled": true,
           "expr": "05 22 * * *",
@@ -386,17 +397,6 @@
           "status": "error",
           "errors": 4,
           "dur_ms": 60003
-        },
-        {
-          "name": "Fleet Morning SITREP (consolidated stand-up)",
-          "enabled": true,
-          "expr": "45 7 * * 1-5",
-          "tz": "America/New_York",
-          "channel": "discord",
-          "last_ms": 1787571900056,
-          "status": "ok",
-          "errors": 0,
-          "dur_ms": 237787
         },
         {
           "name": "Skill: session-primer (Mon smoke)",
@@ -787,7 +787,7 @@
     },
     {
       "id": "hermes",
-      "primary": "xai-oauth/grok-4.6",
+      "primary": "openai-codex/gpt-5.6-sol",
       "fallback": "openai-codex/gpt-5.5",
       "fallbacks": [
         "openai-codex/gpt-5.5",
@@ -3459,7 +3459,7 @@
       "n_jobs": 6,
       "n_enabled": 2,
       "err": 0,
-      "last_ms": 1787626800054,
+      "last_ms": 1787659200054,
       "status": "operational",
       "accomplishments": [
         {
@@ -3608,6 +3608,17 @@
       },
       "jobs": [
         {
+          "name": "Doc Morning Clinical Read (0800 EDT)",
+          "enabled": true,
+          "expr": "0 8 * * *",
+          "tz": "",
+          "channel": "telegram",
+          "last_ms": 1787659200054,
+          "status": "ok",
+          "errors": 0,
+          "dur_ms": 64794
+        },
+        {
           "name": "Dev Loop: doc daily reflection (implement-or-escalate)",
           "enabled": true,
           "expr": "00 23 * * 1,4",
@@ -3617,17 +3628,6 @@
           "status": "ok",
           "errors": 0,
           "dur_ms": 192920
-        },
-        {
-          "name": "Doc Morning Clinical Read (0800 EDT)",
-          "enabled": true,
-          "expr": "0 8 * * *",
-          "tz": "",
-          "channel": "telegram",
-          "last_ms": 1787572800060,
-          "status": "ok",
-          "errors": 0,
-          "dur_ms": 65838
         },
         {
           "name": "Skill: garmin-reader",
@@ -4607,7 +4607,7 @@
       "n_jobs": 11,
       "n_enabled": 9,
       "err": 1,
-      "last_ms": 1787626200055,
+      "last_ms": 1787658180074,
       "status": "degraded",
       "accomplishments": [
         {
@@ -4753,6 +4753,17 @@
       },
       "jobs": [
         {
+          "name": "Pops Daily Wheelhouse Check-in (7:37 AM)",
+          "enabled": true,
+          "expr": "43 7 * * *",
+          "tz": "America/New_York",
+          "channel": "telegram",
+          "last_ms": 1787658180074,
+          "status": "ok",
+          "errors": 0,
+          "dur_ms": 83359
+        },
+        {
           "name": "Dev Loop: pops daily reflection (implement-or-escalate)",
           "enabled": true,
           "expr": "50 22 * * *",
@@ -4795,17 +4806,6 @@
           "status": "error",
           "errors": 4,
           "dur_ms": 60004
-        },
-        {
-          "name": "Pops Daily Wheelhouse Check-in (7:37 AM)",
-          "enabled": true,
-          "expr": "43 7 * * *",
-          "tz": "America/New_York",
-          "channel": "telegram",
-          "last_ms": 1787571780036,
-          "status": "ok",
-          "errors": 0,
-          "dur_ms": 64328
         },
         {
           "name": "Pops Spirit Front Weekly SITREP (Sun 1900)",
@@ -5470,5 +5470,5 @@
     "write-airbnb-reviews-for-listings",
     "you-are-an-expert-ai-agent"
   ],
-  "cowork_date": "2026-08-25T07:40:31-04:00"
+  "cowork_date": "2026-08-25T08:10:35-04:00"
 }

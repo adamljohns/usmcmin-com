@@ -261,8 +261,13 @@ def apply_record(rec, dossier_entry, categories, categories_by_id, rubrics, fres
     footnotes = dict(rec.get('footnotes') or {})  # keep any non-synthetic existing
     # drop any synthetic party-default footnote (we are upgrading to evidence)
     footnotes.pop('_pd', None)
+    old_af = rec.get('answer_footnotes') or {}
     answer_footnotes = {}
-    url_to_fnid = {}
+    # Seed url->fid from the EXISTING footnotes so (a) a repeated source reuses its id and
+    # (b) a freshly-minted id can never collide with — and silently overwrite — an existing
+    # footnote pointing at a different URL.
+    url_to_fnid = {v.get('url'): k for k, v in footnotes.items()
+                   if isinstance(v, dict) and v.get('url')}
     cells_changed = 0
     cells_with_evidence = 0
     issues = []
@@ -270,7 +275,11 @@ def apply_record(rec, dossier_entry, categories, categories_by_id, rubrics, fres
     def fnid_for(url):
         if url in url_to_fnid:
             return url_to_fnid[url]
-        fid = f'r{len(url_to_fnid) + 1}'
+        n = len(url_to_fnid) + 1
+        fid = f'r{n}'
+        while fid in footnotes:      # never clobber an existing footnote id
+            n += 1
+            fid = f'r{n}'
         url_to_fnid[url] = fid
         return fid
 
@@ -318,7 +327,20 @@ def apply_record(rec, dossier_entry, categories, categories_by_id, rubrics, fres
                 else:
                     prev = old_scores.get(cid, [])
                     pv = prev[q] if q < len(prev) else None
-                    row.append(pv if pv in VALID_VALUES else None)
+                    keep = pv if pv in VALID_VALUES else None
+                    row.append(keep)
+                    # CARRY THE CITATION WITH THE ANSWER. answer_footnotes used to be
+                    # rebuilt from this dossier alone and assigned wholesale, so a dossier
+                    # touching ONE category silently stripped every other category's refs
+                    # while `scores` kept the answers — manufacturing "answered but
+                    # undocumented" records (906 of them by 2026-08-26) and quietly
+                    # shrinking the grade-eligible pool.
+                    if keep in (True, False):
+                        prev_refs = old_af.get(cid) or []
+                        pr = prev_refs[q] if q < len(prev_refs) else None
+                        for fid in (pr or []):
+                            if fid in footnotes and fid not in fn_row[q]:
+                                fn_row[q].append(fid)
         # detect change vs old
         prev = old_scores.get(cid, [])
         for q in range(5):

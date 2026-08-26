@@ -234,7 +234,16 @@ def apply_record(rec, dossier_entry, categories, categories_by_id, rubrics, fres
     if 'notes_set' in dossier_entry:
         rec['notes'] = dossier_entry['notes_set']
     elif dossier_entry.get('notes_append'):
-        existing = (rec.get('notes') or '').strip()
+        # 24 legacy records (mostly MS federal enrich-batches) store `notes` as a
+        # topic->description DICT rather than a string, which crashed .strip() and
+        # aborted the whole dossier. Render the dict into readable lines instead of
+        # discarding the content.
+        _n = rec.get('notes')
+        if isinstance(_n, dict):
+            _n = '\n'.join(f'{k.replace("_", " ")}: {v}' for k, v in _n.items() if v)
+        elif isinstance(_n, (list, tuple)):
+            _n = '\n'.join(str(x) for x in _n if x)
+        existing = (_n or '').strip()
         add = dossier_entry['notes_append'].strip()
         if add and add not in existing:
             rec['notes'] = (existing + ('\n\n' if existing else '') + add).strip()

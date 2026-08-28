@@ -1,9 +1,9 @@
 {
-  "generated": "2026-08-28T11:46:25.291915+00:00",
+  "generated": "2026-08-28T12:16:28.229589+00:00",
   "totals": {
     "agents": 16,
-    "operational": 16,
-    "degraded": 0,
+    "operational": 15,
+    "degraded": 1,
     "jobs": 120,
     "enabled": 78,
     "accomplishments": 373,
@@ -12,16 +12,19 @@
   "health": {
     "cron": {
       "enabled": 78,
-      "ran26h": 41,
-      "delivered": 37,
-      "fails": []
+      "ran26h": 40,
+      "delivered": 36,
+      "fails": [
+        "RESOLUTE AM Wire draft (Rush) (rush)"
+      ]
     },
     "cron_source": "openclaw.sqlite + hermes/cron/jobs.json",
     "launchd": {
-      "healthy": 74,
+      "healthy": 73,
       "fails": [
         "com.moop.pj-wisdom-dm: exit 5",
         "com.moop.approval-gate-audit: exit 1",
+        "com.moop.resolute-wire-publish: exit 7",
         "com.moop.psa-consistency-check: exit 1",
         "com.moop.pj-first-dm: exit 5"
       ]
@@ -37,7 +40,7 @@
     {
       "label": "Command Surface Sync",
       "purpose": "Command DB \u2192 Obsidian / TACC / workflows",
-      "last": "2026-08-27T22:14:06-04:00",
+      "last": "2026-08-28T07:54:15-04:00",
       "status": "local-only"
     },
     {
@@ -125,7 +128,7 @@
       "n_jobs": 11,
       "n_enabled": 8,
       "err": 0,
-      "last_ms": 1787882700024,
+      "last_ms": 1787917500053,
       "status": "operational",
       "accomplishments": [
         {
@@ -360,6 +363,17 @@
       },
       "jobs": [
         {
+          "name": "Fleet Morning SITREP (consolidated stand-up)",
+          "enabled": true,
+          "expr": "45 7 * * 1-5",
+          "tz": "America/New_York",
+          "channel": "discord",
+          "last_ms": 1787917500053,
+          "status": "ok",
+          "errors": 0,
+          "dur_ms": 148353
+        },
+        {
           "name": "Dev Loop: main daily reflection (implement-or-escalate)",
           "enabled": true,
           "expr": "05 22 * * *",
@@ -369,17 +383,6 @@
           "status": "ok",
           "errors": 0,
           "dur_ms": 144410
-        },
-        {
-          "name": "Fleet Morning SITREP (consolidated stand-up)",
-          "enabled": true,
-          "expr": "45 7 * * 1-5",
-          "tz": "America/New_York",
-          "channel": "discord",
-          "last_ms": 1787831115424,
-          "status": "ok",
-          "errors": 0,
-          "dur_ms": 161117
         },
         {
           "name": "Skill: week-ahead-calendar (gog)",
@@ -899,7 +902,7 @@
       "n_jobs": 0,
       "n_enabled": 0,
       "err": 0,
-      "last_ms": 1787916006273,
+      "last_ms": 1787918719918,
       "status": "operational",
       "accomplishments": [
         {
@@ -1237,7 +1240,7 @@
         "browser_profile": "usmc",
         "files": {
           "AGENTS.md": 30200,
-          "MEMORY.md": 38674,
+          "MEMORY.md": 39652,
           "HEARTBEAT.md": 3647
         },
         "verified": "2026-08-28"
@@ -3111,7 +3114,7 @@
       "n_jobs": 6,
       "n_enabled": 2,
       "err": 0,
-      "last_ms": 1787886000064,
+      "last_ms": 1787918400027,
       "status": "operational",
       "accomplishments": [
         {
@@ -3260,6 +3263,17 @@
       },
       "jobs": [
         {
+          "name": "Doc Morning Clinical Read (0800 EDT)",
+          "enabled": true,
+          "expr": "0 8 * * *",
+          "tz": "",
+          "channel": "telegram",
+          "last_ms": 1787918400027,
+          "status": "ok",
+          "errors": 0,
+          "dur_ms": 51489
+        },
+        {
           "name": "Dev Loop: doc daily reflection (implement-or-escalate)",
           "enabled": true,
           "expr": "00 23 * * 1,4",
@@ -3269,17 +3283,6 @@
           "status": "ok",
           "errors": 0,
           "dur_ms": 95011
-        },
-        {
-          "name": "Doc Morning Clinical Read (0800 EDT)",
-          "enabled": true,
-          "expr": "0 8 * * *",
-          "tz": "",
-          "channel": "telegram",
-          "last_ms": 1787832000043,
-          "status": "ok",
-          "errors": 0,
-          "dur_ms": 66789
         },
         {
           "name": "Skill: garmin-reader",
@@ -3975,9 +3978,9 @@
       ],
       "n_jobs": 7,
       "n_enabled": 5,
-      "err": 0,
-      "last_ms": 1787890320037,
-      "status": "operational",
+      "err": 1,
+      "last_ms": 1787918700015,
+      "status": "degraded",
       "accomplishments": [
         {
           "date": "2026-08-08",
@@ -4120,6 +4123,17 @@
       },
       "jobs": [
         {
+          "name": "RESOLUTE AM Wire draft (Rush)",
+          "enabled": true,
+          "expr": "5 8 * * *",
+          "tz": "America/New_York",
+          "channel": "last",
+          "last_ms": 1787918700015,
+          "status": "error",
+          "errors": 1,
+          "dur_ms": 22018
+        },
+        {
           "name": "Dev Loop: rush daily reflection (implement-or-escalate)",
           "enabled": true,
           "expr": "12 0 * * 2,5",
@@ -4162,17 +4176,6 @@
           "status": "ok",
           "errors": 0,
           "dur_ms": 237796
-        },
-        {
-          "name": "RESOLUTE AM Wire draft (Rush)",
-          "enabled": true,
-          "expr": "5 8 * * *",
-          "tz": "America/New_York",
-          "channel": "last",
-          "last_ms": 1787832300051,
-          "status": "ok",
-          "errors": 0,
-          "dur_ms": 526205
         },
         {
           "name": "Liberty Brief (Fri 11:53) \u2014 Rush Sullivan",
@@ -5110,5 +5113,5 @@
     "write-airbnb-reviews-for-listings",
     "you-are-an-expert-ai-agent"
   ],
-  "cowork_date": "2026-08-28T07:46:25-04:00"
+  "cowork_date": "2026-08-28T08:16:28-04:00"
 }

@@ -421,12 +421,62 @@ def main():
     if not records:
         return 1
 
+    # ── AUTOMATED INSPECTION GATE ────────────────────────────────────────────────
+    # Every veto to date (65 bills) came from a HUMAN reading a party-vs-verdict table.
+    # That judgment cannot be the only thing standing between a bad mapping and a public
+    # scorecard of named officials, because crons and PSAs run this engine unattended.
+    # The single most reliable machine-checkable signal from those 65 vetoes: on this
+    # Christian-conservative rubric a correct mapping almost never yields a DEMOCRAT
+    # MAJORITY scoring TRUE or a REPUBLICAN MAJORITY scoring FALSE. When it does, the
+    # bill's polarity is usually inverted (a double-negative title like MD HB444
+    # "Immigration Enforcement Agreements - Prohibition" or CA SB1174) or it is a
+    # procedural motion (MT HB818 "Amendments NOT Concurred").
+    #
+    # A flagged dossier is written to a *.FLAGGED.json name that the orchestrator does
+    # NOT pick up, and the run exits 2 — so an unattended round cannot ship it. A human
+    # who has read the report can still apply it deliberately.
+    sc_all = json.load(open(SCORECARD))["candidates"]
+    party_of = {c["slug"]: (c.get("party") or "?") for c in sc_all}
+    tallies = {}
+    for k, rec in records.items():
+        pty = party_of.get(k.split("@")[0], "?")
+        for cat, qs in rec["evidence"].items():
+            for qi, e in qs.items():
+                note = str(e.get("note") or "")
+                bill = note.split("—")[0].replace("Voted YEA on", "").replace("Voted NAY on", "").strip()
+                t = tallies.setdefault((bill or cat, cat, qi), {"D": [0, 0], "R": [0, 0], "n": 0})
+                t["n"] += 1
+                if pty in ("D", "R"):
+                    t[pty][0 if e["v"] else 1] += 1
+
+    flagged = []
+    for (bill, cat, qi), t in tallies.items():
+        dT, dF = t["D"]; rT, rF = t["R"]
+        if (dT > dF and dT >= 5) or (rF > rT and rF >= 5):
+            flagged.append((bill, cat, qi, t))
+
+    if flagged:
+        print("\n" + "=" * 74)
+        print("⛔ INSPECTION GATE — POLARITY LOOKS INVERTED; dossier withheld from apply")
+        for bill, cat, qi, t in flagged:
+            print(f"   {bill} -> {cat}[{qi}]  D(T/F)={t['D'][0]}/{t['D'][1]}  R(T/F)={t['R'][0]}/{t['R'][1]}  n={t['n']}")
+        print("   Read the bill's FULL text (title truncations lie in both directions).")
+        print("   If genuinely wrong:  python3 add-veto.py \"ST:BILL\" \"reason\"")
+        print("   If genuinely right:  re-run with --allow-flagged")
+        print("=" * 74)
+
     os.makedirs("refinements", exist_ok=True)
-    dpath = f"refinements/rollcall-{state.lower()}-{time.strftime('%Y-%m-%d-%H%M')}.json"
+    suffix = ".FLAGGED" if (flagged and "--allow-flagged" not in sys.argv) else ""
+    dpath = f"refinements/rollcall-{state.lower()}-{time.strftime('%Y-%m-%d-%H%M')}{suffix}.json"
     json.dump({"_meta": {"author": "rollcall-engine", "date": today,
-                         "note": f"{state} roll-call-first scoring (LegiScan API; Qwen+Gemma-agreed bill mappings)"},
+                         "note": f"{state} roll-call-first scoring (LegiScan API; Qwen+Gemma-agreed bill mappings)"
+                                 + (" — POLARITY-FLAGGED, needs human review" if suffix else ""),
+                         "inspection": {"bill_mappings": len(tallies), "flagged": len(flagged)}},
                "reset_unspecified": False, "records": records}, open(dpath, "w"), indent=1)
     print(f"dossier: {dpath}")
+    if suffix:
+        print("EXIT 2 — flagged dossier is NOT applied automatically.")
+        return 2
     if apply_now:
         return subprocess.call(["/opt/homebrew/bin/python3", "commit_refinement.py", dpath,
                                 f"rollcall({state}): {len(records)} legislators, {cells} cited floor votes (LegiScan)"])

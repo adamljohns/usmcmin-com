@@ -85,7 +85,20 @@ def main():
         if not build():
             raise SystemExit("BUILD FAILED.")
 
-        run(["git", "add", "-A"])
+        # Stage ONLY what this pipeline produces. `git add -A` in a checkout shared with
+        # Cursor, the PSAs and the fleet crons publishes whatever anyone left lying around:
+        # on 2026-08-26 it swept an unrelated 16.9 MB video and another agent's untracked
+        # test file into a scorecard-currency commit on a PUBLIC repo. Anything not on this
+        # list — scratch files, media, credentials — is now left alone for its owner.
+        PIPELINE_PATHS = ["data", "candidates", "refinements", "sitemap.xml", "issues"]
+        run(["git", "add", "--"] + [p_ for p_ in PIPELINE_PATHS if os.path.exists(p_)])
+        swept = run(["git", "diff", "--cached", "--name-only"],
+                    capture_output=True, text=True).stdout.split()
+        stray = [f for f in swept
+                 if not any(f == p_ or f.startswith(p_ + "/") for p_ in PIPELINE_PATHS)]
+        if stray:
+            print(f"REFUSING: {len(stray)} out-of-scope path(s) staged, e.g. {stray[:3]}")
+            raise SystemExit("staging scope violation — investigate before pushing.")
         committed = run(["git", "commit", "-q", "-m", subject, "-m", COAUTHOR]).returncode == 0
         if not committed:
             print("nothing to commit (already applied?)")
@@ -95,7 +108,21 @@ def main():
             head = run(["git", "rev-parse", "--short", "HEAD"], capture_output=True, text=True).stdout.strip()
             print(f"PUSHED on attempt {attempt} (HEAD {head})")
             return
-        print(f"push rejected — remote moved; retrying (attempt {attempt})")
+        # Push lost the race. REBASE the commit onto the new tip instead of letting the
+        # next loop's `reset --hard` throw it away — that behaviour destroyed three
+        # identical 1,729-record commits on 2026-08-21 before anyone noticed.
+        print(f"push rejected — remote moved; rebasing (attempt {attempt})")
+        run(["git", "fetch", "origin", "main", "-q"])
+        if run(["git", "rebase", "origin/main"],
+               stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL).returncode == 0:
+            if run(["git", "push", "origin", "HEAD:main"],
+                   stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL).returncode == 0:
+                head = run(["git", "rev-parse", "--short", "HEAD"],
+                           capture_output=True, text=True).stdout.strip()
+                print(f"PUSHED after rebase on attempt {attempt} (HEAD {head})")
+                return
+        else:
+            run(["git", "rebase", "--abort"], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
 
     raise SystemExit("FAILED after 4 attempts — remote too hot; try again.")
 

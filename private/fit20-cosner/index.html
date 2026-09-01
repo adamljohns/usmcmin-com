@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<!-- GENERATED FILE — fit20 Studio Command V3.3 shared shell.
+<!-- GENERATED FILE — fit20 Studio Command V3.4 shared shell.
      Do NOT hand-edit index.html. Edit data/studio-ssot.json (content) or
-     studio-command-shared/templates/shell-v33.html (shell), then run
-     studio-command-shared/build-v33.py.
+     studio-command-shared/templates/shell-v34.html (shell), then run
+     studio-command-shared/build-v34.py.
      CODE OWNER: Coach Arnie only. Other agents may send operator JSON / voice ticks — they do not edit this shell. -->
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
@@ -16,7 +16,7 @@
 <meta name="apple-mobile-web-app-title" content="Cosner SC" />
 <meta name="application-name" content="Cosner SC" />
 <meta name="description" content="Private fit20 Cosner's Corner Studio Command dashboard. PIN gate. Installable app." />
-<title>fit20 Cosner's Corner · Studio Command V3.3</title>
+<title>fit20 Cosner's Corner · Studio Command V3.4</title>
 <link rel="icon" href="assets/favicon.png" />
 <link rel="apple-touch-icon" href="assets/apple-touch-icon.png" />
 <link rel="manifest" href="manifest.webmanifest" />
@@ -205,6 +205,25 @@ tr:last-child td{border-bottom:0}
 .gate-comms code{font-size:12px}
 .trainers-line{font-size:12.5px;line-height:1.45}
 .trainers-line b{color:var(--lime-dk)}
+
+.top{padding:calc(10px + env(safe-area-inset-top, 0px)) 14px 10px;padding-top:calc(14px + env(safe-area-inset-top, 8px))}
+.top h1{font-size:18px}
+.brand-logo{height:28px}
+.link-legend{display:none}
+.ql-group{display:none}
+.quicklinks{gap:6px;margin-top:6px}
+.quicklinks a{padding:7px 10px;min-height:32px;font-size:11.5px}
+.kpis{grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:10px}
+.kpi{padding:8px 10px}
+.kpi .val{font-size:22px}
+.sitrep ul{display:none}
+.sitrep.sitrep-open ul{display:block}
+.sitrep .more-sit{margin-top:6px;font-size:11px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--lime-dk);background:none;border:0;padding:0;cursor:pointer}
+.wrap{padding:12px 12px 88px}
+.dock{position:sticky;bottom:0;z-index:30;display:grid;grid-template-columns:repeat(4,1fr);gap:6px;background:var(--charcoal);padding:8px 10px calc(8px + env(safe-area-inset-bottom, 0px));border-top:2px solid var(--lime)}
+.dock a{color:#d6f0a8;text-align:center;font-size:11px;font-weight:800;letter-spacing:.04em;text-transform:uppercase;padding:10px 4px;border-radius:8px;min-height:44px;display:flex;align-items:center;justify-content:center}
+.dock a:hover{text-decoration:none;background:#3a403c}
+.cmd-acc{margin:0 0 12px}
 </style>
 </head>
 <body>
@@ -212,7 +231,7 @@ tr:last-child td{border-bottom:0}
 <div id="gate"><div class="gate-card">
 <img src="assets/fit20-logo.png" alt="fit20" style="width:145px;height:auto;margin-bottom:14px;" />
 <div class="eyebrow">Private · PIN + host path · Not public nav</div>
-<h1>fit20 Cosner's Corner<br/>Studio Command V3.3</h1>
+<h1>fit20 Cosner's Corner<br/>Studio Command V3.4</h1>
 <div class="gate-comms">
 <div class="g-label">Communications:</div>
 <div class="g-ind">Call / Text → RingCentral</div>
@@ -223,7 +242,7 @@ tr:last-child td{border-bottom:0}
 <input id="pin" type="password" inputmode="numeric" maxlength="8" placeholder="••••" autocomplete="off" aria-label="Studio PIN" />
 <button type="button" id="unlock">Unlock dashboard</button>
 <div class="gate-err" id="gateErr">Wrong PIN. Try again.</div>
-<div class="gate-foot">Cosner's Corner · V3.3 · Franchise Well Fitness · updated 2026-08-26</div>
+<div class="gate-foot">Cosner's Corner · V3.4 · Franchise Well Fitness · updated 2026-08-31</div>
 </div></div>
 <div id="app">
 <header class="top"><div class="top-row"><div>
@@ -250,7 +269,7 @@ tr:last-child td{border-bottom:0}
 </nav>
 </div>
 <div class="meta">
-<div><strong>V3.3</strong> <span class="v2-badge">SEPARATE STUDIO</span> <span class="fresh" id="freshBadge">—</span></div>
+<div><strong>V3.4</strong> <span class="v2-badge">SEPARATE STUDIO</span> <span class="fresh" id="freshBadge">—</span></div>
 <div>Studio: Cosner's Corner</div>
 <div>STUD CORD: Adam Johns</div>
 <div class="trainers-line" id="trainersLine"><b>Today's trainers</b> (calendar): —</div>
@@ -258,24 +277,12 @@ tr:last-child td{border-bottom:0}
 <div id="pwaStatus">App: browser tab</div>
 </div>
 </div></header>
-<div class="banner" id="banner"><b>COSNER'S CORNER</b> · V3.3 · Separate studio dashboard · Franchise Well Fitness</div>
+<div class="banner" id="banner"><b>COSNER'S CORNER</b> · V3.4 · Separate studio dashboard · Franchise Well Fitness</div>
 <div class="wrap">
 <section class="kpis" id="kpis"></section>
-
 <div class="sitrep" id="sitrep"></div>
 
-<section class="cmd-strip" id="cmdStrip" aria-label="Coach command">
-  <div class="lbl">Coach / audio command · this device</div>
-  <textarea id="cmdText" placeholder="Examples: arrived, screens done, temp 66, two leads N/A, floors wiped, wrap N/A" aria-label="Checklist command"></textarea>
-  <div class="btn-row" style="margin-top:8px">
-    <button class="btn primary" type="button" id="cmdRun">Apply command</button>
-    <button class="btn" type="button" id="cmdVoice">Speak command</button>
-    <button class="btn" type="button" id="cmdVoiceStop" disabled>Stop</button>
-  </div>
-  <p class="cmd-out" id="cmdOut">Voice or type. Coach can also push a signed hash after Max ships V3.3.</p>
-</section>
-
-<section class="card"><div class="card-h"><h2>Studio Operations Checklist</h2><span class="chip">FRANCHISE WELL FITNESS</span></div>
+<section class="card" id="chkCard"><div class="card-h"><h2>Studio Operations Checklist</h2><span class="chip">FRANCHISE WELL FITNESS</span></div>
 <div class="card-b">
 <p class="copy" style="margin-top:0">One official Franchise Well list. Tap: blank → <b>done</b> → <b>N/A</b>. Coach can tick these from Telegram / Chat audio after this ship — no laminated sheet, no waiting on a pack refresh.</p>
 <div class="day-roll" id="dayRoll"><b>Heads up:</b> this checklist state is from <span id="dayRollDate">—</span>. <span style="white-space:nowrap"><button class="btn" type="button" id="dayRollReset" style="min-height:36px;padding:6px 10px">Reset for today</button> <button class="btn" type="button" id="dayRollKeep" style="min-height:36px;padding:6px 10px">Keep</button></span></div>
@@ -283,7 +290,7 @@ tr:last-child td{border-bottom:0}
   <div><label for="chkShift">Shift</label><select id="chkShift" data-k="fw_shift"><option value="AM" selected>AM</option><option value="MID">Mid</option><option value="PM">PM</option></select></div>
   <div><label for="chkTemp">Studio temp °F</label><select id="chkTemp" data-k="fw_temp"><option value="">—</option><option>61</option><option>62</option><option>63</option><option>64</option><option>65</option><option>66</option><option>67</option><option>68</option></select></div>
   <div><label for="chkTrainer">Trainer on block</label><select id="chkTrainer" data-k="fw_trainer"><option value="">—</option><option>Adam Johns</option><option>Candace Johnson</option><option>Deborah Hogan</option><option>Robert VanGee</option><option>Todd Welsh</option></select></div>
-  <div><label for="chkDate">Date</label><input id="chkDate" data-k="fw_date" type="date" value="2026-08-26" /></div>
+  <div><label for="chkDate">Date</label><input id="chkDate" data-k="fw_date" type="date" value="2026-08-31" /></div>
 </div>
 <div id="chkFw"></div>
 <div class="chk-close"><label for="chkCloseNote" style="display:block;font-size:10px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin-bottom:3px">Close the studio — note needs</label><textarea id="chkCloseNote" data-k="fw_close_note" placeholder="What the next trainer needs for close / restock"></textarea></div>
@@ -296,6 +303,22 @@ tr:last-child td{border-bottom:0}
 </div>
 <p class="copy" id="chkStamp" style="margin:8px 0 0;font-size:11px">Checklist local to this device</p>
 </div></section>
+
+<details class="more-acc cmd-acc" id="cmdStripWrap">
+<summary>Coach / audio command</summary>
+<div class="more-body">
+<section class="cmd-strip" id="cmdStrip" aria-label="Coach command">
+  <div class="lbl">Coach / audio command · this device</div>
+  <textarea id="cmdText" placeholder="Examples: arrived, screens done, temp 66, two leads N/A, floors wiped, wrap N/A" aria-label="Checklist command"></textarea>
+  <div class="btn-row" style="margin-top:8px">
+    <button class="btn primary" type="button" id="cmdRun">Apply command</button>
+    <button class="btn" type="button" id="cmdVoice">Speak command</button>
+    <button class="btn" type="button" id="cmdVoiceStop" disabled>Stop</button>
+  </div>
+  <p class="cmd-out" id="cmdOut">Voice or type. Coach can also push a signed hash after Max ships V3.4.</p>
+</section>
+</div>
+</details>
 
 <section class="card" id="leadsCard"><div class="card-h"><h2>Who to call next</h2><span class="chip">COSNER LEADS</span></div>
 <div class="card-b">
@@ -394,10 +417,16 @@ tr:last-child td{border-bottom:0}
 </div>
 </details>
 
-<div class="footer">fit20 Cosner's Corner · PIN gate · installable · V3.3 · Franchise Well Fitness · pack 2026-08-26 · built 2026-08-26 · shell only (no data/)</div>
+<div class="footer">fit20 Cosner's Corner · PIN gate · installable · V3.4 · Franchise Well Fitness · pack 2026-08-26 · built 2026-08-31 · shell only (no data/)</div>
 <p class="pwa-hint" id="iosInstallHint">iPhone/iPad: Safari → Share → <b>Add to Home Screen</b>. Android/Chrome: use Install bar or browser menu → Install app. Board content refreshes when morning brief / evening sweep publish a new pack.</p>
 <div class="btn-row" style="justify-content:center"><button class="btn primary" type="button" onclick="lockAgain()">Lock screen</button></div>
 </div></div>
+<nav class="dock" id="shiftDock" aria-label="Shift dock">
+  <a href="#chkCard">Checklist</a>
+  <a href="#leadsCard">Call</a>
+  <a href="#notesCard">Notes</a>
+  <a href="#chkCard">Wrap</a>
+</nav>
 <div class="install-bar" id="installBar" role="region" aria-label="Install app">
   <p><b>Install Cosner Studio Command</b> as a home-screen app for one-tap open (works offline on last shell).</p>
   <div class="btn-row" style="margin:0">
@@ -408,7 +437,7 @@ tr:last-child td{border-bottom:0}
 <script>
 "use strict";
 const POC_PIN="2020";
-const STORE="sc_cosner_v33";
+const STORE="sc_cosner_v34";
 const NOTES_KEY="sc_cosner_notes_v33";
 const CHKP="fw_";
 const MAILBOX="cosnerscorner@fit20usa.com";
@@ -445,7 +474,7 @@ function lockAgain(){
 }
 function maybeShowInstall(){
   if(!installBar||isStandalone()) return;
-  if(localStorage.getItem("sc_cosner_pwa_dismiss_v33")==="1") return;
+  if(localStorage.getItem("sc_cosner_pwa_dismiss_v34")==="1") return;
   if(deferredPrompt) installBar.classList.add("on");
 }
 window.addEventListener("beforeinstallprompt",(e)=>{ e.preventDefault(); deferredPrompt=e; if(sessionStorage.getItem(STORE)==="1") maybeShowInstall(); });
@@ -454,7 +483,7 @@ if(installBtn){ installBtn.addEventListener("click",async()=>{
   if(!deferredPrompt){ alert("On iPhone: Safari Share → Add to Home Screen. On Android/Chrome: browser menu → Install / Add to Home Screen."); return; }
   deferredPrompt.prompt(); try{await deferredPrompt.userChoice;}catch(_e){} deferredPrompt=null; installBar.classList.remove("on");
 });}
-if(installDismiss){ installDismiss.addEventListener("click",()=>{ localStorage.setItem("sc_cosner_pwa_dismiss_v33","1"); installBar.classList.remove("on"); });}
+if(installDismiss){ installDismiss.addEventListener("click",()=>{ localStorage.setItem("sc_cosner_pwa_dismiss_v34","1"); installBar.classList.remove("on"); });}
 document.getElementById("unlock").addEventListener("click",unlock);
 pin.addEventListener("keydown",e=>{if(e.key==="Enter")unlock();});
 
@@ -473,7 +502,7 @@ pin.addEventListener("keydown",e=>{if(e.key==="Enter")unlock();});
   const t=SSOT.trainers||{};
   document.getElementById("trainersLine").innerHTML="<b>Today's trainers</b> (calendar): AM <b>"+esc(t.am||"—")+"</b> · MID <b>"+esc(t.mid||"N/A")+"</b> · PM <b>"+esc(t.pm||"N/A")+"</b>"+(t.note?'<div class="muted">'+esc(t.note)+"</div>":"");
   const banner=document.getElementById("banner");
-  banner.innerHTML="<b>COSNER'S CORNER · "+esc(SSOT.date||"")+"</b> · V3.3 · "+esc(SSOT.banner_note||"Separate studio dashboard · Franchise Well Fitness")+" · Today's trainers on meta.";
+  banner.innerHTML="<b>COSNER'S CORNER · "+esc(SSOT.date||"")+"</b> · V3.4 · "+esc(SSOT.banner_note||"Separate studio dashboard · Franchise Well Fitness")+" · Today's trainers on meta.";
   const k=document.getElementById("kpis");
   k.innerHTML=(SSOT.kpis||[]).map(x=>'<div class="kpi '+(x.tone==="ok"?"ok":(x.tone==="hot"?"hot":""))+'"><div class="lbl">'+esc(x.label)+'</div><div class="val">'+esc(x.value)+'</div><div class="sub">'+esc(x.sub||"")+"</div></div>").join("")||'<div class="kpi"><div class="lbl">Board</div><div class="val">—</div><div class="sub">no pack</div></div>';
 })();
@@ -482,10 +511,13 @@ pin.addEventListener("keydown",e=>{if(e.key==="Enter")unlock();});
 function renderSitrep(){
   const s=SSOT.sitrep||{}; const el=document.getElementById("sitrep");
   const pins=loadNotes().filter(n=>n.pinned);
+  const hasB=s.bullets&&s.bullets.length;
   el.innerHTML="<b>"+esc(s.shift||"")+" SITREP · Cosner</b>"
     +'<div class="big">'+esc(s.summary||"No SITREP in pack — enter pass-down via Shift notes.")+"</div>"
-    +((s.bullets&&s.bullets.length)?"<ul>"+s.bullets.map(x=>"<li>"+esc(x)+"</li>").join("")+"</ul>":"")
+    +(hasB?"<ul>"+s.bullets.map(x=>"<li>"+esc(x)+"</li>").join("")+"</ul>"+'<button type="button" class="more-sit" id="sitMore">Show details ▾</button>':"")
     +(pins.length?'<div style="margin-top:8px"><b>Pinned pass-down:</b><ul>'+pins.map(n=>"<li>["+esc(n.tag)+"] "+esc(n.text)+" — <i>"+esc(n.author)+"</i></li>").join("")+"</ul></div>":"");
+  const more=document.getElementById("sitMore");
+  if(more) more.addEventListener("click",()=>{ el.classList.toggle("sitrep-open"); more.textContent=el.classList.contains("sitrep-open")?"Hide details ▴":"Show details ▾"; });
 }
 
 /* ---------- Now / Next / Waiting / Blocked ---------- */
@@ -858,7 +890,7 @@ function chkBtn(it,cls){
       +"Franchise Well: "+line(all)+"\n"
       +(g("close_note")?("Close note: "+g("close_note")+"\n"):"")
       +(misses.length?("Not done: "+misses.join(" · ")+"\n"):"All items done or N/A.\n")
-      +"(Franchise Well Fitness checklist · V3.3 board)";
+      +"(Franchise Well Fitness checklist · V3.4 board)";
     copyText(txt,"Shift summary copied.");
   });
   /* day rollover — never silently wipe */

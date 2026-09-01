@@ -1,5 +1,5 @@
-/* fit20 Cosner Studio Command PWA · V3.3 · cache shell only, never data/ */
-const CACHE = "sc-cosner-v33";
+/* fit20 Cosner Studio Command PWA · V3.4 · cache shell only, never data/ */
+const CACHE = "sc-cosner-v34";
 const PRECACHE = [
   "./",
   "./index.html",

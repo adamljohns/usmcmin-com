@@ -92,8 +92,11 @@ def main():
         # list — scratch files, media, credentials — is now left alone for its owner.
         PIPELINE_PATHS = ["data", "candidates", "refinements", "sitemap.xml", "issues"]
         run(["git", "add", "--"] + [p_ for p_ in PIPELINE_PATHS if os.path.exists(p_)])
-        swept = run(["git", "diff", "--cached", "--name-only"],
-                    capture_output=True, text=True).stdout.split()
+        # -z: NUL-separated and UNQUOTED. Plain --name-only octal-escapes and quotes any
+        # path with non-ASCII bytes ("candidates/ca/jesse-arregu\303\255n.html"), which made
+        # the scope check reject its own in-scope files.
+        swept = [f for f in run(["git", "diff", "--cached", "--name-only", "-z"],
+                                capture_output=True, text=True).stdout.split("\0") if f]
         stray = [f for f in swept
                  if not any(f == p_ or f.startswith(p_ + "/") for p_ in PIPELINE_PATHS)]
         if stray:

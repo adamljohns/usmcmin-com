@@ -21,6 +21,8 @@ Usage:
   legiscan-rollcall-engine.py MD                      # dry: classify + build dossier + report
   legiscan-rollcall-engine.py MD --max-bills 40       # cap getBill spend for the state
   legiscan-rollcall-engine.py MD --apply              # ...then apply+build+push via commit_refinement
+  legiscan-rollcall-engine.py MD --refresh-classifications   # drop cached skip/keep for this state
+  legiscan-rollcall-engine.py NH --refresh-classifications --bills HB365,HB377
 """
 import json, os, re, subprocess, sys, time
 
@@ -30,6 +32,7 @@ _spec = importlib.util.spec_from_file_location("lpe", "local-politician-extract.
 lpe = importlib.util.module_from_spec(_spec)
 _spec.loader.exec_module(lpe)                      # chat/model_at — one implementation
 from legiscan_client import LegiScanClient, LegiScanError
+import rollcall_score as _rs
 
 SCORECARD = "data/scorecard.json"
 CLASS_CACHE = os.path.expanduser("~/.openclaw/state/legiscan-bill-classifications.json")
@@ -85,6 +88,7 @@ def main():
     only_bills = ([b.strip().upper() for b in sys.argv[sys.argv.index("--bills") + 1].split(",")]
                   if "--bills" in sys.argv else None)
     apply_now = "--apply" in sys.argv
+    refresh_class = "--refresh-classifications" in sys.argv
     today = time.strftime("%Y-%m-%d")
 
     qwen = "http://127.0.0.1:1235/v1"; gemma = "http://127.0.0.1:1234/v1"
@@ -176,6 +180,20 @@ def main():
     except Exception:
         ccache = {}
     os.makedirs(os.path.dirname(CLASS_CACHE), exist_ok=True)
+    # A bill judged "skip" is cached forever, so re-sweeps become silent no-ops.
+    # --refresh-classifications drops this state's keys (or just --bills) so they
+    # get re-judged. Does NOT touch other states.
+    if refresh_class:
+        if only_bills:
+            ids = {str(b["bill_id"]) for b in flagged}
+            drop = [k for k in ccache
+                    if k.startswith(f"{state}:") and k.split(":")[1].split(":")[0] in ids]
+        else:
+            drop = [k for k in ccache if k.startswith(f"{state}:")]
+        for k in drop:
+            del ccache[k]
+        json.dump(ccache, open(CLASS_CACHE, "w"), indent=1)
+        print(f"refresh-classifications: dropped {len(drop)} cached {state} key(s)")
 
     # people map for THIS session (1 query, heavily reused)
     ppl = (ls.pull("getSessionPeople", id=sid).get("sessionpeople") or {}).get("people") or []
@@ -340,7 +358,6 @@ def main():
         # or (b) the parties genuinely diverged (majority of D's opposite majority of R's) —
         # the mechanical form of the runbook's "party-line marquee votes are HARD evidence."
             yea_n, nay_n = int(rc.get("yea") or 0), int(rc.get("nay") or 0)
-            contested = (yea_n + nay_n) > 0 and min(yea_n, nay_n) / (yea_n + nay_n) >= 0.25
             py = {"D": [0, 0], "R": [0, 0]}
             for mv in (rc.get("votes") or []):
                 vt = (mv.get("vote_text") or "").strip().lower()
@@ -349,12 +366,7 @@ def main():
                 pp = (people.get(mv.get("people_id")) or {}).get("party") or ""
                 if pp in py:
                     py[pp][0 if vt == "yea" else 1] += 1
-            def maj(side):
-                y, n = side
-                return None if (y + n) < 5 else (y > n)
-            dmaj, rmaj = maj(py["D"]), maj(py["R"])
-            party_divided = dmaj is not None and rmaj is not None and dmaj != rmaj
-            if not (contested or party_divided):
+            if not _rs.vote_is_scoreable(yea_n, nay_n, py["D"], py["R"]):
                 skipped["uncontested"] = skipped.get("uncontested", 0) + 1
                 continue
 
@@ -378,8 +390,7 @@ def main():
                     continue
                 c = matches[0]
                 # ITL reverses: YEA on Inexpedient-to-Legislate = voting AGAINST the bill.
-                voted_for_bill = (vt == "yea") != is_itl
-                supports = (cls["yea"] == "support") == voted_for_bill
+                supports = _rs.cell_verdict(cls["yea"], vt, is_itl)
                 key = f"{c['slug']}@{state}"
                 rec = records.setdefault(key, {"profile": {
                     "confidence": (c.get("profile") or {}).get("confidence") or "evidence_state",
@@ -443,8 +454,7 @@ def main():
 
     flagged = []
     for (bill, cat, qi), t in tallies.items():
-        dT, dF = t["D"]; rT, rF = t["R"]
-        if (dT > dF and dT >= 5) or (rF > rT and rF >= 5):
+        if _rs.polarity_looks_inverted(t["D"], t["R"]):
             flagged.append((bill, cat, qi, t))
 
     if flagged:

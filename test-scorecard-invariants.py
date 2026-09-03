@@ -103,6 +103,15 @@ def main():
           "rollcall_grammar" in eng and "rollcall_grammar" in hunt
           and "FINAL_RC = re.compile" not in eng and "FINAL = re.compile" not in hunt,
           "a local copy of the vote patterns reappeared — they will drift again")
+    check("rollcall: score math lives in rollcall_score.py (engine imports it)",
+          os.path.exists(os.path.join(REPO, "rollcall_score.py")) and "rollcall_score" in eng,
+          "ITL / contested / polarity math left the shared module — fixture tests would lie")
+    check("rollcall: --refresh-classifications flag exists (cache otherwise makes re-sweeps silent no-ops)",
+          "--refresh-classifications" in eng)
+    cr = open(os.path.join(REPO, "commit_refinement.py")).read()
+    check("commit_refinement: stashes uncommitted work before reset --hard",
+          "stash" in cr and "restore_stash" in cr,
+          "reset --hard is back to wiping collaborators' working-tree edits")
 
     # 7. VETO LIST INTEGRITY: entries only grow. A concurrent writer erased two on 8/26.
     v = json.load(open(os.path.join(REPO, "rollcall-vetoes.json")))["vetoed"]
@@ -170,6 +179,14 @@ def main():
             check("engine round-trip: single-category dry-run applies without error",
                   "record(s) refined" in r.stdout and "ABORT" not in r.stdout,
                   (r.stdout or r.stderr)[-300:])
+
+    # 12. ROLLCALL FIXTURES: the predicates the engine now imports, plus ITL / credit-trap
+    #     / polarity-gate cases that used to exist only as comments. Fast; no network.
+    fx = subprocess.run(["/opt/homebrew/bin/python3", "test-rollcall-engine.py"],
+                        cwd=REPO, capture_output=True, text=True)
+    check("rollcall fixtures: test-rollcall-engine.py",
+          fx.returncode == 0,
+          (fx.stdout or fx.stderr)[-400:])
 
     print(f"\n{'='*60}\n{len(PASSES)} passed, {len(FAILS)} FAILED")
     if FAILS:

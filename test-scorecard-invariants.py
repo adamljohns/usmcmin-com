@@ -92,6 +92,18 @@ def main():
     check("rollcall: veto list consulted before classification",
           "rollcall-vetoes.json" in eng and "vetoed_bill" in eng)
 
+    # 6b. VOTE GRAMMAR SINGLE SOURCE. Chamber vote grammar is the #1 hidden blocker (NH
+    #     looked barren purely because its House abbreviates OTP/OTPA/ITL). It lived in two
+    #     copies that drifted — the hunter treated second reading as final while the engine
+    #     treats it as a fallback, so the hunter proposed bills the engine rejected.
+    hunt = open(os.path.join(REPO, "rollcall-marquee-hunt.py")).read()
+    check("grammar: defined once in rollcall_grammar.py",
+          os.path.exists(os.path.join(REPO, "rollcall_grammar.py")))
+    check("grammar: engine + hunter import it instead of re-declaring",
+          "rollcall_grammar" in eng and "rollcall_grammar" in hunt
+          and "FINAL_RC = re.compile" not in eng and "FINAL = re.compile" not in hunt,
+          "a local copy of the vote patterns reappeared — they will drift again")
+
     # 7. VETO LIST INTEGRITY: entries only grow. A concurrent writer erased two on 8/26.
     v = json.load(open(os.path.join(REPO, "rollcall-vetoes.json")))["vetoed"]
     check(f"vetoes: list is populated ({len(v)} bills)", len(v) >= 60,

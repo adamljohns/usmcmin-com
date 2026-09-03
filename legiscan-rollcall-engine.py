@@ -36,22 +36,14 @@ CLASS_CACHE = os.path.expanduser("~/.openclaw/state/legiscan-bill-classification
 KW = re.compile(r"abortion|reproductive|firearm|gun|second amendment|marriage|gender|transgender|"
                 r"parent|school choice|charter|voucher|voter|election|ballot|immigra|sanctuary|"
                 r"bail|police|religio|prayer|obscen|library|puberty|minor|esg|gold|bullion", re.I)
-FINAL_RC = re.compile(r"third reading|final passage|final action|passage|floor vote|concur|ought to pass"
-                      r"|^otpa?$|\botpa?\b|shall the bill pass|"
-                      r"roll call results (passed|failed)|read 3rd time|"
-                      r"house passed|senate passed|passed as amended|passed on final reading", re.I)
-# Some chambers take their decisive floor vote on SECOND reading and never hold a third
-# (North Dakota). Treating 2nd reading as final everywhere would swallow procedural votes,
-# so it is used ONLY as a fallback when a bill has no other final-type roll call.
-SECOND_RC = re.compile(r"second reading|2nd reading", re.I)
-# NH kills bills with an "Inexpedient to Legislate" FLOOR vote — a final action with
-# REVERSED polarity: YEA on ITL = voting to kill the bill (i.e., against its policy).
-# NH's House abbreviates its floor actions (OTP/OTPA = Ought To Pass [as Amended], ITL);
-# matching only the spelled-out forms caught NH's 24-member SENATE votes while missing
-# every 398-member HOUSE vote — the reason NH looked barren despite 364 matchable members.
-ITL_RC = re.compile(r"inexpedient to legislate|^itl$|\bitl\b", re.I)
-# Motions to table are procedural maneuvers, not a recorded position on the policy.
-TABLE_RC = re.compile(r"\btable\b|\blay on\b", re.I)
+# Vote grammar is defined ONCE in rollcall_grammar.py and shared with
+# rollcall-marquee-hunt.py — the two copies had already drifted (the hunter treated
+# second reading as final; this engine treats it as a fallback), so the hunter kept
+# proposing bills this engine rejected. Names are re-bound so existing uses are unchanged.
+_gs = importlib.util.spec_from_file_location("rollcall_grammar", "rollcall_grammar.py")
+_g = importlib.util.module_from_spec(_gs); _gs.loader.exec_module(_g)
+FINAL_RC, SECOND_RC = _g.FINAL_RC, _g.SECOND_RC
+ITL_RC, TABLE_RC = _g.ITL_RC, _g.TABLE_RC
 
 CLASSIFY_SYS = (
     "You map a state legislative BILL to a voter-scorecard POSITION. You are given numbered "

@@ -17,12 +17,13 @@ STRONG = re.compile(r"abortion|reproduct|heartbeat|firearm|handgun|assault weapo
                     r"transgender|gender|marriage|school choice|voucher|charter|parental right|"
                     r"parents|voter|election|ballot|citizenship|immigra|sanctuary|bail|religio|"
                     r"prayer|obscen|puberty|biological sex|born alive|life", re.I)
-FINAL = re.compile(r"third reading|final passage|final action|passage|floor vote|concur|"
-                   r"ought to pass|\botpa?\b|second reading|2nd reading|"
-                   r"shall the bill pass|roll call results (passed|failed)|"
-                   r"read 3rd time|house passed|senate passed|passed as amended|passed on final reading", re.I)
-ITL = re.compile(r"inexpedient to legislate|\bitl\b", re.I)
-TABLE = re.compile(r"\btable\b|\blay on\b", re.I)
+# Vote grammar lives in ONE place — rollcall_grammar.py. These patterns used to be
+# duplicated here and DRIFTED from the engine: this file folded "second reading" into
+# its main final pattern while the engine accepts it only as a fallback, so the hunter
+# proposed bills the engine then rejected (wasted LegiScan queries, inflated no_final_rc).
+import importlib.util as _ilu
+_gs = _ilu.spec_from_file_location("rollcall_grammar", "rollcall_grammar.py")
+_g = _ilu.module_from_spec(_gs); _gs.loader.exec_module(_g)
 
 
 def main():
@@ -47,12 +48,11 @@ def main():
             bill = ls.pull("getBill", id=b["bill_id"]).get("bill") or {}
         except Exception:
             continue
-        for rc in (bill.get("votes") or []):
+        # scoreable() mirrors the engine's acceptance exactly (final/ITL preferred; second
+        # reading only when the bill has nothing else), so every bill surfaced here is one
+        # the engine can actually use.
+        for rc, _k in _g.scoreable(bill.get("votes")):
             desc = rc.get("desc") or ""
-            if TABLE.search(desc) or re.search(r"not\s+concur", desc, re.I):
-                continue
-            if not (FINAL.search(desc) or ITL.search(desc)):
-                continue
             y, n = int(rc.get("yea") or 0), int(rc.get("nay") or 0)
             if y + n < minv:
                 continue

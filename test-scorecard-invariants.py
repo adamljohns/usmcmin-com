@@ -105,8 +105,13 @@ def main():
            if ((c.get("profile") or {}).get("confidence") or "").startswith("evidence")
            and backed(c) == 0
            and any(v in (True, False) for arr in (c.get("scores") or {}).values() for v in arr)]
+    # Threshold was <=35 while a backlog of citation-stripped records existed; that backlog
+    # was cleared 2026-08-30 (25 demoted to archetype_party_default after roll-call
+    # re-documentation was attempted and failed). Any new violation is a live defect: a
+    # record telling the public it is evidence-reviewed while showing nothing to back it.
     check(f"data: evidence-labelled records carry >=1 documented answer ({len(bad)} violations)",
-          len(bad) <= 35, f"e.g. {[c['slug'] for c in bad[:5]]}")
+          len(bad) == 0,
+          f"e.g. {[c['slug'] for c in bad[:5]]} — re-document them, or demote the label")
 
     # 9. Scores must only hold true/false/null/'N/A'.
     junk = [(c["slug"], v) for c in C for arr in (c.get("scores") or {}).values()

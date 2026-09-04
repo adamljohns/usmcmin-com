@@ -76,6 +76,7 @@ HIGH_PRIORITY = {
     "sitemap.html": (0.5, "monthly"),
     "bow-arrow/index.html": (0.7, "monthly"),
     "c5isr/index.html": (0.8, "weekly"),
+    "c5isr/stewardship-manual.html": (0.7, "monthly"),
     "wire.html": (0.85, "weekly"),
     "local.html": (0.85, "weekly"),
     "tmc-husband/index.html": (0.85, "weekly"),

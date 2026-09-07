@@ -36,6 +36,26 @@
   .bb-hero p { color: #CBD5E1; max-width: 560px; margin: 0 auto; line-height: 1.6; font-size: 0.95rem; }
 
   .bb-wrap { max-width: 720px; margin: 0 auto; padding: 24px 16px 64px; }
+  body.bb-split .bb-wrap { max-width: 1240px; }
+  #bbWorkspace { display: block; }
+  body.bb-split #bbWorkspace {
+    display: grid;
+    grid-template-columns: minmax(0, 1.12fr) minmax(0, 0.88fr);
+    gap: 20px;
+    align-items: start;
+  }
+  body.bb-split .bb-mode { display: none; }
+  body.bb-split #habitShell { grid-column: 1; }
+  body.bb-split #formShell,
+  body.bb-split #doneShell { grid-column: 2; }
+  body.bb-split #habitShell[hidden],
+  body.bb-split #formShell[hidden] { display: block !important; }
+  @media (max-width: 900px) {
+    body.bb-split #bbWorkspace { grid-template-columns: 1fr; }
+    body.bb-split .bb-mode { display: flex; }
+    body.bb-split #habitShell[hidden],
+    body.bb-split #formShell[hidden] { display: none !important; }
+  }
   #bbFlash { background: #FFF8EE; border: 1px solid var(--gold); color: var(--navy); padding: 12px 16px; margin-bottom: 16px; font-weight: 600; font-size: 0.92rem; }
   #bbFlash[hidden] { display: none !important; }
   #draftOffer { background: #FFF8EE; border: 1px solid var(--gold); color: var(--navy); padding: 12px 16px; margin-bottom: 16px; font-weight: 600; font-size: 0.92rem; }
@@ -218,8 +238,8 @@
 </header>
 
 <section class="bb-hero">
-  <div class="bb-kicker">Weekly Accountability</div>
-  <h1>Battle Brother Form</h1>
+  <div class="bb-kicker">Battle Brother module</div>
+  <h1>Battle Brother</h1>
   <p>Weekly Armada check-in plus a HabitShare-style board. Sign in with email to sync habits across devices and pair your Battle Brother live.</p>
 </section>
 
@@ -233,133 +253,24 @@
     </div>
   </div>
 
-  <div class="bb-card" id="accountCard" style="margin-bottom:16px;">
-    <h2 class="section-bar">Account · Cloud Sync</h2>
-    <div class="bb-card-body">
-      <p class="bb-hint" style="margin-top:0;" id="accountHint">Sign in with email + PIN to sync habits across devices. Works in the installed app — no magic link required.</p>
-      <div id="accountSignedOut">
-        <div id="authSignInPanel" class="auth-panel">
-          <div class="habit-add">
-            <input type="email" id="authEmail" placeholder="you@email.com" autocomplete="email">
-            <input type="password" id="authPin" placeholder="PIN (6+ chars)" autocomplete="current-password" inputmode="text">
-          </div>
-          <div class="btn-row" style="margin-top:10px;">
-            <button type="button" class="btn-primary" id="btnSignIn" style="flex:1;">Sign in</button>
-            <button type="button" class="btn-ghost" id="btnShowRegister" style="flex:1;">Create account</button>
-          </div>
-          <button type="button" class="auth-toggle" id="btnShowReset">Forgot PIN?</button>
-        </div>
-        <div id="authRegisterPanel" class="auth-panel" hidden>
-          <div class="bb-field" style="margin-bottom:12px;">
-            <label for="authName">Your name</label>
-            <input type="text" id="authName" placeholder="Adam Johns" autocomplete="name">
-          </div>
-          <div class="habit-add">
-            <input type="email" id="authEmailReg" placeholder="you@email.com" autocomplete="email">
-            <input type="password" id="authPinReg" placeholder="Choose PIN (6+ chars)" autocomplete="new-password">
-          </div>
-          <div class="btn-row" style="margin-top:10px;">
-            <button type="button" class="btn-primary" id="btnRegister" style="flex:1;">Create account</button>
-            <button type="button" class="btn-ghost" id="btnShowSignIn" style="flex:1;">Back to sign in</button>
-          </div>
-        </div>
-        <div id="authResetPanel" class="auth-panel" hidden>
-          <div class="habit-add">
-            <input type="email" id="authEmailReset" placeholder="you@email.com" autocomplete="email">
-            <input type="text" id="authResetCode" placeholder="Reset code from email" maxlength="16" autocomplete="one-time-code">
-          </div>
-          <div class="habit-add" style="margin-top:8px;">
-            <input type="password" id="authPinReset" placeholder="New PIN (6+ chars)" autocomplete="new-password">
-            <button type="button" class="btn-primary" id="btnConfirmReset">Set new PIN</button>
-          </div>
-          <button type="button" class="auth-toggle" id="btnRequestResetCode">Email me a reset code</button>
-          <button type="button" class="auth-toggle" id="btnResetBack" style="margin-left:12px;">Back</button>
-        </div>
-        <details style="margin-top:12px;font-size:0.82rem;color:var(--gray);">
-          <summary>Browser only: email magic link</summary>
-          <div class="btn-row" style="margin-top:8px;">
-            <button type="button" class="btn-ghost" id="btnMagicLink" style="flex:1;">Email magic link</button>
-          </div>
-        </details>
-        <p class="bb-hint" id="authStatus"></p>
-      </div>
-      <div id="accountSignedIn" hidden>
-        <p style="margin:0 0 10px;color:var(--navy);font-weight:600;" id="accountWho"></p>
-        <div class="btn-row" style="margin-top:0;">
-          <button type="button" class="btn-ghost" id="btnSyncNow" style="flex:1;">Sync now</button>
-          <button type="button" class="btn-ghost" id="btnLogout" style="flex:1;">Sign out</button>
-        </div>
-        <div id="pairWhenUnlinked" class="pair-when-unlinked">
-          <div class="bb-field" style="margin-top:16px;margin-bottom:0;">
-            <label for="pairEmail">Pair Battle Brother (his email)</label>
-            <div class="habit-add">
-              <input type="email" id="pairEmail" placeholder="brother@email.com" autocomplete="off">
-              <button type="button" class="btn-primary" id="btnPairInvite">Send invite</button>
-            </div>
-          </div>
-          <div class="bb-field" style="margin-top:12px;margin-bottom:0;">
-            <label for="pairCode">Accept invite code</label>
-            <div class="habit-add">
-              <input type="text" id="pairCode" placeholder="8-character code" maxlength="16" autocomplete="off">
-              <button type="button" class="btn-primary" id="btnPairAccept">Accept</button>
-            </div>
-          </div>
-        </div>
-        <p class="bb-hint" id="pairStatus"></p>
-        <div class="btn-row" style="margin-top:8px;">
-          <button type="button" class="btn-ghost" id="btnPairUnlink" hidden>Unlink Battle Brother</button>
-        </div>
-        <div id="setPinBlock" class="bb-field pair-when-unlinked" style="margin-top:12px;margin-bottom:0;" hidden>
-          <label for="authPinNew">Set a PIN for app sign-in</label>
-          <div class="habit-add">
-            <input type="password" id="authPinNew" placeholder="Choose PIN (6+ chars)" autocomplete="new-password">
-            <button type="button" class="btn-primary" id="btnSetPin">Save PIN</button>
-          </div>
-          <p class="bb-hint">Required for sign-in on the installed app — magic link won&rsquo;t open in PWA.</p>
-        </div>
-      </div>
-      <p class="bb-hint" id="cloudStatus" style="margin-bottom:0;"></p>
-    </div>
-  </div>
+  <div id="weekPicker" aria-label="Select Armada week theme"></div>
+  <div id="themeBanner"></div>
 
   <div class="bb-mode" role="tablist" aria-label="Battle Brother modules">
-    <button type="button" class="bb-mode-btn active" id="modeForm" data-mode="form" role="tab" aria-selected="true">Weekly Form</button>
-    <button type="button" class="bb-mode-btn" id="modeHabits" data-mode="habits" role="tab" aria-selected="false">Habit Board · Share</button>
+    <button type="button" class="bb-mode-btn active" id="modeHabits" data-mode="habits" role="tab" aria-selected="true">Habit Board · Share</button>
+    <button type="button" class="bb-mode-btn" id="modeForm" data-mode="form" role="tab" aria-selected="false">Weekly Form</button>
   </div>
 
   <div class="memory-bar">
-    <span id="memoryBarText">Saved locally — sign in above to sync across devices.</span>
+    <span id="memoryBarText">Saved locally — sign in below to sync across devices.</span>
     <span>
       <button type="button" id="btnExport">Export memory</button>
       <button type="button" id="btnClearDraft">Clear draft</button>
     </span>
   </div>
 
-  <div id="weekPicker" aria-label="Select Armada week theme"></div>
-  <div id="themeBanner"></div>
-
-  <div class="bb-card" id="myActionCard">
-    <h2 class="section-bar" id="myActionTitle">Your Self-Assigned Captain&rsquo;s Action</h2>
-    <div class="bb-card-body">
-      <p class="bb-hint" style="margin-top:0;" id="myActionHint">One action for this theme week. The board rotates with the week chips so you can see last week and the last time you walked this theme.</p>
-      <div class="bb-field" style="margin-bottom:0;">
-        <label for="myActionText" id="myActionLabel">Your SACA this week <span class="req">*</span></label>
-        <textarea id="myActionText" name="myActionText" placeholder="One concrete action for this theme week…"></textarea>
-      </div>
-      <div class="my-action-recall">
-        <div class="bb-field">
-          <label id="myActionLastWeekLabel">Last week</label>
-          <div class="recall-box empty" id="myActionLastWeek">No action saved for last week yet.</div>
-        </div>
-        <div class="bb-field">
-          <label id="myActionLastCycleLabel">Last time through this theme</label>
-          <div class="recall-box empty" id="myActionLastCycle">First time through this theme on this device.</div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <div id="habitShell" hidden>
+  <div id="bbWorkspace">
+  <div id="habitShell">
     <div class="habit-stats" id="habitStats"></div>
 
     <div class="bb-card">
@@ -419,7 +330,7 @@
     </div>
   </div>
 
-  <div id="formShell">
+  <div id="formShell" hidden>
     <div class="progress-wrap">
       <div class="bb-progress"><div class="bb-progress-fill" id="progressFill"></div></div>
       <div class="progress-text" id="progressText">Step 1 of 4</div>
@@ -538,6 +449,117 @@
       <button type="button" class="btn-primary" id="btnNext">Next</button>
       <button type="button" class="btn-primary" id="btnSubmit" hidden>Submit</button>
     </div>
+      <div class="bb-card" id="myActionCard">
+        <h2 class="section-bar" id="myActionTitle">Your Self-Assigned Captain&rsquo;s Action</h2>
+        <div class="bb-card-body">
+          <p class="bb-hint" style="margin-top:0;" id="myActionHint">One action for this theme week. The board rotates with the week chips so you can see last week and the last time you walked this theme.</p>
+          <div class="bb-field" style="margin-bottom:0;">
+            <label for="myActionText" id="myActionLabel">Your SACA this week <span class="req">*</span></label>
+            <textarea id="myActionText" name="myActionText" placeholder="One concrete action for this theme week…"></textarea>
+          </div>
+          <div class="my-action-recall">
+            <div class="bb-field">
+              <label id="myActionLastWeekLabel">Last week</label>
+              <div class="recall-box empty" id="myActionLastWeek">No action saved for last week yet.</div>
+            </div>
+            <div class="bb-field">
+              <label id="myActionLastCycleLabel">Last time through this theme</label>
+              <div class="recall-box empty" id="myActionLastCycle">First time through this theme on this device.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+  </div>
+
+  </div>
+
+  <div class="bb-card" id="accountCard" style="margin-bottom:16px;">
+    <h2 class="section-bar">Account · Cloud Sync</h2>
+    <div class="bb-card-body">
+      <p class="bb-hint" style="margin-top:0;" id="accountHint">Sign in with email + PIN to sync habits across devices. Works in the installed app — no magic link required.</p>
+      <div id="accountSignedOut">
+        <div id="authSignInPanel" class="auth-panel">
+          <div class="habit-add">
+            <input type="email" id="authEmail" placeholder="you@email.com" autocomplete="email">
+            <input type="password" id="authPin" placeholder="PIN (6+ chars)" autocomplete="current-password" inputmode="text">
+          </div>
+          <div class="btn-row" style="margin-top:10px;">
+            <button type="button" class="btn-primary" id="btnSignIn" style="flex:1;">Sign in</button>
+            <button type="button" class="btn-ghost" id="btnShowRegister" style="flex:1;">Create account</button>
+          </div>
+          <button type="button" class="auth-toggle" id="btnShowReset">Forgot PIN?</button>
+        </div>
+        <div id="authRegisterPanel" class="auth-panel" hidden>
+          <div class="bb-field" style="margin-bottom:12px;">
+            <label for="authName">Your name</label>
+            <input type="text" id="authName" placeholder="Adam Johns" autocomplete="name">
+          </div>
+          <div class="habit-add">
+            <input type="email" id="authEmailReg" placeholder="you@email.com" autocomplete="email">
+            <input type="password" id="authPinReg" placeholder="Choose PIN (6+ chars)" autocomplete="new-password">
+          </div>
+          <div class="btn-row" style="margin-top:10px;">
+            <button type="button" class="btn-primary" id="btnRegister" style="flex:1;">Create account</button>
+            <button type="button" class="btn-ghost" id="btnShowSignIn" style="flex:1;">Back to sign in</button>
+          </div>
+        </div>
+        <div id="authResetPanel" class="auth-panel" hidden>
+          <div class="habit-add">
+            <input type="email" id="authEmailReset" placeholder="you@email.com" autocomplete="email">
+            <input type="text" id="authResetCode" placeholder="Reset code from email" maxlength="16" autocomplete="one-time-code">
+          </div>
+          <div class="habit-add" style="margin-top:8px;">
+            <input type="password" id="authPinReset" placeholder="New PIN (6+ chars)" autocomplete="new-password">
+            <button type="button" class="btn-primary" id="btnConfirmReset">Set new PIN</button>
+          </div>
+          <button type="button" class="auth-toggle" id="btnRequestResetCode">Email me a reset code</button>
+          <button type="button" class="auth-toggle" id="btnResetBack" style="margin-left:12px;">Back</button>
+        </div>
+        <details style="margin-top:12px;font-size:0.82rem;color:var(--gray);">
+          <summary>Browser only: email magic link</summary>
+          <div class="btn-row" style="margin-top:8px;">
+            <button type="button" class="btn-ghost" id="btnMagicLink" style="flex:1;">Email magic link</button>
+          </div>
+        </details>
+        <p class="bb-hint" id="authStatus"></p>
+      </div>
+      <div id="accountSignedIn" hidden>
+        <p style="margin:0 0 10px;color:var(--navy);font-weight:600;" id="accountWho"></p>
+        <div class="btn-row" style="margin-top:0;">
+          <button type="button" class="btn-ghost" id="btnSyncNow" style="flex:1;">Sync now</button>
+          <button type="button" class="btn-ghost" id="btnLogout" style="flex:1;">Sign out</button>
+        </div>
+        <div id="pairWhenUnlinked" class="pair-when-unlinked">
+          <div class="bb-field" style="margin-top:16px;margin-bottom:0;">
+            <label for="pairEmail">Pair Battle Brother (his email)</label>
+            <div class="habit-add">
+              <input type="email" id="pairEmail" placeholder="brother@email.com" autocomplete="off">
+              <button type="button" class="btn-primary" id="btnPairInvite">Send invite</button>
+            </div>
+          </div>
+          <div class="bb-field" style="margin-top:12px;margin-bottom:0;">
+            <label for="pairCode">Accept invite code</label>
+            <div class="habit-add">
+              <input type="text" id="pairCode" placeholder="8-character code" maxlength="16" autocomplete="off">
+              <button type="button" class="btn-primary" id="btnPairAccept">Accept</button>
+            </div>
+          </div>
+        </div>
+        <p class="bb-hint" id="pairStatus"></p>
+        <div class="btn-row" style="margin-top:8px;">
+          <button type="button" class="btn-ghost" id="btnPairUnlink" hidden>Unlink Battle Brother</button>
+        </div>
+        <div id="setPinBlock" class="bb-field pair-when-unlinked" style="margin-top:12px;margin-bottom:0;" hidden>
+          <label for="authPinNew">Set a PIN for app sign-in</label>
+          <div class="habit-add">
+            <input type="password" id="authPinNew" placeholder="Choose PIN (6+ chars)" autocomplete="new-password">
+            <button type="button" class="btn-primary" id="btnSetPin">Save PIN</button>
+          </div>
+          <p class="bb-hint">Required for sign-in on the installed app — magic link won&rsquo;t open in PWA.</p>
+        </div>
+      </div>
+      <p class="bb-hint" id="cloudStatus" style="margin-bottom:0;"></p>
+    </div>
   </div>
 
   <div id="historyPanel" hidden>
@@ -551,7 +573,7 @@
   <p style="margin-top:6px;">&copy; 2026 U.S.M.C. Ministries</p>
 </footer>
 
-<script src="battle-bro-cloud.js?v=20260822-p1c"></script>
-<script src="battle-bro-form.js?v=20260822-p1c"></script>
+<script src="battle-bro-cloud.js?v=20260907-bb1"></script>
+<script src="battle-bro-form.js?v=20260907-bb1"></script>
 </body>
 </html>

@@ -58,7 +58,7 @@
     saca: true, bb_call: true, armada_call: true, family_meeting: true
   };
 
-  var currentMode = 'form';
+  var currentMode = 'habits';
   var formDirty = false;
   var justSubmitted = false;
 
@@ -212,6 +212,23 @@
     return best;
   }
 
+  function applyWorkspaceLayout(signedIn) {
+    document.body.classList.toggle('bb-signed-in', !!signedIn);
+    document.body.classList.toggle('bb-split', !!signedIn);
+    var wrap = document.querySelector('.bb-wrap');
+    var card = el('accountCard');
+    var week = el('weekPicker');
+    var workspace = el('bbWorkspace');
+    if (!wrap || !card) return;
+    if (signedIn) {
+      if (workspace && workspace.nextElementSibling !== card) {
+        wrap.insertBefore(card, el('historyPanel') || null);
+      }
+    } else if (week && card.nextElementSibling !== week) {
+      wrap.insertBefore(card, week);
+    }
+  }
+
   function setMode(mode) {
     currentMode = mode === 'habits' ? 'habits' : 'form';
     var formBtn = el('modeForm');
@@ -228,17 +245,26 @@
     var formShell = el('formShell');
     var doneShell = el('doneShell');
     var historyPanel = el('historyPanel');
-    if (habitShell) habitShell.hidden = currentMode !== 'habits';
-    if (currentMode === 'habits') {
+    var split = document.body.classList.contains('bb-split');
+    if (split && !justSubmitted) {
+      if (habitShell) habitShell.hidden = false;
+      if (formShell) formShell.hidden = false;
+      if (doneShell) doneShell.hidden = true;
+      renderHabitBoard();
+      renderHistory();
+    } else if (currentMode === 'habits') {
+      if (habitShell) habitShell.hidden = false;
       if (formShell) formShell.hidden = true;
       if (doneShell) doneShell.hidden = true;
       if (historyPanel) historyPanel.hidden = true;
       renderHabitBoard();
     } else if (justSubmitted) {
+      if (habitShell && !split) habitShell.hidden = true;
       if (formShell) formShell.hidden = true;
       if (doneShell) doneShell.hidden = false;
       renderHistory();
     } else {
+      if (habitShell && !split) habitShell.hidden = true;
       if (formShell) formShell.hidden = false;
       if (doneShell) doneShell.hidden = true;
       renderHistory();
@@ -842,7 +868,7 @@
       var sess = window.BBCloud && BBCloud.loadSession();
       bar.textContent = sess && sess.sessionToken
         ? 'Signed in — local + cloud sync.'
-        : 'Saved locally — sign in above to sync across devices.';
+        : 'Saved locally — sign in below to sync across devices.';
     }
   }
 
@@ -873,6 +899,7 @@
       if (sharePack) sharePack.hidden = false;
       if (hint) hint.textContent = 'Sign in with email + PIN to keep habits on every device. Local save still works offline.';
       setCloudStatus(cloudAvailable ? 'Cloud API reachable — sign in to sync.' : 'Cloud API not deployed yet — local + pack sharing still work.');
+      applyWorkspaceLayout(false);
       return;
     }
     if (signedOut) signedOut.hidden = true;
@@ -896,6 +923,8 @@
     var setPinBlock = el('setPinBlock');
     var hasPin = sess.user && sess.user.hasPin;
     if (setPinBlock) setPinBlock.hidden = !!hasPin;
+    applyWorkspaceLayout(true);
+    setMode(currentMode || 'habits');
   }
 
   async function handleSignIn() {
@@ -1783,10 +1812,9 @@
 
     var params = new URLSearchParams(window.location.search);
     var mode = (params.get('mode') || '').toLowerCase();
-    if (mode === 'habits' || mode === 'share' || params.get('share') === '1') {
-      if (params.get('share') === '1' || mode === 'share') openHabitsShare();
-      else setMode('habits');
-    }
+    if (params.get('share') === '1' || mode === 'share') openHabitsShare();
+    else if (mode === 'form') setMode('form');
+    else setMode('habits');
 
     // Cloud account wiring
     if (el('btnSignIn')) el('btnSignIn').addEventListener('click', handleSignIn);

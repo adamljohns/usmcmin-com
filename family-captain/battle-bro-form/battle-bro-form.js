@@ -212,6 +212,14 @@
     return best;
   }
 
+  function isMobileStack() {
+    try {
+      return window.matchMedia('(max-width: 900px)').matches;
+    } catch (e) {
+      return window.innerWidth <= 900;
+    }
+  }
+
   function applyWorkspaceLayout(signedIn) {
     document.body.classList.toggle('bb-signed-in', !!signedIn);
     document.body.classList.toggle('bb-split', !!signedIn);
@@ -247,8 +255,18 @@
     var historyPanel = el('historyPanel');
     var split = document.body.classList.contains('bb-split');
     if (split && !justSubmitted) {
-      if (habitShell) habitShell.hidden = false;
-      if (formShell) formShell.hidden = false;
+      if (isMobileStack()) {
+        if (currentMode === 'habits') {
+          if (habitShell) habitShell.hidden = false;
+          if (formShell) formShell.hidden = true;
+        } else {
+          if (habitShell) habitShell.hidden = true;
+          if (formShell) formShell.hidden = false;
+        }
+      } else {
+        if (habitShell) habitShell.hidden = false;
+        if (formShell) formShell.hidden = false;
+      }
       if (doneShell) doneShell.hidden = true;
       renderHabitBoard();
       renderHistory();
@@ -1770,6 +1788,14 @@
 
     el('modeForm').addEventListener('click', function () { setMode('form'); });
     el('modeHabits').addEventListener('click', function () { setMode('habits'); });
+    var stackMq = null;
+    try { stackMq = window.matchMedia('(max-width: 900px)'); } catch (e) {}
+    var onStackChange = function () {
+      if (document.body.classList.contains('bb-split') && !justSubmitted) setMode(currentMode);
+    };
+    if (stackMq && stackMq.addEventListener) stackMq.addEventListener('change', onStackChange);
+    else if (stackMq && stackMq.addListener) stackMq.addListener(onStackChange);
+    else window.addEventListener('resize', onStackChange);
     el('btnAddHabit').addEventListener('click', addHabit);
     el('newHabitName').addEventListener('keydown', function (e) {
       if (e.key === 'Enter') { e.preventDefault(); addHabit(); }

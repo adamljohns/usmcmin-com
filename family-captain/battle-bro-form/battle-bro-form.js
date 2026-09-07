@@ -217,12 +217,12 @@
     document.body.classList.remove('bb-split');
     var wrap = document.querySelector('.bb-wrap');
     var card = el('accountCard');
-    var week = el('weekPicker');
+    var tabs = document.querySelector('.bb-mode');
     if (!wrap || !card) return;
     if (signedIn) {
       wrap.insertBefore(card, el('historyPanel') || null);
-    } else if (week) {
-      wrap.insertBefore(card, week);
+    } else if (tabs) {
+      wrap.insertBefore(card, tabs);
     }
   }
 
@@ -242,7 +242,12 @@
     var formShell = el('formShell');
     var doneShell = el('doneShell');
     var historyPanel = el('historyPanel');
-    if (currentMode === 'habits') {
+    var weekPicker = el('weekPicker');
+    var themeBanner = el('themeBanner');
+    var onHabits = currentMode === 'habits';
+    if (weekPicker) weekPicker.hidden = onHabits;
+    if (themeBanner) themeBanner.hidden = onHabits;
+    if (onHabits) {
       if (habitShell) habitShell.hidden = false;
       if (formShell) formShell.hidden = true;
       if (doneShell) doneShell.hidden = true;

@@ -214,17 +214,14 @@
 
   function applyWorkspaceLayout(signedIn) {
     document.body.classList.toggle('bb-signed-in', !!signedIn);
-    document.body.classList.toggle('bb-split', !!signedIn);
+    document.body.classList.remove('bb-split');
     var wrap = document.querySelector('.bb-wrap');
     var card = el('accountCard');
     var week = el('weekPicker');
-    var workspace = el('bbWorkspace');
     if (!wrap || !card) return;
     if (signedIn) {
-      if (workspace && workspace.nextElementSibling !== card) {
-        wrap.insertBefore(card, el('historyPanel') || null);
-      }
-    } else if (week && card.nextElementSibling !== week) {
+      wrap.insertBefore(card, el('historyPanel') || null);
+    } else if (week) {
       wrap.insertBefore(card, week);
     }
   }
@@ -245,26 +242,19 @@
     var formShell = el('formShell');
     var doneShell = el('doneShell');
     var historyPanel = el('historyPanel');
-    var split = document.body.classList.contains('bb-split');
-    if (split && !justSubmitted) {
-      if (habitShell) habitShell.hidden = false;
-      if (formShell) formShell.hidden = false;
-      if (doneShell) doneShell.hidden = true;
-      renderHabitBoard();
-      renderHistory();
-    } else if (currentMode === 'habits') {
+    if (currentMode === 'habits') {
       if (habitShell) habitShell.hidden = false;
       if (formShell) formShell.hidden = true;
       if (doneShell) doneShell.hidden = true;
       if (historyPanel) historyPanel.hidden = true;
       renderHabitBoard();
     } else if (justSubmitted) {
-      if (habitShell && !split) habitShell.hidden = true;
+      if (habitShell) habitShell.hidden = true;
       if (formShell) formShell.hidden = true;
       if (doneShell) doneShell.hidden = false;
       renderHistory();
     } else {
-      if (habitShell && !split) habitShell.hidden = true;
+      if (habitShell) habitShell.hidden = true;
       if (formShell) formShell.hidden = false;
       if (doneShell) doneShell.hidden = true;
       renderHistory();

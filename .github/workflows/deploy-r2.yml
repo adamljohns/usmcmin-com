@@ -26,7 +26,11 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Install rclone
-        run: sudo apt-get update -q && sudo apt-get install -y -q rclone
+        run: |
+          curl -fsSL https://downloads.rclone.org/rclone-current-linux-amd64.zip -o /tmp/rclone.zip
+          unzip -q /tmp/rclone.zip -d /tmp
+          sudo install -m 755 /tmp/rclone-*-linux-amd64/rclone /usr/local/bin/rclone
+          rclone version
       - name: Sync site to R2 (delete guard)
         env:
           RCLONE_CONFIG_R2_TYPE: s3

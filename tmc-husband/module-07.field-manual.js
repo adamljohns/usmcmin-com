@@ -5,11 +5,11 @@ const fieldManual = {
   missionDurationMinutes: 60,
   opening: [
     'Love becomes credible through conduct. A husband may feel deep affection and still communicate neglect through inattention, unreliable promises, harsh speech, or leaving the mental load to his wife.',
-    'Popular "love language" categories — words, time, gifts, service, and touch — can help you notice that care sent in one form may not be recognized in another. They are prompts, not diagnoses, contracts, or bargaining chips.',
+    'Popular "love language" categories; words, time, gifts, service, and touch; can help you notice that care sent in one form may not be recognized in another. They are prompts, not diagnoses, contracts, or bargaining chips.',
     'This week, choose one small act your wife can recognize as care and repeat it for seven days. Ask what would help rather than announcing you know her category.'
   ],
   scripture: [
-    { reference: '1 John 3:16–18', note: 'Christian love moves beyond speech into truthful action. Action must remain governed by truth — not manipulation.' },
+    { reference: '1 John 3:16–18', note: 'Christian love moves beyond speech into truthful action. Action must remain governed by truth; not manipulation.' },
     { reference: 'John 13:1–17', note: 'Jesus joins authority with humble service. His example confronts entitlement rather than assigning a wife to manage her husband\'s growth.' },
     { reference: 'Galatians 5:13–14, 22–23', note: 'Service through love and the Spirit\'s fruit include patience, kindness, faithfulness, gentleness, and self-control.' },
     { reference: 'Philippians 2:3–4', note: 'Looking to another\'s interests confronts selfish ambition without erasing truthful limits or personal responsibility.' }
@@ -31,7 +31,7 @@ const fieldManual = {
       actions: [
         'Complete the chosen action for seven days without asking for repayment or daily praise.',
         'If resentment rises because she did not notice, examine the hidden contract.',
-        'You may tell her you are building a faithful habit — do not require daily evaluation.',
+        'You may tell her you are building a faithful habit; do not require daily evaluation.',
         'Continue because the action is good, while remaining open to correction if it is not helpful.'
       ]
     },
@@ -40,7 +40,7 @@ const fieldManual = {
       title: 'Own invisible responsibility',
       actions: [
         'Notice supplies before they run out, appointments before reminders arrive, and maintenance before crisis.',
-        'Owning work means planning and completing it — not asking her to supervise every step.',
+        'Owning work means planning and completing it; not asking her to supervise every step.',
         'Ask what ownership would help, agree on the standard, then carry the mental as well as physical part.',
         'If you miss a day, repair the rhythm without drama or public streak-keeping.'
       ]
@@ -92,12 +92,12 @@ const fieldManual = {
     close: 'Course completion is not marriage completion. Seven browser flags are not a spiritual score or evidence that a marriage is safe.'
   },
   resources: {
-    intro: "Optional study aids from your Notebook by Gemini notebook. Listen, watch, read, or drill \u2014 then return to your field action.",
+    intro: "Optional study aids from your Notebook by Gemini notebook. Listen, watch, read, or drill \u2014 then return to your required action.",
     groups: [
       { key: "video", heading: "Watch", note: "Short video overviews." },
       { key: "audio", heading: "Listen", note: "Audio briefings for deeper reflection." },
       { key: "slides", heading: "Slide decks", note: "PDF study decks." },
-      { key: "infographics", heading: "Field graphics", note: "Single-page visual summaries." },
+      { key: "infographics", heading: "Study graphics", note: "Single-page visual summaries." },
       { key: "reports", heading: "Read", note: "Study reports as clean, printable PDFs." }
     ],
     withheldNotice: null,
@@ -120,9 +120,9 @@ const fieldManual = {
     { slug: "slides-marriage-systems-manual", state: "local", group: "slides", kind: "PDF", title: "Marriage Systems Manual", summary: "Keeping the habits running after the course ends.", href: "../assets/media/tmc-husband/m07/slides/marriage-systems-manual.pdf", linkLabel: "Open slide deck" },
     { slug: "infographic-love-in-action-relationship-guide", state: "local", group: "infographics", title: "Love in Action Relationship Guide", summary: "The five languages with a practice plan.", href: "../assets/media/tmc-husband/m07/infographics/love-in-action-relationship-guide.png", alt: "Illustrated field guide titled Love in Action: Speaking Your Spouse's Language, covering the felt-benefit rule, the gap between intent and reception, five ways to communicate care, treating love like a foreign language, maintaining the relationship engine, and the six-second kiss rule." },
     { slug: "infographic-marriage-maintenance-storyboard-field-guide", state: "local", group: "infographics", title: "Marriage Maintenance Storyboard", summary: "The whole course as one maintenance rhythm.", href: "../assets/media/tmc-husband/m07/infographics/marriage-maintenance-storyboard-field-guide.png", alt: "Illustrated storyboard field guide on marriage maintenance, running from the resentment trap of loving in the wrong language, through a learning-process toolkit of five ways to show love, to fluent connection, with a red safety panel and a four-step action checklist." },
-    { slug: "report-love-in-action-insights-from-the-marriage-course-episode-7", state: "local", group: "reports", title: "Love in Action: Session Insights", summary: "Executive briefing — best starting point for this module.", href: "../assets/media/tmc-husband/m07/reports/love-in-action-insights-from-the-marriage-course-episode-7.pdf", linkLabel: "Read the report" },
+    { slug: "report-love-in-action-insights-from-the-marriage-course-episode-7", state: "local", group: "reports", title: "Love in Action: Session Insights", summary: "Executive briefing; best starting point for this module.", href: "../assets/media/tmc-husband/m07/reports/love-in-action-insights-from-the-marriage-course-episode-7.pdf", linkLabel: "Read the report" },
     { slug: "report-the-architecture-of-intimacy-why-lasting-love-is-a-learned-language-not-a-reflex", state: "local", group: "reports", title: "The Architecture of Intimacy", summary: "Longer treatment of love as a learned practice rather than a reflex.", href: "../assets/media/tmc-husband/m07/reports/the-architecture-of-intimacy-why-lasting-love-is-a-learned-language-not-a-reflex.pdf", linkLabel: "Read the report" },
-    { slug: "report-love-in-action-beyond-the-spontaneous-myth-and-into-the-five-languages", state: "local", group: "reports", title: "Beyond the Spontaneous Myth", summary: "Popular-article register — use as a prompt, not as proof.", href: "../assets/media/tmc-husband/m07/reports/love-in-action-beyond-the-spontaneous-myth-and-into-the-five-languages.pdf", linkLabel: "Read the report" },
+    { slug: "report-love-in-action-beyond-the-spontaneous-myth-and-into-the-five-languages", state: "local", group: "reports", title: "Beyond the Spontaneous Myth", summary: "Popular-article register; use as a prompt, not as proof.", href: "../assets/media/tmc-husband/m07/reports/love-in-action-beyond-the-spontaneous-myth-and-into-the-five-languages.pdf", linkLabel: "Read the report" },
     { slug: "quiz-marriage-quiz", state: "local", group: "quiz", title: "Marriage Quiz", summary: "Knowledge check over this module.", href: "../assets/media/tmc-husband/m07/quiz/marriage-quiz.html", linkLabel: "Open the quiz" },
     { slug: "flashcards-marriage-flashcards", state: "local", group: "flashcards", title: "Marriage Flashcards", summary: "Flashcard drill over this module.", href: "../assets/media/tmc-husband/m07/flashcards/marriage-flashcards.html", linkLabel: "Open the flashcards" }
   ]

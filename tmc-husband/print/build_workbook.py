@@ -1,19 +1,19 @@
 #!/usr/bin/env python3
 """
-build_workbook.py — The Husband's Field Workbook (the whole course, one PDF).
+build_workbook.py; The Husband Course Workbook (the whole course, one PDF).
 
     python3 tmc-husband/print/build_workbook.py
 
 This is the overview volume linked from the course landing page: the seven
 modules end to end, with a fillable box wherever the course asks a man to do
-something. The per-module detail sheets — media notes, quiz self-grade, reading
-notes — are separate inserts (build_inserts.py) so a man can print one module's
+something. The per-module detail sheets; media notes, quiz self-grade, reading
+notes; are separate inserts (build_inserts.py) so a man can print one module's
 worth of paper without printing the book.
 
 Fields are real AcroForm fields over ruled boxes, so the same file works typed
 in Preview / Acrobat / GoodNotes or printed and written on with a pen.
 
-Output: downloads/tmc-husband/The_Husband_Course_FIELD_WORKBOOK.pdf
+Output: downloads/tmc-husband/The_Husband_Course_WORKBOOK.pdf
 """
 
 import json
@@ -34,17 +34,17 @@ from brand import (  # noqa: E402
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 OUT_DIR = os.path.join(REPO, "downloads", "tmc-husband")
-OUT_PATH = os.path.join(OUT_DIR, "The_Husband_Course_FIELD_WORKBOOK.pdf")
+OUT_PATH = os.path.join(OUT_DIR, "The_Husband_Course_WORKBOOK.pdf")
 
 HOW_TO = [
-    "This PDF is fillable. Tap any shaded box and type — or print it and write. Whichever fits how you work.",
+    "This PDF is fillable. Tap any shaded box and type; or print it and write. Whichever fits how you work.",
     "",
     "GoodNotes / Notability: import the PDF, then type in the fields or write over them with a pencil.",
     "Preview / Apple Books / Acrobat: tap a field and type; your work saves with the file.",
     "Printed: the boxes are ruled and sized for a pen.",
     "",
-    "One section per module. Each module ends with a field action that has a finish line your wife could",
-    "notice — the workbook is where you record what you actually did, not what you meant to do.",
+    "One section per module. Each module ends with a required action that has a finish line your wife could",
+    "notice; the workbook is where you record what you actually did, not what you meant to do.",
 ]
 
 
@@ -59,18 +59,18 @@ def build():
     course = load()
 
     c = canvas.Canvas(OUT_PATH, pagesize=(W, H), pageCompression=1)
-    c.setTitle(f"{COURSE_NAME} — Field Workbook")
+    c.setTitle("The Husband Course Workbook")
     c.setAuthor(MINISTRY)
-    c.setSubject("Participant field workbook — seven modules, seven field actions")
+    c.setSubject("Participant workbook; seven modules, seven required actions")
 
-    sheet = Sheet(c, f"{COURSE_NAME} · Field Workbook · {MINISTRY}", accent=NEUTRAL_ACCENT)
+    sheet = Sheet(c, f"{COURSE_NAME} · Workbook · {MINISTRY}", accent=NEUTRAL_ACCENT)
 
     # ── Cover ──
     cover(
         sheet,
         f"{COURSE_NAME} · {MINISTRY}",
-        "The Husband's Field Workbook",
-        course.get("subtitle") or "Seven modules. One field action each week.",
+        "The Husband Course Workbook",
+        course.get("subtitle") or "Seven modules. One required action each week.",
         NEUTRAL_ACCENT,
     )
     sheet.panel("How to use this workbook", HOW_TO)
@@ -88,7 +88,7 @@ def build():
 
     sheet.heading("The seven modules", size=16, space_before=10)
     sheet.body(
-        "Each module asks one question and ends with one husband-owned field action. "
+        "Each module asks one question and ends with one husband-owned required action. "
         "Work them in order; the later modules assume the habits built in the earlier ones.",
         gap=10,
     )
@@ -126,12 +126,12 @@ def build():
         if module.get("finishLineHero"):
             sheet.panel("This week's finish line", [module["finishLineHero"]], accent=accent)
 
-        # Scripture — tick as you read.
+        # Scripture; tick as you read.
         if module.get("scripture"):
             sheet.kicker("Scripture anchor")
             sheet.body("Read each passage in its wider context. Tick it when you have.", size=9, color=GRAY, gap=8)
             for idx, item in enumerate(module["scripture"], 1):
-                sheet.checkbox_row(f"{mid}.scripture.{idx}", f"{item['reference']} — {item['note']}")
+                sheet.checkbox_row(f"{mid}.scripture.{idx}", f"{item['reference']}; {item['note']}")
             sheet.space(6)
 
         # Tasks.
@@ -146,10 +146,10 @@ def build():
                 sheet.space(2)
                 sheet.field("What I did", f"{mid}.task{task['number']}.did", rows=3)
 
-        # The field action.
+        # The required action.
         action = module.get("fieldAction") or {}
         if action:
-            sheet.kicker("Required field action")
+            sheet.kicker("Required action")
             sheet.subheading(action.get("title", ""))
             for idx, step in enumerate(action.get("steps", []), 1):
                 sheet.bullet(step, glyph=f"{idx}.", size=9.4)
@@ -177,7 +177,7 @@ def build():
             sheet.space(4)
 
         # Debrief.
-        sheet.field("Module debrief — what changed, and what she might have noticed",
+        sheet.field("Module debrief; what changed, and what she might have noticed",
                     f"{mid}.debrief", rows=4)
         sheet.new_page()
 
@@ -186,13 +186,13 @@ def build():
     sheet.kicker("End of course")
     sheet.heading("Commissioned", size=22)
     sheet.body(
-        "Seven modules, seven field actions, done quietly and for the long haul. "
+        "Seven modules, seven required actions, done quietly and for the long haul. "
         "Before you close this workbook, write the part you want to still be doing a year from now.",
         gap=12,
     )
     sheet.field("The habit I am keeping", "wb.keeping", rows=4)
     sheet.field("What I want my marriage to look like in a year", "wb.year", rows=5)
-    sheet.field("Where I still need help — and who I will ask", "wb.help", rows=4)
+    sheet.field("Where I still need help; and who I will ask", "wb.help", rows=4)
     sheet.panel("A word on finishing", [
         "Completing a course is not the same as loving your wife well. The course ends; the practice does not.",
         "Keep the weekly check-in. Keep the repairs specific. Keep inviting rather than demanding.",
@@ -201,7 +201,7 @@ def build():
     c.save()
 
     size_kb = os.path.getsize(OUT_PATH) // 1024
-    print(f"Wrote {os.path.relpath(OUT_PATH, REPO)} — {sheet.page} pages, {size_kb} KB")
+    print(f"Wrote {os.path.relpath(OUT_PATH, REPO)}; {sheet.page} pages, {size_kb} KB")
 
 
 if __name__ == "__main__":

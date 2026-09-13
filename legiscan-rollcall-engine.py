@@ -21,6 +21,8 @@ Usage:
   legiscan-rollcall-engine.py MD                      # dry: classify + build dossier + report
   legiscan-rollcall-engine.py MD --max-bills 40       # cap getBill spend for the state
   legiscan-rollcall-engine.py MD --apply              # ...then apply+build+push via commit_refinement
+  legiscan-rollcall-engine.py MD --refresh-classifications   # drop cached skip/keep for this state
+  legiscan-rollcall-engine.py NH --refresh-classifications --bills HB365,HB377
 """
 import json, os, re, subprocess, sys, time
 
@@ -30,26 +32,21 @@ _spec = importlib.util.spec_from_file_location("lpe", "local-politician-extract.
 lpe = importlib.util.module_from_spec(_spec)
 _spec.loader.exec_module(lpe)                      # chat/model_at — one implementation
 from legiscan_client import LegiScanClient, LegiScanError
+import rollcall_score as _rs
 
 SCORECARD = "data/scorecard.json"
 CLASS_CACHE = os.path.expanduser("~/.openclaw/state/legiscan-bill-classifications.json")
 KW = re.compile(r"abortion|reproductive|firearm|gun|second amendment|marriage|gender|transgender|"
                 r"parent|school choice|charter|voucher|voter|election|ballot|immigra|sanctuary|"
                 r"bail|police|religio|prayer|obscen|library|puberty|minor|esg|gold|bullion", re.I)
-FINAL_RC = re.compile(r"third reading|final passage|final action|passage|floor vote|concur|ought to pass"
-                      r"|^otpa?$|\botpa?\b", re.I)
-# Some chambers take their decisive floor vote on SECOND reading and never hold a third
-# (North Dakota). Treating 2nd reading as final everywhere would swallow procedural votes,
-# so it is used ONLY as a fallback when a bill has no other final-type roll call.
-SECOND_RC = re.compile(r"second reading|2nd reading", re.I)
-# NH kills bills with an "Inexpedient to Legislate" FLOOR vote — a final action with
-# REVERSED polarity: YEA on ITL = voting to kill the bill (i.e., against its policy).
-# NH's House abbreviates its floor actions (OTP/OTPA = Ought To Pass [as Amended], ITL);
-# matching only the spelled-out forms caught NH's 24-member SENATE votes while missing
-# every 398-member HOUSE vote — the reason NH looked barren despite 364 matchable members.
-ITL_RC = re.compile(r"inexpedient to legislate|^itl$|\bitl\b", re.I)
-# Motions to table are procedural maneuvers, not a recorded position on the policy.
-TABLE_RC = re.compile(r"\btable\b|\blay on\b", re.I)
+# Vote grammar is defined ONCE in rollcall_grammar.py and shared with
+# rollcall-marquee-hunt.py — the two copies had already drifted (the hunter treated
+# second reading as final; this engine treats it as a fallback), so the hunter kept
+# proposing bills this engine rejected. Names are re-bound so existing uses are unchanged.
+_gs = importlib.util.spec_from_file_location("rollcall_grammar", "rollcall_grammar.py")
+_g = importlib.util.module_from_spec(_gs); _gs.loader.exec_module(_g)
+FINAL_RC, SECOND_RC = _g.FINAL_RC, _g.SECOND_RC
+ITL_RC, TABLE_RC = _g.ITL_RC, _g.TABLE_RC
 
 CLASSIFY_SYS = (
     "You map a state legislative BILL to a voter-scorecard POSITION. You are given numbered "
@@ -91,6 +88,7 @@ def main():
     only_bills = ([b.strip().upper() for b in sys.argv[sys.argv.index("--bills") + 1].split(",")]
                   if "--bills" in sys.argv else None)
     apply_now = "--apply" in sys.argv
+    refresh_class = "--refresh-classifications" in sys.argv
     today = time.strftime("%Y-%m-%d")
 
     qwen = "http://127.0.0.1:1235/v1"; gemma = "http://127.0.0.1:1234/v1"
@@ -105,16 +103,46 @@ def main():
     qmap = {n + 1: qlist[n] for n in range(len(qlist))}
     numbered = "\n".join(f"{n}. {q}" for n, (_, _, q) in qmap.items())
 
-    # --- candidates we can score: this state's unscored active state legislators ---
+    # --- candidates we can score ---
     def evid(c): return ((c.get("profile") or {}).get("confidence") or "").startswith("evidence")
-    pool = [c for c in sc["candidates"]
+
+    def backed_count(c):
+        """Answered cells carrying documentation (footnote ref OR claims[] entry).
+        Mirrors generate-profiles.backed_answer_count — the site withholds a letter
+        grade below MIN_BACKED_FOR_GRADE(5), so this is the enrichment target."""
+        sc_ = c.get("scores") or {}
+        s_ = set()
+        for cat_, rp in (c.get("answer_footnotes") or {}).items():
+            arr_ = sc_.get(cat_) or []
+            for qi_, refs_ in enumerate(rp or []):
+                if refs_ and qi_ < len(arr_) and arr_[qi_] in (True, False):
+                    s_.add((cat_, qi_))
+        for cl_ in (c.get("claims") or []):
+            cat_, qi_ = cl_.get("category"), cl_.get("question_idx")
+            arr_ = sc_.get(cat_) or []
+            if cat_ is not None and isinstance(qi_, int) and qi_ < len(arr_) and arr_[qi_] in (True, False):
+                s_.add((cat_, qi_))
+        return len(s_)
+
+    # DEFAULT: only UNSCORED candidates (coverage mode — find new people).
+    # --enrich: ALSO include already-evidence records that are UNDER-DOCUMENTED
+    # (<5 backed cells). Those are exactly the records whose letter grade the site
+    # now withholds; without this they were skipped as "no_match" and the 2026-08-18
+    # enrichment sweep returned ~55 candidates while reporting 682 unmatched in NH.
+    enrich = "--enrich" in sys.argv
+    base = [c for c in sc["candidates"]
             if (c.get("state") or "").upper() == state and c.get("level") == "state"
-            and (c.get("status") or "active") not in ("lost", "former", "deceased") and not evid(c)]
+            and (c.get("status") or "active") not in ("lost", "former", "deceased")]
+    pool = [c for c in base if (not evid(c)) or (enrich and backed_count(c) < 5)]
     by_name = {}
     for c in pool:
         by_name.setdefault(norm_name(c.get("name")), []).append(c)
         by_name.setdefault(surname(c.get("name")), []).append(c)
-    print(f"{state}: {len(pool)} unscored active state legislators in scorecard")
+    if enrich:
+        _new = sum(1 for c in pool if not evid(c))
+        print(f"{state}: {len(pool)} targets ({_new} unscored + {len(pool)-_new} under-documented) [ENRICH]")
+    else:
+        print(f"{state}: {len(pool)} unscored active state legislators in scorecard")
 
     ls = LegiScanClient()
     spent0 = ls.queries_this_month
@@ -152,6 +180,20 @@ def main():
     except Exception:
         ccache = {}
     os.makedirs(os.path.dirname(CLASS_CACHE), exist_ok=True)
+    # A bill judged "skip" is cached forever, so re-sweeps become silent no-ops.
+    # --refresh-classifications drops this state's keys (or just --bills) so they
+    # get re-judged. Does NOT touch other states.
+    if refresh_class:
+        if only_bills:
+            ids = {str(b["bill_id"]) for b in flagged}
+            drop = [k for k in ccache
+                    if k.startswith(f"{state}:") and k.split(":")[1].split(":")[0] in ids]
+        else:
+            drop = [k for k in ccache if k.startswith(f"{state}:")]
+        for k in drop:
+            del ccache[k]
+        json.dump(ccache, open(CLASS_CACHE, "w"), indent=1)
+        print(f"refresh-classifications: dropped {len(drop)} cached {state} key(s)")
 
     # people map for THIS session (1 query, heavily reused)
     ppl = (ls.pull("getSessionPeople", id=sid).get("sessionpeople") or {}).get("people") or []
@@ -316,7 +358,6 @@ def main():
         # or (b) the parties genuinely diverged (majority of D's opposite majority of R's) —
         # the mechanical form of the runbook's "party-line marquee votes are HARD evidence."
             yea_n, nay_n = int(rc.get("yea") or 0), int(rc.get("nay") or 0)
-            contested = (yea_n + nay_n) > 0 and min(yea_n, nay_n) / (yea_n + nay_n) >= 0.25
             py = {"D": [0, 0], "R": [0, 0]}
             for mv in (rc.get("votes") or []):
                 vt = (mv.get("vote_text") or "").strip().lower()
@@ -325,12 +366,7 @@ def main():
                 pp = (people.get(mv.get("people_id")) or {}).get("party") or ""
                 if pp in py:
                     py[pp][0 if vt == "yea" else 1] += 1
-            def maj(side):
-                y, n = side
-                return None if (y + n) < 5 else (y > n)
-            dmaj, rmaj = maj(py["D"]), maj(py["R"])
-            party_divided = dmaj is not None and rmaj is not None and dmaj != rmaj
-            if not (contested or party_divided):
+            if not _rs.vote_is_scoreable(yea_n, nay_n, py["D"], py["R"]):
                 skipped["uncontested"] = skipped.get("uncontested", 0) + 1
                 continue
 
@@ -354,11 +390,10 @@ def main():
                     continue
                 c = matches[0]
                 # ITL reverses: YEA on Inexpedient-to-Legislate = voting AGAINST the bill.
-                voted_for_bill = (vt == "yea") != is_itl
-                supports = (cls["yea"] == "support") == voted_for_bill
+                supports = _rs.cell_verdict(cls["yea"], vt, is_itl)
                 key = f"{c['slug']}@{state}"
                 rec = records.setdefault(key, {"profile": {
-                    "confidence": "evidence_state",
+                    "confidence": (c.get("profile") or {}).get("confidence") or "evidence_state",
                     "confidence_note": f"Roll-call engine (LegiScan API, Qwen+Gemma-agreed bill mapping) {today}",
                     "last_refined": today, "grind_strikes": 0}, "evidence": {}, "sources_add": []})
                 cellq = str(cls["q"])
@@ -389,12 +424,61 @@ def main():
     if not records:
         return 1
 
+    # ── AUTOMATED INSPECTION GATE ────────────────────────────────────────────────
+    # Every veto to date (65 bills) came from a HUMAN reading a party-vs-verdict table.
+    # That judgment cannot be the only thing standing between a bad mapping and a public
+    # scorecard of named officials, because crons and PSAs run this engine unattended.
+    # The single most reliable machine-checkable signal from those 65 vetoes: on this
+    # Christian-conservative rubric a correct mapping almost never yields a DEMOCRAT
+    # MAJORITY scoring TRUE or a REPUBLICAN MAJORITY scoring FALSE. When it does, the
+    # bill's polarity is usually inverted (a double-negative title like MD HB444
+    # "Immigration Enforcement Agreements - Prohibition" or CA SB1174) or it is a
+    # procedural motion (MT HB818 "Amendments NOT Concurred").
+    #
+    # A flagged dossier is written to a *.FLAGGED.json name that the orchestrator does
+    # NOT pick up, and the run exits 2 — so an unattended round cannot ship it. A human
+    # who has read the report can still apply it deliberately.
+    sc_all = json.load(open(SCORECARD))["candidates"]
+    party_of = {c["slug"]: (c.get("party") or "?") for c in sc_all}
+    tallies = {}
+    for k, rec in records.items():
+        pty = party_of.get(k.split("@")[0], "?")
+        for cat, qs in rec["evidence"].items():
+            for qi, e in qs.items():
+                note = str(e.get("note") or "")
+                bill = note.split("—")[0].replace("Voted YEA on", "").replace("Voted NAY on", "").strip()
+                t = tallies.setdefault((bill or cat, cat, qi), {"D": [0, 0], "R": [0, 0], "n": 0})
+                t["n"] += 1
+                if pty in ("D", "R"):
+                    t[pty][0 if e["v"] else 1] += 1
+
+    flagged = []
+    for (bill, cat, qi), t in tallies.items():
+        if _rs.polarity_looks_inverted(t["D"], t["R"]):
+            flagged.append((bill, cat, qi, t))
+
+    if flagged:
+        print("\n" + "=" * 74)
+        print("⛔ INSPECTION GATE — POLARITY LOOKS INVERTED; dossier withheld from apply")
+        for bill, cat, qi, t in flagged:
+            print(f"   {bill} -> {cat}[{qi}]  D(T/F)={t['D'][0]}/{t['D'][1]}  R(T/F)={t['R'][0]}/{t['R'][1]}  n={t['n']}")
+        print("   Read the bill's FULL text (title truncations lie in both directions).")
+        print("   If genuinely wrong:  python3 add-veto.py \"ST:BILL\" \"reason\"")
+        print("   If genuinely right:  re-run with --allow-flagged")
+        print("=" * 74)
+
     os.makedirs("refinements", exist_ok=True)
-    dpath = f"refinements/rollcall-{state.lower()}-{time.strftime('%Y-%m-%d-%H%M')}.json"
+    suffix = ".FLAGGED" if (flagged and "--allow-flagged" not in sys.argv) else ""
+    dpath = f"refinements/rollcall-{state.lower()}-{time.strftime('%Y-%m-%d-%H%M')}{suffix}.json"
     json.dump({"_meta": {"author": "rollcall-engine", "date": today,
-                         "note": f"{state} roll-call-first scoring (LegiScan API; Qwen+Gemma-agreed bill mappings)"},
+                         "note": f"{state} roll-call-first scoring (LegiScan API; Qwen+Gemma-agreed bill mappings)"
+                                 + (" — POLARITY-FLAGGED, needs human review" if suffix else ""),
+                         "inspection": {"bill_mappings": len(tallies), "flagged": len(flagged)}},
                "reset_unspecified": False, "records": records}, open(dpath, "w"), indent=1)
     print(f"dossier: {dpath}")
+    if suffix:
+        print("EXIT 2 — flagged dossier is NOT applied automatically.")
+        return 2
     if apply_now:
         return subprocess.call(["/opt/homebrew/bin/python3", "commit_refinement.py", dpath,
                                 f"rollcall({state}): {len(records)} legislators, {cells} cited floor votes (LegiScan)"])

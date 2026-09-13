@@ -18,11 +18,11 @@ const fieldManual = {
     {
       number: '1',
       title: 'Schedule the check-in',
-      tagline: 'Twenty uninterrupted minutes. Not a performance review.',
+      tagline: 'Twenty uninterrupted minutes, not a performance review.',
       actions: [
-        'Ask: "I want to protect twenty minutes for us each week — not to grade our marriage, just to stay connected. Would [day/time] work?"',
+        'Ask: "I want to protect twenty minutes for us each week; not to grade our marriage, just to stay connected. Would [day/time] work?"',
         'Choose a quiet, neutral setting. Do not begin in bed, late at night, during a rushed transition, or when either of you is already upset.',
-        'Put the time on your calendar only after she agrees — or after you have made a respectful invitation she may decline without penalty.'
+        'Put the time on your calendar only after she agrees; or after you have made a respectful invitation she may decline without penalty.'
       ]
     },
     {
@@ -59,7 +59,7 @@ const fieldManual = {
       title: 'Protect the rhythm',
       actions: [
         'Put the next check-in on the calendar before the first one ends.',
-        'If the first time did not work, repair the miss and choose another time — do not quit because it felt awkward.',
+        'If the first time did not work, repair the miss and choose another time; do not quit because it felt awkward.',
         'Do not turn consistency into surveillance. A check-in is not a performance review or evidence that you are now entitled to praise.'
       ]
     }
@@ -78,7 +78,7 @@ const fieldManual = {
       'Choose one action you personally own before the next meeting.',
       'Schedule the next check-in before this one ends.'
     ],
-    finishLine: 'The next check-in is on the calendar, the first check-in occurred, and you completed one small act of care based on what you heard — whether or not she participated.'
+    finishLine: 'The next check-in is on the calendar, the first check-in occurred, and you completed one small act of care based on what you heard; whether or not she participated.'
   },
   conversation: {
     intro: 'Invite; do not assign. Your wife may decline, stop, or suggest another format without penalty.',
@@ -89,7 +89,7 @@ const fieldManual = {
       'What one action would be most useful for me to own before we talk again?'
     ]
   },
-  caution: 'Relationship habits help basically safe couples; they do not repair violence, coercive control, active betrayal, or addiction by themselves. A husband\'s initiative is not authority to compel participation. If there is fear, coercion, violence, or immediate danger, seek confidential individual help first — not a joint exercise.',
+  caution: 'Relationship habits help basically safe couples; they do not repair violence, coercive control, active betrayal, or addiction by themselves. A husband\'s initiative is not authority to compel participation. If there is fear, coercion, violence, or immediate danger, seek confidential individual help first; not a joint exercise.',
   support: {
     lead: 'This course is formation for a basically safe marriage. It is not crisis care, clinical treatment, or a substitute for qualified pastoral counsel.',
     referrals: [
@@ -100,12 +100,12 @@ const fieldManual = {
     close: 'Never use Scripture, headship, money, children, or course completion to demand access, silence concern, or prevent help.'
   },
   resources: {
-    intro: 'Optional study aids. Listen, watch, read, or drill — then return to your field action.',
+    intro: 'Optional study aids. Listen, watch, read, or drill; then return to your required action.',
     groups: [
       { key: 'video', heading: 'Watch', note: 'Short video overviews.' },
       { key: 'audio', heading: 'Listen', note: 'Audio briefings for deeper reflection.' },
       { key: 'slides', heading: 'Slide decks', note: 'PDF study decks.' },
-      { key: 'infographics', heading: 'Field graphics', note: 'Single-page visual summaries.' },
+      { key: 'infographics', heading: 'Study graphics', note: 'Single-page visual summaries.' },
       { key: 'reports', heading: 'Read', note: 'Study reports as clean, printable PDFs.' },
       { key: 'ministry', heading: 'From U.S.M.C. Ministries', note: 'Our own writing on questions this module raises.' },
       { key: 'quiz', heading: 'Drill', note: 'Interactive knowledge check.' }
@@ -121,7 +121,7 @@ const fieldManual = {
     }
   },
   assessment: {
-    intro: 'Complete the quiz after working through the module tasks and field action.',
+    intro: 'Complete the quiz after working through the module tasks and required action.',
     quizHref: '../assets/media/tmc-husband/m01/quiz/marriage-quiz.html',
     quizTitle: 'Module 1 Marriage Quiz'
   },
@@ -136,7 +136,7 @@ const fieldManual = {
     { slug: 'infographic-vineyard-field-guide', state: 'local', group: 'infographics', title: 'Marriage Vineyard Field Guide', summary: 'Single-page field guide on adjusting, pruning, supporting, and renewing.', href: '../assets/media/tmc-husband/m01/infographics/marriage-vineyard-field-guide.png', alt: 'Infographic titled Marriage Vineyard Field Guide illustrating four vineyard tasks for marital maintenance.' },
     { slug: 'report-building-foundations', state: 'local', group: 'reports', title: 'Building Strong Foundations', summary: 'Executive briefing on foundation habits.', href: '../assets/media/tmc-husband/m01/reports/episode-1-building-strong-foundations.pdf', linkLabel: 'Read the report' },
     { slug: 'report-we-to-me', state: 'local', group: 'reports', title: 'From We to Me: Navigating the Seasons of Connection', summary: 'Seasons-of-life framing.', href: '../assets/media/tmc-husband/m01/reports/from-we-to-me-seasons-of-connection.pdf', linkLabel: 'Read the report' },
-    { slug: 'report-vineyard-secret', state: 'local', group: 'reports', title: 'The Vineyard Secret: Five Surprising Lessons', summary: 'Popular-article register — use as prompt, not proof.', href: '../assets/media/tmc-husband/m01/reports/vineyard-secret-five-lessons.pdf', linkLabel: 'Read the report' },
+    { slug: 'report-vineyard-secret', state: 'local', group: 'reports', title: 'The Vineyard Secret: Five Surprising Lessons', summary: 'Popular-article register; use as prompt, not proof.', href: '../assets/media/tmc-husband/m01/reports/vineyard-secret-five-lessons.pdf', linkLabel: 'Read the report' },
     { slug: 'post-mutual-submission', state: 'local', group: 'ministry', kind: 'Article', title: 'What the Care and Counsel Bible Gets Wrong About Mutual Submission', summary: 'Why Ephesians 5:21 does not teach symmetrical submission, and what the household code actually commands a husband.', href: 'https://usmcmin.org/blog/what-the-care-and-counsel-bible-gets-wrong-about-mutual-submission.html', linkLabel: 'Read the article' },
     { slug: 'quiz-marriage-quiz', state: 'local', group: 'quiz', title: 'Marriage Quiz', summary: 'Knowledge check over Module 1 material.', href: '../assets/media/tmc-husband/m01/quiz/marriage-quiz.html', linkLabel: 'Open the quiz' }
   ]

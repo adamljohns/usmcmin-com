@@ -95,6 +95,58 @@
     }
     .issue-analysis .scripture cite { color: #c9a84c; font-style: normal; font-weight: 600; font-size: 0.82rem; }
 
+    .issue-share {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 10px 12px;
+      padding: 16px 20px;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      margin-bottom: 24px;
+    }
+    .issue-share-label {
+      font-size: 0.72rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: #c9a84c;
+      margin-right: 4px;
+    }
+    .issue-share-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      flex: 1;
+    }
+    .issue-share-btn {
+      appearance: none;
+      border: 1px solid rgba(201,168,76,0.35);
+      background: rgba(201,168,76,0.06);
+      color: var(--white);
+      font-size: 0.82rem;
+      font-weight: 600;
+      padding: 8px 14px;
+      border-radius: 6px;
+      cursor: pointer;
+      text-decoration: none;
+      line-height: 1.2;
+    }
+    .issue-share-btn:hover {
+      background: rgba(201,168,76,0.14);
+      border-color: rgba(201,168,76,0.55);
+    }
+    .issue-share-btn.copied {
+      background: rgba(74,222,128,0.18);
+      border-color: rgba(74,222,128,0.45);
+      color: #4ade80;
+    }
+    .issue-share-native { display: none; }
+    @media (max-width: 640px) {
+      .issue-share-native.share-available { display: inline-block; }
+    }
+
     .issue-sources {
       padding: 20px 24px;
       background: var(--bg-card);
@@ -159,6 +211,16 @@
     </div>
   </div>
 
+  <div class="issue-share" data-share-title="Arkansas: Religious Exemptions for Nondiscrimination" data-share-url="https://usmcmin.com/issues/ar-religious-exemptions.html">
+    <span class="issue-share-label">Share</span>
+    <div class="issue-share-actions">
+      <button type="button" class="issue-share-btn" data-share="x">Share on X</button>
+      <button type="button" class="issue-share-btn" data-share="facebook">Share on Facebook</button>
+      <button type="button" class="issue-share-btn" data-share="copy">Copy link</button>
+      <button type="button" class="issue-share-btn issue-share-native" data-share="native">Share…</button>
+    </div>
+  </div>
+
   <div class="issue-sources"><h3>Sources &amp; Resources</h3><a href="https://www.aclu.org/legislative-attacks-on-lgbtq-rights-2025" target="_blank" rel="noopener">ACLU - 2025 Legislative Attacks</a><a href="https://religiouslibertyinthestates.com/" target="_blank" rel="noopener">Religious Liberty in the States</a></div>
 </div>
 
@@ -174,6 +236,57 @@
   if (navToggle && navLinks) {
     navToggle.addEventListener('click', function() { navLinks.classList.toggle('open'); });
   }
+})();
+</script>
+<script>
+(function() {
+  var row = document.querySelector('.issue-share');
+  if (!row) return;
+  var shareTitle = row.getAttribute('data-share-title') || document.title;
+  var shareUrl = row.getAttribute('data-share-url') || window.location.href.split('#')[0];
+  var nativeBtn = row.querySelector('[data-share="native"]');
+  if (nativeBtn && navigator.share) {
+    nativeBtn.classList.add('share-available');
+  }
+  row.addEventListener('click', function(e) {
+    var btn = e.target.closest('.issue-share-btn');
+    if (!btn) return;
+    var kind = btn.getAttribute('data-share');
+    var tweetText = shareTitle + ' — RESOLUTE Citizen';
+    if (kind === 'x') {
+      window.open(
+        'https://twitter.com/intent/tweet?text=' + encodeURIComponent(tweetText) + '&url=' + encodeURIComponent(shareUrl),
+        '_blank', 'noopener'
+      );
+    } else if (kind === 'facebook') {
+      window.open(
+        'https://www.facebook.com/sharer/sharer.php?u=' + encodeURIComponent(shareUrl),
+        '_blank', 'noopener'
+      );
+    } else if (kind === 'native' && navigator.share) {
+      navigator.share({ title: shareTitle, text: tweetText, url: shareUrl }).catch(function() {});
+    } else if (kind === 'copy') {
+      var done = function() {
+        btn.classList.add('copied');
+        var prev = btn.textContent;
+        btn.textContent = 'Copied!';
+        setTimeout(function() {
+          btn.classList.remove('copied');
+          btn.textContent = prev;
+        }, 1500);
+      };
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(shareUrl).then(done);
+      } else {
+        var ta = document.createElement('textarea');
+        ta.value = shareUrl;
+        document.body.appendChild(ta);
+        ta.select();
+        try { document.execCommand('copy'); done(); } catch (err) {}
+        document.body.removeChild(ta);
+      }
+    }
+  });
 })();
 </script>
 <script>

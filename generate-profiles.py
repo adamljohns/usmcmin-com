@@ -79,6 +79,30 @@ CIVIC_TOOL_MAP = {
     'City of Fredericksburg': 'https://adamljohns.github.io/resolute-local/city/fredericksburg.html',
 }
 
+def backed_answer_count(c):
+    """How many ANSWERED cells actually carry documentation — a footnote reference
+    (grind/roll-call records) OR a claims[] entry (frontier enrich-batch records).
+
+    This is the honest denominator for "can we back this grade up?". A record can
+    carry 35 answered cells inherited from party-default scaffolding while only 1
+    is documented; grading that as an A presents a party heuristic as a verified
+    finding. (Audit 2026-08-18: 2,499 A-grade profiles had <5 documented answers
+    while averaging 35.8 answered cells.)"""
+    sc = c.get('scores') or {}
+    backed = set()
+    for cat, refs_per_q in (c.get('answer_footnotes') or {}).items():
+        arr = sc.get(cat) or []
+        for qi, refs in enumerate(refs_per_q or []):
+            if refs and qi < len(arr) and arr[qi] in (True, False):
+                backed.add((cat, qi))
+    for cl in (c.get('claims') or []):
+        cat, qi = cl.get('category'), cl.get('question_idx')
+        arr = sc.get(cat) or []
+        if cat is not None and isinstance(qi, int) and qi < len(arr) and arr[qi] in (True, False):
+            backed.add((cat, qi))
+    return len(backed)
+
+
 def letter_grade(pct):
     """A 90+, B 80, C 70, D 60, F <60 — standard report-card scale.
     Takes a 0-100 percentage. Per Adam's 2026-05-18 directive, candidates
@@ -343,6 +367,9 @@ def build_election_html(candidate, elections_data):
     next_date = profile.get('next_election_date')
     next_type = profile.get('next_election_type') or 'general'
     seat_up = profile.get('seat_up_next')
+    # Special / named next_election_type means they are on that ballot.
+    if seat_up is None and str(next_type).lower() in ('special', 'primary', 'runoff'):
+        seat_up = True
     state = (candidate.get('state') or '').upper()
 
     if not next_date:
@@ -393,9 +420,14 @@ def build_election_html(candidate, elections_data):
         ev_note = early_voting.get('note', '')
         ev_note_html = f' <span style="opacity:0.7;">({ev_note})</span>' if ev_note else ''
         admin_parts.append(f'<div class="prof-election-side-item"><strong>Early voting:</strong> {early_voting["start"]} &ndash; {early_voting["end"]}{ev_note_html}</div>')
-    if admin.get('phone'):
+    local_elections = profile.get('local_elections_office') or {}
+    if local_elections.get('phone'):
+        tel = 'tel:' + str(local_elections['phone'])
+        label = local_elections.get('name') or 'County registrar'
+        admin_parts.append(f'<div class="prof-election-side-item"><strong>{label}:</strong> <a href="{tel}">{local_elections["phone"]}</a></div>')
+    elif admin.get('phone'):
         tel = 'tel:' + admin["phone"]
-        admin_parts.append(f'<div class="prof-election-side-item"><strong>Elections office:</strong> <a href="{tel}">{admin["phone"]}</a></div>')
+        admin_parts.append(f'<div class="prof-election-side-item"><strong>State elections office:</strong> <a href="{tel}">{admin["phone"]}</a></div>')
     if admin.get('voter_info_lookup'):
         admin_parts.append(f'<div class="prof-election-side-item"><strong>Voter status:</strong> <a href="{admin["voter_info_lookup"]}" target="_blank" rel="noopener">Check registration</a></div>')
     if admin.get('website'):
@@ -890,17 +922,23 @@ def generate_profile(candidate, categories, meta, nav=None):
     # Below MIN_ANSWERED_FOR_DYNAMIC_GRADE we show absolute /100 (2 pts × global max)
     # and suppress the letter grade so thin seeds cannot look like full A's.
     MIN_ANSWERED_FOR_DYNAMIC_GRADE = 10
-    thin_record = answered_count < MIN_ANSWERED_FOR_DYNAMIC_GRADE
+    # A letter grade must be backed by DOCUMENTED answers, not by party-default
+    # scaffolding a record inherited. Counting merely-answered cells let records
+    # with ~36 answers but 1 citation display a clean A (2026-08-18 audit).
+    MIN_BACKED_FOR_GRADE = 5
+    backed_count = backed_answer_count(c)
+    thin_record = (answered_count < MIN_ANSWERED_FOR_DYNAMIC_GRADE
+                   or backed_count < MIN_BACKED_FOR_GRADE)
     if thin_record:
         pct_of_max = max(0, min(100, round((adjusted_score / MAX_TOTAL) * 100))) if MAX_TOTAL else 0
         grade_letter = '\u2014'  # em dash — grade withheld
     elif max_possible > 0:
-        # Cap pct floor at 0 — when adjustments (e.g., -50 Soros) exceed
-        # max_possible, raw pct goes negative which displays as nonsense
-        # like "-250%". Cap display at 0; the absolute negative score is
-        # still visible in the adjusted_score field for full transparency.
+        # Cap display at 0–100. Floor: negative adjustments (e.g. -50 Soros)
+        # used to print "-250%". Ceiling: positive AIPAC/CCP bonuses on a
+        # small dynamic max used to print 111/100 and 150/100 (RSA-0818-SCORE-CAP).
+        # Raw earned + adjustments stay visible in the caption / adj block.
         raw_pct = round((adjusted_score / max_possible) * 100)
-        pct_of_max = max(0, raw_pct)
+        pct_of_max = max(0, min(100, raw_pct))
         grade_letter = letter_grade(pct_of_max)
     else:
         pct_of_max = 0
@@ -908,13 +946,14 @@ def generate_profile(candidate, categories, meta, nav=None):
 
     if thin_record:
         thin_score_title = (
-            f'Thin evidence seed \u2014 {answered_count} questions answered. '
+            f'Thin evidence \u2014 {answered_count} answered, {backed_count} documented with a cited source. '
             f'Showing absolute {adjusted_score}/100 (not dynamic-max %). '
             f'Letter grade suppressed until \u2265{MIN_ANSWERED_FOR_DYNAMIC_GRADE} answered cells. '
             f'Raw dynamic max would be {max_possible} pts ({answered_count}\u00d72).'
         )
         grade_aria = (
-            f'Thin seed \u2014 letter grade withheld until \u2265{MIN_ANSWERED_FOR_DYNAMIC_GRADE} answered questions'
+            f'Thin evidence \u2014 letter grade withheld until \u2265{MIN_ANSWERED_FOR_DYNAMIC_GRADE} answered '
+            f'and \u2265{MIN_BACKED_FOR_GRADE} documented questions ({backed_count} documented now)'
         )
     else:
         thin_score_title = (
@@ -950,7 +989,7 @@ def generate_profile(candidate, categories, meta, nav=None):
         for cat in _scores_dict
     ) if _scores_dict else True
     _has_claims = bool(c.get('claims'))
-    if confidence == 'party_default':
+    if confidence == 'party_default' or 'party_default' in confidence or 'archetype' in confidence:
         confidence_chip_html = (
             '<div class="prof-confidence-banner" role="note" aria-label="Scoring confidence">'
             '<span class="prof-confidence-chip prof-conf-party-default">Party-default scoring</span>'
@@ -1607,7 +1646,8 @@ def generate_profile(candidate, categories, meta, nav=None):
     fields = [
         ('Religion', profile.get('religion')),
         ('Education', profile.get('education')),
-        ('Birthplace', profile.get('birthplace')),
+        ('Residence' if profile.get('residence') else 'Birthplace',
+         profile.get('residence') or profile.get('birthplace')),
         ('Background', profile.get('background')),
         ('Net Worth', profile.get('net_worth')),
         ('NRA Rating', profile.get('nra_rating')),
@@ -1628,7 +1668,15 @@ def generate_profile(candidate, categories, meta, nav=None):
 
     contenders = profile.get('next_election_contenders', [])
     if contenders:
-        profile_html += f'<div class="prof-detail"><strong>Upcoming Contenders:</strong> {", ".join(contenders)}</div>'
+        slug_to_name = (meta.get('_slug_to_name') or {})
+        pretty = []
+        for item in contenders:
+            if not item:
+                continue
+            pretty.append(slug_to_name.get(item, item) if isinstance(item, str) and '-' in item and item.islower() else item)
+        # If we only have slugs and no name map, skip rather than print kebab.
+        if pretty and not all(p == s and '-' in str(s) for p, s in zip(pretty, contenders)):
+            profile_html += f'<div class="prof-detail"><strong>Upcoming Contenders:</strong> {", ".join(pretty)}</div>'
 
     notes = c.get('notes', '')
     website = c.get('website', '')
@@ -1797,7 +1845,7 @@ def generate_profile(candidate, categories, meta, nav=None):
   <!-- Open Graph (Facebook, LinkedIn, iMessage previews) -->
   <meta property="og:site_name" content="RESOLUTE Citizen Scorecard">
   <meta property="og:type" content="profile">
-  <meta property="og:title" content="{c['name']} — {total['score']}/{MAX_TOTAL} on the RESOLUTE Citizen Scorecard">
+  <meta property="og:title" content="{c['name']} — {pct_of_max}/100 ({grade_letter}) on the RESOLUTE Citizen Scorecard">
   <meta property="og:description" content="{party_label(c['party'])} · {c['office']}, {c['jurisdiction']}. Score {pct_of_max}/100 ({grade_letter}) on the RESOLUTE Citizen {candidate_tier} rubric. Click to see voting record + sources.">
   <meta property="og:url" content="https://usmcmin.com/candidates/{state_code.lower()}/{c.get('slug','')}.html">
   <meta property="og:image" content="{('https://usmcmin.com/' + photo_path) if photo_path else 'https://usmcmin.com/assets/og/og-citizen.jpg'}">
@@ -1805,7 +1853,7 @@ def generate_profile(candidate, categories, meta, nav=None):
 
   <!-- Twitter / X Card -->
   <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="{c['name']} — {total['score']}/{MAX_TOTAL}">
+  <meta name="twitter:title" content="{c['name']} — {pct_of_max}/100 ({grade_letter})">
   <meta name="twitter:description" content="{party_label(c['party'])} · {c['office']}. RESOLUTE Citizen Scorecard.">
   <meta name="twitter:image" content="{('https://usmcmin.com/' + photo_path) if photo_path else 'https://usmcmin.com/assets/og/og-citizen.jpg'}">
 
@@ -2133,7 +2181,11 @@ def main():
     rank_rows = []
     for c in data['candidates']:
         scores = c.get('scores') or {}
-        any_scored = any(isinstance(v, list) and any(a is not None for a in v) for v in scores.values())
+        # Only True/FALSE count as scored answers. N/A / null must not rank.
+        any_scored = any(
+            isinstance(v, list) and any(a is True or a is False for a in v)
+            for v in scores.values()
+        )
         if not any_scored:
             continue
         tot = calc_total(scores, categories, classify_office_tier(c) or 'federal')['score']
@@ -2145,6 +2197,11 @@ def main():
     for i, (slug, _) in enumerate(rank_rows):
         rank_map[slug] = (i + 1, total_ranked)
     meta['_rank_map'] = rank_map
+    meta['_slug_to_name'] = {
+        c.get('slug'): c.get('name')
+        for c in data['candidates']
+        if c.get('slug') and c.get('name')
+    }
 
     for candidate in data['candidates']:
         slug = candidate.get('slug', '')

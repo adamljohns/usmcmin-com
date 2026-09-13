@@ -24,19 +24,18 @@
       ]
     },
     "sheriff-roy": {
-      "voice": "en_US-ryan-high",
-      "engine": "piper",
-      "character": "US male deep (Piper ryan; old bm_lewis \u2192 Carnegie) @ 1.25x",
+      "voice": "am_onyx",
+      "engine": "kokoro",
+      "character": "US male deep gravitas (from General Hartwell; Ryan retired)",
       "narrates": [
         "Joshua",
         "Judges",
-        "1\u20132 Samuel",
-        "1\u20132 Kings",
-        "1\u20132 Chronicles",
+        "1–2 Samuel",
+        "1–2 Kings",
+        "1–2 Chronicles",
         "Ezra",
         "Nehemiah"
-      ],
-      "speed": 1.25
+      ]
     },
     "sally": {
       "voice": "bf_emma",
@@ -82,9 +81,10 @@
       ]
     },
     "coach-arnie": {
-      "voice": "en_US-hfc_male-medium",
-      "engine": "piper",
-      "character": "US male deep deckplate coach (Piper hfc_male @ 1.25x \u2014 Principal 2026-07-17)",
+      "voice": "sentinel",
+      "engine": "commander",
+      "dsp": "clean",
+      "character": "Sentinel — machine-soldier commander class (from Coach Piper hfc_male)",
       "narrates": [
         "Hosea",
         "Joel",
@@ -100,13 +100,13 @@
         "Malachi",
         "James",
         "Jude"
-      ],
-      "speed": 1.25
+      ]
     },
     "sgt-maj-mac": {
-      "voice": "en_US-joe-medium",
-      "engine": "piper",
-      "character": "US male deckplate (Piper joe \u2014 Principal)",
+      "voice": "warden",
+      "engine": "commander",
+      "dsp": "clean",
+      "character": "Warden — dry American gravel (from SgtMaj Piper joe)",
       "narrates": [
         "Matthew"
       ]
@@ -140,18 +140,19 @@
       ]
     },
     "bg-hartwell": {
-      "voice": "am_onyx",
-      "engine": "kokoro",
-      "character": "US male deep gravitas (from Carnegie)",
+      "voice": "commander",
+      "engine": "commander",
+      "dsp": "cinematic",
+      "character": "Commander Voice — cinematic general (Qwen3 VoiceDesign, original; not a Cullen clone)",
       "narrates": [
         "Romans",
-        "1\u20132 Corinthians",
+        "1–2 Corinthians",
         "Galatians",
         "Ephesians",
         "Philippians",
         "Colossians",
-        "1\u20132 Thessalonians",
-        "1\u20132 Timothy",
+        "1–2 Thessalonians",
+        "1–2 Timothy",
         "Titus",
         "Philemon (live)"
       ]
@@ -163,6 +164,33 @@
       "narrates": [
         "Fleet comms and briefs (no Scripture assignment)"
       ]
+    }
+  },
+  "commander_class": {
+    "note": "Qwen3 VoiceDesign originals in ~/AI/CommanderVoice. Call via agent-voice --agent <id> after engine=commander is wired, or commander-say --voice <id>. Not celebrity clones.",
+    "marshal": {
+      "voice": "marshal",
+      "engine": "commander",
+      "dsp": "clean",
+      "character": "Older five-star granite — slower and drier than Commander"
+    },
+    "ironclad": {
+      "voice": "ironclad",
+      "engine": "commander",
+      "dsp": "clean",
+      "character": "Deep naval gunnery baritone — salt and steel"
+    },
+    "warden": {
+      "voice": "warden",
+      "engine": "commander",
+      "dsp": "clean",
+      "character": "Dry American gravel — patient watchman"
+    },
+    "sentinel": {
+      "voice": "sentinel",
+      "engine": "commander",
+      "dsp": "clean",
+      "character": "Original machine-soldier class — Terminator-adjacent, not an Arnold clone"
     }
   },
   "banned_voices": {
@@ -180,7 +208,7 @@
       {
         "voice": "en_US-joe-medium",
         "engine": "piper",
-        "note": "US male Piper \u2014 free for next reassignment"
+        "note": "retired SgtMaj Mac deckplate — parked 2026-08-21"
       },
       {
         "voice": "en_US-lessac-medium",
@@ -188,17 +216,17 @@
         "note": "US male Piper \u2014 free for next reassignment"
       },
       {
-        "voice": "am_santa",
-        "engine": "kokoro",
-        "note": "assigned to Hermes for now"
+        "voice": "en_US-hfc_male-medium",
+        "engine": "piper",
+        "note": "retired Coach Arnie deckplate — parked 2026-08-21"
       },
       {
-        "voice": "en_US-ryan-high",
-        "engine": "piper",
-        "note": "assigned to Sheriff Roy for now"
+        "voice": "am_santa",
+        "engine": "kokoro",
+        "note": "unassigned bench (Hermes uses am_adam)"
       }
     ],
-    "note": "3 banned (puck/fable/fenrir) replaced with local males; Principal will reassign further"
+    "note": "Ryan (en_US-ryan-high) retired 2026-08-21. Commander-class voices live in commander_class + ~/AI/CommanderVoice."
   },
   "reassignment_log": {
     "at": "2026-07-17T21:50-04:00",
@@ -240,12 +268,26 @@
       "coach-arnie": "en_US-hfc_male-medium piper speed=1.25 (cand A)"
     }
   },
-  "reassignment_log_4": {
-    "at": "2026-07-17T22:12-04:00",
+  "reassignment_log_5": {
+    "at": "2026-08-21T20:50-04:00",
     "moves": {
-      "sheriff-roy": "speed 1.25",
-      "fleet_greetings": "generate + wire Mission Control agent pages",
-      "agent_voice_skill": "install agent-voice into all PSA workspaces"
+      "sheriff-roy": "am_onyx kokoro (from bg-hartwell; Ryan retired)",
+      "bg-hartwell": "commander / engine=commander cinematic (General)",
+      "retired": "en_US-ryan-high"
+    },
+    "added_commander_class": [
+      "marshal",
+      "ironclad",
+      "warden",
+      "sentinel"
+    ]
+  },
+  "reassignment_log_6": {
+    "at": "2026-08-21T21:25-04:00",
+    "moves": {
+      "bg-hartwell": "commander / clean (02) — already assigned",
+      "sgt-maj-mac": "warden / clean (05)",
+      "coach-arnie": "sentinel / clean (06)"
     }
   }
 }

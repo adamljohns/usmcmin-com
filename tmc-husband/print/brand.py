@@ -2,7 +2,7 @@
 """
 brand.py — the print brand kit for The Husband Course, in The Marriage Academy.
 
-Everything printable in this course (the field workbook, the seven module
+Everything printable in this course (the workbook, the seven module
 inserts, and the twenty-one reading PDFs) is drawn with these helpers, so the
 whole pack looks like one product and like usmcmin.com.
 
@@ -71,8 +71,8 @@ MODULE_ACCENTS = {
     2: "#2C6E8A",  # Communication — harbor
     3: "#4C6B2F",  # Conflict — olive
     4: "#9B4A3F",  # Repair — clay
-    5: "#5B5A8C",  # Family roots — slate violet
-    6: "#8A3F62",  # Intimacy — deep rose
+    5: "#4A3F8A",  # Family roots — violet
+    6: "#8B1E3F",  # Intimacy — crimson
     7: "#1E4E6B",  # Love in action — navy blue
 }
 NEUTRAL_ACCENT = "#4A5568"

@@ -1,5 +1,7 @@
 # AGENTS.md — Agent guide for the usmcmin-com repo
 
+**Deploy rules are canonical in `DEPLOY-DOCTRINE.md` at the repo root — read it before any deploy-affecting change. It covers both sites and outranks any conflicting note or lane rule.**
+
 > **For any AI agent or human contributor walking into this repo for the
 > first time. Read this BEFORE running any script.**
 

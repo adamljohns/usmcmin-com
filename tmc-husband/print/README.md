@@ -5,7 +5,7 @@ Everything a man can put on paper. Three builders, one brand kit, one export.
 ```
 node   tmc-husband/print/export-course.js     # course JS  -> course-export.json
 python3 tmc-husband/print/build_reports.py    # 21 study reports  -> branded PDFs
-python3 tmc-husband/print/build_workbook.py   # the whole course  -> field workbook
+python3 tmc-husband/print/build_workbook.py   # the whole course  -> workbook
 python3 tmc-husband/print/build_inserts.py    # per module        -> 7 study inserts
 ```
 
@@ -16,7 +16,7 @@ Run the export first; the two PDF builders read it. Requires `reportlab`
 
 | Output | Where it goes | What it is |
 |---|---|---|
-| `downloads/tmc-husband/The_Husband_Course_FIELD_WORKBOOK.pdf` | linked from the course landing page | The overview volume: seven modules, every task, every field action, a fillable box wherever the course asks you to do something. |
+| `downloads/tmc-husband/The_Husband_Course_WORKBOOK.pdf` | linked from the course landing page | The overview volume: seven modules, every task, every required action, a fillable box wherever the course asks you to do something. |
 | `downloads/tmc-husband/The_Husband_Course_Module_0N_INSERT.pdf` | linked from each module page | The detail sheet: a note block per video and audio briefing, reading notes on each study report, the knowledge check laid out to self-grade, a flashcard log. |
 | `assets/media/tmc-husband/mNN/reports/*.pdf` | linked from each module's study library | The Notebook by Gemini study reports, typeset as documents instead of served as raw Markdown. |
 

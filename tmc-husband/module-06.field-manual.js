@@ -5,7 +5,7 @@ const fieldManual = {
   missionDurationMinutes: 60,
   opening: [
     'Marital intimacy is larger than sex. It includes friendship, safety, affection, delight, knowledge, privacy, and embodied closeness. Sexual intimacy matters, but it cannot be isolated from the rest of married life.',
-    'Within the one-flesh covenant, sexual self-giving is mutual and never coerced. First Corinthians 7:3–5 speaks of mutual duty and temporary abstinence by shared agreement — not permission to force, threaten, punish, or demand what harms.',
+    'Within the one-flesh covenant, sexual self-giving is mutual and never coerced. First Corinthians 7:3–5 speaks of mutual duty and temporary abstinence by shared agreement; not permission to force, threaten, punish, or demand what harms.',
     'This week, invite one no-screen connection block of at least thirty minutes. Offer two realistic options, make refusal safe, and state clearly that there is no expectation of sex or forced disclosure.'
   ],
   scripture: [
@@ -31,7 +31,7 @@ const fieldManual = {
       title: 'Honor consent within covenant',
       actions: [
         'Accept that either spouse may decline any sexual or affectionate activity at any time.',
-        'Offer kind words, practical partnership, and nonsexual touch as goods in themselves — not deposits toward access.',
+        'Offer kind words, practical partnership, and nonsexual touch as goods in themselves; not deposits toward access.',
         'Never criticize or compare your wife\'s body. Protect her privacy.',
         'After she states a boundary, keep ordinary warmth intact. Sulking and coldness punish a "no" without speaking a threat.'
       ]
@@ -42,7 +42,7 @@ const fieldManual = {
       actions: [
         'Ask about rest, pain, medication, privacy, unresolved hurt, body image, and caregiving load.',
         'Share household and caregiving responsibility as justice and love, not seduction strategy.',
-        'Treat different desire patterns as shared information — not moral rank.',
+        'Treat different desire patterns as shared information; not moral rank.',
         'Seek medical evaluation for pain; seek trauma-informed care where trauma is present.'
       ]
     },
@@ -60,7 +60,7 @@ const fieldManual = {
   selfCheck: [
     'Does my affection carry an unspoken expectation of sex or reassurance?',
     'How do my words, face, and behavior respond when my wife says no or not now?',
-    'What structural pressure — workload, sleep, privacy, unresolved hurt — can I help address?',
+    'What structural pressure; workload, sleep, privacy, unresolved hurt; can I help address?',
     'Can my wife set a boundary without losing ordinary warmth from me afterward?'
   ],
   fieldAction: {
@@ -93,12 +93,12 @@ const fieldManual = {
     close: 'Consent is always voluntary, specific, ongoing, and reversible. Disappointment does not create entitlement.'
   },
   resources: {
-    intro: "Optional study aids from your Notebook by Gemini notebook. Listen, watch, read, or drill \u2014 then return to your field action.",
+    intro: "Optional study aids from your Notebook by Gemini notebook. Listen, watch, read, or drill \u2014 then return to your required action.",
     groups: [
       { key: "video", heading: "Watch", note: "Short video overviews." },
       { key: "audio", heading: "Listen", note: "Audio briefings for deeper reflection." },
       { key: "slides", heading: "Slide decks", note: "PDF study decks." },
-      { key: "infographics", heading: "Field graphics", note: "Single-page visual summaries." },
+      { key: "infographics", heading: "Study graphics", note: "Single-page visual summaries." },
       { key: "reports", heading: "Read", note: "Study reports as clean, printable PDFs." }
     ],
     withheldNotice: null,
@@ -125,9 +125,9 @@ const fieldManual = {
     { slug: "infographic-the-spark-and-the-flame", state: "local", group: "infographics", title: "The Spark and the Flame", summary: "Friendship, attention, and desire over a long marriage.", href: "../assets/media/tmc-husband/m06/infographics/the-spark-and-the-flame.png", alt: "Illustrated field guide titled The Spark and the Flame: A Field Guide to Sexual Intimacy in Marriage, using a mower spark plug as its central image, with five secrets, a reality-check section on the young-children season, a red panel of warning signs including pornography and emotional adultery, and a three-step action checklist." },
     { slug: "infographic-keeping-the-spark-alive", state: "local", group: "infographics", title: "Keeping the Spark Alive", summary: "Habits that protect intimacy in an ordinary week.", href: "../assets/media/tmc-husband/m06/infographics/keeping-the-spark-alive.png", alt: "Illustrated field guide titled Keeping the Spark Alive: The Heart of Intimacy, with five points on emotional connection, guarding the bedroom as screen-free space, desire following a decision, kindness as the foundation of safety, and consent being voluntary and revocable." },
     { slug: "infographic-five-secrets-of-sexual-intimacy", state: "local", group: "infographics", title: "Five Secrets of Sexual Intimacy", summary: "Five practices, with a consent and safety panel.", href: "../assets/media/tmc-husband/m06/infographics/five-secrets-of-sexual-intimacy.png", alt: "Illustrated field guide titled Keeping the Spark Alive: The 5 Secrets of Sexual Intimacy, with five numbered points on speaking openly, protecting time and space, building anticipation, responding with trust, and other-centred kindness, closing with a note to seek help where there is fear, control, addiction, or abuse." },
-    { slug: "report-briefing-document-the-marriage-course-episode-6-sexual-intimacy", state: "local", group: "reports", title: "Sexual Intimacy: Session Briefing", summary: "Executive briefing — best starting point for this module.", href: "../assets/media/tmc-husband/m06/reports/briefing-document-the-marriage-course-episode-6-sexual-intimacy.pdf", linkLabel: "Read the report" },
+    { slug: "report-briefing-document-the-marriage-course-episode-6-sexual-intimacy", state: "local", group: "reports", title: "Sexual Intimacy: Session Briefing", summary: "Executive briefing; best starting point for this module.", href: "../assets/media/tmc-husband/m06/reports/briefing-document-the-marriage-course-episode-6-sexual-intimacy.pdf", linkLabel: "Read the report" },
     { slug: "report-beyond-the-bedroom-reclaiming-the-spark-in-your-marriage", state: "local", group: "reports", title: "Beyond the Bedroom", summary: "Longer treatment of intimacy as friendship, safety, and attention.", href: "../assets/media/tmc-husband/m06/reports/beyond-the-bedroom-reclaiming-the-spark-in-your-marriage.pdf", linkLabel: "Read the report" },
-    { slug: "report-good-luck-mr-gorsky-5-surprising-truths-about-keeping-the-spark-alive", state: "local", group: "reports", title: "Five Surprising Truths About Keeping the Spark Alive", summary: "Popular-article register — use as a prompt, not as proof.", href: "../assets/media/tmc-husband/m06/reports/good-luck-mr-gorsky-5-surprising-truths-about-keeping-the-spark-alive.pdf", linkLabel: "Read the report" },
+    { slug: "report-good-luck-mr-gorsky-5-surprising-truths-about-keeping-the-spark-alive", state: "local", group: "reports", title: "Five Surprising Truths About Keeping the Spark Alive", summary: "Popular-article register; use as a prompt, not as proof.", href: "../assets/media/tmc-husband/m06/reports/good-luck-mr-gorsky-5-surprising-truths-about-keeping-the-spark-alive.pdf", linkLabel: "Read the report" },
     { slug: "quiz-marriage-quiz", state: "local", group: "quiz", title: "Marriage Quiz", summary: "Knowledge check over this module.", href: "../assets/media/tmc-husband/m06/quiz/marriage-quiz.html", linkLabel: "Open the quiz" },
     { slug: "flashcards-marriage-flashcards", state: "local", group: "flashcards", title: "Marriage Flashcards", summary: "Flashcard drill over this module.", href: "../assets/media/tmc-husband/m06/flashcards/marriage-flashcards.html", linkLabel: "Open the flashcards" }
   ]

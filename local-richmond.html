@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <script>(function(){try{var s=localStorage.getItem('usmc-theme')||localStorage.getItem('theme');if(s!=='light')document.documentElement.setAttribute('data-theme','dark');}catch(e){}})();</script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RESOLUTE Local — Richmond civic door</title>
+  <meta name="description" content="RESOLUTE Local Richmond door. Official Legistar first. No invented Council week.">
+  <style>
+    :root {
+      --bg: #0b0d11; --bg-2: #12151b; --card: #161a21; --ink: #f3f4f6;
+      --muted: #9aa3b2; --line: #2a303a; --gold: #c9b37a;
+      --gold-dim: rgba(201,179,122,0.16); --blue: #7ea8d6; --red: #c45b5b;
+      --serif: "Iowan Old Style", "Palatino Linotype", Palatino, "Times New Roman", serif;
+      --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+    }
+    html[data-theme="light"] {
+      --bg: #f6f3ec; --bg-2: #fffdf8; --card: #ffffff; --ink: #1a1c1f;
+      --muted: #5b616b; --line: #ddd6c8; --gold: #8a7040;
+      --gold-dim: rgba(138,112,64,0.12); --blue: #2f5f8a; --red: #9b3b3b;
+    }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; padding: 0; background: var(--bg); color: var(--ink); font-family: var(--sans); }
+    a { color: inherit; }
+    .wrap { max-width: 1180px; margin: 0 auto; padding: 18px 20px 64px; }
+    .topbar { display: flex; justify-content: space-between; align-items: center; gap: 16px; padding: 14px 0 10px; border-bottom: 1px solid var(--line); }
+    .brand { display: flex; flex-direction: column; gap: 2px; }
+    .brand .kicker { font-size: 0.68rem; letter-spacing: 0.22em; text-transform: uppercase; color: var(--gold); font-weight: 800; }
+    .brand strong { font-family: var(--serif); font-size: 1.05rem; }
+    .nav { display: flex; gap: 16px; align-items: center; flex-wrap: wrap; font-size: 0.82rem; }
+    .nav a { text-decoration: none; color: var(--muted); }
+    .nav a.active { color: var(--ink); font-weight: 700; }
+    .nav a.wire { color: var(--gold); font-weight: 700; }
+    button.theme { border: 1px solid var(--line); background: var(--card); color: var(--ink); border-radius: 999px; padding: 6px 10px; font-size: 0.75rem; cursor: pointer; }
+    .mast { text-align: center; padding: 28px 0 22px; border-bottom: 3px double var(--line); margin-bottom: 22px; }
+    .mast h1 { font-family: var(--serif); font-size: clamp(2.2rem, 6vw, 3.8rem); line-height: 0.95; margin: 0 0 10px; letter-spacing: -0.03em; }
+    .mast h1 em { font-style: normal; color: var(--gold); }
+    .dek { max-width: 680px; margin: 0 auto 10px; color: var(--muted); line-height: 1.55; }
+    .meta { font-size: 0.78rem; color: var(--muted); }
+    .hero { display: grid; grid-template-columns: 1fr; background: var(--card); border: 1px solid var(--line); margin-bottom: 22px; }
+    .hero-body { padding: 28px 28px 24px; display: flex; flex-direction: column; gap: 12px; }
+    .chip { width: fit-content; font-size: 0.68rem; font-weight: 800; letter-spacing: 0.14em; text-transform: uppercase; border: 1px solid var(--line); padding: 4px 8px; color: var(--red); }
+    .hero-body h2 { font-family: var(--serif); font-size: clamp(1.6rem, 3vw, 2.1rem); line-height: 1.15; margin: 0; }
+    .insight { color: var(--muted); line-height: 1.6; margin: 0; font-size: 1.02rem; }
+    .src { margin-top: 8px; font-size: 0.8rem; color: var(--muted); }
+    .src a { color: var(--gold); font-weight: 700; text-decoration: none; }
+    .rails { display: grid; grid-template-columns: 1.15fr 0.95fr 0.9fr; gap: 16px; margin-bottom: 22px; }
+    .rail { background: var(--card); border: 1px solid var(--line); padding: 14px; }
+    .rail h3 { margin: 0 0 12px; font-size: 0.74rem; letter-spacing: 0.16em; text-transform: uppercase; color: var(--gold); border-bottom: 1px solid var(--line); padding-bottom: 8px; }
+    .item { padding: 10px 0; border-bottom: 1px solid var(--line); }
+    .item:last-child { border-bottom: 0; }
+    .item h4 { margin: 0 0 6px; font-family: var(--serif); font-size: 1.02rem; line-height: 1.25; }
+    .item p { margin: 0; color: var(--muted); font-size: 0.86rem; line-height: 1.45; }
+    .who { font-size: 0.72rem; color: var(--muted); letter-spacing: 0.04em; text-transform: uppercase; margin-top: 6px; }
+    .council { display: grid; gap: 8px; }
+    .seat { display: flex; justify-content: space-between; gap: 10px; padding: 8px 0; border-bottom: 1px solid var(--line); font-size: 0.88rem; }
+    .seat:last-child { border-bottom: 0; }
+    .seat span { color: var(--muted); font-size: 0.75rem; letter-spacing: 0.04em; text-transform: uppercase; }
+    .dock { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; }
+    .dock a { display: block; text-decoration: none; border: 1px solid var(--line); background: var(--card); padding: 16px; }
+    .dock .k { color: var(--gold); font-size: 0.7rem; letter-spacing: 0.14em; text-transform: uppercase; font-weight: 800; margin-bottom: 4px; }
+    .dock .t { font-family: var(--serif); font-size: 1.15rem; margin-bottom: 4px; }
+    .dock .d { color: var(--muted); font-size: 0.84rem; line-height: 1.45; }
+    .fine { margin-top: 22px; text-align: center; font-size: 0.68rem; color: var(--muted); line-height: 1.5; max-width: 760px; margin-left: auto; margin-right: auto; }
+    @media (max-width: 900px) { .rails, .dock { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="topbar">
+      <div class="brand">
+        <span class="kicker">U.S.M.C. Ministries</span>
+        <strong>RESOLUTE Local</strong>
+      </div>
+      <nav class="nav" aria-label="Primary">
+        <a href="https://usmcmin.com/mission.html">Mission</a>
+        <a href="https://usmcmin.com/citizen.html">Citizen</a>
+        <a class="wire" href="https://usmcmin.com/wire.html">Wire</a>
+        <a href="https://usmcmin.com/local.html">Local</a>
+        <a class="active" href="#top">Richmond</a>
+        <button class="theme" type="button" id="themeToggle">Light</button>
+      </nav>
+    </div>
+
+    <header class="mast" id="top">
+      <h1>Richmond <em>door</em></h1>
+      <p class="dek">Official portal first. Nine districts. No hallway recap as the lead. A listed date is not a week until Legistar shows the Council packet.</p>
+      <div class="meta">Filed Monday, August 24, 2026 · no live City Council week this fetch</div>
+    </header>
+
+    <article class="hero">
+      <div class="hero-body">
+        <span class="chip">Door open · no live week</span>
+        <h2>City Council 8/17 is on the calendar. The packet is not.</h2>
+        <p class="insight">Richmond Legistar this turn lists City Council Monday, August 17, 2026, 6:00 p.m., Council Chamber, 2nd Floor, City Hall. Meeting details, minutes, agenda, agenda packet, action summary, video, and eComment are all marked Not available. An August 24 “TEST (Do not Delete)” Council row is not a meeting. Standing committees on the August board are mostly canceled. Commission of Architectural Review is not City Council. This door stays honest until a City Council agenda plus packet posts on the same fetch.</p>
+        <div class="src">City of Richmond Legistar · <a href="https://richmondva.legistar.com/Calendar.aspx" target="_blank" rel="noopener">Official calendar →</a></div>
+      </div>
+    </article>
+
+    <section class="rails" aria-label="Richmond rails">
+      <div class="rail">
+        <h3>How to speak / write</h3>
+        <article class="item">
+          <h4>In the chamber</h4>
+          <p>Formal, informal, standing-committee, budget, and special meetings are open in person. Public comment is usually the last part of the public-recognition block. Clerk rules: 30 minutes total, three minutes a speaker, on topics that are not already on that night’s agenda. Public hearings are required for ordinances and resolutions. An ordinance hearing must wait at least seven days after introduction.</p>
+        </article>
+        <article class="item">
+          <h4>Remote / watch</h4>
+          <p>Microsoft Teams appears on the meeting agenda when offered. Formal meetings also air live on VPM/WCVW. Use the current agenda for the link — agendas get revised. Clerk informational line cited on the city site: 804-646-7955.</p>
+        </article>
+        <article class="item">
+          <h4>Find your district</h4>
+          <p>Nine voter districts, not at-large Council seats. Look up the district before you write the member. Mayor is separate from Council.</p>
+          <div class="who"><a href="https://cor.maps.arcgis.com/apps/instant/lookup/index.html?appid=40a004098051476dba45d659d2d02595" style="color:var(--gold);text-decoration:none;font-weight:700;">District lookup →</a></div>
+        </article>
+      </div>
+
+      <div class="rail">
+        <h3>This fetch — honest, not dump</h3>
+        <article class="item">
+          <h4>No City Council packet</h4>
+          <p>8/17 Council row exists. Packet does not. Do not recap a docket that is not posted.</p>
+          <div class="who">Legistar · City Council · 17 Aug 2026</div>
+        </article>
+        <article class="item">
+          <h4>Do not confuse the board</h4>
+          <p>8/25 Commission of Architectural Review has an agenda. Public Safety that day is canceled. Neither is a Council week.</p>
+        </article>
+        <article class="item">
+          <h4>Form of government</h4>
+          <p>Council-Mayor. Council makes law and budget. The Mayor oversees the Chief Administrative Officer. Nine four-year district seats. President and Vice President are chosen by Council for two-year terms.</p>
+          <div class="who"><a href="https://www.rva.gov/richmond-city-council/about-city-council" style="color:var(--gold);text-decoration:none;font-weight:700;">About Council →</a></div>
+        </article>
+      </div>
+
+      <div class="rail">
+        <h3>Who sits — Richmond</h3>
+        <div class="council">
+          <div class="seat">Dr. Danny Avula <span>Mayor · at-large</span></div>
+          <div class="seat">Cynthia I. Newbille <span>President · 7th</span></div>
+          <div class="seat">Katherine Jordan <span>Vice President · 2nd</span></div>
+          <div class="seat">Andrew S. Breton <span>1st · West End</span></div>
+          <div class="seat">Kenya J. Gibson <span>3rd · Northside</span></div>
+          <div class="seat">Sarah Abubaker <span>4th · Southwest</span></div>
+          <div class="seat">Stephanie A. Lynch <span>5th · Central</span></div>
+          <div class="seat">Ellen F. Robertson <span>6th · Gateway</span></div>
+          <div class="seat">Reva M. Trammell <span>8th · Southside</span></div>
+          <div class="seat">Nicole Jones <span>9th · South Central</span></div>
+        </div>
+        <p class="who" style="margin-top:12px;">Roster from rva.gov Council Contacts + Mayor’s Office this turn · <a href="https://www.rva.gov/richmond-city-council/council-contacts" style="color:var(--gold);text-decoration:none;font-weight:700;">Contacts →</a> · <a href="https://usmcmin.com/citizen.html" style="color:var(--gold);text-decoration:none;font-weight:700;">Scorecard →</a></p>
+      </div>
+    </section>
+
+    <section class="dock">
+      <a href="https://usmcmin.com/local.html">
+        <div class="k">Home porch</div>
+        <div class="t">Fredericksburg</div>
+        <div class="d">Only live week right now. Aug 25 packet is posted there.</div>
+      </a>
+      <a href="https://richmondva.legistar.com/Calendar.aspx">
+        <div class="k">Official portal</div>
+        <div class="t">Richmond Legistar</div>
+        <div class="d">Primary source. Ship a week only when City Council shows agenda + packet.</div>
+      </a>
+      <a href="https://www.rva.gov/richmond-city-council/council-contacts">
+        <div class="k">Who sits</div>
+        <div class="t">Council Contacts</div>
+        <div class="d">Nine districts. Write the member who actually represents the block.</div>
+      </a>
+    </section>
+
+    <p class="fine">AI civic desk for USMC Ministries / RESOLUTE. Human-approved before public. Not Associated Press. Official packets first. A listed date without a packet is not a week. Public door: https://usmcmin.com/local-richmond.html</p>
+  </div>
+  <script>
+    (function () {
+      var root = document.documentElement;
+      var btn = document.getElementById('themeToggle');
+      if (location.search.indexOf('theme=light') !== -1) root.setAttribute('data-theme', 'light');
+      function paint() { btn.textContent = root.getAttribute('data-theme') === 'light' ? 'Dark' : 'Light'; }
+      btn.addEventListener('click', function () {
+        var next = root.getAttribute('data-theme') === 'light' ? 'dark' : 'light';
+        root.setAttribute('data-theme', next);
+        try { localStorage.setItem('usmc-theme', next); localStorage.setItem('theme', next); } catch (e) {}
+        paint();
+      });
+      paint();
+    })();
+  </script>
+</body>
+</html>

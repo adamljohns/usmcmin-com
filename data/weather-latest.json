@@ -1,12 +1,12 @@
 {
   "schema_version": "1.0",
-  "cid": "RSA-0817-WIRE-12",
-  "ts_local": "2026-08-17 07:40 EDT",
-  "board_date": "2026-08-17",
+  "cid": "RSA-0913-WIRE-63",
+  "ts_local": "2026-09-13 07:45 EDT",
+  "board_date": "2026-09-13",
   "edition": "am",
   "title": "RESOLUTE Weather",
   "dek": "Fredericksburg, Virginia \u2014 National Weather Service. Readiness, not climate talk.",
-  "disclosure": "J-5 weather desk. Primary source is NWS/NOAA. No climate-activism outlets. Not Associated Press.",
+  "disclosure": "Primary source is NWS/NOAA. No climate-activism outlets. Not Associated Press.",
   "raw_lock": {
     "source": "ChatGPT archive J-5 \u00b7 conversations-002.json index 17 \u00b7 Aug 9 2026 export",
     "place": "Fredericksburg, VA (not Baltimore). Household + church + ops readiness.",
@@ -27,54 +27,87 @@
     "name": "Fredericksburg, VA",
     "lat": 38.3032,
     "lon": -77.4605,
+    "office": "LWX",
+    "grid": "85,43",
     "nws_page": "https://forecast.weather.gov/MapClick.php?lat=38.3032&lon=-77.4605",
+    "forecast_api": "https://api.weather.gov/gridpoints/LWX/85,43/forecast",
     "alerts_api": "https://api.weather.gov/alerts/active?point=38.3032,-77.4605"
   },
   "alerts": {
     "active": [],
-    "checked_at": "2026-08-17 07:32 EDT",
-    "note": "NWS alerts API returned an empty feature list for this point."
+    "checked_at": "2026-09-13 07:45 EDT",
+    "note": ""
   },
   "forecast": {
-    "source": "National Weather Service",
+    "source": "National Weather Service / LWX 85,43",
     "url": "https://forecast.weather.gov/MapClick.php?lat=38.3032&lon=-77.4605",
-    "fetched_at": "2026-08-17 07:31 EDT",
+    "fetched_at": "2026-09-13 07:45 EDT",
+    "update_time": "2026-09-13T11:34:17+00:00",
     "periods": [
       {
         "name": "Today",
-        "text": "Mostly sunny, high near 91. Heat index as high as 102. Calm wind becoming northwest 5 to 7 mph."
+        "short": "Isolated storms, high 88",
+        "text": "Isolated rain showers before 8am, then isolated showers and thunderstorms between 2pm and 3pm. Mostly sunny, with a high near 88. West wind around 3 mph. Chance of precipitation is 20%. New rainfall amounts less than a tenth of an inch possible.",
+        "icon": "https://api.weather.gov/icons/land/day/rain_showers,20/tsra_hi,20?size=medium",
+        "icon_local": "assets/weather/nws-today-tsra.png"
       },
       {
         "name": "Tonight",
-        "text": "Chance of showers and thunderstorms. Mostly cloudy, low around 71. Precipitation chance 50%."
+        "short": "Partly cloudy, low 68",
+        "text": "Partly cloudy, with a low around 68. Northwest wind 0 to 3 mph.",
+        "icon": "https://api.weather.gov/icons/land/night/sct?size=medium",
+        "icon_local": "assets/weather/nws-tonight-sct.png"
+      },
+      {
+        "name": "Monday",
+        "short": "Sunny, high 82",
+        "text": "Sunny, with a high near 82. North wind 5 to 10 mph, with gusts as high as 18 mph.",
+        "icon": "https://api.weather.gov/icons/land/day/few?size=medium",
+        "icon_local": "assets/weather/nws-monday-few.png"
+      },
+      {
+        "name": "Monday Night",
+        "short": "Mostly clear, low 54",
+        "text": "Mostly clear, with a low around 54. North wind 1 to 8 mph.",
+        "icon": "https://api.weather.gov/icons/land/night/few?size=medium",
+        "icon_local": "assets/weather/nws-monday-night-few.png"
       },
       {
         "name": "Tuesday",
-        "text": "Mostly sunny, high near 88. North wind 3 to 7 mph. Tuesday night mostly clear, low around 68."
-      },
-      {
-        "name": "Wednesday",
-        "text": "Sunny, high near 90. Wednesday night partly cloudy, low around 70."
-      },
-      {
-        "name": "Thursday\u2013Friday",
-        "text": "Thursday: showers likely and possibly a thunderstorm after 2 p.m., high near 90, 60% chance. Thursday night 70%. Friday similar, high near 84, 60% dayside / 70% night."
+        "short": "Sunny, high 82",
+        "text": "Sunny, with a high near 82. Northeast wind around 3 mph.",
+        "icon": "https://api.weather.gov/icons/land/day/few?size=medium",
+        "icon_local": "assets/weather/nws-tuesday-few.png"
       }
     ]
   },
+  "visuals": {
+    "required": true,
+    "credit": "National Weather Service / NOAA. Official icons and KLWX radar.",
+    "note": "",
+    "hero": {
+      "kind": "nws_radar",
+      "label": "Sterling (KLWX) radar \u2014 what the sky is doing now",
+      "image": "https://radar.weather.gov/ridge/standard/KLWX_0.gif",
+      "image_local": "assets/weather/klwx-radar-latest.gif",
+      "page": "https://radar.weather.gov/station/klwx/standard",
+      "rights": "US_GOV_WORK",
+      "caption": "Official NWS KLWX radar loop."
+    }
+  },
   "readiness": {
-    "hed": "Heat today. Storm chance tonight. No active alert.",
-    "insight": "Actionable: hydrate and shade for outdoor work \u2014 heat index 102. Have a plan if a storm cuts power tonight (50%). Thursday\u2013Friday is the wetter stretch. No NWS watch/warning is up on this point as of 07:32. Clarity, not fear.",
+    "hed": "No active watches. High 88 today; isolated storms 20%.",
+    "insight": "NWS has no active watches or warnings on the Fredericksburg point. Today: mostly sunny, isolated storms 20%, high near 88. Tonight: partly cloudy, low around 68. Monday: sunny, high 82, then a cooler Monday night near 54.",
     "actions": [
-      "Water and shade for anyone working outside through mid-afternoon",
-      "Charge lights / power banks before tonight\u2019s 50% storm chance",
-      "No travel-hold. Watch Thursday\u2013Friday if outdoor plans are locked"
+      "No active watches or warnings",
+      "Today: high 88, isolated storms 20%",
+      "Monday sunny 82; Monday night low 54"
     ]
   },
   "publish": {
     "state": "LIVE",
     "live_url": "https://usmcmin.com/weather.html",
-    "notes": "Separate page. NWS primary. Do not put a vibe widget on Wire."
+    "notes": "RSA-0913-WX Sunday AM. No active alerts. KLWX radar. Grid LWX 85,43."
   },
   "status": "LIVE"
 }

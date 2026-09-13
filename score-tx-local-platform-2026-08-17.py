@@ -55,7 +55,7 @@ OFFICIALS = {
             "Nonpartisan Glen Rose mayor; no individual issue record on official pages. "
             "Party-default R baseline (Somervell County) per Principal affiliated/platform policy 2026-08-17."
         ),
-        "use_platform": True,
+        "use_platform": False,
     },
     "george-freas": {
         "party": None,
@@ -66,7 +66,7 @@ OFFICIALS = {
             "https://directory.tml.org/profile/city/1112",
         ],
         "note": "Nonpartisan Glen Rose council; party-default R baseline (Somervell County).",
-        "use_platform": True,
+        "use_platform": False,
     },
     "laurin-mapes": {
         "party": None,
@@ -77,7 +77,7 @@ OFFICIALS = {
             "https://directory.tml.org/profile/city/1112",
         ],
         "note": "Nonpartisan Glen Rose council; party-default R baseline (Somervell County).",
-        "use_platform": True,
+        "use_platform": False,
     },
     "richard-bruning": {
         "party": None,
@@ -88,7 +88,7 @@ OFFICIALS = {
             "https://directory.tml.org/profile/city/1112",
         ],
         "note": "Nonpartisan Glen Rose council; party-default R baseline (Somervell County).",
-        "use_platform": True,
+        "use_platform": False,
     },
     "stuart-mann": {
         "party": None,
@@ -99,7 +99,7 @@ OFFICIALS = {
             "https://www.glenrosetexas.org/city-council/directory-listing/stuart-mann",
         ],
         "note": "Nonpartisan Glen Rose Mayor Pro Tem; party-default R baseline.",
-        "use_platform": True,
+        "use_platform": False,
     },
     "candace-scholz": {
         "party": None,
@@ -110,7 +110,7 @@ OFFICIALS = {
             "https://www.glenrosetexas.org/city-council/directory-listing/candace-scholz",
         ],
         "note": "Nonpartisan Glen Rose council; party-default R baseline.",
-        "use_platform": True,
+        "use_platform": False,
     },
     # Somervell — partisan county (R verified txdirectory)
     "danny-l-chambers": {
@@ -239,7 +239,7 @@ OFFICIALS = {
             "https://directory.tml.org/profile/individual/83337",
         ],
         "note": "Nonpartisan Josephine mayor; party-default R baseline (Collin/Hunt conservative counties).",
-        "use_platform": True,
+        "use_platform": False,
     },
     "chris-hill": {
         "party": "R",

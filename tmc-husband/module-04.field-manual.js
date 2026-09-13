@@ -6,7 +6,7 @@ const fieldManual = {
   opening: [
     'Hurt in marriage is not healed by saying the word forgiveness faster. Repair begins with truth. A husband who has caused harm must face what he did, the effect it had, and what responsibility now requires.',
     'Forgiveness, reconciliation, and trust are related but not interchangeable. Forgiveness releases personal vengeance; reconciliation requires truth from both people; trust is a judgment about demonstrated reliability that may return gradually or not at all.',
-    'This week, choose one specific wrong you can safely address. Prepare what you did, why it was wrong, the impact you understand, and one repair you will make — without demanding closure.'
+    'This week, choose one specific wrong you can safely address. Prepare what you did, why it was wrong, the impact you understand, and one repair you will make; without demanding closure.'
   ],
   scripture: [
     { reference: 'Psalm 51:1–12', note: 'David names sin before God without bargaining. Grace grounds repentance; it does not remove temporal consequences or entitle restored trust.' },
@@ -18,7 +18,7 @@ const fieldManual = {
     {
       number: '1',
       title: 'Name the wrong specifically',
-      tagline: 'Confession is agreement with reality — not self-hatred.',
+      tagline: 'Confession is agreement with reality, not self-hatred.',
       actions: [
         'Choose one specific behavior, not a global character flaw.',
         'Write what you did in active voice: "I disclosed private information" not "Things were shared."',
@@ -55,7 +55,7 @@ const fieldManual = {
         'Identify whether a pastor, counselor, recovery group, financial professional, or legal authority is appropriate.',
         'Choose helpers who will not collude with secrecy or rush her response.',
         'Do not recruit friends to persuade her that you have changed.',
-        'Track commitments with dates and actions — not vague claims of "working on it."'
+        'Track commitments with dates and actions; not vague claims of "working on it."'
       ]
     }
   ],
@@ -96,12 +96,12 @@ const fieldManual = {
     close: 'A husband must never use Scripture, forgiveness, headship, money, children, or course completion to demand access, silence concern, or prevent help.'
   },
   resources: {
-    intro: "Optional study aids from your Notebook by Gemini notebook. Listen, watch, read, or drill \u2014 then return to your field action.",
+    intro: "Optional study aids from your Notebook by Gemini notebook. Listen, watch, read, or drill \u2014 then return to your required action.",
     groups: [
       { key: "video", heading: "Watch", note: "Short video overviews." },
       { key: "audio", heading: "Listen", note: "Audio briefings for deeper reflection." },
       { key: "slides", heading: "Slide decks", note: "PDF study decks." },
-      { key: "infographics", heading: "Field graphics", note: "Single-page visual summaries." },
+      { key: "infographics", heading: "Study graphics", note: "Single-page visual summaries." },
       { key: "reports", heading: "Read", note: "Study reports as clean, printable PDFs." }
     ],
     withheldNotice: null,
@@ -123,9 +123,9 @@ const fieldManual = {
     { slug: "slides-the-topography-of-repair", state: "local", group: "slides", kind: "PDF", title: "The Topography of Repair", summary: "Mapping how deep a given hurt actually runs.", href: "../assets/media/tmc-husband/m04/slides/the-topography-of-repair.pdf", linkLabel: "Open slide deck" },
     { slug: "infographic-marriage-healing-and-forgiveness-guide", state: "local", group: "infographics", title: "The Path to Healing", summary: "Anger as signal, the three-step repair, and a red-flag panel on when to seek help.", href: "../assets/media/tmc-husband/m04/infographics/marriage-healing-and-forgiveness-guide.png", alt: "Illustrated field guide titled The Path to Healing: Navigating Hurt and Forgiveness in Marriage, with panels on anger as an alarm, the rhino and hedgehog styles, a three-step repair, a safety filter, and a seven-day plan." },
     { slug: "infographic-marriage-conflict-and-forgiveness-guide", state: "local", group: "infographics", title: "Marriage Conflict and Forgiveness Guide", summary: "Companion guide on repair sequence and boundaries.", href: "../assets/media/tmc-husband/m04/infographics/marriage-conflict-and-forgiveness-guide.png", alt: "Illustrated field guide titled Healing the Heart: A Married Couple's Field Guide to Conflict and Forgiveness, with sections on rhino and hedgehog conflict styles, a downward spiral shown as a clogged drain, a three-part healing process, and an action checklist." },
-    { slug: "report-episode-4-the-marriage-course-healing-hurt-and-anger", state: "local", group: "reports", title: "Healing Hurt and Anger", summary: "Executive briefing — best starting point for this module.", href: "../assets/media/tmc-husband/m04/reports/episode-4-the-marriage-course-healing-hurt-and-anger.pdf", linkLabel: "Read the report" },
+    { slug: "report-episode-4-the-marriage-course-healing-hurt-and-anger", state: "local", group: "reports", title: "Healing Hurt and Anger", summary: "Executive briefing; best starting point for this module.", href: "../assets/media/tmc-husband/m04/reports/episode-4-the-marriage-course-healing-hurt-and-anger.pdf", linkLabel: "Read the report" },
     { slug: "report-beyond-the-apple-throw-navigating-anger-and-healing-in-marriage", state: "local", group: "reports", title: "Beyond the Apple Throw", summary: "Longer treatment of anger, repair, and what forgiveness does not mean.", href: "../assets/media/tmc-husband/m04/reports/beyond-the-apple-throw-navigating-anger-and-healing-in-marriage.pdf", linkLabel: "Read the report" },
-    { slug: "report-rhinos-hedgehogs-and-the-buried-alive-rule-5-surprising-lessons-for-a-healthier-marriage", state: "local", group: "reports", title: "Rhinos, Hedgehogs, and the Buried-Alive Rule", summary: "Popular-article register — use as a prompt, not as proof.", href: "../assets/media/tmc-husband/m04/reports/rhinos-hedgehogs-and-the-buried-alive-rule-5-surprising-lessons-for-a-healthier-marriage.pdf", linkLabel: "Read the report" },
+    { slug: "report-rhinos-hedgehogs-and-the-buried-alive-rule-5-surprising-lessons-for-a-healthier-marriage", state: "local", group: "reports", title: "Rhinos, Hedgehogs, and the Buried-Alive Rule", summary: "Popular-article register; use as a prompt, not as proof.", href: "../assets/media/tmc-husband/m04/reports/rhinos-hedgehogs-and-the-buried-alive-rule-5-surprising-lessons-for-a-healthier-marriage.pdf", linkLabel: "Read the report" },
     { slug: "quiz-marriage-quiz", state: "local", group: "quiz", title: "Marriage Quiz", summary: "Knowledge check over this module.", href: "../assets/media/tmc-husband/m04/quiz/marriage-quiz.html", linkLabel: "Open the quiz" },
     { slug: "flashcards-marriage-flashcards", state: "local", group: "flashcards", title: "Marriage Flashcards", summary: "Flashcard drill over this module.", href: "../assets/media/tmc-husband/m04/flashcards/marriage-flashcards.html", linkLabel: "Open the flashcards" }
   ]

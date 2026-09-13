@@ -1,0 +1,2556 @@
+{
+  "_meta": {
+    "author": "rush",
+    "date": "2026-08-29",
+    "tick": "T34",
+    "engine": "xai/grok-4.6",
+    "cid": "MBP-DL0828-12H-T34",
+    "policy": "docs/scorecard-evidence-policy-2026-08-16.md",
+    "note": "DL-0828 Principal Grok bulk 12H T34 leftover STATE fill (6 CT House + 4 KY House). Keys slug@STATE. reset_unspecified=true. Official pages this hop: housedems.ct.gov/gaiewski 200; housedems.ct.gov/DeFronzo 200; housedems.ct.gov/KavrosDeGraw 200 + Biography 200; legislature.ky.gov Dist 96/38/73/61 200. CGA CGAMemberBills ASP for Carpino/Carney/Veach/Kavros FETCH FAIL this hop — identity from Ballotpedia 200 + House GOP title 200 JS-empty. Wrong-member check: each fetched official/Ballotpedia party/district matches assignment. campaign_website null on all 10 assignment rows — maddoxforky.com found this hop. CT GOP follows RNC (Ballotpedia Republican_Party_of_Connecticut 200; ct.gop/about-your-party 200 principles too thin to score leftover cells). KY GOP rpk.org/our-party HTTP 403 unread. CT Dems platform URL redirected to homepage (no scored plank text). KY Dems follow DNC (Ballotpedia Democratic_Party_of_Kentucky 200). Leftover STATE fill: sanctity_of_life, biblical_marriage, family_child_sovereignty, christian_liberty, self_defense, border_immigration; platform also fills election_integrity and public_justice where mapped and not contradictory. Do not invent: economic_stewardship, industry_capture, refuse_federal_overreach, refuse_state_overreach. Individual overlays this hop: Kavros DeGraw PPV!CT 2024 Dist.17* SoL; Gaiewski Pride eblast BM; Dotson Ballotpedia 2026 survey Save Women's Sports + mass deportation (named office State Representative only; lost KY-06 primary); Maddox campaign 100% pro-life + constitutional carry/red-flag + church-on-Easter. Carpino/Carney/Veach/DeFronzo/Flannery/Roarx platform-only (thin campaign/bio). Carney and Dotson not on 2026 House ballot — former keep scoring, still named State Representative through 2027 term. Dual-office one slug. LegiScan API KEY_EXPIRED this hop (GAITS Pro trial expired; do not mint a second key). Cache getSessionPeople_id=2244 CT people_ids 10808/26420/25971/16432/22109/22100; getSessionPeople_id=2247 KY 22058/23624/22056/20557. getSponsoredList_id=22058 (Flannery) and 23624 (Roarx) HTTP cache status OK but titles empty — bill numbers without titles not scored; no legiscan.com HTML scrape; no invented roll-calls. PAC/FEC/AIPAC: YOU-run this hop — FEC API api.open.fec.gov DEMO_KEY HTTP 429 OVER_RATE_LIMIT; FEC browse Savannah+Maddox+KY 200 SPA-empty; OpenSecrets search 403 Cloudflare. Incomplete dual FEC/OS — PAC cells omitted (not-run=omit; blank > wrong). PPV overlay: Kavros Dist.17*; Gaiewski Dist.40 was Conley* on 2024 list (Gaiewski 2025 special — no PPV). No refine-records.py. No scorecard.json edit. No git. No Telegram/Discord.",
+    "counts": {
+      "records": 10,
+      "cited_cells": 256,
+      "blank_cells": 234,
+      "individual_affiliated_cells": 15,
+      "party_platform_cells": 241,
+      "per_record": {
+        "christie-carpino@CT": {
+          "cited": 24,
+          "blank": 25,
+          "individual": 0,
+          "party_platform": 24
+        },
+        "dan-gaiewski@CT": {
+          "cited": 28,
+          "blank": 21,
+          "individual": 3,
+          "party_platform": 25
+        },
+        "david-defronzo@CT": {
+          "cited": 28,
+          "blank": 21,
+          "individual": 0,
+          "party_platform": 28
+        },
+        "devin-carney@CT": {
+          "cited": 24,
+          "blank": 25,
+          "individual": 0,
+          "party_platform": 24
+        },
+        "donna-veach@CT": {
+          "cited": 24,
+          "blank": 25,
+          "individual": 0,
+          "party_platform": 24
+        },
+        "eleni-kavros-degraw@CT": {
+          "cited": 28,
+          "blank": 21,
+          "individual": 2,
+          "party_platform": 26
+        },
+        "patrick-flannery@KY": {
+          "cited": 24,
+          "blank": 25,
+          "individual": 0,
+          "party_platform": 24
+        },
+        "rachel-roarx@KY": {
+          "cited": 28,
+          "blank": 21,
+          "individual": 0,
+          "party_platform": 28
+        },
+        "ryan-dotson@KY": {
+          "cited": 24,
+          "blank": 25,
+          "individual": 4,
+          "party_platform": 20
+        },
+        "savannah-maddox@KY": {
+          "cited": 24,
+          "blank": 25,
+          "individual": 6,
+          "party_platform": 18
+        }
+      }
+    },
+    "fetched": {
+      "ok": [
+        "https://www.housedems.ct.gov/gaiewski",
+        "https://www.housedems.ct.gov/Gaiewski/Biography",
+        "https://www.housedems.ct.gov/gaiewski/happy-pride-update-ledges-fire-gold-star-bridge-and-more",
+        "https://www.housedems.ct.gov/DeFronzo",
+        "https://www.housedems.ct.gov/KavrosDeGraw",
+        "https://www.housedems.ct.gov/KavrosDeGraw/Biography",
+        "https://www.cthousegop.com/carpino",
+        "https://www.cthousegop.com/carpino/about",
+        "https://www.cthousegop.com/carney",
+        "https://www.cthousegop.com/veach",
+        "https://legislature.ky.gov/Legislators/Pages/Legislator-Profile.aspx?DistrictNumber=96",
+        "https://legislature.ky.gov/Legislators/Pages/Legislator-Profile.aspx?DistrictNumber=38",
+        "https://legislature.ky.gov/Legislators/Pages/Legislator-Profile.aspx?DistrictNumber=73",
+        "https://legislature.ky.gov/Legislators/Pages/Legislator-Profile.aspx?DistrictNumber=61",
+        "https://www.maddoxforky.com/",
+        "https://spectrumnews1.com/ky/louisville/news/2019/10/30/bevin--maddox-receive-award-for-work-on-gun-bill",
+        "https://www.plannedparenthoodaction.org/planned-parenthood-votes-connecticut/news-room/planned-parenthood-votes-connecticut-endorses-candidates-for-the-connecticut-general-assembly-committed-to-protecting-reproductive-rights",
+        "https://ballotpedia.org/Christie_Carpino",
+        "https://ballotpedia.org/Dan_Gaiewski",
+        "https://ballotpedia.org/David_DeFronzo",
+        "https://ballotpedia.org/Devin_R._Carney",
+        "https://ballotpedia.org/Donna_Veach",
+        "https://ballotpedia.org/Eleni_Kavros_DeGraw",
+        "https://ballotpedia.org/Patrick_Flannery",
+        "https://ballotpedia.org/Rachel_Roarx",
+        "https://ballotpedia.org/Ryan_Dotson",
+        "https://ballotpedia.org/Savannah_Maddox",
+        "https://ballotpedia.org/Republican_Party_of_Connecticut",
+        "https://ballotpedia.org/Republican_Party_of_Kentucky",
+        "https://ballotpedia.org/Democratic_Party_of_Connecticut",
+        "https://ballotpedia.org/Democratic_Party_of_Kentucky",
+        "https://ct.gop/about-your-party/",
+        "https://www.presidency.ucsb.edu/documents/2024-republican-party-platform",
+        "https://gop.com/platform/",
+        "https://democrats.org/where-we-stand/party-platform/",
+        "https://www.fec.gov/data/candidates/?search=Savannah+Maddox&state=KY"
+      ],
+      "fail": [
+        "https://cga.ct.gov/asp/CGABillStatus/CGAMemberBills.asp?dist_code=%27032%27&dist_name=Carpino,%20Christie%20M.",
+        "https://cga.ct.gov/asp/CGABillStatus/CGAMemberBills.asp?dist_code=%27023%27&dist_name=Carney,%20Devin%20R.",
+        "https://cga.ct.gov/asp/CGABillStatus/CGAMemberBills.asp?dist_code=%27030%27&dist_name=Veach,%20Donna",
+        "https://cga.ct.gov/asp/CGABillStatus/CGAMemberBills.asp?dist_code=%27017%27&dist_name=Kavros%20DeGraw,%20Eleni",
+        "https://www.cga.ct.gov/asp/CGABillStatus/CGAMemberBills.asp?dist_code=%27032%27",
+        "https://www.cga.ct.gov/2022/kiddata/TMY/2022SB-00208-R000301-Carpino,%20Christie,%20Representative-Connecticut%20General%20Assembly-Social%20Media%20Parental%20Consent-TMY.PDF"
+      ],
+      "403": [
+        "https://rpk.org/our-party/",
+        "https://www.opensecrets.org/search?q=Savannah+Maddox"
+      ],
+      "404": [
+        "https://www.housedems.ct.gov/DeFronzo/Biography",
+        "https://www.housedems.ct.gov/DeFronzo/biography"
+      ],
+      "429": [
+        "https://api.open.fec.gov/v1/candidates/search/?q=Savannah+Maddox&state=KY&api_key=DEMO_KEY"
+      ],
+      "spa_empty_or_thin": [
+        "https://gop.com/platform/ (200 redirect to gop.com/about-our-party; PDF linked, not used as quote text)",
+        "https://democrats.org/where-we-stand/party-platform/ (200 redirect to 2024 DNC PDF binary; map used from data/party-platforms.json, not PDF quote text)",
+        "https://ctdems.org/your-party/platform/ (200 redirect to ctdems.org homepage; no scored plank text)",
+        "https://www.cthousegop.com/carpino (200 JS-empty title only)",
+        "https://www.cthousegop.com/carney (200 JS-empty title only)",
+        "https://www.cthousegop.com/veach (200 JS-empty title only)",
+        "https://www.fec.gov/data/candidates/?search=Savannah+Maddox&state=KY (200 SPA chrome only; no named candidate rows in extract)",
+        "https://www.ballotready.org/people/savannah-maddox (200 extract-thin signup wall)"
+      ],
+      "legiscan": {
+        "health": "KEY_EXPIRED GAITS Pro trial — do not mint a second key",
+        "cache_session": "getSessionPeople_id=2244 CT OK; getSessionPeople_id=2247 KY OK",
+        "people_ids": {
+          "christie-carpino": 10808,
+          "dan-gaiewski": 26420,
+          "david-defronzo": 25971,
+          "devin-carney": 16432,
+          "donna-veach": 22109,
+          "eleni-kavros-degraw": 22100,
+          "patrick-flannery": 22058,
+          "rachel-roarx": 23624,
+          "ryan-dotson": 22056,
+          "savannah-maddox": 20557
+        },
+        "sponsored_titles": "empty on cached getSponsoredList 22058/23624 — not scored"
+      }
+    },
+    "n_records": 10,
+    "cited_cells": 256
+  },
+  "reset_unspecified": true,
+  "records": {
+    "christie-carpino@CT": {
+      "profile": {
+        "confidence": "evidence_state",
+        "office": "State Representative",
+        "party": "R",
+        "state": "CT",
+        "note": "Official assignment website cga.ct.gov CGAMemberBills dist 032 FETCH FAIL this hop. Ballotpedia Christie_Carpino HTTP 200: CT House District 32 Republican, assumed office 2011, term ends 2027; running 2026; B.A. UNH, J.D. Northeastern; pro bono attorney Connecticut Legal Services; committees GAE, Regulation Review Co-Chair, Public Health. Wrong-member check: party/district match assignment Dist 32 R. cthousegop.com/carpino HTTP 200 JS-empty (title only). CGA parental-consent TMY PDF FETCH FAIL. No campaign_website on assignment. Named office State Representative only. Dual-office not present. Status active. LegiScan cache getSessionPeople_id=2244 people_id=10808 HD-032 R; getSponsoredList_id=10808 not in cache; KEY_EXPIRED this hop — no invented roll-calls; no legiscan.com HTML scrape. PAC/FEC/AIPAC omitted: FEC API DEMO_KEY HTTP 429 OVER_RATE_LIMIT; OpenSecrets search 403 Cloudflare — incomplete dual FEC/OS (not-run=omit; blank > wrong). Remaining leftover STATE from 2024 RNC state map (CT GOP follows RNC). Unmapped omitted: economic_stewardship, industry_capture, refuse_federal_overreach, refuse_state_overreach."
+      },
+      "sources_add": [
+        "https://ballotpedia.org/Christie_Carpino",
+        "https://www.cthousegop.com/carpino",
+        "https://ballotpedia.org/Republican_Party_of_Connecticut",
+        "https://www.presidency.ucsb.edu/documents/2024-republican-party-platform",
+        "https://gop.com/platform/"
+      ],
+      "evidence": {
+        "sanctity_of_life": {
+          "0": {
+            "v": true,
+            "src": [
+              "https://www.presidency.ucsb.edu/documents/2024-republican-party-platform"
+            ],
+            "note": "Scored from the 2024 Republican National Platform (sanctity_of_life q0) — Connecticut GOP follows the RNC platform (ballotpedia.org/Republican_Party_of_Connecticut HTTP 200 this hop). Kentucky GOP rpk.org/our-party HTTP 403 this hop (body not readable; not used as quote text). No individual statement found.",
+            "kind": "party_platform"
+          },
+          "1": {
+            "v": true,
+            "src": [
+              "https://www.presidency.ucsb.edu/documents/2024-republican-party-platform"
+            ],
+            "note": "Scored from the 2024 Republican National Platform (sanctity_of_life q1) — Connecticut GOP follows the RNC platform (ballotpedia.org/Republican_Party_of_Connecticut HTTP 200 this hop). Kentucky GOP rpk.org/our-party HTTP 403 this hop (body not readable; not used as quote text). No individual statement found.",
+            "kind": "party_platform"
+          }
+        },
+        "biblical_marriage": {
+          "0": {
+            "v": true,
+            "src": [
+              "https://www.presidency.ucsb.edu/documents/2024-republican-party-platform"
+            ],
+            "note": "Scored from the 2024 Republican National Platform (biblical_marriage q0) — Connecticut GOP follows the RNC platform (ballotpedia.org/Republican_Party_of_Connecticut HTTP 200 this hop). Kentucky GOP rpk.org/our-party HTTP 403 this hop (body not readable; not used as quote text). No individual statement found.",
+            "kind": "party_platform"
+          },
+          "2": {
+            "v": true,
+            "src": [
+              "https://www.presidency.ucsb.edu/documents/2024-republican-party-platform"
+            ],
+            "note": "Scored from the 2024 Republican National Platform (biblical_marriage q2) — Connecticut GOP follows the RNC platform (ballotpedia.org/Republican_Party_of_Connecticut HTTP 200 this hop). Kentucky GOP rpk.org/our-party HTTP 403 this hop (body not readable; not used as quote text). No individual statement found.",
+            "kind": "party_platform"
+          },
+          "4": {
+            "v": true,
+            "src": [
+              "https://www.presidency.ucsb.edu/documents/2024-republican-party-platform"
+            ],
+            "note": "Scored from the 2024 Republican National Platform (biblical_marriage q4) — Connecticut GOP follows the RNC platform (ballotpedia.org/Republican_Party_of_Connecticut HTTP 200 this hop). Kentucky GOP rpk.org/our-party HTTP 403 this hop (body not readable; not used as quote text). No individual statement found.",
+            "kind": "party_platform"
+          }
+        },
+        "family_child_sovereignty": {
+          "0": {
+            "v": true,
+            "src": [
+              "https://www.presidency.ucsb.edu/documents/2024-republican-party-platform"
+            ],
+            "note": "Scored from the 2024 Republican National Platform (family_child_sovereignty q0) — Connecticut GOP follows the RNC platform (ballotpedia.org/Republican_Party_of_Connecticut HTTP 200 this hop). Kentucky GOP rpk.org/our-party HTTP 403 this hop (body not readable; not used as quote text). No individual statement found.",
+            "kind": "party_platform"
+          },
+          "1": {
+            "v": true,
+            "src": [
+              "https://www.presidency.ucsb.edu/documents/2024-republican-party-platform"
+            ],
+            "note": "Scored from the 2024 Republican National Platform (family_child_sovereignty q1) — Connecticut GOP follows the RNC platform (ballotpedia.org/Republican_Party_of_Connecticut HTTP 200 this hop). Kentucky GOP rpk.org/our-party HTTP 403 this hop (body not readable; not used as quote text). No individual statement found.",
+            "kind": "party_platform"
+          },
+          "2": {
+            "v": true,
+            "src": [
+              "https://www.presidency.ucsb.edu/documents/2024-republican-party-platform"
+            ],
+            "note": "Scored from the 2024 Republican National Platform (family_child_sovereignty q2) — Connecticut GOP follows the RNC platform (ballotpedia.org/Republican_Party_of_Connecticut HTTP 200 this hop). Kentucky GOP rpk.org/our-party HTTP 403 this hop (body not readable; not used as quote text). No individual statement found.",
+            "kind": "party_platform"
+          },
+          "3": {
+            "v": true,
+            "src": [
+              "https://www.presidency.ucsb.edu/documents/2024-republican-party-platform"
+            ],
+            "note": "Scored from the 2024 Republican National Platform (family_child_sovereignty q3) — Connecticut GOP follows the RNC platform (ballotpedia.org/Republican_Party_of_Connecticut HTTP 200 this hop). Kentucky GOP rpk.org/our-party HTTP 403 this hop (body not readable; not used as quote text). No individual statement found.",
+            "kind": "party_platform"
+          },
+          "4": {
+            "v": true,
+            "src": [
+              "https://www.presidency.ucsb.edu/documents/2024-republican-party-platform"
+            ],
+            "note": "Scored from the 2024 Republican National Platform (family_child_sovereignty q4) — Connecticut GOP follows the RNC platform (ballotpedia.org/Republican_Party_of_Connecticut HTTP 200 this hop). Kentucky GOP rpk.org/our-party HTTP 403 this hop (body not readable; not used as quote text). No individual statement found.",
+            "kind": "party_platform"
+          }
+        },
+        "christian_liberty": {
+          "0": {
+            "v": true,
+            "src": [
+              "https://www.presidency.ucsb.edu/documents/2024-republican-party-platform"
+            ],
+            "note": "Scored from the 2024 Republican National Platform (christian_liberty q0) — Connecticut GOP follows the RNC platform (ballotpedia.org/Republican_Party_of_Connecticut HTTP 200 this hop). Kentucky GOP rpk.org/our-party HTTP 403 this hop (body not readable; not used as quote text). No individual statement found.",
+            "kind": "party_platform"
+          },
+          "1": {
+            "v": true,
+            "src": [
+              "https://www.presidency.ucsb.edu/documents/2024-republican-party-platform"
+            ],
+            "note": "Scored from the 2024 Republican National Platform (christian_liberty q1) — Connecticut GOP follows the RNC platform (ballotpedia.org/Republican_Party_of_Connecticut HTTP 200 this hop). Kentucky GOP rpk.org/our-party HTTP 403 this hop (body not readable; not used as quote text). No individual statement found.",
+            "kind": "party_platform"
+          },
+          "2": {
+            "v": true,
+            "src": [
+              "https://www.presidency.ucsb.edu/documents/2024-republican-party-platform"
+            ],
+            "note": "Scored from the 2024 Republican National Platform (christian_liberty q2) — Connecticut GOP follows the RNC platform (ballotpedia.org/Republican_Party_of_Connecticut HTTP 200 this hop). Kentucky GOP rpk.org/our-party HTTP 403 this hop (body not readable; not used as quote text). No individual statement found.",
+            "kind": "party_platform"
+          },
+          "3": {
+            "v": true,
+            "src": [
+              "https://www.presidency.ucsb.edu/documents/2024-republican-party-platform"
+            ],
+            "note": "Scored from the 2024 Republican National Platform (christian_liberty q3) — Connecticut GOP follows the RNC platform (ballotpedia.org/Republican_Party_of_Connecticut HTTP 200 this hop). Kentucky GOP rpk.org/our-party HTTP 403 this hop (body not readable; not used as quote text). No individual statement found.",
+            "kind": "party_platform"
+          }
+        },
+        "election_integrity": {
+          "1": {
+            "v": true,
+            "src": [
+              "https://www.presidency.ucsb.edu/documents/2024-republican-party-platform"
+            ],
+            "note": "Scored from the 2024 Republican National Platform (election_integrity q1) — Connecticut GOP follows the RNC platform (ballotpedia.org/Republican_Party_of_Connecticut HTTP 200 this hop). Kentucky GOP rpk.org/our-party HTTP 403 this hop (body not readable; not used as quote text). No individual statement found.",
+            "kind": "party_platform"
+          },
+          "3": {
+            "v": true,
+            "src": [
+              "https://www.presidency.ucsb.edu/documents/2024-republican-party-platform"
+            ],
+            "note": "Scored from the 2024 Republican National Platform (election_integrity q3) — Connecticut GOP follows the RNC platform (ballotpedia.org/Republican_Party_of_Connecticut HTTP 200 this hop). Kentucky GOP rpk.org/our-party HTTP 403 this hop (body not readable; not used as quote text). No individual statement found.",
+            "kind": "party_platform"
+          },
+          "4": {
+            "v": true,
+            "src": [
+              "https://www.presidency.ucsb.edu/documents/2024-republican-party-platform"
+            ],
+            "note": "Scored from the 2024 Republican National Platform (election_integrity q4) — Connecticut GOP follows the RNC platform (ballotpedia.org/Republican_Party_of_Connecticut HTTP 200 this hop). Kentucky GOP rpk.org/our-party HTTP 403 this hop (body not readable; not used as quote text). No individual statement found.",
+            "kind": "party_platform"
+          }
+        },
+        "border_immigration": {
+          "1": {
+            "v": true,
+            "src": [
+              "https://www.presidency.ucsb.edu/documents/2024-republican-party-platform"
+            ],
+            "note": "Scored from the 2024 Republican National Platform (border_immigration q1) — Connecticut GOP follows the RNC platform (ballotpedia.org/Republican_Party_of_Connecticut HTTP 200 this hop). Kentucky GOP rpk.org/our-party HTTP 403 this hop (body not readable; not used as quote text). No individual statement found.",
+            "kind": "party_platform"
+          },
+          "2": {
+            "v": true,
+            "src": [
+              "https://www.presidency.ucsb.edu/documents/2024-republican-party-platform"
+            ],
+            "note": "Scored from the 2024 Republican National Platform (border_immigration q2) — Connecticut GOP follows the RNC platform (ballotpedia.org/Republican_Party_of_Connecticut HTTP 200 this hop). Kentucky GOP rpk.org/our-party HTTP 403 this hop (body not readable; not used as quote text). No individual statement found.",
+            "kind": "party_platform"
+          }
+        },
+        "self_defense": {
+          "0": {
+            "v": true,
+            "src": [
+              "https://www.presidency.ucsb.edu/documents/2024-republican-party-platform"
+            ],
+            "note": "Scored from the 2024 Republican National Platform (self_defense q0) — Connecticut GOP follows the RNC platform (ballotpedia.org/Republican_Party_of_Connecticut HTTP 200 this hop). Kentucky GOP rpk.org/our-party HTTP 403 this hop (body not readable; not used as quote text). No individual statement found.",
+            "kind": "party_platform"
+          },
+          "1": {
+            "v": true,
+            "src": [
+              "https://www.presidency.ucsb.edu/documents/2024-republican-party-platform"
+            ],
+            "note": "Scored from the 2024 Republican National Platform (self_defense q1) — Connecticut GOP follows the RNC platform (ballotpedia.org/Republican_Party_of_Connecticut HTTP 200 this hop). Kentucky GOP rpk.org/our-party HTTP 403 this hop (body not readable; not used as quote text). No individual statement found.",
+            "kind": "party_platform"
+          }
+        },
+        "public_justice": {
+          "0": {
+            "v": true,
+            "src": [
+              "https://www.presidency.ucsb.edu/documents/2024-republican-party-platform"
+            ],
+            "note": "Scored from the 2024 Republican National Platform (public_justice q0) — Connecticut GOP follows the RNC platform (ballotpedia.org/Republican_Party_of_Connecticut HTTP 200 this hop). Kentucky GOP rpk.org/our-party HTTP 403 this hop (body not readable; not used as quote text). No individual statement found.",
+            "kind": "party_platform"
+          },
+          "1": {
+            "v": true,
+            "src": [
+              "https://www.presidency.ucsb.edu/documents/2024-republican-party-platform"
+            ],
+            "note": "Scored from the 2024 Republican National Platform (public_justice q1) — Connecticut GOP follows the RNC platform (ballotpedia.org/Republican_Party_of_Connecticut HTTP 200 this hop). Kentucky GOP rpk.org/our-party HTTP 403 this hop (body not readable; not used as quote text). No individual statement found.",
+            "kind": "party_platform"
+          },
+          "2": {
+            "v": true,
+            "src": [
+              "https://www.presidency.ucsb.edu/documents/2024-republican-party-platform"
+            ],
+            "note": "Scored from the 2024 Republican National Platform (public_justice q2) — Connecticut GOP follows the RNC platform (ballotpedia.org/Republican_Party_of_Connecticut HTTP 200 this hop). Kentucky GOP rpk.org/our-party HTTP 403 this hop (body not readable; not used as quote text). No individual statement found.",
+            "kind": "party_platform"
+          }
+        }
+      }
+    },
+    "dan-gaiewski@CT": {
+      "profile": {
+        "confidence": "evidence_state",
+        "office": "State Representative",
+        "party": "D",
+        "state": "CT",
+        "note": "Official housedems.ct.gov/gaiewski HTTP 200 this hop: State Representative Dan Gaiewski, Groton/New London Dist 40. Biography HTTP 200: born Groton; Fitch HS; Franklin & Marshall BA Government/American Studies; Groton Town Council 2023; elected 2025 special to replace Christine Conley; committees Appropriations, Banking, Commerce, Veterans. Ballotpedia Dan_Gaiewski HTTP 200: assumed office 2025-02-28, term ends 2027, Dist 40 D. Wrong-member check: party/district match. PPV!CT 2024 House list Dist 40 is Christine Conley* not Gaiewski (elected after that list) — no PPV overlay. Pride eblast individual BM overlay. Named office State Representative only. Dual-office: Groton Town Council mentioned as prior/as-of 2025 campaign; score named House office only. Status active. LegiScan cache getSessionPeople_id=2244 people_id=26420 HD-040 D (Daniel Gaiewski); getSponsoredList not in cache; KEY_EXPIRED. PAC/FEC omitted (FEC 429 / OpenSecrets 403). Remaining leftover STATE from 2024 DNC state map. Unmapped omitted: economic_stewardship, industry_capture, refuse_federal_overreach, refuse_state_overreach."
+      },
+      "sources_add": [
+        "https://www.housedems.ct.gov/gaiewski",
+        "https://www.housedems.ct.gov/Gaiewski/Biography",
+        "https://www.housedems.ct.gov/gaiewski/happy-pride-update-ledges-fire-gold-star-bridge-and-more",
+        "https://ballotpedia.org/Dan_Gaiewski",
+        "https://democrats.org/where-we-stand/party-platform/"
+      ],
+      "evidence": {
+        "sanctity_of_life": {
+          "0": {
+            "v": false,
+            "src": [
+              "https://democrats.org/where-we-stand/party-platform/"
+            ],
+            "note": "Scored from the 2024 Democratic Party Platform (sanctity_of_life q0) — ctdems.org/your-party/platform HTTP 200 this hop redirected to ctdems.org homepage (no scored CT Dem plank text). Kentucky Democratic Party follows the DNC platform (ballotpedia.org/Democratic_Party_of_Kentucky HTTP 200). No individual statement found.",
+            "kind": "party_platform"
+          },
+          "1": {
+            "v": false,
+            "src": [
+              "https://democrats.org/where-we-stand/party-platform/"
+            ],
+            "note": "Scored from the 2024 Democratic Party Platform (sanctity_of_life q1) — ctdems.org/your-party/platform HTTP 200 this hop redirected to ctdems.org homepage (no scored CT Dem plank text). Kentucky Democratic Party follows the DNC platform (ballotpedia.org/Democratic_Party_of_Kentucky HTTP 200). No individual statement found.",
+            "kind": "party_platform"
+          }
+        },
+        "biblical_marriage": {
+          "0": {
+            "v": false,
+            "src": [
+              "https://www.housedems.ct.gov/gaiewski/happy-pride-update-ledges-fire-gold-star-bridge-and-more"
+            ],
+            "note": "Campaign/individual (fetched this hop): housedems.ct.gov/gaiewski Pride eblast HTTP 200 2026-06-05 signed Dan Gaiewski — 'June is Pride Month! Let’s celebrate the LGBTQ+ community and reaffirm our commitment to equality, dignity, and opportunity for all... expanded access to fertility care for LGBTQ+ couples and individuals... everyone can live, love, work, and raise a family.' Not biblical marriage. Individual overrides DNC platform for this cell.",
+            "kind": "individual"
+          },
+          "2": {
+            "v": false,
+            "src": [
+              "https://www.housedems.ct.gov/gaiewski/happy-pride-update-ledges-fire-gold-star-bridge-and-more"
+            ],
+            "note": "Campaign/individual (fetched this hop): same Pride eblast — fertility care for LGBTQ+ couples and 'raise a family' as equality agenda, not biblical marriage definition. Individual overrides DNC platform for this cell.",
+            "kind": "individual"
+          },
+          "4": {
+            "v": false,
+            "src": [
+              "https://www.housedems.ct.gov/gaiewski/happy-pride-update-ledges-fire-gold-star-bridge-and-more"
+            ],
+            "note": "Campaign/individual (fetched this hop): same Pride eblast — 'While other states have moved backward, Connecticut continues to protect access to care, defend against discrimination.' LGBTQ family/equality expansion, not biblical marriage. Individual overrides DNC platform for this cell.",
+            "kind": "individual"
+          }
+        },
+        "family_child_sovereignty": {
+          "0": {
+            "v": false,
+            "src": [
+              "https://democrats.org/where-we-stand/party-platform/"
+            ],
+            "note": "Scored from the 2024 Democratic Party Platform (family_child_sovereignty q0) — ctdems.org/your-party/platform HTTP 200 this hop redirected to ctdems.org homepage (no scored CT Dem plank text). Kentucky Democratic Party follows the DNC platform (ballotpedia.org/Democratic_Party_of_Kentucky HTTP 200). No individual statement found.",
+            "kind": "party_platform"
+          },
+          "1": {
+            "v": false,
+            "src": [
+              "https://democrats.org/where-we-stand/party-platform/"
+            ],
+            "note": "Scored from the 2024 Democratic Party Platform (family_child_sovereignty q1) — ctdems.org/your-party/platform HTTP 200 this hop redirected to ctdems.org homepage (no scored CT Dem plank text). Kentucky Democratic Party follows the DNC platform (ballotpedia.org/Democratic_Party_of_Kentucky HTTP 200). No individual statement found.",
+            "kind": "party_platform"
+          },
+          "2": {
+            "v": false,
+            "src": [
+              "https://democrats.org/where-we-stand/party-platform/"
+            ],
+            "note": "Scored from the 2024 Democratic Party Platform (family_child_sovereignty q2) — ctdems.org/your-party/platform HTTP 200 this hop redirected to ctdems.org homepage (no scored CT Dem plank text). Kentucky Democratic Party follows the DNC platform (ballotpedia.org/Democratic_Party_of_Kentucky HTTP 200). No individual statement found.",
+            "kind": "party_platform"
+          },
+          "3": {
+            "v": false,
+            "src": [
+              "https://democrats.org/where-we-stand/party-platform/"
+            ],
+            "note": "Scored from the 2024 Democratic Party Platform (family_child_sovereignty q3) — ctdems.org/your-party/platform HTTP 200 this hop redirected to ctdems.org homepage (no scored CT Dem plank text). Kentucky Democratic Party follows the DNC platform (ballotpedia.org/Democratic_Party_of_Kentucky HTTP 200). No individual statement found.",
+            "kind": "party_platform"
+          },
+          "4": {
+            "v": false,
+            "src": [
+              "https://democrats.org/where-we-stand/party-platform/"
+            ],
+            "note": "Scored from the 2024 Democratic Party Platform (family_child_sovereignty q4) — ctdems.org/your-party/platform HTTP 200 this hop redirected to ctdems.org homepage (no scored CT Dem plank text). Kentucky Democratic Party follows the DNC platform (ballotpedia.org/Democratic_Party_of_Kentucky HTTP 200). No individual statement found.",
+            "kind": "party_platform"
+          }
+        },
+        "christian_liberty": {
+          "0": {
+            "v": false,
+            "src": [
+              "https://democrats.org/where-we-stand/party-platform/"
+            ],
+            "note": "Scored from the 2024 Democratic Party Platform (christian_liberty q0) — ctdems.org/your-party/platform HTTP 200 this hop redirected to ctdems.org homepage (no scored CT Dem plank text). Kentucky Democratic Party follows the DNC platform (ballotpedia.org/Democratic_Party_of_Kentucky HTTP 200). No individual statement found.",
+            "kind": "party_platform"
+          },
+          "1": {
+            "v": false,
+            "src": [
+              "https://democrats.org/where-we-stand/party-platform/"
+            ],
+            "note": "Scored from the 2024 Democratic Party Platform (christian_liberty q1) — ctdems.org/your-party/platform HTTP 200 this hop redirected to ctdems.org homepage (no scored CT Dem plank text). Kentucky Democratic Party follows the DNC platform (ballotpedia.org/Democratic_Party_of_Kentucky HTTP 200). No individual statement found.",
+            "kind": "party_platform"
+          },
+          "2": {
+            "v": false,
+            "src": [
+              "https://democrats.org/where-we-stand/party-platform/"
+            ],
+            "note": "Scored from the 2024 Democratic Party Platform (christian_liberty q2) — ctdems.org/your-party/platform HTTP 200 this hop redirected to ctdems.org homepage (no scored CT Dem plank text). Kentucky Democratic Party follows the DNC platform (ballotpedia.org/Democratic_Party_of_Kentucky HTTP 200). No individual statement found.",
+            "kind": "party_platform"
+          },
+          "3": {
+            "v": false,
+            "src": [
+              "https://democrats.org/where-we-stand/party-platform/"
+            ],
+            "note": "Scored from the 2024 Democratic Party Platform (christian_liberty q3) — ctdems.org/your-party/platform HTTP 200 this hop redirected to ctdems.org homepage (no scored CT Dem plank text). Kentucky Democratic Party follows the DNC platform (ballotpedia.org/Democratic_Party_of_Kentucky HTTP 200). No individual statement found.",
+            "kind": "party_platform"
+          },
+          "4": {
+            "v": false,
+            "src": [
+              "https://democrats.org/where-we-stand/party-platform/"
+            ],
+            "note": "Scored from the 2024 Democratic Party Platform (christian_liberty q4) — ctdems.org/your-party/platform HTTP 200 this hop redirected to ctdems.org homepage (no scored CT Dem plank text). Kentucky Democratic Party follows the DNC platform (ballotpedia.org/Democratic_Party_of_Kentucky HTTP 200). No individual statement found.",
+            "kind": "party_platform"
+          }
+        },
+        "election_integrity": {
+          "0": {
+            "v": false,
+            "src": [
+              "https://democrats.org/where-we-stand/party-platform/"
+            ],
+            "note": "Scored from the 2024 Democratic Party Platform (election_integrity q0) — ctdems.org/your-party/platform HTTP 200 this hop redirected to ctdems.org homepage (no scored CT Dem plank text). Kentucky Democratic Party follows the DNC platform (ballotpedia.org/Democratic_Party_of_Kentucky HTTP 200). No individual statement found.",
+            "kind": "party_platform"
+          },
+          "1": {
+            "v": false,
+            "src": [
+              "https://democrats.org/where-we-stand/party-platform/"
+            ],
+            "note": "Scored from the 2024 Democratic Party Platform (election_integrity q1) — ctdems.org/your-party/platform HTTP 200 this hop redirected to ctdems.org homepage (no scored CT Dem plank text). Kentucky Democratic Party follows the DNC platform (ballotpedia.org/Democratic_Party_of_Kentucky HTTP 200). No individual statement found.",
+            "kind": "party_platform"
+          },
+          "2": {
+            "v": false,
+            "src": [
+              "https://democrats.org/where-we-stand/party-platform/"
+            ],
+            "note": "Scored from the 2024 Democratic Party Platform (election_integrity q2) — ctdems.org/your-party/platform HTTP 200 this hop redirected to ctdems.org homepage (no scored CT Dem plank text). Kentucky Democratic Party follows the DNC platform (ballotpedia.org/Democratic_Party_of_Kentucky HTTP 200). No individual statement found.",
+            "kind": "party_platform"
+          },
+          "3": {
+            "v": false,
+            "src": [
+              "https://democrats.org/where-we-stand/party-platform/"
+            ],
+            "note": "Scored from the 2024 Democratic Party Platform (election_integrity q3) — ctdems.org/your-party/platform HTTP 200 this hop redirected to ctdems.org homepage (no scored CT Dem plank text). Kentucky Democratic Party follows the DNC platform (ballotpedia.org/Democratic_Party_of_Kentucky HTTP 200). No individual statement found.",
+            "kind": "party_platform"
+          },
+          "4": {
+            "v": false,
+            "src": [
+              "https://democrats.org/where-we-stand/party-platform/"
+            ],
+            "note": "Scored from the 2024 Democratic Party Platform (election_integrity q4) — ctdems.org/your-party/platform HTTP 200 this hop redirected to ctdems.org homepage (no scored CT Dem plank text). Kentucky Democratic Party follows the DNC platform (ballotpedia.org/Democratic_Party_of_Kentucky HTTP 200). No individual statement found.",
+            "kind": "party_platform"
+          }
+        },
+        "border_immigration": {
+          "0": {
+            "v": false,
+            "src": [
+              "https://democrats.org/where-we-stand/party-platform/"
+            ],
+            "note": "Scored from the 2024 Democratic Party Platform (border_immigration q0) — ctdems.org/your-party/platform HTTP 200 this hop redirected to ctdems.org homepage (no scored CT Dem plank text). Kentucky Democratic Party follows the DNC platform (ballotpedia.org/Democratic_Party_of_Kentucky HTTP 200). No individual statement found.",
+            "kind": "party_platform"
+          },
+          "1": {
+            "v": false,
+            "src": [
+              "https://democrats.org/where-we-stand/party-platform/"
+            ],
+            "note": "Scored from the 2024 Democratic Party Platform (border_immigration q1) — ctdems.org/your-party/platform HTTP 200 this hop redirected to ctdems.org homepage (no scored CT Dem plank text). Kentucky Democratic Party follows the DNC platform (ballotpedia.org/Democratic_Party_of_Kentucky HTTP 200). No individual statement found.",
+            "kind": "party_platform"
+          },
+          "2": {
+            "v": false,
+            "src": [
+              "https://democrats.org/where-we-stand/party-platform/"
+            ],
+            "note": "Scored from the 2024 Democratic Party Platform (border_immigration q2) — ctdems.org/your-party/platform HTTP 200 this hop redirected to ctdems.org homepage (no scored CT Dem plank text). Kentucky Democratic Party follows the DNC platform (ballotpedia.org/Democratic_Party_of_Kentucky HTTP 200). No individual statement found.",
+            "kind": "party_platform"
+          }
+        },
+        "self_defense": {
+          "0": {
+            "v": false,
+            "src": [
+              "https://democrats.org/where-we-stand/party-platform/"
+            ],
+            "note": "Scored from the 2024 Democratic Party Platform (self_defense q0) — ctdems.org/your-party/platform HTTP 200 this hop redirected to ctdems.org homepage (no scored CT Dem plank text). Kentucky Democratic Party follows the DNC platform (ballotpedia.org/Democratic_Party_of_Kentucky HTTP 200). No individual statement found.",
+            "kind": "party_platform"
+          },
+          "1": {
+            "v": false,
+            "src": [
+              "https://democrats.org/where-we-stand/party-platform/"
+            ],
+            "note": "Scored from the 2024 Democratic Party Platform (self_defense q1) — ctdems.org/your-party/platform HTTP 200 this hop redirected to ctdems.org homepage (no scored CT Dem plank text). Kentucky Democratic Party follows the DNC platform (ballotpedia.org/Democratic_Party_of_Kentucky HTTP 200). No individual statement found.",
+            "kind": "party_platform"
+          }
+        },
+        "public_justice": {
+          "0": {
+            "v": false,
+            "src": [
+              "https://democrats.org/where-we-stand/party-platform/"
+            ],
+            "note": "Scored from the 2024 Democratic Party Platform (public_justice q0) — ctdems.org/your-party/platform HTTP 200 this hop redirected to ctdems.org homepage (no scored CT Dem plank text). Kentucky Democratic Party follows the DNC platform (ballotpedia.org/Democratic_Party_of_Kentucky HTTP 200). No individual statement found.",
+            "kind": "party_platform"
+          },
+          "1": {
+            "v": false,
+            "src": [
+              "https://democrats.org/where-we-stand/party-platform/"
+            ],
+            "note": "Scored from the 2024 Democratic Party Platform (public_justice q1) — ctdems.org/your-party/platform HTTP 200 this hop redirected to ctdems.org homepage (no scored CT Dem plank text). Kentucky Democratic Party follows the DNC platform (ballotpedia.org/Democratic_Party_of_Kentucky HTTP 200). No individual statement found.",
+            "kind": "party_platform"
+          },
+          "2": {
+            "v": false,
+            "src": [
+              "https://democrats.org/where-we-stand/party-platform/"
+            ],
+            "note": "Scored from the 2024 Democratic Party Platform (public_justice q2) — ctdems.org/your-party/platform HTTP 200 this hop redirected to ctdems.org homepage (no scored CT Dem plank text). Kentucky Democratic Party follows the DNC platform (ballotpedia.org/Democratic_Party_of_Kentucky HTTP 200). No individual statement found.",
+            "kind": "party_platform"
+          }
+        }
+      }
+    },
+    "david-defronzo@CT": {
+      "profile": {
+        "confidence": "evidence_state",
+        "office": "State Representative",
+        "party": "D",
+        "state": "CT",
+        "note": "Official housedems.ct.gov/DeFronzo HTTP 200 this hop: House Democrat news for New Britain; Dist 26 per assignment. Biography URL 404 this hop. Ballotpedia David_DeFronzo HTTP 200: CT House District 26 Democrat, assumed office 2025-01-08, term ends 2027; beat Barbara Marino 59.8–40.2 (2024); committees Appropriations, Education, Higher Education. Wrong-member check: party/district match Dist 26 D. Not on PPV!CT 2024 House list (Dist 26 absent). No campaign_website on assignment. Named office State Representative only. Dual-office not present. Status active. LegiScan cache getSessionPeople_id=2244 people_id=25971 HD-026 D; getSponsoredList not in cache; KEY_EXPIRED. PAC/FEC omitted. Remaining leftover STATE from 2024 DNC state map. Unmapped omitted: economic_stewardship, industry_capture, refuse_federal_overreach, refuse_state_overreach."
+      },
+      "sources_add": [
+        "https://www.housedems.ct.gov/DeFronzo",
+        "https://ballotpedia.org/David_DeFronzo",
+        "https://democrats.org/where-we-stand/party-platform/"
+      ],
+      "evidence": {
+        "sanctity_of_life": {
+          "0": {
+            "v": false,
+            "src": [
+              "https://democrats.org/where-we-stand/party-platform/"
+            ],
+            "note": "Scored from the 2024 Democratic Party Platform (sanctity_of_life q0) — ctdems.org/your-party/platform HTTP 200 this hop redirected to ctdems.org homepage (no scored CT Dem plank text). Kentucky Democratic Party follows the DNC platform (ballotpedia.org/Democratic_Party_of_Kentucky HTTP 200). No individual statement found.",
+            "kind": "party_platform"
+          },
+          "1": {
+            "v": false,
+            "src": [
+              "https://democrats.org/where-we-stand/party-platform/"
+            ],
+            "note": "Scored from the 2024 Democratic Party Platform (sanctity_of_life q1) — ctdems.org/your-party/platform HTTP 200 this hop redirected to ctdems.org homepage (no scored CT Dem plank text). Kentucky Democratic Party follows the DNC platform (ballotpedia.org/Democratic_Party_of_Kentucky HTTP 200). No individual statement found.",
+            "kind": "party_platform"
+          }
+        },
+        "biblical_marriage": {
+          "0": {
+            "v": false,
+            "src": [
+              "https://democrats.org/where-we-stand/party-platform/"
+            ],
+            "note": "Scored from the 2024 Democratic Party Platform (biblical_marriage q0) — ctdems.org/your-party/platform HTTP 200 this hop redirected to ctdems.org homepage (no scored CT Dem plank text). Kentucky Democratic Party follows the DNC platform (ballotpedia.org/Democratic_Party_of_Kentucky HTTP 200). No individual statement found.",
+            "kind": "party_platform"
+          },
+          "2": {
+            "v": false,
+            "src": [
+              "https://democrats.org/where-we-stand/party-platform/"
+            ],
+            "note": "Scored from the 2024 Democratic Party Platform (biblical_marriage q2) — ctdems.org/your-party/platform HTTP 200 this hop redirected to ctdems.org homepage (no scored CT Dem plank text). Kentucky Democratic Party follows the DNC platform (ballotpedia.org/Democratic_Party_of_Kentucky HTTP 200). No individual statement found.",
+            "kind": "party_platform"
+          },
+          "4": {
+            "v": false,
+            "src": [
+              "https://democrats.org/where-we-stand/party-platform/"
+            ],
+            "note": "Scored from the 2024 Democratic Party Platform (biblical_marriage q4) — ctdems.org/your-party/platform HTTP 200 this hop redirected to ctdems.org homepage (no scored CT Dem plank text). Kentucky Democratic Party follows the DNC platform (ballotpedia.org/Democratic_Party_of_Kentucky HTTP 200). No individual statement found.",
+            "kind": "party_platform"
+          }
+        },
+        "family_child_sovereignty": {
+          "0": {
+            "v": false,
+            "src": [
+              "https://democrats.org/where-we-stand/party-platform/"
+            ],
+            "note": "Scored from the 2024 Democratic Party Platform (family_child_sovereignty q0) — ctdems.org/your-party/platform HTTP 200 this hop redirected to ctdems.org homepage (no scored CT Dem plank text). Kentucky Democratic Party follows the DNC platform (ballotpedia.org/Democratic_Party_of_Kentucky HTTP 200). No individual statement found.",
+            "kind": "party_platform"
+          },
+          "1": {
+            "v": false,
+            "src": [
+              "https://democrats.org/where-we-stand/party-platform/"
+            ],
+            "note": "Scored from the 2024 Democratic Party Platform (family_child_sovereignty q1) — ctdems.org/your-party/platform HTTP 200 this hop redirected to ctdems.org homepage (no scored CT Dem plank text). Kentucky Democratic Party follows the DNC platform (ballotpedia.org/Democratic_Party_of_Kentucky HTTP 200). No individual statement found.",
+            "kind": "party_platform"
+          },
+          "2": {
+            "v": false,
+            "src": [
+              "https://democrats.org/where-we-stand/party-platform/"
+            ],
+            "note": "Scored from the 2024 Democratic Party Platform (family_child_sovereignty q2) — ctdems.org/your-party/platform HTTP 200 this hop redirected to ctdems.org homepage (no scored CT Dem plank text). Kentucky Democratic Party follows the DNC platform (ballotpedia.org/Democratic_Party_of_Kentucky HTTP 200). No individual statement found.",
+            "kind": "party_platform"
+          },
+          "3": {
+            "v": false,
+            "src": [
+              "https://democrats.org/where-we-stand/party-platform/"
+            ],
+            "note": "Scored from the 2024 Democratic Party Platform (family_child_sovereignty q3) — ctdems.org/your-party/platform HTTP 200 this hop redirected to ctdems.org homepage (no scored CT Dem plank text). Kentucky Democratic Party follows the DNC platform (ballotpedia.org/Democratic_Party_of_Kentucky HTTP 200). No individual statement found.",
+            "kind": "party_platform"
+          },
+          "4": {
+            "v": false,
+            "src": [
+              "https://democrats.org/where-we-stand/party-platform/"
+            ],
+            "note": "Scored from the 2024 Democratic Party Platform (family_child_sovereignty q4) — ctdems.org/your-party/platform HTTP 200 this hop redirected to ctdems.org homepage (no scored CT Dem plank text). Kentucky Democratic Party follows the DNC platform (ballotpedia.org/Democratic_Party_of_Kentucky HTTP 200). No individual statement found.",
+            "kind": "party_platform"
+          }
+        },
+        "christian_liberty": {
+          "0": {
+            "v": false,
+            "src": [
+              "https://democrats.org/where-we-stand/party-platform/"
+            ],
+            "note": "Scored from the 2024 Democratic Party Platform (christian_liberty q0) — ctdems.org/your-party/platform HTTP 200 this hop redirected to ctdems.org homepage (no scored CT Dem plank text). Kentucky Democratic Party follows the DNC platform (ballotpedia.org/Democratic_Party_of_Kentucky HTTP 200). No individual statement found.",
+            "kind": "party_platform"
+          },
+          "1": {
+            "v": false,
+            "src": [
+              "https://democrats.org/where-we-stand/party-platform/"
+            ],
+            "note": "Scored from the 2024 Democratic Party Platform (christian_liberty q1) — ctdems.org/your-party/platform HTTP 200 this hop redirected to ctdems.org homepage (no scored CT Dem plank text). Kentucky Democratic Party follows the DNC platform (ballotpedia.org/Democratic_Party_of_Kentucky HTTP 200). No individual statement found.",
+            "kind": "party_platform"
+          },
+          "2": {
+            "v": false,
+            "src": [
+              "https://democrats.org/where-we-stand/party-platform/"
+            ],
+            "note": "Scored from the 2024 Democratic Party Platform (christian_liberty q2) — ctdems.org/your-party/platform HTTP 200 this hop redirected to ctdems.org homepage (no scored CT Dem plank text). Kentucky Democratic Party follows the DNC platform (ballotpedia.org/Democratic_Party_of_Kentucky HTTP 200). No individual statement found.",
+            "kind": "party_platform"
+          },
+          "3": {
+            "v": false,
+            "src": [
+              "https://democrats.org/where-we-stand/party-platform/"
+            ],
+            "note": "Scored from the 2024 Democratic Party Platform (christian_liberty q3) — ctdems.org/your-party/platform HTTP 200 this hop redirected to ctdems.org homepage (no scored CT Dem plank text). Kentucky Democratic Party follows the DNC platform (ballotpedia.org/Democratic_Party_of_Kentucky HTTP 200). No individual statement found.",
+            "kind": "party_platform"
+          },
+          "4": {
+            "v": false,
+            "src": [
+              "https://democrats.org/where-we-stand/party-platform/"
+            ],
+            "note": "Scored from the 2024 Democratic Party Platform (christian_liberty q4) — ctdems.org/your-party/platform HTTP 200 this hop redirected to ctdems.org homepage (no scored CT Dem plank text). Kentucky Democratic Party follows the DNC platform (ballotpedia.org/Democratic_Party_of_Kentucky HTTP 200). No individual statement found.",
+            "kind": "party_platform"
+          }
+        },
+        "election_integrity": {
+          "0": {
+            "v": false,
+            "src": [
+              "https://democrats.org/where-we-stand/party-platform/"
+            ],
+            "note": "Scored from the 2024 Democratic Party Platform (election_integrity q0) — ctdems.org/your-party/platform HTTP 200 this hop redirected to ctdems.org homepage (no scored CT Dem plank text). Kentucky Democratic Party follows the DNC platform (ballotpedia.org/Democratic_Party_of_Kentucky HTTP 200). No individual statement found.",
+            "kind": "party_platform"
+          },
+          "1": {
+            "v": false,
+            "src": [
+              "https://democrats.org/where-we-stand/party-platform/"
+            ],
+            "note": "Scored from the 2024 Democratic Party Platform (election_integrity q1) — ctdems.org/your-party/platform HTTP 200 this hop redirected to ctdems.org homepage (no scored CT Dem plank text). Kentucky Democratic Party follows the DNC platform (ballotpedia.org/Democratic_Party_of_Kentucky HTTP 200). No individual statement found.",
+            "kind": "party_platform"
+          },
+          "2": {
+            "v": false,
+            "src": [
+              "https://democrats.org/where-we-stand/party-platform/"
+            ],
+            "note": "Scored from the 2024 Democratic Party Platform (election_integrity q2) — ctdems.org/your-party/platform HTTP 200 this hop redirected to ctdems.org homepage (no scored CT Dem plank text). Kentucky Democratic Party follows the DNC platform (ballotpedia.org/Democratic_Party_of_Kentucky HTTP 200). No individual statement found.",
+            "kind": "party_platform"
+          },
+          "3": {
+            "v": false,
+            "src": [
+              "https://democrats.org/where-we-stand/party-platform/"
+            ],
+            "note": "Scored from the 2024 Democratic Party Platform (election_integrity q3) — ctdems.org/your-party/platform HTTP 200 this hop redirected to ctdems.org homepage (no scored CT Dem plank text). Kentucky Democratic Party follows the DNC platform (ballotpedia.org/Democratic_Party_of_Kentucky HTTP 200). No individual statement found.",
+            "kind": "party_platform"
+          },
+          "4": {
+            "v": false,
+            "src": [
+              "https://democrats.org/where-we-stand/party-platform/"
+            ],
+            "note": "Scored from the 2024 Democratic Party Platform (election_integrity q4) — ctdems.org/your-party/platform HTTP 200 this hop redirected to ctdems.org homepage (no scored CT Dem plank text). Kentucky Democratic Party follows the DNC platform (ballotpedia.org/Democratic_Party_of_Kentucky HTTP 200). No individual statement found.",
+            "kind": "party_platform"
+          }
+        },
+        "border_immigration": {
+          "0": {
+            "v": false,
+            "src": [
+              "https://democrats.org/where-we-stand/party-platform/"
+            ],
+            "note": "Scored from the 2024 Democratic Party Platform (border_immigration q0) — ctdems.org/your-party/platform HTTP 200 this hop redirected to ctdems.org homepage (no scored CT Dem plank text). Kentucky Democratic Party follows the DNC platform (ballotpedia.org/Democratic_Party_of_Kentucky HTTP 200). No individual statement found.",
+            "kind": "party_platform"
+          },
+          "1": {
+            "v": false,
+            "src": [
+              "https://democrats.org/where-we-stand/party-platform/"
+            ],
+            "note": "Scored from the 2024 Democratic Party Platform (border_immigration q1) — ctdems.org/your-party/platform HTTP 200 this hop redirected to ctdems.org homepage (no scored CT Dem plank text). Kentucky Democratic Party follows the DNC platform (ballotpedia.org/Democratic_Party_of_Kentucky HTTP 200). No individual statement found.",
+            "kind": "party_platform"
+          },
+          "2": {
+            "v": false,
+            "src": [
+              "https://democrats.org/where-we-stand/party-platform/"
+            ],
+            "note": "Scored from the 2024 Democratic Party Platform (border_immigration q2) — ctdems.org/your-party/platform HTTP 200 this hop redirected to ctdems.org homepage (no scored CT Dem plank text). Kentucky Democratic Party follows the DNC platform (ballotpedia.org/Democratic_Party_of_Kentucky HTTP 200). No individual statement found.",
+            "kind": "party_platform"
+          }
+        },
+        "self_defense": {
+          "0": {
+            "v": false,
+            "src": [
+              "https://democrats.org/where-we-stand/party-platform/"
+            ],
+            "note": "Scored from the 2024 Democratic Party Platform (self_defense q0) — ctdems.org/your-party/platform HTTP 200 this hop redirected to ctdems.org homepage (no scored CT Dem plank text). Kentucky Democratic Party follows the DNC platform (ballotpedia.org/Democratic_Party_of_Kentucky HTTP 200). No individual statement found.",
+            "kind": "party_platform"
+          },
+          "1": {
+            "v": false,
+            "src": [
+              "https://democrats.org/where-we-stand/party-platform/"
+            ],
+            "note": "Scored from the 2024 Democratic Party Platform (self_defense q1) — ctdems.org/your-party/platform HTTP 200 this hop redirected to ctdems.org homepage (no scored CT Dem plank text). Kentucky Democratic Party follows the DNC platform (ballotpedia.org/Democratic_Party_of_Kentucky HTTP 200). No individual statement found.",
+            "kind": "party_platform"
+          }
+        },
+        "public_justice": {
+          "0": {
+            "v": false,
+            "src": [
+              "https://democrats.org/where-we-stand/party-platform/"
+            ],
+            "note": "Scored from the 2024 Democratic Party Platform (public_justice q0) — ctdems.org/your-party/platform HTTP 200 this hop redirected to ctdems.org homepage (no scored CT Dem plank text). Kentucky Democratic Party follows the DNC platform (ballotpedia.org/Democratic_Party_of_Kentucky HTTP 200). No individual statement found.",
+            "kind": "party_platform"
+          },
+          "1": {
+            "v": false,
+            "src": [
+              "https://democrats.org/where-we-stand/party-platform/"
+            ],
+            "note": "Scored from the 2024 Democratic Party Platform (public_justice q1) — ctdems.org/your-party/platform HTTP 200 this hop redirected to ctdems.org homepage (no scored CT Dem plank text). Kentucky Democratic Party follows the DNC platform (ballotpedia.org/Democratic_Party_of_Kentucky HTTP 200). No individual statement found.",
+            "kind": "party_platform"
+          },
+          "2": {
+            "v": false,
+            "src": [
+              "https://democrats.org/where-we-stand/party-platform/"
+            ],
+            "note": "Scored from the 2024 Democratic Party Platform (public_justice q2) — ctdems.org/your-party/platform HTTP 200 this hop redirected to ctdems.org homepage (no scored CT Dem plank text). Kentucky Democratic Party follows the DNC platform (ballotpedia.org/Democratic_Party_of_Kentucky HTTP 200). No individual statement found.",
+            "kind": "party_platform"
+          }
+        }
+      }
+    },
+    "devin-carney@CT": {
+      "profile": {
+        "confidence": "evidence_state",
+        "office": "State Representative",
+        "party": "R",
+        "state": "CT",
+        "note": "Official assignment CGAMemberBills dist 023 FETCH FAIL this hop. Ballotpedia Devin_R._Carney HTTP 200: CT House District 23 Republican, assumed office 2015-01-07, term ends 2027; not running for re-election 2026 (former keep scoring — still named office State Representative until term end). cthousegop.com/carney HTTP 200 JS-empty (title: House Republican Policy Chairman). Brandeis BA. Wrong-member check: party/district match Dist 23 R. Named office State Representative only — do not score a second office. Dual-office not present. Status active through 2027 term. LegiScan cache getSessionPeople_id=2244 people_id=16432 HD-023 R; getSponsoredList not in cache; KEY_EXPIRED. PAC/FEC omitted. Remaining leftover STATE from 2024 RNC state map (CT GOP follows RNC). Unmapped omitted: economic_stewardship, industry_capture, refuse_federal_overreach, refuse_state_overreach."
+      },
+      "sources_add": [
+        "https://ballotpedia.org/Devin_R._Carney",
+        "https://www.cthousegop.com/carney",
+        "https://ballotpedia.org/Republican_Party_of_Connecticut",
+        "https://www.presidency.ucsb.edu/documents/2024-republican-party-platform",
+        "https://gop.com/platform/"
+      ],
+      "evidence": {
+        "sanctity_of_life": {
+          "0": {
+            "v": true,
+            "src": [
+              "https://www.presidency.ucsb.edu/documents/2024-republican-party-platform"
+            ],
+            "note": "Scored from the 2024 Republican National Platform (sanctity_of_life q0) — Connecticut GOP follows the RNC platform (ballotpedia.org/Republican_Party_of_Connecticut HTTP 200 this hop). Kentucky GOP rpk.org/our-party HTTP 403 this hop (body not readable; not used as quote text). No individual statement found.",
+            "kind": "party_platform"
+          },
+          "1": {
+            "v": true,
+            "src": [
+              "https://www.presidency.ucsb.edu/documents/2024-republican-party-platform"
+            ],
+            "note": "Scored from the 2024 Republican National Platform (sanctity_of_life q1) — Connecticut GOP follows the RNC platform (ballotpedia.org/Republican_Party_of_Connecticut HTTP 200 this hop). Kentucky GOP rpk.org/our-party HTTP 403 this hop (body not readable; not used as quote text). No individual statement found.",
+            "kind": "party_platform"
+          }
+        },
+        "biblical_marriage": {
+          "0": {
+            "v": true,
+            "src": [
+              "https://www.presidency.ucsb.edu/documents/2024-republican-party-platform"
+            ],
+            "note": "Scored from the 2024 Republican National Platform (biblical_marriage q0) — Connecticut GOP follows the RNC platform (ballotpedia.org/Republican_Party_of_Connecticut HTTP 200 this hop). Kentucky GOP rpk.org/our-party HTTP 403 this hop (body not readable; not used as quote text). No individual statement found.",
+            "kind": "party_platform"
+          },
+          "2": {
+            "v": true,
+            "src": [
+              "https://www.presidency.ucsb.edu/documents/2024-republican-party-platform"
+            ],
+            "note": "Scored from the 2024 Republican National Platform (biblical_marriage q2) — Connecticut GOP follows the RNC platform (ballotpedia.org/Republican_Party_of_Connecticut HTTP 200 this hop). Kentucky GOP rpk.org/our-party HTTP 403 this hop (body not readable; not used as quote text). No individual statement found.",
+            "kind": "party_platform"
+          },
+          "4": {
+            "v": true,
+            "src": [
+              "https://www.presidency.ucsb.edu/documents/2024-republican-party-platform"
+            ],
+            "note": "Scored from the 2024 Republican National Platform (biblical_marriage q4) — Connecticut GOP follows the RNC platform (ballotpedia.org/Republican_Party_of_Connecticut HTTP 200 this hop). Kentucky GOP rpk.org/our-party HTTP 403 this hop (body not readable; not used as quote text). No individual statement found.",
+            "kind": "party_platform"
+          }
+        },
+        "family_child_sovereignty": {
+          "0": {
+            "v": true,
+            "src": [
+              "https://www.presidency.ucsb.edu/documents/2024-republican-party-platform"
+            ],
+            "note": "Scored from the 2024 Republican National Platform (family_child_sovereignty q0) — Connecticut GOP follows the RNC platform (ballotpedia.org/Republican_Party_of_Connecticut HTTP 200 this hop). Kentucky GOP rpk.org/our-party HTTP 403 this hop (body not readable; not used as quote text). No individual statement found.",
+            "kind": "party_platform"
+          },
+          "1": {
+            "v": true,
+            "src": [
+              "https://www.presidency.ucsb.edu/documents/2024-republican-party-platform"
+            ],
+            "note": "Scored from the 2024 Republican National Platform (family_child_sovereignty q1) — Connecticut GOP follows the RNC platform (ballotpedia.org/Republican_Party_of_Connecticut HTTP 200 this hop). Kentucky GOP rpk.org/our-party HTTP 403 this hop (body not readable; not used as quote text). No individual statement found.",
+            "kind": "party_platform"
+          },
+          "2": {
+            "v": true,
+            "src": [
+              "https://www.presidency.ucsb.edu/documents/2024-republican-party-platform"
+            ],
+            "note": "Scored from the 2024 Republican National Platform (family_child_sovereignty q2) — Connecticut GOP follows the RNC platform (ballotpedia.org/Republican_Party_of_Connecticut HTTP 200 this hop). Kentucky GOP rpk.org/our-party HTTP 403 this hop (body not readable; not used as quote text). No individual statement found.",
+            "kind": "party_platform"
+          },
+          "3": {
+            "v": true,
+            "src": [
+              "https://www.presidency.ucsb.edu/documents/2024-republican-party-platform"
+            ],
+            "note": "Scored from the 2024 Republican National Platform (family_child_sovereignty q3) — Connecticut GOP follows the RNC platform (ballotpedia.org/Republican_Party_of_Connecticut HTTP 200 this hop). Kentucky GOP rpk.org/our-party HTTP 403 this hop (body not readable; not used as quote text). No individual statement found.",
+            "kind": "party_platform"
+          },
+          "4": {
+            "v": true,
+            "src": [
+              "https://www.presidency.ucsb.edu/documents/2024-republican-party-platform"
+            ],
+            "note": "Scored from the 2024 Republican National Platform (family_child_sovereignty q4) — Connecticut GOP follows the RNC platform (ballotpedia.org/Republican_Party_of_Connecticut HTTP 200 this hop). Kentucky GOP rpk.org/our-party HTTP 403 this hop (body not readable; not used as quote text). No individual statement found.",
+            "kind": "party_platform"
+          }
+        },
+        "christian_liberty": {
+          "0": {
+            "v": true,
+            "src": [
+              "https://www.presidency.ucsb.edu/documents/2024-republican-party-platform"
+            ],
+            "note": "Scored from the 2024 Republican National Platform (christian_liberty q0) — Connecticut GOP follows the RNC platform (ballotpedia.org/Republican_Party_of_Connecticut HTTP 200 this hop). Kentucky GOP rpk.org/our-party HTTP 403 this hop (body not readable; not used as quote text). No individual statement found.",
+            "kind": "party_platform"
+          },
+          "1": {
+            "v": true,
+            "src": [
+              "https://www.presidency.ucsb.edu/documents/2024-republican-party-platform"
+            ],
+            "note": "Scored from the 2024 Republican National Platform (christian_liberty q1) — Connecticut GOP follows the RNC platform (ballotpedia.org/Republican_Party_of_Connecticut HTTP 200 this hop). Kentucky GOP rpk.org/our-party HTTP 403 this hop (body not readable; not used as quote text). No individual statement found.",
+            "kind": "party_platform"
+          },
+          "2": {
+            "v": true,
+            "src": [
+              "https://www.presidency.ucsb.edu/documents/2024-republican-party-platform"
+            ],
+            "note": "Scored from the 2024 Republican National Platform (christian_liberty q2) — Connecticut GOP follows the RNC platform (ballotpedia.org/Republican_Party_of_Connecticut HTTP 200 this hop). Kentucky GOP rpk.org/our-party HTTP 403 this hop (body not readable; not used as quote text). No individual statement found.",
+            "kind": "party_platform"
+          },
+          "3": {
+            "v": true,
+            "src": [
+              "https://www.presidency.ucsb.edu/documents/2024-republican-party-platform"
+            ],
+            "note": "Scored from the 2024 Republican National Platform (christian_liberty q3) — Connecticut GOP follows the RNC platform (ballotpedia.org/Republican_Party_of_Connecticut HTTP 200 this hop). Kentucky GOP rpk.org/our-party HTTP 403 this hop (body not readable; not used as quote text). No individual statement found.",
+            "kind": "party_platform"
+          }
+        },
+        "election_integrity": {
+          "1": {
+            "v": true,
+            "src": [
+              "https://www.presidency.ucsb.edu/documents/2024-republican-party-platform"
+            ],
+            "note": "Scored from the 2024 Republican National Platform (election_integrity q1) — Connecticut GOP follows the RNC platform (ballotpedia.org/Republican_Party_of_Connecticut HTTP 200 this hop). Kentucky GOP rpk.org/our-party HTTP 403 this hop (body not readable; not used as quote text). No individual statement found.",
+            "kind": "party_platform"
+          },
+          "3": {
+            "v": true,
+            "src": [
+              "https://www.presidency.ucsb.edu/documents/2024-republican-party-platform"
+            ],
+            "note": "Scored from the 2024 Republican National Platform (election_integrity q3) — Connecticut GOP follows the RNC platform (ballotpedia.org/Republican_Party_of_Connecticut HTTP 200 this hop). Kentucky GOP rpk.org/our-party HTTP 403 this hop (body not readable; not used as quote text). No individual statement found.",
+            "kind": "party_platform"
+          },
+          "4": {
+            "v": true,
+            "src": [
+              "https://www.presidency.ucsb.edu/documents/2024-republican-party-platform"
+            ],
+            "note": "Scored from the 2024 Republican National Platform (election_integrity q4) — Connecticut GOP follows the RNC platform (ballotpedia.org/Republican_Party_of_Connecticut HTTP 200 this hop). Kentucky GOP rpk.org/our-party HTTP 403 this hop (body not readable; not used as quote text). No individual statement found.",
+            "kind": "party_platform"
+          }
+        },
+        "border_immigration": {
+          "1": {
+            "v": true,
+            "src": [
+              "https://www.presidency.ucsb.edu/documents/2024-republican-party-platform"
+            ],
+            "note": "Scored from the 2024 Republican National Platform (border_immigration q1) — Connecticut GOP follows the RNC platform (ballotpedia.org/Republican_Party_of_Connecticut HTTP 200 this hop). Kentucky GOP rpk.org/our-party HTTP 403 this hop (body not readable; not used as quote text). No individual statement found.",
+            "kind": "party_platform"
+          },
+          "2": {
+            "v": true,
+            "src": [
+              "https://www.presidency.ucsb.edu/documents/2024-republican-party-platform"
+            ],
+            "note": "Scored from the 2024 Republican National Platform (border_immigration q2) — Connecticut GOP follows the RNC platform (ballotpedia.org/Republican_Party_of_Connecticut HTTP 200 this hop). Kentucky GOP rpk.org/our-party HTTP 403 this hop (body not readable; not used as quote text). No individual statement found.",
+            "kind": "party_platform"
+          }
+        },
+        "self_defense": {
+          "0": {
+            "v": true,
+            "src": [
+              "https://www.presidency.ucsb.edu/documents/2024-republican-party-platform"
+            ],
+            "note": "Scored from the 2024 Republican National Platform (self_defense q0) — Connecticut GOP follows the RNC platform (ballotpedia.org/Republican_Party_of_Connecticut HTTP 200 this hop). Kentucky GOP rpk.org/our-party HTTP 403 this hop (body not readable; not used as quote text). No individual statement found.",
+            "kind": "party_platform"
+          },
+          "1": {
+            "v": true,
+            "src": [
+              "https://www.presidency.ucsb.edu/documents/2024-republican-party-platform"
+            ],
+            "note": "Scored from the 2024 Republican National Platform (self_defense q1) — Connecticut GOP follows the RNC platform (ballotpedia.org/Republican_Party_of_Connecticut HTTP 200 this hop). Kentucky GOP rpk.org/our-party HTTP 403 this hop (body not readable; not used as quote text). No individual statement found.",
+            "kind": "party_platform"
+          }
+        },
+        "public_justice": {
+          "0": {
+            "v": true,
+            "src": [
+              "https://www.presidency.ucsb.edu/documents/2024-republican-party-platform"
+            ],
+            "note": "Scored from the 2024 Republican National Platform (public_justice q0) — Connecticut GOP follows the RNC platform (ballotpedia.org/Republican_Party_of_Connecticut HTTP 200 this hop). Kentucky GOP rpk.org/our-party HTTP 403 this hop (body not readable; not used as quote text). No individual statement found.",
+            "kind": "party_platform"
+          },
+          "1": {
+            "v": true,
+            "src": [
+              "https://www.presidency.ucsb.edu/documents/2024-republican-party-platform"
+            ],
+            "note": "Scored from the 2024 Republican National Platform (public_justice q1) — Connecticut GOP follows the RNC platform (ballotpedia.org/Republican_Party_of_Connecticut HTTP 200 this hop). Kentucky GOP rpk.org/our-party HTTP 403 this hop (body not readable; not used as quote text). No individual statement found.",
+            "kind": "party_platform"
+          },
+          "2": {
+            "v": true,
+            "src": [
+              "https://www.presidency.ucsb.edu/documents/2024-republican-party-platform"
+            ],
+            "note": "Scored from the 2024 Republican National Platform (public_justice q2) — Connecticut GOP follows the RNC platform (ballotpedia.org/Republican_Party_of_Connecticut HTTP 200 this hop). Kentucky GOP rpk.org/our-party HTTP 403 this hop (body not readable; not used as quote text). No individual statement found.",
+            "kind": "party_platform"
+          }
+        }
+      }
+    },
+    "donna-veach@CT": {
+      "profile": {
+        "confidence": "evidence_state",
+        "office": "State Representative",
+        "party": "R",
+        "state": "CT",
+        "note": "Official assignment CGAMemberBills dist 030 FETCH FAIL this hop. Ballotpedia Donna_Veach HTTP 200: CT House District 30 Republican, assumed office 2021-01-06, term ends 2027; running 2026; lives Berlin; A.S. Post University, BBA American Intercontinental; Hungerford Nature Center; Copperpott Farms. cthousegop.com/veach HTTP 200 JS-empty. Wrong-member check: party/district match Dist 30 R. Named office State Representative only. Dual-office not present. Status active. LegiScan cache getSessionPeople_id=2244 people_id=22109 HD-030 R; getSponsoredList not in cache; KEY_EXPIRED. PAC/FEC omitted. Remaining leftover STATE from 2024 RNC state map. Unmapped omitted: economic_stewardship, industry_capture, refuse_federal_overreach, refuse_state_overreach."
+      },
+      "sources_add": [
+        "https://ballotpedia.org/Donna_Veach",
+        "https://www.cthousegop.com/veach",
+        "https://ballotpedia.org/Republican_Party_of_Connecticut",
+        "https://www.presidency.ucsb.edu/documents/2024-republican-party-platform",
+        "https://gop.com/platform/"
+      ],
+      "evidence": {
+        "sanctity_of_life": {
+          "0": {
+            "v": true,
+            "src": [
+              "https://www.presidency.ucsb.edu/documents/2024-republican-party-platform"
+            ],
+            "note": "Scored from the 2024 Republican National Platform (sanctity_of_life q0) — Connecticut GOP follows the RNC platform (ballotpedia.org/Republican_Party_of_Connecticut HTTP 200 this hop). Kentucky GOP rpk.org/our-party HTTP 403 this hop (body not readable; not used as quote text). No individual statement found.",
+            "kind": "party_platform"
+          },
+          "1": {
+            "v": true,
+            "src": [
+              "https://www.presidency.ucsb.edu/documents/2024-republican-party-platform"
+            ],
+            "note": "Scored from the 2024 Republican National Platform (sanctity_of_life q1) — Connecticut GOP follows the RNC platform (ballotpedia.org/Republican_Party_of_Connecticut HTTP 200 this hop). Kentucky GOP rpk.org/our-party HTTP 403 this hop (body not readable; not used as quote text). No individual statement found.",
+            "kind": "party_platform"
+          }
+        },
+        "biblical_marriage": {
+          "0": {
+            "v": true,
+            "src": [
+              "https://www.presidency.ucsb.edu/documents/2024-republican-party-platform"
+            ],
+            "note": "Scored from the 2024 Republican National Platform (biblical_marriage q0) — Connecticut GOP follows the RNC platform (ballotpedia.org/Republican_Party_of_Connecticut HTTP 200 this hop). Kentucky GOP rpk.org/our-party HTTP 403 this hop (body not readable; not used as quote text). No individual statement found.",
+            "kind": "party_platform"
+          },
+          "2": {
+            "v": true,
+            "src": [
+              "https://www.presidency.ucsb.edu/documents/2024-republican-party-platform"
+            ],
+            "note": "Scored from the 2024 Republican National Platform (biblical_marriage q2) — Connecticut GOP follows the RNC platform (ballotpedia.org/Republican_Party_of_Connecticut HTTP 200 this hop). Kentucky GOP rpk.org/our-party HTTP 403 this hop (body not readable; not used as quote text). No individual statement found.",
+            "kind": "party_platform"
+          },
+          "4": {
+            "v": true,
+            "src": [
+              "https://www.presidency.ucsb.edu/documents/2024-republican-party-platform"
+            ],
+            "note": "Scored from the 2024 Republican National Platform (biblical_marriage q4) — Connecticut GOP follows the RNC platform (ballotpedia.org/Republican_Party_of_Connecticut HTTP 200 this hop). Kentucky GOP rpk.org/our-party HTTP 403 this hop (body not readable; not used as quote text). No individual statement found.",
+            "kind": "party_platform"
+          }
+        },
+        "family_child_sovereignty": {
+          "0": {
+            "v": true,
+            "src": [
+              "https://www.presidency.ucsb.edu/documents/2024-republican-party-platform"
+            ],
+            "note": "Scored from the 2024 Republican National Platform (family_child_sovereignty q0) — Connecticut GOP follows the RNC platform (ballotpedia.org/Republican_Party_of_Connecticut HTTP 200 this hop). Kentucky GOP rpk.org/our-party HTTP 403 this hop (body not readable; not used as quote text). No individual statement found.",
+            "kind": "party_platform"
+          },
+          "1": {
+            "v": true,
+            "src": [
+              "https://www.presidency.ucsb.edu/documents/2024-republican-party-platform"
+            ],
+            "note": "Scored from the 2024 Republican National Platform (family_child_sovereignty q1) — Connecticut GOP follows the RNC platform (ballotpedia.org/Republican_Party_of_Connecticut HTTP 200 this hop). Kentucky GOP rpk.org/our-party HTTP 403 this hop (body not readable; not used as quote text). No individual statement found.",
+            "kind": "party_platform"
+          },
+          "2": {
+            "v": true,
+            "src": [
+              "https://www.presidency.ucsb.edu/documents/2024-republican-party-platform"
+            ],
+            "note": "Scored from the 2024 Republican National Platform (family_child_sovereignty q2) — Connecticut GOP follows the RNC platform (ballotpedia.org/Republican_Party_of_Connecticut HTTP 200 this hop). Kentucky GOP rpk.org/our-party HTTP 403 this hop (body not readable; not used as quote text). No individual statement found.",
+            "kind": "party_platform"
+          },
+          "3": {
+            "v": true,
+            "src": [
+              "https://www.presidency.ucsb.edu/documents/2024-republican-party-platform"
+            ],
+            "note": "Scored from the 2024 Republican National Platform (family_child_sovereignty q3) — Connecticut GOP follows the RNC platform (ballotpedia.org/Republican_Party_of_Connecticut HTTP 200 this hop). Kentucky GOP rpk.org/our-party HTTP 403 this hop (body not readable; not used as quote text). No individual statement found.",
+            "kind": "party_platform"
+          },
+          "4": {
+            "v": true,
+            "src": [
+              "https://www.presidency.ucsb.edu/documents/2024-republican-party-platform"
+            ],
+            "note": "Scored from the 2024 Republican National Platform (family_child_sovereignty q4) — Connecticut GOP follows the RNC platform (ballotpedia.org/Republican_Party_of_Connecticut HTTP 200 this hop). Kentucky GOP rpk.org/our-party HTTP 403 this hop (body not readable; not used as quote text). No individual statement found.",
+            "kind": "party_platform"
+          }
+        },
+        "christian_liberty": {
+          "0": {
+            "v": true,
+            "src": [
+              "https://www.presidency.ucsb.edu/documents/2024-republican-party-platform"
+            ],
+            "note": "Scored from the 2024 Republican National Platform (christian_liberty q0) — Connecticut GOP follows the RNC platform (ballotpedia.org/Republican_Party_of_Connecticut HTTP 200 this hop). Kentucky GOP rpk.org/our-party HTTP 403 this hop (body not readable; not used as quote text). No individual statement found.",
+            "kind": "party_platform"
+          },
+          "1": {
+            "v": true,
+            "src": [
+              "https://www.presidency.ucsb.edu/documents/2024-republican-party-platform"
+            ],
+            "note": "Scored from the 2024 Republican National Platform (christian_liberty q1) — Connecticut GOP follows the RNC platform (ballotpedia.org/Republican_Party_of_Connecticut HTTP 200 this hop). Kentucky GOP rpk.org/our-party HTTP 403 this hop (body not readable; not used as quote text). No individual statement found.",
+            "kind": "party_platform"
+          },
+          "2": {
+            "v": true,
+            "src": [
+              "https://www.presidency.ucsb.edu/documents/2024-republican-party-platform"
+            ],
+            "note": "Scored from the 2024 Republican National Platform (christian_liberty q2) — Connecticut GOP follows the RNC platform (ballotpedia.org/Republican_Party_of_Connecticut HTTP 200 this hop). Kentucky GOP rpk.org/our-party HTTP 403 this hop (body not readable; not used as quote text). No individual statement found.",
+            "kind": "party_platform"
+          },
+          "3": {
+            "v": true,
+            "src": [
+              "https://www.presidency.ucsb.edu/documents/2024-republican-party-platform"
+            ],
+            "note": "Scored from the 2024 Republican National Platform (christian_liberty q3) — Connecticut GOP follows the RNC platform (ballotpedia.org/Republican_Party_of_Connecticut HTTP 200 this hop). Kentucky GOP rpk.org/our-party HTTP 403 this hop (body not readable; not used as quote text). No individual statement found.",
+            "kind": "party_platform"
+          }
+        },
+        "election_integrity": {
+          "1": {
+            "v": true,
+            "src": [
+              "https://www.presidency.ucsb.edu/documents/2024-republican-party-platform"
+            ],
+            "note": "Scored from the 2024 Republican National Platform (election_integrity q1) — Connecticut GOP follows the RNC platform (ballotpedia.org/Republican_Party_of_Connecticut HTTP 200 this hop). Kentucky GOP rpk.org/our-party HTTP 403 this hop (body not readable; not used as quote text). No individual statement found.",
+            "kind": "party_platform"
+          },
+          "3": {
+            "v": true,
+            "src": [
+              "https://www.presidency.ucsb.edu/documents/2024-republican-party-platform"
+            ],
+            "note": "Scored from the 2024 Republican National Platform (election_integrity q3) — Connecticut GOP follows the RNC platform (ballotpedia.org/Republican_Party_of_Connecticut HTTP 200 this hop). Kentucky GOP rpk.org/our-party HTTP 403 this hop (body not readable; not used as quote text). No individual statement found.",
+            "kind": "party_platform"
+          },
+          "4": {
+            "v": true,
+            "src": [
+              "https://www.presidency.ucsb.edu/documents/2024-republican-party-platform"
+            ],
+            "note": "Scored from the 2024 Republican National Platform (election_integrity q4) — Connecticut GOP follows the RNC platform (ballotpedia.org/Republican_Party_of_Connecticut HTTP 200 this hop). Kentucky GOP rpk.org/our-party HTTP 403 this hop (body not readable; not used as quote text). No individual statement found.",
+            "kind": "party_platform"
+          }
+        },
+        "border_immigration": {
+          "1": {
+            "v": true,
+            "src": [
+              "https://www.presidency.ucsb.edu/documents/2024-republican-party-platform"
+            ],
+            "note": "Scored from the 2024 Republican National Platform (border_immigration q1) — Connecticut GOP follows the RNC platform (ballotpedia.org/Republican_Party_of_Connecticut HTTP 200 this hop). Kentucky GOP rpk.org/our-party HTTP 403 this hop (body not readable; not used as quote text). No individual statement found.",
+            "kind": "party_platform"
+          },
+          "2": {
+            "v": true,
+            "src": [
+              "https://www.presidency.ucsb.edu/documents/2024-republican-party-platform"
+            ],
+            "note": "Scored from the 2024 Republican National Platform (border_immigration q2) — Connecticut GOP follows the RNC platform (ballotpedia.org/Republican_Party_of_Connecticut HTTP 200 this hop). Kentucky GOP rpk.org/our-party HTTP 403 this hop (body not readable; not used as quote text). No individual statement found.",
+            "kind": "party_platform"
+          }
+        },
+        "self_defense": {
+          "0": {
+            "v": true,
+            "src": [
+              "https://www.presidency.ucsb.edu/documents/2024-republican-party-platform"
+            ],
+            "note": "Scored from the 2024 Republican National Platform (self_defense q0) — Connecticut GOP follows the RNC platform (ballotpedia.org/Republican_Party_of_Connecticut HTTP 200 this hop). Kentucky GOP rpk.org/our-party HTTP 403 this hop (body not readable; not used as quote text). No individual statement found.",
+            "kind": "party_platform"
+          },
+          "1": {
+            "v": true,
+            "src": [
+              "https://www.presidency.ucsb.edu/documents/2024-republican-party-platform"
+            ],
+            "note": "Scored from the 2024 Republican National Platform (self_defense q1) — Connecticut GOP follows the RNC platform (ballotpedia.org/Republican_Party_of_Connecticut HTTP 200 this hop). Kentucky GOP rpk.org/our-party HTTP 403 this hop (body not readable; not used as quote text). No individual statement found.",
+            "kind": "party_platform"
+          }
+        },
+        "public_justice": {
+          "0": {
+            "v": true,
+            "src": [
+              "https://www.presidency.ucsb.edu/documents/2024-republican-party-platform"
+            ],
+            "note": "Scored from the 2024 Republican National Platform (public_justice q0) — Connecticut GOP follows the RNC platform (ballotpedia.org/Republican_Party_of_Connecticut HTTP 200 this hop). Kentucky GOP rpk.org/our-party HTTP 403 this hop (body not readable; not used as quote text). No individual statement found.",
+            "kind": "party_platform"
+          },
+          "1": {
+            "v": true,
+            "src": [
+              "https://www.presidency.ucsb.edu/documents/2024-republican-party-platform"
+            ],
+            "note": "Scored from the 2024 Republican National Platform (public_justice q1) — Connecticut GOP follows the RNC platform (ballotpedia.org/Republican_Party_of_Connecticut HTTP 200 this hop). Kentucky GOP rpk.org/our-party HTTP 403 this hop (body not readable; not used as quote text). No individual statement found.",
+            "kind": "party_platform"
+          },
+          "2": {
+            "v": true,
+            "src": [
+              "https://www.presidency.ucsb.edu/documents/2024-republican-party-platform"
+            ],
+            "note": "Scored from the 2024 Republican National Platform (public_justice q2) — Connecticut GOP follows the RNC platform (ballotpedia.org/Republican_Party_of_Connecticut HTTP 200 this hop). Kentucky GOP rpk.org/our-party HTTP 403 this hop (body not readable; not used as quote text). No individual statement found.",
+            "kind": "party_platform"
+          }
+        }
+      }
+    },
+    "eleni-kavros-degraw@CT": {
+      "profile": {
+        "confidence": "evidence_state",
+        "office": "State Representative",
+        "party": "D",
+        "state": "CT",
+        "note": "Official housedems.ct.gov/KavrosDeGraw HTTP 200 and Biography HTTP 200: elected Nov 2020 Dist 17 Avon/Canton; third term; House Chair Planning and Development; Public Health and Appropriations; JMU. Assignment CGAMemberBills dist 017 FETCH FAIL. Ballotpedia Eleni_Kavros_DeGraw HTTP 200: Dist 17 D, assumed 2021-01-06, term ends 2027; running 2026. Wrong-member check: party/district match. PPV!CT 2024 still-listed Dist 17 Eleni Kavros DeGraw* — SoL overlay. Named office State Representative only. Dual-office not present. Status active. LegiScan cache getSessionPeople_id=2244 people_id=22100 HD-017 D; getSponsoredList not in cache; KEY_EXPIRED. PAC/FEC omitted. Remaining leftover STATE from 2024 DNC state map. Unmapped omitted: economic_stewardship, industry_capture, refuse_federal_overreach, refuse_state_overreach."
+      },
+      "sources_add": [
+        "https://www.housedems.ct.gov/KavrosDeGraw",
+        "https://www.housedems.ct.gov/KavrosDeGraw/Biography",
+        "https://www.plannedparenthoodaction.org/planned-parenthood-votes-connecticut/news-room/planned-parenthood-votes-connecticut-endorses-candidates-for-the-connecticut-general-assembly-committed-to-protecting-reproductive-rights",
+        "https://ballotpedia.org/Eleni_Kavros_DeGraw",
+        "https://democrats.org/where-we-stand/party-platform/"
+      ],
+      "evidence": {
+        "sanctity_of_life": {
+          "0": {
+            "v": false,
+            "src": [
+              "https://www.plannedparenthoodaction.org/planned-parenthood-votes-connecticut/news-room/planned-parenthood-votes-connecticut-endorses-candidates-for-the-connecticut-general-assembly-committed-to-protecting-reproductive-rights"
+            ],
+            "note": "PPV!CT 2024 House endorsement (Dist. 17 Eleni Kavros DeGraw*) for candidates committed to protecting and expanding abortion access. Not personhood from conception. Endorsement not disavowed. Individual/affiliated overrides DNC platform for this cell.",
+            "kind": "individual"
+          },
+          "1": {
+            "v": false,
+            "src": [
+              "https://www.plannedparenthoodaction.org/planned-parenthood-votes-connecticut/news-room/planned-parenthood-votes-connecticut-endorses-candidates-for-the-connecticut-general-assembly-committed-to-protecting-reproductive-rights"
+            ],
+            "note": "Same PPV!CT 2024 endorsement (Dist. 17 Eleni Kavros DeGraw*) is expansion of abortion access, not abolition/heartbeat/total ban. Endorsement still listed this hop. Individual/affiliated overrides DNC platform for this cell.",
+            "kind": "individual"
+          }
+        },
+        "biblical_marriage": {
+          "0": {
+            "v": false,
+            "src": [
+              "https://democrats.org/where-we-stand/party-platform/"
+            ],
+            "note": "Scored from the 2024 Democratic Party Platform (biblical_marriage q0) — ctdems.org/your-party/platform HTTP 200 this hop redirected to ctdems.org homepage (no scored CT Dem plank text). Kentucky Democratic Party follows the DNC platform (ballotpedia.org/Democratic_Party_of_Kentucky HTTP 200). No individual statement found.",
+            "kind": "party_platform"
+          },
+          "2": {
+            "v": false,
+            "src": [
+              "https://democrats.org/where-we-stand/party-platform/"
+            ],
+            "note": "Scored from the 2024 Democratic Party Platform (biblical_marriage q2) — ctdems.org/your-party/platform HTTP 200 this hop redirected to ctdems.org homepage (no scored CT Dem plank text). Kentucky Democratic Party follows the DNC platform (ballotpedia.org/Democratic_Party_of_Kentucky HTTP 200). No individual statement found.",
+            "kind": "party_platform"
+          },
+          "4": {
+            "v": false,
+            "src": [
+              "https://democrats.org/where-we-stand/party-platform/"
+            ],
+            "note": "Scored from the 2024 Democratic Party Platform (biblical_marriage q4) — ctdems.org/your-party/platform HTTP 200 this hop redirected to ctdems.org homepage (no scored CT Dem plank text). Kentucky Democratic Party follows the DNC platform (ballotpedia.org/Democratic_Party_of_Kentucky HTTP 200). No individual statement found.",
+            "kind": "party_platform"
+          }
+        },
+        "family_child_sovereignty": {
+          "0": {
+            "v": false,
+            "src": [
+              "https://democrats.org/where-we-stand/party-platform/"
+            ],
+            "note": "Scored from the 2024 Democratic Party Platform (family_child_sovereignty q0) — ctdems.org/your-party/platform HTTP 200 this hop redirected to ctdems.org homepage (no scored CT Dem plank text). Kentucky Democratic Party follows the DNC platform (ballotpedia.org/Democratic_Party_of_Kentucky HTTP 200). No individual statement found.",
+            "kind": "party_platform"
+          },
+          "1": {
+            "v": false,
+            "src": [
+              "https://democrats.org/where-we-stand/party-platform/"
+            ],
+            "note": "Scored from the 2024 Democratic Party Platform (family_child_sovereignty q1) — ctdems.org/your-party/platform HTTP 200 this hop redirected to ctdems.org homepage (no scored CT Dem plank text). Kentucky Democratic Party follows the DNC platform (ballotpedia.org/Democratic_Party_of_Kentucky HTTP 200). No individual statement found.",
+            "kind": "party_platform"
+          },
+          "2": {
+            "v": false,
+            "src": [
+              "https://democrats.org/where-we-stand/party-platform/"
+            ],
+            "note": "Scored from the 2024 Democratic Party Platform (family_child_sovereignty q2) — ctdems.org/your-party/platform HTTP 200 this hop redirected to ctdems.org homepage (no scored CT Dem plank text). Kentucky Democratic Party follows the DNC platform (ballotpedia.org/Democratic_Party_of_Kentucky HTTP 200). No individual statement found.",
+            "kind": "party_platform"
+          },
+          "3": {
+            "v": false,
+            "src": [
+              "https://democrats.org/where-we-stand/party-platform/"
+            ],
+            "note": "Scored from the 2024 Democratic Party Platform (family_child_sovereignty q3) — ctdems.org/your-party/platform HTTP 200 this hop redirected to ctdems.org homepage (no scored CT Dem plank text). Kentucky Democratic Party follows the DNC platform (ballotpedia.org/Democratic_Party_of_Kentucky HTTP 200). No individual statement found.",
+            "kind": "party_platform"
+          },
+          "4": {
+            "v": false,
+            "src": [
+              "https://democrats.org/where-we-stand/party-platform/"
+            ],
+            "note": "Scored from the 2024 Democratic Party Platform (family_child_sovereignty q4) — ctdems.org/your-party/platform HTTP 200 this hop redirected to ctdems.org homepage (no scored CT Dem plank text). Kentucky Democratic Party follows the DNC platform (ballotpedia.org/Democratic_Party_of_Kentucky HTTP 200). No individual statement found.",
+            "kind": "party_platform"
+          }
+        },
+        "christian_liberty": {
+          "0": {
+            "v": false,
+            "src": [
+              "https://democrats.org/where-we-stand/party-platform/"
+            ],
+            "note": "Scored from the 2024 Democratic Party Platform (christian_liberty q0) — ctdems.org/your-party/platform HTTP 200 this hop redirected to ctdems.org homepage (no scored CT Dem plank text). Kentucky Democratic Party follows the DNC platform (ballotpedia.org/Democratic_Party_of_Kentucky HTTP 200). No individual statement found.",
+            "kind": "party_platform"
+          },
+          "1": {
+            "v": false,
+            "src": [
+              "https://democrats.org/where-we-stand/party-platform/"
+            ],
+            "note": "Scored from the 2024 Democratic Party Platform (christian_liberty q1) — ctdems.org/your-party/platform HTTP 200 this hop redirected to ctdems.org homepage (no scored CT Dem plank text). Kentucky Democratic Party follows the DNC platform (ballotpedia.org/Democratic_Party_of_Kentucky HTTP 200). No individual statement found.",
+            "kind": "party_platform"
+          },
+          "2": {
+            "v": false,
+            "src": [
+              "https://democrats.org/where-we-stand/party-platform/"
+            ],
+            "note": "Scored from the 2024 Democratic Party Platform (christian_liberty q2) — ctdems.org/your-party/platform HTTP 200 this hop redirected to ctdems.org homepage (no scored CT Dem plank text). Kentucky Democratic Party follows the DNC platform (ballotpedia.org/Democratic_Party_of_Kentucky HTTP 200). No individual statement found.",
+            "kind": "party_platform"
+          },
+          "3": {
+            "v": false,
+            "src": [
+              "https://democrats.org/where-we-stand/party-platform/"
+            ],
+            "note": "Scored from the 2024 Democratic Party Platform (christian_liberty q3) — ctdems.org/your-party/platform HTTP 200 this hop redirected to ctdems.org homepage (no scored CT Dem plank text). Kentucky Democratic Party follows the DNC platform (ballotpedia.org/Democratic_Party_of_Kentucky HTTP 200). No individual statement found.",
+            "kind": "party_platform"
+          },
+          "4": {
+            "v": false,
+            "src": [
+              "https://democrats.org/where-we-stand/party-platform/"
+            ],
+            "note": "Scored from the 2024 Democratic Party Platform (christian_liberty q4) — ctdems.org/your-party/platform HTTP 200 this hop redirected to ctdems.org homepage (no scored CT Dem plank text). Kentucky Democratic Party follows the DNC platform (ballotpedia.org/Democratic_Party_of_Kentucky HTTP 200). No individual statement found.",
+            "kind": "party_platform"
+          }
+        },
+        "election_integrity": {
+          "0": {
+            "v": false,
+            "src": [
+              "https://democrats.org/where-we-stand/party-platform/"
+            ],
+            "note": "Scored from the 2024 Democratic Party Platform (election_integrity q0) — ctdems.org/your-party/platform HTTP 200 this hop redirected to ctdems.org homepage (no scored CT Dem plank text). Kentucky Democratic Party follows the DNC platform (ballotpedia.org/Democratic_Party_of_Kentucky HTTP 200). No individual statement found.",
+            "kind": "party_platform"
+          },
+          "1": {
+            "v": false,
+            "src": [
+              "https://democrats.org/where-we-stand/party-platform/"
+            ],
+            "note": "Scored from the 2024 Democratic Party Platform (election_integrity q1) — ctdems.org/your-party/platform HTTP 200 this hop redirected to ctdems.org homepage (no scored CT Dem plank text). Kentucky Democratic Party follows the DNC platform (ballotpedia.org/Democratic_Party_of_Kentucky HTTP 200). No individual statement found.",
+            "kind": "party_platform"
+          },
+          "2": {
+            "v": false,
+            "src": [
+              "https://democrats.org/where-we-stand/party-platform/"
+            ],
+            "note": "Scored from the 2024 Democratic Party Platform (election_integrity q2) — ctdems.org/your-party/platform HTTP 200 this hop redirected to ctdems.org homepage (no scored CT Dem plank text). Kentucky Democratic Party follows the DNC platform (ballotpedia.org/Democratic_Party_of_Kentucky HTTP 200). No individual statement found.",
+            "kind": "party_platform"
+          },
+          "3": {
+            "v": false,
+            "src": [
+              "https://democrats.org/where-we-stand/party-platform/"
+            ],
+            "note": "Scored from the 2024 Democratic Party Platform (election_integrity q3) — ctdems.org/your-party/platform HTTP 200 this hop redirected to ctdems.org homepage (no scored CT Dem plank text). Kentucky Democratic Party follows the DNC platform (ballotpedia.org/Democratic_Party_of_Kentucky HTTP 200). No individual statement found.",
+            "kind": "party_platform"
+          },
+          "4": {
+            "v": false,
+            "src": [
+              "https://democrats.org/where-we-stand/party-platform/"
+            ],
+            "note": "Scored from the 2024 Democratic Party Platform (election_integrity q4) — ctdems.org/your-party/platform HTTP 200 this hop redirected to ctdems.org homepage (no scored CT Dem plank text). Kentucky Democratic Party follows the DNC platform (ballotpedia.org/Democratic_Party_of_Kentucky HTTP 200). No individual statement found.",
+            "kind": "party_platform"
+          }
+        },
+        "border_immigration": {
+          "0": {
+            "v": false,
+            "src": [
+              "https://democrats.org/where-we-stand/party-platform/"
+            ],
+            "note": "Scored from the 2024 Democratic Party Platform (border_immigration q0) — ctdems.org/your-party/platform HTTP 200 this hop redirected to ctdems.org homepage (no scored CT Dem plank text). Kentucky Democratic Party follows the DNC platform (ballotpedia.org/Democratic_Party_of_Kentucky HTTP 200). No individual statement found.",
+            "kind": "party_platform"
+          },
+          "1": {
+            "v": false,
+            "src": [
+              "https://democrats.org/where-we-stand/party-platform/"
+            ],
+            "note": "Scored from the 2024 Democratic Party Platform (border_immigration q1) — ctdems.org/your-party/platform HTTP 200 this hop redirected to ctdems.org homepage (no scored CT Dem plank text). Kentucky Democratic Party follows the DNC platform (ballotpedia.org/Democratic_Party_of_Kentucky HTTP 200). No individual statement found.",
+            "kind": "party_platform"
+          },
+          "2": {
+            "v": false,
+            "src": [
+              "https://democrats.org/where-we-stand/party-platform/"
+            ],
+            "note": "Scored from the 2024 Democratic Party Platform (border_immigration q2) — ctdems.org/your-party/platform HTTP 200 this hop redirected to ctdems.org homepage (no scored CT Dem plank text). Kentucky Democratic Party follows the DNC platform (ballotpedia.org/Democratic_Party_of_Kentucky HTTP 200). No individual statement found.",
+            "kind": "party_platform"
+          }
+        },
+        "self_defense": {
+          "0": {
+            "v": false,
+            "src": [
+              "https://democrats.org/where-we-stand/party-platform/"
+            ],
+            "note": "Scored from the 2024 Democratic Party Platform (self_defense q0) — ctdems.org/your-party/platform HTTP 200 this hop redirected to ctdems.org homepage (no scored CT Dem plank text). Kentucky Democratic Party follows the DNC platform (ballotpedia.org/Democratic_Party_of_Kentucky HTTP 200). No individual statement found.",
+            "kind": "party_platform"
+          },
+          "1": {
+            "v": false,
+            "src": [
+              "https://democrats.org/where-we-stand/party-platform/"
+            ],
+            "note": "Scored from the 2024 Democratic Party Platform (self_defense q1) — ctdems.org/your-party/platform HTTP 200 this hop redirected to ctdems.org homepage (no scored CT Dem plank text). Kentucky Democratic Party follows the DNC platform (ballotpedia.org/Democratic_Party_of_Kentucky HTTP 200). No individual statement found.",
+            "kind": "party_platform"
+          }
+        },
+        "public_justice": {
+          "0": {
+            "v": false,
+            "src": [
+              "https://democrats.org/where-we-stand/party-platform/"
+            ],
+            "note": "Scored from the 2024 Democratic Party Platform (public_justice q0) — ctdems.org/your-party/platform HTTP 200 this hop redirected to ctdems.org homepage (no scored CT Dem plank text). Kentucky Democratic Party follows the DNC platform (ballotpedia.org/Democratic_Party_of_Kentucky HTTP 200). No individual statement found.",
+            "kind": "party_platform"
+          },
+          "1": {
+            "v": false,
+            "src": [
+              "https://democrats.org/where-we-stand/party-platform/"
+            ],
+            "note": "Scored from the 2024 Democratic Party Platform (public_justice q1) — ctdems.org/your-party/platform HTTP 200 this hop redirected to ctdems.org homepage (no scored CT Dem plank text). Kentucky Democratic Party follows the DNC platform (ballotpedia.org/Democratic_Party_of_Kentucky HTTP 200). No individual statement found.",
+            "kind": "party_platform"
+          },
+          "2": {
+            "v": false,
+            "src": [
+              "https://democrats.org/where-we-stand/party-platform/"
+            ],
+            "note": "Scored from the 2024 Democratic Party Platform (public_justice q2) — ctdems.org/your-party/platform HTTP 200 this hop redirected to ctdems.org homepage (no scored CT Dem plank text). Kentucky Democratic Party follows the DNC platform (ballotpedia.org/Democratic_Party_of_Kentucky HTTP 200). No individual statement found.",
+            "kind": "party_platform"
+          }
+        }
+      }
+    },
+    "patrick-flannery@KY": {
+      "profile": {
+        "confidence": "evidence_state",
+        "office": "State Representative",
+        "party": "R",
+        "state": "KY",
+        "note": "Official legislature.ky.gov Legislator-Profile DistrictNumber=96 HTTP 200 this hop: Dist 96 Boyd (Part)/Carter/Lewis; email Patrick.Flannery@kylegislature.gov; Olive Hill; Annex 373B. Ballotpedia Patrick_Flannery HTTP 200: KY House District 96 Republican, assumed office 2021-01-01, term ends 2027; running 2026; Georgetown College BA; NKU Chase JD; attorney/businessman. Wrong-member check: party/district match Dist 96 R. Search snippet of same LRC page lists Baptist — faith membership on affiliated page, not an issue-cell quote; no SOFT life/2A map. Named office State Representative only. Dual-office not present. Status active. LegiScan cache getSessionPeople_id=2247 people_id=22058 HD-096 R; getSponsoredList_id=22058 cache OK but titles empty (bill numbers only) — not scored; KEY_EXPIRED; no legiscan.com HTML scrape. PAC/FEC omitted. Remaining leftover STATE from 2024 RNC state map (KY GOP PDF/site unread). Unmapped omitted: economic_stewardship, industry_capture, refuse_federal_overreach, refuse_state_overreach."
+      },
+      "sources_add": [
+        "https://legislature.ky.gov/Legislators/Pages/Legislator-Profile.aspx?DistrictNumber=96",
+        "https://ballotpedia.org/Patrick_Flannery",
+        "https://www.presidency.ucsb.edu/documents/2024-republican-party-platform",
+        "https://gop.com/platform/"
+      ],
+      "evidence": {
+        "sanctity_of_life": {
+          "0": {
+            "v": true,
+            "src": [
+              "https://www.presidency.ucsb.edu/documents/2024-republican-party-platform"
+            ],
+            "note": "Scored from the 2024 Republican National Platform (sanctity_of_life q0) — Connecticut GOP follows the RNC platform (ballotpedia.org/Republican_Party_of_Connecticut HTTP 200 this hop). Kentucky GOP rpk.org/our-party HTTP 403 this hop (body not readable; not used as quote text). No individual statement found.",
+            "kind": "party_platform"
+          },
+          "1": {
+            "v": true,
+            "src": [
+              "https://www.presidency.ucsb.edu/documents/2024-republican-party-platform"
+            ],
+            "note": "Scored from the 2024 Republican National Platform (sanctity_of_life q1) — Connecticut GOP follows the RNC platform (ballotpedia.org/Republican_Party_of_Connecticut HTTP 200 this hop). Kentucky GOP rpk.org/our-party HTTP 403 this hop (body not readable; not used as quote text). No individual statement found.",
+            "kind": "party_platform"
+          }
+        },
+        "biblical_marriage": {
+          "0": {
+            "v": true,
+            "src": [
+              "https://www.presidency.ucsb.edu/documents/2024-republican-party-platform"
+            ],
+            "note": "Scored from the 2024 Republican National Platform (biblical_marriage q0) — Connecticut GOP follows the RNC platform (ballotpedia.org/Republican_Party_of_Connecticut HTTP 200 this hop). Kentucky GOP rpk.org/our-party HTTP 403 this hop (body not readable; not used as quote text). No individual statement found.",
+            "kind": "party_platform"
+          },
+          "2": {
+            "v": true,
+            "src": [
+              "https://www.presidency.ucsb.edu/documents/2024-republican-party-platform"
+            ],
+            "note": "Scored from the 2024 Republican National Platform (biblical_marriage q2) — Connecticut GOP follows the RNC platform (ballotpedia.org/Republican_Party_of_Connecticut HTTP 200 this hop). Kentucky GOP rpk.org/our-party HTTP 403 this hop (body not readable; not used as quote text). No individual statement found.",
+            "kind": "party_platform"
+          },
+          "4": {
+            "v": true,
+            "src": [
+              "https://www.presidency.ucsb.edu/documents/2024-republican-party-platform"
+            ],
+            "note": "Scored from the 2024 Republican National Platform (biblical_marriage q4) — Connecticut GOP follows the RNC platform (ballotpedia.org/Republican_Party_of_Connecticut HTTP 200 this hop). Kentucky GOP rpk.org/our-party HTTP 403 this hop (body not readable; not used as quote text). No individual statement found.",
+            "kind": "party_platform"
+          }
+        },
+        "family_child_sovereignty": {
+          "0": {
+            "v": true,
+            "src": [
+              "https://www.presidency.ucsb.edu/documents/2024-republican-party-platform"
+            ],
+            "note": "Scored from the 2024 Republican National Platform (family_child_sovereignty q0) — Connecticut GOP follows the RNC platform (ballotpedia.org/Republican_Party_of_Connecticut HTTP 200 this hop). Kentucky GOP rpk.org/our-party HTTP 403 this hop (body not readable; not used as quote text). No individual statement found.",
+            "kind": "party_platform"
+          },
+          "1": {
+            "v": true,
+            "src": [
+              "https://www.presidency.ucsb.edu/documents/2024-republican-party-platform"
+            ],
+            "note": "Scored from the 2024 Republican National Platform (family_child_sovereignty q1) — Connecticut GOP follows the RNC platform (ballotpedia.org/Republican_Party_of_Connecticut HTTP 200 this hop). Kentucky GOP rpk.org/our-party HTTP 403 this hop (body not readable; not used as quote text). No individual statement found.",
+            "kind": "party_platform"
+          },
+          "2": {
+            "v": true,
+            "src": [
+              "https://www.presidency.ucsb.edu/documents/2024-republican-party-platform"
+            ],
+            "note": "Scored from the 2024 Republican National Platform (family_child_sovereignty q2) — Connecticut GOP follows the RNC platform (ballotpedia.org/Republican_Party_of_Connecticut HTTP 200 this hop). Kentucky GOP rpk.org/our-party HTTP 403 this hop (body not readable; not used as quote text). No individual statement found.",
+            "kind": "party_platform"
+          },
+          "3": {
+            "v": true,
+            "src": [
+              "https://www.presidency.ucsb.edu/documents/2024-republican-party-platform"
+            ],
+            "note": "Scored from the 2024 Republican National Platform (family_child_sovereignty q3) — Connecticut GOP follows the RNC platform (ballotpedia.org/Republican_Party_of_Connecticut HTTP 200 this hop). Kentucky GOP rpk.org/our-party HTTP 403 this hop (body not readable; not used as quote text). No individual statement found.",
+            "kind": "party_platform"
+          },
+          "4": {
+            "v": true,
+            "src": [
+              "https://www.presidency.ucsb.edu/documents/2024-republican-party-platform"
+            ],
+            "note": "Scored from the 2024 Republican National Platform (family_child_sovereignty q4) — Connecticut GOP follows the RNC platform (ballotpedia.org/Republican_Party_of_Connecticut HTTP 200 this hop). Kentucky GOP rpk.org/our-party HTTP 403 this hop (body not readable; not used as quote text). No individual statement found.",
+            "kind": "party_platform"
+          }
+        },
+        "christian_liberty": {
+          "0": {
+            "v": true,
+            "src": [
+              "https://www.presidency.ucsb.edu/documents/2024-republican-party-platform"
+            ],
+            "note": "Scored from the 2024 Republican National Platform (christian_liberty q0) — Connecticut GOP follows the RNC platform (ballotpedia.org/Republican_Party_of_Connecticut HTTP 200 this hop). Kentucky GOP rpk.org/our-party HTTP 403 this hop (body not readable; not used as quote text). No individual statement found.",
+            "kind": "party_platform"
+          },
+          "1": {
+            "v": true,
+            "src": [
+              "https://www.presidency.ucsb.edu/documents/2024-republican-party-platform"
+            ],
+            "note": "Scored from the 2024 Republican National Platform (christian_liberty q1) — Connecticut GOP follows the RNC platform (ballotpedia.org/Republican_Party_of_Connecticut HTTP 200 this hop). Kentucky GOP rpk.org/our-party HTTP 403 this hop (body not readable; not used as quote text). No individual statement found.",
+            "kind": "party_platform"
+          },
+          "2": {
+            "v": true,
+            "src": [
+              "https://www.presidency.ucsb.edu/documents/2024-republican-party-platform"
+            ],
+            "note": "Scored from the 2024 Republican National Platform (christian_liberty q2) — Connecticut GOP follows the RNC platform (ballotpedia.org/Republican_Party_of_Connecticut HTTP 200 this hop). Kentucky GOP rpk.org/our-party HTTP 403 this hop (body not readable; not used as quote text). No individual statement found.",
+            "kind": "party_platform"
+          },
+          "3": {
+            "v": true,
+            "src": [
+              "https://www.presidency.ucsb.edu/documents/2024-republican-party-platform"
+            ],
+            "note": "Scored from the 2024 Republican National Platform (christian_liberty q3) — Connecticut GOP follows the RNC platform (ballotpedia.org/Republican_Party_of_Connecticut HTTP 200 this hop). Kentucky GOP rpk.org/our-party HTTP 403 this hop (body not readable; not used as quote text). No individual statement found.",
+            "kind": "party_platform"
+          }
+        },
+        "election_integrity": {
+          "1": {
+            "v": true,
+            "src": [
+              "https://www.presidency.ucsb.edu/documents/2024-republican-party-platform"
+            ],
+            "note": "Scored from the 2024 Republican National Platform (election_integrity q1) — Connecticut GOP follows the RNC platform (ballotpedia.org/Republican_Party_of_Connecticut HTTP 200 this hop). Kentucky GOP rpk.org/our-party HTTP 403 this hop (body not readable; not used as quote text). No individual statement found.",
+            "kind": "party_platform"
+          },
+          "3": {
+            "v": true,
+            "src": [
+              "https://www.presidency.ucsb.edu/documents/2024-republican-party-platform"
+            ],
+            "note": "Scored from the 2024 Republican National Platform (election_integrity q3) — Connecticut GOP follows the RNC platform (ballotpedia.org/Republican_Party_of_Connecticut HTTP 200 this hop). Kentucky GOP rpk.org/our-party HTTP 403 this hop (body not readable; not used as quote text). No individual statement found.",
+            "kind": "party_platform"
+          },
+          "4": {
+            "v": true,
+            "src": [
+              "https://www.presidency.ucsb.edu/documents/2024-republican-party-platform"
+            ],
+            "note": "Scored from the 2024 Republican National Platform (election_integrity q4) — Connecticut GOP follows the RNC platform (ballotpedia.org/Republican_Party_of_Connecticut HTTP 200 this hop). Kentucky GOP rpk.org/our-party HTTP 403 this hop (body not readable; not used as quote text). No individual statement found.",
+            "kind": "party_platform"
+          }
+        },
+        "border_immigration": {
+          "1": {
+            "v": true,
+            "src": [
+              "https://www.presidency.ucsb.edu/documents/2024-republican-party-platform"
+            ],
+            "note": "Scored from the 2024 Republican National Platform (border_immigration q1) — Connecticut GOP follows the RNC platform (ballotpedia.org/Republican_Party_of_Connecticut HTTP 200 this hop). Kentucky GOP rpk.org/our-party HTTP 403 this hop (body not readable; not used as quote text). No individual statement found.",
+            "kind": "party_platform"
+          },
+          "2": {
+            "v": true,
+            "src": [
+              "https://www.presidency.ucsb.edu/documents/2024-republican-party-platform"
+            ],
+            "note": "Scored from the 2024 Republican National Platform (border_immigration q2) — Connecticut GOP follows the RNC platform (ballotpedia.org/Republican_Party_of_Connecticut HTTP 200 this hop). Kentucky GOP rpk.org/our-party HTTP 403 this hop (body not readable; not used as quote text). No individual statement found.",
+            "kind": "party_platform"
+          }
+        },
+        "self_defense": {
+          "0": {
+            "v": true,
+            "src": [
+              "https://www.presidency.ucsb.edu/documents/2024-republican-party-platform"
+            ],
+            "note": "Scored from the 2024 Republican National Platform (self_defense q0) — Connecticut GOP follows the RNC platform (ballotpedia.org/Republican_Party_of_Connecticut HTTP 200 this hop). Kentucky GOP rpk.org/our-party HTTP 403 this hop (body not readable; not used as quote text). No individual statement found.",
+            "kind": "party_platform"
+          },
+          "1": {
+            "v": true,
+            "src": [
+              "https://www.presidency.ucsb.edu/documents/2024-republican-party-platform"
+            ],
+            "note": "Scored from the 2024 Republican National Platform (self_defense q1) — Connecticut GOP follows the RNC platform (ballotpedia.org/Republican_Party_of_Connecticut HTTP 200 this hop). Kentucky GOP rpk.org/our-party HTTP 403 this hop (body not readable; not used as quote text). No individual statement found.",
+            "kind": "party_platform"
+          }
+        },
+        "public_justice": {
+          "0": {
+            "v": true,
+            "src": [
+              "https://www.presidency.ucsb.edu/documents/2024-republican-party-platform"
+            ],
+            "note": "Scored from the 2024 Republican National Platform (public_justice q0) — Connecticut GOP follows the RNC platform (ballotpedia.org/Republican_Party_of_Connecticut HTTP 200 this hop). Kentucky GOP rpk.org/our-party HTTP 403 this hop (body not readable; not used as quote text). No individual statement found.",
+            "kind": "party_platform"
+          },
+          "1": {
+            "v": true,
+            "src": [
+              "https://www.presidency.ucsb.edu/documents/2024-republican-party-platform"
+            ],
+            "note": "Scored from the 2024 Republican National Platform (public_justice q1) — Connecticut GOP follows the RNC platform (ballotpedia.org/Republican_Party_of_Connecticut HTTP 200 this hop). Kentucky GOP rpk.org/our-party HTTP 403 this hop (body not readable; not used as quote text). No individual statement found.",
+            "kind": "party_platform"
+          },
+          "2": {
+            "v": true,
+            "src": [
+              "https://www.presidency.ucsb.edu/documents/2024-republican-party-platform"
+            ],
+            "note": "Scored from the 2024 Republican National Platform (public_justice q2) — Connecticut GOP follows the RNC platform (ballotpedia.org/Republican_Party_of_Connecticut HTTP 200 this hop). Kentucky GOP rpk.org/our-party HTTP 403 this hop (body not readable; not used as quote text). No individual statement found.",
+            "kind": "party_platform"
+          }
+        }
+      }
+    },
+    "rachel-roarx@KY": {
+      "profile": {
+        "confidence": "evidence_state",
+        "office": "State Representative",
+        "party": "D",
+        "state": "KY",
+        "note": "Official legislature.ky.gov Legislator-Profile DistrictNumber=38 HTTP 200 this hop: Bio Independent Contractor LIBA; former Metro Council Legislative Aide; Catholic; Notre Dame Academy; Holy Cross HS; U of L BS Political Science; House 2023-Present. Ballotpedia Rachel_Roarx HTTP 200: KY House District 38 Democrat, assumed 2023-01-01, term ends 2027; running 2026; 2024 Candidate Connection completed (union labor, healthcare access, public education) — those lines do not map leftover SoL/BM/FCS/2A cells without stretch; blank > wrong. Catholic on official bio is faith membership, not SOFT life map. Media (Kentucky Lantern 2025-03-13) on a GOP abortion-clarification vote is mixed/not a personhood plank — not scored. Named office State Representative only. Dual-office not present. Status active. LegiScan cache getSessionPeople_id=2247 people_id=23624 HD-038 D; getSponsoredList_id=23624 titles empty — not scored; KEY_EXPIRED. PAC/FEC omitted. Remaining leftover STATE from 2024 DNC state map. Unmapped omitted: economic_stewardship, industry_capture, refuse_federal_overreach, refuse_state_overreach."
+      },
+      "sources_add": [
+        "https://legislature.ky.gov/Legislators/Pages/Legislator-Profile.aspx?DistrictNumber=38",
+        "https://ballotpedia.org/Rachel_Roarx",
+        "https://ballotpedia.org/Democratic_Party_of_Kentucky",
+        "https://democrats.org/where-we-stand/party-platform/"
+      ],
+      "evidence": {
+        "sanctity_of_life": {
+          "0": {
+            "v": false,
+            "src": [
+              "https://democrats.org/where-we-stand/party-platform/"
+            ],
+            "note": "Scored from the 2024 Democratic Party Platform (sanctity_of_life q0) — ctdems.org/your-party/platform HTTP 200 this hop redirected to ctdems.org homepage (no scored CT Dem plank text). Kentucky Democratic Party follows the DNC platform (ballotpedia.org/Democratic_Party_of_Kentucky HTTP 200). No individual statement found.",
+            "kind": "party_platform"
+          },
+          "1": {
+            "v": false,
+            "src": [
+              "https://democrats.org/where-we-stand/party-platform/"
+            ],
+            "note": "Scored from the 2024 Democratic Party Platform (sanctity_of_life q1) — ctdems.org/your-party/platform HTTP 200 this hop redirected to ctdems.org homepage (no scored CT Dem plank text). Kentucky Democratic Party follows the DNC platform (ballotpedia.org/Democratic_Party_of_Kentucky HTTP 200). No individual statement found.",
+            "kind": "party_platform"
+          }
+        },
+        "biblical_marriage": {
+          "0": {
+            "v": false,
+            "src": [
+              "https://democrats.org/where-we-stand/party-platform/"
+            ],
+            "note": "Scored from the 2024 Democratic Party Platform (biblical_marriage q0) — ctdems.org/your-party/platform HTTP 200 this hop redirected to ctdems.org homepage (no scored CT Dem plank text). Kentucky Democratic Party follows the DNC platform (ballotpedia.org/Democratic_Party_of_Kentucky HTTP 200). No individual statement found.",
+            "kind": "party_platform"
+          },
+          "2": {
+            "v": false,
+            "src": [
+              "https://democrats.org/where-we-stand/party-platform/"
+            ],
+            "note": "Scored from the 2024 Democratic Party Platform (biblical_marriage q2) — ctdems.org/your-party/platform HTTP 200 this hop redirected to ctdems.org homepage (no scored CT Dem plank text). Kentucky Democratic Party follows the DNC platform (ballotpedia.org/Democratic_Party_of_Kentucky HTTP 200). No individual statement found.",
+            "kind": "party_platform"
+          },
+          "4": {
+            "v": false,
+            "src": [
+              "https://democrats.org/where-we-stand/party-platform/"
+            ],
+            "note": "Scored from the 2024 Democratic Party Platform (biblical_marriage q4) — ctdems.org/your-party/platform HTTP 200 this hop redirected to ctdems.org homepage (no scored CT Dem plank text). Kentucky Democratic Party follows the DNC platform (ballotpedia.org/Democratic_Party_of_Kentucky HTTP 200). No individual statement found.",
+            "kind": "party_platform"
+          }
+        },
+        "family_child_sovereignty": {
+          "0": {
+            "v": false,
+            "src": [
+              "https://democrats.org/where-we-stand/party-platform/"
+            ],
+            "note": "Scored from the 2024 Democratic Party Platform (family_child_sovereignty q0) — ctdems.org/your-party/platform HTTP 200 this hop redirected to ctdems.org homepage (no scored CT Dem plank text). Kentucky Democratic Party follows the DNC platform (ballotpedia.org/Democratic_Party_of_Kentucky HTTP 200). No individual statement found.",
+            "kind": "party_platform"
+          },
+          "1": {
+            "v": false,
+            "src": [
+              "https://democrats.org/where-we-stand/party-platform/"
+            ],
+            "note": "Scored from the 2024 Democratic Party Platform (family_child_sovereignty q1) — ctdems.org/your-party/platform HTTP 200 this hop redirected to ctdems.org homepage (no scored CT Dem plank text). Kentucky Democratic Party follows the DNC platform (ballotpedia.org/Democratic_Party_of_Kentucky HTTP 200). No individual statement found.",
+            "kind": "party_platform"
+          },
+          "2": {
+            "v": false,
+            "src": [
+              "https://democrats.org/where-we-stand/party-platform/"
+            ],
+            "note": "Scored from the 2024 Democratic Party Platform (family_child_sovereignty q2) — ctdems.org/your-party/platform HTTP 200 this hop redirected to ctdems.org homepage (no scored CT Dem plank text). Kentucky Democratic Party follows the DNC platform (ballotpedia.org/Democratic_Party_of_Kentucky HTTP 200). No individual statement found.",
+            "kind": "party_platform"
+          },
+          "3": {
+            "v": false,
+            "src": [
+              "https://democrats.org/where-we-stand/party-platform/"
+            ],
+            "note": "Scored from the 2024 Democratic Party Platform (family_child_sovereignty q3) — ctdems.org/your-party/platform HTTP 200 this hop redirected to ctdems.org homepage (no scored CT Dem plank text). Kentucky Democratic Party follows the DNC platform (ballotpedia.org/Democratic_Party_of_Kentucky HTTP 200). No individual statement found.",
+            "kind": "party_platform"
+          },
+          "4": {
+            "v": false,
+            "src": [
+              "https://democrats.org/where-we-stand/party-platform/"
+            ],
+            "note": "Scored from the 2024 Democratic Party Platform (family_child_sovereignty q4) — ctdems.org/your-party/platform HTTP 200 this hop redirected to ctdems.org homepage (no scored CT Dem plank text). Kentucky Democratic Party follows the DNC platform (ballotpedia.org/Democratic_Party_of_Kentucky HTTP 200). No individual statement found.",
+            "kind": "party_platform"
+          }
+        },
+        "christian_liberty": {
+          "0": {
+            "v": false,
+            "src": [
+              "https://democrats.org/where-we-stand/party-platform/"
+            ],
+            "note": "Scored from the 2024 Democratic Party Platform (christian_liberty q0) — ctdems.org/your-party/platform HTTP 200 this hop redirected to ctdems.org homepage (no scored CT Dem plank text). Kentucky Democratic Party follows the DNC platform (ballotpedia.org/Democratic_Party_of_Kentucky HTTP 200). No individual statement found.",
+            "kind": "party_platform"
+          },
+          "1": {
+            "v": false,
+            "src": [
+              "https://democrats.org/where-we-stand/party-platform/"
+            ],
+            "note": "Scored from the 2024 Democratic Party Platform (christian_liberty q1) — ctdems.org/your-party/platform HTTP 200 this hop redirected to ctdems.org homepage (no scored CT Dem plank text). Kentucky Democratic Party follows the DNC platform (ballotpedia.org/Democratic_Party_of_Kentucky HTTP 200). No individual statement found.",
+            "kind": "party_platform"
+          },
+          "2": {
+            "v": false,
+            "src": [
+              "https://democrats.org/where-we-stand/party-platform/"
+            ],
+            "note": "Scored from the 2024 Democratic Party Platform (christian_liberty q2) — ctdems.org/your-party/platform HTTP 200 this hop redirected to ctdems.org homepage (no scored CT Dem plank text). Kentucky Democratic Party follows the DNC platform (ballotpedia.org/Democratic_Party_of_Kentucky HTTP 200). No individual statement found.",
+            "kind": "party_platform"
+          },
+          "3": {
+            "v": false,
+            "src": [
+              "https://democrats.org/where-we-stand/party-platform/"
+            ],
+            "note": "Scored from the 2024 Democratic Party Platform (christian_liberty q3) — ctdems.org/your-party/platform HTTP 200 this hop redirected to ctdems.org homepage (no scored CT Dem plank text). Kentucky Democratic Party follows the DNC platform (ballotpedia.org/Democratic_Party_of_Kentucky HTTP 200). No individual statement found.",
+            "kind": "party_platform"
+          },
+          "4": {
+            "v": false,
+            "src": [
+              "https://democrats.org/where-we-stand/party-platform/"
+            ],
+            "note": "Scored from the 2024 Democratic Party Platform (christian_liberty q4) — ctdems.org/your-party/platform HTTP 200 this hop redirected to ctdems.org homepage (no scored CT Dem plank text). Kentucky Democratic Party follows the DNC platform (ballotpedia.org/Democratic_Party_of_Kentucky HTTP 200). No individual statement found.",
+            "kind": "party_platform"
+          }
+        },
+        "election_integrity": {
+          "0": {
+            "v": false,
+            "src": [
+              "https://democrats.org/where-we-stand/party-platform/"
+            ],
+            "note": "Scored from the 2024 Democratic Party Platform (election_integrity q0) — ctdems.org/your-party/platform HTTP 200 this hop redirected to ctdems.org homepage (no scored CT Dem plank text). Kentucky Democratic Party follows the DNC platform (ballotpedia.org/Democratic_Party_of_Kentucky HTTP 200). No individual statement found.",
+            "kind": "party_platform"
+          },
+          "1": {
+            "v": false,
+            "src": [
+              "https://democrats.org/where-we-stand/party-platform/"
+            ],
+            "note": "Scored from the 2024 Democratic Party Platform (election_integrity q1) — ctdems.org/your-party/platform HTTP 200 this hop redirected to ctdems.org homepage (no scored CT Dem plank text). Kentucky Democratic Party follows the DNC platform (ballotpedia.org/Democratic_Party_of_Kentucky HTTP 200). No individual statement found.",
+            "kind": "party_platform"
+          },
+          "2": {
+            "v": false,
+            "src": [
+              "https://democrats.org/where-we-stand/party-platform/"
+            ],
+            "note": "Scored from the 2024 Democratic Party Platform (election_integrity q2) — ctdems.org/your-party/platform HTTP 200 this hop redirected to ctdems.org homepage (no scored CT Dem plank text). Kentucky Democratic Party follows the DNC platform (ballotpedia.org/Democratic_Party_of_Kentucky HTTP 200). No individual statement found.",
+            "kind": "party_platform"
+          },
+          "3": {
+            "v": false,
+            "src": [
+              "https://democrats.org/where-we-stand/party-platform/"
+            ],
+            "note": "Scored from the 2024 Democratic Party Platform (election_integrity q3) — ctdems.org/your-party/platform HTTP 200 this hop redirected to ctdems.org homepage (no scored CT Dem plank text). Kentucky Democratic Party follows the DNC platform (ballotpedia.org/Democratic_Party_of_Kentucky HTTP 200). No individual statement found.",
+            "kind": "party_platform"
+          },
+          "4": {
+            "v": false,
+            "src": [
+              "https://democrats.org/where-we-stand/party-platform/"
+            ],
+            "note": "Scored from the 2024 Democratic Party Platform (election_integrity q4) — ctdems.org/your-party/platform HTTP 200 this hop redirected to ctdems.org homepage (no scored CT Dem plank text). Kentucky Democratic Party follows the DNC platform (ballotpedia.org/Democratic_Party_of_Kentucky HTTP 200). No individual statement found.",
+            "kind": "party_platform"
+          }
+        },
+        "border_immigration": {
+          "0": {
+            "v": false,
+            "src": [
+              "https://democrats.org/where-we-stand/party-platform/"
+            ],
+            "note": "Scored from the 2024 Democratic Party Platform (border_immigration q0) — ctdems.org/your-party/platform HTTP 200 this hop redirected to ctdems.org homepage (no scored CT Dem plank text). Kentucky Democratic Party follows the DNC platform (ballotpedia.org/Democratic_Party_of_Kentucky HTTP 200). No individual statement found.",
+            "kind": "party_platform"
+          },
+          "1": {
+            "v": false,
+            "src": [
+              "https://democrats.org/where-we-stand/party-platform/"
+            ],
+            "note": "Scored from the 2024 Democratic Party Platform (border_immigration q1) — ctdems.org/your-party/platform HTTP 200 this hop redirected to ctdems.org homepage (no scored CT Dem plank text). Kentucky Democratic Party follows the DNC platform (ballotpedia.org/Democratic_Party_of_Kentucky HTTP 200). No individual statement found.",
+            "kind": "party_platform"
+          },
+          "2": {
+            "v": false,
+            "src": [
+              "https://democrats.org/where-we-stand/party-platform/"
+            ],
+            "note": "Scored from the 2024 Democratic Party Platform (border_immigration q2) — ctdems.org/your-party/platform HTTP 200 this hop redirected to ctdems.org homepage (no scored CT Dem plank text). Kentucky Democratic Party follows the DNC platform (ballotpedia.org/Democratic_Party_of_Kentucky HTTP 200). No individual statement found.",
+            "kind": "party_platform"
+          }
+        },
+        "self_defense": {
+          "0": {
+            "v": false,
+            "src": [
+              "https://democrats.org/where-we-stand/party-platform/"
+            ],
+            "note": "Scored from the 2024 Democratic Party Platform (self_defense q0) — ctdems.org/your-party/platform HTTP 200 this hop redirected to ctdems.org homepage (no scored CT Dem plank text). Kentucky Democratic Party follows the DNC platform (ballotpedia.org/Democratic_Party_of_Kentucky HTTP 200). No individual statement found.",
+            "kind": "party_platform"
+          },
+          "1": {
+            "v": false,
+            "src": [
+              "https://democrats.org/where-we-stand/party-platform/"
+            ],
+            "note": "Scored from the 2024 Democratic Party Platform (self_defense q1) — ctdems.org/your-party/platform HTTP 200 this hop redirected to ctdems.org homepage (no scored CT Dem plank text). Kentucky Democratic Party follows the DNC platform (ballotpedia.org/Democratic_Party_of_Kentucky HTTP 200). No individual statement found.",
+            "kind": "party_platform"
+          }
+        },
+        "public_justice": {
+          "0": {
+            "v": false,
+            "src": [
+              "https://democrats.org/where-we-stand/party-platform/"
+            ],
+            "note": "Scored from the 2024 Democratic Party Platform (public_justice q0) — ctdems.org/your-party/platform HTTP 200 this hop redirected to ctdems.org homepage (no scored CT Dem plank text). Kentucky Democratic Party follows the DNC platform (ballotpedia.org/Democratic_Party_of_Kentucky HTTP 200). No individual statement found.",
+            "kind": "party_platform"
+          },
+          "1": {
+            "v": false,
+            "src": [
+              "https://democrats.org/where-we-stand/party-platform/"
+            ],
+            "note": "Scored from the 2024 Democratic Party Platform (public_justice q1) — ctdems.org/your-party/platform HTTP 200 this hop redirected to ctdems.org homepage (no scored CT Dem plank text). Kentucky Democratic Party follows the DNC platform (ballotpedia.org/Democratic_Party_of_Kentucky HTTP 200). No individual statement found.",
+            "kind": "party_platform"
+          },
+          "2": {
+            "v": false,
+            "src": [
+              "https://democrats.org/where-we-stand/party-platform/"
+            ],
+            "note": "Scored from the 2024 Democratic Party Platform (public_justice q2) — ctdems.org/your-party/platform HTTP 200 this hop redirected to ctdems.org homepage (no scored CT Dem plank text). Kentucky Democratic Party follows the DNC platform (ballotpedia.org/Democratic_Party_of_Kentucky HTTP 200). No individual statement found.",
+            "kind": "party_platform"
+          }
+        }
+      }
+    },
+    "ryan-dotson@KY": {
+      "profile": {
+        "confidence": "evidence_state",
+        "office": "State Representative",
+        "party": "R",
+        "state": "KY",
+        "note": "Official legislature.ky.gov Legislator-Profile DistrictNumber=73 HTTP 200: Dist 73 Clark/Fayette (Part); Ryan.Dotson@kylegislature.gov; Winchester. Ballotpedia Ryan_Dotson HTTP 200: KY House District 73 Republican, assumed 2021-01-01, term ends 2027; not running for House re-election 2026 (former keep scoring); lost U.S. House KY-06 GOP primary 2026-05-19 (26.4% to Alvarado 56.5%). Dual-office one slug — score named office State Representative only, not Congress. 2026 Candidate Connection: Pastor; Save Women's Sports Act in Kentucky; mass deportation; 'Pastor'/'God at the center' too vague to score SoL/CL (vague slogans). Search snippet of LRC lists Pro-Life Caucus member — caucus label without a cited plank on the fetched profile extract; blank > wrong for SoL beyond platform. Wrong-member check: Dist 73 R match. Status active through 2027 term. LegiScan cache getSessionPeople_id=2247 people_id=22056 HD-073 R; getSponsoredList not in cache; KEY_EXPIRED. PAC/FEC omitted. Remaining leftover STATE from 2024 RNC state map. Unmapped omitted: economic_stewardship, industry_capture, refuse_federal_overreach, refuse_state_overreach."
+      },
+      "sources_add": [
+        "https://legislature.ky.gov/Legislators/Pages/Legislator-Profile.aspx?DistrictNumber=73",
+        "https://ballotpedia.org/Ryan_Dotson",
+        "https://www.presidency.ucsb.edu/documents/2024-republican-party-platform",
+        "https://gop.com/platform/"
+      ],
+      "evidence": {
+        "sanctity_of_life": {
+          "0": {
+            "v": true,
+            "src": [
+              "https://www.presidency.ucsb.edu/documents/2024-republican-party-platform"
+            ],
+            "note": "Scored from the 2024 Republican National Platform (sanctity_of_life q0) — Connecticut GOP follows the RNC platform (ballotpedia.org/Republican_Party_of_Connecticut HTTP 200 this hop). Kentucky GOP rpk.org/our-party HTTP 403 this hop (body not readable; not used as quote text). No individual statement found.",
+            "kind": "party_platform"
+          },
+          "1": {
+            "v": true,
+            "src": [
+              "https://www.presidency.ucsb.edu/documents/2024-republican-party-platform"
+            ],
+            "note": "Scored from the 2024 Republican National Platform (sanctity_of_life q1) — Connecticut GOP follows the RNC platform (ballotpedia.org/Republican_Party_of_Connecticut HTTP 200 this hop). Kentucky GOP rpk.org/our-party HTTP 403 this hop (body not readable; not used as quote text). No individual statement found.",
+            "kind": "party_platform"
+          }
+        },
+        "biblical_marriage": {
+          "0": {
+            "v": true,
+            "src": [
+              "https://www.presidency.ucsb.edu/documents/2024-republican-party-platform"
+            ],
+            "note": "Scored from the 2024 Republican National Platform (biblical_marriage q0) — Connecticut GOP follows the RNC platform (ballotpedia.org/Republican_Party_of_Connecticut HTTP 200 this hop). Kentucky GOP rpk.org/our-party HTTP 403 this hop (body not readable; not used as quote text). No individual statement found.",
+            "kind": "party_platform"
+          },
+          "2": {
+            "v": true,
+            "src": [
+              "https://www.presidency.ucsb.edu/documents/2024-republican-party-platform"
+            ],
+            "note": "Scored from the 2024 Republican National Platform (biblical_marriage q2) — Connecticut GOP follows the RNC platform (ballotpedia.org/Republican_Party_of_Connecticut HTTP 200 this hop). Kentucky GOP rpk.org/our-party HTTP 403 this hop (body not readable; not used as quote text). No individual statement found.",
+            "kind": "party_platform"
+          },
+          "4": {
+            "v": true,
+            "src": [
+              "https://www.presidency.ucsb.edu/documents/2024-republican-party-platform"
+            ],
+            "note": "Scored from the 2024 Republican National Platform (biblical_marriage q4) — Connecticut GOP follows the RNC platform (ballotpedia.org/Republican_Party_of_Connecticut HTTP 200 this hop). Kentucky GOP rpk.org/our-party HTTP 403 this hop (body not readable; not used as quote text). No individual statement found.",
+            "kind": "party_platform"
+          }
+        },
+        "family_child_sovereignty": {
+          "0": {
+            "v": true,
+            "src": [
+              "https://www.presidency.ucsb.edu/documents/2024-republican-party-platform"
+            ],
+            "note": "Scored from the 2024 Republican National Platform (family_child_sovereignty q0) — Connecticut GOP follows the RNC platform (ballotpedia.org/Republican_Party_of_Connecticut HTTP 200 this hop). Kentucky GOP rpk.org/our-party HTTP 403 this hop (body not readable; not used as quote text). No individual statement found.",
+            "kind": "party_platform"
+          },
+          "1": {
+            "v": true,
+            "src": [
+              "https://www.presidency.ucsb.edu/documents/2024-republican-party-platform"
+            ],
+            "note": "Scored from the 2024 Republican National Platform (family_child_sovereignty q1) — Connecticut GOP follows the RNC platform (ballotpedia.org/Republican_Party_of_Connecticut HTTP 200 this hop). Kentucky GOP rpk.org/our-party HTTP 403 this hop (body not readable; not used as quote text). No individual statement found.",
+            "kind": "party_platform"
+          },
+          "2": {
+            "v": true,
+            "src": [
+              "https://ballotpedia.org/Ryan_Dotson"
+            ],
+            "note": "Campaign/individual (fetched this hop): Ballotpedia Ryan_Dotson 2026 Candidate Connection HTTP 200 — 'I got the Save Women's Sports Act passed in Kentucky, and now KY leads the nation in protecting our women and girls from having men in their private spaces' and 'block transgender insanity from putting our wives and daughters in an unsafe environment.' Sex-based sports/spaces. Named office remains State Representative (survey is campaign sentence about KY House record). Individual overrides RNC platform for this cell.",
+            "kind": "individual"
+          },
+          "3": {
+            "v": true,
+            "src": [
+              "https://www.presidency.ucsb.edu/documents/2024-republican-party-platform"
+            ],
+            "note": "Scored from the 2024 Republican National Platform (family_child_sovereignty q3) — Connecticut GOP follows the RNC platform (ballotpedia.org/Republican_Party_of_Connecticut HTTP 200 this hop). Kentucky GOP rpk.org/our-party HTTP 403 this hop (body not readable; not used as quote text). No individual statement found.",
+            "kind": "party_platform"
+          },
+          "4": {
+            "v": true,
+            "src": [
+              "https://ballotpedia.org/Ryan_Dotson"
+            ],
+            "note": "Campaign/individual (fetched this hop): same Ballotpedia 2026 survey — Save Women's Sports / men out of girls' private spaces as KY House record. Individual overrides RNC platform for this cell.",
+            "kind": "individual"
+          }
+        },
+        "christian_liberty": {
+          "0": {
+            "v": true,
+            "src": [
+              "https://www.presidency.ucsb.edu/documents/2024-republican-party-platform"
+            ],
+            "note": "Scored from the 2024 Republican National Platform (christian_liberty q0) — Connecticut GOP follows the RNC platform (ballotpedia.org/Republican_Party_of_Connecticut HTTP 200 this hop). Kentucky GOP rpk.org/our-party HTTP 403 this hop (body not readable; not used as quote text). No individual statement found.",
+            "kind": "party_platform"
+          },
+          "1": {
+            "v": true,
+            "src": [
+              "https://www.presidency.ucsb.edu/documents/2024-republican-party-platform"
+            ],
+            "note": "Scored from the 2024 Republican National Platform (christian_liberty q1) — Connecticut GOP follows the RNC platform (ballotpedia.org/Republican_Party_of_Connecticut HTTP 200 this hop). Kentucky GOP rpk.org/our-party HTTP 403 this hop (body not readable; not used as quote text). No individual statement found.",
+            "kind": "party_platform"
+          },
+          "2": {
+            "v": true,
+            "src": [
+              "https://www.presidency.ucsb.edu/documents/2024-republican-party-platform"
+            ],
+            "note": "Scored from the 2024 Republican National Platform (christian_liberty q2) — Connecticut GOP follows the RNC platform (ballotpedia.org/Republican_Party_of_Connecticut HTTP 200 this hop). Kentucky GOP rpk.org/our-party HTTP 403 this hop (body not readable; not used as quote text). No individual statement found.",
+            "kind": "party_platform"
+          },
+          "3": {
+            "v": true,
+            "src": [
+              "https://www.presidency.ucsb.edu/documents/2024-republican-party-platform"
+            ],
+            "note": "Scored from the 2024 Republican National Platform (christian_liberty q3) — Connecticut GOP follows the RNC platform (ballotpedia.org/Republican_Party_of_Connecticut HTTP 200 this hop). Kentucky GOP rpk.org/our-party HTTP 403 this hop (body not readable; not used as quote text). No individual statement found.",
+            "kind": "party_platform"
+          }
+        },
+        "election_integrity": {
+          "1": {
+            "v": true,
+            "src": [
+              "https://www.presidency.ucsb.edu/documents/2024-republican-party-platform"
+            ],
+            "note": "Scored from the 2024 Republican National Platform (election_integrity q1) — Connecticut GOP follows the RNC platform (ballotpedia.org/Republican_Party_of_Connecticut HTTP 200 this hop). Kentucky GOP rpk.org/our-party HTTP 403 this hop (body not readable; not used as quote text). No individual statement found.",
+            "kind": "party_platform"
+          },
+          "3": {
+            "v": true,
+            "src": [
+              "https://www.presidency.ucsb.edu/documents/2024-republican-party-platform"
+            ],
+            "note": "Scored from the 2024 Republican National Platform (election_integrity q3) — Connecticut GOP follows the RNC platform (ballotpedia.org/Republican_Party_of_Connecticut HTTP 200 this hop). Kentucky GOP rpk.org/our-party HTTP 403 this hop (body not readable; not used as quote text). No individual statement found.",
+            "kind": "party_platform"
+          },
+          "4": {
+            "v": true,
+            "src": [
+              "https://www.presidency.ucsb.edu/documents/2024-republican-party-platform"
+            ],
+            "note": "Scored from the 2024 Republican National Platform (election_integrity q4) — Connecticut GOP follows the RNC platform (ballotpedia.org/Republican_Party_of_Connecticut HTTP 200 this hop). Kentucky GOP rpk.org/our-party HTTP 403 this hop (body not readable; not used as quote text). No individual statement found.",
+            "kind": "party_platform"
+          }
+        },
+        "border_immigration": {
+          "1": {
+            "v": true,
+            "src": [
+              "https://ballotpedia.org/Ryan_Dotson"
+            ],
+            "note": "Campaign/individual (fetched this hop): Ballotpedia 2026 Candidate Connection — 'that includes supporting President Trump's mass deportation operation to make America safe again.' Individual overrides RNC platform for this cell. Score named State Representative office only (lost KY-06 GOP primary 2026-05-19; still KY House until 2027).",
+            "kind": "individual"
+          },
+          "2": {
+            "v": true,
+            "src": [
+              "https://ballotpedia.org/Ryan_Dotson"
+            ],
+            "note": "Campaign/individual (fetched this hop): same mass-deportation / enforcement sentence on Ballotpedia 2026 survey. Individual overrides RNC platform for this cell.",
+            "kind": "individual"
+          }
+        },
+        "self_defense": {
+          "0": {
+            "v": true,
+            "src": [
+              "https://www.presidency.ucsb.edu/documents/2024-republican-party-platform"
+            ],
+            "note": "Scored from the 2024 Republican National Platform (self_defense q0) — Connecticut GOP follows the RNC platform (ballotpedia.org/Republican_Party_of_Connecticut HTTP 200 this hop). Kentucky GOP rpk.org/our-party HTTP 403 this hop (body not readable; not used as quote text). No individual statement found.",
+            "kind": "party_platform"
+          },
+          "1": {
+            "v": true,
+            "src": [
+              "https://www.presidency.ucsb.edu/documents/2024-republican-party-platform"
+            ],
+            "note": "Scored from the 2024 Republican National Platform (self_defense q1) — Connecticut GOP follows the RNC platform (ballotpedia.org/Republican_Party_of_Connecticut HTTP 200 this hop). Kentucky GOP rpk.org/our-party HTTP 403 this hop (body not readable; not used as quote text). No individual statement found.",
+            "kind": "party_platform"
+          }
+        },
+        "public_justice": {
+          "0": {
+            "v": true,
+            "src": [
+              "https://www.presidency.ucsb.edu/documents/2024-republican-party-platform"
+            ],
+            "note": "Scored from the 2024 Republican National Platform (public_justice q0) — Connecticut GOP follows the RNC platform (ballotpedia.org/Republican_Party_of_Connecticut HTTP 200 this hop). Kentucky GOP rpk.org/our-party HTTP 403 this hop (body not readable; not used as quote text). No individual statement found.",
+            "kind": "party_platform"
+          },
+          "1": {
+            "v": true,
+            "src": [
+              "https://www.presidency.ucsb.edu/documents/2024-republican-party-platform"
+            ],
+            "note": "Scored from the 2024 Republican National Platform (public_justice q1) — Connecticut GOP follows the RNC platform (ballotpedia.org/Republican_Party_of_Connecticut HTTP 200 this hop). Kentucky GOP rpk.org/our-party HTTP 403 this hop (body not readable; not used as quote text). No individual statement found.",
+            "kind": "party_platform"
+          },
+          "2": {
+            "v": true,
+            "src": [
+              "https://www.presidency.ucsb.edu/documents/2024-republican-party-platform"
+            ],
+            "note": "Scored from the 2024 Republican National Platform (public_justice q2) — Connecticut GOP follows the RNC platform (ballotpedia.org/Republican_Party_of_Connecticut HTTP 200 this hop). Kentucky GOP rpk.org/our-party HTTP 403 this hop (body not readable; not used as quote text). No individual statement found.",
+            "kind": "party_platform"
+          }
+        }
+      }
+    },
+    "savannah-maddox@KY": {
+      "profile": {
+        "confidence": "evidence_state",
+        "office": "State Representative",
+        "party": "R",
+        "state": "KY",
+        "note": "Official legislature.ky.gov Legislator-Profile DistrictNumber=61 HTTP 200: Representative Savannah Maddox (R); Bio Christian; NKU BA History & International Relations; House 2019-Present; Dist 61 Boone (Part)/Gallatin/Grant/Kenton (Part). Campaign maddoxforky.com HTTP 200 this hop (assignment campaign_website=null — found this hop): 100% pro-life; constitutional carry; red-flag opposition; church-on-Easter mandate fight. Ballotpedia Savannah_Maddox HTTP 200: Dist 61 R, assumed 2019-01-01, term ends 2027; running 2026; withdrew 2023 governor bid. Dual-office one slug — score named State Representative only (governor bid withdrawn). Official 'Christian' is faith membership; issue cells scored from campaign sentences not SOFT church map. Wrong-member check: Dist 61 R match. Status active. LegiScan cache getSessionPeople_id=2247 people_id=20557 HD-061 R; getSponsoredList not in cache; KEY_EXPIRED. PAC/FEC omitted: FEC browse Savannah+Maddox+KY 200 SPA-empty; FEC API 429; OpenSecrets 403. Remaining leftover STATE from 2024 RNC state map. Unmapped omitted: economic_stewardship, industry_capture, refuse_federal_overreach, refuse_state_overreach."
+      },
+      "sources_add": [
+        "https://legislature.ky.gov/Legislators/Pages/Legislator-Profile.aspx?DistrictNumber=61",
+        "https://www.maddoxforky.com/",
+        "https://spectrumnews1.com/ky/louisville/news/2019/10/30/bevin--maddox-receive-award-for-work-on-gun-bill",
+        "https://ballotpedia.org/Savannah_Maddox",
+        "https://www.presidency.ucsb.edu/documents/2024-republican-party-platform",
+        "https://gop.com/platform/"
+      ],
+      "evidence": {
+        "sanctity_of_life": {
+          "0": {
+            "v": true,
+            "src": [
+              "https://www.maddoxforky.com/"
+            ],
+            "note": "Campaign/individual (fetched this hop): maddoxforky.com HTTP 200 — 'There is no room for compromise with the right to life. I am 100% Pro-Life and will passionately advocate for the sanctity of human life at every age and every stage. Our Creator endows us with the gift of life... Every life is precious.' Personhood/sanctity from conception through life. Individual overrides RNC platform for this cell.",
+            "kind": "individual"
+          },
+          "1": {
+            "v": true,
+            "src": [
+              "https://www.maddoxforky.com/"
+            ],
+            "note": "Campaign/individual (fetched this hop): same maddoxforky.com — 100% pro-life / no compromise / protect those who cannot yet speak. Not expansion of abortion. Individual overrides RNC platform for this cell.",
+            "kind": "individual"
+          }
+        },
+        "biblical_marriage": {
+          "0": {
+            "v": true,
+            "src": [
+              "https://www.presidency.ucsb.edu/documents/2024-republican-party-platform"
+            ],
+            "note": "Scored from the 2024 Republican National Platform (biblical_marriage q0) — Connecticut GOP follows the RNC platform (ballotpedia.org/Republican_Party_of_Connecticut HTTP 200 this hop). Kentucky GOP rpk.org/our-party HTTP 403 this hop (body not readable; not used as quote text). No individual statement found.",
+            "kind": "party_platform"
+          },
+          "2": {
+            "v": true,
+            "src": [
+              "https://www.presidency.ucsb.edu/documents/2024-republican-party-platform"
+            ],
+            "note": "Scored from the 2024 Republican National Platform (biblical_marriage q2) — Connecticut GOP follows the RNC platform (ballotpedia.org/Republican_Party_of_Connecticut HTTP 200 this hop). Kentucky GOP rpk.org/our-party HTTP 403 this hop (body not readable; not used as quote text). No individual statement found.",
+            "kind": "party_platform"
+          },
+          "4": {
+            "v": true,
+            "src": [
+              "https://www.presidency.ucsb.edu/documents/2024-republican-party-platform"
+            ],
+            "note": "Scored from the 2024 Republican National Platform (biblical_marriage q4) — Connecticut GOP follows the RNC platform (ballotpedia.org/Republican_Party_of_Connecticut HTTP 200 this hop). Kentucky GOP rpk.org/our-party HTTP 403 this hop (body not readable; not used as quote text). No individual statement found.",
+            "kind": "party_platform"
+          }
+        },
+        "family_child_sovereignty": {
+          "0": {
+            "v": true,
+            "src": [
+              "https://www.presidency.ucsb.edu/documents/2024-republican-party-platform"
+            ],
+            "note": "Scored from the 2024 Republican National Platform (family_child_sovereignty q0) — Connecticut GOP follows the RNC platform (ballotpedia.org/Republican_Party_of_Connecticut HTTP 200 this hop). Kentucky GOP rpk.org/our-party HTTP 403 this hop (body not readable; not used as quote text). No individual statement found.",
+            "kind": "party_platform"
+          },
+          "1": {
+            "v": true,
+            "src": [
+              "https://www.presidency.ucsb.edu/documents/2024-republican-party-platform"
+            ],
+            "note": "Scored from the 2024 Republican National Platform (family_child_sovereignty q1) — Connecticut GOP follows the RNC platform (ballotpedia.org/Republican_Party_of_Connecticut HTTP 200 this hop). Kentucky GOP rpk.org/our-party HTTP 403 this hop (body not readable; not used as quote text). No individual statement found.",
+            "kind": "party_platform"
+          },
+          "2": {
+            "v": true,
+            "src": [
+              "https://www.presidency.ucsb.edu/documents/2024-republican-party-platform"
+            ],
+            "note": "Scored from the 2024 Republican National Platform (family_child_sovereignty q2) — Connecticut GOP follows the RNC platform (ballotpedia.org/Republican_Party_of_Connecticut HTTP 200 this hop). Kentucky GOP rpk.org/our-party HTTP 403 this hop (body not readable; not used as quote text). No individual statement found.",
+            "kind": "party_platform"
+          },
+          "3": {
+            "v": true,
+            "src": [
+              "https://www.presidency.ucsb.edu/documents/2024-republican-party-platform"
+            ],
+            "note": "Scored from the 2024 Republican National Platform (family_child_sovereignty q3) — Connecticut GOP follows the RNC platform (ballotpedia.org/Republican_Party_of_Connecticut HTTP 200 this hop). Kentucky GOP rpk.org/our-party HTTP 403 this hop (body not readable; not used as quote text). No individual statement found.",
+            "kind": "party_platform"
+          },
+          "4": {
+            "v": true,
+            "src": [
+              "https://www.presidency.ucsb.edu/documents/2024-republican-party-platform"
+            ],
+            "note": "Scored from the 2024 Republican National Platform (family_child_sovereignty q4) — Connecticut GOP follows the RNC platform (ballotpedia.org/Republican_Party_of_Connecticut HTTP 200 this hop). Kentucky GOP rpk.org/our-party HTTP 403 this hop (body not readable; not used as quote text). No individual statement found.",
+            "kind": "party_platform"
+          }
+        },
+        "christian_liberty": {
+          "0": {
+            "v": true,
+            "src": [
+              "https://www.maddoxforky.com/"
+            ],
+            "note": "Campaign/individual (fetched this hop): maddoxforky.com HTTP 200 — 'Our rights are granted by God, protected by the Constitution, and guaranteed by the Commonwealth' and fought Beshear 'unconstitutional mandates' including 'Kentuckians who were banned from attending church on Easter Sunday.' Individual overrides RNC platform for this cell.",
+            "kind": "individual"
+          },
+          "1": {
+            "v": true,
+            "src": [
+              "https://www.maddoxforky.com/"
+            ],
+            "note": "Campaign/individual (fetched this hop): same campaign page — church-on-Easter / constitutional rights against COVID mandates. Official LRC bio lists Christian (faith membership); campaign sentence is the scored quote. Individual overrides RNC platform for this cell.",
+            "kind": "individual"
+          },
+          "2": {
+            "v": true,
+            "src": [
+              "https://www.presidency.ucsb.edu/documents/2024-republican-party-platform"
+            ],
+            "note": "Scored from the 2024 Republican National Platform (christian_liberty q2) — Connecticut GOP follows the RNC platform (ballotpedia.org/Republican_Party_of_Connecticut HTTP 200 this hop). Kentucky GOP rpk.org/our-party HTTP 403 this hop (body not readable; not used as quote text). No individual statement found.",
+            "kind": "party_platform"
+          },
+          "3": {
+            "v": true,
+            "src": [
+              "https://www.presidency.ucsb.edu/documents/2024-republican-party-platform"
+            ],
+            "note": "Scored from the 2024 Republican National Platform (christian_liberty q3) — Connecticut GOP follows the RNC platform (ballotpedia.org/Republican_Party_of_Connecticut HTTP 200 this hop). Kentucky GOP rpk.org/our-party HTTP 403 this hop (body not readable; not used as quote text). No individual statement found.",
+            "kind": "party_platform"
+          }
+        },
+        "election_integrity": {
+          "1": {
+            "v": true,
+            "src": [
+              "https://www.presidency.ucsb.edu/documents/2024-republican-party-platform"
+            ],
+            "note": "Scored from the 2024 Republican National Platform (election_integrity q1) — Connecticut GOP follows the RNC platform (ballotpedia.org/Republican_Party_of_Connecticut HTTP 200 this hop). Kentucky GOP rpk.org/our-party HTTP 403 this hop (body not readable; not used as quote text). No individual statement found.",
+            "kind": "party_platform"
+          },
+          "3": {
+            "v": true,
+            "src": [
+              "https://www.presidency.ucsb.edu/documents/2024-republican-party-platform"
+            ],
+            "note": "Scored from the 2024 Republican National Platform (election_integrity q3) — Connecticut GOP follows the RNC platform (ballotpedia.org/Republican_Party_of_Connecticut HTTP 200 this hop). Kentucky GOP rpk.org/our-party HTTP 403 this hop (body not readable; not used as quote text). No individual statement found.",
+            "kind": "party_platform"
+          },
+          "4": {
+            "v": true,
+            "src": [
+              "https://www.presidency.ucsb.edu/documents/2024-republican-party-platform"
+            ],
+            "note": "Scored from the 2024 Republican National Platform (election_integrity q4) — Connecticut GOP follows the RNC platform (ballotpedia.org/Republican_Party_of_Connecticut HTTP 200 this hop). Kentucky GOP rpk.org/our-party HTTP 403 this hop (body not readable; not used as quote text). No individual statement found.",
+            "kind": "party_platform"
+          }
+        },
+        "border_immigration": {
+          "1": {
+            "v": true,
+            "src": [
+              "https://www.presidency.ucsb.edu/documents/2024-republican-party-platform"
+            ],
+            "note": "Scored from the 2024 Republican National Platform (border_immigration q1) — Connecticut GOP follows the RNC platform (ballotpedia.org/Republican_Party_of_Connecticut HTTP 200 this hop). Kentucky GOP rpk.org/our-party HTTP 403 this hop (body not readable; not used as quote text). No individual statement found.",
+            "kind": "party_platform"
+          },
+          "2": {
+            "v": true,
+            "src": [
+              "https://www.presidency.ucsb.edu/documents/2024-republican-party-platform"
+            ],
+            "note": "Scored from the 2024 Republican National Platform (border_immigration q2) — Connecticut GOP follows the RNC platform (ballotpedia.org/Republican_Party_of_Connecticut HTTP 200 this hop). Kentucky GOP rpk.org/our-party HTTP 403 this hop (body not readable; not used as quote text). No individual statement found.",
+            "kind": "party_platform"
+          }
+        },
+        "self_defense": {
+          "0": {
+            "v": true,
+            "src": [
+              "https://www.maddoxforky.com/",
+              "https://spectrumnews1.com/ky/louisville/news/2019/10/30/bevin--maddox-receive-award-for-work-on-gun-bill"
+            ],
+            "note": "Campaign/individual (fetched this hop): maddoxforky.com HTTP 200 — 'I filed Constitutional Carry legislation and championed its passage, making Kentucky the 15th state where law-abiding citizens can exercise their 2nd Amendment rights without having to ask the government for permission or pay recurrent fees.' Spectrum News 2019-10-30 HTTP 200: NAGR .50 Caliber Freedom Award for SB 150 constitutional carry; Maddox: 'law abiding citizens no longer have to ask permission or pay recurring fees.' Individual overrides RNC platform for this cell.",
+            "kind": "individual"
+          },
+          "1": {
+            "v": true,
+            "src": [
+              "https://www.maddoxforky.com/"
+            ],
+            "note": "Campaign/individual (fetched this hop): maddoxforky.com HTTP 200 — 'I fought fiercely to defeat Red Flag Laws, and I am currently fighting to abolish so-called “Gun Free Zones” in Kentucky.' Individual overrides RNC platform for this cell.",
+            "kind": "individual"
+          }
+        },
+        "public_justice": {
+          "0": {
+            "v": true,
+            "src": [
+              "https://www.presidency.ucsb.edu/documents/2024-republican-party-platform"
+            ],
+            "note": "Scored from the 2024 Republican National Platform (public_justice q0) — Connecticut GOP follows the RNC platform (ballotpedia.org/Republican_Party_of_Connecticut HTTP 200 this hop). Kentucky GOP rpk.org/our-party HTTP 403 this hop (body not readable; not used as quote text). No individual statement found.",
+            "kind": "party_platform"
+          },
+          "1": {
+            "v": true,
+            "src": [
+              "https://www.presidency.ucsb.edu/documents/2024-republican-party-platform"
+            ],
+            "note": "Scored from the 2024 Republican National Platform (public_justice q1) — Connecticut GOP follows the RNC platform (ballotpedia.org/Republican_Party_of_Connecticut HTTP 200 this hop). Kentucky GOP rpk.org/our-party HTTP 403 this hop (body not readable; not used as quote text). No individual statement found.",
+            "kind": "party_platform"
+          },
+          "2": {
+            "v": true,
+            "src": [
+              "https://www.presidency.ucsb.edu/documents/2024-republican-party-platform"
+            ],
+            "note": "Scored from the 2024 Republican National Platform (public_justice q2) — Connecticut GOP follows the RNC platform (ballotpedia.org/Republican_Party_of_Connecticut HTTP 200 this hop). Kentucky GOP rpk.org/our-party HTTP 403 this hop (body not readable; not used as quote text). No individual statement found.",
+            "kind": "party_platform"
+          }
+        }
+      }
+    }
+  }
+}

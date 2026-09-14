@@ -44,6 +44,9 @@ def generate_issue_page(issue):
     page_url = f'https://usmcmin.com/issues/{slug}.html'
     title = issue['title']
     summary = issue.get('summary', '')
+    og_rel = f'assets/og/issues/{slug}-og.jpg'
+    og_path = os.path.join(os.path.dirname(__file__), og_rel)
+    og_image = f'https://usmcmin.com/{og_rel}' if os.path.isfile(og_path) else 'https://usmcmin.com/assets/og/og-citizen.jpg'
     urgency_class = {'critical': 'urgency-critical', 'soon': 'urgency-soon', 'info': 'urgency-info'}.get(issue.get('urgency', 'info'), 'urgency-info')
     card_class = {'critical': 'issue-card-urgent', 'soon': 'issue-card-upcoming', 'info': 'issue-card-info'}.get(issue.get('urgency', 'info'), 'issue-card-info')
 
@@ -113,13 +116,13 @@ def generate_issue_page(issue):
   <meta property="og:url" content="{page_url}">
   <meta property="og:type" content="article">
   <meta property="og:site_name" content="RESOLUTE Citizen">
-  <meta property="og:image" content="https://usmcmin.com/assets/og/og-citizen.jpg">
+  <meta property="og:image" content="{og_image}">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="{_esc(title)}">
   <meta name="twitter:description" content="{_esc(summary)}">
-  <meta name="twitter:image" content="https://usmcmin.com/assets/og/og-citizen.jpg">
+  <meta name="twitter:image" content="{og_image}">
   <script type="application/ld+json">{_json_ld(issue, page_url)}</script>
   <link rel="stylesheet" href="../assets/css/main.min.css">
   <link rel="icon" type="image/svg+xml" href="../assets/icons/favicon.svg">

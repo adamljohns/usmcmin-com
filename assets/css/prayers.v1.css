@@ -1,0 +1,65 @@
+/* U.S.M.C. Ministries — Prayer Lists (PJG-0919-PRAY1)
+   Screen styles ride on main.min.css variables; the print block is the
+   product: it is what becomes the personalised PDF. */
+
+.pr-wrap { max-width: 820px; margin: 0 auto; padding: 1.5rem 1rem 4rem; }
+.pr-kicker { color: var(--gold, #D4AF37); font-size: .7rem; font-weight: 700;
+  letter-spacing: .22em; text-transform: uppercase; margin-bottom: .4rem; }
+.pr-lede { opacity: .8; margin-bottom: 1.6rem; }
+
+/* ---- the personalisation panel ---- */
+.pr-panel { border: 1px solid var(--gold, #D4AF37); border-radius: 14px;
+  padding: 1.1rem 1.15rem; margin-bottom: 1.8rem; background: rgba(212,175,55,.05); }
+.pr-panel h2 { margin: 0 0 .2rem; font-size: 1.05rem; color: var(--gold, #D4AF37); }
+.pr-panel .hint { font-size: .82rem; opacity: .75; margin: 0 0 .9rem; }
+.pr-fields { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: .75rem; }
+.pr-field label { display: block; font-size: .74rem; letter-spacing: .04em;
+  text-transform: uppercase; opacity: .7; margin-bottom: .25rem; }
+.pr-field input { width: 100%; padding: .55rem .65rem; border-radius: 8px;
+  border: 1px solid var(--border, #333); background: var(--bg-raise, #171717);
+  color: inherit; font: inherit; font-size: .92rem; }
+.pr-field input:focus { outline: 2px solid var(--gold, #D4AF37); outline-offset: 1px; }
+.pr-actions { display: flex; flex-wrap: wrap; gap: .6rem; margin-top: 1rem; align-items: center; }
+.pr-btn { font: inherit; font-size: .88rem; font-weight: 600; cursor: pointer;
+  border-radius: 9px; padding: .6rem 1.1rem; border: 1px solid var(--border, #333);
+  background: transparent; color: inherit; }
+.pr-btn.pr-go { background: var(--gold, #D4AF37); border-color: var(--gold, #D4AF37);
+  color: #000; font-weight: 700; }
+.pr-saved { font-size: .78rem; opacity: .7; }
+
+/* ---- child picker ---- */
+.pr-kids { display: flex; flex-wrap: wrap; gap: .45rem; margin-top: .9rem; }
+.pr-kid { font: inherit; font-size: .82rem; cursor: pointer; padding: .35rem .8rem;
+  border-radius: 999px; border: 1px solid var(--border, #333); background: transparent; color: inherit; }
+.pr-kid[aria-pressed="true"] { background: var(--gold, #D4AF37); color: #000;
+  border-color: var(--gold, #D4AF37); font-weight: 700; }
+
+/* ---- the prayers ---- */
+.pr-item { border-top: 1px solid var(--border, #333); padding: 1.15rem 0; }
+.pr-item:first-of-type { border-top: none; }
+.pr-num { font-size: .7rem; letter-spacing: .12em; opacity: .55; }
+.pr-item h3 { margin: .15rem 0 .3rem; font-size: 1.08rem; }
+.pr-ref { display: inline-block; font-size: .78rem; margin-bottom: .55rem; }
+.pr-ref a { color: var(--gold, #D4AF37); }
+.pr-body { margin: 0; line-height: 1.65; }
+
+/* ---- print: this is the PDF ---- */
+.pr-cover { display: none; }
+@media print {
+  @page { margin: 18mm 16mm; }
+  nav, footer, .pr-panel, .site-nav, .pr-noprint, header { display: none !important; }
+  body { background: #fff !important; color: #000 !important; font-size: 11.5pt; }
+  .pr-wrap { max-width: none; padding: 0; }
+  a { color: #000 !important; text-decoration: none; }
+  .pr-cover { display: block; text-align: center; page-break-after: always; padding-top: 28%; }
+  .pr-cover .ct { font-size: 25pt; font-weight: 700; margin-bottom: .4rem; }
+  .pr-cover .cs { font-size: 12pt; font-style: italic; }
+  .pr-cover .cf { margin-top: 2.6rem; font-size: 10pt; letter-spacing: .1em;
+    text-transform: uppercase; }
+  .pr-item { break-inside: avoid; page-break-inside: avoid;
+    border-top: 1px solid #bbb; padding: 10pt 0; }
+  .pr-item h3 { font-size: 13pt; }
+  .pr-ref { font-size: 9.5pt; color: #444 !important; }
+  .pr-num { color: #777 !important; }
+  .pr-kicker, .pr-lede { display: none; }
+}

@@ -43,12 +43,12 @@
   };
 
   // Canonical Captain habit board (order matters). Users can still add customs below.
-  var HABITS_SCHEMA_V = 2;
+  var HABITS_SCHEMA_V = 3;
   var WEEKLY_CHECK_COL = 3; // Wed — single middle check for weekly habits
   var DEFAULT_HABITS = [
     { id: 'creed', name: 'Review Creed', cadence: 'daily', shared: true },
-    { id: 'prayer_525', name: '5:25 Prayer', cadence: 'daily', shared: true },
     { id: 'captains_log', name: "Captain's Log", cadence: 'daily', shared: true },
+    { id: 'prayer_525', name: '5:25 Prayer', cadence: 'daily', shared: true },
     { id: 'saca', name: 'Complete my SACA', cadence: 'weekly', shared: true },
     { id: 'bb_call', name: 'Battle Brother call / His SACA complete', cadence: 'weekly', shared: true },
     { id: 'armada_call', name: 'Armada call', cadence: 'weekly', shared: true }
@@ -93,8 +93,32 @@
     return store;
   }
 
+  function canonicalHabitOrder(items) {
+    var byId = {};
+    (items || []).forEach(function (h) {
+      if (h && h.id) byId[h.id] = h;
+    });
+    var custom = (items || []).filter(function (h) {
+      return h && h.id && !LEGACY_DEFAULT_IDS[h.id];
+    });
+    return DEFAULT_HABITS.map(function (def) {
+      var prev = byId[def.id] || null;
+      return {
+        id: def.id,
+        name: def.name,
+        cadence: def.cadence,
+        shared: prev && typeof prev.shared === 'boolean' ? prev.shared : def.shared
+      };
+    }).concat(custom.map(function (h) {
+      return Object.assign({}, h);
+    }));
+  }
+
   function migrateHabits(store) {
-    if ((store.habits.v || 0) >= HABITS_SCHEMA_V) return;
+    if ((store.habits.v || 0) >= HABITS_SCHEMA_V) {
+      store.habits.items = canonicalHabitOrder(store.habits.items);
+      return;
+    }
 
     // Preserve checks when renaming Word / prayer → 5:25 Prayer.
     var checks = store.habits.checks;
@@ -113,22 +137,7 @@
       byId.prayer_525 = Object.assign({}, byId.word, { id: 'prayer_525', name: '5:25 Prayer' });
     }
 
-    var custom = store.habits.items.filter(function (h) {
-      return h && h.id && !LEGACY_DEFAULT_IDS[h.id];
-    });
-
-    store.habits.items = DEFAULT_HABITS.map(function (def) {
-      var prev = byId[def.id] || null;
-      return {
-        id: def.id,
-        name: def.name,
-        cadence: def.cadence,
-        shared: prev && typeof prev.shared === 'boolean' ? prev.shared : def.shared
-      };
-    }).concat(custom.map(function (h) {
-      return Object.assign({}, h);
-    }));
-
+    store.habits.items = canonicalHabitOrder(store.habits.items);
     store.habits.v = HABITS_SCHEMA_V;
   }
 
@@ -705,10 +714,20 @@
     out.profile = { name: rp.name || lp.name };
     var lh = (local && local.habits) || { items: [], checks: {} };
     var rh = (remote && remote.habits) || { items: [], checks: {} };
+    var lReset = Date.parse(lh.resetAt || '') || 0;
+    var rReset = Date.parse(rh.resetAt || '') || 0;
+    var checks;
+    if (lReset > rReset) checks = Object.assign({}, lh.checks || {});
+    else if (rReset > lReset) checks = Object.assign({}, rh.checks || {});
+    else checks = mergeHabitChecks(lh.checks, rh.checks);
+    var lBoard = (lh.boardWeek || '');
+    var rBoard = (rh.boardWeek || '');
     out.habits = {
       items: mergeHabitItems(lh.items, rh.items),
-      checks: mergeHabitChecks(lh.checks, rh.checks),
-      v: Math.max(lh.v || 0, rh.v || 0)
+      checks: checks,
+      v: Math.max(lh.v || 0, rh.v || 0),
+      resetAt: lReset >= rReset ? (lh.resetAt || rh.resetAt || '') : (rh.resetAt || ''),
+      boardWeek: lBoard >= rBoard ? lBoard : rBoard
     };
     out.submissions = mergeSubmissions(local && local.submissions, remote && remote.submissions);
     var lb = local && local.brotherPack;
@@ -764,6 +783,7 @@
     renderHistory();
     if (currentMode === 'habits') renderHabitBoard();
     renderMyActionCard();
+    if (typeof renderWeekRoll === 'function') renderWeekRoll();
   }
 
   async function pushCloudState(manual) {
@@ -1166,20 +1186,22 @@
   }
 
   function weekFromUrl() {
-    var params = new URLSearchParams(window.location.search);
-    var w = parseInt(params.get('week'), 10);
-    if (w >= 1 && w <= 7) {
-      weekFromOverride = true;
-      return w;
-    }
-    var key = (params.get('theme') || '').toLowerCase();
-    var hit = THEMES.find(function (t) { return t.key === key; });
-    if (hit) {
-      weekFromOverride = true;
-      return hit.week;
-    }
+    // Refresh always opens the calendar week. A leftover ?week= from a prior
+    // chip tap must not pin the board (that is how Finance survived into Husbanding).
     weekFromOverride = false;
     return calendarWeek();
+  }
+
+  function formatWeekRange(now) {
+    var days = weekDates(now || new Date());
+    var months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    function bit(d) { return months[d.getMonth()] + ' ' + d.getDate(); }
+    var a = days[0];
+    var b = days[6];
+    var year = a.getFullYear() === b.getFullYear()
+      ? String(b.getFullYear())
+      : a.getFullYear() + '–' + b.getFullYear();
+    return 'Sun ' + bit(a) + ' – Sat ' + bit(b) + ', ' + year;
   }
 
   function syncWeekToUrl(week) {
@@ -1465,7 +1487,8 @@
         ? 'Armada theme (manual pick)'
         : 'This week&rsquo;s Armada theme';
       banner.innerHTML = '<span class="tb-kicker">' + kicker + '</span>' +
-        '<span class="tb-title">' + t.icon + ' Week ' + t.week + ' — ' + t.title + '</span>';
+        '<span class="tb-title">' + t.icon + ' Week ' + t.week + ' — ' + t.title + '</span>' +
+        '<span class="tb-dates">' + escapeHtml(formatWeekRange()) + '</span>';
     }
     document.title = 'Battle Brother Form · Week ' + t.week + ' ' + t.title + ' — The Family Captain';
     renderMyActionCard();
@@ -1773,11 +1796,67 @@
     });
   }
 
+  function downloadHabitMemory() {
+    var store = ensureHabits(loadStore());
+    var blob = new Blob([JSON.stringify({
+      type: 'fc_battle_brother_habit_memory',
+      exportedAt: new Date().toISOString(),
+      boardWeek: store.habits.boardWeek || '',
+      items: store.habits.items,
+      checks: store.habits.checks
+    }, null, 2)], { type: 'application/json' });
+    var a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'battle-brother-habits-' + ymd(new Date()) + '.json';
+    a.click();
+    URL.revokeObjectURL(a.href);
+    flash('Habit checks downloaded. Nothing was cleared.');
+  }
+
+  function resetHabitBoard() {
+    if (!window.confirm('Reset the habit board? Download first if you want a copy. This clears the checks.')) return;
+    var store = ensureHabits(loadStore());
+    store.habits.checks = {};
+    store.habits.resetAt = new Date().toISOString();
+    store.habits.boardWeek = ymd(sundayOf(new Date()));
+    saveStore(store);
+    renderHabitBoard();
+    renderWeekRoll();
+    flash('Board reset. Older checks are gone.');
+  }
+
+  function renderWeekRoll() {
+    var bar = el('weekRoll');
+    if (!bar) return;
+    var store = ensureHabits(loadStore());
+    var sun = ymd(sundayOf(new Date()));
+    if (!store.habits.boardWeek) {
+      store.habits.boardWeek = sun;
+      saveStore(store);
+    }
+    if (store.habits.boardWeek >= sun) {
+      bar.hidden = true;
+      bar.innerHTML = '';
+      return;
+    }
+    bar.hidden = false;
+    bar.innerHTML = '<p>New week. Checks from the last board stay until you reset. Download a copy, or start fresh.</p>' +
+      '<div class="btn-row">' +
+      '<button type="button" class="btn-primary" id="btnDownloadHabits">Download checks</button>' +
+      '<button type="button" class="btn-ghost" id="btnResetHabits">Reset board</button>' +
+      '</div>';
+    var dl = el('btnDownloadHabits');
+    var rs = el('btnResetHabits');
+    if (dl) dl.addEventListener('click', downloadHabitMemory);
+    if (rs) rs.addEventListener('click', resetHabitBoard);
+  }
+
   function init() {
     selectedWeek = weekFromUrl();
-    if (!weekFromOverride) syncWeekToUrl(selectedWeek);
+    syncWeekToUrl(selectedWeek);
     renderWeekPicker();
     updateThemeBanner();
+    renderWeekRoll();
     restoreProfile();
     bindStars();
     bindInputs();

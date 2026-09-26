@@ -74,7 +74,7 @@ def main() -> None:
             biz["last_grind"] = date.today().isoformat()
 
     data["updated"] = date.today().isoformat()
-    DATA.write_text(json.dumps(data, ensure_ascii=False, separators=(",", ":")))
+    DATA.write_text(json.dumps(data, ensure_ascii=False, indent=2) + "\n")
     uniq = sorted(set(touched))
     print(f"merged: {len(uniq)} listing(s) with score updates -> {', '.join(uniq[:12])}")
 

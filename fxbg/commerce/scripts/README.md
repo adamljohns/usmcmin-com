@@ -8,6 +8,9 @@ python3 scripts/fix-web-urls.py               # correct dead/wrong domains
 python3 scripts/enrich-fi-licensed-trades.py  # affirmative FI for licensed trades
 python3 scripts/enrich-digital-integrity.py   # HEAD-probe all web URLs
 python3 scripts/enrich-digital-batch.py SLUG…  # probe batch only
+python3 scripts/fetch-osm-candidates.py          # Overpass → data/osm-candidates.json
+python3 scripts/import-osm-stubs.py 150         # add gray OSM stubs (deduped)
+python3 scripts/discover-digital-batch.py 40    # crawl web + social links
 python3 scripts/select-commerce-batch.py 8 /tmp/batch.json
 python3 scripts/local-commerce-extract.py /tmp/batch.json /tmp/out.json
 python3 scripts/merge-commerce-local.py /tmp/out.json

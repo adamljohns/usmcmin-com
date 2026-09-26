@@ -7,6 +7,10 @@ python3 scripts/recast-rubric-v04.py          # v0.3→0.4 evidence lock (FI/bra
 python3 scripts/fix-web-urls.py               # correct dead/wrong domains
 python3 scripts/enrich-fi-licensed-trades.py  # affirmative FI for licensed trades
 python3 scripts/enrich-digital-integrity.py   # HEAD-probe all web URLs
+python3 scripts/enrich-digital-batch.py SLUG…  # probe batch only
+python3 scripts/select-commerce-batch.py 8 /tmp/batch.json
+python3 scripts/local-commerce-extract.py /tmp/batch.json /tmp/out.json
+python3 scripts/merge-commerce-local.py /tmp/out.json
 python3 scripts/render-profile.py             # all 317 profiles
 python3 scripts/render-profile.py fit20-cosners-corner  # one slug
 python3 scripts/build-categories.py           # categories/*.html landing pages

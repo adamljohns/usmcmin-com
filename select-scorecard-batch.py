@@ -66,6 +66,15 @@ def main():
     # 3 strikes = out of the rotation (until a new source class resets the game)
     pool = [c for c in C if active(c) and not evid(c) and website(c) and strikes(c) < 3]
     pool.sort(key=rank)
+    # 2026-09-30: the website pool ran dry (all 422 struck out) while 598 active, unscored,
+    # SITE-LESS candidates were never selected -- so the Brave discovery step that exists to
+    # find their sites never ran on them, and the grind idled for days. Top the batch up with
+    # them. The extractor also tries Ballotpedia by name; the verbatim gate still decides what
+    # scores, and the 3-strike rule still retires the ones nothing can be found for.
+    if len(pool) < N:
+        nosite = [c for c in C if active(c) and not evid(c) and not website(c) and strikes(c) < 3]
+        nosite.sort(key=rank)
+        pool += nosite
     batch = [{
         "slug": c["slug"], "name": c.get("name"), "state": c.get("state"),
         "level": c.get("level"), "party": c.get("party"), "office": c.get("office"),
@@ -79,7 +88,7 @@ def main():
         "confidence": (c.get("profile") or {}).get("confidence"),
     } for c in pool[:N]]
     json.dump(batch, open(OUT, "w"), indent=1)
-    print(f"selected {len(batch)} of {len(pool)} eligible (unscored + fetchable) -> {OUT}")
+    print(f"selected {len(batch)} of {len(pool)} eligible (unscored; fetchable first, then site-less for discovery) -> {OUT}")
     # eligible-with-website is the fetchable frontier; the website-less remainder waits on Brave discovery.
 
 

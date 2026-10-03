@@ -11,6 +11,7 @@ Categorizes pages so search engines see the right priorities:
   0.4  individual issue pages
 Operations dashboards (auth-gated) are excluded — they live in robots.txt Disallow.
 """
+import re
 from datetime import date
 from pathlib import Path
 
@@ -181,17 +182,36 @@ def render_index(shards):
     lines.append("</sitemapindex>")
     return "\n".join(lines) + "\n"
 
+_LASTMOD_RE = re.compile(r"<lastmod>[^<]*</lastmod>")
+
+def write_if_changed(path: Path, content: str) -> int:
+    """Write only when something other than the <lastmod> dates differs."""
+    if path.exists():
+        existing = path.read_text()
+        if _LASTMOD_RE.sub("", existing) == _LASTMOD_RE.sub("", content):
+            return 0
+    path.write_text(content)
+    return 1
+
 if __name__ == "__main__":
     urls = collect()
     shards = shard_urls(urls)
 
     # Remove old generated shard files so renamed/deleted states do not linger.
+    keep = {filename for filename, _shard in shards}
     for old in ROOT.glob("sitemap-*.xml"):
-        old.unlink()
+        if old.name not in keep:
+            old.unlink()
 
+    # A date-only rewrite is not a change. Rewriting every <lastmod> daily left
+    # ~56 uncommitted files in the worktree, which trips the non-fleet-dirty
+    # guard in fleet-dashboard-refresh.sh and froze the live Fleet Command
+    # Center twice (2026-09-22..28, 2026-09-30..10-03).
+    written = 0
     for filename, shard in shards:
-        (ROOT / filename).write_text(render_urlset(shard))
+        written += write_if_changed(ROOT / filename, render_urlset(shard))
 
     out = ROOT / "sitemap.xml"
-    out.write_text(render_index(shards))
-    print(f"Wrote {out} with {len(urls)} URLs across {len(shards)} shards")
+    written += write_if_changed(out, render_index(shards))
+    print(f"Wrote {out} with {len(urls)} URLs across {len(shards)} shards "
+          f"({written} file(s) changed)")

@@ -224,9 +224,9 @@
   padding: 4px 12px;
   border-radius: 6px;
 }
-.party-r { background: rgba(220,38,38,0.15); color: #ef4444; border: 1px solid rgba(220,38,38,0.3); }
-.party-d { background: rgba(37,99,235,0.15); color: #3b82f6; border: 1px solid rgba(37,99,235,0.3); }
-.party-i { background: rgba(168,85,247,0.15); color: #a855f7; border: 1px solid rgba(168,85,247,0.3); }
+.party-r { background: rgba(220,38,38,0.15); color: #f87171; border: 1px solid rgba(220,38,38,0.3); }
+.party-d { background: rgba(37,99,235,0.15); color: #60a5fa; border: 1px solid rgba(37,99,235,0.3); }
+.party-i { background: rgba(168,85,247,0.15); color: #c084fc; border: 1px solid rgba(168,85,247,0.3); }
 .party-unknown { background: rgba(107,114,128,0.15); color: #9ca3af; border: 1px solid rgba(107,114,128,0.3); }
 
 /* Election / countdown block */
@@ -1632,3 +1632,21 @@ footer a { color: var(--accent); text-decoration: none; }
 html:not([data-theme="dark"]) .prof-map-link { color: #0f766e; border-color: rgba(15, 118, 110, 0.4); }
 html:not([data-theme="dark"]) .prof-election-label { color: #8a6d1a; }
 html:not([data-theme="dark"]) .prof-election-countdown span:first-child { color: #8a6d1a; }
+
+/* ── READABILITY PASS (MBP-1004-CONTRAST) — Bright mode only ───────────────
+   Pastel dark-theme colours on the light profile card. Before -> after on #F4F5F7. */
+html:not([data-theme="dark"]) :is(.prof-q-claim-dispute, .prof-bias-attribution, .prof-bias-attribution a,
+  .prof-freshness, .prof-fn-meta, .prof-fn-meta a, .prof-fn-archive) { color: #566070; }   /* #94a3b8 2.4 -> 5.8 */
+html:not([data-theme="dark"]) .prof-contact h2, html:not([data-theme="dark"]) .prof-district-details summary,
+html:not([data-theme="dark"]) .prof-contact-tagline em { color: #7A5C0A; }   /* gold 1.9-2.3 -> 6.2 */
+html:not([data-theme="dark"]) .prof-total-adj-minus, html:not([data-theme="dark"]) .prof-adj-minus .prof-adj-delta { color: #B71C1C; }   /* 2.2 -> 5.0 */
+html:not([data-theme="dark"]) .prof-total-adj-plus, html:not([data-theme="dark"]) .prof-adj-plus .prof-adj-delta { color: #1F6E27; }
+html:not([data-theme="dark"]) .prof-tier-pill-state { color: #1D4ED8; }   /* 1.4 -> 5.3 */
+html:not([data-theme="dark"]) .prof-tier-pill-local { color: #1F6E27; }
+html:not([data-theme="dark"]) .prof-tier-pill-federal { color: #7A5C0A; }
+html:not([data-theme="dark"]) .prof-candidacy-text a { color: #075985; }   /* 1.9 -> 6.6 */
+/* Status chip: a 30% black tile reads as mid-grey on a light banner, and the
+   pastel label vanished into it (LOST 1.1, LAME DUCK 1.5). */
+html:not([data-theme="dark"]) .prof-status-chip { background: rgba(0,0,0,0.06); }
+html:not([data-theme="dark"]) .prof-status-lost .prof-status-chip { color: #B71C1C; }
+html:not([data-theme="dark"]) .prof-status-lame .prof-status-chip { color: #7A5200; }

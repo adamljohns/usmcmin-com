@@ -269,3 +269,14 @@
 @media (max-width:1240px){
   main .container{padding-left:clamp(1rem,4vw,1.75rem);padding-right:clamp(1rem,4vw,1.75rem)}
 }
+
+/* ── READABILITY PASS (MBP-1004-CONTRAST) ─────────────────────────────────
+   Each agent's accent (--ac, or an inline colour in the feed) is used as small
+   text on both a near-black and a white card. Mixed toward the page ink. */
+html:not([data-theme="dark"]) .acc-agent, html:not([data-theme="dark"]) .agent-hero:not(.has-banner) .agent-callsign { color: color-mix(in srgb, var(--ac) 58%, #000); }
+[data-theme="dark"] .acc-agent { color: color-mix(in srgb, var(--ac) 70%, #fff); }
+html:not([data-theme="dark"]) .feed-agent, html:not([data-theme="dark"]) li > a[style*="color:#"] { filter: brightness(.68) saturate(1.25); }
+[data-theme="dark"] .feed-agent, [data-theme="dark"] li > a[style*="color:#"] { filter: brightness(1.3); }
+html:not([data-theme="dark"]) .badge-ok { color: #1F6E27; }      /* 2.9 -> 5.3 */
+html:not([data-theme="dark"]) .badge-warn { color: #7A5200; }    /* 2.0 -> 5.6 */
+[data-theme="dark"] .err-count { color: #EF6B5E; }   /* 3.6 -> 6.5 */

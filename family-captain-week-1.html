@@ -15,7 +15,7 @@
   <meta name="twitter:title" content="Week 1 · Vision — The Family Captain AI Boot Camp">
   <meta name="twitter:description" content="Week 1 of the Family Captain AI Boot Camp: Vision. Write the vision plain. AI drafts; the captain decides where he is going.">
   <meta name="twitter:image" content="https://usmcmin.com/assets/og/og-fc-week-1.png">
-<link rel="stylesheet" href="assets/css/main.css">
+<link rel="stylesheet" href="assets/css/main.css?v=1004">
   <link rel="icon" type="image/svg+xml" href="assets/icons/favicon.svg">
   <link rel="icon" type="image/png" sizes="32x32" href="assets/icons/favicon-32.png">
   <link rel="icon" type="image/png" sizes="16x16" href="assets/icons/favicon-16.png">
@@ -948,19 +948,43 @@
      warm-gray #F4F5F7 9.7:1, panel #EBEDF0 9.3:1). */
   body[data-track="family-captain"] :is(p,li,b,strong,em,i,h2,h3,h4,h5,h6,
     dt,dd,summary,small,caption,figcaption,blockquote,th,td):not(
-    :is(.module-hero,.week-hero,footer,.cta-band,.drill-cell) *) {
+    :is(.module-hero,.week-hero,footer,.cta-band,.drill-cell,.captains-note-section) *) {
     color: #334155 !important;
   }
 
   /* (2) DARK-ZONE REPAIRS — only the genuinely broken bits. The dark
      zones otherwise keep their existing (correct) light text. */
-  body[data-track="family-captain"] :is(.module-hero,.week-hero,.cta-band) a {
+  /* :not(.btn) — buttons in these zones are bronze-filled; painting their
+     label bronze made it bronze-on-bronze (1.4:1). They keep white. */
+  body[data-track="family-captain"] :is(.module-hero,.week-hero,.cta-band) a:not(.btn) {
     color: #CE8E31 !important;
   }
   /* week-hero tag + scripture lines (were dark-slate on dark slate) */
   body[data-track="family-captain"] .week-hero :is(.week-tag,.week-scrip) {
     color: #CBD5E1 !important;
   }
+  /* (2b) READABILITY PASS (MBP-1004-CONTRAST). Bright bronze #CE8E31 is
+     2.6-2.8:1 as text on FC's light surfaces: text takes the documented
+     text-bronze #8B5A1F, filled controls the button bronze #B07320.
+     `html body` outranks the equal-specificity rules declared further down. */
+  html body[data-track="family-captain"] :is(.fc-audio-chapters .ch-time,
+    .fc-media-actions a, .study-card .card-label,
+    .fc-note-weekly .fc-note-flabel) {
+    color: #8B5A1F !important;
+  }
+  html body[data-track="family-captain"] .study-card.flipped .card-label { color: #3F7A3C !important; }
+  html body[data-track="family-captain"] .study-card .card-hint,
+  html body[data-track="family-captain"] .fc-xbtn:not(.primary) { color: #475569 !important; }
+  html body[data-track="family-captain"] .fc-xbtn.primary,
+  html body[data-track="family-captain"] a.workon-btn {
+    background: #B07320 !important; color: #FFFFFF !important; border-color: #B07320 !important;
+  }
+  /* The Captain's Note is a slate panel; the structural sweep above painted
+     its body text slate as well (1.4:1). */
+  html body[data-track="family-captain"] .captains-note-section h3 { color: #FFFFFF !important; }
+  html body[data-track="family-captain"] .captains-note-section .cn-body { color: #E2E8F0 !important; }
+  html body[data-track="family-captain"] .captains-note-section .cn-tag { color: #CBD5E1 !important; }
+  html body[data-track="family-captain"] .chip.active .count { opacity: 1; color: #1E293B !important; }
 
   /* (3) LIGHT-SURFACE class offenders the earlier sweeps missed. */
   body[data-track="family-captain"] :is(.cost,.uc-winner,.tl-label,

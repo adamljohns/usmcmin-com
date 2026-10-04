@@ -3,7 +3,7 @@
 page and Family Captain AI Boot Camp page.
 
 Both courses already tracked completion, but only on their voyage page. This
-wires assets/{js,css}/course-hud.v1.* into the individual pages so a student on
+wires assets/{js,css}/course-hud.v2.* into the individual pages so a student on
 week 7 can see where he is without navigating away.
 
 Idempotent: re-running makes no change to a page already carrying the HUD, so
@@ -15,8 +15,8 @@ Usage:
 """
 import re, sys, glob, argparse
 
-CSS_LINK = '<link rel="stylesheet" href="assets/css/course-hud.v1.css">'
-JS_TAG = '<script defer src="assets/js/course-hud.v1.js"></script>'
+CSS_LINK = '<link rel="stylesheet" href="assets/css/course-hud.v2.css">'
+JS_TAG = '<script defer src="assets/js/course-hud.v2.js"></script>'
 MARK = 'data-course-hud'
 
 # The voyage/log pages own the full picture already — a HUD there would just
@@ -43,7 +43,7 @@ def patch(path, course, dry):
     orig = html
 
     # Stylesheet goes next to the existing one so cascade order is predictable.
-    if 'course-hud.v1.css' not in html:
+    if 'course-hud.v2.css' not in html:
         m = re.search(r'<link rel="stylesheet" href="assets/css/main\.css">', html)
         if not m:
             return 'SKIP — no main.css link to anchor to'

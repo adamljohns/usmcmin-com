@@ -14,7 +14,7 @@
   --gray-light: #374151;
   --border: #d8dee6;
   --green: #2d7a46;
-  --yellow: #9a7b0a;
+  --yellow: #7a5e00; /* was #9a7b0a: 3.4:1 on its own tint (MBP-1004-CONTRAST) */
   --red: #b42318;
   --black-band: #4b5563;
   --green-bg: rgba(45, 122, 70, 0.1);
@@ -380,3 +380,11 @@ footer {
   color: var(--gray);
   text-align: center;
 }
+
+/* READABILITY PASS (MBP-1004-CONTRAST): the band word on each card is written
+   by the page builder as an inline colour chosen for a dark page. These pages
+   are light, so YELLOW was 1.6:1 and GREEN 2.8:1 on the white card. */
+.biz-card .eyebrow[style*="#FFC107" i] { color: var(--yellow) !important; }
+.biz-card .eyebrow[style*="#4CAF50" i] { color: var(--green) !important; }
+.biz-card .eyebrow[style*="#f44336" i] { color: var(--red) !important; }
+.biz-card .eyebrow[style*="#888" i] { color: var(--gray) !important; }

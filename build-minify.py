@@ -82,7 +82,11 @@ def minify_css(text):
     # Collapse runs of whitespace into a single space
     text = re.sub(r'\s+', ' ', text)
     # Remove space around CSS operators that don't need it
-    text = re.sub(r'\s*([{}:;,>+~])\s*', r'\1', text)
+    text = re.sub(r'\s*([{};,>+~])\s*', r'\1', text)
+    # Colon: strip the space AFTER it only. A space BEFORE a colon is a descendant
+    # combinator (`html:not([data-theme="dark"]) :is(.a, .b)`); removing it turned that
+    # into `html:not(...):is(...)`, which matches nothing (2026-10-04, MBP-1004-CONTRAST).
+    text = re.sub(r':\s+', ':', text)
     # Remove the optional semicolon before }
     text = text.replace(';}', '}')
     # Remove leading 0 from 0.5em, 0.25rem, etc. (saves a byte)

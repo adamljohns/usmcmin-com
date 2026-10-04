@@ -1,4 +1,8 @@
 # RESOLUTE Citizen / Local — Enhancement Backlog
+
+> **Freshness note — 2026-10-03 (MBP-1003-NIGHT, freshness lane).** Checked against `origin/main` on 2026-10-03. This file is kept as written below; read this note first.
+> - **Backlog is exhausted and its worker is gone:** 54 items `[x]`, 0 items `[ ]`; last item closed 2026-06-19. The `scorecard-enhance` cron named below no longer exists (not in `launchctl list`, `~/Library/LaunchAgents`, or `openclaw cron list`). Live scorecard jobs are `com.moop.scorecard-refine-local` and `com.moop.scorecard-qa`. Add new items here only with a new owner.
+
 **Worked one item per hour by the `scorecard-enhance` cron. Avoids data/scorecard.json (the refinement crons own that). Low-risk, additive, scoped tasks only.**
 
 Status key: `[ ]` todo · `[~]` in progress · `[x]` done (date) · `[skip]` deferred (reason).

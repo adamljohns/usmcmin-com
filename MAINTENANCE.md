@@ -1,5 +1,10 @@
 # RESOLUTE Citizen Scorecard — Maintenance Playbook
 
+> **Freshness note — 2026-10-03 (MBP-1003-NIGHT, freshness lane).** Checked against `origin/main` on 2026-10-03. This file is kept as written below; read this note first.
+> - **Still true:** the cardinal web-verify rule and the build order below.
+> - **Correction:** on this Mac `python3` is `/usr/bin/python3` **3.9.6**. Run the build steps with `/opt/homebrew/bin/python3` (as `commit_refinement.py` does). `build-sitemap-xml.py` crashed under 3.9 (`str | None`) until 2026-10-03; it now runs on both, and it skips date-only rewrites (only a real URL change rewrites a shard, and then the index too).
+> - **Scale today:** 9,426 candidates, 53 states/territories, scorecard v5.6.0 (`data/stats.json`, `data/scorecard.json`); 12,154 sitemap URLs in 56 shards.
+
 **Purpose:** the canonical procedure for keeping the scorecard current. Election
 data changes constantly (primaries resolve, candidates enter/drop, results come
 in). This playbook encodes the hard-won rules so every update is accurate,

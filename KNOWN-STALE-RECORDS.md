@@ -1,5 +1,8 @@
 # Known stale records — RESOLUTE Citizen v4.0
 
+> **Freshness note — 2026-10-03 (MBP-1003-NIGHT, freshness lane).** Checked against `origin/main` on 2026-10-03. This file is kept as written below; read this note first.
+> - **Superseded header:** this file says "RESOLUTE Citizen v4.0" and "Last updated 2026-06-16"; the scorecard is **v5.6.0** with **9,426** candidates (`data/scorecard.json` meta, `data/stats.json`). No sweep has been logged here since 2026-08-25 (last commit). Treat every "stale" item below as unverified until re-checked; the live scorecard ledger is `~/.openclaw/shared-memory/context/overnight/scorecard.md`.
+
 **Last updated: 2026-06-16** (enhancement sweep G2 — §B "Senators not
 seeking re-election" roster pulled + cited; no scorecard.json edits)
 **Maintainer: regenerate this on every web-validation sweep.**

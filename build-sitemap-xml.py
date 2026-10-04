@@ -11,6 +11,8 @@ Categorizes pages so search engines see the right priorities:
   0.4  individual issue pages
 Operations dashboards (auth-gated) are excluded — they live in robots.txt Disallow.
 """
+from __future__ import annotations  # `str | None` hints crash /usr/bin/python3 (3.9) otherwise
+
 import re
 from datetime import date
 from pathlib import Path
@@ -211,7 +213,14 @@ if __name__ == "__main__":
     for filename, shard in shards:
         written += write_if_changed(ROOT / filename, render_urlset(shard))
 
+    # The index carries one <lastmod> per shard. When any shard really changed,
+    # rewrite the index too so crawlers see a fresh date; otherwise its dates
+    # would stay frozen at whatever day the shard *set* last changed.
     out = ROOT / "sitemap.xml"
-    written += write_if_changed(out, render_index(shards))
+    if written:
+        out.write_text(render_index(shards))
+        written += 1
+    else:
+        written += write_if_changed(out, render_index(shards))
     print(f"Wrote {out} with {len(urls)} URLs across {len(shards)} shards "
           f"({written} file(s) changed)")

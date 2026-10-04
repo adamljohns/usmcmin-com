@@ -24,6 +24,7 @@ State and local cycles vary too much to enrich universally; those get left
 null until a state-specific pass populates them.
 """
 import json
+from datetime import date
 import subprocess
 import sys
 from pathlib import Path
@@ -122,7 +123,9 @@ def enrich_federal(c):
     if new_type and profile.get('next_election_type') != new_type:
         profile['next_election_type'] = new_type
         changed = True
-    if profile.get('seat_up_next') != seat_up:
+    # Only when a rule matched: an unrecognised jurisdiction string must not
+    # flip a known nominee's seat to "not up".
+    if new_date and profile.get('seat_up_next') != seat_up:
         profile['seat_up_next'] = seat_up
         changed = True
 
@@ -317,6 +320,69 @@ def enrich_state_level(c):
 enrich_fl_state = enrich_state_level
 
 
+# Share of each chamber's seats regularly up on 2026-11-03, as (upper %, lower %).
+# Source: Wikipedia "2026 United States state legislative elections", States
+# summary table (itself cited to Ballotpedia "State legislative elections, 2026"),
+# fetched 2026-10-03:
+#   https://en.wikipedia.org/wiki/2026_United_States_state_legislative_elections
+#   https://ballotpedia.org/State_legislative_elections,_2026
+# LA, MS, NJ and VA hold no 2026 legislative election and are left out on purpose.
+# NE is unicameral (49 seats, 24 up) and is stored as the upper chamber.
+CHAMBER_SHARE_UP_2026 = {
+    'AL': (100, 100), 'AK': (50, 100), 'AZ': (100, 100), 'AR': (49, 100),
+    'CA': (50, 100), 'CO': (51, 100), 'CT': (100, 100), 'DE': (52, 100),
+    'FL': (50, 100), 'GA': (100, 100), 'HI': (52, 100), 'ID': (100, 100),
+    'IL': (66, 100), 'IN': (50, 100), 'IA': (50, 100), 'KS': (0, 100),
+    'KY': (50, 100), 'ME': (100, 100), 'MD': (100, 100), 'MA': (100, 100),
+    'MI': (100, 100), 'MN': (100, 100), 'MO': (50, 100), 'MT': (50, 100),
+    'NE': (49, None), 'NV': (52, 100), 'NH': (100, 100), 'NM': (0, 100),
+    'NY': (100, 100), 'NC': (100, 100), 'ND': (51, 50), 'OH': (52, 100),
+    'OK': (50, 100), 'OR': (50, 100), 'PA': (50, 100), 'RI': (100, 100),
+    'SC': (0, 100), 'SD': (100, 100), 'TN': (52, 100), 'TX': (52, 100),
+    'UT': (52, 100), 'VT': (100, 100), 'WA': (49, 100), 'WV': (50, 100),
+    'WI': (52, 100), 'WY': (52, 100),
+}
+# 0% up in 2026 with 4-year terms (KS, NM, SC senates, elected 2024) -> 2028.
+NEXT_GENERAL_2028 = '2028-11-07'
+
+
+def fix_stale_state_legislator(c, today):
+    """Repair a state legislator whose next_election_date has already passed.
+
+    Runs after enrich_state_level, so it only sees records the per-state rules
+    did not reach (states with no rule, or jurisdiction strings those rules do
+    not match, e.g. "Texas State House"). Most of these still hold their 2026
+    PRIMARY date. Whole chamber up -> the general, seat up. Chamber not up ->
+    the 2028 general, seat not up. Staggered chamber, where this record does
+    not say which half the seat is in -> date cleared rather than guessed.
+    """
+    profile = c.setdefault('profile', {})
+    nd = profile.get('next_election_date')
+    if not nd or nd >= today:
+        return None
+    share = CHAMBER_SHARE_UP_2026.get((c.get('state') or '').upper())
+    if not share:
+        return None
+    jlo = (c.get('jurisdiction') or '').lower()
+    if 'senate' in jlo or 'legislature' in jlo:
+        pct = share[0]
+    elif 'house' in jlo or 'assembly' in jlo or 'delegates' in jlo:
+        pct = share[1]
+    else:
+        return None  # statewide executives: cycles vary office by office
+    if pct == 100:
+        new = ('2026-11-03', True)
+    elif pct == 0:
+        new = (NEXT_GENERAL_2028, False)
+    elif pct is not None:
+        new = (None, None)
+    else:
+        return None
+    profile['next_election_date'], profile['seat_up_next'] = new
+    profile['next_election_type'] = 'general' if new[0] else None
+    return 'up' if new[1] else ('not_up' if new[0] else 'cleared')
+
+
 def enrich_judicial(c):
     """SCOTUS justices have lifetime appointments — no election."""
     profile = c.setdefault('profile', {})
@@ -339,8 +405,15 @@ def main():
     executive_changed = 0
     judicial_changed = 0
     state_changed_by = {}
+    stale_fixed = {}
+    today = date.today().isoformat()
     for c in data['candidates']:
         level = c.get('level', '')
+        # People who hold no seat and are on no ballot (lost, former, deceased)
+        # get no countdown. Without this, a re-run re-adds Nov 3 to the VA
+        # primary losers whose dates were cleared in 5833c390163.
+        if c.get('status') in ('lost', 'former', 'deceased'):
+            continue
         if level == 'federal':
             if enrich_federal(c):
                 federal_changed += 1
@@ -354,6 +427,10 @@ def main():
             if enrich_state_level(c):
                 s = (c.get('state') or '?').upper()
                 state_changed_by[s] = state_changed_by.get(s, 0) + 1
+            how = fix_stale_state_legislator(c, today)
+            if how:
+                key = ((c.get('state') or '?').upper(), how)
+                stale_fixed[key] = stale_fixed.get(key, 0) + 1
 
     print(f"Federal enriched: {federal_changed}")
     print(f"Executive enriched: {executive_changed}")
@@ -362,9 +439,17 @@ def main():
     for s in sorted(state_changed_by.keys()):
         print(f"  {s}: {state_changed_by[s]}")
     print(f"  Total: {sum(state_changed_by.values())}")
+    print("Stale state-legislator dates repaired (state, outcome):")
+    for k in sorted(stale_fixed):
+        print(f"  {k[0]} {k[1]}: {stale_fixed[k]}")
+    print(f"  Total: {sum(stale_fixed.values())}")
 
+    if '--dry' in sys.argv:
+        print('[dry] scorecard.json not written')
+        return
+    # Minified, matching build-data.py; indent=2 bloated the master to ~85 MB.
     with open(SCORECARD_PATH, 'w') as f:
-        json.dump(data, f, indent=2)
+        json.dump(data, f, separators=(',', ':'))
 
     subprocess.run(
         [sys.executable, str(BASE_DIR / 'build-data.py'), '--quiet'],

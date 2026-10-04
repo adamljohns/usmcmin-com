@@ -387,6 +387,65 @@ def fix_stale_state_legislator(c, today):
     return 'up' if new[1] else ('not_up' if new[0] else 'cleared')
 
 
+# Statewide officials confirmed as their party's 2026 nominee, whose record still held
+# the passed 2026 PRIMARY date (MBP-1003-NIGHT r3, fetched 2026-10-04 UTC). Source per
+# record: https://en.wikipedia.org/wiki/<page> — the record is in its own party's
+# 'Nominee' list (results-box winner where the primary was contested). The seat is on
+# the 2026-11-03 general. A statewide officer NOT in this table is left alone: cycles
+# vary office by office, and an incumbent who lost or withdrew needs a status change.
+STATEWIDE_NOMINEES_2026 = {
+    'adrian-fontes': '2026_Arizona_Secretary_of_State_election',
+    'andrea-campbell-ag-2026': '2026_Massachusetts_Attorney_General_election',
+    'anthony-brown-ag-2026': '2026_Maryland_Attorney_General_election',
+    'brad-little-gov-2026': '2026_Idaho_gubernatorial_election',
+    'brenna-bird-ag-2026': '2026_Iowa_Attorney_General_election',
+    'charity-clark': '2026_Vermont_Attorney_General_election',
+    'cisco-aguilar-sos-2026': '2026_Nevada_Secretary_of_State_election',
+    'jim-pillen-gov-2026': '2026_Nebraska_gubernatorial_election',
+    'joe-lombardo': '2026_Nevada_gubernatorial_election',
+    'john-rodgers': '2026_Vermont_lieutenant_gubernatorial_election',
+    'josh-green-gov-2026': '2026_Hawaii_gubernatorial_election',
+    'josh-kaul-ag-2026': '2026_Wisconsin_Attorney_General_election',
+    'katie-hobbs-gov-2026': '2026_Arizona_gubernatorial_election',
+    'keith-ellison-ag-2026': '2026_Minnesota_Attorney_General_election',
+    'kelly-ayotte-gov-2026': '2026_New_Hampshire_gubernatorial_election',
+    'kim-driscoll': '2026_Massachusetts_lieutenant_gubernatorial_election',
+    'kris-kobach': '2026_Kansas_Attorney_General_election',
+    'kris-mayes-ag': '2026_Arizona_Attorney_General_election',
+    'larry-rhoden-gov-2026': '2026_South_Dakota_gubernatorial_election',
+    'leslie-rutledge': '2026_Arkansas_lieutenant_gubernatorial_election',
+    'maura-healey-gov-2026': '2026_Massachusetts_gubernatorial_election',
+    'mike-hilgers': '2026_Nebraska_Attorney_General_election',
+    'ned-lamont-gov-2026': '2026_Connecticut_gubernatorial_election',
+    'phil-scott-gov-2026': '2026_Vermont_gubernatorial_election',
+    'raul-labrador': '2026_Idaho_Attorney_General_election',
+    'raul-torrez-ag-2026': '2026_New_Mexico_Attorney_General_election',
+    'sabina-matos': '2026_Rhode_Island_lieutenant_gubernatorial_election',
+    'sarah-huckabee-sanders': '2026_Arkansas_gubernatorial_election',
+    'scott-bedke': '2026_Idaho_lieutenant_gubernatorial_election',
+    'stavros-anthony': '2026_Nevada_lieutenant_gubernatorial_election',
+    'steve-simon': '2026_Minnesota_Secretary_of_State_election',
+    'susan-bysiewicz': '2026_Connecticut_lieutenant_gubernatorial_election',
+    'tim-griffin-ag-2026': '2026_Arkansas_Attorney_General_election',
+    'wes-moore-gov-2026': '2026_Maryland_gubernatorial_election',
+    'william-tong': '2026_Connecticut_Attorney_General_election',
+}
+
+
+def roll_statewide_nominee(c, today):
+    """Passed primary date -> the 2026 general, for the cited nominees above only."""
+    if c.get('slug') not in STATEWIDE_NOMINEES_2026:
+        return False
+    profile = c.setdefault('profile', {})
+    nd = profile.get('next_election_date')
+    if not nd or nd >= today:
+        return False
+    profile['next_election_date'] = '2026-11-03'
+    profile['next_election_type'] = 'general'
+    profile['seat_up_next'] = True
+    return True
+
+
 def enrich_judicial(c):
     """SCOTUS justices have lifetime appointments — no election."""
     profile = c.setdefault('profile', {})
@@ -425,6 +484,12 @@ def main():
         if (c.get('candidacy_status') in ('lost_primary', 'not_running', 'withdrew')
                 and any(w in olo for w in ('candidate', 'primary', 'withdrew', 'not running'))):
             continue
+        # A pending special election is the next election; the chamber's regular
+        # cycle rule must not overwrite it (VA's odd-year rule would move the
+        # 2026-11-03 HD-20 special to 2027-11-02).
+        prof = c.get('profile') or {}
+        if prof.get('next_election_type') == 'special' and (prof.get('next_election_date') or '') >= today:
+            continue
         if level == 'federal':
             if enrich_federal(c):
                 federal_changed += 1
@@ -434,10 +499,18 @@ def main():
         elif level == 'judicial':
             if enrich_judicial(c):
                 judicial_changed += 1
+        elif level == 'state-executive':
+            if roll_statewide_nominee(c, today):
+                key = ((c.get('state') or '?').upper(), 'statewide nominee')
+                stale_fixed[key] = stale_fixed.get(key, 0) + 1
         elif level == 'state':
             if enrich_state_level(c):
                 s = (c.get('state') or '?').upper()
                 state_changed_by[s] = state_changed_by.get(s, 0) + 1
+            if roll_statewide_nominee(c, today):
+                key = ((c.get('state') or '?').upper(), 'statewide nominee')
+                stale_fixed[key] = stale_fixed.get(key, 0) + 1
+                continue
             how = fix_stale_state_legislator(c, today)
             if how:
                 key = ((c.get('state') or '?').upper(), how)

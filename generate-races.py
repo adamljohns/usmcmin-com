@@ -33,6 +33,17 @@ PARTY_LABEL = {
 }
 PARTY_ORDER = ["R", "D", "L", "I", "G", "C", "NP"]
 
+# Candidates who left the race stay on the board as history, labelled so a
+# reader does not take them for a live ballot option. Mirrors
+# OUT_OF_RACE_STATUSES in generate-profiles.py.
+OUT_OF_RACE_LABEL = {
+    "lost": "Lost",
+    "lost_primary": "Lost primary",
+    "not_running": "Not running",
+    "withdrew": "Withdrew",
+    "lost_higher_office": "Lost",
+}
+
 
 def load_json(path: Path):
     with path.open("r", encoding="utf-8") as f:
@@ -296,6 +307,10 @@ def shared_css() -> str:
 
 
 def page_shell(title: str, description: str, canonical: str, body: str, active: str = "races") -> str:
+    # Share-card meta was hand-added to races/*.html in 44317bc7488 (2026-08-12);
+    # emitted here so a regeneration does not strip it.
+    slug = canonical.rsplit("/", 1)[-1].removesuffix(".html")
+    og_alt = "2026 races" if slug == "index" else slug.replace("-", " ").title()
     return f'''<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -310,8 +325,13 @@ def page_shell(title: str, description: str, canonical: str, body: str, active: 
   <meta property="og:description" content="{escape(description)}">
   <meta property="og:type" content="website">
   <meta property="og:url" content="{escape(canonical)}">
-  <meta property="og:image" content="https://usmcmin.com/assets/og/og-citizen.jpg">
+  <meta property="og:image" content="https://usmcmin.com/assets/og/og-citizen-races.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:type" content="image/jpeg">
+  <meta property="og:image:alt" content="RESOLUTE Citizen — {escape(og_alt)}">
   <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="https://usmcmin.com/assets/og/og-citizen-races.jpg">
   <meta name="twitter:title" content="{escape(title)}">
   <meta name="twitter:description" content="{escape(description)}">
   <link rel="stylesheet" href="../assets/css/main.min.css">
@@ -376,6 +396,11 @@ def render_candidate_row(c, slug: str, state: str, categories: list, is_incumben
     badges = []
     if is_incumbent_slug and (c.get("slug") == is_incumbent_slug or slug == is_incumbent_slug):
         badges.append("Incumbent")
+    out_label = OUT_OF_RACE_LABEL.get(c.get("candidacy_status") or "")
+    if not out_label and c.get("status") == "lost":
+        out_label = "Lost"
+    if out_label:
+        badges.append(out_label)
     badge_html = (" · ".join(badges) + " · ") if badges else ""
     if tot["answered"] == 0:
         score_html = f'''<div class="race-score" style="color:#9ca3af;">—</div>

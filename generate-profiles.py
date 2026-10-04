@@ -293,6 +293,11 @@ def answer_display(val):
         return '<span style="color:#888;font-style:italic;text-decoration:line-through;" title="This question is not scoreable at this office tier — official has no direct authority to act on this issue.">N/A &middot; out of tier</span>'
     return '<span style="color:#666;font-style:italic;">Not yet verified</span>'
 
+# candidacy_status values meaning the person is no longer on the ballot for
+# profile.candidacy's race. Mirrored in generate-races.py.
+OUT_OF_RACE_STATUSES = ('lost', 'lost_primary', 'not_running', 'withdrew',
+                        'lost_higher_office')
+
 # ---- Navigation & photo helpers (added for prev/next + initials fallback) ----
 
 STATE_NAMES_FULL = {
@@ -1161,7 +1166,11 @@ def generate_profile(candidate, categories, meta, nav=None):
     # with a deep-link to the side-by-side comparison view for that race.
     candidacy_banner_html = ''
     cand = profile.get('candidacy') or {}
-    if cand.get('race_id'):
+    # A candidate who lost the primary or left the race keeps profile.candidacy
+    # as history, but must not be advertised as "Currently running".
+    out_of_race = (status in ('lost', 'former', 'deceased')
+                   or c.get('candidacy_status') in OUT_OF_RACE_STATUSES)
+    if cand.get('race_id') and not out_of_race:
         is_inc = bool(cand.get('is_incumbent'))
         chip_label = 'Incumbent' if is_inc else 'Challenger'
         chip_class = 'prof-cand-incumbent' if is_inc else 'prof-cand-challenger'

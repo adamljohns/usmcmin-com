@@ -13,7 +13,10 @@ verbatim-verifies every quote against the page it actually fetched and Gemma sti
 cross-checks polarity — so a wrong guess here can never produce a wrong score, only a
 wasted fetch. Discovery widens coverage; it does not widen trust.
 
-Brave key = the ONE fleet key (openclaw.json → plugins.entries.brave.config.webSearch.apiKey).
+Brave access = openclaw.json → plugins.entries.brave.config.webSearch. `apiKey` may be a
+plain string OR a SecretRef dict, and `baseUrl` normally points at the loopback budget
+gate, which injects the key itself. Both are handled in brave_config(); do not go direct
+to api.search.brave.com, that bypasses the metered budget.
 
 Usage: local-source-discover.py BATCH.json OUT_BATCH.json [--max N] [--sleep S]
 """
@@ -34,22 +37,55 @@ GOOD_TITLE = re.compile(
 OFFICE_HINT = re.compile(r"delegate|senator|senate|representative|house|governor|assembly|council", re.I)
 
 
-def brave_key():
-    if os.environ.get("BRAVE_API_KEY"):
-        return os.environ["BRAVE_API_KEY"]
-    cfg = json.load(open(os.path.expanduser("~/.openclaw/openclaw.json")))
+DEFAULT_BRAVE_BASE = "https://api.search.brave.com"
+
+
+def _resolve_secret(v):
+    """openclaw.json values may be a plain string OR a SecretRef dict. Resolve to a
+    string or None — NEVER return the dict, which urllib would reject as a header
+    value (`expected string or bytes-like object, got 'dict'`). That TypeError was
+    caught per-candidate and swallowed, so the grind ran 47 days with 0 Brave queries
+    (2026-08-22 → 2026-10-03) while logging a benign `+0 campaign site(s) found`."""
+    if isinstance(v, str):
+        return v or None
+    if isinstance(v, dict):
+        # {"source":"env","provider":"default","id":"OPENCLAW_BRAVE_API_KEY"}
+        if v.get("source") == "env" and v.get("id"):
+            return os.environ.get(v["id"]) or None
+        return None
+    return None
+
+
+def brave_config():
+    """(base_url, key_or_None). The key is optional when base_url is the loopback
+    budget gate (`brave-search-budget.py serve-proxy`), which injects the real key
+    itself and enforces the metered budget (soft_switch → DDG, hard_block). Going
+    direct to api.search.brave.com would bypass that gate, so honour baseUrl."""
+    base, key = DEFAULT_BRAVE_BASE, None
     try:
-        return cfg["plugins"]["entries"]["brave"]["config"]["webSearch"]["apiKey"]
+        cfg = json.load(open(os.path.expanduser("~/.openclaw/openclaw.json")))
+        ws = cfg["plugins"]["entries"]["brave"]["config"]["webSearch"]
+        base = (ws.get("baseUrl") or DEFAULT_BRAVE_BASE).rstrip("/")
+        key = _resolve_secret(ws.get("apiKey"))
     except Exception:
-        raise SystemExit("Brave API key not found (env BRAVE_API_KEY or openclaw.json "
-                         "plugins.entries.brave.config.webSearch.apiKey)")
+        pass
+    key = os.environ.get("BRAVE_API_KEY") or key
+    is_loopback = urllib.parse.urlparse(base).hostname in ("127.0.0.1", "localhost", "::1")
+    if not key and not is_loopback:
+        raise SystemExit("Brave API key not found (env BRAVE_API_KEY, or a resolvable "
+                         "openclaw.json plugins.entries.brave.config.webSearch.apiKey) "
+                         f"and baseUrl {base} is not the local budget proxy")
+    return base, key
 
 
-def brave_search(key, q, count=8):
-    u = ("https://api.search.brave.com/res/v1/web/search?q=" + urllib.parse.quote(q)
+def brave_search(cfg, q, count=8):
+    base, key = cfg
+    u = (f"{base}/res/v1/web/search?q=" + urllib.parse.quote(q)
          + f"&count={count}&country=us&result_filter=web")
-    req = urllib.request.Request(u, headers={"Accept": "application/json",
-                                             "X-Subscription-Token": key})
+    headers = {"Accept": "application/json"}
+    if key:
+        headers["X-Subscription-Token"] = key
+    req = urllib.request.Request(u, headers=headers)
     with urllib.request.urlopen(req, timeout=15) as r:
         j = json.load(r)
     return (j.get("web", {}) or {}).get("results") or []
@@ -97,8 +133,8 @@ def main():
     mx = int(sys.argv[sys.argv.index("--max") + 1]) if "--max" in sys.argv else 25
     slp = float(sys.argv[sys.argv.index("--sleep") + 1]) if "--sleep" in sys.argv else 0.4
     batch = json.load(open(src))
-    key = brave_key()
-    found = spent = rec_found = 0
+    bcfg = brave_config()
+    found = spent = rec_found = errors = 0
 
     # ---- Pass 2 target: the voting-RECORD page (LegiScan). For the ~2/3 of state legislators
     # with no campaign site, sponsorships/roll-calls are the quotable evidence — bill titles
@@ -109,7 +145,7 @@ def main():
         if (c.get("level") == "state" and not c.get("records_website") and spent < mx):
             q2 = f'"{c.get("name")}" {c.get("state")} site:legiscan.com'
             try:
-                res2 = brave_search(key, q2, count=5)
+                res2 = brave_search(bcfg, q2, count=5)
                 spent += 1
                 hit = next((m.group(0) for r in res2
                             for m in [LEGISCAN_RE.search(r.get("url") or "")] if m), None)
@@ -119,6 +155,7 @@ def main():
                     rec_found += 1
                     print(f"  R {c['slug']:26} -> {hit}")
             except Exception as e:
+                errors += 1
                 print(f"  brave error (records) for {c['slug']}: {str(e)[:60]}")
             time.sleep(slp)
         if not looks_thin(c) or spent >= mx:
@@ -126,9 +163,10 @@ def main():
         office = (c.get("office") or "").split("(")[0].strip()
         q = f'"{c.get("name")}" {c.get("state")} {office} campaign issues'
         try:
-            res = brave_search(key, q)
+            res = brave_search(bcfg, q)
             spent += 1
         except Exception as e:
+            errors += 1
             print(f"  brave error for {c['slug']}: {str(e)[:70]}")
             time.sleep(slp)
             continue
@@ -145,6 +183,16 @@ def main():
     print(f"wrote {out}: {found} campaign site(s) + {rec_found} records page(s) discovered "
           f"on {spent} Brave quer(ies), {len(batch)} candidates in batch")
 
+    # A round where EVERY query failed is a broken-Brave round, not a legitimately
+    # empty one. Exit non-zero so the orchestrator logs "source discovery failed"
+    # instead of the indistinguishable "+0 campaign site(s) found". This is the
+    # signal that was missing for 47 days (see _resolve_secret).
+    if errors and spent == 0:
+        print(f"DISCOVERY BROKEN: all {errors} Brave attempt(s) raised; 0 queries "
+              f"completed. Check the Brave key/baseUrl in openclaw.json.")
+        return 2
+    return 0
+
 
 if __name__ == "__main__":
-    main()
+    sys.exit(main() or 0)

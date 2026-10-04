@@ -414,6 +414,13 @@ def main():
         # primary losers whose dates were cleared in 5833c390163.
         if c.get('status') in ('lost', 'former', 'deceased'):
             continue
+        # Same for a candidacy-only record whose candidacy has ended. Its office
+        # text says so ("2026 candidate", "WITHDREW", "NOT running"); a sitting
+        # member who is not running keeps the seat's date.
+        olo = (c.get('office') or '').lower()
+        if (c.get('candidacy_status') in ('lost_primary', 'not_running', 'withdrew')
+                and any(w in olo for w in ('candidate', 'withdrew', 'not running'))):
+            continue
         if level == 'federal':
             if enrich_federal(c):
                 federal_changed += 1

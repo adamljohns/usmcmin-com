@@ -116,6 +116,10 @@ def enrich_federal(c):
         seat_up = True  # all US House seats up every 2 years
     elif 'senate' in jurisdiction:
         new_date, seat_up = _senate_next_date(slug)
+        # A 2026 general-election candidate is on the 2026 ballot whatever
+        # SENATOR_CLASS knows (it only lists a handful of sitting senators).
+        if c.get('candidacy_status') == 'general_candidate':
+            new_date, seat_up = NEXT_GENERAL_SENATE_2026, True
 
     if new_date and profile.get('next_election_date') != new_date:
         profile['next_election_date'] = new_date
@@ -415,11 +419,11 @@ def main():
         if c.get('status') in ('lost', 'former', 'deceased'):
             continue
         # Same for a candidacy-only record whose candidacy has ended. Its office
-        # text says so ("2026 candidate", "WITHDREW", "NOT running"); a sitting
+        # text says so ("2026 candidate", "D primary", "WITHDREW"); a sitting
         # member who is not running keeps the seat's date.
         olo = (c.get('office') or '').lower()
         if (c.get('candidacy_status') in ('lost_primary', 'not_running', 'withdrew')
-                and any(w in olo for w in ('candidate', 'withdrew', 'not running'))):
+                and any(w in olo for w in ('candidate', 'primary', 'withdrew', 'not running'))):
             continue
         if level == 'federal':
             if enrich_federal(c):

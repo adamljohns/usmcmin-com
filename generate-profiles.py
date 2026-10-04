@@ -1151,12 +1151,15 @@ def generate_profile(candidate, categories, meta, nav=None):
         )
     elif status == 'lame_duck':
         candidacy_note = (profile.get('candidacy_note') or '').strip()
+        lame_why = ('lost renomination in 2026 and is not on the November ballot.'
+                    if c.get('candidacy_status') == 'lost_primary'
+                    else 'has announced they will not seek re-election in 2026.')
         status_banner_html = (
             '<div class="prof-status-banner prof-status-lame" role="note" aria-label="Not seeking re-election">'
             '<span class="prof-status-chip">LAME DUCK</span>'
             '<div class="prof-status-text">'
             f'<strong>{c.get("name", "This official")}</strong> is still in active office '
-            'but has announced they will not seek re-election in 2026.'
+            f'but {lame_why}'
             f'{(" " + candidacy_note) if candidacy_note else ""}'
             '</div>'
             '</div>'

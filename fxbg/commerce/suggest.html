@@ -82,6 +82,13 @@ footer{margin-top:28px;font-family:Inter,system-ui,sans-serif;font-size:.78rem;c
 <script>
 (function(){
   const form = document.getElementById('c3-form');
+  // Prefill from a listing's "Submit a correction" link (?type=&business_name=&business_id=&category=)
+  const pre = new URLSearchParams(location.search);
+  ['type', 'business_name', 'business_id', 'category'].forEach(function (k) {
+    const el = document.getElementById(k);
+    const v = pre.get(k);
+    if (el && v) el.value = v.slice(0, 200);
+  });
   const status = document.getElementById('status');
   const btn = document.getElementById('submit-btn');
   const ENDPOINTS = [

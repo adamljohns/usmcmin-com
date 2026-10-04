@@ -89,14 +89,48 @@ def render_category(cat: str, listings: list[dict]) -> str:
 """
 
 
+GROUPS = [
+    ("Home & Trades", ("plumb", "hvac", "electric", "roof", "landscap", "home-", "flooring", "pest", "moving", "appliance",
+                       "hardware", "builder", "painting", "construction", "home-cleaning", "contractor", "fence", "locksmith", "self-storage", "nursery-garden", "pressure")),
+    ("Auto", ("auto", "car-", "tire", "gas-station", "motorcycle")),
+    ("Food & Drink", ("restaurant", "cafe", "coffee", "bakery", "brew", "bar-", "catering", "grocery", "convenience",
+                      "food", "pizza", "deli", "winery", "liquor", "ice-cream", "donut", "butcher")),
+    ("Health & Care", ("medical", "dental", "dentist", "orthodont", "chiropract", "physical-therapy", "mental-health", "pharmacy",
+                       "audiology", "oncology", "primary-care", "eye-care", "optometr", "health", "veterinary", "dermatolog",
+                       "funeral", "cardiolog", "allergy", "hospital", "acupunct", "counsel", "assisted-living", "massage")),
+    ("Family, School & Church", ("childcare", "preschool", "school", "tutor", "nonprofit", "church", "ministry", "pet-", "dog-")),
+    ("Personal Care & Fitness", ("salon", "barber", "esthetic", "tattoo", "fitness", "gym", "spa", "nail", "martial-arts", "dance", "golf")),
+    ("Money, Legal & Property", ("bank", "credit-union", "financial", "accounting", "cpa", "law", "legal", "insurance",
+                                 "real-estate", "professional", "government", "check-cashing", "consult", "mortgage")),
+    ("Shopping", ("retail", "furniture", "jewelry", "florist", "bookstore", "thrift", "tobacco", "bicycle", "art-", "gift",
+                  "clothing", "boutique", "antique", "printing", "pet-supply", "photography", "dry-cleaning")),
+]
+
+
+def group_for(cat: str) -> str:
+    for name, keys in GROUPS:
+        if any(k in cat for k in keys):
+            return name
+    return "More"
+
+
 def render_index(counts: list[tuple[str, int]]) -> str:
-    rows = "\n".join(
-        f"""<a class="sister-card" href="{esc(slugify(cat))}.html">
-  <div class="kicker">{n} listing{'s' if n != 1 else ''}</div>
-  <strong>{esc(label(cat))}</strong>
-</a>"""
-        for cat, n in counts
-    )
+    grouped: dict[str, list[tuple[str, int]]] = {}
+    for cat, n in counts:
+        grouped.setdefault(group_for(cat), []).append((cat, n))
+    sections = []
+    for name in [g for g, _ in GROUPS] + ["More"]:
+        items = sorted(grouped.get(name, []), key=lambda x: label(x[0]))
+        if not items:
+            continue
+        links = " · ".join(
+            f'<a href="{esc(slugify(cat))}.html">{esc(label(cat))}</a> <span class="meta">({n})</span>' for cat, n in items)
+        total = sum(n for _, n in items)
+        sections.append(f"""<div class="panel">
+  <h2>{esc(name)} <span class="meta">· {total} listings</span></h2>
+  <p class="cat-links">{links}</p>
+</div>""")
+    rows = "\n".join(sections)
     return f"""<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -104,7 +138,7 @@ def render_index(counts: list[tuple[str, int]]) -> str:
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Categories — Christ-Centered Commerce</title>
   <link rel="stylesheet" href="../assets/commerce.css" />
-  <style>.cat-index {{ display:grid; gap:12px; grid-template-columns:repeat(auto-fill,minmax(220px,1fr)); }}</style>
+  <style>.cat-links {{ line-height:2; }} .cat-links a {{ white-space:nowrap; }} .cat-links .meta {{ display:inline; margin:0; }}</style>
 </head>
 <body>
   <div class="soft-banner">Rubric v0.4 · Browse by category</div>
@@ -119,9 +153,7 @@ def render_index(counts: list[tuple[str, int]]) -> str:
     <div class="module-tag">Categories</div>
     <h1 class="profile-title">Browse by <span style="color:var(--gold)">Category</span></h1>
     <p class="meta">{len(counts)} categories · tap for filtered listings · <a href="../directory.html">or search the directory →</a></p>
-    <div class="panel cat-index">
-      {rows}
-    </div>
+    {rows}
   </div>
 </body>
 </html>

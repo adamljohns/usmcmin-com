@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import html
 import json
+from urllib.parse import urlencode
 import sys
 from collections import Counter
 from pathlib import Path
@@ -231,6 +232,37 @@ def render_profile(biz: dict, osm: dict | None = None, alt_tags: dict | None = N
 </div>"""
 
     summary = biz.get("summary") or ""
+    unreviewed = all(str(scores.get(k, "gray")).lower() == "gray" for k, _ in FACTORS)
+    suggest_href = "../suggest.html?" + urlencode({
+        "type": "correct", "business_name": biz.get("name", ""), "business_id": biz.get("slug", ""),
+        "category": cat})
+    origin = "This listing comes from a community map (OpenStreetMap) and " if biz.get("ingest_source") == "osm" else "This listing "
+    if unreviewed:
+        verdict_html = f"""<div class="panel">
+  <h2>Not reviewed yet</h2>
+  <p>{origin}has not been reviewed against the 10 factors yet. Gray means insufficient public evidence — neutral, not a bad mark.</p>
+  <div class="cta-row"><a class="btn" href="{esc(suggest_href)}">Know this business? Tell us →</a></div>
+</div>"""
+    else:
+        verdict_html = f"""<div class="panel">
+  <h2>Verdict</h2>
+  <p>{esc(summary)}</p>
+</div>"""
+    factor_list = f"""<ul class="factor-list">
+        {"".join(factors_html)}
+      </ul>"""
+    if unreviewed:
+        scorecard_html = f"""<div class="panel">
+  <details>
+    <summary><strong>10-Factor Scorecard</strong> — all Gray (not reviewed)</summary>
+    {factor_list}
+  </details>
+</div>"""
+    else:
+        scorecard_html = f"""<div class="panel">
+      <h2>10-Factor Scorecard</h2>
+      {factor_list}
+    </div>"""
 
     return f"""<!DOCTYPE html>
 <html lang="en">
@@ -262,27 +294,19 @@ def render_profile(biz: dict, osm: dict | None = None, alt_tags: dict | None = N
 
     {contact_panel(biz, tags)}
 
-    <div class="panel">
-      <h2>Verdict</h2>
-      <p>{esc(summary)}</p>
-    </div>
+    {verdict_html}
 
     {owner_html}
     {network_html}
 
-    <div class="panel">
-      <h2>10-Factor Scorecard</h2>
-      <ul class="factor-list">
-        {"".join(factors_html)}
-      </ul>
-    </div>
+    {scorecard_html}
 
     {src_html}
 
     <div class="panel">
       <h2>See an error?</h2>
       <p>Submit a correction with sources.</p>
-      <div class="cta-row"><a class="btn solid" href="../suggest.html">Submit feedback →</a></div>
+      <div class="cta-row"><a class="btn solid" href="{esc(suggest_href)}">Submit a correction →</a></div>
     </div>
 
     <footer>Christ-Centered Commerce · C5iSR · Evidence before heat</footer>

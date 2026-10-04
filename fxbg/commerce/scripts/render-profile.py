@@ -4,13 +4,14 @@ from __future__ import annotations
 
 import html
 import json
+import re
 from urllib.parse import urlencode
 import sys
 from collections import Counter
 from pathlib import Path
 
 from commerce_common import (
-    category_label, directions_url, load_osm_tags, location_note, osm_tags_for, pretty_hours, real_address,
+    category_label, directions_url, display_phone, load_osm_tags, location_note, osm_tags_for, pretty_hours, real_address,
     tel_href,
 )
 
@@ -97,6 +98,19 @@ def botb_line(biz: dict) -> str:
     return " · ".join(parts)
 
 
+def closed_panel(biz: dict) -> str:
+    if not biz.get("closed"):
+        return ""
+    ev = "".join(
+        f'<li><a href="{esc(e.get("url", ""))}" target="_blank" rel="noopener">{esc(e.get("label") or e.get("url", ""))}</a></li>'
+        for e in biz.get("closed_evidence") or [])
+    return f"""<div class="panel" style="border-color:#f44336">
+  <h2>Reported closed</h2>
+  <p>Public listings report this business as closed. It is no longer shown in the directory. Still open? <a href="../suggest.html">Tell us</a>.</p>
+  {f"<ul>{ev}</ul>" if ev else ""}
+</div>"""
+
+
 def contact_panel(biz: dict, tags: dict) -> str:
     """Address, phone, website, directions and hours — only what is on file."""
     rows = []
@@ -114,7 +128,7 @@ def contact_panel(biz: dict, tags: dict) -> str:
                     f"{(' ' + esc(biz['zip'])) if biz.get('zip') else ''}</p>")
     if biz.get("phone"):
         tel = tel_href(biz["phone"])
-        ph = f'<a href="{tel}">{esc(biz["phone"])}</a>' if tel else esc(biz["phone"])
+        ph = f'<a href="{tel}">{esc(display_phone(biz["phone"]))}</a>' if tel else esc(biz["phone"])
         rows.append(f"<p><strong>Phone:</strong> {ph}</p>")
     own = biz.get("hours_source") or {}
     if biz.get("hours") and own.get("url"):
@@ -167,6 +181,28 @@ def render_duplicate(biz: dict, target: dict) -> str:
 </body>
 </html>
 """
+
+
+def json_ld(biz: dict, tags: dict) -> str:
+    """schema.org LocalBusiness from facts on file only (no ratings — bands are not stars)."""
+    ld = {"@context": "https://schema.org", "@type": "LocalBusiness", "name": biz.get("name", ""),
+          "url": f"https://usmcmin.com/fxbg/commerce/business/{biz.get('slug')}.html"}
+    addr = real_address(biz)
+    if addr:
+        ld["address"] = {k: v for k, v in {
+            "@type": "PostalAddress", "streetAddress": addr, "addressLocality": biz.get("city") or "",
+            "addressRegion": biz.get("state") or "VA", "postalCode": biz.get("zip") or ""}.items() if v}
+    if biz.get("phone"):
+        ld["telephone"] = biz["phone"]
+    if biz.get("web"):
+        ld["sameAs"] = biz["web"]
+    if biz.get("ingest_source") == "osm" and biz.get("lat") is not None and biz.get("lng") is not None:
+        ld["geo"] = {"@type": "GeoCoordinates", "latitude": biz["lat"], "longitude": biz["lng"]}
+    oh = tags.get("opening_hours", "")
+    if oh and not biz.get("hours") and re.fullmatch(r"[A-Za-z0-9:,;\- /]+", oh):
+        ld["openingHours"] = [x.strip() for x in oh.split(";") if x.strip()]
+    body = json.dumps(ld, ensure_ascii=False).replace("</", "<\\/")
+    return f'<script type="application/ld+json">{body}</script>'
 
 
 def render_profile(biz: dict, osm: dict | None = None, alt_tags: dict | None = None) -> str:
@@ -272,6 +308,7 @@ def render_profile(biz: dict, osm: dict | None = None, alt_tags: dict | None = N
   <title>{esc(biz.get("name", ""))} — {esc(category_label(cat))}, {esc(biz.get("city") or "Fredericksburg")} · Christ-Centered Commerce</title>
   <meta name="description" content="{esc(biz.get('name', ''))} ({esc(category_label(cat))}, {esc(biz.get('city') or 'Fredericksburg area')}) — address, contact and the 10-Factor Christ-Centered Commerce scorecard." />
   <link rel="stylesheet" href="../assets/commerce.css" />
+  {json_ld(biz, tags)}
 </head>
 <body>
   <div class="soft-banner">Rubric v0.4 · Evidence before heat</div>
@@ -292,6 +329,7 @@ def render_profile(biz: dict, osm: dict | None = None, alt_tags: dict | None = N
       <div class="color-profile-chip"><span>{esc(prof)}</span></div>
     </header>
 
+    {closed_panel(biz)}
     {contact_panel(biz, tags)}
 
     {verdict_html}

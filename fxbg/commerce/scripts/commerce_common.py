@@ -117,8 +117,19 @@ def directions_url(biz: dict) -> str:
     return "https://www.google.com/maps/search/?api=1&query=" + quote_plus(q)
 
 
+def display_phone(phone: str) -> str:
+    """US numbers as (540) 555-1234; anything else (extensions, multiple numbers) as-is."""
+    digits = re.sub(r"\D", "", phone or "")
+    if len(digits) == 11 and digits[0] == "1":
+        digits = digits[1:]
+    if len(digits) == 10 and re.fullmatch(r"[+\d\s().\-]+", (phone or "").strip()):
+        return f"({digits[:3]}) {digits[3:6]}-{digits[6:]}"
+    return (phone or "").strip()
+
+
 def tel_href(phone: str) -> str:
-    digits = re.sub(r"[^\d+]", "", phone or "")
+    main = re.split(r"\s*(?:x|ext\.?|extension|/|;|,| or )\s*", phone or "", maxsplit=1, flags=re.I)[0]
+    digits = re.sub(r"[^\d+]", "", main)
     return f"tel:{digits}" if len(digits) >= 10 else ""
 
 

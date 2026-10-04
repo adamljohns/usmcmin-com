@@ -7,7 +7,7 @@ import json
 from collections import Counter
 from pathlib import Path
 
-from commerce_common import category_label, load_osm_tags, osm_tags_for, real_address, search_terms
+from commerce_common import category_label, display_phone, load_osm_tags, osm_tags_for, real_address, search_terms
 
 ROOT = Path(__file__).resolve().parents[1]
 DATA = ROOT / "data" / "businesses.json"
@@ -40,7 +40,7 @@ def card(biz: dict) -> str:
     return f"""<a class="biz-card" href="../business/{esc(biz['slug'])}.html" style="border-color:{color}55">
   <div class="eyebrow" style="color:{color}">{overall.upper()}</div>
   <h3>{esc(biz.get('name', ''))}</h3>
-  <div class="meta">{esc(real_address(biz) or biz.get('city') or '')}{(' · ' + esc(biz['phone'])) if biz.get('phone') else ''}</div>
+  <div class="meta">{esc(real_address(biz) or biz.get('city') or '')}{(' · ' + esc(display_phone(biz['phone']))) if biz.get('phone') else ''}</div>
 </a>"""
 
 
@@ -199,7 +199,7 @@ def write_directory_index(data: dict, businesses: list[dict]) -> None:
             "o": str(b.get("overall") or "gray").lower(),
             "a": real_address(b),
             "t": b.get("city") or "",
-            "p": b.get("phone") or "",
+            "p": display_phone(b.get("phone") or ""),
             "w": 1 if b.get("web") else 0,
             "k": search_terms(b, osm_tags_for(b, osm)),
             "d": summary[:160],

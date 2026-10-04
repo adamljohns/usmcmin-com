@@ -273,6 +273,12 @@ def party_label(party):
         return 'Democrat'
     if party == 'I':
         return 'Independent'
+    # third-party ballot lines (same labels generate-races.py uses); these read
+    # "Nonpartisan" before, which is wrong for a candidate on a party line
+    if party == 'L':
+        return 'Libertarian'
+    if party == 'G':
+        return 'Green'
     return 'Nonpartisan'
 
 def party_class(party):

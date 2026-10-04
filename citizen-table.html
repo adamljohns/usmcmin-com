@@ -127,6 +127,9 @@
 
     /* Jurisdiction section */
     .jurisdiction-section {
+      /* main.css gives every <section> 5rem 2rem of padding; here that put ~200px
+         of dead space between one-row county tables. */
+      padding: 0;
       margin-bottom: 36px;
       overflow-x: auto;
       overscroll-behavior-inline: contain;
@@ -611,7 +614,7 @@ function renderTables() {
 
   var catHeaders = '';
   DATA.categories.forEach(function(cat) {
-    var shortLabel = cat.label.length > 10 ? cat.label.substring(0, 9) + '.' : cat.label;
+    var shortLabel = cat.label.length > 10 ? cat.label.substring(0, 9).trim() + '.' : cat.label;
     catHeaders += '<th scope="col"><div class="cat-th"><img src="assets/icons/' + esc(cat.icon) + '" alt="" width="18" height="18"><span aria-label="' + esc(cat.label) + '">' + esc(shortLabel) + '</span></div></th>';
   });
 

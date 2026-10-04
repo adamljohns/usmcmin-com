@@ -1,7 +1,9 @@
 /* fleet.css — Fleet Command Center. Layered on main.css design tokens.
    Generated pages: fleet/index.html, fleet/<agent>.html, fleet/cowork.html */
 
-.fleet-hero{padding:3.2rem 0 1.8rem;border-bottom:1px solid var(--border);
+/* Top padding is --nav-clear (main.css): with 3.2rem the eyebrow sat behind the
+   fixed masthead on every width. */
+.fleet-hero{padding:var(--nav-clear) 0 1.8rem;border-bottom:1px solid var(--border);
   background:linear-gradient(180deg,var(--bg-card),transparent)}
 .fleet-eyebrow{font-family:var(--font-sans);font-size:.72rem;letter-spacing:.28em;
   font-weight:700;color:var(--gold);margin-bottom:.6rem}
@@ -93,11 +95,12 @@
 .pill-ok{background:#2E9E5B}.pill-warn{background:#E0A100}.pill-off{background:var(--border)}
 
 /* split: feed + wins */
-.split{display:grid;grid-template-columns:1.4fr 1fr;gap:2rem;align-items:start}
+/* minmax(0,…) so the nowrap .feed-job lines can't widen the page on a phone */
+.split{display:grid;grid-template-columns:minmax(0,1.4fr) minmax(0,1fr);gap:2rem;align-items:start}
 .feed{list-style:none;padding:0;margin:0}
 .feed li{display:flex;align-items:center;gap:.7rem;padding:.55rem 0;border-bottom:1px solid var(--border);font-size:.88rem}
 .feed-agent{font-weight:600;flex:none;min-width:120px}
-.feed-job{color:var(--gray);flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.feed-job{color:var(--gray);flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .feed-time{color:var(--gray);font-size:.78rem;flex:none}
 
 /* accomplishments */
@@ -112,7 +115,9 @@
 .acc-detail{color:var(--gray);font-size:.83rem;line-height:1.4}
 
 /* ── agent deep-dive ── */
-.agent-hero{position:relative;overflow:hidden;padding:2.8rem 0 2.4rem;
+/* margin-top clears the fixed masthead so the banner (and the agent's name on a
+   phone) starts below the bar instead of behind it. */
+.agent-hero{position:relative;overflow:hidden;margin-top:var(--nav-h);padding:2.8rem 0 2.4rem;
   border-bottom:1px solid var(--border);
   background:linear-gradient(120deg,color-mix(in srgb,var(--ac) 12%,var(--bg-card)),transparent)}
 /* Discord banners are 680x240. Full-bleed BACKGROUND, not a floating thumb.
@@ -190,10 +195,12 @@
 }
 @media (max-width:640px){
   /* Full-bleed banner strip; content sits on scrim, not a top-left thumb. */
+  /* No max-height / aspect-ratio here: the tag pills wrap to two or three rows
+     on a phone and a fixed 200px box clipped the last row. */
   .agent-hero.has-banner{
     min-height:132px;
-    max-height:200px;
-    aspect-ratio:680 / 240;
+    max-height:none;
+    aspect-ratio:auto;
   }
   .agent-hero-banner{object-position:center 30%}
   .agent-hero-inner{padding:.75rem 0 .7rem;align-items:center}
@@ -249,10 +256,16 @@
 .cowork-slug{font-size:.74rem;color:var(--gray);word-break:break-all}
 
 @media(max-width:760px){
-  .split{grid-template-columns:1fr}
+  .split{grid-template-columns:minmax(0,1fr)}
   .feed-agent{min-width:90px}
 }
 
 /* force banner/logo images not to inherit site-wide img shrink rules */
 .agent-hero.has-banner > img.agent-hero-banner{position:absolute;inset:0;width:100%;height:100%;}
 .agent-hero .agent-logo img{width:100%;height:100%;object-fit:cover;display:block;}
+
+/* Side gutter. main.css .container is max-width:1180px with no padding, so below
+   ~1240px every fleet heading, card and table ran edge to edge. */
+@media (max-width:1240px){
+  main .container{padding-left:clamp(1rem,4vw,1.75rem);padding-right:clamp(1rem,4vw,1.75rem)}
+}

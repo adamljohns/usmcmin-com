@@ -151,7 +151,7 @@ def nav_html(active: str = "races") -> str:
 
 def shared_css() -> str:
     return '''
-    .race-wrap { max-width: 1100px; margin: 0 auto; padding: 22px 16px 70px; }
+    .race-wrap { max-width: 1100px; margin: 0 auto; padding: var(--nav-clear) 16px 70px; }
     .race-crumb { font-size: 0.82rem; color: var(--gray); margin: 12px 0 18px; line-height: 1.6; }
     .race-crumb a { color: var(--accent); text-decoration: none; }
     .race-crumb a:hover { text-decoration: underline; }

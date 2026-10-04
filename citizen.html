@@ -403,19 +403,25 @@
 
     /* Score bar */
     .sc-scores {
-      padding: 14px 18px;
+      padding: 14px 12px;
       display: grid;
-      grid-template-columns: repeat(7, 1fr);
+      /* minmax(0,…) keeps all seven columns inside the card; a bare 1fr track
+         grows to its longest label and pushed the last column off the edge. */
+      grid-template-columns: repeat(7, minmax(0, 1fr));
       gap: 6px;
     }
     .sc-score-cell { text-align: center; }
     .sc-score-cell .cat-label {
-      font-size: 0.55rem;
+      font-size: 0.5rem;
       color: var(--gray);
       text-transform: uppercase;
-      letter-spacing: 0.3px;
+      letter-spacing: 0;
       display: block;
       margin-bottom: 4px;
+      /* Reserve two lines: some labels wrap and some don't, which left the
+         scores in one row sitting at different heights. */
+      line-height: 1.3;
+      min-height: 2.6em;
     }
     .sc-score-cell .cat-score { font-size: 1.1rem; font-weight: 700; }
     .sc-score-cell .cat-max { font-size: 0.6rem; color: var(--gray); }
@@ -587,7 +593,7 @@
 
     @media (max-width: 600px) {
       .sc-grid { grid-template-columns: 1fr; }
-      .sc-scores { grid-template-columns: repeat(4, 1fr); gap: 8px; }
+      .sc-scores { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; }
       .sc-stats { gap: 16px; }
     }
 
@@ -1674,7 +1680,7 @@ function renderCards() {
       if (!pillarOf(cat, total.tier)) return; // v5.0 — skip categories not in this tier's rubric
       var cs = calcCategoryScore(c.scores[cat.id]);
       var color = cs.answered > 0 ? getScoreColor(cs.score, cs.max) : '#666';
-      var label = cat.label.length > 10 ? cat.label.substring(0, 9) + '.' : cat.label;
+      var label = cat.label.length > 10 ? cat.label.substring(0, 9).trim() + '.' : cat.label;
       var cellAriaLabel = cs.answered > 0
         ? cat.label + ': ' + cs.score + ' of ' + MAX_PER_TOPIC
         : cat.label + ': not yet scored';

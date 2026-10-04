@@ -151,6 +151,10 @@
    in the flow, so this page's first block rendered behind it. --nav-clear is
    defined once in assets/css/main.css; don't hard-code a pixel value here. */
 .sh-container { padding-top: var(--nav-clear); }
+    /* Keyless OpenStreetMap tiles, darkened to match the page. The CARTO dark
+       basemap began stamping "API KEY REQUIRED" across every tile (seen
+       2026-10-04); a CARTO key would restore the original look. */
+    .osm-dark { filter: invert(1) hue-rotate(180deg) brightness(0.85) contrast(0.9) saturate(0.35); }
 </style>
 </head>
 <body>
@@ -282,9 +286,9 @@
       scrollWheelZoom: false,
       preferCanvas: true,
     });
-    L.tileLayer('https://cartodb-basemaps-{s}.global.ssl.fastly.net/dark_nolabels/{z}/{x}/{y}.png', {
-      attribution: '© OSM © CARTO',
-      subdomains: 'abcd',
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '© OpenStreetMap contributors',
+      className: 'osm-dark',
       maxZoom: 18,
     }).addTo(map);
 

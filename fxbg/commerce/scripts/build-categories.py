@@ -71,6 +71,7 @@ def render_category(cat: str, listings: list[dict]) -> str:
     <a href="index.html" class="active">Categories</a>
     <a href="../methodology.html">Methodology</a>
     <a href="../about.html">About</a>
+    <a href="../suggest.html">Suggest</a>
   </nav>
   <div class="wrap">
     <a class="back" href="index.html">← All categories</a>
@@ -148,6 +149,7 @@ def render_index(counts: list[tuple[str, int]]) -> str:
     <a href="index.html" class="active">Categories</a>
     <a href="../methodology.html">Methodology</a>
     <a href="../about.html">About</a>
+    <a href="../suggest.html">Suggest</a>
   </nav>
   <div class="wrap">
     <div class="module-tag">Categories</div>

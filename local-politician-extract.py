@@ -138,15 +138,24 @@ def parse_findings(content):
 
 
 def applicable_questions(categories, level):
-    """[(category_id, q_idx, question_text)] for questions applicable at this tier."""
+    """[(category_id, q_idx, question_text)] for questions applicable at this tier.
+
+    questions_state / questions_local hold a tier variant per index, or null where the
+    base question applies as-is. Fall back PER ENTRY, the way generate-profiles.py's
+    question_text_for_tier() does. A list-level fallback sent the brain the literal
+    position text "None" for 14 of 53 state-tier and 13 of 32 local-tier questions,
+    including all of public_justice and refuse_federal_overreach, so those cells could
+    never be scored."""
     qkey = {"federal": "questions", "state": "questions_state", "local": "questions_local"}.get(level, "questions")
     out = []
     for cat in categories:
-        qs = cat.get(qkey) or cat.get("questions") or []
+        base = cat.get("questions") or []
+        variants = cat.get(qkey) or []
         appl = cat.get("applicable_at") or []
-        for qi, q in enumerate(qs):
+        for qi in range(max(len(base), len(variants))):
+            q = (variants[qi] if qi < len(variants) else None) or (base[qi] if qi < len(base) else None)
             tiers = appl[qi] if qi < len(appl) else []
-            if level in tiers:
+            if q and level in tiers:
                 out.append((cat["id"], qi, q))
     return out
 

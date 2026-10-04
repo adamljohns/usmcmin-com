@@ -117,7 +117,10 @@ def main():
                         cell["status"] = "FAIL_dead_source"
                         entry["failed"] += 1; any_bad = True
                     else:
-                        pos = qs[qi] if qi < len(qs) else cat_id
+                        # tier variants are null where the base question applies — fall back per entry
+                        base_qs = (cats.get(cat_id) or {}).get("questions") or []
+                        pos = ((qs[qi] if qi < len(qs) else None)
+                               or (base_qs[qi] if qi < len(base_qs) else None) or cat_id)
                         verdict = "SUPPORT" if v else "OPPOSE"
                         # TIER-3 PARTY PLATFORM (evidence policy, Principal lock 2026-08-16):
                         # a platform document legitimately backs a cell WITHOUT naming the

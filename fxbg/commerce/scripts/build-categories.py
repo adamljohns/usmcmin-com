@@ -133,6 +133,8 @@ def main() -> None:
     businesses = data.get("businesses") or []
     by_cat: dict[str, list] = {}
     for biz in businesses:
+        if biz.get("publish") is False:
+            continue
         cat = biz.get("category") or "other"
         by_cat.setdefault(cat, []).append(biz)
     counts = sorted(by_cat.items(), key=lambda x: (-len(x[1]), x[0]))

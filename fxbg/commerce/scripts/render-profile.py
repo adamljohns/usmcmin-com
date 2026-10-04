@@ -115,7 +115,12 @@ def contact_panel(biz: dict, tags: dict) -> str:
         tel = tel_href(biz["phone"])
         ph = f'<a href="{tel}">{esc(biz["phone"])}</a>' if tel else esc(biz["phone"])
         rows.append(f"<p><strong>Phone:</strong> {ph}</p>")
-    hours = pretty_hours(tags.get("opening_hours", ""))
+    own = biz.get("hours_source") or {}
+    if biz.get("hours") and own.get("url"):
+        checked = f", checked {esc(own['checked'])}" if own.get("checked") else ""
+        rows.append("<p><strong>Hours:</strong><br>" + "<br>".join(esc(h) for h in biz["hours"])
+                    + f'<br><span class="meta">From <a href="{esc(own["url"])}" target="_blank" rel="noopener">the business\'s website</a>{checked}.</span></p>')
+    hours = [] if biz.get("hours") else pretty_hours(tags.get("opening_hours", ""))
     if hours:
         checked = tags.get("check_date:opening_hours") or tags.get("check_date")
         note = f"OpenStreetMap community data{', last checked ' + esc(checked) if checked else ''} — call ahead to confirm."
@@ -139,11 +144,35 @@ def contact_panel(biz: dict, tags: dict) -> str:
 </div>"""
 
 
-def render_profile(biz: dict, osm: dict | None = None) -> str:
+def render_duplicate(biz: dict, target: dict) -> str:
+    """Folded OSM duplicate: send visitors (and search engines) to the full listing."""
+    name = esc(target.get("name", ""))
+    href = f"{esc(target['slug'])}.html"
+    return f"""<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>{name} — Christ-Centered Commerce</title>
+  <meta name="robots" content="noindex" />
+  <link rel="canonical" href="https://usmcmin.com/fxbg/commerce/business/{href}" />
+  <meta http-equiv="refresh" content="0; url={href}" />
+  <link rel="stylesheet" href="../assets/commerce.css" />
+</head>
+<body>
+  <div class="wrap-narrow">
+    <p>This listing has moved to <a href="{href}">{name}</a>.</p>
+  </div>
+</body>
+</html>
+"""
+
+
+def render_profile(biz: dict, osm: dict | None = None, alt_tags: dict | None = None) -> str:
     scores = biz.get("scores") or {}
     overall = str(biz.get("overall") or "gray").lower()
     prof = color_profile(scores)
-    tags = osm_tags_for(biz, osm or {})
+    tags = osm_tags_for(biz, osm or {}) or alt_tags or {}
     cat = biz.get("category") or "other"
     cat_slug = cat.replace("_", "-")
 
@@ -273,12 +302,19 @@ def main() -> None:
         businesses = [b for b in businesses if b.get("slug") in slugs]
     OUT.mkdir(parents=True, exist_ok=True)
     count = 0
+    every = {b.get("slug"): b for b in data.get("businesses") or []}
+    # curated slug -> OSM tags of a folded duplicate (hours for listings with no OSM source)
+    dup_tags = {b["duplicate_of"]: osm_tags_for(b, osm) for b in every.values() if b.get("duplicate_of")}
     for biz in businesses:
         slug = biz.get("slug")
         if not slug:
             continue
         path = OUT / f"{slug}.html"
-        path.write_text(render_profile(biz, osm))
+        target = every.get(biz.get("duplicate_of") or "")
+        if target and biz.get("publish") is False:
+            path.write_text(render_duplicate(biz, target))
+        else:
+            path.write_text(render_profile(biz, osm, dup_tags.get(slug)))
         count += 1
     print(f"rendered {count} profiles -> {OUT}")
 

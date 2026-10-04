@@ -25,7 +25,7 @@ FACTORS = [
 
 def main() -> None:
     data = json.loads(DATA.read_text())
-    biz = data.get("businesses") or []
+    biz = [b for b in data.get("businesses") or [] if b.get("publish") is not False]
     overall = Counter(str(b.get("overall", "gray")).lower() for b in biz)
     cats = Counter(b.get("category", "?") for b in biz)
     type_a = sum(

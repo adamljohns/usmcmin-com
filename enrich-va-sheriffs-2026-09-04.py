@@ -36,33 +36,46 @@ GOV_HINT = re.compile(r"\.(gov|us)(/|$)", re.I)
 SHERIFF_HINT = re.compile(r"sheriff|so\s|sheriff'?s?\s+office", re.I)
 
 
-def brave_key() -> str:
-    for env in ("BRAVE_API_KEY", "OPENCLAW_BRAVE_API_KEY"):
-        if os.environ.get(env):
-            return os.environ[env]
-    cfg = json.load(open(os.path.expanduser("~/.openclaw/openclaw.json")))
-    raw = cfg["plugins"]["entries"]["brave"]["config"]["webSearch"]["apiKey"]
-    if isinstance(raw, str):
-        return raw
-    if isinstance(raw, dict):
-        import subprocess
-
-        sid = raw.get("id") or "OPENCLAW_BRAVE_API_KEY"
-        return subprocess.check_output(
-            ["security", "find-generic-password", "-s", sid, "-w"], text=True
-        ).strip()
-    raise SystemExit("Brave API key not found")
+DEFAULT_BRAVE_BASE = "https://api.search.brave.com"
 
 
-def brave_search(key: str, q: str, count: int = 10) -> list[dict]:
+def brave_config() -> tuple[str, str | None]:
+    """(base_url, key_or_None), same contract as local-source-discover.py.
+
+    Honour webSearch.baseUrl: it is the loopback budget gate (brave-search-budget.py
+    serve-proxy) that injects the key and enforces the metered budget. The old
+    hardcoded api.search.brave.com bypassed that gate. A key is only needed off-loopback;
+    a SecretRef dict resolves from the environment, never from a Keychain prompt."""
+    base, key = DEFAULT_BRAVE_BASE, None
+    try:
+        cfg = json.load(open(os.path.expanduser("~/.openclaw/openclaw.json")))
+        ws = cfg["plugins"]["entries"]["brave"]["config"]["webSearch"]
+        base = (ws.get("baseUrl") or DEFAULT_BRAVE_BASE).rstrip("/")
+        raw = ws.get("apiKey")
+        if isinstance(raw, str) and raw:
+            key = raw
+        elif isinstance(raw, dict) and raw.get("source") == "env" and raw.get("id"):
+            key = os.environ.get(raw["id"]) or None
+    except Exception:
+        pass
+    key = os.environ.get("BRAVE_API_KEY") or os.environ.get("OPENCLAW_BRAVE_API_KEY") or key
+    loopback = urllib.parse.urlparse(base).hostname in ("127.0.0.1", "localhost", "::1")
+    if not key and not loopback:
+        raise SystemExit(f"Brave API key not found and baseUrl {base} is not the local budget proxy")
+    return base, key
+
+
+def brave_search(cfg: tuple[str, str | None], q: str, count: int = 10) -> list[dict]:
+    base, key = cfg
     u = (
-        "https://api.search.brave.com/res/v1/web/search?q="
+        f"{base}/res/v1/web/search?q="
         + urllib.parse.quote(q)
         + f"&count={count}&country=us&result_filter=web"
     )
-    req = urllib.request.Request(
-        u, headers={"Accept": "application/json", "X-Subscription-Token": key}
-    )
+    headers = {"Accept": "application/json"}
+    if key:
+        headers["X-Subscription-Token"] = key
+    req = urllib.request.Request(u, headers=headers)
     with urllib.request.urlopen(req, timeout=20) as r:
         j = json.load(r)
     return (j.get("web", {}) or {}).get("results") or []
@@ -238,7 +251,7 @@ def main() -> None:
         if arg == "--sleep" and i + 1 < len(sys.argv):
             sleep = float(sys.argv[i + 1])
 
-    key = brave_key()
+    key = brave_config()
     with open(SCORECARD, encoding="utf-8") as f:
         data = json.load(f)
 

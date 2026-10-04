@@ -801,6 +801,11 @@ def render_page(cat):
     }}
     .cp-disq h3 {{ color: #ff8a80; font-size: 0.95rem; margin-bottom: 6px; font-weight: 700; }}
     .cp-disq ul {{ margin: 0 0 0 22px; color: #ffb3ad; font-size: 0.9rem; }}
+    /* Bright mode: the colours above are tuned for the dark page and wash out on white. */
+    html:not([data-theme="dark"]) .cp-tier-badge, html:not([data-theme="dark"]) .cp-scripture p {{ color: var(--gray-light); }}
+    html:not([data-theme="dark"]) .cp-disq h3 {{ color: #B42318; }}
+    html:not([data-theme="dark"]) .cp-disq ul {{ color: #7A271A; }}
+    html:not([data-theme="dark"]) .cp-disq p {{ color: #7A271A !important; }} /* beats the inline colour on the note */
 
     /* v4.3 — tier toggle (Federal / State / Local) for the questions section.
        Pure-CSS visibility: all three variants are rendered, the parent <ol>

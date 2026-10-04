@@ -263,6 +263,10 @@ def shared_css() -> str:
     .race-chip-ok { color: #86efac; border-color: rgba(34,197,94,0.35); background: rgba(34,197,94,0.08); }
     .race-chip-soft { color: #fde68a; border-color: rgba(234,179,8,0.35); background: rgba(234,179,8,0.08); }
     .race-chip-null { color: #9ca3af; }
+    /* Bright mode: pale chip text washed out on white. */
+    html:not([data-theme="dark"]) .race-chip-ok { color: #166534; }
+    html:not([data-theme="dark"]) .race-chip-soft { color: #854d0e; }
+    html:not([data-theme="dark"]) .race-chip-null { color: #4b5563; }
     .party-r { color: #f87171; }
     .party-d { color: #60a5fa; }
     .party-l { color: #fbbf24; }

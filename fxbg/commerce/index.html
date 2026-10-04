@@ -37,6 +37,22 @@
   </header>
 
   <div class="wrap">
+    <form class="panel" action="directory.html" method="get" role="search" style="margin-bottom:18px">
+      <h2 style="margin-top:0">Find a local business</h2>
+      <div style="display:flex;gap:10px;flex-wrap:wrap">
+        <input type="search" name="q" placeholder="plumber, coffee, mechanic, a name…" aria-label="Search businesses" style="flex:1 1 220px" />
+        <button type="submit" class="btn solid">Search</button>
+      </div>
+      <div class="cta-row">
+        <a class="btn" href="directory.html?q=plumber">Plumber</a>
+        <a class="btn" href="directory.html?q=hvac">HVAC</a>
+        <a class="btn" href="directory.html?q=mechanic">Auto repair</a>
+        <a class="btn" href="directory.html?q=coffee">Coffee</a>
+        <a class="btn" href="directory.html?q=dentist">Dentist</a>
+        <a class="btn" href="directory.html?q=barber">Barber</a>
+        <a class="btn" href="categories/index.html">All categories</a>
+      </div>
+    </form>
     <div class="featured-grid">
       <div class="biz-card" style="border-color:rgba(76,175,80,0.45)">
         <div class="eyebrow" style="color:var(--green)">Featured · Type B exemplar</div>
@@ -99,9 +115,10 @@
   <script>
   (async function () {
     const bandColor = { green:'#4CAF50', yellow:'#FFC107', red:'#f44336', black:'#888', gray:'#888' };
-    const res = await fetch('data/businesses.json', { cache:'no-store' });
+    const esc = s => String(s ?? '').replace(/[&<>"']/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
+    const res = await fetch('data/directory-index.json');
     const data = await res.json();
-    const list = (data.businesses || []).filter(b => b.publish !== false);
+    const list = (data.rows || []).map(r => ({ name:r.n, slug:r.s, overall:r.o, lat:r.y, lng:r.x }));
     const overall = {};
     list.forEach(b => { const o = b.overall || 'gray'; overall[o] = (overall[o]||0)+1; });
     const parts = Object.entries(overall).sort((a,b)=>b[1]-a[1]).map(([k,v])=>`${v} ${k}`);
@@ -118,7 +135,7 @@
         const c = bandColor[b.overall] || bandColor.gray;
         L.circleMarker([b.lat, b.lng], { radius:8, color:c, fillColor:c, fillOpacity:0.85, weight:2 })
           .addTo(map)
-          .bindPopup(`<strong>${b.name}</strong><br/>${(b.overall||'').toUpperCase()} · <a href="business/${b.slug}.html">scorecard</a>`);
+          .bindPopup(`<strong>${esc(b.name)}</strong><br/>${esc((b.overall||'').toUpperCase())} · <a href="business/${encodeURIComponent(b.slug)}.html">details</a>`);
         pts.push([b.lat, b.lng]);
       });
       document.getElementById('map-count').textContent = pts.length;

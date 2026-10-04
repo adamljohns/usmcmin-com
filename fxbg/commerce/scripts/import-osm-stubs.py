@@ -100,11 +100,42 @@ def haversine_m(a: tuple[float, float], b: tuple[float, float]) -> float:
     return 2 * r * math.asin(math.sqrt(x))
 
 
+# 2026-10-04 (MBP-1003-NIGHT): specific types that used to fall through to
+# "retail" / "home-services" / "professional-services".
+SHOP_MAP.update({
+    "childcare": "childcare", "car_wash": "car-wash", "storage_rental": "self-storage",
+    "funeral_directors": "funeral-home", "massage": "health-wellness", "dry_cleaning": "dry-cleaning",
+    "laundry": "dry-cleaning", "tattoo": "tattoo", "optician": "eye-care", "florist": "florist",
+    "jewelry": "jewelry", "books": "bookstore", "garden_centre": "nursery-garden-center",
+    "pet_grooming": "pet-grooming", "car_parts": "auto-parts", "hearing_aids": "audiology",
+    "pastry": "bakery", "furniture": "furniture", "bed": "furniture", "car_rental": "car-rental",
+    "bicycle": "bicycle", "tobacco": "tobacco-vape", "e-cigarette": "tobacco-vape",
+    "alcohol": "liquor-store", "doityourself": "hardware", "paint": "hardware",
+    "pet": "pet-supply", "charity": "thrift-store", "second_hand": "thrift-store",
+    "copyshop": "printing", "money_lender": "check-cashing", "motorcycle": "motorcycle",
+})
+AMENITY_MAP.update({
+    "clinic": "medical", "childcare": "childcare", "kindergarten": "preschool",
+    "car_wash": "car-wash", "car_rental": "car-rental", "fuel": "gas-station",
+})
+CRAFT_MAP = {
+    "plumber": "plumbing", "hvac": "hvac", "electrician": "electrical", "roofer": "roofing",
+    "brewery": "brewery", "winery": "winery", "gardener": "landscaping",
+}
+OFFICE_MAP = {
+    "estate_agent": "real-estate", "insurance": "insurance", "lawyer": "law-firm", "lawyers": "law-firm",
+    "tax_advisor": "accounting", "accountant": "accounting", "financial_advisor": "financial-advisor",
+    "wealth_advisor": "financial-advisor", "government": "government-office", "moving_company": "moving",
+    "construction_company": "home-builder", "home_builder": "home-builder",
+}
+
+
 def category_from_tags(tags: dict) -> str:
-    if tags.get("shop"):
-        return SHOP_MAP.get(tags["shop"], "retail")
-    if tags.get("amenity"):
-        return AMENITY_MAP.get(tags["amenity"], "retail")
+    for key, table in (("shop", SHOP_MAP), ("amenity", AMENITY_MAP), ("craft", CRAFT_MAP), ("office", OFFICE_MAP)):
+        if tags.get(key) in table:
+            return table[tags[key]]
+    if tags.get("shop") or tags.get("amenity"):
+        return "retail"
     if tags.get("office"):
         return "professional-services"
     if tags.get("craft"):

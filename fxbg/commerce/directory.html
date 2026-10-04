@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Directory — Christ-Centered Commerce</title>
-  <meta name="description" content="317 Fredericksburg-area businesses — filter by category and overall band." />
+  <meta name="description" content="Search 2,300+ Fredericksburg-area businesses by name, trade or category — address, phone and a 10-factor Christ-centered commerce scorecard." />
   <link rel="stylesheet" href="assets/commerce.css" />
   <style>
     .filter-bar { display:flex; flex-wrap:wrap; gap:10px; margin-bottom:16px; align-items:center; }
@@ -16,6 +16,8 @@
     @media (min-width:640px) { #biz-grid { grid-template-columns:1fr 1fr; } }
     .biz-card { border-width:1px; transition:border-color .15s; }
     .biz-card:hover { border-color:var(--gold); }
+    .biz-card h3 a { color:inherit; text-decoration:none; }
+    .biz-card .meta a { color:var(--gold); }
   </style>
 </head>
 <body>
@@ -31,11 +33,11 @@
   <div class="wrap">
     <div class="module-tag">Directory</div>
     <h1 class="profile-title">Fredericksburg <span style="color:var(--gold)">Listings</span></h1>
-    <p class="meta">Filter by category or band · Tap scorecard for factor detail</p>
+    <p class="meta">Search by name or trade · filter by category or band · tap a listing for address, phone, hours and the scorecard</p>
 
     <div class="panel">
       <div class="filter-bar">
-        <input type="search" id="q" placeholder="Search name…" aria-label="Search" />
+        <input type="search" id="q" placeholder="Search: plumber, coffee, pizza, a name…" aria-label="Search businesses" />
         <select id="cat"><option value="">All categories</option></select>
         <select id="band">
           <option value="">All bands</option>
@@ -46,62 +48,112 @@
           <option value="gray">Unrated (gray)</option>
         </select>
         <select id="sort">
+          <option value="band">Sort: Scored first</option>
           <option value="name">Sort: A–Z</option>
-          <option value="band">Sort: Band</option>
           <option value="category">Sort: Category</option>
         </select>
+        <label style="font-size:0.85rem;color:var(--gray-light);display:flex;gap:6px;align-items:center;flex:0 0 auto"><input type="checkbox" id="local" style="width:auto;min-width:0" /> Hide chains (3+ locations)</label>
       </div>
       <p class="count-line" id="count">—</p>
       <div id="biz-grid"></div>
+      <div class="cta-row" style="justify-content:center"><button type="button" class="btn" id="more" style="display:none">Show more</button></div>
     </div>
   </div>
   <script>
   (async function () {
     const bandColor = { green:'#4CAF50', yellow:'#FFC107', red:'#f44336', black:'#888', gray:'#888' };
     const bandOrder = { green:0, yellow:1, gray:2, red:3, black:4 };
-    const res = await fetch('data/businesses.json', { cache:'no-store' });
+    const PAGE = 60;
+    // Words people type -> category slugs they mean.
+    const SYN = {
+      plumber:['plumbing'], plumbing:['plumbing'], electrician:['electrical'], hvac:['hvac'], heating:['hvac'],
+      roofer:['roofing'], roof:['roofing'], landscaper:['landscaping'], lawn:['landscaping'], contractor:['home-services','home-builder'],
+      coffee:['cafe','coffee-shop','bakery-cafe'], cafe:['cafe','coffee-shop','bakery-cafe'], breakfast:['restaurant-breakfast','restaurant-brunch','restaurant-american-diner'],
+      mechanic:['auto-repair'], tires:['auto-repair'], oil:['auto-repair'], dentist:['dental','dentist','orthodontics'], dental:['dental','dentist'],
+      doctor:['medical','primary-care'], vet:['veterinary'], haircut:['salon','barbershop'], barber:['barbershop'], hair:['salon','barbershop'],
+      lawyer:['law-firm'], attorney:['law-firm'], law:['law-firm'],
+      cpa:['accounting'], accountant:['accounting'], taxes:['accounting'],
+      gas:['gas-station'], groceries:['grocery'], pharmacy:['pharmacy'], daycare:['childcare','preschool'], gym:['fitness-training'],
+      bar:['bar-restaurant','brewery','brewery-restaurant'], beer:['brewery','brewery-restaurant'], realtor:['real-estate'],
+      counselor:['mental-health'], therapist:['mental-health','physical-therapy'], chiropractor:['chiropractic'], florist:['florist'],
+      storage:['self-storage'], 'car wash':['car-wash'], insurance:['insurance','professional-cpa-legal-insurance']
+    };
+    const esc = s => String(s ?? '').replace(/[&<>"']/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
+    const res = await fetch('data/directory-index.json');
     const data = await res.json();
-    const all = (data.businesses || []).filter(b => b.publish !== false);
+    const labels = data.labels || {};
+    const label = c => labels[c] || (c || '').replace(/-/g, ' ');
+    const all = data.rows || [];
+    all.forEach(b => { b._hay = [b.n, label(b.c), b.c, b.a, b.t, b.k].join(' ').toLowerCase(); });
+    const nameCount = {};
+    all.forEach(b => { const k = (b.n || '').toLowerCase(); nameCount[k] = (nameCount[k] || 0) + 1; });
     document.getElementById('stat-line').textContent = `${all.length} listings · rubric ${data.rubric_version || '?'}`;
 
-    const cats = [...new Set(all.map(b => b.category).filter(Boolean))].sort();
+    const catCount = {};
+    all.forEach(b => { catCount[b.c] = (catCount[b.c] || 0) + 1; });
     const catEl = document.getElementById('cat');
-    cats.forEach(c => {
+    Object.keys(catCount).sort((a, b) => label(a).localeCompare(label(b))).forEach(c => {
       const o = document.createElement('option');
-      o.value = c; o.textContent = c.replace(/-/g, ' ');
+      o.value = c; o.textContent = `${label(c)} (${catCount[c]})`;
       catEl.appendChild(o);
     });
 
-    function render() {
+    const params = new URLSearchParams(location.search);
+    if (params.get('q')) document.getElementById('q').value = params.get('q');
+    if (params.get('cat') && catCount[params.get('cat')]) catEl.value = params.get('cat');
+    if (params.get('band')) document.getElementById('band').value = params.get('band');
+    let shown = PAGE;
+
+    function matches(b, q) {
+      if (!q) return true;
+      // Short words match whole words only ("bar" should not hit "barber").
+      const has1 = w => w.length < 4 ? new RegExp(`\\b${w.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\b`).test(b._hay) : b._hay.includes(w);
+      const has = w => has1(w) || (w.length > 4 && /s$/.test(w) && has1(w.slice(0, -1)));
+      if (has(q)) return true;
+      const syn = SYN[q] || SYN[q.replace(/s$/, '')];
+      if (syn && syn.includes(b.c)) return true;
+      return q.split(/\s+/).every(w => has(w) || (SYN[w] || SYN[w.replace(/s$/, '')] || []).includes(b.c));
+    }
+
+    function render(resetPage) {
+      if (resetPage) shown = PAGE;
       const q = document.getElementById('q').value.trim().toLowerCase();
-      const cat = document.getElementById('cat').value;
+      const cat = catEl.value;
       const band = document.getElementById('band').value;
       const sort = document.getElementById('sort').value;
+      const hideChains = document.getElementById('local').checked;
       let list = all.filter(b => {
-        if (cat && b.category !== cat) return false;
-        if (band && (b.overall || 'gray') !== band) return false;
-        if (q && !(b.name || '').toLowerCase().includes(q)) return false;
-        return true;
+        if (cat && b.c !== cat) return false;
+        if (band && (b.o || 'gray') !== band) return false;
+        if (hideChains && nameCount[(b.n || '').toLowerCase()] >= 3) return false;
+        return matches(b, q);
       });
       list.sort((a, b) => {
-        if (sort === 'band') return (bandOrder[a.overall] ?? 9) - (bandOrder[b.overall] ?? 9) || a.name.localeCompare(b.name);
-        if (sort === 'category') return (a.category || '').localeCompare(b.category || '') || a.name.localeCompare(b.name);
-        return a.name.localeCompare(b.name);
+        if (sort === 'name') return a.n.localeCompare(b.n);
+        if (sort === 'category') return label(a.c).localeCompare(label(b.c)) || a.n.localeCompare(b.n);
+        return (bandOrder[a.o] ?? 9) - (bandOrder[b.o] ?? 9) || (b.p ? 1 : 0) - (a.p ? 1 : 0) || a.n.localeCompare(b.n);
       });
-      document.getElementById('count').textContent = `Showing ${list.length} of ${all.length}`;
-      document.getElementById('biz-grid').innerHTML = list.map(b => {
-        const c = bandColor[b.overall] || bandColor.gray;
+      const qs = new URLSearchParams();
+      if (q) qs.set('q', q); if (cat) qs.set('cat', cat); if (band) qs.set('band', band);
+      history.replaceState(null, '', qs.toString() ? `?${qs}` : location.pathname);
+      document.getElementById('count').textContent = `Showing ${Math.min(shown, list.length)} of ${list.length} matches (${all.length} listings)`;
+      document.getElementById('biz-grid').innerHTML = list.slice(0, shown).map(b => {
+        const c = bandColor[b.o] || bandColor.gray;
+        const tel = (b.p || '').replace(/[^\d+]/g, '');
+        const where = b.a ? `${b.a}${b.t && !b.a.includes(b.t) ? ', ' + b.t : ''}` : (b.t || '');
         return `<article class="biz-card" style="border-color:${c}55">
-          <div class="eyebrow" style="color:${c}">${(b.overall||'gray').toUpperCase()}${b.featured?' · Featured':''}${b.adam_visited?' · Visited':''}</div>
-          <h3>${b.name}</h3>
-          <div class="meta">${(b.category||'').replace(/-/g,' ')} · ${b.city||''}</div>
-          <p style="font-size:0.9rem;color:var(--gray-light);margin:0 0 10px">${(b.summary||'').slice(0,160)}${(b.summary||'').length>160?'…':''}</p>
-          <a class="btn solid" href="business/${b.slug}.html">Scorecard →</a>
+          <div class="eyebrow" style="color:${c}">${esc((b.o || 'gray').toUpperCase())}${b.f ? ' · Featured' : ''}${b.v ? ' · Visited' : ''}</div>
+          <h3><a href="business/${encodeURIComponent(b.s)}.html">${esc(b.n)}</a></h3>
+          <div class="meta">${esc(label(b.c))} · ${esc(where)}${b.p ? ` · <a href="tel:${esc(tel)}">${esc(b.p)}</a>` : ''}</div>
+          ${b.d ? `<p style="font-size:0.9rem;color:var(--gray-light);margin:0 0 10px">${esc(b.d)}${b.d.length >= 160 ? '…' : ''}</p>` : ''}
+          <a class="btn solid" href="business/${encodeURIComponent(b.s)}.html">Details &amp; scorecard →</a>
         </article>`;
-      }).join('') || '<p style="color:var(--gray)">No matches.</p>';
+      }).join('') || `<p style="color:var(--gray)">No matches. Try a shorter word, clear the filters, or <a href="suggest.html">suggest a business</a>.</p>`;
+      document.getElementById('more').style.display = list.length > shown ? '' : 'none';
     }
-    ['q','cat','band','sort'].forEach(id => document.getElementById(id).addEventListener('input', render));
-    render();
+    ['q','cat','band','sort','local'].forEach(id => document.getElementById(id).addEventListener('input', () => render(true)));
+    document.getElementById('more').addEventListener('click', () => { shown += PAGE; render(false); });
+    render(true);
   })();
   </script>
 </body>

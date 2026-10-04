@@ -8,6 +8,11 @@ import sys
 from collections import Counter
 from pathlib import Path
 
+from commerce_common import (
+    category_label, directions_url, load_osm_tags, location_note, osm_tags_for, pretty_hours, real_address,
+    tel_href,
+)
+
 ROOT = Path(__file__).resolve().parents[1]
 DATA = ROOT / "data" / "businesses.json"
 OUT = ROOT / "business"
@@ -91,20 +96,61 @@ def botb_line(biz: dict) -> str:
     return " · ".join(parts)
 
 
-def render_profile(biz: dict) -> str:
+def contact_panel(biz: dict, tags: dict) -> str:
+    """Address, phone, website, directions and hours — only what is on file."""
+    rows = []
+    addr = real_address(biz)
+    place = ", ".join(x for x in (biz.get("city"), biz.get("state")) if x)
+    if addr:
+        line = addr if (biz.get("city") or "") in addr else f"{addr}, {place}"
+        if biz.get("zip") and biz["zip"] not in line:
+            line += f" {biz['zip']}"
+        rows.append(f"<p><strong>Address:</strong> {esc(line)}</p>")
+    elif location_note(biz):
+        rows.append(f"<p><strong>Location:</strong> {esc(location_note(biz))}</p>")
+    else:
+        rows.append(f"<p><strong>Address:</strong> street address not confirmed yet · {esc(place or 'Fredericksburg area')}"
+                    f"{(' ' + esc(biz['zip'])) if biz.get('zip') else ''}</p>")
+    if biz.get("phone"):
+        tel = tel_href(biz["phone"])
+        ph = f'<a href="{tel}">{esc(biz["phone"])}</a>' if tel else esc(biz["phone"])
+        rows.append(f"<p><strong>Phone:</strong> {ph}</p>")
+    hours = pretty_hours(tags.get("opening_hours", ""))
+    if hours:
+        checked = tags.get("check_date:opening_hours") or tags.get("check_date")
+        note = f"OpenStreetMap community data{', last checked ' + esc(checked) if checked else ''} — call ahead to confirm."
+        rows.append("<p><strong>Hours:</strong><br>" + "<br>".join(esc(h) for h in hours)
+                    + f'<br><span class="meta">{note}</span></p>')
+    buttons = []
+    if biz.get("web"):
+        buttons.append(f'<a class="btn solid" href="{esc(biz["web"])}" target="_blank" rel="noopener">Website →</a>')
+    tel = tel_href(biz.get("phone") or "")
+    if tel:
+        buttons.append(f'<a class="btn" href="{tel}">Call</a>')
+    maps = directions_url(biz)
+    if maps:
+        label = "Directions" if addr else ("Map location" if biz.get("ingest_source") == "osm" else "Find on map")
+        buttons.append(f'<a class="btn" href="{esc(maps)}" target="_blank" rel="noopener">{label}</a>')
+    btn_html = f'<div class="cta-row">{"".join(buttons)}</div>' if buttons else ""
+    return f"""<div class="panel">
+  <h2>Visit &amp; contact</h2>
+  {"".join(rows)}
+  {btn_html}
+</div>"""
+
+
+def render_profile(biz: dict, osm: dict | None = None) -> str:
     scores = biz.get("scores") or {}
     overall = str(biz.get("overall") or "gray").lower()
     prof = color_profile(scores)
+    tags = osm_tags_for(biz, osm or {})
+    cat = biz.get("category") or "other"
+    cat_slug = cat.replace("_", "-")
 
     meta_bits = [
-        esc(biz.get("category") or ""),
-        esc(biz.get("address") or ""),
+        f'<a href="../categories/{esc(cat_slug)}.html">{esc(category_label(cat))}</a>',
         esc(biz.get("city") or ""),
-        esc(biz.get("state") or ""),
-        esc(biz.get("zip") or ""),
     ]
-    if biz.get("phone"):
-        meta_bits.append(esc(biz["phone"]))
     botb = botb_line(biz)
     if botb:
         meta_bits.insert(0, esc(botb))
@@ -162,8 +208,8 @@ def render_profile(biz: dict) -> str:
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>{esc(biz.get("name", ""))} — Christ-Centered Commerce</title>
-  <meta name="description" content="10-Factor Christ-Centered Commerce scorecard for {esc(biz.get('name', ''))}." />
+  <title>{esc(biz.get("name", ""))} — {esc(category_label(cat))}, {esc(biz.get("city") or "Fredericksburg")} · Christ-Centered Commerce</title>
+  <meta name="description" content="{esc(biz.get('name', ''))} ({esc(category_label(cat))}, {esc(biz.get('city') or 'Fredericksburg area')}) — address, contact and the 10-Factor Christ-Centered Commerce scorecard." />
   <link rel="stylesheet" href="../assets/commerce.css" />
 </head>
 <body>
@@ -177,13 +223,15 @@ def render_profile(biz: dict) -> str:
     <a href="../suggest.html">Suggest</a>
   </nav>
   <div class="wrap-narrow">
-    <a class="back" href="../index.html">← Christ-Centered Commerce</a>
+    <a class="back" href="../categories/{esc(cat_slug)}.html">← All {esc(category_label(cat))} listings</a>
     <header class="profile-header">
       <div class="overall-band {overall}">{BAND_LABEL.get(overall, overall.upper())}</div>
       <h1 class="profile-title">{esc(biz.get("name", ""))}</h1>
       <div class="meta">{" · ".join(x for x in meta_bits if x)}</div>
       <div class="color-profile-chip"><span>{esc(prof)}</span></div>
     </header>
+
+    {contact_panel(biz, tags)}
 
     <div class="panel">
       <h2>Verdict</h2>
@@ -220,6 +268,7 @@ def main() -> None:
     slugs = [s.strip() for s in sys.argv[1:] if s.strip()]
     data = json.loads(DATA.read_text())
     businesses = data.get("businesses") or []
+    osm = load_osm_tags()
     if slugs:
         businesses = [b for b in businesses if b.get("slug") in slugs]
     OUT.mkdir(parents=True, exist_ok=True)
@@ -229,7 +278,7 @@ def main() -> None:
         if not slug:
             continue
         path = OUT / f"{slug}.html"
-        path.write_text(render_profile(biz))
+        path.write_text(render_profile(biz, osm))
         count += 1
     print(f"rendered {count} profiles -> {OUT}")
 

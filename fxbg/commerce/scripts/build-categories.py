@@ -7,6 +7,8 @@ import json
 from collections import Counter
 from pathlib import Path
 
+from commerce_common import category_label, load_osm_tags, osm_tags_for, real_address, search_terms
+
 ROOT = Path(__file__).resolve().parents[1]
 DATA = ROOT / "data" / "businesses.json"
 OUT = ROOT / "categories"
@@ -29,7 +31,7 @@ def slugify(cat: str) -> str:
 
 
 def label(cat: str) -> str:
-    return cat.replace("-", " ").title()
+    return category_label(cat)
 
 
 def card(biz: dict) -> str:
@@ -38,14 +40,16 @@ def card(biz: dict) -> str:
     return f"""<a class="biz-card" href="../business/{esc(biz['slug'])}.html" style="border-color:{color}55">
   <div class="eyebrow" style="color:{color}">{overall.upper()}</div>
   <h3>{esc(biz.get('name', ''))}</h3>
-  <div class="meta">{esc(biz.get('address') or biz.get('city') or '')}</div>
+  <div class="meta">{esc(real_address(biz) or biz.get('city') or '')}{(' · ' + esc(biz['phone'])) if biz.get('phone') else ''}</div>
 </a>"""
 
 
 def render_category(cat: str, listings: list[dict]) -> str:
     overall = Counter(str(b.get("overall", "gray")).lower() for b in listings)
     bands = " · ".join(f"{overall[c]} {c.title()}" for c in ("green", "yellow", "gray", "red") if overall.get(c))
-    cards = "\n".join(card(b) for b in sorted(listings, key=lambda x: x.get("name", "")))
+    band_rank = {"green": 0, "yellow": 1, "gray": 2, "red": 3, "black": 4}
+    cards = "\n".join(card(b) for b in sorted(
+        listings, key=lambda x: (band_rank.get(str(x.get("overall") or "gray").lower(), 9), x.get("name", ""))))
     return f"""<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -72,7 +76,7 @@ def render_category(cat: str, listings: list[dict]) -> str:
     <a class="back" href="index.html">← All categories</a>
     <div class="module-tag">{esc(label(cat))}</div>
     <h1 class="profile-title">{esc(label(cat))}</h1>
-    <p class="meta">{len(listings)} listings · {esc(bands)}</p>
+    <p class="meta">{len(listings)} listing{'s' if len(listings) != 1 else ''} · {esc(bands)} · scored listings first · <a href="../directory.html?cat={esc(cat)}">search &amp; filter these →</a></p>
     <div class="panel">
       <div class="cat-grid">
         {cards}
@@ -88,7 +92,7 @@ def render_category(cat: str, listings: list[dict]) -> str:
 def render_index(counts: list[tuple[str, int]]) -> str:
     rows = "\n".join(
         f"""<a class="sister-card" href="{esc(slugify(cat))}.html">
-  <div class="kicker">{n} listings</div>
+  <div class="kicker">{n} listing{'s' if n != 1 else ''}</div>
   <strong>{esc(label(cat))}</strong>
 </a>"""
         for cat, n in counts
@@ -114,7 +118,7 @@ def render_index(counts: list[tuple[str, int]]) -> str:
   <div class="wrap">
     <div class="module-tag">Categories</div>
     <h1 class="profile-title">Browse by <span style="color:var(--gold)">Category</span></h1>
-    <p class="meta">{len(counts)} categories · tap for filtered listings</p>
+    <p class="meta">{len(counts)} categories · tap for filtered listings · <a href="../directory.html">or search the directory →</a></p>
     <div class="panel cat-index">
       {rows}
     </div>
@@ -134,13 +138,54 @@ def main() -> None:
     counts = sorted(by_cat.items(), key=lambda x: (-len(x[1]), x[0]))
     OUT.mkdir(parents=True, exist_ok=True)
     for cat, listings in counts:
-        if len(listings) < 2:
-            continue
         path = OUT / f"{slugify(cat)}.html"
         path.write_text(render_category(cat, listings))
-    (OUT / "index.html").write_text(render_index([(c, len(l)) for c, l in counts if len(l) >= 2]))
-    built = sum(1 for _, l in counts if len(l) >= 2)
-    print(f"built categories/index.html + {built} category pages -> {OUT}")
+    (OUT / "index.html").write_text(render_index([(c, len(l)) for c, l in counts]))
+    print(f"built categories/index.html + {len(counts)} category pages -> {OUT}")
+    write_directory_index(data, businesses)
+
+
+BOILERPLATE_PREFIX = "Community-sourced map listing"
+
+
+def write_directory_index(data: dict, businesses: list[dict]) -> None:
+    """Slim JSON for directory.html and the hub map (businesses.json is ~5 MB)."""
+    osm = load_osm_tags()
+    rows = []
+    for b in businesses:
+        if b.get("publish") is False:
+            continue
+        summary = b.get("summary") or ""
+        if summary.startswith(BOILERPLATE_PREFIX):
+            summary = ""
+        row = {
+            "s": b.get("slug"),
+            "n": b.get("name"),
+            "c": b.get("category") or "other",
+            "o": str(b.get("overall") or "gray").lower(),
+            "a": real_address(b),
+            "t": b.get("city") or "",
+            "p": b.get("phone") or "",
+            "w": 1 if b.get("web") else 0,
+            "k": search_terms(b, osm_tags_for(b, osm)),
+            "d": summary[:160],
+        }
+        if b.get("lat") is not None and b.get("lng") is not None:
+            row["y"], row["x"] = round(b["lat"], 5), round(b["lng"], 5)
+        if b.get("featured"):
+            row["f"] = 1
+        if b.get("adam_visited"):
+            row["v"] = 1
+        rows.append({k: v for k, v in row.items() if v not in ("", 0, None)})
+    out = {
+        "updated": data.get("updated"),
+        "rubric_version": data.get("rubric_version"),
+        "labels": {c: category_label(c) for c in sorted({r["c"] for r in rows})},
+        "rows": rows,
+    }
+    path = ROOT / "data" / "directory-index.json"
+    path.write_text(json.dumps(out, ensure_ascii=False, separators=(",", ":")))
+    print(f"wrote {path.name}: {len(rows)} rows, {path.stat().st_size // 1024} KB")
 
 
 if __name__ == "__main__":

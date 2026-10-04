@@ -117,9 +117,18 @@ def collect():
         # Skip the redirect-only stubs — sitemap should point to canonical URLs
         if rel in {"scorecard.html", "scorecard-table.html", "fitness/fitness.html", "resolute.html", "resolute/index.html"}:
             continue
+        # A page that tells crawlers noindex, or that only redirects, is not a
+        # sitemap URL. 113 were listed on 2026-10-04 (folded business stubs,
+        # fleet/*, finance/debt|forecast|review, private/*, 404.html).
+        head = path.read_text(encoding="utf-8", errors="ignore")[:8000]
+        if _NOINDEX_RE.search(head) or _REFRESH_RE.search(head):
+            continue
         prio, freq = priority_for(rel)
         urls.append((rel, prio, freq))
     return urls
+
+_NOINDEX_RE = re.compile(r"""<meta[^>]+name=["']robots["'][^>]+content=["'][^"']*noindex""", re.I)
+_REFRESH_RE = re.compile(r"""<meta[^>]+http-equiv=["']refresh""", re.I)
 
 def loc_for(rel: str) -> str:
     return f"{BASE_URL}/{rel}" if rel != "index.html" else f"{BASE_URL}/"

@@ -1,9 +1,9 @@
 {
-  "generated": "2026-10-07T12:30:54.554013+00:00",
+  "generated": "2026-10-07T14:01:02.800115+00:00",
   "totals": {
     "agents": 16,
-    "operational": 14,
-    "degraded": 2,
+    "operational": 13,
+    "degraded": 3,
     "jobs": 174,
     "enabled": 87,
     "accomplishments": 411,
@@ -13,59 +13,25 @@
     "cron": {
       "enabled": 88,
       "ran26h": 40,
-      "delivered": 24,
-      "fails": []
+      "delivered": 23,
+      "fails": [
+        "scheduled job \u00d7 1"
+      ]
     },
     "cron_source": "openclaw.sqlite + hermes/cron/jobs.json",
     "launchd": {
-      "healthy": 89,
+      "healthy": 91,
       "fails": [
-        "launchd job \u00d7 3"
+        "launchd job \u00d7 1"
       ]
     }
   },
   "rhythm": [
     {
-      "label": "Frictionless Capture",
-      "purpose": "Telegram/Discord \u2192 Command DB",
-      "last": "gateway hook installed",
-      "status": "installed"
-    },
-    {
-      "label": "Command Surface Sync",
-      "purpose": "Command DB to public-safe workflows",
-      "last": "2026-10-05T21:37:33-04:00",
-      "status": "local-only"
-    },
-    {
-      "label": "Morning Intel",
-      "purpose": "Calendar, mail, house, body, wire",
-      "last": "2026-10-05-morning-brief",
+      "label": "Command Rhythm",
+      "purpose": "Documents probe timed out",
+      "last": "unavailable",
       "status": "stale"
-    },
-    {
-      "label": "Daily Command Brief",
-      "purpose": "3\u20135 command priorities",
-      "last": "daily-brief-2026-09-04",
-      "status": "stale"
-    },
-    {
-      "label": "Email Action Digest",
-      "purpose": "Action/security/finance signal",
-      "last": "email-digest-2026-07-10",
-      "status": "stale"
-    },
-    {
-      "label": "Evening AAR",
-      "purpose": "Wins, slips, release, tomorrow",
-      "last": "2026-10-05-evening-wrap",
-      "status": "current"
-    },
-    {
-      "label": "Weekly Review",
-      "purpose": "7 themes + 12-week course correction",
-      "last": "Sunday 19:00 framework",
-      "status": "overdue"
     }
   ],
   "agents": [
@@ -1008,7 +974,7 @@
       "n_jobs": 0,
       "n_enabled": 0,
       "err": 0,
-      "last_ms": 1791375665692,
+      "last_ms": 1791381380573,
       "status": "operational",
       "accomplishments": [
         {
@@ -1714,7 +1680,7 @@
       "n_jobs": 9,
       "n_enabled": 5,
       "err": 0,
-      "last_ms": 1791372395991,
+      "last_ms": 1791379597662,
       "status": "operational",
       "accomplishments": [
         {
@@ -2184,10 +2150,10 @@
           "expr": "",
           "tz": "",
           "channel": "",
-          "last_ms": 1791372395991,
+          "last_ms": 1791379597662,
           "status": "skipped",
           "errors": 0,
-          "dur_ms": 257
+          "dur_ms": 258
         },
         {
           "name": "skill-collection-review-chaps",
@@ -2338,7 +2304,7 @@
       "n_jobs": 23,
       "n_enabled": 8,
       "err": 0,
-      "last_ms": 1791372600042,
+      "last_ms": 1791377400048,
       "status": "operational",
       "accomplishments": [
         {
@@ -2500,6 +2466,17 @@
       },
       "jobs": [
         {
+          "name": "Skill: finance-news",
+          "enabled": true,
+          "expr": "50 8 * * 1-5",
+          "tz": "America/New_York",
+          "channel": "discord",
+          "last_ms": 1791377400048,
+          "status": "ok",
+          "errors": 0,
+          "dur_ms": 188744
+        },
+        {
           "name": "C5iSR Daily Post \u2014 Carnegie (Mon-Sat 7:30AM, all six themes)",
           "enabled": true,
           "expr": "30 7 * * 1-6",
@@ -2531,17 +2508,6 @@
           "status": "ok",
           "errors": 0,
           "dur_ms": 37933
-        },
-        {
-          "name": "Skill: finance-news",
-          "enabled": true,
-          "expr": "50 8 * * 1-5",
-          "tz": "America/New_York",
-          "channel": "discord",
-          "last_ms": 1791291000068,
-          "status": "ok",
-          "errors": 0,
-          "dur_ms": 82437
         },
         {
           "name": "C5iSR social draft (M/W/F)",
@@ -2816,7 +2782,7 @@
       "n_jobs": 14,
       "n_enabled": 6,
       "err": 0,
-      "last_ms": 1791318000054,
+      "last_ms": 1791377400074,
       "status": "operational",
       "accomplishments": [
         {
@@ -3026,6 +2992,28 @@
       },
       "jobs": [
         {
+          "name": "Sally: host-inbox sweep AM",
+          "enabled": true,
+          "expr": "50 8 * * *",
+          "tz": "America/New_York",
+          "channel": "telegram",
+          "last_ms": 1791377400074,
+          "status": "ok",
+          "errors": 0,
+          "dur_ms": 19151
+        },
+        {
+          "name": "Skill: airbnb-reader",
+          "enabled": true,
+          "expr": "40 8 * * *",
+          "tz": "America/New_York",
+          "channel": "discord",
+          "last_ms": 1791376800023,
+          "status": "ok",
+          "errors": 0,
+          "dur_ms": 25472
+        },
+        {
           "name": "Sally: host-inbox sweep PM",
           "enabled": true,
           "expr": "20 16 * * *",
@@ -3046,28 +3034,6 @@
           "status": "ok",
           "errors": 0,
           "dur_ms": 577361
-        },
-        {
-          "name": "Sally: host-inbox sweep AM",
-          "enabled": true,
-          "expr": "50 8 * * *",
-          "tz": "America/New_York",
-          "channel": "telegram",
-          "last_ms": 1791291000083,
-          "status": "ok",
-          "errors": 0,
-          "dur_ms": 67358
-        },
-        {
-          "name": "Skill: airbnb-reader",
-          "enabled": true,
-          "expr": "40 8 * * *",
-          "tz": "America/New_York",
-          "channel": "discord",
-          "last_ms": 1791290400053,
-          "status": "ok",
-          "errors": 0,
-          "dur_ms": 15493
         },
         {
           "name": "skill-collection-review-sally",
@@ -3242,7 +3208,7 @@
       "n_jobs": 10,
       "n_enabled": 6,
       "err": 1,
-      "last_ms": 1791368798401,
+      "last_ms": 1791379599698,
       "status": "degraded",
       "accomplishments": [
         {
@@ -3510,10 +3476,10 @@
           "expr": "",
           "tz": "",
           "channel": "",
-          "last_ms": 1791368798401,
+          "last_ms": 1791379599698,
           "status": "skipped",
           "errors": 0,
-          "dur_ms": 263
+          "dur_ms": 257
         },
         {
           "name": "Nutrition log ping 19:00 \u2014 Coach Arnie",
@@ -3986,7 +3952,7 @@
       "n_jobs": 11,
       "n_enabled": 7,
       "err": 0,
-      "last_ms": 1791358002432,
+      "last_ms": 1791379603742,
       "status": "operational",
       "accomplishments": [
         {
@@ -4159,10 +4125,10 @@
           "expr": "",
           "tz": "",
           "channel": "",
-          "last_ms": 1791358002432,
+          "last_ms": 1791379603742,
           "status": "skipped",
           "errors": 0,
-          "dur_ms": 255
+          "dur_ms": 265
         },
         {
           "name": "Evening Civic Watch (6:30 PM) \u2014 Sheriff Roy",
@@ -4714,7 +4680,7 @@
       "n_jobs": 10,
       "n_enabled": 5,
       "err": 0,
-      "last_ms": 1791373200052,
+      "last_ms": 1791376200044,
       "status": "operational",
       "accomplishments": [
         {
@@ -4863,6 +4829,17 @@
       },
       "jobs": [
         {
+          "name": "Daily Tech/AI Brief (08:30)",
+          "enabled": true,
+          "expr": "30 8 * * *",
+          "tz": "America/New_York",
+          "channel": "discord",
+          "last_ms": 1791376200044,
+          "status": "ok",
+          "errors": 0,
+          "dur_ms": 62432
+        },
+        {
           "name": "RESOLUTE AM Wire draft (Rush)",
           "enabled": true,
           "expr": "40 7 * * *",
@@ -4894,17 +4871,6 @@
           "status": "ok",
           "errors": 0,
           "dur_ms": 77622
-        },
-        {
-          "name": "Daily Tech/AI Brief (08:30)",
-          "enabled": true,
-          "expr": "30 8 * * *",
-          "tz": "America/New_York",
-          "channel": "discord",
-          "last_ms": 1791289800070,
-          "status": "ok",
-          "errors": 0,
-          "dur_ms": 84375
         },
         {
           "name": "skill-collection-review-rush",
@@ -5032,9 +4998,9 @@
       ],
       "n_jobs": 11,
       "n_enabled": 7,
-      "err": 0,
-      "last_ms": 1791373380046,
-      "status": "operational",
+      "err": 1,
+      "last_ms": 1791379587511,
+      "status": "degraded",
       "accomplishments": [
         {
           "date": "2026-10-07",
@@ -5179,6 +5145,28 @@
       },
       "jobs": [
         {
+          "name": "wheelhouse-pattern",
+          "enabled": true,
+          "expr": "",
+          "tz": "",
+          "channel": "",
+          "last_ms": 1791379587511,
+          "status": "skipped",
+          "errors": 0,
+          "dur_ms": 273
+        },
+        {
+          "name": "Daily Father Outreach Reminder (Pops)",
+          "enabled": true,
+          "expr": "0 9 * * 1-5",
+          "tz": "America/New_York",
+          "channel": "telegram",
+          "last_ms": 1791378004840,
+          "status": "error",
+          "errors": 1,
+          "dur_ms": 900253
+        },
+        {
           "name": "Pops Daily Wheelhouse Check-in (7:37 AM)",
           "enabled": true,
           "expr": "43 7 * * *",
@@ -5188,28 +5176,6 @@
           "status": "ok",
           "errors": 0,
           "dur_ms": 23580
-        },
-        {
-          "name": "wheelhouse-pattern",
-          "enabled": true,
-          "expr": "",
-          "tz": "",
-          "channel": "",
-          "last_ms": 1791365185809,
-          "status": "skipped",
-          "errors": 0,
-          "dur_ms": 254
-        },
-        {
-          "name": "Daily Father Outreach Reminder (Pops)",
-          "enabled": true,
-          "expr": "0 9 * * 1-5",
-          "tz": "America/New_York",
-          "channel": "telegram",
-          "last_ms": 1791292535096,
-          "status": "ok",
-          "errors": 0,
-          "dur_ms": 22819
         },
         {
           "name": "skill-collection-review-pops",
@@ -5359,7 +5325,7 @@
       "n_jobs": 8,
       "n_enabled": 4,
       "err": 1,
-      "last_ms": 1791372410210,
+      "last_ms": 1791379611886,
       "status": "degraded",
       "accomplishments": [
         {
@@ -5520,10 +5486,10 @@
           "expr": "",
           "tz": "",
           "channel": "",
-          "last_ms": 1791372410210,
+          "last_ms": 1791379611886,
           "status": "skipped",
           "errors": 0,
-          "dur_ms": 258
+          "dur_ms": 254
         },
         {
           "name": "Daily Standards Check (9:30 AM) \u2014 Mac",
@@ -5659,7 +5625,7 @@
       "n_jobs": 9,
       "n_enabled": 5,
       "err": 0,
-      "last_ms": 1791358012567,
+      "last_ms": 1791379613902,
       "status": "operational",
       "accomplishments": [
         {
@@ -5829,10 +5795,10 @@
           "expr": "",
           "tz": "",
           "channel": "",
-          "last_ms": 1791358012567,
+          "last_ms": 1791379613902,
           "status": "skipped",
           "errors": 0,
-          "dur_ms": 256
+          "dur_ms": 265
         },
         {
           "name": "skill-collection-review-bg-hartwell",

@@ -9,6 +9,7 @@
  *   4. Mobile nav-toggle hamburger
  *   5. Light/dark theme toggle
  *   6. Next Election banner: "date passed" once the date on file is past
+ *   7. Registration deadline / early voting: "(passed)" once past
  *
  * Originally inlined into every profile.html via generate-profiles.py
  * (~8 KB × ~8,670 profiles = ~70 MB of duplicated JS). Extracted on
@@ -346,4 +347,28 @@
   }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', fixPassedElections);
   else fixPassedElections();
+})();
+
+/* 7. Election side panel: registration deadline / early-voting window printed as
+ * ISO dates — once the (end) date is past, append "(passed)". 2026-10-06. */
+(function(){
+  function markPassed() {
+    var today = new Date();
+    var iso = today.getFullYear() + '-' + ('0' + (today.getMonth() + 1)).slice(-2) + '-' + ('0' + today.getDate()).slice(-2);
+    var items = document.querySelectorAll('.prof-election-side-item');
+    for (var i = 0; i < items.length; i++) {
+      var it = items[i], s = it.querySelector('strong');
+      if (!s || it.getAttribute('data-passed')) continue;
+      var k = s.textContent || '';
+      if (k.indexOf('Registration deadline') !== 0 && k.indexOf('Early voting') !== 0) continue;
+      var dates = (it.textContent || '').match(/\d{4}-\d{2}-\d{2}/g);
+      if (!dates) continue;
+      if (dates[dates.length - 1] < iso) {
+        it.setAttribute('data-passed', '1');
+        it.appendChild(document.createTextNode(' (passed)'));
+      }
+    }
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', markPassed);
+  else markPassed();
 })();

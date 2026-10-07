@@ -224,6 +224,28 @@ def json_ld(biz: dict, tags: dict) -> str:
     return f'<script type="application/ld+json">{body}</script>'
 
 
+def place_bits(biz: dict, tags: dict) -> tuple[str, str]:
+    """(where, contact) for <title>/description: the street address on file, else the community-map street,
+    else the ZIP — so chain locations get distinct titles. Contact lists only what is on file."""
+    where = real_address(biz) or location_note(biz)
+    if not where:
+        num, street = (tags.get("addr:housenumber") or "").strip(), (tags.get("addr:street") or "").strip()
+        where = f"{num} {street}".strip() if street else ""
+    if not where and (biz.get("map_area") or {}).get("text"):
+        where = biz["map_area"]["text"]  # reverse geocode of the map point, e.g. "near Plank Road, Chancellor"
+    if not where and biz.get("zip"):
+        where = f"ZIP {biz['zip']}"
+    have = ["address" if real_address(biz) else "location"]
+    if biz.get("phone"):
+        have.append("phone")
+    if biz.get("hours") or (tags.get("opening_hours") and not biz.get("osm_hours_stale")):
+        have.append("hours")
+    if biz.get("web"):
+        have.append("website")
+    contact = ", ".join(have[:-1]) + (" and " if len(have) > 1 else "") + have[-1]
+    return where, contact
+
+
 def render_profile(biz: dict, osm: dict | None = None, alt_tags: dict | None = None) -> str:
     scores = biz.get("scores") or {}
     overall = str(biz.get("overall") or "gray").lower()
@@ -231,6 +253,7 @@ def render_profile(biz: dict, osm: dict | None = None, alt_tags: dict | None = N
     tags = osm_tags_for(biz, osm or {}) or alt_tags or {}
     cat = biz.get("category") or "other"
     cat_slug = cat.replace("_", "-")
+    where, contact = place_bits(biz, tags)
 
     meta_bits = [
         f'<a href="../categories/{esc(cat_slug)}.html">{esc(category_label(cat))}</a>',
@@ -321,8 +344,8 @@ def render_profile(biz: dict, osm: dict | None = None, alt_tags: dict | None = N
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>{esc(biz.get("name", ""))} — {esc(category_label(cat))}, {esc(biz.get("city") or "Fredericksburg")} · Christ-Centered Commerce</title>
-  <meta name="description" content="{esc(biz.get('name', ''))} ({esc(category_label(cat))}, {esc(biz.get('city') or 'Fredericksburg area')}) — address, contact and the 10-Factor Christ-Centered Commerce scorecard." />
+  <title>{esc(biz.get("name", ""))}{(", " + esc(where)) if where else ""} — {esc(category_label(cat))}, {esc(biz.get("city") or "Fredericksburg")} · Christ-Centered Commerce</title>
+  <meta name="description" content="{esc(biz.get('name', ''))}{(" at " + esc(where)) if where else ""} ({esc(category_label(cat))}, {esc(biz.get('city') or 'Fredericksburg area')}) — {esc(contact)} on file, and the 10-Factor Christ-Centered Commerce scorecard." />
   <link rel="stylesheet" href="../assets/commerce.css" />
   {json_ld(biz, tags)}
 </head>

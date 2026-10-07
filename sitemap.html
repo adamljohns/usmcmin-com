@@ -1090,8 +1090,8 @@
         <p class="stats-sub">A snapshot of what's running on usmcmin.com today.</p>
       </div>
       <div class="stats-grid">
-        <div class="stat-cell"><div class="stat-num">9,426</div><div class="stat-label">Candidates Scored</div></div>
-        <div class="stat-cell"><div class="stat-num">53</div><div class="stat-label">States &amp; Territories</div></div>
+        <div class="stat-cell"><div class="stat-num" id="statCandidates">9,436</div><div class="stat-label">Candidates Scored</div></div>
+        <div class="stat-cell"><div class="stat-num" id="statStates">53</div><div class="stat-label">States &amp; Territories</div></div>
         <div class="stat-cell"><div class="stat-num">10</div><div class="stat-label">Scorecard Categories</div></div>
         <div class="stat-cell"><div class="stat-num">5</div><div class="stat-label">Sub-Brands</div></div>
         <div class="stat-cell"><div class="stat-num">4</div><div class="stat-label">Coaching Tracks (U·S·M·C)</div></div>
@@ -1219,5 +1219,13 @@
 
 <script data-goatcounter="https://usmcmin.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
 <script src="assets/js/main.js" defer></script>
+<script>
+/* Candidates + states hydrate from data/stats.json (written by build-stats.py); the numbers above are the static fallback. */
+fetch('data/stats.json',{cache:'no-cache'}).then(function(r){return r.ok?r.json():null}).then(function(d){
+  var t=d&&d.totals; if(!t) return;
+  if(t.candidates){document.getElementById('statCandidates').textContent=Number(t.candidates).toLocaleString('en-US');}
+  if(t.states_covered){document.getElementById('statStates').textContent=t.states_covered;}
+}).catch(function(){});
+</script>
 </body>
 </html>

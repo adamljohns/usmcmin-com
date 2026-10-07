@@ -77,11 +77,16 @@ def factor_detail(biz: dict, factor: str, band: str) -> str:
     sources = biz.get("sources") or []
     if not sources:
         return "<p>Scored from public brand and operator notes on file.</p>"
-    items = "".join(
-        f'<li><a href="{esc(s.get("url", ""))}" target="_blank" rel="noopener">{esc(s.get("label") or s.get("url", ""))}</a></li>'
-        for s in sources
-    )
+    items = "".join(source_li(s) for s in sources)
     return f"<ul>{items}</ul>"
+
+
+def source_li(s: dict) -> str:
+    """A dead source stays as evidence text but is never linked (expired, hijacked or 404 pages)."""
+    label = esc(s.get("label") or s.get("url", "") or "Source")
+    if s.get("dead"):
+        return f'<li>{label} <span class="meta">(link no longer works — checked {esc(s["dead"])})</span></li>'
+    return f'<li><a href="{esc(s.get("url", ""))}" target="_blank" rel="noopener">{label}</a></li>'
 
 
 def botb_line(biz: dict) -> str:
@@ -256,10 +261,7 @@ def render_profile(biz: dict, osm: dict | None = None, alt_tags: dict | None = N
     sources = biz.get("sources") or []
     src_html = ""
     if sources:
-        items = "".join(
-            f'<li><a href="{esc(s.get("url", ""))}" target="_blank" rel="noopener">{esc(s.get("label") or "Source")}</a></li>'
-            for s in sources
-        )
+        items = "".join(source_li(s) for s in sources)
         src_html = f"""<div class="panel">
   <h2>Sources</h2>
   <ul>{items}</ul>

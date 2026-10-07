@@ -1,9 +1,9 @@
 {
-  "generated": "2026-10-07T14:01:02.800115+00:00",
+  "generated": "2026-10-07T15:03:17.763608+00:00",
   "totals": {
     "agents": 16,
-    "operational": 13,
-    "degraded": 3,
+    "operational": 12,
+    "degraded": 4,
     "jobs": 174,
     "enabled": 87,
     "accomplishments": 411,
@@ -12,26 +12,61 @@
   "health": {
     "cron": {
       "enabled": 88,
-      "ran26h": 40,
-      "delivered": 23,
+      "ran26h": 42,
+      "delivered": 24,
       "fails": [
-        "scheduled job \u00d7 1"
+        "scheduled job \u00d7 1",
+        "scheduled skill \u00d7 1"
       ]
     },
     "cron_source": "openclaw.sqlite + hermes/cron/jobs.json",
     "launchd": {
-      "healthy": 91,
-      "fails": [
-        "launchd job \u00d7 1"
-      ]
+      "healthy": 99,
+      "fails": []
     }
   },
   "rhythm": [
     {
-      "label": "Command Rhythm",
-      "purpose": "Documents probe timed out",
-      "last": "unavailable",
+      "label": "Frictionless Capture",
+      "purpose": "Telegram/Discord \u2192 Command DB",
+      "last": "gateway hook installed",
+      "status": "installed"
+    },
+    {
+      "label": "Command Surface Sync",
+      "purpose": "Command DB \u2192 Obsidian / TACC / workflows",
+      "last": "2026-10-05T21:37:33-04:00",
+      "status": "local-only"
+    },
+    {
+      "label": "Morning Intel",
+      "purpose": "Calendar, mail, house, body, wire",
+      "last": "2026-10-07-morning-brief",
+      "status": "current"
+    },
+    {
+      "label": "Daily Command Brief",
+      "purpose": "3\u20135 command priorities",
+      "last": "daily-brief-2026-09-04",
       "status": "stale"
+    },
+    {
+      "label": "Email Action Digest",
+      "purpose": "Action/security/finance signal",
+      "last": "email-digest-2026-07-10",
+      "status": "stale"
+    },
+    {
+      "label": "Evening AAR",
+      "purpose": "Wins, slips, release, tomorrow",
+      "last": "2026-10-06-evening-wrap",
+      "status": "current"
+    },
+    {
+      "label": "Weekly Review",
+      "purpose": "7 themes + 12-week course correction",
+      "last": "Sunday 19:00 framework",
+      "status": "overdue"
     }
   ],
   "agents": [
@@ -974,7 +1009,7 @@
       "n_jobs": 0,
       "n_enabled": 0,
       "err": 0,
-      "last_ms": 1791381380573,
+      "last_ms": 1791385382788,
       "status": "operational",
       "accomplishments": [
         {
@@ -1071,7 +1106,7 @@
       "n_jobs": 0,
       "n_enabled": 0,
       "err": 0,
-      "last_ms": 1791309177361,
+      "last_ms": 1791385104009,
       "status": "operational",
       "accomplishments": [
         {
@@ -2304,7 +2339,7 @@
       "n_jobs": 23,
       "n_enabled": 8,
       "err": 0,
-      "last_ms": 1791377400048,
+      "last_ms": 1791385101036,
       "status": "operational",
       "accomplishments": [
         {
@@ -2466,6 +2501,17 @@
       },
       "jobs": [
         {
+          "name": "carnegie-paper-touch-am",
+          "enabled": true,
+          "expr": "45 9 * * 1-5",
+          "tz": "America/New_York",
+          "channel": "last",
+          "last_ms": 1791385101036,
+          "status": "ok",
+          "errors": 0,
+          "dur_ms": 86151
+        },
+        {
           "name": "Skill: finance-news",
           "enabled": true,
           "expr": "50 8 * * 1-5",
@@ -2497,17 +2543,6 @@
           "status": "ok",
           "errors": 0,
           "dur_ms": 611831
-        },
-        {
-          "name": "carnegie-paper-touch-am",
-          "enabled": true,
-          "expr": "45 9 * * 1-5",
-          "tz": "America/New_York",
-          "channel": "last",
-          "last_ms": 1791294300046,
-          "status": "ok",
-          "errors": 0,
-          "dur_ms": 37933
         },
         {
           "name": "C5iSR social draft (M/W/F)",
@@ -3951,9 +3986,9 @@
       ],
       "n_jobs": 11,
       "n_enabled": 7,
-      "err": 0,
-      "last_ms": 1791379603742,
-      "status": "operational",
+      "err": 1,
+      "last_ms": 1791385200179,
+      "status": "degraded",
       "accomplishments": [
         {
           "date": "2026-09-07",
@@ -4120,6 +4155,28 @@
       },
       "jobs": [
         {
+          "name": "Skill: fxbg-city-code (Wed code check)",
+          "enabled": true,
+          "expr": "0 11 * * 3",
+          "tz": "America/New_York",
+          "channel": "discord",
+          "last_ms": 1791385200179,
+          "status": "error",
+          "errors": 1,
+          "dur_ms": 90629
+        },
+        {
+          "name": "Skill: fxbg-council-monitor",
+          "enabled": true,
+          "expr": "30 10 * * 3",
+          "tz": "America/New_York",
+          "channel": "discord",
+          "last_ms": 1791385097003,
+          "status": "ok",
+          "errors": 0,
+          "dur_ms": 156609
+        },
+        {
           "name": "agenda-this-week",
           "enabled": true,
           "expr": "",
@@ -4162,28 +4219,6 @@
           "status": "ok",
           "errors": 0,
           "dur_ms": 142497
-        },
-        {
-          "name": "Skill: fxbg-city-code (Wed code check)",
-          "enabled": true,
-          "expr": "0 11 * * 3",
-          "tz": "America/New_York",
-          "channel": "discord",
-          "last_ms": 1790780400047,
-          "status": "ok",
-          "errors": 0,
-          "dur_ms": 124225
-        },
-        {
-          "name": "Skill: fxbg-council-monitor",
-          "enabled": true,
-          "expr": "30 10 * * 3",
-          "tz": "America/New_York",
-          "channel": "discord",
-          "last_ms": 1790778600033,
-          "status": "ok",
-          "errors": 0,
-          "dur_ms": 176401
         },
         {
           "name": "skill-collection-review-sheriff-roy",
@@ -5161,10 +5196,10 @@
           "expr": "0 9 * * 1-5",
           "tz": "America/New_York",
           "channel": "telegram",
-          "last_ms": 1791378004840,
+          "last_ms": 1791378935155,
           "status": "error",
-          "errors": 1,
-          "dur_ms": 900253
+          "errors": 2,
+          "dur_ms": 6034704
         },
         {
           "name": "Pops Daily Wheelhouse Check-in (7:37 AM)",
@@ -5325,7 +5360,7 @@
       "n_jobs": 8,
       "n_enabled": 4,
       "err": 1,
-      "last_ms": 1791379611886,
+      "last_ms": 1791385090917,
       "status": "degraded",
       "accomplishments": [
         {
@@ -5481,6 +5516,17 @@
       },
       "jobs": [
         {
+          "name": "Daily Standards Check (9:30 AM) \u2014 Mac",
+          "enabled": true,
+          "expr": "30 9 * * *",
+          "tz": "America/New_York",
+          "channel": "discord",
+          "last_ms": 1791385090917,
+          "status": "ok",
+          "errors": 0,
+          "dur_ms": 39717
+        },
+        {
           "name": "pt-log-late-check",
           "enabled": true,
           "expr": "",
@@ -5490,17 +5536,6 @@
           "status": "skipped",
           "errors": 0,
           "dur_ms": 254
-        },
-        {
-          "name": "Daily Standards Check (9:30 AM) \u2014 Mac",
-          "enabled": true,
-          "expr": "30 9 * * *",
-          "tz": "America/New_York",
-          "channel": "discord",
-          "last_ms": 1791293400039,
-          "status": "ok",
-          "errors": 0,
-          "dur_ms": 45126
         },
         {
           "name": "skill-collection-review-sgt-maj-mac",
@@ -5934,5 +5969,5 @@
     "write-airbnb-reviews-for-listings",
     "you-are-an-expert-ai-agent"
   ],
-  "cowork_date": "2026-10-06T06:56:44-04:00"
+  "cowork_date": "2026-10-07T11:02:58-04:00"
 }

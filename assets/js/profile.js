@@ -8,6 +8,7 @@
  *   3. Jump-to dropdown + Prev/Next sort override (reads data-state attr)
  *   4. Mobile nav-toggle hamburger
  *   5. Light/dark theme toggle
+ *   6. Next Election banner: "date passed" once the date on file is past
  *
  * Originally inlined into every profile.html via generate-profiles.py
  * (~8 KB × ~8,670 profiles = ~70 MB of duplicated JS). Extracted on
@@ -319,3 +320,30 @@
   });
 })();
 
+
+/* 6. Next Election banner: once the date on file has passed, say so instead of
+ * counting "0 days until" (the inline countdown floors at 0). Reads the printed
+ * date, e.g. "March 3, 2026"; passed = after that whole local day. 2026-10-06. */
+(function(){
+  var MONTHS = ['january','february','march','april','may','june','july','august','september','october','november','december'];
+  function fixPassedElections() {
+    var els = document.querySelectorAll('[id^="countdown-"]');
+    for (var i = 0; i < els.length; i++) {
+      var el = els[i];
+      var main = el.closest ? el.closest('.prof-election-main') : null;
+      if (!main) continue;
+      var dateEl = main.querySelector('.prof-election-date');
+      var m = dateEl && /([A-Za-z]+)\s+(\d{1,2}),\s*(\d{4})/.exec(dateEl.textContent || '');
+      if (!m) continue;
+      var mo = MONTHS.indexOf(m[1].toLowerCase());
+      if (mo < 0) continue;
+      var dayAfter = new Date(+m[3], mo, +m[2] + 1);
+      if (Date.now() < dayAfter.getTime()) continue;
+      var label = main.querySelector('.prof-election-label');
+      if (label) label.textContent = 'Last election on file';
+      if (el.parentNode) el.parentNode.textContent = 'Date passed · next election not yet on file';
+    }
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', fixPassedElections);
+  else fixPassedElections();
+})();

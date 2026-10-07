@@ -1,0 +1,66 @@
+{
+ "_meta": {
+  "author": "bg-hartwell",
+  "date": "2026-10-06",
+  "tick": "T1",
+  "engine": "claude-opus-5-5",
+  "cid": "MBP-1006-NIGHT",
+  "policy": "docs/scorecard-evidence-policy-2026-08-16.md",
+  "note": "VM-A lock #4 PAC / foreign-lobby affirmative search, tick 1: Kaine + Warner (US Senate, VA). Source: OpenFEC schedule_a (DEMO_KEY), queried by principal committee id and contributor name. Kaine = KAINE FOR VIRGINIA C00495358; Warner = FRIENDS OF MARK WARNER C00438713. Slugs tim-kaine@VA / mark-warner@VA have NOT been checked against scorecard.json (it wasn't reachable from this lane), so a refiner must remap them if the canonical slugs differ. Warner foreign_policy_restraint q3 left null: the DEMO_KEY hit its 40/hr rate limit before the NORPAC/AIPAC/J Street queries ran, OpenSecrets returned 403 (Cloudflare), and web_search had a provider error. Rows may include earmarked or conduit memo lines; the dollar figures quoted are the raw schedule_a rows, not deduplicated totals.",
+  "pac_search_cells": 3,
+  "records": 2
+ },
+ "reset_unspecified": false,
+ "records": {
+  "tim-kaine@VA": {
+   "sources_add": [
+    "https://api.open.fec.gov/v1/schedules/schedule_a/?committee_id=C00495358&contributor_name=PLANNED%20PARENTHOOD",
+    "https://api.open.fec.gov/v1/schedules/schedule_a/?committee_id=C00495358&contributor_name=NORPAC",
+    "https://api.open.fec.gov/v1/schedules/schedule_a/?committee_id=C00495358&contributor_name=J%20STREET"
+   ],
+   "evidence": {
+    "sanctity_of_life": {
+     "4": {
+      "v": false,
+      "src": [
+       "https://api.open.fec.gov/v1/schedules/schedule_a/?committee_id=C00495358&contributor_name=PLANNED%20PARENTHOOD"
+      ],
+      "kind": "pac_search",
+      "confidence": "high",
+      "note": "OpenFEC schedule_a, KAINE FOR VIRGINIA (C00495358), contributor PLANNED PARENTHOOD: 4 rows. PLANNED PARENTHOOD ACTION FUND INC. PAC (C00314617) $2,500 on 2017-08-17, $2,500 on 2018-06-29, $34.85 on 2018-07-12; PLANNED PARENTHOOD ACTION FUND INC. (C30001945) $845 on 2012-08-26. Abortion-industry PAC money received. Queried 2026-10-06."
+     }
+    },
+    "foreign_policy_restraint": {
+     "3": {
+      "v": false,
+      "src": [
+       "https://api.open.fec.gov/v1/schedules/schedule_a/?committee_id=C00495358&contributor_name=NORPAC",
+       "https://api.open.fec.gov/v1/schedules/schedule_a/?committee_id=C00495358&contributor_name=J%20STREET"
+      ],
+      "kind": "pac_search",
+      "confidence": "high",
+      "note": "OpenFEC schedule_a, KAINE FOR VIRGINIA (C00495358): contributor NORPAC (C00247403), pro-Israel PAC, 12 rows including several $1,000 and $2,500 rows dated 2024-06-05; contributor J STREET PAC (C00441949), 388 rows, 2018 to 2020 (likely earmarked conduit lines). Contributor AIPAC: 0 rows. Contributor PRO-ISRAEL AMERICA: 0 rows. Queried 2026-10-06."
+     }
+    }
+   }
+  },
+  "mark-warner@VA": {
+   "sources_add": [
+    "https://api.open.fec.gov/v1/schedules/schedule_a/?committee_id=C00438713&contributor_name=PLANNED%20PARENTHOOD"
+   ],
+   "evidence": {
+    "sanctity_of_life": {
+     "4": {
+      "v": false,
+      "src": [
+       "https://api.open.fec.gov/v1/schedules/schedule_a/?committee_id=C00438713&contributor_name=PLANNED%20PARENTHOOD"
+      ],
+      "kind": "pac_search",
+      "confidence": "high",
+      "note": "OpenFEC schedule_a, FRIENDS OF MARK WARNER (C00438713), contributor PLANNED PARENTHOOD: 5 rows, all PLANNED PARENTHOOD ACTION FUND INC PAC / Planned Parenthood Federal PAC (C00314617). $2,500 on 2013-06-29, $2,500 on 2013-11-27, $4,000 on 2014-07-31, $407.57 on 2014-10-22, $2,500 on 2020-03-30. Abortion-industry PAC money received. Queried 2026-10-06."
+     }
+    }
+   }
+  }
+ }
+}

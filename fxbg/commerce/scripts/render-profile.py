@@ -345,7 +345,7 @@ def render_profile(biz: dict, osm: dict | None = None, alt_tags: dict | None = N
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>{esc(biz.get("name", ""))}{(", " + esc(where)) if where else ""} — {esc(category_label(cat))}, {esc(biz.get("city") or "Fredericksburg")} · Christ-Centered Commerce</title>
-  <meta name="description" content="{esc(biz.get('name', ''))}{(" at " + esc(where)) if where else ""} ({esc(category_label(cat))}, {esc(biz.get('city') or 'Fredericksburg area')}) — {esc(contact)} on file, and the 10-Factor Christ-Centered Commerce scorecard." />
+  <meta name="description" content="{esc(biz.get('name', ''))}{((" " if where.startswith(("near ", "in ")) else " at ") + esc(where)) if where else ""} ({esc(category_label(cat))}, {esc(biz.get('city') or 'Fredericksburg area')}) — {esc(contact)} on file, and the 10-Factor Christ-Centered Commerce scorecard." />
   <link rel="stylesheet" href="../assets/commerce.css" />
   {json_ld(biz, tags)}
 </head>

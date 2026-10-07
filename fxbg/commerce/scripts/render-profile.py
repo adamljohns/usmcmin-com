@@ -135,7 +135,8 @@ def contact_panel(biz: dict, tags: dict) -> str:
         checked = f", checked {esc(own['checked'])}" if own.get("checked") else ""
         rows.append("<p><strong>Hours:</strong><br>" + "<br>".join(esc(h) for h in biz["hours"])
                     + f'<br><span class="meta">From <a href="{esc(own["url"])}" target="_blank" rel="noopener">the business\'s website</a>{checked}.</span></p>')
-    hours = [] if biz.get("hours") else pretty_hours(tags.get("opening_hours", ""))
+    stale = biz.get("osm_hours_stale")  # moved since the OSM survey — old hours belong to the old storefront
+    hours = [] if (biz.get("hours") or stale) else pretty_hours(tags.get("opening_hours", ""))
     if hours:
         checked = tags.get("check_date:opening_hours") or tags.get("check_date")
         note = f"OpenStreetMap community data{', last checked ' + esc(checked) if checked else ''} — call ahead to confirm."
@@ -156,6 +157,19 @@ def contact_panel(biz: dict, tags: dict) -> str:
   <h2>Visit &amp; contact</h2>
   {"".join(rows)}
   {btn_html}
+</div>"""
+
+
+def own_words_panel(biz: dict) -> str:
+    """The business's own one-line self-description, quoted verbatim from its website."""
+    text, src = biz.get("description"), biz.get("description_source") or {}
+    if not text or not src.get("url"):
+        return ""
+    checked = f", checked {esc(src['checked'])}" if src.get("checked") else ""
+    return f"""<div class="panel">
+  <h2>In their own words</h2>
+  <p>&ldquo;{esc(text)}&rdquo;</p>
+  <p class="meta">Quoted from <a href="{esc(src['url'])}" target="_blank" rel="noopener">the business's website</a>{checked}. Their description, not our review.</p>
 </div>"""
 
 
@@ -199,7 +213,7 @@ def json_ld(biz: dict, tags: dict) -> str:
     if biz.get("ingest_source") == "osm" and biz.get("lat") is not None and biz.get("lng") is not None:
         ld["geo"] = {"@type": "GeoCoordinates", "latitude": biz["lat"], "longitude": biz["lng"]}
     oh = tags.get("opening_hours", "")
-    if oh and not biz.get("hours") and re.fullmatch(r"[A-Za-z0-9:,;\- /]+", oh):
+    if oh and not biz.get("hours") and not biz.get("osm_hours_stale") and re.fullmatch(r"[A-Za-z0-9:,;\- /]+", oh):
         ld["openingHours"] = [x.strip() for x in oh.split(";") if x.strip()]
     body = json.dumps(ld, ensure_ascii=False).replace("</", "<\\/")
     return f'<script type="application/ld+json">{body}</script>'
@@ -330,7 +344,7 @@ def render_profile(biz: dict, osm: dict | None = None, alt_tags: dict | None = N
     </header>
 
     {closed_panel(biz)}
-    {contact_panel(biz, tags)}
+    {contact_panel(biz, tags)}{own_words_panel(biz)}
 
     {verdict_html}
 

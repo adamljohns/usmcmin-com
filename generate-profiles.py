@@ -3,6 +3,7 @@
 import json
 import os
 import re
+from html import escape as html_escape
 
 import source_bias as sb
 # v5.6 — tier-aware label/description helpers (per-tier rubric drill-down).
@@ -1854,7 +1855,7 @@ def generate_profile(candidate, categories, meta, nav=None):
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>{c['name']} — RESOLUTE Citizen Scorecard | U.S.M.C. Ministries</title>
+  <title>{c['name']}{(' (' + html_escape(c['title_qualifier']) + ')') if c.get('title_qualifier') else ''} — RESOLUTE Citizen Scorecard | U.S.M.C. Ministries</title>
   <meta name="description" content="RESOLUTE Citizen Scorecard for {c['name']} ({party_label(c['party'])}). {c['office']}, {c['jurisdiction']}. Score: {pct_of_max}/100 ({grade_letter}).">
 
   <!-- Canonical URL for SEO + social previews -->
@@ -1934,7 +1935,7 @@ def generate_profile(candidate, categories, meta, nav=None):
       {photo_html}
       <div class="prof-header-text">
         <div class="prof-jurisdiction">{c['jurisdiction']}</div>
-        <h1 class="prof-name">{c['name']}</h1>
+        <h1 class="prof-name">{c['name']}</h1>{('<p class="prof-name-qualifier">' + html_escape(c['title_qualifier']) + '</p>') if c.get('title_qualifier') else ''}
         <div class="prof-office">{c['office']}</div>
         <span class="prof-party {party_class(c['party'])}">{party_label(c['party'])}</span>
         {f'<a href="{website}" target="_blank" rel="noopener" style="margin-left:12px;color:var(--accent);font-size:0.85rem;">Campaign Website &rarr;</a>' if website else ''}

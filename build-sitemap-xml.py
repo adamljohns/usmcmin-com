@@ -123,12 +123,30 @@ def collect():
         head = path.read_text(encoding="utf-8", errors="ignore")[:8000]
         if _NOINDEX_RE.search(head) or _REFRESH_RE.search(head):
             continue
+        # A page whose canonical names another URL is a duplicate, not a
+        # sitemap URL (legacy-max portfolio copies, c5isr/finance legacy pages;
+        # 2026-10-06).
+        if _canonical_elsewhere(rel, head):
+            continue
         prio, freq = priority_for(rel)
         urls.append((rel, prio, freq))
     return urls
 
 _NOINDEX_RE = re.compile(r"""<meta[^>]+name=["']robots["'][^>]+content=["'][^"']*noindex""", re.I)
 _REFRESH_RE = re.compile(r"""<meta[^>]+http-equiv=["']refresh""", re.I)
+_CANON_RE = re.compile(r"""<link[^>]+rel=["']canonical["'][^>]*href=(?:"([^"]+)"|'([^']+)')""", re.I)
+
+def _canonical_elsewhere(rel: str, head: str) -> bool:
+    m = _CANON_RE.search(head)
+    if not m:
+        return False
+    def norm(url: str) -> str:
+        url = url.split("#")[0].split("?")[0].replace("://www.", "://").rstrip("/")
+        for tail in ("/index.html", ".html"):
+            if url.endswith(tail):
+                url = url[: -len(tail)]
+        return url
+    return norm(m.group(1) or m.group(2)) != norm(loc_for(rel))
 
 def loc_for(rel: str) -> str:
     return f"{BASE_URL}/{rel}" if rel != "index.html" else f"{BASE_URL}/"

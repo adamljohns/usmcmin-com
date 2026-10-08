@@ -126,28 +126,28 @@
         <h3>Free Discovery Call</h3>
         <p>Not sure which session is right for you? Start here. A free 15-minute call to hear your situation and see if we're a good fit.</p>
         <div class="price">FREE <span>/ 15 min</span></div>
-        <a href="#calendly-section" class="btn btn-primary" style="justify-content:center">Book Free Call →</a>
+        <a href="#booking-section" class="btn btn-primary" style="justify-content:center">Book Free Call →</a>
       </div>
 
       <div class="service-card">
         <div class="service-icon"><img src="../assets/icons/shields/shield-gear.png" alt="" width="40" style="display:inline-block"></div>
         <h3>AI Assistant Setup</h3>
         <p>Walk through setting up your own personal AI assistant — OpenClaw + Claude — in a live screen-share session. Built for business partners and entrepreneurs who want real productivity, not gimmicks.</p>
-        <a href="#calendly-section" class="btn btn-primary" style="justify-content:center">Book Free Call →</a>
+        <a href="#booking-section" class="btn btn-primary" style="justify-content:center">Book Free Call →</a>
       </div>
 
       <div class="service-card">
         <div class="service-icon"><img src="../assets/icons/shields/shield-bible.png" alt="" width="40" style="display:inline-block"></div>
         <h3>Ministry Consulting</h3>
         <p>Men's discipleship frameworks, the Five-Front War model, CBMC connections, and marriage counseling referrals. Built on 20+ years of leadership and faith under fire.</p>
-        <a href="#calendly-section" class="btn btn-primary" style="justify-content:center">Book Free Call →</a>
+        <a href="#booking-section" class="btn btn-primary" style="justify-content:center">Book Free Call →</a>
       </div>
 
       <div class="service-card">
         <div class="service-icon"><img src="../assets/icons/shields/shield-finance.png" alt="" width="40" style="display:inline-block"></div>
         <h3>Airbnb / STR Optimization</h3>
         <p>Short-term rental strategy, listing optimization, automation systems, and multi-platform expansion. I run Bow & Arrow — this isn't theory, it's what I actually do.</p>
-        <a href="#calendly-section" class="btn btn-primary" style="justify-content:center">Book Free Call →</a>
+        <a href="#booking-section" class="btn btn-primary" style="justify-content:center">Book Free Call →</a>
       </div>
     </div>
   </div>
@@ -179,19 +179,33 @@
     </ul>
   </div>
 
-  <!-- Calendly -->
-  <div class="section" id="calendly-section">
+  <!-- Cal.com Booking -->
+  <div class="section" id="booking-section">
     <div class="section-header">
       <span class="section-icon"><img src="../assets/icons/shields/shield-calendar.png" alt="" width="28"></span>
       <h2>Select a Time</h2>
     </div>
     <p>Pick a slot that works for you. All sessions are conducted via video call.</p>
-    <div class="calendly-inline-widget" data-url="https://calendly.com/adamljohns?hide_gdpr_banner=1&background_color=111111&text_color=e8e8e8&primary_color=d4af37" style="min-width:280px;min-height:630px;border-radius:12px;overflow:hidden"></div>
-    <script type="text/javascript" src="https://assets.calendly.com/assets/external/widget.js" async></script>
+    <!-- Cal.com inline embed begin (consulting link lives in /assets/data/cal-booking.json) -->
+    <div id="cal-inline-consulting" style="width:100%;min-height:700px;overflow:scroll;border-radius:12px;background:#111111;"></div>
+    <script type="text/javascript">
+      (function(C,A,L){let p=function(a,ar){a.q.push(ar)};let d=C.document;C.Cal=C.Cal||function(){let cal=C.Cal;let ar=arguments;if(!cal.loaded){cal.ns={};cal.q=cal.q||[];d.head.appendChild(d.createElement("script")).src=A;cal.loaded=true}if(ar[0]===L){const api=function(){p(api,arguments)};const namespace=ar[1];api.q=api.q||[];typeof namespace==="string"?(cal.ns[namespace]=api)&&p(api,ar):p(cal,ar);return}p(cal,ar)};})(window,"https://app.cal.com/embed/embed.js","init");
+      (function(){
+        var FALLBACK="usmc-ministries-2022";
+        function mount(calLink){
+          document.querySelectorAll("a[data-cal-consult]").forEach(function(a){a.href="https://cal.com/"+calLink;});
+          Cal("init","consulting",{origin:"https://cal.com"});
+          Cal.ns["consulting"]("inline",{elementOrSelector:"#cal-inline-consulting",calLink:calLink});
+          Cal.ns["consulting"]("ui",{"theme":"dark","cssVarsPerTheme":{"dark":{"cal-brand":"#D4AF37","cal-bg":"#111111","cal-bg-emphasis":"#1a1a1a","cal-text":"#e8e8e8"}},"hideEventTypeDetails":false});
+        }
+        fetch("/assets/data/cal-booking.json",{cache:"no-cache"}).then(function(r){return r.ok?r.json():{};}).then(function(j){mount(j.consultCalLink||FALLBACK);}).catch(function(){mount(FALLBACK);});
+      })();
+    </script>
+    <!-- Cal.com inline embed end -->
     <noscript>
       <div style="text-align:center;padding:40px;background:var(--bg-card,#111);border:1px solid var(--gold);border-radius:12px;margin:20px 0">
         <p style="color:var(--gold);font-size:1.2rem;margin-bottom:15px">📅 Select a Time</p>
-        <a href="https://calendly.com/adamljohns" target="_blank" class="btn btn-primary">Open Booking Calendar →</a>
+        <a href="https://cal.com/usmc-ministries-2022" data-cal-consult target="_blank" class="btn btn-primary">Open Booking Calendar →</a>
       </div>
     </noscript>
     <p style="color:#555;font-size:0.8rem;margin-top:10px;text-align:center">All sessions via video call · Payment collected at booking · Rescheduling within 24hrs honored</p>
@@ -228,7 +242,7 @@
       <li><span class="check"><img src="../assets/icons/shields/shield-star.png" alt="" width="20"></span><div class="get-text"><strong>A Real Plan</strong><span>You'll walk away with clarity, direction, and specific next steps — not vague motivational talk.</span></div></li>
     </ul>
     <div style="text-align:center;margin-top:30px">
-      <a href="#calendly-section" class="btn btn-primary" style="font-size:1.05rem;padding:15px 36px"><img src="../assets/icons/shields/shield-calendar.png" alt="" width="20" style="vertical-align:middle;margin-right:6px"> Book Your Free Discovery Call</a>
+      <a href="#booking-section" class="btn btn-primary" style="font-size:1.05rem;padding:15px 36px"><img src="../assets/icons/shields/shield-calendar.png" alt="" width="20" style="vertical-align:middle;margin-right:6px"> Book Your Free Discovery Call</a>
     </div>
     <p style="text-align:center;margin-top:20px;font-size:0.9rem;color:var(--gray)">Ready for structured coaching? <a href="../coaching.html" style="color:var(--gold);font-weight:600">View paid coaching programs →</a></p>
   </div>

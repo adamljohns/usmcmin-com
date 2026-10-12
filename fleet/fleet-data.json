@@ -1,9 +1,9 @@
 {
-  "generated": "2026-10-12T10:34:11.318926+00:00",
+  "generated": "2026-10-12T11:06:16.031260+00:00",
   "totals": {
     "agents": 17,
-    "operational": 13,
-    "degraded": 4,
+    "operational": 10,
+    "degraded": 7,
     "jobs": 177,
     "enabled": 89,
     "accomplishments": 412,
@@ -12,16 +12,17 @@
   "health": {
     "cron": {
       "enabled": 89,
-      "ran26h": 42,
-      "delivered": 24,
+      "ran26h": 49,
+      "delivered": 26,
       "fails": [
+        "scheduled job \u00d7 5",
         "scheduled skill \u00d7 2",
         "nightly reflection \u00d7 1"
       ]
     },
     "cron_source": "openclaw.sqlite + hermes/cron/jobs.json",
     "launchd": {
-      "healthy": 107,
+      "healthy": 103,
       "fails": []
     }
   },
@@ -35,14 +36,14 @@
     {
       "label": "Command Surface Sync",
       "purpose": "Command DB \u2192 Obsidian / TACC / workflows",
-      "last": "2026-10-11T22:05:35-04:00",
+      "last": "2026-10-12T07:01:01-04:00",
       "status": "local-only"
     },
     {
       "label": "Morning Intel",
       "purpose": "Calendar, mail, house, body, wire",
-      "last": "2026-10-08-morning-brief",
-      "status": "stale"
+      "last": "2026-10-12-morning-brief",
+      "status": "current"
     },
     {
       "label": "Daily Command Brief",
@@ -129,8 +130,8 @@
       ],
       "n_jobs": 25,
       "n_enabled": 12,
-      "err": 2,
-      "last_ms": 1791770327029,
+      "err": 3,
+      "last_ms": 1791803072650,
       "status": "degraded",
       "accomplishments": [
         {
@@ -380,6 +381,28 @@
       },
       "jobs": [
         {
+          "name": "GQueues \u2192 Obsidian workflow snapshot",
+          "enabled": true,
+          "expr": "47 7 * * *",
+          "tz": "America/New_York",
+          "channel": "",
+          "last_ms": 1791803072650,
+          "status": "error",
+          "errors": 1,
+          "dur_ms": 82294
+        },
+        {
+          "name": "Memory Dreaming Promotion",
+          "enabled": true,
+          "expr": "0 3 * * *",
+          "tz": "America/New_York",
+          "channel": "",
+          "last_ms": 1791801426874,
+          "status": "ok",
+          "errors": 0,
+          "dur_ms": 313448
+        },
+        {
           "name": "Dev Loop: Max weekly EBI implement-or-escalate rollup",
           "enabled": true,
           "expr": "15 20 * * 0",
@@ -433,28 +456,6 @@
           "status": "ok",
           "errors": 0,
           "dur_ms": 10828
-        },
-        {
-          "name": "GQueues \u2192 Obsidian workflow snapshot",
-          "enabled": true,
-          "expr": "47 7 * * *",
-          "tz": "America/New_York",
-          "channel": "",
-          "last_ms": 1791719220042,
-          "status": "ok",
-          "errors": 0,
-          "dur_ms": 8097
-        },
-        {
-          "name": "Memory Dreaming Promotion",
-          "enabled": true,
-          "expr": "0 3 * * *",
-          "tz": "America/New_York",
-          "channel": "",
-          "last_ms": 1791702000046,
-          "status": "ok",
-          "errors": 0,
-          "dur_ms": 156974
         },
         {
           "name": "Weekly Self-Audit (Sat 05:57 ET)",
@@ -671,7 +672,7 @@
       "n_jobs": 18,
       "n_enabled": 11,
       "err": 0,
-      "last_ms": 1791768419398,
+      "last_ms": 1791801848684,
       "status": "operational",
       "accomplishments": [
         {
@@ -811,6 +812,50 @@
       },
       "jobs": [
         {
+          "name": "Credential and OAuth Watch",
+          "enabled": true,
+          "expr": "0 6 * * 1,4",
+          "tz": "",
+          "channel": "origin",
+          "last_ms": 1791801848684,
+          "status": "ok",
+          "errors": 0,
+          "dur_ms": null
+        },
+        {
+          "name": "Vault Loop",
+          "enabled": true,
+          "expr": "30 23 * * *",
+          "tz": "",
+          "channel": "local",
+          "last_ms": 1791801568480,
+          "status": "ok",
+          "errors": 0,
+          "dur_ms": null
+        },
+        {
+          "name": "Infrastructure Readiness Check",
+          "enabled": true,
+          "expr": "45 5 * * *",
+          "tz": "",
+          "channel": "origin",
+          "last_ms": 1791801526714,
+          "status": "ok",
+          "errors": 0,
+          "dur_ms": null
+        },
+        {
+          "name": "Fleet Integrity Watch",
+          "enabled": true,
+          "expr": "15 6 * * *",
+          "tz": "",
+          "channel": "origin",
+          "last_ms": 1791801521978,
+          "status": "ok",
+          "errors": 0,
+          "dur_ms": null
+        },
+        {
           "name": "MOOP Command Nightly Reconciliation",
           "enabled": true,
           "expr": "15 21 * * *",
@@ -855,56 +900,12 @@
           "dur_ms": null
         },
         {
-          "name": "Fleet Integrity Watch",
-          "enabled": true,
-          "expr": "15 6 * * *",
-          "tz": "",
-          "channel": "origin",
-          "last_ms": 1791713841190,
-          "status": "ok",
-          "errors": 0,
-          "dur_ms": null
-        },
-        {
-          "name": "Infrastructure Readiness Check",
-          "enabled": true,
-          "expr": "45 5 * * *",
-          "tz": "",
-          "channel": "origin",
-          "last_ms": 1791712434928,
-          "status": "ok",
-          "errors": 0,
-          "dur_ms": null
-        },
-        {
           "name": "Weekly Fleet Currency Review",
           "enabled": true,
           "expr": "0 0 * * 0",
           "tz": "",
           "channel": "origin",
           "last_ms": 1791691752526,
-          "status": "ok",
-          "errors": 0,
-          "dur_ms": null
-        },
-        {
-          "name": "Vault Loop",
-          "enabled": true,
-          "expr": "30 23 * * *",
-          "tz": "",
-          "channel": "local",
-          "last_ms": 1791689556504,
-          "status": "ok",
-          "errors": 0,
-          "dur_ms": null
-        },
-        {
-          "name": "Credential and OAuth Watch",
-          "enabled": true,
-          "expr": "0 6 * * 1,4",
-          "tz": "",
-          "channel": "origin",
-          "last_ms": 1791454385106,
           "status": "ok",
           "errors": 0,
           "dur_ms": null
@@ -1021,7 +1022,7 @@
       "n_jobs": 0,
       "n_enabled": 0,
       "err": 0,
-      "last_ms": 1791769472967,
+      "last_ms": 1791802595536,
       "status": "operational",
       "accomplishments": [
         {
@@ -1118,7 +1119,7 @@
       "n_jobs": 0,
       "n_enabled": 0,
       "err": 0,
-      "last_ms": 1791760894575,
+      "last_ms": 1791802659117,
       "status": "operational",
       "accomplishments": [
         {
@@ -1250,14 +1251,7 @@
         "gqueues__resources_list",
         "gqueues__resources_read",
         "gqueues__prompts_list",
-        "gqueues__prompts_get",
-        "gqueues__create_queue",
-        "gqueues__create_section",
-        "gqueues__create_task",
-        "gqueues__delete_task",
-        "gqueues__update_queue",
-        "gqueues__update_section",
-        "gqueues__update_task"
+        "gqueues__prompts_get"
       ],
       "skills": [
         "agent-self-introspect",
@@ -1294,9 +1288,9 @@
       ],
       "n_jobs": 8,
       "n_enabled": 4,
-      "err": 0,
-      "last_ms": 1791750000046,
-      "status": "operational",
+      "err": 1,
+      "last_ms": 1791801614131,
+      "status": "degraded",
       "accomplishments": [
         {
           "date": "2026-09-30",
@@ -1594,6 +1588,17 @@
       },
       "jobs": [
         {
+          "name": "The Watchman's Daily Devotional",
+          "enabled": true,
+          "expr": "0 6 * * *",
+          "tz": "America/New_York",
+          "channel": "discord",
+          "last_ms": 1791801614131,
+          "status": "error",
+          "errors": 2,
+          "dur_ms": 534744
+        },
+        {
           "name": "Skill: scripture-lookup (Sun BTE smoke)",
           "enabled": true,
           "expr": "20 16 * * 0",
@@ -1625,17 +1630,6 @@
           "status": "ok",
           "errors": 0,
           "dur_ms": 13116
-        },
-        {
-          "name": "The Watchman's Daily Devotional",
-          "enabled": true,
-          "expr": "0 6 * * *",
-          "tz": "America/New_York",
-          "channel": "discord",
-          "last_ms": 1791712800070,
-          "status": "ok",
-          "errors": 0,
-          "dur_ms": 166335
         },
         {
           "name": "Dev Loop: preacher-john daily reflection (implement-or-escalate)",
@@ -1721,14 +1715,7 @@
         "gqueues__resources_list",
         "gqueues__resources_read",
         "gqueues__prompts_list",
-        "gqueues__prompts_get",
-        "gqueues__create_queue",
-        "gqueues__create_section",
-        "gqueues__create_task",
-        "gqueues__delete_task",
-        "gqueues__update_queue",
-        "gqueues__update_section",
-        "gqueues__update_task"
+        "gqueues__prompts_get"
       ],
       "skills": [
         "agent-self-introspect",
@@ -1765,7 +1752,7 @@
       "n_jobs": 9,
       "n_enabled": 5,
       "err": 0,
-      "last_ms": 1791770345260,
+      "last_ms": 1791801437072,
       "status": "operational",
       "accomplishments": [
         {
@@ -2235,10 +2222,10 @@
           "expr": "",
           "tz": "",
           "channel": "",
-          "last_ms": 1791770345260,
+          "last_ms": 1791801437072,
           "status": "skipped",
           "errors": 0,
-          "dur_ms": 257
+          "dur_ms": 256
         },
         {
           "name": "chaps-directory-qa",
@@ -2861,14 +2848,7 @@
         "gqueues__resources_list",
         "gqueues__resources_read",
         "gqueues__prompts_list",
-        "gqueues__prompts_get",
-        "gqueues__create_queue",
-        "gqueues__create_section",
-        "gqueues__create_task",
-        "gqueues__delete_task",
-        "gqueues__update_queue",
-        "gqueues__update_section",
-        "gqueues__update_task"
+        "gqueues__prompts_get"
       ],
       "skills": [
         "agent-self-introspect",
@@ -2905,7 +2885,7 @@
       "n_jobs": 14,
       "n_enabled": 6,
       "err": 0,
-      "last_ms": 1791750330391,
+      "last_ms": 1791801461698,
       "status": "operational",
       "accomplishments": [
         {
@@ -3115,6 +3095,17 @@
       },
       "jobs": [
         {
+          "name": "skill-collection-review-sally",
+          "enabled": true,
+          "expr": "",
+          "tz": "",
+          "channel": "",
+          "last_ms": 1791801461698,
+          "status": "ok",
+          "errors": 0,
+          "dur_ms": 371079
+        },
+        {
           "name": "Sally: host-inbox sweep PM",
           "enabled": true,
           "expr": "20 16 * * *",
@@ -3157,17 +3148,6 @@
           "status": "ok",
           "errors": 0,
           "dur_ms": 577361
-        },
-        {
-          "name": "skill-collection-review-sally",
-          "enabled": true,
-          "expr": "",
-          "tz": "",
-          "channel": "",
-          "last_ms": 1791176119233,
-          "status": "ok",
-          "errors": 0,
-          "dur_ms": 53465
         },
         {
           "name": "Monthly Suzanne Check-in Reminder",
@@ -3308,14 +3288,7 @@
         "gqueues__resources_list",
         "gqueues__resources_read",
         "gqueues__prompts_list",
-        "gqueues__prompts_get",
-        "gqueues__create_task",
-        "gqueues__update_task",
-        "gqueues__delete_task",
-        "gqueues__create_queue",
-        "gqueues__create_section",
-        "gqueues__update_queue",
-        "gqueues__update_section"
+        "gqueues__prompts_get"
       ],
       "skills": [
         "agent-self-introspect",
@@ -3405,14 +3378,7 @@
         "gqueues__resources_list",
         "gqueues__resources_read",
         "gqueues__prompts_list",
-        "gqueues__prompts_get",
-        "gqueues__create_queue",
-        "gqueues__create_section",
-        "gqueues__create_task",
-        "gqueues__delete_task",
-        "gqueues__update_queue",
-        "gqueues__update_section",
-        "gqueues__update_task"
+        "gqueues__prompts_get"
       ],
       "skills": [
         "agent-self-introspect",
@@ -3444,7 +3410,7 @@
       "n_jobs": 10,
       "n_enabled": 6,
       "err": 1,
-      "last_ms": 1791770371681,
+      "last_ms": 1791801471996,
       "status": "degraded",
       "accomplishments": [
         {
@@ -3707,15 +3673,37 @@
       },
       "jobs": [
         {
+          "name": "skill-collection-review-coach-arnie",
+          "enabled": true,
+          "expr": "",
+          "tz": "",
+          "channel": "",
+          "last_ms": 1791801471996,
+          "status": "ok",
+          "errors": 0,
+          "dur_ms": 16903
+        },
+        {
           "name": "recovery-pulse",
           "enabled": true,
           "expr": "",
           "tz": "",
           "channel": "",
-          "last_ms": 1791770371681,
+          "last_ms": 1791801441176,
           "status": "skipped",
           "errors": 0,
-          "dur_ms": 271
+          "dur_ms": 255
+        },
+        {
+          "name": "Coach Arnie Monday Weekly Audit (Mon 6AM)",
+          "enabled": true,
+          "expr": "15 6 * * 1",
+          "tz": "",
+          "channel": "discord",
+          "last_ms": 1791801410103,
+          "status": "ok",
+          "errors": 0,
+          "dur_ms": 305546
         },
         {
           "name": "Nutrition log ping 19:00 \u2014 Coach Arnie",
@@ -3749,28 +3737,6 @@
           "status": "error",
           "errors": 1,
           "dur_ms": 341373
-        },
-        {
-          "name": "Coach Arnie Monday Weekly Audit (Mon 6AM)",
-          "enabled": true,
-          "expr": "15 6 * * 1",
-          "tz": "",
-          "channel": "discord",
-          "last_ms": 1791195300038,
-          "status": "ok",
-          "errors": 0,
-          "dur_ms": 89158
-        },
-        {
-          "name": "skill-collection-review-coach-arnie",
-          "enabled": true,
-          "expr": "",
-          "tz": "",
-          "channel": "",
-          "last_ms": 1791178004238,
-          "status": "ok",
-          "errors": 0,
-          "dur_ms": 9279
         },
         {
           "name": "heartbeat-coach-arnie",
@@ -3856,14 +3822,7 @@
         "gqueues__resources_list",
         "gqueues__resources_read",
         "gqueues__prompts_list",
-        "gqueues__prompts_get",
-        "gqueues__create_queue",
-        "gqueues__create_section",
-        "gqueues__create_task",
-        "gqueues__delete_task",
-        "gqueues__update_queue",
-        "gqueues__update_section",
-        "gqueues__update_task"
+        "gqueues__prompts_get"
       ],
       "skills": [
         "agent-self-introspect",
@@ -4184,14 +4143,7 @@
         "gqueues__resources_list",
         "gqueues__resources_read",
         "gqueues__prompts_list",
-        "gqueues__prompts_get",
-        "gqueues__create_queue",
-        "gqueues__create_section",
-        "gqueues__create_task",
-        "gqueues__delete_task",
-        "gqueues__update_queue",
-        "gqueues__update_section",
-        "gqueues__update_task"
+        "gqueues__prompts_get"
       ],
       "skills": [
         "agent-self-introspect",
@@ -4225,8 +4177,8 @@
       ],
       "n_jobs": 11,
       "n_enabled": 7,
-      "err": 1,
-      "last_ms": 1791770371708,
+      "err": 2,
+      "last_ms": 1791801445281,
       "status": "degraded",
       "accomplishments": [
         {
@@ -4399,10 +4351,10 @@
           "expr": "",
           "tz": "",
           "channel": "",
-          "last_ms": 1791770371708,
-          "status": "skipped",
-          "errors": 0,
-          "dur_ms": 256
+          "last_ms": 1791801445281,
+          "status": "error",
+          "errors": 1,
+          "dur_ms": 5
         },
         {
           "name": "Evening Civic Watch (6:30 PM) \u2014 Sheriff Roy",
@@ -4553,14 +4505,7 @@
         "gqueues__resources_list",
         "gqueues__resources_read",
         "gqueues__prompts_list",
-        "gqueues__prompts_get",
-        "gqueues__create_queue",
-        "gqueues__create_section",
-        "gqueues__create_task",
-        "gqueues__delete_task",
-        "gqueues__update_queue",
-        "gqueues__update_section",
-        "gqueues__update_task"
+        "gqueues__prompts_get"
       ],
       "skills": [
         "agent-self-introspect",
@@ -4588,7 +4533,7 @@
       "n_jobs": 10,
       "n_enabled": 6,
       "err": 0,
-      "last_ms": 1791711000042,
+      "last_ms": 1791801416216,
       "status": "operational",
       "accomplishments": [
         {
@@ -4813,10 +4758,10 @@
           "expr": "30 5 * * *",
           "tz": "America/New_York",
           "channel": "discord",
-          "last_ms": 1791711000042,
+          "last_ms": 1791801416216,
           "status": "ok",
           "errors": 0,
-          "dur_ms": 22406
+          "dur_ms": 60278
         },
         {
           "name": "Skill: audio-transcribe",
@@ -4956,14 +4901,7 @@
         "gqueues__resources_list",
         "gqueues__resources_read",
         "gqueues__prompts_list",
-        "gqueues__prompts_get",
-        "gqueues__create_queue",
-        "gqueues__create_section",
-        "gqueues__create_task",
-        "gqueues__delete_task",
-        "gqueues__update_queue",
-        "gqueues__update_section",
-        "gqueues__update_task"
+        "gqueues__prompts_get"
       ],
       "skills": [
         "agent-self-introspect",
@@ -5295,14 +5233,7 @@
         "gqueues__resources_list",
         "gqueues__resources_read",
         "gqueues__prompts_list",
-        "gqueues__prompts_get",
-        "gqueues__create_queue",
-        "gqueues__create_section",
-        "gqueues__create_task",
-        "gqueues__delete_task",
-        "gqueues__update_queue",
-        "gqueues__update_section",
-        "gqueues__update_task"
+        "gqueues__prompts_get"
       ],
       "skills": [
         "agent-self-introspect",
@@ -5335,9 +5266,14 @@
       "n_jobs": 11,
       "n_enabled": 7,
       "err": 1,
-      "last_ms": 1791770961544,
+      "last_ms": 1791801465763,
       "status": "degraded",
       "accomplishments": [
+        {
+          "date": "2026-10-12",
+          "title": "Email back-brief (2026-10-12)",
+          "detail": "Personal-lane digest only (Gmail/iCloud/Yahoo) \u2014 B&A/fit20/USMC excluded per Principal 2026-07-17."
+        },
         {
           "date": "2026-10-11",
           "title": "Email back-brief (2026-10-11)",
@@ -5407,11 +5343,6 @@
           "date": "2026-09-29",
           "title": "Email back-brief (2026-09-29)",
           "detail": "Personal-lane digest only (Gmail/iCloud/Yahoo) \u2014 B&A/fit20/USMC excluded per Principal 2026-07-17."
-        },
-        {
-          "date": "2026-09-28",
-          "title": "Letter to Gideon and Boaz. Your voice. The four cuts are in.",
-          "detail": "PDF shipped via psa-send-pdf.sh \u00b7 file=2026-09-28-letter-to-my-sons"
         }
       ],
       "name": "Pops Henderson",
@@ -5481,6 +5412,28 @@
       },
       "jobs": [
         {
+          "name": "skill-collection-review-pops",
+          "enabled": true,
+          "expr": "",
+          "tz": "",
+          "channel": "",
+          "last_ms": 1791801465763,
+          "status": "ok",
+          "errors": 0,
+          "dur_ms": 52731
+        },
+        {
+          "name": "wheelhouse-pattern",
+          "enabled": true,
+          "expr": "",
+          "tz": "",
+          "channel": "",
+          "last_ms": 1791801430926,
+          "status": "skipped",
+          "errors": 0,
+          "dur_ms": 256
+        },
+        {
           "name": "Skill: calendar-apple (Sun family week)",
           "enabled": true,
           "expr": "12 18 * * 0",
@@ -5490,17 +5443,6 @@
           "status": "error",
           "errors": 2,
           "dur_ms": 301989
-        },
-        {
-          "name": "wheelhouse-pattern",
-          "enabled": true,
-          "expr": "",
-          "tz": "",
-          "channel": "",
-          "last_ms": 1791770339192,
-          "status": "skipped",
-          "errors": 0,
-          "dur_ms": 255
         },
         {
           "name": "Pops Sunday Family Huddle Agenda Draft (Sun 4 PM)",
@@ -5545,17 +5487,6 @@
           "status": "ok",
           "errors": 0,
           "dur_ms": 92792
-        },
-        {
-          "name": "skill-collection-review-pops",
-          "enabled": true,
-          "expr": "",
-          "tz": "",
-          "channel": "",
-          "last_ms": 1791174524110,
-          "status": "ok",
-          "errors": 0,
-          "dur_ms": 13590
         },
         {
           "name": "heartbeat-pops",
@@ -5643,14 +5574,7 @@
         "gqueues__resources_list",
         "gqueues__resources_read",
         "gqueues__prompts_list",
-        "gqueues__prompts_get",
-        "gqueues__create_queue",
-        "gqueues__create_section",
-        "gqueues__create_task",
-        "gqueues__delete_task",
-        "gqueues__update_queue",
-        "gqueues__update_section",
-        "gqueues__update_task"
+        "gqueues__prompts_get"
       ],
       "skills": [
         "agent-self-introspect",
@@ -5679,9 +5603,9 @@
       ],
       "n_jobs": 9,
       "n_enabled": 4,
-      "err": 0,
-      "last_ms": 1791770372456,
-      "status": "operational",
+      "err": 1,
+      "last_ms": 1791801451323,
+      "status": "degraded",
       "accomplishments": [
         {
           "date": "2026-08-17",
@@ -5836,6 +5760,17 @@
       },
       "jobs": [
         {
+          "name": "pt-log-late-check",
+          "enabled": true,
+          "expr": "",
+          "tz": "",
+          "channel": "",
+          "last_ms": 1791801451323,
+          "status": "error",
+          "errors": 1,
+          "dur_ms": 6
+        },
+        {
           "name": "skill-collection-review-sgt-maj-mac",
           "enabled": true,
           "expr": "",
@@ -5845,17 +5780,6 @@
           "status": "ok",
           "errors": 0,
           "dur_ms": 25473
-        },
-        {
-          "name": "pt-log-late-check",
-          "enabled": true,
-          "expr": "",
-          "tz": "",
-          "channel": "",
-          "last_ms": 1791770372050,
-          "status": "skipped",
-          "errors": 0,
-          "dur_ms": 254
         },
         {
           "name": "Daily Standards Check (9:30 AM) \u2014 Mac",
@@ -5973,14 +5897,7 @@
         "gqueues__resources_list",
         "gqueues__resources_read",
         "gqueues__prompts_list",
-        "gqueues__prompts_get",
-        "gqueues__create_queue",
-        "gqueues__create_section",
-        "gqueues__create_task",
-        "gqueues__delete_task",
-        "gqueues__update_queue",
-        "gqueues__update_section",
-        "gqueues__update_task"
+        "gqueues__prompts_get"
       ],
       "skills": [
         "agent-self-introspect",
@@ -6009,9 +5926,9 @@
       ],
       "n_jobs": 9,
       "n_enabled": 5,
-      "err": 0,
-      "last_ms": 1791770372062,
-      "status": "operational",
+      "err": 1,
+      "last_ms": 1791801455618,
+      "status": "degraded",
       "accomplishments": [
         {
           "date": "2026-08-11",
@@ -6180,10 +6097,10 @@
           "expr": "",
           "tz": "",
           "channel": "",
-          "last_ms": 1791770372062,
-          "status": "skipped",
-          "errors": 0,
-          "dur_ms": 301
+          "last_ms": 1791801455618,
+          "status": "error",
+          "errors": 1,
+          "dur_ms": 477
         },
         {
           "name": "Gus Sunday Reading List + Reflection (Sun 6PM)",
@@ -6319,5 +6236,5 @@
     "write-airbnb-reviews-for-listings",
     "you-are-an-expert-ai-agent"
   ],
-  "cowork_date": "2026-10-12T06:33:54-04:00"
+  "cowork_date": "2026-10-12T07:06:06-04:00"
 }

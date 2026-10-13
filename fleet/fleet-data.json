@@ -1,9 +1,9 @@
 {
-  "generated": "2026-10-13T14:20:08.372106+00:00",
+  "generated": "2026-10-13T16:43:47.168780+00:00",
   "totals": {
     "agents": 17,
-    "operational": 14,
-    "degraded": 3,
+    "operational": 10,
+    "degraded": 7,
     "jobs": 178,
     "enabled": 90,
     "accomplishments": 413,
@@ -12,16 +12,16 @@
   "health": {
     "cron": {
       "enabled": 90,
-      "ran26h": 40,
-      "delivered": 22,
-      "fails": []
+      "ran26h": 39,
+      "delivered": 19,
+      "fails": [
+        "scheduled job \u00d7 5"
+      ]
     },
     "cron_source": "openclaw.sqlite + hermes/cron/jobs.json",
     "launchd": {
-      "healthy": 93,
-      "fails": [
-        "launchd job \u00d7 3"
-      ]
+      "healthy": 103,
+      "fails": []
     }
   },
   "rhythm": [
@@ -34,7 +34,7 @@
     {
       "label": "Command Surface Sync",
       "purpose": "Command DB \u2192 Obsidian / TACC / workflows",
-      "last": "2026-10-13T10:06:59-04:00",
+      "last": "2026-10-13T12:32:47-04:00",
       "status": "local-only"
     },
     {
@@ -71,7 +71,7 @@
   "agents": [
     {
       "id": "main",
-      "primary": "anthropic/claude-fable-5-1",
+      "primary": "anthropic/claude-opus-5-5",
       "fallback": "openai/gpt-5.6-sol",
       "fallbacks": [
         "openai/gpt-5.6-sol",
@@ -128,8 +128,8 @@
       ],
       "n_jobs": 25,
       "n_enabled": 12,
-      "err": 2,
-      "last_ms": 1791892021681,
+      "err": 3,
+      "last_ms": 1791908100110,
       "status": "degraded",
       "accomplishments": [
         {
@@ -379,6 +379,17 @@
       },
       "jobs": [
         {
+          "name": "Noon bolt ask",
+          "enabled": true,
+          "expr": "15 12 * * *",
+          "tz": "America/New_York",
+          "channel": "telegram",
+          "last_ms": 1791908100110,
+          "status": "error",
+          "errors": 1,
+          "dur_ms": 9
+        },
+        {
           "name": "GQueues \u2192 Obsidian workflow snapshot",
           "enabled": true,
           "expr": "47 7 * * *",
@@ -410,17 +421,6 @@
           "status": "ok",
           "errors": 0,
           "dur_ms": 140859
-        },
-        {
-          "name": "Noon bolt ask",
-          "enabled": true,
-          "expr": "15 12 * * *",
-          "tz": "America/New_York",
-          "channel": "telegram",
-          "last_ms": 1791821700047,
-          "status": "ok",
-          "errors": 0,
-          "dur_ms": 21512
         },
         {
           "name": "Dev Loop: Max weekly EBI implement-or-escalate rollup",
@@ -1020,7 +1020,7 @@
       "n_jobs": 0,
       "n_enabled": 0,
       "err": 0,
-      "last_ms": 1791851692553,
+      "last_ms": 1791909381956,
       "status": "operational",
       "accomplishments": [
         {
@@ -1749,9 +1749,9 @@
       ],
       "n_jobs": 9,
       "n_enabled": 5,
-      "err": 0,
-      "last_ms": 1791895037756,
-      "status": "operational",
+      "err": 1,
+      "last_ms": 1791908216813,
+      "status": "degraded",
       "accomplishments": [
         {
           "date": "2026-10-05",
@@ -2220,10 +2220,10 @@
           "expr": "",
           "tz": "",
           "channel": "",
-          "last_ms": 1791895037756,
-          "status": "skipped",
-          "errors": 0,
-          "dur_ms": 254
+          "last_ms": 1791908216813,
+          "status": "error",
+          "errors": 1,
+          "dur_ms": 27
         },
         {
           "name": "skill-collection-review-chaps",
@@ -3028,8 +3028,8 @@
         "lane": "Airbnb/studio",
         "browser_profile": "airbnb",
         "files": {
-          "AGENTS.md": 47588,
-          "MEMORY.md": 32252,
+          "AGENTS.md": 48113,
+          "MEMORY.md": 33218,
           "HEARTBEAT.md": 1352
         },
         "verified": "2026-10-13"
@@ -3413,9 +3413,9 @@
       ],
       "n_jobs": 10,
       "n_enabled": 6,
-      "err": 0,
-      "last_ms": 1791898642007,
-      "status": "operational",
+      "err": 1,
+      "last_ms": 1791909442051,
+      "status": "degraded",
       "accomplishments": [
         {
           "date": "2026-09-09",
@@ -3682,10 +3682,21 @@
           "expr": "",
           "tz": "",
           "channel": "",
-          "last_ms": 1791898642007,
+          "last_ms": 1791909442051,
           "status": "skipped",
           "errors": 0,
-          "dur_ms": 255
+          "dur_ms": 266
+        },
+        {
+          "name": "Coach Midday Garmin Read (12:15 EDT)",
+          "enabled": true,
+          "expr": "15 12 * * *",
+          "tz": "America/New_York",
+          "channel": "discord",
+          "last_ms": 1791908100093,
+          "status": "error",
+          "errors": 1,
+          "dur_ms": 8
         },
         {
           "name": "Nutrition log ping 19:00 \u2014 Coach Arnie",
@@ -3697,17 +3708,6 @@
           "status": "ok",
           "errors": 0,
           "dur_ms": 53000
-        },
-        {
-          "name": "Coach Midday Garmin Read (12:15 EDT)",
-          "enabled": true,
-          "expr": "15 12 * * *",
-          "tz": "America/New_York",
-          "channel": "discord",
-          "last_ms": 1791821700038,
-          "status": "ok",
-          "errors": 0,
-          "dur_ms": 15428
         },
         {
           "name": "Skill: zoho-crm (fit20 Mon leads)",
@@ -4536,9 +4536,9 @@
       ],
       "n_jobs": 10,
       "n_enabled": 6,
-      "err": 0,
-      "last_ms": 1791883800047,
-      "status": "operational",
+      "err": 1,
+      "last_ms": 1791902112010,
+      "status": "degraded",
       "accomplishments": [
         {
           "date": "2026-10-09",
@@ -4757,6 +4757,17 @@
       },
       "jobs": [
         {
+          "name": "skill-collection-review-prof-x",
+          "enabled": true,
+          "expr": "",
+          "tz": "",
+          "channel": "",
+          "last_ms": 1791902112010,
+          "status": "error",
+          "errors": 1,
+          "dur_ms": 5972711
+        },
+        {
           "name": "Newsletter Synthesis (5:30 AM) \u2014 Prof X",
           "enabled": true,
           "expr": "30 5 * * *",
@@ -4810,17 +4821,6 @@
           "status": "ok",
           "errors": 0,
           "dur_ms": 73523
-        },
-        {
-          "name": "skill-collection-review-prof-x",
-          "enabled": true,
-          "expr": "",
-          "tz": "",
-          "channel": "",
-          "last_ms": 1791297311961,
-          "status": "ok",
-          "errors": 0,
-          "dur_ms": 126822
         },
         {
           "name": "heartbeat-prof-x",
@@ -5270,7 +5270,7 @@
       "n_jobs": 11,
       "n_enabled": 7,
       "err": 1,
-      "last_ms": 1791896404845,
+      "last_ms": 1791908205347,
       "status": "degraded",
       "accomplishments": [
         {
@@ -5416,6 +5416,17 @@
       },
       "jobs": [
         {
+          "name": "wheelhouse-pattern",
+          "enabled": true,
+          "expr": "",
+          "tz": "",
+          "channel": "",
+          "last_ms": 1791908205347,
+          "status": "skipped",
+          "errors": 0,
+          "dur_ms": 256
+        },
+        {
           "name": "Daily Father Outreach Reminder (Pops)",
           "enabled": true,
           "expr": "0 9 * * 1-5",
@@ -5436,17 +5447,6 @@
           "status": "ok",
           "errors": 0,
           "dur_ms": 23595
-        },
-        {
-          "name": "wheelhouse-pattern",
-          "enabled": true,
-          "expr": "",
-          "tz": "",
-          "channel": "",
-          "last_ms": 1791887831165,
-          "status": "skipped",
-          "errors": 0,
-          "dur_ms": 255
         },
         {
           "name": "skill-collection-review-pops",
@@ -5607,9 +5607,9 @@
       ],
       "n_jobs": 9,
       "n_enabled": 4,
-      "err": 0,
-      "last_ms": 1791898200035,
-      "status": "operational",
+      "err": 1,
+      "last_ms": 1791908219011,
+      "status": "degraded",
       "accomplishments": [
         {
           "date": "2026-08-17",
@@ -5764,6 +5764,17 @@
       },
       "jobs": [
         {
+          "name": "pt-log-late-check",
+          "enabled": true,
+          "expr": "",
+          "tz": "",
+          "channel": "",
+          "last_ms": 1791908219011,
+          "status": "error",
+          "errors": 1,
+          "dur_ms": 5
+        },
+        {
           "name": "Daily Standards Check (9:30 AM) \u2014 Mac",
           "enabled": true,
           "expr": "30 9 * * *",
@@ -5773,17 +5784,6 @@
           "status": "ok",
           "errors": 0,
           "dur_ms": 55336
-        },
-        {
-          "name": "pt-log-late-check",
-          "enabled": true,
-          "expr": "",
-          "tz": "",
-          "channel": "",
-          "last_ms": 1791896896011,
-          "status": "skipped",
-          "errors": 0,
-          "dur_ms": 254
         },
         {
           "name": "skill-collection-review-sgt-maj-mac",
@@ -6250,5 +6250,5 @@
     "write-airbnb-reviews-for-listings",
     "you-are-an-expert-ai-agent"
   ],
-  "cowork_date": "2026-10-13T10:19:58-04:00"
+  "cowork_date": "2026-10-13T12:43:37-04:00"
 }

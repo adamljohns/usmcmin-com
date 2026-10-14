@@ -134,7 +134,9 @@ def main():
             if not committed:
                 print("nothing to commit (already applied?)")
                 return
-            if run(["git", "push", "origin", "main"],
+            # HEAD:main, not main: in the detached /tmp/srl-iso-* worktree the local `main`
+            # ref is the shared checkout's (stale, or carrying someone else's commits).
+            if run(["git", "push", "origin", "HEAD:main"],
                    stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL).returncode == 0:
                 head = run(["git", "rev-parse", "--short", "HEAD"],
                            capture_output=True, text=True).stdout.strip()
@@ -145,7 +147,10 @@ def main():
             # identical 1,729-record commits on 2026-08-21 before anyone noticed.
             print(f"push rejected — remote moved; rebasing (attempt {attempt})")
             run(["git", "fetch", "origin", "main", "-q"])
-            if run(["git", "rebase", "origin/main"],
+            # --autostash: the build also rewrites out-of-scope outputs (sitemap-navigation.xml
+            # since c568edc, 2026-10-06), and a dirty tree made every rebase refuse — the grind
+            # failed 4/4 "remote too hot" on every round from 2026-10-06 23:50 (MBP-1014-BURN).
+            if run(["git", "rebase", "--autostash", "origin/main"],
                    stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL).returncode == 0:
                 if run(["git", "push", "origin", "HEAD:main"],
                        stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL).returncode == 0:

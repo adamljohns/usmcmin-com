@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""local-source-discover.py — Brave/SearXNG source discovery for the local grind.
+"""local-source-discover.py — Brave/Gemini-grounded/SearXNG source discovery for the local grind.
 
 THE FRONTIER PROBLEM this solves: a state legislator's scorecard `website` is their
 official legislature bio (mgaleg.maryland.gov/Members/Details/... — committees + contact,
@@ -28,10 +28,22 @@ the rest of the round after 3 consecutive failures, any HTTP 429, or junk answer
 outlast 2 waits on Google's own suspension (see Searcher). No CAPTCHA solving, no IP
 rotation, no hammering a refusing engine. Override the URL with SEARXNG_URL.
 
+GEMINI GROUNDED TIER (2026-10-14, MBP-1014-BURN): order is Brave (when not gated) →
+Gemini grounded (~/Scripts/gemini-search.py --source scorecard-grind --json; Google Search
+via Gemini, free under its own 1,400/day hard cap) → SearXNG. ONLY the grounding SOURCE
+URLs become candidates; the model's answer text is never read as evidence or as a URL
+(it often names a site its sources don't contain — that is exactly the guess we refuse).
+Grounding titles are bare domains, so each source page's own <title> is fetched for the
+unchanged picker. A Gemini answer is used only if the caller's picker accepts one of its
+sources; otherwise the query falls through to SearXNG. Exit 3 (daily cap) or 3 straight
+errors → Gemini off for the round. At most --gemini-max calls a round (default 60, env
+GEMINI_DISCOVER_MAX); the count is logged on the summary line.
+
 Usage: local-source-discover.py BATCH.json OUT_BATCH.json [--max N] [--sleep S]
-                                [--searx-sleep S] [--no-brave]
+                                [--searx-sleep S] [--no-brave] [--no-gemini]
+                                [--gemini-max N]
 """
-import json, os, re, sys, time, urllib.parse, urllib.request
+import html, json, os, re, subprocess, sys, time, urllib.parse, urllib.request
 
 # Aggregators/news/socials/official pages — never a candidate's own position prose.
 BAD_HOST = re.compile(
@@ -86,7 +98,7 @@ def brave_config():
         pass
     if not enabled:
         print("brave: gated (plugins.entries.brave.enabled=false, budget switch) "
-              "— using SearXNG")
+              "— using Gemini grounded → SearXNG")
         return None
     key = os.environ.get("BRAVE_API_KEY") or key
     is_loopback = urllib.parse.urlparse(base).hostname in ("127.0.0.1", "localhost", "::1")
@@ -129,6 +141,53 @@ def searx_search(q, count=8):
     return res, (j.get("unresponsive_engines") or [])
 
 
+GEMINI_SCRIPT = os.path.expanduser(os.environ.get("GEMINI_SEARCH") or "~/Scripts/gemini-search.py")
+GEMINI_SOURCE = "scorecard-grind"
+_UA = ("Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 "
+       "(KHTML, like Gecko) Chrome/126.0 Safari/537.36")
+
+
+class GeminiCapReached(Exception):
+    """gemini-search.py exit 3: the fleet's 1,400/day free allowance is spent."""
+
+
+def page_title(url):
+    """Best-effort <title> of a page (first 64 KB), or '' — gives the unchanged picker the
+    same title signal Brave/SearXNG results carry. Never raises."""
+    try:
+        req = urllib.request.Request(url, headers={"User-Agent": _UA, "Accept": "text/html"})
+        with urllib.request.urlopen(req, timeout=8) as r:
+            raw = r.read(65536).decode("utf-8", "replace")
+        m = re.search(r"<title[^>]*>(.*?)</title>", raw, re.I | re.S)
+        return html.unescape(re.sub(r"\s+", " ", m.group(1))).strip()[:200] if m else ""
+    except Exception:
+        return ""
+
+
+def gemini_search(q):
+    """Google-grounded Gemini via the fleet script → [{url,title}] from the grounding
+    SOURCES only. The answer text is discarded here on purpose: it is not evidence."""
+    p = subprocess.run([sys.executable, GEMINI_SCRIPT, "--source", GEMINI_SOURCE, "--json", q],
+                       capture_output=True, text=True, timeout=180)
+    if p.returncode == 3:
+        raise GeminiCapReached((p.stderr or "").strip()[:120])
+    if p.returncode != 0:
+        raise RuntimeError(f"gemini-search exit {p.returncode}: {(p.stderr or '').strip()[:80]}")
+    j = json.loads(p.stdout)
+    out = []
+    for s in j.get("sources") or []:
+        url = (s.get("url") or "").strip()
+        host = urllib.parse.urlparse(url).netloc.lower()
+        # an unresolved vertexaisearch redirect is not a candidate site
+        if not host or "vertexaisearch" in host or "grounding-api-redirect" in url:
+            continue
+        title = s.get("title") or ""
+        if not BAD_HOST.search(host) and not BAD_HOST.search(url):
+            title = page_title(url) or title   # grounding titles are bare domains
+        out.append({"url": url, "title": title})
+    return out
+
+
 def _mentions(results, toks):
     """True if any result names the person (a surname token in url or title)."""
     for x in results:
@@ -152,15 +211,57 @@ class Searcher:
     SUSPEND_WAIT = 200          # > SearXNG's 180 s too-many-requests suspension
     SEARX_MAX_BACKOFF = 2
 
-    def __init__(self, brave_cfg, searx_sleep=12.0):
+    def __init__(self, brave_cfg, searx_sleep=12.0, gemini_max=60):
         self.brave = brave_cfg
         self.searx_sleep = searx_sleep
         self.searx_ok = True
         self.searx_fails = 0
         self.backoffs = 0
         self._last_searx = 0.0
+        self.gemini_max = gemini_max
+        self.gemini_ok = gemini_max > 0 and os.path.exists(GEMINI_SCRIPT)
+        self.gemini_fails = 0
         self.n = {"brave": 0, "searxng": 0, "brave_err": 0, "brave_empty": 0,
-                  "searx_err": 0, "searx_junk": 0}
+                  "searx_err": 0, "searx_junk": 0,
+                  "gemini_calls": 0, "gemini_used": 0, "gemini_err": 0,
+                  "gemini_miss": 0, "gemini_cap": 0}
+        if gemini_max > 0 and not self.gemini_ok:
+            print(f"gemini: {GEMINI_SCRIPT} not found — tier skipped")
+
+    def _gemini(self, q, want):
+        """One grounded call → results, or None to fall through. Sources only, never the answer."""
+        if not self.gemini_ok:
+            return None
+        if self.n["gemini_calls"] >= self.gemini_max:
+            self.gemini_ok = False
+            print(f"  gemini: per-round cap reached ({self.gemini_max} calls) — SearXNG only from here")
+            return None
+        self.n["gemini_calls"] += 1
+        try:
+            res = gemini_search(q)
+        except GeminiCapReached as e:
+            self.n["gemini_cap"] += 1
+            self.gemini_ok = False
+            print(f"  gemini: daily cap reached (exit 3: {e}) — falling through to SearXNG")
+            return None
+        except Exception as e:
+            self.n["gemini_err"] += 1
+            self.gemini_fails += 1
+            print(f"  gemini error ({str(e)[:70]}) — falling through to SearXNG")
+            if self.gemini_fails >= 3:
+                self.gemini_ok = False
+                print("  gemini: 3 consecutive errors — off for this round")
+            return None
+        self.gemini_fails = 0
+        if os.environ.get("DISCOVER_DEBUG"):
+            for x in res:
+                print(f"      gemini> {x['url'][:90]} | {x['title'][:50]}")
+        if res and (want is None or want(res)):
+            self.n["gemini_used"] += 1
+            return res
+        self.n["gemini_miss"] += 1
+        self._gem_last = res
+        return None
 
     def _searx_once(self, q, count):
         wait = self.searx_sleep - (time.time() - self._last_searx)
@@ -207,7 +308,10 @@ class Searcher:
         self.n["searxng"] += 1
         return res
 
-    def search(self, q, count=8, toks=None):
+    def search(self, q, count=8, toks=None, gq=None, want=None):
+        """gq: the natural-language question for the Gemini tier (default q).
+        want(results) -> truthy: the caller's own picker; a Gemini answer that the picker
+        rejects falls through to SearXNG instead of ending the query."""
         if self.brave is not None:
             try:
                 res = brave_search(self.brave, q, count)
@@ -221,7 +325,16 @@ class Searcher:
                 print(f"  brave error ({str(e)[:60]}) — falling back to SearXNG")
                 if code in (401, 402, 403, 429):
                     self.brave = None   # gated / out of budget: stop paying for errors
+        self._gem_last = None
+        res = self._gemini(gq or q, want)
+        if res is not None:
+            return res, "gemini"
+        if not self.searx_ok and self._gem_last is not None:
+            return self._gem_last, "gemini"   # nothing better left; the picker says no honestly
         return self._searx(q, count, toks), "searxng"
+
+    def any_lane(self):
+        return self.brave is not None or self.gemini_ok or self.searx_ok
 
 
 def surname_toks(c):
@@ -272,9 +385,13 @@ def main():
     mx = int(sys.argv[sys.argv.index("--max") + 1]) if "--max" in sys.argv else 25
     slp = float(sys.argv[sys.argv.index("--sleep") + 1]) if "--sleep" in sys.argv else 0.4
     ssl = float(sys.argv[sys.argv.index("--searx-sleep") + 1]) if "--searx-sleep" in sys.argv else 12.0
+    gmx = int(sys.argv[sys.argv.index("--gemini-max") + 1]) if "--gemini-max" in sys.argv \
+        else int(os.environ.get("GEMINI_DISCOVER_MAX") or 60)
+    if "--no-gemini" in sys.argv:
+        gmx = 0
     batch = json.load(open(src))
     bcfg = None if "--no-brave" in sys.argv else brave_config()
-    S = Searcher(bcfg, searx_sleep=ssl)
+    S = Searcher(bcfg, searx_sleep=ssl, gemini_max=gmx)
     found = spent = rec_found = errors = 0
 
     # ---- Pass 2 target: the voting-RECORD page (LegiScan). For the ~2/3 of state legislators
@@ -282,15 +399,21 @@ def main():
     # appear verbatim on legiscan.com person pages, so the verbatim gate works unchanged.
     LEGISCAN_RE = re.compile(r"https?://legiscan\.com/[A-Z]{2}/people/[A-Za-z0-9_\-]+", re.I)
 
-    lanes = {"brave": 0, "searxng": 0}
+    lanes = {"brave": 0, "gemini": 0, "searxng": 0}
     for c in batch:
-        if S.brave is None and not S.searx_ok:
-            print("  no search lane left this round (Brave gated, SearXNG circuit open) — stopping")
+        if not S.any_lane():
+            print("  no search lane left this round (Brave gated, Gemini off/capped, "
+                  "SearXNG circuit open) — stopping")
             break
+        office = (c.get("office") or "").split("(")[0].strip()
         if (c.get("level") == "state" and not c.get("records_website") and spent < mx):
             q2 = f'"{c.get("name")}" {c.get("state")} site:legiscan.com'
+            g2 = (f'What is the LegiScan legislator page (legiscan.com/{c.get("state")}/people/...) '
+                  f'for {c.get("name")}, {c.get("state")} {office}?')
             try:
-                res2, lane = S.search(q2, count=5, toks=surname_toks(c))
+                res2, lane = S.search(q2, count=5, toks=surname_toks(c), gq=g2,
+                                      want=lambda rs: any(LEGISCAN_RE.search(r.get("url") or "")
+                                                          for r in rs))
                 spent += 1
                 lanes[lane] += 1
                 hit = next((m.group(0) for r in res2
@@ -306,10 +429,12 @@ def main():
             time.sleep(slp)
         if not looks_thin(c) or spent >= mx:
             continue
-        office = (c.get("office") or "").split("(")[0].strip()
         q = f'"{c.get("name")}" {c.get("state")} {office} campaign issues'
+        gq = (f'What is the official campaign website (with issues or positions) of '
+              f'{c.get("name")}, {c.get("state")} {office}?')
         try:
-            res, lane = S.search(q, toks=surname_toks(c))
+            res, lane = S.search(q, toks=surname_toks(c), gq=gq,
+                                 want=lambda rs, n=c.get("name"): pick_campaign_site(rs, n))
             spent += 1
             lanes[lane] += 1
         except Exception as e:
@@ -328,9 +453,13 @@ def main():
         time.sleep(slp)
     json.dump(batch, open(out, "w"), indent=1)
     print(f"wrote {out}: {found} campaign site(s) + {rec_found} records page(s) discovered "
-          f"on {spent} quer(ies) (brave {lanes['brave']}, searxng {lanes['searxng']}; "
+          f"on {spent} quer(ies) (brave {lanes['brave']}, gemini {lanes['gemini']}, searxng {lanes['searxng']}; "
           f"brave errors {S.n['brave_err']}, brave empty {S.n['brave_empty']}, "
           f"searxng errors {S.n['searx_err']}, searxng off-target {S.n['searx_junk']}), {len(batch)} candidates in batch")
+    print(f"gemini: {S.n['gemini_calls']}/{S.gemini_max} call(s) this round — "
+          f"{S.n['gemini_used']} used, {S.n['gemini_miss']} fell through (no source the picker accepts), "
+          f"{S.n['gemini_err']} error(s), cap-refused {S.n['gemini_cap']} "
+          f"[source={GEMINI_SOURCE}; sources only, answer text never used]")
 
     # A round where EVERY query failed is a broken-search round, not a legitimately
     # empty one. Exit non-zero so the orchestrator logs "source discovery failed"
@@ -338,7 +467,7 @@ def main():
     # signal that was missing for 47 days (see _resolve_secret).
     if errors and spent == 0:
         print(f"DISCOVERY BROKEN: all {errors} search attempt(s) raised; 0 queries "
-              f"completed. Check SearXNG ({os.environ.get('SEARXNG_URL') or DEFAULT_SEARX}) "
+              f"completed. Check gemini-search.py --status, SearXNG ({os.environ.get('SEARXNG_URL') or DEFAULT_SEARX}) "
               f"and the Brave key/baseUrl in openclaw.json.")
         return 2
     return 0

@@ -3,11 +3,20 @@ signature_pad v5.1.3
 
 Released: 2025-12-03
 Source:   https://github.com/szimek/signature_pad/releases/tag/v5.1.3
-Build:    dist/signature_pad.min.js (UMD bundle, modern browsers)
+Build:    dist/signature_pad.umd.min.js (UMD bundle, defines window.SignaturePad)
 License:  MIT (see LICENSE)
-Fetched:  2026-05-23 by claude-code via cdn.jsdelivr.net/npm/signature_pad@5.1.3
-SHA-256:  38c67ba2220b98426e8baa9ea81a4c3fcd092c21189d4e2237c8e8abaa39429f
-Bytes:    14877
+Fetched:  2026-10-14 by Max (MBP-1014-BURN) from the npm tarball below
+          (first fetch 2026-05-23 via cdn.jsdelivr.net took the ESM file)
+SHA-256:  0d8abbc3ba7c963b80edca55d1aed04383b6194e9ab521ca977a832f9b0dc5c4
+Bytes:    15929
+Tarball:  registry.npmjs.org/signature_pad/-/signature_pad-5.1.3.tgz
+          integrity sha512-zyxW5vuJVnQdGcU+kAj9FYl7WaAunY3kA5S7mPg0xJiujL9+sPAWfSQHS5tXaJXDUa4FuZeKhfdCDQ6K3wfkpQ== (verified 2026-10-14)
+
+2026-10-14 (MBP-1014-BURN): the file fetched 2026-05-23 as signature_pad.min.js
+is the ESM build (ends in `export{x as default}`), so a classic <script> threw
+"Unexpected token 'export'", SignaturePad was undefined and house-rules.html
+disabled Submit. house-rules.html now loads signature_pad.umd.min.js. The old
+ESM file is kept in place, unused (SHA-256 38c67ba2...39429f, 14877 bytes).
 
 Pinned for supply-chain hygiene per the usmcmin.com booking-site security
 posture: third-party JS is NOT hot-linked from a CDN; it's vendored, version-
@@ -15,9 +24,10 @@ locked, and integrity-tracked here.
 
 To upgrade
 ----------
-1. Fetch the new dist/signature_pad.min.js from a tagged release.
+1. Fetch the new dist/signature_pad.umd.min.js (NOT signature_pad.min.js,
+   which is the ES module build) from a tagged release.
 2. Verify the SHA against the GitHub release artifacts if available.
-3. Replace signature_pad.min.js + LICENSE in this directory.
+3. Replace signature_pad.umd.min.js + LICENSE in this directory.
 4. Update the pin version, fetched date, and SHA-256 above.
 5. Bump the cache-busting query string on the <script src> tag in
    /house-rules.html (e.g. ?v=5.1.3 → ?v=5.2.0).

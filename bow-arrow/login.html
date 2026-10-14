@@ -38,22 +38,16 @@
     </div>
 
     <script>
-        // Check if already authenticated
-        if (localStorage.getItem('ba_auth') === 'steward-2026') {
-            window.location.href = 'dashboard.html';
-        }
+        // 2026-10-14: the Bow & Arrow ops pages are gated at the edge by the usmcmin-com
+        // Worker (PIN prompt, HttpOnly session). No password lives in this page any more.
+        // The dashboards still look for the legacy localStorage sentinel, so set it and forward.
+        localStorage.setItem('ba_auth', 'steward-2026');
+        window.location.replace('dashboard.html');
 
         function handleLogin(e) {
             e.preventDefault();
-            const pw = document.getElementById('password').value;
-            if (pw === 'steward') {
-                localStorage.setItem('ba_auth', 'steward-2026');
-                window.location.href = 'dashboard.html';
-            } else {
-                document.getElementById('loginError').style.display = 'block';
-                document.getElementById('password').value = '';
-                document.getElementById('password').focus();
-            }
+            localStorage.setItem('ba_auth', 'steward-2026');
+            window.location.href = 'dashboard.html';
             return false;
         }
     </script>

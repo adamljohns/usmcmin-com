@@ -8,6 +8,12 @@ name: Deploy site to R2
 # PDFs, and infographics) lives in R2 only — it is gitignored and uploaded
 # out-of-band by tmc-husband/sync-media.sh. The excludes below are what keep a
 # deploy from wiping it. If you add a new media directory, exclude it here too.
+#
+# The private steward pages (finance dashboards, Bow & Arrow ops pages, C5iSR
+# dashboard, personal-outreach) are R2-only too since 2026-10-14: they are NOT in
+# this public repo, the Worker edge-gates them by PIN, and the --exclude lines
+# below keep a sync from deleting them. Working copy ~/usmcmin-com-private/,
+# publish with ~/Scripts/usmcmin-com-private-publish.sh. DEPLOY-DOCTRINE.md rule 3b.
 on:
   push:
     branches: [main]
@@ -52,6 +58,25 @@ jobs:
             --exclude 'assets/media/tmc-husband/*/infographics/**' \
             --exclude 'assets/video/**.mp4' \
             --exclude 'assets/video/**.m4a' \
+            --exclude 'finance/finance.html' \
+            --exclude 'finance/financial-command.html' \
+            --exclude 'finance/financial-onboarding.html' \
+            --exclude 'finance/stewardship-dashboard.html' \
+            --exclude 'finance/debt.html' \
+            --exclude 'finance/forecast.html' \
+            --exclude 'finance/review.html' \
+            --exclude 'finance/finance-sw.js' \
+            --exclude 'finance/finance.webmanifest' \
+            --exclude 'bow-arrow/dashboard.html' \
+            --exclude 'bow-arrow/financials.html' \
+            --exclude 'bow-arrow/calendar.html' \
+            --exclude 'bow-arrow/cleaning.html' \
+            --exclude 'bow-arrow/comms.html' \
+            --exclude 'bow-arrow/maintenance.html' \
+            --exclude 'bow-arrow/assets/dashboard.js' \
+            --exclude 'c5isr/dashboard.html' \
+            --exclude 'c5isr/assets/dashboard.js' \
+            --exclude 'personal-outreach.html' \
             --checksum --fast-list \
             --transfers 64 --checkers 64 \
             --s3-upload-cutoff 200M --s3-chunk-size 32M

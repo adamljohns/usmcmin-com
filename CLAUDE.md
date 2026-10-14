@@ -2,6 +2,8 @@
 
 **Deploy rules are canonical in `DEPLOY-DOCTRINE.md` at the repo root — read it before any deploy-affecting change. It covers both sites and outranks any conflicting note or lane rule.**
 
+**Private steward pages (finance dashboards, Bow & Arrow ops pages, C5iSR dashboard, personal-outreach) are NOT in this repo since 2026-10-14.** They are R2-only and edge-gated by the Worker; edit them in `~/usmcmin-com-private/` and publish with `~/Scripts/usmcmin-com-private-publish.sh`. Never recreate those paths here (DEPLOY-DOCTRINE.md rule 3b).
+
 > **What this is:** the U.S.M.C. Ministries static website (`git@github.com:adamljohns/usmcmin-com`),
 > served from **Cloudflare R2 via the `usmcmin-com` Worker** and **auto-deploying from `main`** (`git push` = deploy; a GitHub Action syncs to R2 in ~2-4 min — GitHub Pages is DISABLED entirely; rollback procedure lives in `~/usmcmin-com-worker/ROLLBACK.md`). Two subsystems:
 > 1. **RESOLUTE Citizen** voter scorecard (~8,500 officials). Source of truth is `data/scorecard.json`

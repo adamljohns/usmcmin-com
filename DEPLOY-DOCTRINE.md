@@ -42,6 +42,23 @@ intervening directory, so `**/*.mp4` does not match files sitting directly in
 `assets/media` — which is where the plan videos are. That mismatch deleted the
 v32 MP4 three times before it was found.
 
+**3b. The usmcmin.com private steward pages are R2-only too (2026-10-14).**
+finance/{finance,financial-command,financial-onboarding,stewardship-dashboard,
+debt,forecast,review}.html, finance/finance-sw.js, finance/finance.webmanifest,
+bow-arrow/{dashboard,financials,calendar,cleaning,comms,maintenance}.html,
+bow-arrow/assets/dashboard.js, c5isr/dashboard.html, c5isr/assets/dashboard.js
+and personal-outreach.html were removed from this public repo because they
+carry household figures and a PIN. They live only in `usmcmin-com-site`, the
+`usmcmin-com` Worker edge-gates them (finance scope = steward password, dash
+scope = the usual PIN; `~/usmcmin-com-worker/worker.js`), and
+`.github/workflows/deploy-r2.yml` plus `.gitignore` exclude every one of them,
+so a push can neither delete nor restore them. Working copy and the only
+publish path: `~/usmcmin-com-private/` → `~/Scripts/usmcmin-com-private-publish.sh`
+(checksum-verified `rclone copyto`). Never re-add one of these paths to git;
+a new private page goes into MANIFEST.txt, the Worker gate, and both exclude
+lists before it is published. Git history before `sprint-1014-private-r2only`
+still contains the old copies; treat anything in them as burned.
+
 Anything that is not R2-only belongs in git, where a sync cannot orphan it.
 
 **4. Do not "simplify" the deploy guards.**

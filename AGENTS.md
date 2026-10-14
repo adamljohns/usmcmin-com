@@ -2,6 +2,8 @@
 
 **Deploy rules are canonical in `DEPLOY-DOCTRINE.md` at the repo root — read it before any deploy-affecting change. It covers both sites and outranks any conflicting note or lane rule.**
 
+**Private steward pages (finance dashboards, Bow & Arrow ops pages, C5iSR dashboard, personal-outreach) are NOT in this repo since 2026-10-14.** They are R2-only and edge-gated by the Worker; edit them in `~/usmcmin-com-private/` and publish with `~/Scripts/usmcmin-com-private-publish.sh`. Never recreate those paths here (DEPLOY-DOCTRINE.md rule 3b).
+
 > **For any AI agent or human contributor walking into this repo for the
 > first time. Read this BEFORE running any script.**
 

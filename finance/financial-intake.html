@@ -895,17 +895,42 @@
             _captcha: 'false',
             ...allData
         };
+        // FormSubmit is the only path that reaches a person today (intake.usmcmin.com
+        // does not resolve). It used to be fire-and-forget: "Complete!" showed even
+        // when the send failed and the intake went nowhere. Only show done once
+        // FormSubmit has taken it; otherwise keep the form and say so (same pattern
+        // as the usmcmin.org counseling/mentoring/serving intakes, 2026-10-04).
+        const submitBtn = document.querySelector('#sec-' + currentSec + ' .btn-submit');
+        if (submitBtn) submitBtn.disabled = true;
         fetch(FORMSUBMIT_FALLBACK, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
             body: JSON.stringify(submitPayload)
-        }).catch(function(){ /* best-effort */ });
-
-        document.getElementById('sec-' + currentSec).classList.remove('active');
-        document.getElementById('sec-done').classList.add('active');
-        document.getElementById('progressFill').style.width = '100%';
-        document.getElementById('progressText').innerHTML = 'Complete! <img src="https://usmcmin.org/assets/icons/shield-finance.png" class="site-icon" alt="finance" width="20" height="20">';
-        window.scrollTo(0, 0);
+        }).then(function(r){
+            if (!r.ok) throw new Error('HTTP ' + r.status);
+            return r.json().catch(function(){ return {}; });
+        }).then(function(j){
+            if (j && (j.success === false || j.success === 'false')) throw new Error(j.message || 'not accepted');
+            var err = document.getElementById('sendError');
+            if (err) err.remove();
+            document.getElementById('sec-' + currentSec).classList.remove('active');
+            document.getElementById('sec-done').classList.add('active');
+            document.getElementById('progressFill').style.width = '100%';
+            document.getElementById('progressText').innerHTML = 'Complete! <img src="https://usmcmin.org/assets/icons/shield-finance.png" class="site-icon" alt="finance" width="20" height="20">';
+            window.scrollTo(0, 0);
+        }).catch(function(){
+            if (submitBtn) submitBtn.disabled = false;
+            var el = document.getElementById('sendError');
+            if (!el) {
+                el = document.createElement('p');
+                el.id = 'sendError';
+                el.setAttribute('role', 'alert');
+                el.style.cssText = 'color:#e74c3c;font-weight:600;margin-top:14px;line-height:1.5;';
+                if (submitBtn && submitBtn.parentNode) submitBtn.parentNode.appendChild(el);
+                else document.body.appendChild(el);
+            }
+            el.innerHTML = 'This did not send. Your answers are still here and saved on this device. Check your connection and press Submit again, or email <a href="mailto:usmcministries2022@gmail.com" style="color:inherit;text-decoration:underline">usmcministries2022@gmail.com</a>.';
+        });
     }
 </script>
 

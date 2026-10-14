@@ -972,11 +972,43 @@ function submitForm() {
     payload.proteinTarget = proteinTarget;
     // Local snapshot so Adam can recover client-side even if FormSubmit hiccups.
     try { localStorage.setItem('fitness_intake_' + ((getVal('firstName')||'anon').toLowerCase()), JSON.stringify(payload)); } catch (e) {}
-    fetch(FORMSUBMIT_URL, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-      body: JSON.stringify(payload)
-    }).catch(function() { /* best-effort — UI already shows results regardless */ });
+    // The results below are computed on this page, so they still show. But the send
+    // used to be fire-and-forget: a failed send was silent and the intake never
+    // reached Coach. Now a failed send is said out loud, with a retry (2026-10-14).
+    function sendIntake() {
+      var old = document.getElementById('sendError');
+      if (old) old.remove();
+      fetch(FORMSUBMIT_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+        body: JSON.stringify(payload)
+      }).then(function(r) {
+        if (!r.ok) throw new Error('HTTP ' + r.status);
+        return r.json().catch(function() { return {}; });
+      }).then(function(j) {
+        if (j && (j.success === false || j.success === 'false')) throw new Error(j.message || 'not accepted');
+      }).catch(function() {
+        var done = document.getElementById('sec-done');
+        var el = document.createElement('div');
+        el.id = 'sendError';
+        el.setAttribute('role', 'alert');
+        el.style.cssText = 'color:#e74c3c;font-weight:600;margin:0 0 16px;line-height:1.5;border:1px solid #e74c3c;border-radius:8px;padding:12px 14px;';
+        el.innerHTML = 'Your intake did not reach Coach. Your results below are fine and your answers are saved on this device. ';
+        var retry = document.createElement('button');
+        retry.type = 'button';
+        retry.textContent = 'Send it again';
+        retry.style.cssText = 'margin:8px 8px 0 0;padding:8px 14px;border-radius:6px;border:none;background:var(--gold);color:#000;font-weight:700;cursor:pointer;';
+        retry.addEventListener('click', sendIntake);
+        el.appendChild(retry);
+        var mail = document.createElement('a');
+        mail.href = 'mailto:usmcministries2022@gmail.com?subject=' + encodeURIComponent(payload._subject);
+        mail.textContent = 'or email us';
+        mail.style.cssText = 'color:inherit;text-decoration:underline;';
+        el.appendChild(mail);
+        if (done) done.insertBefore(el, done.firstChild); else document.body.appendChild(el);
+      });
+    }
+    sendIntake();
   })();
 
   let estHtml = '<h3 style="color:var(--gold);margin:20px 0 12px;">Initial Estimates</h3>';

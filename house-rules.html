@@ -279,12 +279,17 @@
   todayInput.value = new Date().toISOString().slice(0, 10); // YYYY-MM-DD UTC
 
   // ───── signature_pad setup with HiDPI ─────
+  // Phones fire 'resize' when the address bar slides away on scroll; only
+  // rebuild (and clear) the pad when the canvas box really changed size.
+  let lastCanvasW = 0, lastCanvasH = 0;
   function resizeCanvas() {
+    if (canvas.offsetWidth === lastCanvasW && canvas.offsetHeight === lastCanvasH) return;
+    lastCanvasW = canvas.offsetWidth; lastCanvasH = canvas.offsetHeight;
     const ratio = Math.max(window.devicePixelRatio || 1, 1);
     canvas.width = canvas.offsetWidth * ratio;
     canvas.height = canvas.offsetHeight * ratio;
     canvas.getContext('2d').scale(ratio, ratio);
-    if (typeof sigPad !== 'undefined' && sigPad) sigPad.clear();
+    if (typeof sigPad !== 'undefined' && sigPad) { sigPad.clear(); updateSubmitState(); }
   }
 
   // typeof check guards against the rare case where signature_pad failed to load
@@ -311,6 +316,9 @@
     sigHint.classList.add('hidden');
     updateSubmitState();
   });
+  // isEmpty() is still true at beginStroke; re-check once the stroke has ink,
+  // or a guest who signs last never sees Submit enable.
+  sigPad.addEventListener('endStroke', updateSubmitState);
 
   clearBtn.addEventListener('click', function () {
     sigPad.clear();

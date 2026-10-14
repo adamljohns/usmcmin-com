@@ -31,6 +31,12 @@ EXCLUDE = {
     "finance/financial-command.html",
     "finance/financial-onboarding.html",
     "finance/stewardship-dashboard.html",
+    # sprint-1014: the rest of the edge-gated (401) finance pages. Keep in step
+    # with FINANCE_PUBLIC in ~/usmcmin-com-worker/worker.js -- anything under
+    # finance/ that is not public there is gated and must never be listed here.
+    "finance/debt.html",
+    "finance/forecast.html",
+    "finance/review.html",
     # Crypto dashboard (shows positions)
     "c5isr/dashboard.html",
     # Bow & Arrow ops (internal; shows revenue, expenses, guest data)
@@ -85,9 +91,7 @@ HIGH_PRIORITY = {
     "tmc-husband/index.html": (0.85, "weekly"),
     "fleet/index.html": (0.6, "weekly"),
     "finance/index.html": (0.8, "monthly"),
-    "finance/finance.html": (0.5, "monthly"),
     "finance/financial-intake.html": (0.8, "monthly"),
-    "finance/financial-onboarding.html": (0.6, "monthly"),
     "finance/consulting.html": (0.7, "monthly"),
     "fitness/index.html": (0.85, "monthly"),
     "fitness/fitness-intake.html": (0.8, "monthly"),

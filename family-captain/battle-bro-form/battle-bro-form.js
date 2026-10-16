@@ -1517,25 +1517,50 @@
 
   function validateStep() {
     readForm();
+    validateStep.field = '';
+    function miss(id, msg) { validateStep.field = id; return msg; }
     if (currentStep === 0) {
-      if (!form.reporterName) return 'Enter your name (first and last).';
-      if (!form.lastWeekSaca) return "What was your Battle Brother's SACA for last week?";
-      if (!form.sacaPassFail) return 'Did he complete his SACA? (Pass/Fail)';
-      if (!form.thisWeekSaca) return "What is your Battle Brother's SACA for this week?";
-      if (!val('myActionText')) return 'Write your own Self-Assigned Captain\'s Action for this theme week.';
+      if (!form.reporterName) return miss('reporterName', 'Enter your name (first and last).');
+      if (!form.lastWeekSaca) return miss('lastWeekSaca', "What was your Battle Brother's SACA for last week?");
+      if (!form.sacaPassFail) return miss('sacaPassFail', 'Did he complete his SACA? (Pass/Fail)');
+      if (!form.thisWeekSaca) return miss('thisWeekSaca', "What is your Battle Brother's SACA for this week?");
+      if (!val('myActionText')) return miss('myActionText', 'Write your own Self-Assigned Captain\'s Action for this theme week.');
     }
     if (currentStep === 1) {
-      if (!form.battleBrotherCall) return 'Did you have your Battle Brother call?';
-      if (!form.threeQuestionsAsked) return 'Did your Battle Brother ask the required 3 questions?';
+      if (!form.battleBrotherCall) return miss('battleBrotherCall', 'Did you have your Battle Brother call?');
+      if (!form.threeQuestionsAsked) return miss('threeQuestionsAsked', 'Did your Battle Brother ask the required 3 questions?');
     }
     if (currentStep === 2) {
-      if (!form.armadaCall) return 'Did you have your Armada call?';
-      if (!form.armadaRating) return 'Rate the Armada call (1–5 stars).';
+      if (!form.armadaCall) return miss('armadaCall', 'Did you have your Armada call?');
+      if (!form.armadaRating) return miss('armadaRating', 'Rate the Armada call (1–5 stars).');
     }
     if (currentStep === 3) {
-      if (!form.confidentialComments) return 'Any additional comments? (required — even a short prayer counts)';
+      if (!form.confidentialComments) return miss('confidentialComments', 'Any additional comments? (required — even a short prayer counts)');
     }
     return '';
+  }
+
+  // Validation errors must be visible where the thumb is (POP-1016-BBNEXT):
+  // message sits right above the button row, and the missing field is scrolled to and focused.
+  function clearStepError() {
+    var box = el('bbStepError');
+    if (box) { box.hidden = true; box.textContent = ''; }
+    document.querySelectorAll('.bb-field-invalid').forEach(function (n) { n.classList.remove('bb-field-invalid'); });
+  }
+
+  function showStepError(msg, fieldId) {
+    clearStepError();
+    var box = el('bbStepError');
+    if (box) { box.textContent = msg; box.hidden = false; }
+    var target = fieldId === 'armadaRating' ? document.querySelector('.star-btn') : el(fieldId);
+    if (target) {
+      var wrap = target.closest ? (target.closest('.bb-field') || target) : target;
+      wrap.classList.add('bb-field-invalid');
+      try { target.scrollIntoView({ behavior: 'smooth', block: 'center' }); } catch (e) { target.scrollIntoView(); }
+      try { target.focus({ preventScroll: true }); } catch (e) { target.focus(); }
+    } else if (box) {
+      box.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
   }
 
   function setStar(n) {
@@ -1682,7 +1707,8 @@
 
   async function submitForm() {
     var err = validateStep();
-    if (err) { flash(err); return; }
+    if (err) { showStepError(err, validateStep.field); return; }
+    clearStepError();
     var payload = buildPayload();
     persistSubmission(payload);
     syncHabitsFromSubmission(payload);
@@ -1889,10 +1915,19 @@
 
     el('btnNext').addEventListener('click', function () {
       var err = validateStep();
-      if (err) { flash(err); return; }
+      if (err) { showStepError(err, validateStep.field); return; }
+      clearStepError();
       showStep(currentStep + 1);
     });
-    el('btnBack').addEventListener('click', function () { showStep(currentStep - 1); });
+    el('btnBack').addEventListener('click', function () { clearStepError(); showStep(currentStep - 1); });
+    el('formShell').addEventListener('input', function (ev) {
+      var f = ev.target && ev.target.closest && ev.target.closest('.bb-field-invalid');
+      if (f) clearStepError();
+    });
+    el('formShell').addEventListener('change', function (ev) {
+      var f = ev.target && ev.target.closest && ev.target.closest('.bb-field-invalid');
+      if (f) clearStepError();
+    });
     el('btnSubmit').addEventListener('click', submitForm);
     el('btnAnother').addEventListener('click', resetForm);
     el('btnClearDraft').addEventListener('click', function () {

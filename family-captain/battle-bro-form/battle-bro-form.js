@@ -1556,6 +1556,8 @@
     if (target) {
       var wrap = target.closest ? (target.closest('.bb-field') || target) : target;
       wrap.classList.add('bb-field-invalid');
+      // Put the message directly under the missing field so both are on screen together.
+      if (box && wrap.parentNode) wrap.parentNode.insertBefore(box, wrap.nextSibling);
       try { target.scrollIntoView({ behavior: 'smooth', block: 'center' }); } catch (e) { target.scrollIntoView(); }
       try { target.focus({ preventScroll: true }); } catch (e) { target.focus(); }
     } else if (box) {

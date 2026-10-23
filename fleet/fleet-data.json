@@ -1,9 +1,9 @@
 {
-  "generated": "2026-10-23T19:16:17.760313+00:00",
+  "generated": "2026-10-23T19:50:23.170030+00:00",
   "totals": {
     "agents": 17,
-    "operational": 14,
-    "degraded": 2,
+    "operational": 9,
+    "degraded": 7,
     "jobs": 172,
     "enabled": 98,
     "accomplishments": 401,
@@ -12,18 +12,17 @@
   "health": {
     "cron": {
       "enabled": 98,
-      "ran26h": 61,
-      "delivered": 23,
+      "ran26h": 63,
+      "delivered": 25,
       "fails": [
-        "scheduled job \u00d7 4"
+        "scheduled job \u00d7 5",
+        "agent heartbeat \u00d7 4"
       ]
     },
     "cron_source": "openclaw.sqlite + hermes/cron/jobs.json",
     "launchd": {
-      "healthy": 101,
-      "fails": [
-        "launchd job \u00d7 2"
-      ]
+      "healthy": 103,
+      "fails": []
     }
   },
   "rhythm": [
@@ -134,7 +133,7 @@
       "n_jobs": 26,
       "n_enabled": 10,
       "err": 1,
-      "last_ms": 1792772100901,
+      "last_ms": 1792784400067,
       "status": "degraded",
       "accomplishments": [
         {
@@ -409,6 +408,17 @@
       },
       "jobs": [
         {
+          "name": "Friday second-brain compile",
+          "enabled": true,
+          "expr": "40 15 * * 5",
+          "tz": "America/New_York",
+          "channel": "telegram",
+          "last_ms": 1792784400067,
+          "status": "ok",
+          "errors": 0,
+          "dur_ms": 48109
+        },
+        {
           "name": "Noon bolt ask",
           "enabled": true,
           "expr": "15 12 * * *",
@@ -506,17 +516,6 @@
           "status": "ok",
           "errors": 0,
           "dur_ms": 152353
-        },
-        {
-          "name": "Friday second-brain compile",
-          "enabled": true,
-          "expr": "40 15 * * 5",
-          "tz": "America/New_York",
-          "channel": "telegram",
-          "last_ms": 1792179600053,
-          "status": "ok",
-          "errors": 0,
-          "dur_ms": 55302
         },
         {
           "name": "One-shot: VA chiropractor reminder (Tue 10/20 08:00)",
@@ -1147,7 +1146,7 @@
       "n_jobs": 0,
       "n_enabled": 0,
       "err": 0,
-      "last_ms": 1792770058671,
+      "last_ms": 1792784594120,
       "status": "operational",
       "accomplishments": [
         {
@@ -1791,7 +1790,7 @@
       "n_jobs": 10,
       "n_enabled": 7,
       "err": 0,
-      "last_ms": 1792781871322,
+      "last_ms": 1792784927015,
       "status": "operational",
       "accomplishments": [
         {
@@ -2246,26 +2245,37 @@
       },
       "jobs": [
         {
-          "name": "heartbeat-chaps",
-          "enabled": true,
-          "expr": "",
-          "tz": "",
-          "channel": "",
-          "last_ms": 1792781871322,
-          "status": "ok",
-          "errors": 0,
-          "dur_ms": 18345
-        },
-        {
           "name": "invitation-check",
           "enabled": true,
           "expr": "",
           "tz": "",
           "channel": "",
-          "last_ms": 1792777726938,
+          "last_ms": 1792784927015,
           "status": "ok",
           "errors": 0,
-          "dur_ms": 42699
+          "dur_ms": 20874
+        },
+        {
+          "name": "Skill: pastoral-intake (Fri hygiene)",
+          "enabled": true,
+          "expr": "30 15 * * 5",
+          "tz": "America/New_York",
+          "channel": "discord",
+          "last_ms": 1792783805920,
+          "status": "ok",
+          "errors": 0,
+          "dur_ms": 92500
+        },
+        {
+          "name": "heartbeat-chaps",
+          "enabled": true,
+          "expr": "",
+          "tz": "",
+          "channel": "",
+          "last_ms": 1792783671361,
+          "status": "ok",
+          "errors": 0,
+          "dur_ms": 64025
         },
         {
           "name": "Evening pre-check-in prompt (9 PM)",
@@ -2299,17 +2309,6 @@
           "status": "ok",
           "errors": 0,
           "dur_ms": 40051
-        },
-        {
-          "name": "Skill: pastoral-intake (Fri hygiene)",
-          "enabled": true,
-          "expr": "30 15 * * 5",
-          "tz": "America/New_York",
-          "channel": "discord",
-          "last_ms": 1792179000025,
-          "status": "ok",
-          "errors": 0,
-          "dur_ms": 63692
         },
         {
           "name": "Freedom Group follow-up reminder (Mon 10/26)",
@@ -2940,9 +2939,9 @@
       ],
       "n_jobs": 15,
       "n_enabled": 8,
-      "err": 0,
-      "last_ms": 1792782494575,
-      "status": "operational",
+      "err": 1,
+      "last_ms": 1792784294605,
+      "status": "degraded",
       "accomplishments": [
         {
           "date": "2026-10-20",
@@ -3111,10 +3110,10 @@
           "expr": "",
           "tz": "",
           "channel": "",
-          "last_ms": 1792782494575,
-          "status": "ok",
-          "errors": 0,
-          "dur_ms": 45865
+          "last_ms": 1792784294605,
+          "status": "error",
+          "errors": 1,
+          "dur_ms": 80245
         },
         {
           "name": "heartbeat-sally",
@@ -3436,7 +3435,7 @@
       "n_jobs": 9,
       "n_enabled": 6,
       "err": 0,
-      "last_ms": 1792781883548,
+      "last_ms": 1792784023684,
       "status": "operational",
       "accomplishments": [
         {
@@ -3694,26 +3693,26 @@
       },
       "jobs": [
         {
-          "name": "heartbeat-coach-arnie",
-          "enabled": true,
-          "expr": "",
-          "tz": "",
-          "channel": "",
-          "last_ms": 1792781883548,
-          "status": "skipped",
-          "errors": 0,
-          "dur_ms": 300
-        },
-        {
           "name": "recovery-pulse",
           "enabled": true,
           "expr": "",
           "tz": "",
           "channel": "",
-          "last_ms": 1792773223646,
+          "last_ms": 1792784023684,
           "status": "ok",
           "errors": 0,
-          "dur_ms": 40123
+          "dur_ms": 127526
+        },
+        {
+          "name": "heartbeat-coach-arnie",
+          "enabled": true,
+          "expr": "",
+          "tz": "",
+          "channel": "",
+          "last_ms": 1792783685591,
+          "status": "skipped",
+          "errors": 0,
+          "dur_ms": 292
         },
         {
           "name": "Coach Midday Garmin Read (12:15 EDT)",
@@ -4184,9 +4183,9 @@
       ],
       "n_jobs": 10,
       "n_enabled": 7,
-      "err": 0,
-      "last_ms": 1792781316943,
-      "status": "operational",
+      "err": 1,
+      "last_ms": 1792784019597,
+      "status": "degraded",
       "accomplishments": [
         {
           "date": "2026-09-07",
@@ -4353,26 +4352,26 @@
       },
       "jobs": [
         {
-          "name": "heartbeat-sheriff-roy",
-          "enabled": true,
-          "expr": "",
-          "tz": "",
-          "channel": "",
-          "last_ms": 1792781316943,
-          "status": "ok",
-          "errors": 0,
-          "dur_ms": 106277
-        },
-        {
           "name": "agenda-this-week",
           "enabled": true,
           "expr": "",
           "tz": "",
           "channel": "",
-          "last_ms": 1792762419531,
+          "last_ms": 1792784019597,
           "status": "ok",
           "errors": 0,
-          "dur_ms": 532193
+          "dur_ms": 89396
+        },
+        {
+          "name": "heartbeat-sheriff-roy",
+          "enabled": true,
+          "expr": "",
+          "tz": "",
+          "channel": "",
+          "last_ms": 1792783364676,
+          "status": "error",
+          "errors": 1,
+          "dur_ms": 68
         },
         {
           "name": "RESOLUTE Local YouTube weekly (Roy draft)",
@@ -4537,7 +4536,7 @@
       "n_jobs": 9,
       "n_enabled": 6,
       "err": 0,
-      "last_ms": 1792782317479,
+      "last_ms": 1792784119223,
       "status": "operational",
       "accomplishments": [
         {
@@ -4752,10 +4751,10 @@
           "expr": "",
           "tz": "",
           "channel": "",
-          "last_ms": 1792782317479,
-          "status": "ok",
+          "last_ms": 1792784119223,
+          "status": "skipped",
           "errors": 0,
-          "dur_ms": 103347
+          "dur_ms": 289
         },
         {
           "name": "Newsletter Synthesis (5:30 AM) \u2014 Prof X",
@@ -4925,9 +4924,9 @@
       ],
       "n_jobs": 9,
       "n_enabled": 6,
-      "err": 0,
-      "last_ms": 1792782660871,
-      "status": "operational",
+      "err": 1,
+      "last_ms": 1792783368595,
+      "status": "degraded",
       "accomplishments": [
         {
           "date": "2026-09-07",
@@ -5075,6 +5074,17 @@
       },
       "jobs": [
         {
+          "name": "heartbeat-rush",
+          "enabled": true,
+          "expr": "",
+          "tz": "",
+          "channel": "",
+          "last_ms": 1792783368595,
+          "status": "error",
+          "errors": 1,
+          "dur_ms": 11
+        },
+        {
           "name": "breaking-news-scan",
           "enabled": true,
           "expr": "",
@@ -5084,17 +5094,6 @@
           "status": "ok",
           "errors": 0,
           "dur_ms": 112021
-        },
-        {
-          "name": "heartbeat-rush",
-          "enabled": true,
-          "expr": "",
-          "tz": "",
-          "channel": "",
-          "last_ms": 1792781316953,
-          "status": "ok",
-          "errors": 0,
-          "dur_ms": 100562
         },
         {
           "name": "Daily News Brief (1:00 PM) \u2014 Rush",
@@ -5253,9 +5252,9 @@
       ],
       "n_jobs": 11,
       "n_enabled": 8,
-      "err": 0,
-      "last_ms": 1792781306705,
-      "status": "operational",
+      "err": 1,
+      "last_ms": 1792783364626,
+      "status": "degraded",
       "accomplishments": [
         {
           "date": "2026-10-23",
@@ -5405,10 +5404,10 @@
           "expr": "",
           "tz": "",
           "channel": "",
-          "last_ms": 1792781306705,
-          "status": "ok",
-          "errors": 0,
-          "dur_ms": 8196
+          "last_ms": 1792783364626,
+          "status": "error",
+          "errors": 1,
+          "dur_ms": 26
         },
         {
           "name": "wheelhouse-pattern",
@@ -5599,9 +5598,9 @@
       ],
       "n_jobs": 8,
       "n_enabled": 4,
-      "err": 0,
-      "last_ms": 1792781322997,
-      "status": "operational",
+      "err": 1,
+      "last_ms": 1792784933109,
+      "status": "degraded",
       "accomplishments": [
         {
           "date": "2026-08-17",
@@ -5756,26 +5755,26 @@
       },
       "jobs": [
         {
-          "name": "heartbeat-sgt-maj-mac",
-          "enabled": true,
-          "expr": "",
-          "tz": "",
-          "channel": "",
-          "last_ms": 1792781322997,
-          "status": "skipped",
-          "errors": 0,
-          "dur_ms": 274
-        },
-        {
           "name": "pt-log-late-check",
           "enabled": true,
           "expr": "",
           "tz": "",
           "channel": "",
-          "last_ms": 1792777733067,
+          "last_ms": 1792784933109,
           "status": "ok",
           "errors": 0,
-          "dur_ms": 76137
+          "dur_ms": 59850
+        },
+        {
+          "name": "heartbeat-sgt-maj-mac",
+          "enabled": true,
+          "expr": "",
+          "tz": "",
+          "channel": "",
+          "last_ms": 1792783386166,
+          "status": "error",
+          "errors": 1,
+          "dur_ms": 23142
         },
         {
           "name": "Daily Standards Check (9:30 AM) \u2014 Mac",
@@ -5920,7 +5919,7 @@
       "n_jobs": 8,
       "n_enabled": 5,
       "err": 0,
-      "last_ms": 1792781907983,
+      "last_ms": 1792784021637,
       "status": "operational",
       "accomplishments": [
         {
@@ -6095,26 +6094,26 @@
       },
       "jobs": [
         {
-          "name": "heartbeat-bg-hartwell",
-          "enabled": true,
-          "expr": "",
-          "tz": "",
-          "channel": "",
-          "last_ms": 1792781907983,
-          "status": "ok",
-          "errors": 0,
-          "dur_ms": 39111
-        },
-        {
           "name": "pattern-watch",
           "enabled": true,
           "expr": "",
           "tz": "",
           "channel": "",
-          "last_ms": 1792762421554,
+          "last_ms": 1792784021637,
           "status": "ok",
           "errors": 0,
-          "dur_ms": 285752
+          "dur_ms": 170607
+        },
+        {
+          "name": "heartbeat-bg-hartwell",
+          "enabled": true,
+          "expr": "",
+          "tz": "",
+          "channel": "",
+          "last_ms": 1792783708015,
+          "status": "skipped",
+          "errors": 0,
+          "dur_ms": 308
         },
         {
           "name": "Daily Strategic Note (10:00 AM) \u2014 Gus",
@@ -6228,5 +6227,5 @@
     "write-airbnb-reviews-for-listings",
     "you-are-an-expert-ai-agent"
   ],
-  "cowork_date": "2026-10-23T15:16:06-04:00"
+  "cowork_date": "2026-10-23T15:50:12-04:00"
 }

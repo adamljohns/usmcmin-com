@@ -373,8 +373,9 @@
   else markPassed();
 })();
 
-/* 8. State news desks — links only, never a score. Principal 2026-10-24.
- * Reads data-state already on #profJumpSelect. Does not touch the grade.
+/* 8. State desks — links only, never a score. Principal 2026-10-24.
+ * State and federal cards get the state desk. Local cards get a local desk only.
+ * Virginia Scope removed: not a conservative desk. Progressive outlets excluded.
  * Keep in sync with data/state-news-desks.json. */
 (function(){
   var CS = {
@@ -389,23 +390,74 @@
     SD:"south_dakota", TN:"tennessee", TX:"texas", UT:"utah", VT:"vermont",
     VA:"virginia", WA:"washington", WV:"west_virginia", WI:"wisconsin", WY:"wyoming"
   };
-  var EXTRA = {
+  var STATE = {
     AL:[{n:"1819 News", u:"https://1819news.com/"}],
-    AZ:[{n:"AZ Free News", u:"https://azfreenews.com/"}],
+    AK:[{n:"Must Read Alaska", u:"https://mustreadalaska.com/"}],
+    AZ:[{n:"AZ Free News", u:"https://azfreenews.com/"},{n:"Arizona Sun Times", u:"https://thestarnewsnetwork.com/the-arizona-sun-times/"}],
+    AR:[{n:"Conduit News", u:"https://conduitnews.com/"}],
     CA:[{n:"California Globe", u:"https://californiaglobe.com/"}],
+    CO:[{n:"Complete Colorado", u:"https://completecolorado.com/"}],
+    CT:[{n:"Connecticut Star", u:"https://thestarnewsnetwork.com/the-connecticut-star/"}],
+    DE:[{n:"Caesar Rodney Institute", u:"https://www.caesarrodney.org/"}],
+    FL:[{n:"Florida Capital Star", u:"https://thestarnewsnetwork.com/the-florida-capital-star/"}],
+    GA:[{n:"Georgia Star News", u:"https://thestarnewsnetwork.com/the-georgia-star-news/"}],
+    HI:[{n:"Grassroot Institute", u:"https://www.grassrootinstitute.org/"}],
+    ID:[{n:"Idaho Freedom", u:"https://idahofreedom.org/"}],
+    IL:[{n:"Illinois Policy", u:"https://www.illinoispolicy.org/"}],
+    IN:[{n:"Indiana Policy Review", u:"https://inpolicy.org/"}],
+    IA:[{n:"Iowa Star", u:"https://thestarnewsnetwork.com/the-iowa-star/"}],
+    KS:[{n:"Kansas Policy Institute", u:"https://kansaspolicy.org/"}],
+    KY:[{n:"Bluegrass Institute", u:"https://www.bluegrassinstitute.org/"}],
+    LA:[{n:"Pelican Institute", u:"https://www.pelicanpolicy.org/"}],
     ME:[{n:"The Maine Wire", u:"https://www.themainewire.com/"}],
-    MI:[{n:"Michigan Capitol Confidential", u:"https://www.michigancapitolconfidential.com/"}],
-    OH:[{n:"The Ohio Star", u:"https://thestarnewsnetwork.com/the-ohio-star/"}],
-    VA:[{n:"Virginia Scope", u:"https://www.virginiascope.com/"}]
+    MD:[{n:"Maryland Public Policy", u:"https://www.mdpolicy.org/"}],
+    MA:[{n:"MassFiscal", u:"https://www.massfiscal.org/"}],
+    MI:[{n:"Capitol Confidential", u:"https://www.michigancapitolconfidential.com/"},{n:"Michigan Star", u:"https://thestarnewsnetwork.com/the-michigan-star/"}],
+    MN:[{n:"Minnesota Sun", u:"https://thestarnewsnetwork.com/the-minnesota-sun/"}],
+    MS:[{n:"Mississippi Center for Public Policy", u:"https://mspolicy.org/"}],
+    MO:[{n:"Show-Me Institute", u:"https://showmeinstitute.org/"}],
+    MT:[{n:"Frontier Institute", u:"https://frontierinstitute.org/"}],
+    NE:[{n:"Platte Institute", u:"https://platteinstitute.org/"}],
+    NV:[{n:"Nevada Policy", u:"https://nevadapolicy.org/"}],
+    NH:[{n:"New Hampshire Star", u:"https://thestarnewsnetwork.com/the-new-hampshire-star/"}],
+    NJ:[{n:"Garden State Initiative", u:"https://www.gardenstateinitiative.org/"}],
+    NM:[{n:"Rio Grande Foundation", u:"https://www.riograndefoundation.org/"}],
+    NY:[{n:"Empire Center", u:"https://www.empirecenter.org/"}],
+    NC:[{n:"John Locke Foundation", u:"https://www.johnlocke.org/"}],
+    ND:[{n:"Say Anything", u:"https://www.sayanythingblog.com/"}],
+    OH:[{n:"Ohio Star", u:"https://thestarnewsnetwork.com/the-ohio-star/"}],
+    OK:[{n:"Oklahoma Council of Public Affairs", u:"https://ocpathink.org/"}],
+    OR:[{n:"Cascade Policy", u:"https://cascadepolicy.org/"}],
+    PA:[{n:"Pennsylvania Daily Star", u:"https://thestarnewsnetwork.com/the-pennsylvania-daily-star/"}],
+    RI:[{n:"Rhode Island Center for Freedom", u:"https://rifreedom.org/"}],
+    SC:[{n:"South Carolina Sun", u:"https://thestarnewsnetwork.com/the-south-carolina-sun/"}],
+    SD:[{n:"Dakota War College", u:"https://dakotawarcollege.com/"}],
+    TN:[{n:"Tennessee Star", u:"https://tennesseestar.com/"}],
+    TX:[{n:"The Texan", u:"https://thetexan.news/"},{n:"Texas Scorecard", u:"https://texasscorecard.com/"},{n:"Texas Public Policy Foundation", u:"https://www.texaspolicy.com/"}],
+    UT:[{n:"Sutherland Institute", u:"https://sutherlandinstitute.org/"}],
+    VT:[{n:"Ethan Allen Institute", u:"https://www.ethanallen.org/"}],
+    VA:[{n:"Virginia Star", u:"https://thestarnewsnetwork.com/the-virginia-star/"},{n:"Republican Standard", u:"https://therepublicanstandard.com/"},{n:"The Bull Elephant", u:"https://thebullelephant.com/"}],
+    WA:[{n:"Washington Policy Center", u:"https://www.washingtonpolicy.org/"}],
+    WV:[{n:"Cardinal Institute", u:"https://cardinalinstitute.com/"}],
+    WI:[{n:"Wisconsin Daily Star", u:"https://thestarnewsnetwork.com/the-wisconsin-daily-star/"},{n:"MacIver Institute", u:"https://www.maciverinstitute.com/"}],
+    WY:[{n:"Cowboy State Daily", u:"https://cowboystatedaily.com/"}]
   };
+  var LOCAL = {};
+  function isLocal(office){
+    return /city of|county|school board|sheriff|mayor|council|supervisor|commonwealth's attorney|district attorney|circuit attorney|judicial circuit|board of|city commission|alder|police chief|township|village|borough|selectm/i.test(String(office || "").split("(")[0]);
+  }
   function mount(){
-    if (document.getElementById("prof-state-desks")) return;
+    var old = document.getElementById("prof-state-desks");
+    if (old) old.remove();
     var sel = document.getElementById("profJumpSelect");
-    var st = sel && (sel.getAttribute("data-state") || "");
-    st = String(st).toUpperCase();
-    if (!CS[st] && !(EXTRA[st] && EXTRA[st].length)) return;
+    var st = String((sel && sel.getAttribute("data-state")) || "").toUpperCase();
+    var officeEl = document.querySelector(".prof-office");
+    var office = officeEl ? officeEl.textContent : "";
+    var local = isLocal(office);
+    var links = local ? (LOCAL[st] || []) : (STATE[st] || []);
     var score = document.getElementById("prof-score");
-    if (!score || !score.parentNode) return;
+    if (!score) return;
+    if (!local && !CS[st] && !links.length) return;
     if (!document.getElementById("prof-state-desks-style")) {
       var style = document.createElement("style");
       style.id = "prof-state-desks-style";
@@ -413,19 +465,16 @@
       document.head.appendChild(style);
     }
     var html = "";
-    if (CS[st]) {
-      html += '<a href="https://www.thecentersquare.com/' + CS[st] + '/" target="_blank" rel="noopener">Center Square</a>';
-    }
-    var extras = EXTRA[st] || [];
-    for (var i = 0; i < extras.length; i++) {
-      html += '<a href="' + extras[i].u + '" target="_blank" rel="noopener">' + extras[i].n + "</a>";
-    }
+    if (!local && CS[st]) html += '<a href="https://www.thecentersquare.com/' + CS[st] + '/" target="_blank" rel="noopener">Center Square</a>';
+    for (var i = 0; i < links.length; i++) html += '<a href="' + links[i].u + '" target="_blank" rel="noopener">' + links[i].n + "</a>";
+    var note = local
+      ? (links.length ? "Local desk only. A headline is not a grade." : "No verified conservative local desk for this city yet. State papers are not used as a substitute.")
+      : "State desks only. A headline is not a grade.";
+    if (local && !links.length) html = "";
     var box = document.createElement("div");
     box.id = "prof-state-desks";
     box.className = "prof-state-desks";
-    box.setAttribute("role", "navigation");
-    box.setAttribute("aria-label", "State news desks");
-    box.innerHTML = '<div class="prof-state-desks-label">State desks</div><div class="prof-state-desks-links">' + html + '</div><p class="prof-state-desks-note">Links only. A headline is not a grade.</p>';
+    box.innerHTML = '<div class="prof-state-desks-label">' + (local ? "Local desk" : "State desks") + '</div><div class="prof-state-desks-links">' + html + '</div><p class="prof-state-desks-note">' + note + "</p>";
     score.insertAdjacentElement("afterend", box);
   }
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", mount);

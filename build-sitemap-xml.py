@@ -75,6 +75,7 @@ HIGH_PRIORITY = {
     "citizen-table.html": (0.8, "weekly"),
     "citizen-issues.html": (0.7, "weekly"),
     "citizen-rankings.html": (0.9, "daily"),     # live A-F leaderboard — primary CTA
+    "national-map.html": (0.8, "weekly"),        # state-average choropleth (build-national-map.py)
     "find-my-reps.html": (0.9, "weekly"),
     "scoring-system.html": (0.85, "monthly"),    # rubric explainer
     "methodology-foreign-influence.html": (0.75, "monthly"),

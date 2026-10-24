@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <script>(function(){try{var s=localStorage.getItem('usmc-theme')||localStorage.getItem('theme');if(s!=='light')document.documentElement.setAttribute('data-theme','dark');}catch(e){}})();</script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="canonical" href="https://usmcmin.com/national-map.html">
+  <title>RESOLUTE Citizen Score by State — National Map | U.S.M.C. Ministries</title>
+  <meta name="description" content="A map of all 50 states and D.C., each shaded by the average RESOLUTE Citizen score of its sitting state legislators or its congressional delegation. Evidence-scored office-holders only.">
+  <meta property="og:site_name" content="RESOLUTE Citizen Scorecard">
+  <meta property="og:title" content="RESOLUTE Citizen Score by State">
+  <meta property="og:description" content="Every state shaded by the average RESOLUTE Citizen score of its state legislature or its congressional delegation.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://usmcmin.com/national-map.html">
+  <meta property="og:image" content="https://usmcmin.com/assets/og/og-citizen-map.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:type" content="image/jpeg">
+  <meta property="og:image:alt" content="RESOLUTE Citizen — national score map">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="https://usmcmin.com/assets/og/og-citizen-map.jpg">
+  <meta name="twitter:title" content="RESOLUTE Citizen Score by State">
+  <meta name="twitter:description" content="Every state shaded by the average RESOLUTE Citizen score of its state legislature or its congressional delegation.">
+  <link rel="stylesheet" href="assets/css/main.min.css?v=1004">
+  <link rel="icon" type="image/svg+xml" href="assets/icons/favicon.svg">
+  <link rel="icon" type="image/png" sizes="32x32" href="assets/icons/favicon-32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="assets/icons/favicon-16.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="assets/icons/apple-touch-icon.png">
+  <style>
+    .nm-container { max-width: 1100px; margin: 0 auto; padding: 22px 16px 60px; }
+    /* Clear the fixed masthead (body > nav is position:fixed). --nav-clear lives in main.css. */
+    .nm-container { padding-top: var(--nav-clear); }
+
+    .nm-controls { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; justify-content: space-between; margin: 0 0 14px; }
+    .nm-tabs { display: inline-flex; border: 1px solid var(--border); border-radius: 10px; overflow: hidden; background: var(--bg-card); }
+    .nm-tab {
+      appearance: none; border: 0; background: transparent; color: var(--gray);
+      padding: 10px 16px; font-size: 0.9rem; font-weight: 700; cursor: pointer; min-height: 44px;
+    }
+    .nm-tab + .nm-tab { border-left: 1px solid var(--border); }
+    .nm-tab.on { background: var(--accent); color: var(--bg-dark); }
+    .nm-tab:focus-visible, .nm-share:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+    .nm-share {
+      appearance: none; border: 1px solid var(--accent); background: transparent; color: var(--white);
+      padding: 10px 16px; border-radius: 10px; font-size: 0.9rem; font-weight: 700; cursor: pointer; min-height: 44px;
+    }
+    .nm-share:disabled { opacity: 0.5; cursor: progress; }
+    .nm-share-status { font-size: 0.78rem; color: var(--gray); margin-left: 8px; }
+
+    .nm-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; padding: 22px 22px 16px; }
+    .nm-head { display: flex; gap: 16px; align-items: flex-start; }
+    .nm-head img { width: 72px; height: 72px; flex: 0 0 auto; }
+    .nm-head h1 { font-size: clamp(1.35rem, 3.6vw, 2.1rem); color: var(--white); font-weight: 800; margin: 0 0 4px; line-height: 1.2; }
+    .nm-kicker { font-size: 0.7rem; letter-spacing: 2px; text-transform: uppercase; color: var(--accent); font-weight: 700; margin-bottom: 4px; }
+    .nm-head p { color: var(--gray); font-size: 0.92rem; line-height: 1.6; margin: 0; max-width: 760px; }
+
+    .nm-map-wrap { position: relative; margin: 16px 0 6px; touch-action: manipulation; }
+    .nm-map-wrap svg { display: block; width: 100%; height: auto; }
+    .nm-state { cursor: pointer; transition: opacity 0.12s; }
+    .nm-state:focus { outline: none; }
+    .nm-state.hover, .nm-state:focus-visible { stroke: var(--white) !important; stroke-width: 1.8px; }
+    .nm-states .nm-state.hover { paint-order: stroke; }
+
+    .nm-tip {
+      position: absolute; z-index: 5; min-width: 180px; max-width: 260px;
+      background: var(--bg-dark); color: var(--white); border: 1px solid var(--border);
+      border-radius: 8px; padding: 10px 12px; box-shadow: 0 6px 22px rgba(0,0,0,0.35);
+      font-size: 0.82rem; line-height: 1.45; pointer-events: none;
+    }
+    .nm-tip.pinned { pointer-events: auto; }
+    .nm-tip-name { font-weight: 800; font-size: 0.95rem; margin-bottom: 2px; }
+    .nm-tip-avg { font-size: 1.5rem; font-weight: 800; }
+    .nm-tip-avg span { font-size: 0.78rem; font-weight: 600; color: var(--gray); }
+    .nm-tip-na { font-size: 1rem; color: var(--gray); }
+    .nm-tip-n, .nm-tip-hint { color: var(--gray); font-size: 0.78rem; }
+    .nm-tip-links { display: flex; flex-direction: column; gap: 4px; margin-top: 8px; }
+    .nm-tip-links a { color: var(--accent); font-weight: 700; text-decoration: none; padding: 4px 0; }
+
+    .nm-legend { display: flex; flex-wrap: wrap; gap: 8px 16px; align-items: center; font-size: 0.8rem; color: var(--white); margin-top: 6px; }
+    .nm-leg-title { font-weight: 800; }
+    .nm-leg-item { display: inline-flex; align-items: center; gap: 6px; }
+    .nm-sw { display: inline-block; width: 18px; height: 18px; border-radius: 3px; border: 1px solid var(--border); }
+    .nm-source { margin-top: 12px; padding-top: 10px; border-top: 1px solid var(--border); font-size: 0.76rem; color: var(--gray); }
+    .nm-national { font-size: 0.86rem; color: var(--gray); margin-top: 6px; }
+    .nm-national strong { color: var(--white); }
+
+    .nm-notes { margin-top: 18px; font-size: 0.86rem; color: var(--gray); line-height: 1.7; }
+    .nm-notes h2 { font-size: 1rem; color: var(--white); margin: 0 0 6px; }
+    .nm-notes a { color: var(--accent); }
+    .nm-notes ul { padding-left: 18px; margin: 6px 0; }
+
+    details.nm-table { margin-top: 18px; background: var(--bg-card); border: 1px solid var(--border); border-radius: 10px; padding: 10px 14px; }
+    details.nm-table summary { cursor: pointer; font-weight: 700; color: var(--white); min-height: 32px; line-height: 32px; }
+    .nm-table table { width: 100%; border-collapse: collapse; font-size: 0.84rem; margin-top: 8px; }
+    .nm-table caption { text-align: left; color: var(--gray); font-size: 0.78rem; padding-bottom: 6px; }
+    .nm-table th, .nm-table td { padding: 6px 8px; border-bottom: 1px solid var(--border); text-align: left; color: var(--white); }
+    .nm-table th { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.6px; color: var(--gray); }
+    .nm-table td.num, .nm-table th.num { text-align: right; font-variant-numeric: tabular-nums; }
+    .nm-table a { color: var(--accent); text-decoration: none; }
+    .nm-error { padding: 30px; text-align: center; color: #f87171; border: 1px solid rgba(248,113,113,0.3); border-radius: 8px; }
+
+    @media (max-width: 600px) {
+      .nm-card { padding: 14px 12px 12px; }
+      .nm-head img { width: 48px; height: 48px; }
+      .nm-head p { font-size: 0.84rem; }
+      .nm-controls { flex-direction: column; align-items: stretch; }
+      .nm-tabs { display: flex; }
+      .nm-tab { flex: 1 1 50%; padding: 10px 8px; font-size: 0.84rem; }
+      .nm-legend { font-size: 0.74rem; gap: 6px 10px; }
+      .nm-sw { width: 14px; height: 14px; }
+      /* phone: the map is ~360px wide, so the state readout docks under it instead of covering it */
+      .nm-tip { position: relative; left: auto !important; top: auto !important; max-width: none; margin-top: 8px; box-shadow: none; }
+    }
+  </style>
+</head>
+<body>
+
+<a href="#main" class="skip-link">Skip to content</a>
+
+<nav>
+  <a href="/" class="nav-brand" style="text-decoration:none">
+    <img src="assets/img/logo.png" alt="U.S.M.C. Ministries" style="object-fit:contain">
+    <div class="nav-brand-text">
+      <div class="name">U.S.M.C. Ministries</div>
+      <div class="tag">Warriors Equipped</div>
+    </div>
+  </a>
+  <ul class="nav-links">
+    <li><a href="mission.html">Mission</a></li>
+    <li><a href="shop.html">Shop</a></li>
+    <li><a href="books.html">Books</a></li>
+    <li><a href="coaching.html">Coaching</a></li>
+    <li><a href="fitness/">Fitness</a></li>
+    <li><a href="finance/">Finance</a></li>
+    <li><a href="about.html">About</a></li>
+    <li><a href="https://usmcmin.org" target="_blank">Ministry Site</a></li>
+  </ul>
+  <a href="coaching.html" class="btn nav-cta">Book a Session</a>
+  <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme" title="Switch light/dark mode">&#127769;</button>
+  <button class="nav-toggle" aria-label="Menu"><span></span><span></span><span></span></button>
+</nav>
+
+<main id="main" class="nm-container">
+  <div class="nm-controls">
+    <div class="nm-tabs" role="group" aria-label="Which office-holders to average">
+      <button type="button" class="nm-tab on" data-view="legislature" aria-pressed="true">State legislature</button>
+      <button type="button" class="nm-tab" data-view="congress" aria-pressed="false">Congressional delegation</button>
+    </div>
+    <div>
+      <button type="button" class="nm-share" id="nmShare" disabled>Share image</button>
+      <span class="nm-share-status" id="nmShareStatus" role="status" aria-live="polite"></span>
+    </div>
+  </div>
+
+  <section class="nm-card" id="nmCard" aria-labelledby="nmTitle">
+    <div class="nm-head">
+      <img src="assets/icons/shield-map-96.png" alt="U.S.M.C. Ministries shield" width="72" height="72">
+      <div>
+        <div class="nm-kicker">RESOLUTE Citizen &middot; National map</div>
+        <h1 id="nmTitle">RESOLUTE Citizen Score by State</h1>
+        <p id="nmSub">Average RESOLUTE Citizen score of each state's sitting, evidence-scored office-holders.</p>
+      </div>
+    </div>
+
+    <div class="nm-map-wrap" id="nmMapWrap">
+      <div class="nm-tip" id="nmTip" hidden></div>
+    </div>
+
+    <div class="nm-legend" id="nmLegend" aria-label="Colour legend"></div>
+    <div class="nm-national" id="nmNational"></div>
+    <div class="nm-source" id="nmSource">Source: RESOLUTE Citizen Scorecard, usmcmin.com</div>
+  </section>
+
+  <details class="nm-table">
+    <summary>Table view &mdash; every state, ranked</summary>
+    <table>
+      <caption id="nmTableCap"></caption>
+      <thead><tr><th>#</th><th>State</th><th class="num">Average</th><th class="num">Scored (n)</th><th class="num">Sitting</th></tr></thead>
+      <tbody id="nmTableBody"></tbody>
+    </table>
+  </details>
+
+  <div class="nm-notes">
+    <h2>How this map is computed</h2>
+    <ul>
+      <li><strong>Each person's score</strong> is the same 0&ndash;100 headline number shown on their profile page (percentage of their dynamic max, including any foreign-influence adjustments). The state's shade is the plain average of those numbers.</li>
+      <li><strong>Only evidence-scored office-holders count</strong> &mdash; people whose scorecard carries an individually researched or verified-claim record. Party-default scaffolding never enters an average, so missing research does not drag a state down. <em>Scored (n)</em> is how many people are in the average; <em>Sitting</em> is how many sitting office-holders we hold a record for.</li>
+      <li><strong>State legislature</strong> = sitting state representatives, senators, delegates and assembly members. Governors and other statewide officials are not included. D.C. has no state legislature.</li>
+      <li><strong>Congressional delegation</strong> = the state's sitting U.S. Senators and U.S. Representatives. Non-voting delegates (including D.C.'s) are not included.</li>
+      <li>A state with fewer than 3 scored office-holders in a view is shown grey (<em>not enough scored</em>). Local officials are not part of either view.</li>
+    </ul>
+    <p>Click or tap a state to open its scorecards. See also the <a href="citizen-rankings.html">rankings</a>, the <a href="map.html">detailed state maps</a> and the <a href="scoring-system.html">scoring system</a>.</p>
+  </div>
+</main>
+
+<footer>
+  <p><strong>RESOLUTE Citizen — National Map</strong> · a tool of <a href="https://usmcmin.org">U.S.M.C. Ministries</a></p>
+</footer>
+
+<script src="assets/js/national-map.v1.js" defer></script>
+<script src="assets/js/main.min.js" defer></script>
+
+</body>
+</html>

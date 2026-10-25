@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <script>(function(){try{var s=localStorage.getItem('usmc-theme')||localStorage.getItem('theme');if(s!=='light')document.documentElement.setAttribute('data-theme','dark');}catch(e){}})();</script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="canonical" href="https://usmcmin.com/va-local-map.html">
+  <title>Virginia Local Scores — RESOLUTE Citizen | U.S.M.C. Ministries</title>
+  <meta name="description" content="Virginia counties and independent cities shaded by the average RESOLUTE Citizen score of sitting local officials. Evidence-scored records only. A place stays grey until at least three officials are scored.">
+  <meta property="og:site_name" content="RESOLUTE Citizen Scorecard">
+  <meta property="og:title" content="Virginia local scores">
+  <meta property="og:description" content="Counties and independent cities shaded by sitting local officials with an evidence-backed score. Grey means not enough scored yet.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://usmcmin.com/va-local-map.html">
+  <meta property="og:image" content="https://usmcmin.com/assets/og/og-citizen-map.jpg">
+  <link rel="stylesheet" href="assets/css/main.min.css?v=1004">
+  <link rel="icon" type="image/svg+xml" href="assets/icons/favicon.svg">
+  <style>
+    .nm-container { max-width: 1100px; margin: 0 auto; padding: 22px 16px 60px; padding-top: var(--nav-clear); }
+    .nm-controls { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; justify-content: space-between; margin: 0 0 14px; }
+    .nm-share { appearance: none; border: 1px solid var(--accent); background: transparent; color: var(--white); padding: 10px 16px; border-radius: 10px; font-size: 0.9rem; font-weight: 700; cursor: pointer; min-height: 44px; }
+    .nm-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; padding: 22px 22px 16px; }
+    .nm-head { display: flex; gap: 16px; align-items: flex-start; }
+    .nm-head img { width: 72px; height: 72px; flex: 0 0 auto; }
+    .nm-kicker { font-size: 0.7rem; letter-spacing: 2px; text-transform: uppercase; color: var(--accent); font-weight: 700; margin-bottom: 4px; }
+    .nm-head h1 { font-size: clamp(1.35rem, 3.6vw, 2.1rem); color: var(--white); font-weight: 800; margin: 0 0 4px; line-height: 1.2; }
+    .nm-head p { color: var(--gray); font-size: 0.92rem; line-height: 1.6; margin: 0; max-width: 760px; }
+    .nm-map-wrap { position: relative; margin: 16px 0 6px; }
+    .nm-map-wrap svg { display: block; width: 100%; height: auto; }
+    .vl-place { cursor: pointer; }
+    .vl-place:focus { outline: none; }
+    .vl-place.hover, .vl-place:focus-visible { stroke: var(--white) !important; stroke-width: 1.6px; }
+    .nm-tip { position: absolute; z-index: 5; min-width: 200px; max-width: 280px; background: var(--bg-dark); color: var(--white); border: 1px solid var(--border); border-radius: 8px; padding: 10px 12px; font-size: 0.82rem; line-height: 1.45; pointer-events: none; }
+    .nm-tip.pinned { pointer-events: auto; }
+    .nm-tip-name { font-weight: 800; font-size: 0.95rem; }
+    .nm-tip-avg { font-size: 1.4rem; font-weight: 800; }
+    .nm-tip-n, .nm-tip-hint { color: var(--gray); font-size: 0.78rem; }
+    .nm-tip a { color: var(--accent); font-weight: 700; text-decoration: none; display: block; padding: 2px 0; }
+    .nm-legend { display: flex; flex-wrap: wrap; gap: 8px 14px; align-items: center; font-size: 0.8rem; color: var(--white); margin-top: 8px; }
+    .nm-sw { width: 16px; height: 16px; border-radius: 3px; display: inline-block; vertical-align: -3px; margin-right: 4px; }
+    .nm-national { margin-top: 8px; color: var(--gray); font-size: 0.86rem; }
+    .nm-notes { margin-top: 22px; color: var(--gray); font-size: 0.9rem; line-height: 1.55; }
+    .nm-notes h2 { color: var(--white); font-size: 1.05rem; }
+    .nm-table { margin-top: 16px; }
+    .nm-table table { width: 100%; border-collapse: collapse; font-size: 0.86rem; }
+    .nm-table th, .nm-table td { text-align: left; padding: 6px 8px; border-bottom: 1px solid var(--border); color: var(--white); }
+    .nm-table .num { text-align: right; }
+    .nm-table a { color: var(--accent); }
+    @media (max-width: 600px) {
+      .nm-card { padding: 14px 12px; }
+      .nm-head img { width: 48px; height: 48px; }
+      .nm-tip { position: relative; left: auto !important; top: auto !important; max-width: none; margin-top: 8px; }
+    }
+  </style>
+</head>
+<body>
+<a href="#main" class="skip-link">Skip to content</a>
+<nav>
+  <a href="/" class="nav-brand" style="text-decoration:none">
+    <img src="assets/img/logo.png" alt="U.S.M.C. Ministries" style="object-fit:contain">
+    <div class="nav-brand-text">
+      <div class="name">U.S.M.C. Ministries</div>
+      <div class="tag">Warriors Equipped</div>
+    </div>
+  </a>
+  <ul class="nav-links">
+    <li><a href="national-map.html">National map</a></li>
+    <li><a href="map.html">State maps</a></li>
+    <li><a href="citizen-rankings.html">Rankings</a></li>
+    <li><a href="https://usmcmin.org" target="_blank">Ministry Site</a></li>
+  </ul>
+  <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme" title="Switch light/dark mode">🌙</button>
+  <button class="nav-toggle" aria-label="Menu"><span></span><span></span><span></span></button>
+</nav>
+<main id="main" class="nm-container">
+  <div class="nm-controls">
+    <a href="national-map.html" style="color:var(--accent);font-weight:700">National map</a>
+  </div>
+  <section class="nm-card" id="vlCard">
+    <div class="nm-head">
+      <img src="assets/icons/shield-map-96.png" alt="" width="72" height="72">
+      <div>
+        <div class="nm-kicker">RESOLUTE Citizen · Virginia local</div>
+        <h1>Virginia counties and cities</h1>
+        <p id="vlSub">Average score of sitting local officials with an evidence-backed scorecard. A place stays grey until at least three officials are scored.</p>
+      </div>
+    </div>
+    <div class="nm-map-wrap" id="vlMap"></div>
+    <div class="nm-legend" id="vlLegend"></div>
+    <div class="nm-national" id="vlNational"></div>
+  </section>
+  <details class="nm-table">
+    <summary>Places with enough scores to shade</summary>
+    <table>
+      <thead><tr><th>Place</th><th class="num">Average</th><th class="num">Scored</th><th class="num">Sitting</th></tr></thead>
+      <tbody id="vlTable"></tbody>
+    </table>
+  </details>
+  <div class="nm-notes">
+    <h2>How this map is computed</h2>
+    <ul>
+      <li>Each person's number is the same 0–100 headline score as on their profile page.</li>
+      <li>Only evidence-scored, currently sitting local officials count. A name with no researched record does not pull a county down.</li>
+      <li>A county or independent city shades only when at least three officials are scored. Most counties currently have a sheriff record only, so they stay grey. That is missing research, not a grade.</li>
+      <li>Combined jurisdictions (a county paired with a city on one record) are left off until they can be split cleanly.</li>
+    </ul>
+    <p>See the <a href="national-map.html">national map</a> and the <a href="scoring-system.html">scoring system</a>.</p>
+  </div>
+</main>
+<footer>
+  <p><strong>RESOLUTE Citizen — Virginia local map</strong> · a tool of <a href="https://usmcmin.org">U.S.M.C. Ministries</a></p>
+</footer>
+<script src="assets/js/va-local-map.v1.js" defer></script>
+<script src="assets/js/main.min.js" defer></script>
+</body>
+</html>

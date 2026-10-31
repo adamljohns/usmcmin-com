@@ -222,7 +222,7 @@ def render_duplicate(biz: dict, target: dict) -> str:
   <meta name="robots" content="noindex" />
   <link rel="canonical" href="https://usmcmin.com/fxbg/commerce/business/{href}" />
   <meta http-equiv="refresh" content="0; url={href}" />
-  <link rel="stylesheet" href="../assets/commerce.css" />
+  <link rel="stylesheet" href="../assets/commerce.css?v=20261031-c5isr" />
 </head>
 <body>
   <div class="wrap-narrow">
@@ -377,7 +377,7 @@ def render_profile(biz: dict, osm: dict | None = None, alt_tags: dict | None = N
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>{esc(biz.get("name", ""))}{(", " + esc(where)) if where else ""} — {esc(category_label(cat))}, {esc(biz.get("city") or "Fredericksburg")} · Christ-Centered Commerce</title>
   <meta name="description" content="{esc(biz.get('name', ''))}{((" " if where.startswith(("near ", "in ")) else " at ") + esc(where)) if where else ""} ({esc(category_label(cat))}, {esc(biz.get('city') or 'Fredericksburg area')}) — {esc(contact)} on file, and the 10-Factor Christ-Centered Commerce scorecard." />
-  <link rel="stylesheet" href="../assets/commerce.css" />
+  <link rel="stylesheet" href="../assets/commerce.css?v=20261031-c5isr" />
   {json_ld(biz, tags)}
 </head>
 <body>

@@ -57,7 +57,7 @@ def render_category(cat: str, listings: list[dict]) -> str:
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>{esc(label(cat))} in the Fredericksburg, VA area ({len(listings)}) · Christ-Centered Commerce</title>
   <meta name="description" content="{len(listings)} Fredericksburg-area {esc(label(cat).lower())} listing{'s' if len(listings) != 1 else ''}{(' (' + esc(bands) + ')') if bands else ''} — address and phone where on file, each with a 10-Factor Christ-Centered Commerce scorecard." />
-  <link rel="stylesheet" href="../assets/commerce.css" />
+  <link rel="stylesheet" href="../assets/commerce.css?v=20261031-c5isr" />
   <style>
     .cat-grid {{ display:grid; gap:12px; }}
     @media (min-width:640px) {{ .cat-grid {{ grid-template-columns:1fr 1fr; }} }}
@@ -139,7 +139,7 @@ def render_index(counts: list[tuple[str, int]]) -> str:
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Browse Fredericksburg businesses by category · Christ-Centered Commerce</title>
   <meta name="description" content="{len(counts)} categories of Fredericksburg, VA-area businesses — food, trades, health, retail and services — each listing with a 10-Factor Christ-Centered Commerce scorecard." />
-  <link rel="stylesheet" href="../assets/commerce.css" />
+  <link rel="stylesheet" href="../assets/commerce.css?v=20261031-c5isr" />
   <style>.cat-links {{ line-height:2; }} .cat-links a {{ white-space:nowrap; }} .cat-links .meta {{ display:inline; margin:0; }}</style>
 </head>
 <body>

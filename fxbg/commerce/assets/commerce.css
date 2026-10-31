@@ -2,17 +2,21 @@
 @import url('https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,600;8..60,700&family=Source+Sans+3:wght@400;500;600;700&display=swap');
 
 :root {
-  --bg: #f6f7f9;
+  --bg: #f7f5f0; /* C5iSR paper (was cool gray #f6f7f9) */
   --bg-card: #ffffff;
-  --bg-card-hover: #f0f2f5;
-  --navy: #1e3a5f;
-  --navy-deep: #152a45;
+  --bg-card-hover: #f1ede4;
+  /* C5iSR brand (Principal 2026-10-31): forest + gold on paper, matching usmcmin.com/c5isr.
+     Variable names kept as --navy* so the 20 rules that use them need no edit; values are forest. */
+  --navy: #1f3d32;
+  --navy-deep: #142a22;
+  --gold: #8a6d2b;      /* borders / text on white only: 4.9:1 on #fff, 4.5:1 on paper */
+  --gold-soft: #f0e6cc;
   --accent: #6b7280;
   --accent-light: #4b5563;
   --text: #1a1a1a;
   --gray: #5c6570;
   --gray-light: #374151;
-  --border: #d8dee6;
+  --border: #ddd8cc;
   --green: #2d7a46;
   --yellow: #7a5e00; /* was #9a7b0a: 3.4:1 on its own tint (MBP-1004-CONTRAST) */
   --red: #b42318;
@@ -22,7 +26,7 @@
   --red-bg: rgba(180, 35, 24, 0.08);
   --gray-bg: rgba(75, 85, 99, 0.08);
   --radius: 8px;
-  --shadow: 0 1px 2px rgba(30, 58, 95, 0.06), 0 4px 16px rgba(30, 58, 95, 0.04);
+  --shadow: 0 1px 2px rgba(31, 61, 50, 0.06), 0 4px 16px rgba(31, 61, 50, 0.04);
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -42,7 +46,8 @@ a:hover { color: var(--navy-deep); text-decoration: underline; }
 .soft-banner {
   font-size: 0.75rem;
   background: var(--navy);
-  color: #e8edf3;
+  color: var(--gold-soft);
+  border-bottom: 2px solid var(--gold);
   padding: 8px 16px;
   text-align: center;
   letter-spacing: 0.02em;
@@ -72,7 +77,7 @@ a:hover { color: var(--navy-deep); text-decoration: underline; }
 }
 
 .site-nav a:hover { color: var(--navy); background: var(--bg); text-decoration: none; }
-.site-nav a.active { color: var(--navy); background: rgba(30, 58, 95, 0.08); font-weight: 600; }
+.site-nav a.active { color: var(--navy); background: rgba(31, 61, 50, 0.08); font-weight: 600; box-shadow: inset 0 -2px 0 var(--gold); }
 
 .hero {
   text-align: left;
@@ -85,7 +90,7 @@ a:hover { color: var(--navy-deep); text-decoration: underline; }
 
 .module-tag {
   display: inline-block;
-  color: var(--navy);
+  color: var(--gold);
   font-size: 0.72rem;
   font-weight: 700;
   letter-spacing: 0.12em;
@@ -113,7 +118,7 @@ a:hover { color: var(--navy-deep); text-decoration: underline; }
   font-style: normal;
   color: var(--gray-light);
   font-size: 1rem;
-  border-left: 3px solid var(--navy);
+  border-left: 3px solid var(--gold);
   padding: 4px 0 4px 16px;
   background: transparent;
 }
@@ -399,6 +404,6 @@ footer {
 .progress-label{display:flex;justify-content:space-between;font-size:.9rem;margin:6px 0 3px}
 .progress-track{height:12px;border-radius:6px;background:rgba(127,127,127,.18);overflow:hidden}
 .progress-fill{height:100%;min-width:2px;border-radius:6px}
-.progress-fill.rev{background:#B8960C}
-.progress-fill.list{background:#4CAF50}
+.progress-fill.rev{background:var(--gold)}
+.progress-fill.list{background:var(--navy)}
 .progress-note{font-size:.78rem;color:var(--gray);margin:6px 0 0}

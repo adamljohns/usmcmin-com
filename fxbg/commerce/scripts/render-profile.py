@@ -178,6 +178,37 @@ def own_words_panel(biz: dict) -> str:
 </div>"""
 
 
+
+def other_reviews_panel(biz: dict) -> str:
+    """Outbound LINKS to third-party review sites. No API, no scraping, no cached stars:
+    Principal 2026-10-31: "My rating is what matters." Placed below our band and scorecard."""
+    name = (biz.get("name") or "").strip()
+    if not name:
+        return ""
+    city = (biz.get("city") or "Fredericksburg").strip()
+    zipc = (biz.get("zip") or "").strip()
+    addr = (biz.get("address") or "").strip()
+    q_google = " ".join(x for x in (name, addr, city, "VA", zipc) if x)
+    links = [
+        ("Google", "https://www.google.com/maps/search/?" + urlencode({"api": "1", "query": q_google})),
+        ("Yelp", "https://www.yelp.com/search?" + urlencode({"find_desc": name, "find_loc": f"{city}, VA {zipc}".strip()})),
+        ("BBB", "https://www.bbb.org/search?" + urlencode({"find_text": name, "find_loc": f"{city}, VA"})),
+    ]
+    fb = ""
+    cands = [biz.get("web") or "", biz.get("facebook") or ""] + [str((x or {}).get("url") or "") for x in (biz.get("sources") or [])]
+    for u in cands:
+        if "facebook.com/" in u.lower():
+            fb = u
+            break
+    if fb:
+        links.append(("Facebook", fb))
+    items = " · ".join(
+        f'<a href="{esc(u)}" target="_blank" rel="nofollow noopener">{esc(label)}</a>' for label, u in links
+    )
+    return f"""<div class="panel other-reviews">
+  <p class="meta">See reviews on: {items}<br><span class="meta">Other people's ratings, off this site. Not part of our band.</span></p>
+</div>"""
+
 def render_duplicate(biz: dict, target: dict) -> str:
     """Folded OSM duplicate: send visitors (and search engines) to the full listing."""
     name = esc(target.get("name", ""))
@@ -377,6 +408,8 @@ def render_profile(biz: dict, osm: dict | None = None, alt_tags: dict | None = N
     {network_html}
 
     {scorecard_html}
+
+    {other_reviews_panel(biz)}
 
     {src_html}
 

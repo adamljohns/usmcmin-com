@@ -76,6 +76,13 @@
 
     <div class="panel" style="margin-top:18px">
       <h2>Directory snapshot</h2>
+      <div class="progress-block" id="progress-block" hidden>
+        <div class="progress-label"><strong>Reviewed by Adam</strong> <span id="pg-rev-num">—</span></div>
+        <div class="progress-track" aria-label="Businesses personally reviewed by Adam out of the area total"><div class="progress-fill rev" id="pg-rev-fill"></div></div>
+        <div class="progress-label"><strong>Listed</strong> <span id="pg-list-num">—</span></div>
+        <div class="progress-track" aria-label="Businesses listed out of the area total"><div class="progress-fill list" id="pg-list-fill"></div></div>
+        <p class="progress-note" id="pg-note"></p>
+      </div>
       <p id="stats-line" style="margin-top:0">Loading stats…</p>
       <div class="cta-row">
         <a class="btn solid" href="directory.html">Full directory + filters →</a>
@@ -114,6 +121,24 @@
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <script>
   (async function () {
+    try {
+      const st = await (await fetch('data/stats.json', { cache: 'no-cache' })).json();
+      const pg = st.progress, tg = st.target;
+      if (pg && tg) {
+        const n = x => Number(x || 0).toLocaleString('en-US');
+        const pct = (a, b) => Math.max(0, Math.min(100, 100 * a / b));
+        document.getElementById('pg-rev-num').textContent = `${n(pg.principal_reviewed)} of ${n(tg.total)}`;
+        document.getElementById('pg-list-num').textContent = `${n(pg.listed)} of ${n(tg.total)} (${pg.listed_pct}%)`;
+        document.getElementById('pg-rev-fill').style.width = pct(pg.principal_reviewed, tg.total) + '%';
+        document.getElementById('pg-list-fill').style.width = pct(pg.listed, tg.total) + '%';
+        const locs = Object.entries(tg.localities || {}).map(([k, v]) => `${k} ${n(v)}`).join(' · ');
+        const note = document.getElementById('pg-note');
+        note.textContent = `Area total: ${locs}. ${tg.note} Source: `;
+        const a = document.createElement('a'); a.href = tg.source_url; a.textContent = tg.source;
+        a.target = '_blank'; a.rel = 'noopener'; note.appendChild(a); note.appendChild(document.createTextNode('.'));
+        document.getElementById('progress-block').hidden = false;
+      }
+    } catch (e) { /* stats are optional; the rest of the hub still loads */ }
     const bandColor = { green:'#4CAF50', yellow:'#FFC107', red:'#f44336', black:'#888', gray:'#888' };
     const esc = s => String(s ?? '').replace(/[&<>"']/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
     const res = await fetch('data/directory-index.json');

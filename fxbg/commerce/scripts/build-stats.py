@@ -9,6 +9,22 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 DATA = ROOT / "data" / "businesses.json"
 
+# Total-target: Census County Business Patterns 2023, employer establishments (all NAICS),
+# https://www2.census.gov/programs-surveys/cbp/datasets/2023/cbp23co.zip . Principal 2026-10-31.
+TARGET = {
+    "total": 7778,
+    "localities": {
+        "Fredericksburg city": 1477,
+        "Spotsylvania County": 2811,
+        "Stafford County": 2570,
+        "King George County": 496,
+        "Caroline County": 424,
+    },
+    "source": "U.S. Census Bureau, County Business Patterns 2023",
+    "source_url": "https://www2.census.gov/programs-surveys/cbp/datasets/2023/cbp23co.zip",
+    "note": "Employer establishments; excludes no-employee sole proprietors.",
+}
+
 FACTORS = [
     "ownership",
     "truth",
@@ -34,6 +50,9 @@ def main() -> None:
         if (b.get("scores") or {}).get("christ_centered_brand") == "green"
     )
     adam = sum(1 for b in biz if b.get("adam_visited"))
+    # principal_reviewed: {"date": "YYYY-MM-DD", "note": "..."} set ONLY when Adam has personally
+    # read the listing and given feedback on it. Never inferred from adam_visited/adam_connection.
+    reviewed = sum(1 for b in biz if isinstance(b.get("principal_reviewed"), dict) and b["principal_reviewed"].get("date"))
     with_sources = sum(1 for b in biz if b.get("sources"))
     stats = {
         "total": len(biz),
@@ -44,6 +63,14 @@ def main() -> None:
         "top_categories": cats.most_common(8),
         "type_a_or_b_green_brand": type_a,
         "adam_visited": adam,
+        "principal_reviewed": reviewed,
+        "target": TARGET,
+        "progress": {
+            "listed": len(biz),
+            "listed_pct": round(100 * len(biz) / TARGET["total"], 1),
+            "principal_reviewed": reviewed,
+            "principal_reviewed_pct": round(100 * reviewed / TARGET["total"], 2),
+        },
         "with_sources": with_sources,
         "factor_green_counts": {
             f: sum(1 for b in biz if (b.get("scores") or {}).get(f) == "green")

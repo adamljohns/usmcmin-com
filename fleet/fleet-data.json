@@ -1,28 +1,29 @@
 {
-  "generated": "2026-11-01T17:33:45.161260+00:00",
+  "generated": "2026-11-02T13:00:08.877872+00:00",
   "totals": {
     "agents": 17,
-    "operational": 15,
-    "degraded": 1,
-    "jobs": 183,
-    "enabled": 104,
-    "accomplishments": 411,
+    "operational": 12,
+    "degraded": 4,
+    "jobs": 185,
+    "enabled": 96,
+    "accomplishments": 410,
     "cowork": 41
   },
   "health": {
     "cron": {
-      "enabled": 104,
-      "ran26h": 52,
-      "delivered": 16,
+      "enabled": 96,
+      "ran26h": 61,
+      "delivered": 22,
       "fails": [
-        "scheduled job \u00d7 6"
+        "scheduled job \u00d7 5",
+        "scheduled skill \u00d7 1"
       ]
     },
     "cron_source": "openclaw.sqlite + hermes/cron/jobs.json",
     "launchd": {
-      "healthy": 101,
+      "healthy": 97,
       "fails": [
-        "launchd job \u00d7 2"
+        "launchd job \u00d7 4"
       ]
     }
   },
@@ -36,14 +37,14 @@
     {
       "label": "Command Surface Sync",
       "purpose": "Command DB \u2192 Obsidian / TACC / workflows",
-      "last": "2026-10-31T22:40:38-04:00",
+      "last": "2026-11-02T07:59:34-05:00",
       "status": "local-only"
     },
     {
       "label": "Morning Intel",
       "purpose": "Calendar, mail, house, body, wire",
       "last": "2026-11-01-morning-brief",
-      "status": "current"
+      "status": "stale"
     },
     {
       "label": "Daily Command Brief",
@@ -60,7 +61,7 @@
     {
       "label": "Evening AAR",
       "purpose": "Wins, slips, release, tomorrow",
-      "last": "2026-10-31-evening-wrap",
+      "last": "2026-11-01-evening-wrap",
       "status": "current"
     },
     {
@@ -132,7 +133,7 @@
       "n_jobs": 27,
       "n_enabled": 10,
       "err": 0,
-      "last_ms": 1793553300063,
+      "last_ms": 1793623620328,
       "status": "operational",
       "accomplishments": [
         {
@@ -412,6 +413,61 @@
       },
       "jobs": [
         {
+          "name": "GQueues \u2192 Obsidian workflow snapshot",
+          "enabled": true,
+          "expr": "47 7 * * *",
+          "tz": "America/New_York",
+          "channel": "",
+          "last_ms": 1793623620328,
+          "status": "ok",
+          "errors": 0,
+          "dur_ms": 135662
+        },
+        {
+          "name": "Fleet Morning SITREP (consolidated stand-up)",
+          "enabled": true,
+          "expr": "45 7 * * 1-5",
+          "tz": "America/New_York",
+          "channel": "discord",
+          "last_ms": 1793623500852,
+          "status": "ok",
+          "errors": 0,
+          "dur_ms": 199290
+        },
+        {
+          "name": "Skill: week-ahead-calendar (gog)",
+          "enabled": true,
+          "expr": "0 21 * * 0",
+          "tz": "America/New_York",
+          "channel": "discord",
+          "last_ms": 1793584800046,
+          "status": "ok",
+          "errors": 0,
+          "dur_ms": 22593
+        },
+        {
+          "name": "Skill: psa-skill-honing (weekly audit)",
+          "enabled": true,
+          "expr": "0 14 * * 0",
+          "tz": "America/New_York",
+          "channel": "discord",
+          "last_ms": 1793559704279,
+          "status": "ok",
+          "errors": 0,
+          "dur_ms": 334295
+        },
+        {
+          "name": "software-update-watchdog",
+          "enabled": true,
+          "expr": "0 13 * * 0",
+          "tz": "",
+          "channel": "last",
+          "last_ms": 1793556001531,
+          "status": "ok",
+          "errors": 0,
+          "dur_ms": 76108
+        },
+        {
           "name": "Noon bolt ask",
           "enabled": true,
           "expr": "15 12 * * *",
@@ -421,17 +477,6 @@
           "status": "ok",
           "errors": 0,
           "dur_ms": 17813
-        },
-        {
-          "name": "GQueues \u2192 Obsidian workflow snapshot",
-          "enabled": true,
-          "expr": "47 7 * * *",
-          "tz": "America/New_York",
-          "channel": "",
-          "last_ms": 1793537221401,
-          "status": "ok",
-          "errors": 0,
-          "dur_ms": 93740
         },
         {
           "name": "Weekly Self-Audit (Sat 05:57 ET)",
@@ -465,50 +510,6 @@
           "status": "ok",
           "errors": 0,
           "dur_ms": 13551
-        },
-        {
-          "name": "Fleet Morning SITREP (consolidated stand-up)",
-          "enabled": true,
-          "expr": "45 7 * * 1-5",
-          "tz": "America/New_York",
-          "channel": "discord",
-          "last_ms": 1793360700048,
-          "status": "ok",
-          "errors": 0,
-          "dur_ms": 153894
-        },
-        {
-          "name": "Skill: week-ahead-calendar (gog)",
-          "enabled": true,
-          "expr": "0 21 * * 0",
-          "tz": "America/New_York",
-          "channel": "discord",
-          "last_ms": 1792976401655,
-          "status": "ok",
-          "errors": 0,
-          "dur_ms": 22058
-        },
-        {
-          "name": "Skill: psa-skill-honing (weekly audit)",
-          "enabled": true,
-          "expr": "0 14 * * 0",
-          "tz": "America/New_York",
-          "channel": "discord",
-          "last_ms": 1792951779117,
-          "status": "ok",
-          "errors": 0,
-          "dur_ms": 87541
-        },
-        {
-          "name": "software-update-watchdog",
-          "enabled": true,
-          "expr": "0 13 * * 0",
-          "tz": "",
-          "channel": "last",
-          "last_ms": 1792947600687,
-          "status": "ok",
-          "errors": 0,
-          "dur_ms": 63140
         },
         {
           "name": "Re-enable C5iSR social draft (two-week pause ends)",
@@ -722,11 +723,11 @@
       "voice": null,
       "tools": [],
       "skills": [],
-      "n_jobs": 17,
-      "n_enabled": 11,
-      "err": 6,
-      "last_ms": 1793552457650,
-      "status": "degraded",
+      "n_jobs": 19,
+      "n_enabled": 3,
+      "err": 0,
+      "last_ms": 1793575856062,
+      "status": "operational",
       "accomplishments": [
         {
           "date": "2026-07-21",
@@ -865,74 +866,118 @@
       },
       "jobs": [
         {
-          "name": "MOOP Command Noon Capture",
+          "name": "Semiannual Email Archive Review",
           "enabled": true,
+          "expr": "0 9 27 1,7 *",
+          "tz": "",
+          "channel": "origin",
+          "last_ms": null,
+          "status": "\u2014",
+          "errors": 0,
+          "dur_ms": null
+        },
+        {
+          "name": "Resume noon capture and vault housekeeping",
+          "enabled": true,
+          "expr": "once at 2026-11-04 15:00",
+          "tz": "",
+          "channel": "local",
+          "last_ms": null,
+          "status": "\u2014",
+          "errors": 0,
+          "dur_ms": null
+        },
+        {
+          "name": "Resume deferred Hermes background jobs",
+          "enabled": true,
+          "expr": "once at 2026-11-04 18:35",
+          "tz": "",
+          "channel": "local",
+          "last_ms": null,
+          "status": "\u2014",
+          "errors": 0,
+          "dur_ms": null
+        },
+        {
+          "name": "Weekly Automation Review",
+          "enabled": false,
+          "expr": "30 18 * * 0",
+          "tz": "",
+          "channel": "origin",
+          "last_ms": 1793575856062,
+          "status": "error",
+          "errors": 0,
+          "dur_ms": null
+        },
+        {
+          "name": "MOOP Command Nightly Reconciliation",
+          "enabled": false,
+          "expr": "15 18 * * *",
+          "tz": "",
+          "channel": "origin",
+          "last_ms": 1793574969710,
+          "status": "error",
+          "errors": 0,
+          "dur_ms": null
+        },
+        {
+          "name": "MOOP Command Noon Capture",
+          "enabled": false,
           "expr": "0 12 * * *",
           "tz": "",
           "channel": "origin",
           "last_ms": 1793552457650,
           "status": "error",
-          "errors": 1,
+          "errors": 0,
           "dur_ms": null
         },
         {
           "name": "Fleet Integrity Watch",
-          "enabled": true,
+          "enabled": false,
           "expr": "15 6 * * *",
           "tz": "",
           "channel": "origin",
           "last_ms": 1793531755935,
           "status": "error",
-          "errors": 1,
+          "errors": 0,
           "dur_ms": null
         },
         {
           "name": "Infrastructure Readiness Check",
-          "enabled": true,
+          "enabled": false,
           "expr": "45 5 * * *",
           "tz": "",
           "channel": "origin",
           "last_ms": 1793529957572,
           "status": "error",
-          "errors": 1,
+          "errors": 0,
           "dur_ms": null
         },
         {
           "name": "Weekly Fleet Currency Review",
-          "enabled": true,
+          "enabled": false,
           "expr": "0 0 * * 0",
           "tz": "",
           "channel": "origin",
           "last_ms": 1793505709653,
           "status": "error",
-          "errors": 1,
+          "errors": 0,
           "dur_ms": null
         },
         {
           "name": "Vault Loop",
-          "enabled": true,
+          "enabled": false,
           "expr": "30 23 * * *",
           "tz": "",
           "channel": "local",
           "last_ms": 1793503857461,
           "status": "error",
-          "errors": 1,
-          "dur_ms": null
-        },
-        {
-          "name": "MOOP Command Nightly Reconciliation",
-          "enabled": true,
-          "expr": "15 18 * * *",
-          "tz": "",
-          "channel": "origin",
-          "last_ms": 1793484967364,
-          "status": "error",
-          "errors": 1,
+          "errors": 0,
           "dur_ms": null
         },
         {
           "name": "Email Autopilot After-Action Report",
-          "enabled": true,
+          "enabled": false,
           "expr": "30 10 * * 1-5",
           "tz": "",
           "channel": "origin",
@@ -943,7 +988,7 @@
         },
         {
           "name": "Credential and OAuth Watch",
-          "enabled": true,
+          "enabled": false,
           "expr": "0 6 * * 1,4",
           "tz": "",
           "channel": "origin",
@@ -954,34 +999,12 @@
         },
         {
           "name": "Melaleuca Monday Briefing",
-          "enabled": true,
+          "enabled": false,
           "expr": "0 9 * * 1",
           "tz": "",
           "channel": "origin",
           "last_ms": 1793019787578,
           "status": "ok",
-          "errors": 0,
-          "dur_ms": null
-        },
-        {
-          "name": "Weekly Automation Review",
-          "enabled": true,
-          "expr": "30 18 * * 0",
-          "tz": "",
-          "channel": "origin",
-          "last_ms": 1792967945934,
-          "status": "ok",
-          "errors": 0,
-          "dur_ms": null
-        },
-        {
-          "name": "Semiannual Email Archive Review",
-          "enabled": true,
-          "expr": "0 9 27 1,7 *",
-          "tz": "",
-          "channel": "origin",
-          "last_ms": null,
-          "status": "\u2014",
           "errors": 0,
           "dur_ms": null
         },
@@ -1161,7 +1184,7 @@
       "n_jobs": 0,
       "n_enabled": 0,
       "err": 0,
-      "last_ms": 1793479182263,
+      "last_ms": 1793585599707,
       "status": "operational",
       "accomplishments": [
         {
@@ -1331,9 +1354,9 @@
       ],
       "n_jobs": 8,
       "n_enabled": 5,
-      "err": 0,
-      "last_ms": 1793536831006,
-      "status": "operational",
+      "err": 1,
+      "last_ms": 1793623020703,
+      "status": "degraded",
       "accomplishments": [
         {
           "date": "2026-10-14",
@@ -1583,11 +1606,11 @@
         "lane": "Bible/devotion",
         "browser_profile": "usmc",
         "files": {
-          "AGENTS.md": 46783,
+          "AGENTS.md": 47647,
           "MEMORY.md": 19673,
           "HEARTBEAT.md": 2440
         },
-        "verified": "2026-11-01"
+        "verified": "2026-11-02"
       },
       "narration": {
         "voice": "bm_george",
@@ -1641,48 +1664,26 @@
       },
       "jobs": [
         {
-          "name": "heartbeat-preacher-john",
-          "enabled": true,
-          "expr": "",
-          "tz": "",
-          "channel": "",
-          "last_ms": 1793536831006,
-          "status": "ok",
-          "errors": 0,
-          "dur_ms": 838098
-        },
-        {
           "name": "The Watchman's Daily Devotional",
           "enabled": true,
           "expr": "37 7 * * *",
           "tz": "America/New_York",
           "channel": "telegram",
-          "last_ms": 1793536621635,
+          "last_ms": 1793623020703,
           "status": "ok",
           "errors": 0,
-          "dur_ms": 347820
+          "dur_ms": 324155
         },
         {
-          "name": "Skill: scripture-lookup (Sun BTE smoke)",
+          "name": "heartbeat-preacher-john",
           "enabled": true,
-          "expr": "20 16 * * 0",
-          "tz": "America/New_York",
-          "channel": "telegram",
-          "last_ms": 1792959601136,
-          "status": "ok",
+          "expr": "",
+          "tz": "",
+          "channel": "",
+          "last_ms": 1793601631720,
+          "status": "skipped",
           "errors": 0,
-          "dur_ms": 18107
-        },
-        {
-          "name": "Skill: liturgical-calendar",
-          "enabled": true,
-          "expr": "30 14 * * 0",
-          "tz": "America/New_York",
-          "channel": "telegram",
-          "last_ms": 1792953000140,
-          "status": "ok",
-          "errors": 0,
-          "dur_ms": 82774
+          "dur_ms": 255
         },
         {
           "name": "PJ Sunday GQueues devotion sweep",
@@ -1690,10 +1691,32 @@
           "expr": "0 17 * * 0",
           "tz": "America/New_York",
           "channel": "telegram",
-          "last_ms": null,
-          "status": "\u2014",
+          "last_ms": 1793571134037,
+          "status": "error",
+          "errors": 1,
+          "dur_ms": 4230
+        },
+        {
+          "name": "Skill: scripture-lookup (Sun BTE smoke)",
+          "enabled": true,
+          "expr": "20 16 * * 0",
+          "tz": "America/New_York",
+          "channel": "telegram",
+          "last_ms": 1793568000644,
+          "status": "ok",
           "errors": 0,
-          "dur_ms": null
+          "dur_ms": 26090
+        },
+        {
+          "name": "Skill: liturgical-calendar",
+          "enabled": true,
+          "expr": "30 14 * * 0",
+          "tz": "America/New_York",
+          "channel": "telegram",
+          "last_ms": 1793561400339,
+          "status": "ok",
+          "errors": 0,
+          "dur_ms": 20470
         },
         {
           "name": "Dev Loop: preacher-john daily reflection (implement-or-escalate)",
@@ -1811,9 +1834,9 @@
       ],
       "n_jobs": 9,
       "n_enabled": 6,
-      "err": 0,
-      "last_ms": 1793553744334,
-      "status": "operational",
+      "err": 1,
+      "last_ms": 1793623965999,
+      "status": "degraded",
       "accomplishments": [
         {
           "date": "2026-10-25",
@@ -2277,10 +2300,10 @@
           "expr": "",
           "tz": "",
           "channel": "",
-          "last_ms": 1793553744334,
+          "last_ms": 1793623965999,
           "status": "ok",
           "errors": 0,
-          "dur_ms": 50958
+          "dur_ms": 370503
         },
         {
           "name": "invitation-check",
@@ -2288,10 +2311,10 @@
           "expr": "",
           "tz": "",
           "channel": "",
-          "last_ms": 1793549058909,
+          "last_ms": 1793621343677,
           "status": "ok",
           "errors": 0,
-          "dur_ms": 47854
+          "dur_ms": 966790
         },
         {
           "name": "Evening pre-check-in prompt (9 PM)",
@@ -2299,10 +2322,10 @@
           "expr": "0 21 * * *",
           "tz": "America/New_York",
           "channel": "telegram",
-          "last_ms": 1793494800708,
+          "last_ms": 1793584800057,
           "status": "ok",
           "errors": 0,
-          "dur_ms": 48854
+          "dur_ms": 37733
         },
         {
           "name": "chaps-directory-qa",
@@ -2310,10 +2333,10 @@
           "expr": "40 16 */3 * *",
           "tz": "America/New_York",
           "channel": "discord",
-          "last_ms": 1793479200033,
-          "status": "ok",
-          "errors": 0,
-          "dur_ms": 61729
+          "last_ms": 1793569201349,
+          "status": "error",
+          "errors": 1,
+          "dur_ms": 18966
         },
         {
           "name": "Skill: pastoral-intake (Fri hygiene)",
@@ -2449,7 +2472,7 @@
       "n_jobs": 27,
       "n_enabled": 13,
       "err": 0,
-      "last_ms": 1793552714533,
+      "last_ms": 1793623980162,
       "status": "operational",
       "accomplishments": [
         {
@@ -2542,11 +2565,11 @@
         "lane": "C5iSR/capital",
         "browser_profile": "c5isr",
         "files": {
-          "AGENTS.md": 69827,
+          "AGENTS.md": 70691,
           "MEMORY.md": 13536,
           "HEARTBEAT.md": 5108
         },
-        "verified": "2026-11-01"
+        "verified": "2026-11-02"
       },
       "narration": {
         "voice": "bm_lewis",
@@ -2606,15 +2629,48 @@
       },
       "jobs": [
         {
+          "name": "Skill: personal-finance-v2 (Mon ledger)",
+          "enabled": true,
+          "expr": "53 7 * * 1",
+          "tz": "America/New_York",
+          "channel": "telegram",
+          "last_ms": 1793623980162,
+          "status": "ok",
+          "errors": 0,
+          "dur_ms": 124855
+        },
+        {
+          "name": "C5iSR Daily Post \u2014 Carnegie (Mon-Sat 7:30AM, all six themes)",
+          "enabled": true,
+          "expr": "30 7 * * 1-6",
+          "tz": "America/New_York",
+          "channel": "telegram",
+          "last_ms": 1793622600052,
+          "status": "ok",
+          "errors": 0,
+          "dur_ms": 78952
+        },
+        {
+          "name": "C5iSR Price Pre-Fetch (7:23AM Mon-Sat)",
+          "enabled": true,
+          "expr": "23 7 * * 1-6",
+          "tz": "",
+          "channel": "",
+          "last_ms": 1793622294783,
+          "status": "ok",
+          "errors": 0,
+          "dur_ms": 1598
+        },
+        {
           "name": "hourly-cache-watch",
           "enabled": true,
           "expr": "",
           "tz": "",
           "channel": "",
-          "last_ms": 1793552714533,
+          "last_ms": 1793621648999,
           "status": "ok",
           "errors": 0,
-          "dur_ms": 110883
+          "dur_ms": 474685
         },
         {
           "name": "heartbeat-carnegie",
@@ -2622,10 +2678,10 @@
           "expr": "",
           "tz": "",
           "channel": "",
-          "last_ms": 1793551996924,
+          "last_ms": 1793620407217,
           "status": "ok",
           "errors": 0,
-          "dur_ms": 110209
+          "dur_ms": 871694
         },
         {
           "name": "Skill: tax-deadlines (monthly)",
@@ -2648,28 +2704,6 @@
           "status": "ok",
           "errors": 0,
           "dur_ms": 62197
-        },
-        {
-          "name": "C5iSR Daily Post \u2014 Carnegie (Mon-Sat 7:30AM, all six themes)",
-          "enabled": true,
-          "expr": "30 7 * * 1-6",
-          "tz": "America/New_York",
-          "channel": "telegram",
-          "last_ms": 1793446201653,
-          "status": "ok",
-          "errors": 0,
-          "dur_ms": 30782
-        },
-        {
-          "name": "C5iSR Price Pre-Fetch (7:23AM Mon-Sat)",
-          "enabled": true,
-          "expr": "23 7 * * 1-6",
-          "tz": "",
-          "channel": "",
-          "last_ms": 1793445780289,
-          "status": "ok",
-          "errors": 0,
-          "dur_ms": 1033
         },
         {
           "name": "Paper lab Friday weekly-swing scan (AC3-1024-FRISCAN)",
@@ -2736,17 +2770,6 @@
           "status": "ok",
           "errors": 0,
           "dur_ms": 148453
-        },
-        {
-          "name": "Skill: personal-finance-v2 (Mon ledger)",
-          "enabled": true,
-          "expr": "53 7 * * 1",
-          "tz": "America/New_York",
-          "channel": "telegram",
-          "last_ms": 1793015580684,
-          "status": "ok",
-          "errors": 0,
-          "dur_ms": 48513
         },
         {
           "name": "C5iSR ENDGAME Afternoon Post \u2014 Carnegie (Mon-Sat 15:00, through Wed 10/28)",
@@ -2984,9 +3007,9 @@
       ],
       "n_jobs": 20,
       "n_enabled": 11,
-      "err": 0,
-      "last_ms": 1793552948252,
-      "status": "operational",
+      "err": 1,
+      "last_ms": 1793623701143,
+      "status": "degraded",
       "accomplishments": [
         {
           "date": "2026-10-28",
@@ -3105,11 +3128,11 @@
         "lane": "Airbnb/studio",
         "browser_profile": "airbnb",
         "files": {
-          "AGENTS.md": 49169,
+          "AGENTS.md": 50033,
           "MEMORY.md": 42393,
           "HEARTBEAT.md": 984
         },
-        "verified": "2026-11-01"
+        "verified": "2026-11-02"
       },
       "narration": {
         "voice": "bf_emma",
@@ -3170,10 +3193,21 @@
           "expr": "",
           "tz": "",
           "channel": "",
-          "last_ms": 1793552948252,
+          "last_ms": 1793623701143,
           "status": "ok",
           "errors": 0,
-          "dur_ms": 45798
+          "dur_ms": 190406
+        },
+        {
+          "name": "Cottage 30-day rule ON weekdays 7 AM",
+          "enabled": true,
+          "expr": "0 7 * * 1-5",
+          "tz": "America/New_York",
+          "channel": "telegram",
+          "last_ms": 1793620800934,
+          "status": "ok",
+          "errors": 0,
+          "dur_ms": 118327
         },
         {
           "name": "heartbeat-sally",
@@ -3181,10 +3215,32 @@
           "expr": "",
           "tz": "",
           "channel": "",
-          "last_ms": 1793552139201,
+          "last_ms": 1793616940464,
+          "status": "skipped",
+          "errors": 0,
+          "dur_ms": 254
+        },
+        {
+          "name": "Sally: Tiffany pay check",
+          "enabled": true,
+          "expr": "15 17,21 * * *",
+          "tz": "America/New_York",
+          "channel": "telegram",
+          "last_ms": 1793585700050,
           "status": "ok",
           "errors": 0,
-          "dur_ms": 128740
+          "dur_ms": 254597
+        },
+        {
+          "name": "Sally: host-inbox sweep PM",
+          "enabled": true,
+          "expr": "20 16 * * *",
+          "tz": "America/New_York",
+          "channel": "telegram",
+          "last_ms": 1793568026796,
+          "status": "error",
+          "errors": 1,
+          "dur_ms": 226028
         },
         {
           "name": "Monthly Suzanne Check-in Reminder",
@@ -3220,28 +3276,6 @@
           "dur_ms": 33348
         },
         {
-          "name": "Sally: Tiffany pay check",
-          "enabled": true,
-          "expr": "15 17,21 * * *",
-          "tz": "America/New_York",
-          "channel": "telegram",
-          "last_ms": 1793495700049,
-          "status": "ok",
-          "errors": 0,
-          "dur_ms": 31471
-        },
-        {
-          "name": "Sally: host-inbox sweep PM",
-          "enabled": true,
-          "expr": "20 16 * * *",
-          "tz": "America/New_York",
-          "channel": "telegram",
-          "last_ms": 1793478000047,
-          "status": "ok",
-          "errors": 0,
-          "dur_ms": 67809
-        },
-        {
           "name": "Cottage 30-day rule OFF weekdays 5 PM",
           "enabled": true,
           "expr": "0 17 * * 1-5",
@@ -3251,17 +3285,6 @@
           "status": "ok",
           "errors": 0,
           "dur_ms": 223864
-        },
-        {
-          "name": "Cottage 30-day rule ON weekdays 7 AM",
-          "enabled": true,
-          "expr": "0 7 * * 1-5",
-          "tz": "America/New_York",
-          "channel": "telegram",
-          "last_ms": 1793358001036,
-          "status": "ok",
-          "errors": 0,
-          "dur_ms": 126174
         },
         {
           "name": "Skill: airbnb-search",
@@ -3546,7 +3569,7 @@
       "n_jobs": 10,
       "n_enabled": 7,
       "err": 0,
-      "last_ms": 1793554110008,
+      "last_ms": 1793622600071,
       "status": "operational",
       "accomplishments": [
         {
@@ -3746,11 +3769,11 @@
         "lane": "Garmin/fit20",
         "browser_profile": "garmin / fit20",
         "files": {
-          "AGENTS.md": 57198,
+          "AGENTS.md": 58062,
           "MEMORY.md": 28465,
           "HEARTBEAT.md": 3368
         },
-        "verified": "2026-11-01"
+        "verified": "2026-11-02"
       },
       "narration": {
         "voice": "sentinel",
@@ -3819,15 +3842,59 @@
       },
       "jobs": [
         {
+          "name": "fit20 Daily Lead Sweep (07:30 ET)",
+          "enabled": true,
+          "expr": "30 7 * * *",
+          "tz": "America/New_York",
+          "channel": "telegram",
+          "last_ms": 1793622600071,
+          "status": "ok",
+          "errors": 0,
+          "dur_ms": 431544
+        },
+        {
           "name": "heartbeat-coach-arnie",
           "enabled": true,
           "expr": "",
           "tz": "",
           "channel": "",
-          "last_ms": 1793554110008,
+          "last_ms": 1793621116620,
           "status": "ok",
           "errors": 0,
-          "dur_ms": 43498
+          "dur_ms": 208283
+        },
+        {
+          "name": "Coach Arnie Monday Weekly Audit (Mon 6AM)",
+          "enabled": true,
+          "expr": "15 6 * * 1",
+          "tz": "",
+          "channel": "telegram",
+          "last_ms": 1793618101662,
+          "status": "ok",
+          "errors": 0,
+          "dur_ms": 206018
+        },
+        {
+          "name": "recovery-pulse",
+          "enabled": true,
+          "expr": "",
+          "tz": "",
+          "channel": "",
+          "last_ms": 1793615664741,
+          "status": "skipped",
+          "errors": 0,
+          "dur_ms": 254
+        },
+        {
+          "name": "Nutrition log ping 19:00 \u2014 Coach Arnie",
+          "enabled": true,
+          "expr": "12 19 * * *",
+          "tz": "America/New_York",
+          "channel": "telegram",
+          "last_ms": 1793578320058,
+          "status": "ok",
+          "errors": 0,
+          "dur_ms": 88260
         },
         {
           "name": "Coach Midday Garmin Read (12:15 EDT)",
@@ -3841,39 +3908,6 @@
           "dur_ms": 11013
         },
         {
-          "name": "recovery-pulse",
-          "enabled": true,
-          "expr": "",
-          "tz": "",
-          "channel": "",
-          "last_ms": 1793550860828,
-          "status": "ok",
-          "errors": 0,
-          "dur_ms": 17730
-        },
-        {
-          "name": "fit20 Daily Lead Sweep (07:30 ET)",
-          "enabled": true,
-          "expr": "30 7 * * *",
-          "tz": "America/New_York",
-          "channel": "telegram",
-          "last_ms": 1793536200155,
-          "status": "ok",
-          "errors": 0,
-          "dur_ms": 641876
-        },
-        {
-          "name": "Nutrition log ping 19:00 \u2014 Coach Arnie",
-          "enabled": true,
-          "expr": "12 19 * * *",
-          "tz": "America/New_York",
-          "channel": "telegram",
-          "last_ms": 1793488320127,
-          "status": "ok",
-          "errors": 0,
-          "dur_ms": 38483
-        },
-        {
           "name": "Skill: zoho-crm (fit20 Mon leads)",
           "enabled": true,
           "expr": "20 8 * * 1",
@@ -3883,17 +3917,6 @@
           "status": "ok",
           "errors": 0,
           "dur_ms": 201152
-        },
-        {
-          "name": "Coach Arnie Monday Weekly Audit (Mon 6AM)",
-          "enabled": true,
-          "expr": "15 6 * * 1",
-          "tz": "",
-          "channel": "telegram",
-          "last_ms": 1793009700053,
-          "status": "ok",
-          "errors": 0,
-          "dur_ms": 147147
         },
         {
           "name": "Dev Loop: coach-arnie daily reflection (implement-or-escalate)",
@@ -4005,7 +4028,7 @@
       "n_jobs": 8,
       "n_enabled": 3,
       "err": 0,
-      "last_ms": 1793552293697,
+      "last_ms": 1793622071127,
       "status": "operational",
       "accomplishments": [
         {
@@ -4144,15 +4167,26 @@
       },
       "jobs": [
         {
+          "name": "heartbeat-doc",
+          "enabled": true,
+          "expr": "",
+          "tz": "",
+          "channel": "",
+          "last_ms": 1793622071127,
+          "status": "ok",
+          "errors": 0,
+          "dur_ms": 228625
+        },
+        {
           "name": "vitals-warning",
           "enabled": true,
           "expr": "",
           "tz": "",
           "channel": "",
-          "last_ms": 1793552293697,
+          "last_ms": 1793621290976,
           "status": "ok",
           "errors": 0,
-          "dur_ms": 97058
+          "dur_ms": 1008776
         },
         {
           "name": "Doc Morning Clinical Read (0800 EDT)",
@@ -4164,17 +4198,6 @@
           "status": "ok",
           "errors": 0,
           "dur_ms": 28581
-        },
-        {
-          "name": "heartbeat-doc",
-          "enabled": true,
-          "expr": "",
-          "tz": "",
-          "channel": "",
-          "last_ms": 1793535668595,
-          "status": "ok",
-          "errors": 0,
-          "dur_ms": 45245
         },
         {
           "name": "Dev Loop: doc daily reflection (implement-or-escalate)",
@@ -4311,7 +4334,7 @@
       "n_jobs": 10,
       "n_enabled": 7,
       "err": 0,
-      "last_ms": 1793553898594,
+      "last_ms": 1793622313030,
       "status": "operational",
       "accomplishments": [
         {
@@ -4484,10 +4507,10 @@
           "expr": "",
           "tz": "",
           "channel": "",
-          "last_ms": 1793553898594,
+          "last_ms": 1793622313030,
           "status": "ok",
           "errors": 0,
-          "dur_ms": 88199
+          "dur_ms": 142355
         },
         {
           "name": "agenda-this-week",
@@ -4495,10 +4518,10 @@
           "expr": "",
           "tz": "",
           "channel": "",
-          "last_ms": 1793540024226,
-          "status": "ok",
+          "last_ms": 1793604826223,
+          "status": "skipped",
           "errors": 0,
-          "dur_ms": 223462
+          "dur_ms": 255
         },
         {
           "name": "RESOLUTE Local YouTube weekly (Roy draft)",
@@ -4661,7 +4684,7 @@
       "n_jobs": 9,
       "n_enabled": 6,
       "err": 0,
-      "last_ms": 1793552881242,
+      "last_ms": 1793623344823,
       "status": "operational",
       "accomplishments": [
         {
@@ -4876,10 +4899,10 @@
           "expr": "",
           "tz": "",
           "channel": "",
-          "last_ms": 1793552881242,
+          "last_ms": 1793623344823,
           "status": "ok",
           "errors": 0,
-          "dur_ms": 44026
+          "dur_ms": 564570
         },
         {
           "name": "Skill: audio-transcribe",
@@ -5048,7 +5071,7 @@
       "n_jobs": 9,
       "n_enabled": 6,
       "err": 0,
-      "last_ms": 1793553959596,
+      "last_ms": 1793623201340,
       "status": "operational",
       "accomplishments": [
         {
@@ -5197,15 +5220,26 @@
       },
       "jobs": [
         {
+          "name": "RESOLUTE AM Wire draft (Rush)",
+          "enabled": true,
+          "expr": "40 7 * * *",
+          "tz": "America/New_York",
+          "channel": "last",
+          "last_ms": 1793623201340,
+          "status": "ok",
+          "errors": 0,
+          "dur_ms": 396603
+        },
+        {
           "name": "heartbeat-rush",
           "enabled": true,
           "expr": "",
           "tz": "",
           "channel": "",
-          "last_ms": 1793553959596,
+          "last_ms": 1793622436647,
           "status": "ok",
           "errors": 0,
-          "dur_ms": 63950
+          "dur_ms": 54683
         },
         {
           "name": "breaking-news-scan",
@@ -5213,10 +5247,32 @@
           "expr": "",
           "tz": "",
           "channel": "",
-          "last_ms": 1793552726724,
+          "last_ms": 1793621985932,
           "status": "ok",
           "errors": 0,
-          "dur_ms": 135069
+          "dur_ms": 314115
+        },
+        {
+          "name": "RESOLUTE PM Wire draft (Rush)",
+          "enabled": true,
+          "expr": "20 16 * * *",
+          "tz": "America/New_York",
+          "channel": "last",
+          "last_ms": 1793568000658,
+          "status": "ok",
+          "errors": 0,
+          "dur_ms": 120607
+        },
+        {
+          "name": "Daily News Brief (1:00 PM) \u2014 Rush",
+          "enabled": true,
+          "expr": "10 13 * * *",
+          "tz": "America/New_York",
+          "channel": "telegram",
+          "last_ms": 1793556600052,
+          "status": "ok",
+          "errors": 0,
+          "dur_ms": 49922
         },
         {
           "name": "Daily Tech/AI Brief (08:30)",
@@ -5228,39 +5284,6 @@
           "status": "ok",
           "errors": 0,
           "dur_ms": 102925
-        },
-        {
-          "name": "RESOLUTE AM Wire draft (Rush)",
-          "enabled": true,
-          "expr": "40 7 * * *",
-          "tz": "America/New_York",
-          "channel": "last",
-          "last_ms": 1793536800622,
-          "status": "ok",
-          "errors": 0,
-          "dur_ms": 422912
-        },
-        {
-          "name": "RESOLUTE PM Wire draft (Rush)",
-          "enabled": true,
-          "expr": "20 16 * * *",
-          "tz": "America/New_York",
-          "channel": "last",
-          "last_ms": 1793478048809,
-          "status": "ok",
-          "errors": 0,
-          "dur_ms": 144522
-        },
-        {
-          "name": "Daily News Brief (1:00 PM) \u2014 Rush",
-          "enabled": true,
-          "expr": "10 13 * * *",
-          "tz": "America/New_York",
-          "channel": "telegram",
-          "last_ms": 1793466672728,
-          "status": "ok",
-          "errors": 0,
-          "dur_ms": 135142
         },
         {
           "name": "Dev Loop: rush daily reflection (implement-or-escalate)",
@@ -5374,9 +5397,14 @@
       "n_jobs": 13,
       "n_enabled": 10,
       "err": 0,
-      "last_ms": 1793554201509,
+      "last_ms": 1793623381260,
       "status": "operational",
       "accomplishments": [
+        {
+          "date": "2026-11-02",
+          "title": "Email back-brief (2026-11-02)",
+          "detail": "Personal-lane digest only (Gmail/iCloud/Yahoo) \u2014 B&A/fit20/USMC excluded per Principal 2026-07-17."
+        },
         {
           "date": "2026-11-01",
           "title": "TACC Morning Brief \u2014 Sun Nov 01",
@@ -5446,16 +5474,6 @@
           "date": "2026-10-28",
           "title": "TACC Morning Brief \u2014 Wed Oct 28",
           "detail": "PDF shipped via psa-send-pdf.sh \u00b7 file=2026-10-28-morning-brief"
-        },
-        {
-          "date": "2026-10-28",
-          "title": "Email back-brief (2026-10-28)",
-          "detail": "Personal-lane digest only (Gmail/iCloud/Yahoo) \u2014 B&A/fit20/USMC excluded per Principal 2026-07-17."
-        },
-        {
-          "date": "2026-10-27",
-          "title": "TACC Morning Brief \u2014 Tue Oct 27",
-          "detail": "PDF shipped via psa-send-pdf.sh \u00b7 file=2026-10-27-morning-brief"
         }
       ],
       "name": "Pops Henderson",
@@ -5525,6 +5543,61 @@
       },
       "jobs": [
         {
+          "name": "Pops Daily Wheelhouse Check-in (7:37 AM)",
+          "enabled": true,
+          "expr": "43 7 * * *",
+          "tz": "America/New_York",
+          "channel": "telegram",
+          "last_ms": 1793623381260,
+          "status": "ok",
+          "errors": 0,
+          "dur_ms": 49593
+        },
+        {
+          "name": "heartbeat-pops",
+          "enabled": true,
+          "expr": "",
+          "tz": "",
+          "channel": "",
+          "last_ms": 1793622779318,
+          "status": "ok",
+          "errors": 0,
+          "dur_ms": 1237346
+        },
+        {
+          "name": "Pops Daily Captain's Creed (6:55 AM) \u2014 Discord #study + TG link",
+          "enabled": true,
+          "expr": "55 6 * * *",
+          "tz": "America/New_York",
+          "channel": "telegram",
+          "last_ms": 1793620500051,
+          "status": "ok",
+          "errors": 0,
+          "dur_ms": 21993
+        },
+        {
+          "name": "wheelhouse-pattern",
+          "enabled": true,
+          "expr": "",
+          "tz": "",
+          "channel": "",
+          "last_ms": 1793610496279,
+          "status": "skipped",
+          "errors": 0,
+          "dur_ms": 255
+        },
+        {
+          "name": "Skill: calendar-apple (Sun family week)",
+          "enabled": true,
+          "expr": "12 18 * * 0",
+          "tz": "America/New_York",
+          "channel": "telegram",
+          "last_ms": 1793574720671,
+          "status": "ok",
+          "errors": 0,
+          "dur_ms": 141126
+        },
+        {
           "name": "Pops Sunday Family Huddle Agenda Draft (Sun 12:30 PM)",
           "enabled": true,
           "expr": "30 12 * * 0",
@@ -5534,39 +5607,6 @@
           "status": "ok",
           "errors": 0,
           "dur_ms": 46461
-        },
-        {
-          "name": "heartbeat-pops",
-          "enabled": true,
-          "expr": "",
-          "tz": "",
-          "channel": "",
-          "last_ms": 1793554191353,
-          "status": "ok",
-          "errors": 0,
-          "dur_ms": 39085
-        },
-        {
-          "name": "wheelhouse-pattern",
-          "enabled": true,
-          "expr": "",
-          "tz": "",
-          "channel": "",
-          "last_ms": 1793552907662,
-          "status": "ok",
-          "errors": 0,
-          "dur_ms": 27125
-        },
-        {
-          "name": "Pops Daily Wheelhouse Check-in (7:37 AM)",
-          "enabled": true,
-          "expr": "43 7 * * *",
-          "tz": "America/New_York",
-          "channel": "telegram",
-          "last_ms": 1793536981432,
-          "status": "ok",
-          "errors": 0,
-          "dur_ms": 18004
         },
         {
           "name": "Pops Sunday Weekly Theme Change",
@@ -5580,17 +5620,6 @@
           "dur_ms": 26081
         },
         {
-          "name": "Pops Daily Captain's Creed (6:55 AM) \u2014 Discord #study + TG link",
-          "enabled": true,
-          "expr": "55 6 * * *",
-          "tz": "America/New_York",
-          "channel": "telegram",
-          "last_ms": 1793534101140,
-          "status": "ok",
-          "errors": 0,
-          "dur_ms": 22740
-        },
-        {
           "name": "Daily Father Outreach Reminder (Pops)",
           "enabled": true,
           "expr": "0 9 * * 1-5",
@@ -5600,17 +5629,6 @@
           "status": "ok",
           "errors": 0,
           "dur_ms": 141028
-        },
-        {
-          "name": "Skill: calendar-apple (Sun family week)",
-          "enabled": true,
-          "expr": "12 18 * * 0",
-          "tz": "America/New_York",
-          "channel": "telegram",
-          "last_ms": 1792966320055,
-          "status": "ok",
-          "errors": 0,
-          "dur_ms": 134861
         },
         {
           "name": "Pops scooter reminder ECOROAD (Thu 11/5)",
@@ -5745,7 +5763,7 @@
       "n_jobs": 8,
       "n_enabled": 4,
       "err": 0,
-      "last_ms": 1793553200020,
+      "last_ms": 1793623464348,
       "status": "operational",
       "accomplishments": [
         {
@@ -5906,10 +5924,10 @@
           "expr": "",
           "tz": "",
           "channel": "",
-          "last_ms": 1793553200020,
+          "last_ms": 1793623464348,
           "status": "ok",
           "errors": 0,
-          "dur_ms": 44171
+          "dur_ms": 799404
         },
         {
           "name": "pt-log-late-check",
@@ -5917,10 +5935,10 @@
           "expr": "",
           "tz": "",
           "channel": "",
-          "last_ms": 1793549128713,
+          "last_ms": 1793621406651,
           "status": "ok",
           "errors": 0,
-          "dur_ms": 462392
+          "dur_ms": 887969
         },
         {
           "name": "Weekly Standards Check (Sat 9:30 AM) \u2014 Mac",
@@ -6062,9 +6080,9 @@
       ],
       "n_jobs": 8,
       "n_enabled": 5,
-      "err": 0,
-      "last_ms": 1793554034839,
-      "status": "operational",
+      "err": 3,
+      "last_ms": 1793623099815,
+      "status": "degraded",
       "accomplishments": [
         {
           "date": "2026-10-12",
@@ -6243,10 +6261,10 @@
           "expr": "",
           "tz": "",
           "channel": "",
-          "last_ms": 1793554034839,
+          "last_ms": 1793623099815,
           "status": "ok",
           "errors": 0,
-          "dur_ms": 42004
+          "dur_ms": 791899
         },
         {
           "name": "pattern-watch",
@@ -6254,21 +6272,10 @@
           "expr": "",
           "tz": "",
           "channel": "",
-          "last_ms": 1793540028290,
-          "status": "ok",
+          "last_ms": 1793604830275,
+          "status": "skipped",
           "errors": 0,
-          "dur_ms": 236485
-        },
-        {
-          "name": "Weekly Strategic Note (Sun 5:17 PM) \u2014 Gus",
-          "enabled": true,
-          "expr": "17 17 * * 0",
-          "tz": "America/New_York",
-          "channel": "telegram",
-          "last_ms": 1793023455296,
-          "status": "ok",
-          "errors": 0,
-          "dur_ms": 100647
+          "dur_ms": 255
         },
         {
           "name": "Gus Sunday Reading List + Reflection (Sun 6PM)",
@@ -6276,10 +6283,21 @@
           "expr": "0 18 * * 0",
           "tz": "America/New_York",
           "channel": "telegram",
-          "last_ms": 1792965601708,
-          "status": "ok",
-          "errors": 0,
-          "dur_ms": 167890
+          "last_ms": 1793574000030,
+          "status": "error",
+          "errors": 1,
+          "dur_ms": 6933
+        },
+        {
+          "name": "Weekly Strategic Note (Sun 5:17 PM) \u2014 Gus",
+          "enabled": true,
+          "expr": "17 17 * * 0",
+          "tz": "America/New_York",
+          "channel": "telegram",
+          "last_ms": 1793571420688,
+          "status": "error",
+          "errors": 1,
+          "dur_ms": 3877
         },
         {
           "name": "Skill: theology-research (Sun prep)",
@@ -6287,10 +6305,10 @@
           "expr": "0 17 * * 0",
           "tz": "America/New_York",
           "channel": "telegram",
-          "last_ms": 1792962001327,
-          "status": "ok",
-          "errors": 0,
-          "dur_ms": 44351
+          "last_ms": 1793570700456,
+          "status": "error",
+          "errors": 1,
+          "dur_ms": 7210
         },
         {
           "name": "Dev Loop: bg-hartwell daily reflection (implement-or-escalate)",
@@ -6371,5 +6389,5 @@
     "write-airbnb-reviews-for-listings",
     "you-are-an-expert-ai-agent"
   ],
-  "cowork_date": "2026-11-01T12:33:17-05:00"
+  "cowork_date": "2026-11-02T07:59:34-05:00"
 }

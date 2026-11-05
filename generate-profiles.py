@@ -1158,9 +1158,14 @@ def generate_profile(candidate, categories, meta, nav=None):
         )
     elif status == 'lame_duck':
         candidacy_note = (profile.get('candidacy_note') or '').strip()
-        lame_why = ('lost renomination in 2026 and is not on the November ballot.'
-                    if c.get('candidacy_status') == 'lost_primary'
-                    else 'has announced they will not seek re-election in 2026.')
+        _cs = c.get('candidacy_status')
+        if _cs == 'lost_primary':
+            lame_why = 'lost renomination in 2026 and is not on the November ballot.'
+        elif _cs == 'lost':
+            lame_why = ('lost the November 3, 2026 general election (unofficial results) '
+                        'and serves until the new term begins.')
+        else:
+            lame_why = 'has announced they will not seek re-election in 2026.'
         status_banner_html = (
             '<div class="prof-status-banner prof-status-lame" role="note" aria-label="Not seeking re-election">'
             '<span class="prof-status-chip">LAME DUCK</span>'
@@ -1180,7 +1185,22 @@ def generate_profile(candidate, categories, meta, nav=None):
     # as history, but must not be advertised as "Currently running".
     out_of_race = (status in ('lost', 'former', 'deceased')
                    or c.get('candidacy_status') in OUT_OF_RACE_STATUSES)
-    if cand.get('race_id') and not out_of_race:
+    if c.get('candidacy_status') == 'won':
+        # Election-night result applied (election-results-ingest.py). Unofficial until the
+        # state certifies; the record keeps its scores and the race link as history.
+        race_id = cand.get('race_id') or ''
+        race_link = (f' <a href="../../races/{race_id}.html">This race &rarr;</a>' if race_id else '')
+        candidacy_banner_html = (
+            '<div class="prof-candidacy-banner" role="note" aria-label="Candidacy status">'
+            '<span class="prof-candidacy-chip prof-cand-incumbent">Elected</span>'
+            '<div class="prof-candidacy-text">'
+            f'Won the November 3, 2026 general election for <strong>{cand.get("office") or c.get("office","")}</strong> '
+            '(unofficial results until certified).'
+            f'{race_link}'
+            '</div>'
+            '</div>'
+        )
+    elif cand.get('race_id') and not out_of_race:
         is_inc = bool(cand.get('is_incumbent'))
         chip_label = 'Incumbent' if is_inc else 'Challenger'
         chip_class = 'prof-cand-incumbent' if is_inc else 'prof-cand-challenger'

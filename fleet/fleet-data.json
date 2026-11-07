@@ -1,5 +1,5 @@
 {
-  "generated": "2026-11-07T13:48:38.717477+00:00",
+  "generated": "2026-11-07T14:21:04.434468+00:00",
   "totals": {
     "agents": 17,
     "operational": 5,
@@ -12,18 +12,18 @@
   "health": {
     "cron": {
       "enabled": 105,
-      "ran26h": 66,
-      "delivered": 19,
+      "ran26h": 65,
+      "delivered": 18,
       "fails": [
-        "scheduled job \u00d7 10",
+        "scheduled job \u00d7 12",
         "scheduled skill \u00d7 1"
       ]
     },
     "cron_source": "openclaw.sqlite + hermes/cron/jobs.json",
     "launchd": {
-      "healthy": 99,
+      "healthy": 97,
       "fails": [
-        "launchd job \u00d7 4"
+        "launchd job \u00d7 6"
       ]
     }
   },
@@ -1194,7 +1194,7 @@
       "n_jobs": 0,
       "n_enabled": 0,
       "err": 0,
-      "last_ms": 1794055546885,
+      "last_ms": 1794060388939,
       "status": "operational",
       "accomplishments": [
         {
@@ -1844,7 +1844,7 @@
       "n_jobs": 9,
       "n_enabled": 6,
       "err": 0,
-      "last_ms": 1794057850484,
+      "last_ms": 1794059650522,
       "status": "operational",
       "accomplishments": [
         {
@@ -2309,10 +2309,10 @@
           "expr": "",
           "tz": "",
           "channel": "",
-          "last_ms": 1794057850484,
+          "last_ms": 1794059650522,
           "status": "ok",
           "errors": 0,
-          "dur_ms": 54369
+          "dur_ms": 65351
         },
         {
           "name": "invitation-check",
@@ -2480,8 +2480,8 @@
       ],
       "n_jobs": 27,
       "n_enabled": 13,
-      "err": 2,
-      "last_ms": 1794057269157,
+      "err": 3,
+      "last_ms": 1794060869201,
       "status": "degraded",
       "accomplishments": [
         {
@@ -2643,10 +2643,21 @@
           "expr": "",
           "tz": "",
           "channel": "",
-          "last_ms": 1794057269157,
+          "last_ms": 1794060869201,
           "status": "ok",
           "errors": 0,
-          "dur_ms": 120542
+          "dur_ms": 174945
+        },
+        {
+          "name": "Daily reconciliation \u2014 previous day (AC3-1025-RECON)",
+          "enabled": true,
+          "expr": "0 9 * * 1-6",
+          "tz": "America/New_York",
+          "channel": "last",
+          "last_ms": 1794060000876,
+          "status": "error",
+          "errors": 1,
+          "dur_ms": 30303
         },
         {
           "name": "heartbeat-carnegie",
@@ -2654,10 +2665,10 @@
           "expr": "",
           "tz": "",
           "channel": "",
-          "last_ms": 1794056064618,
+          "last_ms": 1794059664699,
           "status": "ok",
           "errors": 0,
-          "dur_ms": 441976
+          "dur_ms": 176757
         },
         {
           "name": "C5iSR Daily Post \u2014 Carnegie (Mon-Sat 7:30AM, all six themes)",
@@ -2735,17 +2746,6 @@
           "status": "ok",
           "errors": 0,
           "dur_ms": 191670
-        },
-        {
-          "name": "Daily reconciliation \u2014 previous day (AC3-1025-RECON)",
-          "enabled": true,
-          "expr": "0 9 * * 1-6",
-          "tz": "America/New_York",
-          "channel": "last",
-          "last_ms": 1793973601392,
-          "status": "ok",
-          "errors": 0,
-          "dur_ms": 73336
         },
         {
           "name": "Skill: finance-news",
@@ -3016,8 +3016,8 @@
       ],
       "n_jobs": 22,
       "n_enabled": 13,
-      "err": 1,
-      "last_ms": 1794058800043,
+      "err": 2,
+      "last_ms": 1794060500027,
       "status": "degraded",
       "accomplishments": [
         {
@@ -3197,6 +3197,28 @@
       },
       "jobs": [
         {
+          "name": "review-batch-submit",
+          "enabled": true,
+          "expr": "",
+          "tz": "",
+          "channel": "",
+          "last_ms": 1794060500027,
+          "status": "ok",
+          "errors": 0,
+          "dur_ms": 128558
+        },
+        {
+          "name": "Sally: host-inbox sweep AM",
+          "enabled": true,
+          "expr": "50 8 * * *",
+          "tz": "America/New_York",
+          "channel": "telegram",
+          "last_ms": 1794059400044,
+          "status": "error",
+          "errors": 1,
+          "dur_ms": 21000
+        },
+        {
           "name": "Skill: airbnb-reader",
           "enabled": true,
           "expr": "40 8 * * *",
@@ -3206,17 +3228,6 @@
           "status": "error",
           "errors": 1,
           "dur_ms": 13725
-        },
-        {
-          "name": "review-batch-submit",
-          "enabled": true,
-          "expr": "",
-          "tz": "",
-          "channel": "",
-          "last_ms": 1794058699668,
-          "status": "ok",
-          "errors": 0,
-          "dur_ms": 52512
         },
         {
           "name": "heartbeat-sally",
@@ -3261,17 +3272,6 @@
           "status": "ok",
           "errors": 0,
           "dur_ms": 57392
-        },
-        {
-          "name": "Sally: host-inbox sweep AM",
-          "enabled": true,
-          "expr": "50 8 * * *",
-          "tz": "America/New_York",
-          "channel": "telegram",
-          "last_ms": 1793973000063,
-          "status": "ok",
-          "errors": 0,
-          "dur_ms": 108008
         },
         {
           "name": "Cottage 30-day rule ON weekdays 7 AM",
@@ -3600,7 +3600,7 @@
       "n_jobs": 10,
       "n_enabled": 7,
       "err": 1,
-      "last_ms": 1794058480216,
+      "last_ms": 1794059827772,
       "status": "degraded",
       "accomplishments": [
         {
@@ -3878,6 +3878,17 @@
       },
       "jobs": [
         {
+          "name": "heartbeat-coach-arnie",
+          "enabled": true,
+          "expr": "",
+          "tz": "",
+          "channel": "",
+          "last_ms": 1794059827772,
+          "status": "ok",
+          "errors": 0,
+          "dur_ms": 63367
+        },
+        {
           "name": "recovery-pulse",
           "enabled": true,
           "expr": "",
@@ -3887,17 +3898,6 @@
           "status": "ok",
           "errors": 0,
           "dur_ms": 20054
-        },
-        {
-          "name": "heartbeat-coach-arnie",
-          "enabled": true,
-          "expr": "",
-          "tz": "",
-          "channel": "",
-          "last_ms": 1794058026721,
-          "status": "ok",
-          "errors": 0,
-          "dur_ms": 46101
         },
         {
           "name": "fit20 Daily Lead Sweep (07:30 ET)",
@@ -4063,7 +4063,7 @@
       "n_jobs": 8,
       "n_enabled": 3,
       "err": 1,
-      "last_ms": 1794056917896,
+      "last_ms": 1794060518681,
       "status": "degraded",
       "accomplishments": [
         {
@@ -4207,10 +4207,10 @@
           "expr": "",
           "tz": "",
           "channel": "",
-          "last_ms": 1794056917896,
+          "last_ms": 1794060518681,
           "status": "ok",
           "errors": 0,
-          "dur_ms": 48946
+          "dur_ms": 109972
         },
         {
           "name": "Doc Morning Clinical Read (0800 EDT)",
@@ -4369,7 +4369,7 @@
       "n_jobs": 10,
       "n_enabled": 7,
       "err": 0,
-      "last_ms": 1794058588237,
+      "last_ms": 1794060388283,
       "status": "operational",
       "accomplishments": [
         {
@@ -4542,10 +4542,10 @@
           "expr": "",
           "tz": "",
           "channel": "",
-          "last_ms": 1794058588237,
+          "last_ms": 1794060388283,
           "status": "ok",
           "errors": 0,
-          "dur_ms": 68523
+          "dur_ms": 135121
         },
         {
           "name": "agenda-this-week",
@@ -4719,7 +4719,7 @@
       "n_jobs": 9,
       "n_enabled": 6,
       "err": 0,
-      "last_ms": 1794057773413,
+      "last_ms": 1794059573455,
       "status": "operational",
       "accomplishments": [
         {
@@ -4934,10 +4934,10 @@
           "expr": "",
           "tz": "",
           "channel": "",
-          "last_ms": 1794057773413,
+          "last_ms": 1794059573455,
           "status": "ok",
           "errors": 0,
-          "dur_ms": 58415
+          "dur_ms": 65023
         },
         {
           "name": "Prof X Weekly Synthesis (Fri 4PM)",
@@ -5107,7 +5107,7 @@
       "n_jobs": 9,
       "n_enabled": 6,
       "err": 2,
-      "last_ms": 1794058630722,
+      "last_ms": 1794059984659,
       "status": "degraded",
       "accomplishments": [
         {
@@ -5281,6 +5281,17 @@
       },
       "jobs": [
         {
+          "name": "heartbeat-rush",
+          "enabled": true,
+          "expr": "",
+          "tz": "",
+          "channel": "",
+          "last_ms": 1794059984659,
+          "status": "ok",
+          "errors": 0,
+          "dur_ms": 71244
+        },
+        {
           "name": "Daily Tech/AI Brief (08:30)",
           "enabled": true,
           "expr": "30 8 * * *",
@@ -5290,17 +5301,6 @@
           "status": "error",
           "errors": 4,
           "dur_ms": 25676
-        },
-        {
-          "name": "heartbeat-rush",
-          "enabled": true,
-          "expr": "",
-          "tz": "",
-          "channel": "",
-          "last_ms": 1794058184615,
-          "status": "ok",
-          "errors": 0,
-          "dur_ms": 39282
         },
         {
           "name": "breaking-news-scan",
@@ -5458,7 +5458,7 @@
       "n_jobs": 12,
       "n_enabled": 9,
       "err": 1,
-      "last_ms": 1794058138047,
+      "last_ms": 1794059938084,
       "status": "degraded",
       "accomplishments": [
         {
@@ -5614,10 +5614,10 @@
           "expr": "",
           "tz": "",
           "channel": "",
-          "last_ms": 1794058138047,
+          "last_ms": 1794059938084,
           "status": "ok",
           "errors": 0,
-          "dur_ms": 40636
+          "dur_ms": 40214
         },
         {
           "name": "wheelhouse-pattern",
@@ -5818,7 +5818,7 @@
       "n_jobs": 8,
       "n_enabled": 4,
       "err": 1,
-      "last_ms": 1794058993974,
+      "last_ms": 1794060794007,
       "status": "degraded",
       "accomplishments": [
         {
@@ -5979,10 +5979,10 @@
           "expr": "",
           "tz": "",
           "channel": "",
-          "last_ms": 1794058993974,
+          "last_ms": 1794060794007,
           "status": "ok",
           "errors": 0,
-          "dur_ms": 53413
+          "dur_ms": 56436
         },
         {
           "name": "pt-log-late-check",
@@ -6136,7 +6136,7 @@
       "n_jobs": 8,
       "n_enabled": 5,
       "err": 3,
-      "last_ms": 1794058435144,
+      "last_ms": 1794059626139,
       "status": "degraded",
       "accomplishments": [
         {
@@ -6311,6 +6311,17 @@
       },
       "jobs": [
         {
+          "name": "heartbeat-bg-hartwell",
+          "enabled": true,
+          "expr": "",
+          "tz": "",
+          "channel": "",
+          "last_ms": 1794059626139,
+          "status": "skipped",
+          "errors": 0,
+          "dur_ms": 296
+        },
+        {
           "name": "pattern-watch",
           "enabled": true,
           "expr": "",
@@ -6320,17 +6331,6 @@
           "status": "ok",
           "errors": 0,
           "dur_ms": 44715
-        },
-        {
-          "name": "heartbeat-bg-hartwell",
-          "enabled": true,
-          "expr": "",
-          "tz": "",
-          "channel": "",
-          "last_ms": 1794057826059,
-          "status": "skipped",
-          "errors": 0,
-          "dur_ms": 288
         },
         {
           "name": "Gus Sunday Reading List + Reflection (Sun 6PM)",
@@ -6444,5 +6444,5 @@
     "write-airbnb-reviews-for-listings",
     "you-are-an-expert-ai-agent"
   ],
-  "cowork_date": "2026-11-07T08:48:09-05:00"
+  "cowork_date": "2026-11-07T09:20:32-05:00"
 }

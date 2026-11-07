@@ -98,7 +98,15 @@ def main():
         deep.sort(key=lambda c: (yield_tier(c), -blanks(c)) + rank(c)[2:])
         if deep:
             mode = "deepen" if not pool else "unscored+deepen"
-        pool += deep
+            # Interleave: unscored retries yield rarely (they struck out before), deepen records
+            # have known-good sites. Half the batch each so a 473-deep bench can't starve the
+            # deepen tier for a day of zero-yield rounds.
+            if pool:
+                pool = pool[:max(1, N // 2)] + deep
+            else:
+                pool = deep
+        else:
+            pool = pool
 
     def answered(c):
         return [f"{cat}:{qi}" for cat, v in (c.get("scores") or {}).items() if isinstance(v, list)

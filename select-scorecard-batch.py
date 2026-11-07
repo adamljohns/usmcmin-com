@@ -75,6 +75,35 @@ def main():
         nosite = [c for c in C if active(c) and not evid(c) and not website(c) and strikes(c) < 3]
         nosite.sort(key=rank)
         pool += nosite
+    # 2026-11-06 (Principal: "have local models work till the scorecard is done"): when the
+    # unscored pool is dry, DEEPEN. ~2,500 evidence-scored records (curated / state / local /
+    # federal) have a fetchable site but have never been through the local grind — avg 16 blank
+    # sub-cells each. The batch carries `answered` so the extractor asks ONLY about blank
+    # questions and the merge can never overwrite a curated or vote-derived cell. One pass each:
+    # the merge stamps grind_attempted, which drops the record out of this pool for good.
+    mode = "unscored"
+    if len(pool) < N:
+        def blanks(c):
+            return sum(1 for v in (c.get("scores") or {}).values() if isinstance(v, list)
+                       for x in v if x is None)
+
+        def passed(c):
+            p = c.get("profile") or {}
+            return bool(p.get("grind_attempted")) or "Local-grind" in str(p.get("confidence_note") or "")
+
+        deep = [c for c in C if active(c) and evid(c) and website(c) and not passed(c)
+                and strikes(c) < 3 and blanks(c) > 0]
+        # campaign/personal sites first (several times the verbatim-evidence yield of a gov bio),
+        # then most blanks, then the civic-impact state order.
+        deep.sort(key=lambda c: (yield_tier(c), -blanks(c)) + rank(c)[2:])
+        if deep:
+            mode = "deepen" if not pool else "unscored+deepen"
+        pool += deep
+
+    def answered(c):
+        return [f"{cat}:{qi}" for cat, v in (c.get("scores") or {}).items() if isinstance(v, list)
+                for qi, x in enumerate(v) if x is not None]
+
     batch = [{
         "slug": c["slug"], "name": c.get("name"), "state": c.get("state"),
         "level": c.get("level"), "party": c.get("party"), "office": c.get("office"),
@@ -86,9 +115,12 @@ def main():
         # refine-records stamps evidence_<tier> on any record whose profile arrives WITHOUT a
         # confidence key — which would falsely mark an unscored candidate "evidence-reviewed".
         "confidence": (c.get("profile") or {}).get("confidence"),
+        # cells already holding a verdict — the extractor skips these questions entirely.
+        "answered": answered(c),
     } for c in pool[:N]]
     json.dump(batch, open(OUT, "w"), indent=1)
-    print(f"selected {len(batch)} of {len(pool)} eligible (unscored; fetchable first, then site-less for discovery) -> {OUT}")
+    print(f"selected {len(batch)} of {len(pool)} eligible (mode={mode}; unscored fetchable first, "
+          f"then site-less for discovery, then deepen never-ground evidence records) -> {OUT}")
     # eligible-with-website is the fetchable frontier; the website-less remainder waits on Brave discovery.
 
 

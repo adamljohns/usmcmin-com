@@ -358,6 +358,14 @@ def main():
 
         quote_uses = {}   # one sentence must not fill a whole category — see MAX_CELLS_PER_QUOTE
         qlist = applicable_questions(categories, level)
+        # 2026-11-06 deepen pass: never re-ask a question that already holds a verdict (curated,
+        # roll-call, or earlier grind). A campaign-site quote must not overwrite a recorded vote.
+        done = set(c.get("answered") or [])
+        if done:
+            qlist = [t for t in qlist if f"{t[0]}:{t[1]}" not in done]
+        if not qlist:
+            rec["status"] = "nothing_blank"
+            return rec, f"{slug}: every applicable cell already answered — nothing to ask"
         qmap = {n + 1: qlist[n] for n in range(len(qlist))}
         numbered = "\n".join(f"{n}. {q}" for n, (_, _, q) in qmap.items())
         combined = "\n\n".join(f"[{u}]\n{t}" for u, t in pages)[:22000]

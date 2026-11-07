@@ -60,6 +60,13 @@ def main():
             "confidence_note": f"Local-grind (Qwen finds + Gemma cross-check, verbatim-verified) {today}",
             "last_refined": today,
         }
+        # 2026-11-06 deepen pass: a record that was already evidence-scored (curated, federal,
+        # earlier grind) keeps its confidence label and note; we only add the blanks we filled.
+        if str(r.get("existing_confidence") or "").startswith("evidence"):
+            prof["confidence"] = r["existing_confidence"]
+            del prof["confidence_note"]
+            prof["grind_attempted"] = today
+            prof["grind_deepened"] = f"{today}: +{len(findings)} verbatim-verified blank(s) filled"
         prof["grind_strikes"] = 0   # scored — clear the bench count
         if r.get("source_discovered") and r.get("campaign_website"):
             prof["campaign_website"] = r["campaign_website"]

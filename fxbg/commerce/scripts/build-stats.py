@@ -77,6 +77,15 @@ def main() -> None:
             for f in FACTORS
         },
     }
+    # Full-review counts (reviewed / changed / held / applied) — counts only; the
+    # patches and HOLD queue stay private (scripts/build-full-review-stats.py).
+    fr_stats = ROOT / "data" / "full-review-stats.json"
+    if fr_stats.exists():
+        try:
+            fr = json.loads(fr_stats.read_text())
+            stats["full_review"] = {k: fr.get(k) for k in ("reviewed", "changed", "held", "applied", "mode", "updated")}
+        except Exception:
+            pass
     out = ROOT / "data" / "stats.json"
     out.write_text(json.dumps(stats, indent=2))
     print(json.dumps(stats, indent=2))

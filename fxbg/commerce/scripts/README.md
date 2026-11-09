@@ -20,6 +20,14 @@ python3 scripts/build-categories.py           # categories/*.html landing pages
 python3 scripts/build-stats.py                # data/stats.json for hub
 ```
 
+Full review mode (dry run; see `../FULL-REVIEW-RUNBOOK.md`):
+
+```bash
+scripts/full-review-round.sh 25 [--include slug,slug]   # select -> fetch -> patch + HOLD (never applies)
+python3 scripts/test-full-review.py                     # offline gate tests
+python3 scripts/apply-full-review-patch.py PATCH.json   # dry run; --live only on Adam's GO
+```
+
 Output: `business/<slug>.html` via shared `assets/commerce.css` + `assets/commerce.js`.
 
 Proof pages: `methodology.html`, `directory.html`, `business/fit20-cosners-corner.html`, `business/allmans-bbq.html`.

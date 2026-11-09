@@ -212,6 +212,8 @@
   </div>
 
   <div id="coverageBody"></div>
+
+  <div id="fullReviewBody"></div>
 </div>
 
 <footer>
@@ -501,6 +503,43 @@
       el.innerHTML = '<section class="st-section"><div class="st-error">Failed to load ' +
         '<code>data/coverage-by-state.json</code>: ' + esc(err.message) + '.</div></section>';
     });
+})();
+</script>
+<script>
+// Full review (local-model evidence review of every politician) — counts only.
+// data/full-review-stats.json is written by scripts/full-review/build_patch.py; the review
+// patch and HOLD queue themselves are kept off the public site.
+(function(){
+  var el = document.getElementById('fullReviewBody');
+  if (!el) return;
+  function esc(s){ return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+  function fmt(n){ return (n||0).toLocaleString(); }
+  function card(label, value, sub){
+    return '<div class="st-card"><div class="label">' + esc(label) + '</div><div class="value">' + esc(value) +
+      '</div>' + (sub ? '<div class="sub">' + esc(sub) + '</div>' : '') + '</div>';
+  }
+  fetch('data/full-review-stats.json', { cache: 'no-cache' })
+    .then(function(r){ if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
+    .then(function(d){
+      var t = d.totals || {}, l = d.last_round || {};
+      var html = '<section class="st-section" id="full-review"><h2>Full review</h2>' +
+        '<p class="lead">Every politician re-read on local models against the published rubric. ' +
+        'A change needs a quote found word-for-word on the cited page; score changes and anything touching ' +
+        'a Fredericksburg or Virginia official wait for human QA before they are applied.' +
+        (l.dry_run ? ' The latest round was a dry run: nothing was applied.' : '') + '</p>';
+      html += '<div class="st-grid">' +
+        card('Reviewed', fmt(t.reviewed), 'politicians, all rounds') +
+        card('Changed', fmt(t.changed), 'politicians with a proposed change') +
+        card('Held', fmt(t.held), 'politicians with items waiting for QA') +
+        card('Applied', fmt(t.applied), 'changes written to the scorecard') +
+        '</div>';
+      html += '<p class="lead" style="font-size:0.8rem;">Latest round ' + esc(l.round || '\u2014') + ': ' +
+        fmt(l.reviewed) + ' reviewed, ' + fmt(l.changed) + ' changed, ' + fmt(l.held) + ' held, ' +
+        fmt(l.unreachable) + ' unreachable, ' + fmt(l.applied) + ' applied. Rounds: ' + fmt(t.rounds) +
+        (d._meta && d._meta.generated ? ' &middot; generated ' + esc(d._meta.generated) : '') + '.</p></section>';
+      el.innerHTML = html;
+    })
+    .catch(function(){ el.innerHTML = ''; });
 })();
 </script>
 <script>

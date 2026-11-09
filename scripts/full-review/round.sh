@@ -44,6 +44,14 @@ deadline() {
   echo "${FULL_REVIEW_DEADLINE:-$h}"
 }
 
+# ---- never take the lock in the grind's start window (:04-:10): let the :07 grind take it first
+MIN=$((10#$(date +%M)))
+if [ "$MIN" -ge 4 ] && [ "$MIN" -lt 10 ]; then
+  WAIT_S=$(( (10 - MIN) * 60 - 10#$(date +%S) ))
+  say "in the grind's start window — waiting ${WAIT_S}s so the :07 grind round starts first"
+  sleep "$WAIT_S"
+fi
+
 # ---- shared lock: wait for a running grind round, never steal it
 waited=0
 while ! mkdir "$LOCK" 2>/dev/null; do
@@ -83,9 +91,9 @@ echo "$SHA_BEFORE  data/scorecard.json" > "$RD/sha256-before.txt"
 
 if [ ! -f "$RD/batch.json" ]; then
   if [ -n "${FULL_REVIEW_SLUGS:-}" ]; then
-    $PY "$HERE/select.py" "$RD/batch.json" --batch "$BATCH" --slugs "$FULL_REVIEW_SLUGS" >>"$LOG" 2>&1 || { say "selector failed"; exit 1; }
+    $PY "$HERE/select_batch.py" "$RD/batch.json" --batch "$BATCH" --slugs "$FULL_REVIEW_SLUGS" >>"$LOG" 2>&1 || { say "selector failed"; exit 1; }
   else
-    $PY "$HERE/select.py" "$RD/batch.json" --batch "$BATCH" ${FULL_REVIEW_QUOTA:+--quota "$FULL_REVIEW_QUOTA"} >>"$LOG" 2>&1 || { say "selector failed"; exit 1; }
+    $PY "$HERE/select_batch.py" "$RD/batch.json" --batch "$BATCH" ${FULL_REVIEW_QUOTA:+--quota "$FULL_REVIEW_QUOTA"} >>"$LOG" 2>&1 || { say "selector failed"; exit 1; }
   fi
 fi
 

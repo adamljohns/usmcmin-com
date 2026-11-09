@@ -142,6 +142,15 @@ def html_to_text(raw):
     return t.strip()
 
 
+def html_to_text_full(raw):
+    """Every visible string on the page (tables, sidebars included) for name checks."""
+    raw = re.sub(r"<(script|style|noscript|svg|template)[^>]*>.*?</\1>", " ", raw or "", flags=re.S | re.I)
+    return re.sub(r"\s+", " ", htmlmod.unescape(re.sub(r"<[^>]+>", " ", raw))).strip()
+
+
+PLATFORM_URL = re.compile(r"platform|presidency\.ucsb\.edu/documents/\d{4}-(republican|democratic)", re.I)
+
+
 def sha(s):
     return hashlib.sha1(s.encode("utf-8", "replace")).hexdigest()[:16]
 
@@ -578,7 +587,8 @@ def own_domains(c):
 def page_names_person(text, c):
     first, last = name_parts(c.get("name"))
     t = norm(text)
-    if not last or norm(last) not in t:
+    # whole-word surname only: "Gill" must not match "Gillen"
+    if not last or not re.search(r"\b" + re.escape(norm(last)) + r"\b", t):
         return False
     nf, nl = norm(first), norm(last)
     # first name (or its first 3 letters, Rob/Robert) within two tokens of the surname, or "Last, First"
@@ -587,7 +597,7 @@ def page_names_person(text, c):
         return True
     # nickname / initial forms: surname next to a title word
     return bool(re.search(r"(rep\.|representative|senator|sen\.|delegate|del\.|mayor|councilm|supervisor|sheriff|"
-                          r"governor|judge|commissioner)\s+(\w+\s+){0,2}" + re.escape(norm(last)), t))
+                          r"governor|judge|commissioner)\s+(\w+\s+){0,2}" + re.escape(norm(last)) + r"\b", t))
 
 
 JOINT = re.compile(r"joint statement|joined (by )?(senators?|reps?\.|representatives?|colleagues)|along with (senators?|reps?\.|"
@@ -604,17 +614,18 @@ def scope_check(c, page_url, page_text, quote, context):
         return False, "page does not name this official (first + last name)", flags
     lq, lc = norm(quote), norm(context)
     first_person = bool(re.search(r"\b(i|i'm|i've|i'll|my|me)\b", lq))
-    names_them = norm(last) in lq or norm(last) in lc
+    sur = re.compile(r"\b" + re.escape(norm(last)) + r"\b")
+    names_them = bool(sur.search(lq) or sur.search(lc))
     if not own and not names_them:
         return False, "third-party page: quote and its context do not name this official", flags
-    if own and not (first_person or names_them or norm(last) in norm(page_text[:3000])):
+    if own and not (first_person or names_them or sur.search(norm(page_text[:3000]))):
         return False, "own-site page but passage is not attributable to this official", flags
     if JOINT.search(context or ""):
         flags.append("joint-statement")
     # another person's name as the actor right before the quote (predecessor / colleague)
     m = re.search(r"([A-Z][a-z]+ [A-Z][a-z]+)\s+(said|stated|introduced|sponsored|voted|wrote)\b",
                   (context or "")[:max(0, (context or "").find(quote[:20]))] if quote else "")
-    if m and norm(last) not in norm(m.group(1)):
+    if m and not sur.search(norm(m.group(1))):
         flags.append(f"other actor named: {m.group(1)}")
     return True, ("own site" if own else "names official"), flags
 

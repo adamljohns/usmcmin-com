@@ -53,7 +53,7 @@ EXTRACT_SYS = (
     "question's topic and must show THIS official's own position, vote, sponsored bill, or statement — not "
     "another person's, not a party's, not a predecessor's, not a general description of the office. "
     "(3) support = the official's record affirms the question as written; oppose = it contradicts it. "
-    "(4) Questions marked 'currently TRUE/FALSE' are a re-check: answer them too when a page speaks to them. "
+    "(4) Answer BLANK questions first; also answer ANSWERED questions when a page speaks to them (a re-check). "
     "(5) If unsure, leave the question out. A blank is fine; a wrong answer is not. Never infer from party. "
     "(6) Headings, menu labels, and slogans with no specific position do not count."
 )
@@ -136,6 +136,41 @@ def parse_house_dir(html):
     out = []
     for m in re.finditer(r'<a href="(https?://[a-z0-9-]+\.house\.gov/?)"[^>]*>\s*([^<]+?)\s*</a>', html, re.I):
         out.append({"url": m.group(1), "label": m.group(2).strip(), "snippet": m.group(0)})
+    return out
+
+
+VA_HOUSE = "https://house.vga.virginia.gov/members"
+VA_SENATE = "https://apps.senate.virginia.gov/Senator/index.php"
+
+
+def parse_va_house(html):
+    """Virginia House of Delegates member cards: name link + district, quoted as one raw slice."""
+    out = []
+    for m in re.finditer(r'aria_label="View profile for ([^"]+)" href="(/members/H\d+)">([^<]+)</a>', html):
+        tail = html[m.end():m.end() + 900]
+        d = re.search(r'District:</span>\s*(\d+)', tail)
+        last, _, first = m.group(3).partition(",")
+        snippet = html[m.start():m.end() + (d.end() if d else 0)]
+        out.append({"last": last.strip(), "first": first.strip().split(" ")[0], "state": "VA",
+                    "district": d.group(1) if d else None, "url": "https://house.vga.virginia.gov" + m.group(2),
+                    "snippet": snippet, "chamber": "house"})
+    return out
+
+
+def parse_va_senate(html):
+    out = []
+    for m in re.finditer(r'href="//apps\.senate\.virginia\.gov/Senator/memberpage\.php\?id=(S\d+)\s*">\s*([^<]+?)\s*</a>', html):
+        tail = html[m.end():m.end() + 1500]
+        d = re.search(r'District (\d+)', tail)
+        pty = re.search(r'<strong>Party:</strong>\s*(\w+)', tail)
+        end = max(d.end() if d else 0, pty.end() if pty else 0)
+        nm = m.group(2).strip()
+        parts = nm.replace(",", " ").split()
+        out.append({"last": parts[-1] if parts else nm, "first": next((x for x in parts if len(x.rstrip(".")) > 1), ""),
+                    "state": "VA", "district": d.group(1) if d else None,
+                    "party": {"Democrat": "D", "Republican": "R"}.get(pty.group(1) if pty else "", pty.group(1) if pty else None),
+                    "url": "https://apps.senate.virginia.gov/Senator/memberpage.php?id=" + m.group(1),
+                    "snippet": html[m.start():m.end() + end], "chamber": "senate"})
     return out
 
 
@@ -253,26 +288,45 @@ def review_one(b, c, ctx):
     st = (c.get("state") or "").upper()
     if tier == "federal":
         o = (c.get("office") or "").lower()
-        if re.search(r"u\.s\. house|u\.s\. rep|representative", o) and "candidate" not in o:
+        sitting = not re.search(r"candidate|nominee|challenger|primary|former|withdrew|suspended|lost|seeking|"
+                                r"attorney general|governor|secretary|ambassador|acting", o)
+        if sitting and re.match(r"\s*(u\.s\. house|u\.s\. rep|united states rep|representative\b)", o):
             row, how = match_member(ctx["clerk"], c)
             obs["roster"]["house_clerk"] = {"source": CLERK_XML, "matched": bool(row), "how": how,
                                             "row": {k: v for k, v in (row or {}).items() if k not in ("raw",)}}
             if row:
                 obs["roster"]["house_clerk"]["raw_block"] = row["raw"]
-            hd = [r for r in ctx["house_dir"] if L.norm(L.name_parts(c.get("name"))[1]) in L.norm(r["label"])]
-            if len(hd) == 1 or (row and [r for r in hd if L.norm(row["last"]) in L.norm(r["label"])]):
-                obs["roster"]["house_dir"] = {"source": HOUSE_DIR, "url": hd[0]["url"], "snippet": hd[0]["snippet"]}
-            elif hd:
-                obs["roster"]["house_dir"] = {"source": HOUSE_DIR, "ambiguous": [h["snippet"] for h in hd][:4]}
-        if re.search(r"u\.s\. senat|united states senat", o) and "candidate" not in o:
+            # exact "Last, First" match against the Clerk's own spelling (never a substring: Gill != Gillen)
+            if row:
+                want_last, want_first = L.norm(row["last"]), L.norm(row.get("first") or "")
+                hd = [r for r in ctx["house_dir"]
+                      if L.norm(r["label"].split(",")[0]) == want_last
+                      and L.norm(r["label"].split(",", 1)[-1]).strip().startswith(want_first[:3])]
+                if len(hd) == 1:
+                    obs["roster"]["house_dir"] = {"source": HOUSE_DIR, "url": hd[0]["url"], "snippet": hd[0]["snippet"]}
+                elif hd:
+                    obs["roster"]["house_dir"] = {"source": HOUSE_DIR, "ambiguous": [h["snippet"] for h in hd][:4]}
+        if sitting and re.match(r"\s*(u\.s\. senat|united states senat)", o):
             row, how = match_member(ctx["senate"], c)
             obs["roster"]["senate"] = {"source": SENATE_XML, "matched": bool(row), "how": how,
                                        "row": {k: v for k, v in (row or {}).items() if k != "raw"}}
             if row:
                 obs["roster"]["senate"]["raw_block"] = row["raw"]
 
+    # ---- official roster (Virginia General Assembly)
+    if st == "VA" and tier == "state":
+        o = (c.get("office") or "").lower()
+        key_, rows_, src_ = (("va_house", ctx["va_house"], VA_HOUSE) if re.search(r"delegate|house of del", o) else
+                             ("va_senate", ctx["va_senate"], VA_SENATE) if re.search(r"state senat", o) else (None, None, None))
+        if key_ and "candidate" not in o:
+            row, how = match_member(rows_, c)
+            obs["roster"][key_] = {"source": src_, "matched": bool(row), "how": how, "row": row}
+
     # ---- own pages
     web = c.get("website")
+    for k_ in ("va_house", "va_senate"):
+        if not web and (obs["roster"].get(k_) or {}).get("row"):
+            web = obs["roster"][k_]["row"]["url"]
     if not web and obs["roster"].get("house_dir", {}).get("url"):
         web = obs["roster"]["house_dir"]["url"]
     if not web and obs["roster"].get("senate", {}).get("row", {}).get("website"):
@@ -344,6 +398,9 @@ def review_one(b, c, ctx):
                 cited.setdefault(u, []).append(f"{cat}[{qi}]")
     n = 0
     for u, cells in cited.items():
+        if L.PLATFORM_URL.search(u):
+            obs["rechecks"].append({"url": u, "cells": cells, "skipped": "party-platform citation (tier 3; names no person by design)"})
+            continue
         if SKIP_RECHECK.search(u) or not u.startswith("http"):
             obs["rechecks"].append({"url": u, "cells": cells, "skipped": "aggregator/social/search page — not re-fetched"})
             continue
@@ -353,9 +410,14 @@ def review_one(b, c, ctx):
         n += 1
         rec = F.get(u)
         t = F.text(rec) if rec.get("ok") else ""
+        raw = F.raw(rec) if rec.get("ok") else ""
+        scripted = bool(t) and (len(t) < 2000 or bool(re.search(
+            r"__NEXT_DATA__|<app-root|ng-version|id=\"root\"></div>|id=\"app\"></div>", raw)))
         obs["rechecks"].append({"url": u, "cells": cells, "ok": rec.get("ok"), "status": rec.get("status"),
-                                "error": rec.get("error"), "fetched_url": rec.get("url"),
-                                "names_person": L.page_names_person(t, c) if t else None})
+                                "error": rec.get("error"), "fetched_url": rec.get("url"), "text_chars": len(t),
+                                "script_rendered": scripted,
+                                "names_person": (L.page_names_person(t, c) or L.page_names_person(L.html_to_text_full(raw), c))
+                                if t else None})
 
     # ---- the live usmcmin.com profile (what the public sees now; quoted by record-consistency flags)
     add_page(f"https://usmcmin.com/candidates/{st.lower()}/{c['slug']}.html", "usmcmin-profile")
@@ -389,15 +451,20 @@ def review_one(b, c, ctx):
             p["used_for_model"] = True
             chunks.append(f"[S{i}] {p['fetched_url']}\n{take}")
         qmap = {}
-        lines = []
-        for k, (cat, qi, q) in enumerate(qlist, 1):
+        blank, answered = [], []
+        for cat, qi, q in qlist:
             sc = (c.get("scores") or {}).get(cat, [None] * 5)
             cur = sc[qi] if qi < len(sc) else None
-            curs = {True: "currently TRUE", False: "currently FALSE"}.get(cur, "currently blank")
-            qmap[k] = (cat, qi, q)
-            lines.append(f"{k}. {q} ({curs})")
+            (blank if cur not in (True, False) else answered).append((cat, qi, q, cur))
+        lines_b, lines_a, k = [], [], 0
+        for cat, qi, q, cur in blank:
+            k += 1; qmap[k] = (cat, qi, q); lines_b.append(f"{k}. {q}")
+        for cat, qi, q, cur in answered:
+            k += 1; qmap[k] = (cat, qi, q); lines_a.append(f"{k}. {q} (stored: {'TRUE' if cur else 'FALSE'})")
         user = (f"OFFICIAL: {c.get('name')} — {c.get('office')} ({c.get('jurisdiction') or st})\n\n"
-                f"NUMBERED QUESTIONS:\n" + "\n".join(lines) + "\n\nSOURCE PAGES:\n" + "\n\n".join(chunks))
+                f"BLANK QUESTIONS (no answer stored yet — look for these first):\n" + ("\n".join(lines_b) or "(none)") +
+                f"\n\nANSWERED QUESTIONS (re-check against the pages):\n" + ("\n".join(lines_a) or "(none)") +
+                "\n\nSOURCE PAGES:\n" + "\n\n".join(chunks))
         try:
             ts = time.time()
             out = chat(lm, EXTRACT_MODEL, EXTRACT_SYS, user, max_tokens=2000, no_think=True)
@@ -476,12 +543,17 @@ def main():
     clerk = F.get(CLERK_XML, allow_archive=False)
     senate = F.get(SENATE_XML, allow_archive=False)
     hdir = F.get(HOUSE_DIR, allow_archive=False)
+    vah = F.get(VA_HOUSE, allow_archive=False)
+    vas = F.get(VA_SENATE, allow_archive=False)
     ctx = {"F": F, "rules": rules, "cats": sc["categories"], "rubrics": sc["meta"]["rubrics"], "lm": a.lm,
            "clerk": parse_clerk(F.raw(clerk)) if clerk.get("ok") else [],
            "senate": parse_senate(F.raw(senate)) if senate.get("ok") else [],
-           "house_dir": parse_house_dir(F.raw(hdir)) if hdir.get("ok") else []}
+           "house_dir": parse_house_dir(F.raw(hdir)) if hdir.get("ok") else [],
+           "va_house": parse_va_house(F.raw(vah)) if vah.get("ok") else [],
+           "va_senate": parse_va_senate(F.raw(vas)) if vas.get("ok") else []}
     print(f"rules pages loaded: {sum(loaded.values())}/{len(loaded)}  clerk rows={len(ctx['clerk'])} "
-          f"senate rows={len(ctx['senate'])} house.gov dir links={len(ctx['house_dir'])}", flush=True)
+          f"senate rows={len(ctx['senate'])} house.gov dir links={len(ctx['house_dir'])} "
+          f"VA house={len(ctx['va_house'])} VA senate={len(ctx['va_senate'])}", flush=True)
     od = os.path.join(rd, "obs")
     os.makedirs(od, exist_ok=True)
     done = pending = 0

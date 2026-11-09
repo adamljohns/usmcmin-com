@@ -86,8 +86,10 @@ def main():
         # The official site found on the official roster this round counts as the person's own site
         # for scope and ranking (e.g. a House member whose record has no website yet).
         c_orig = c
-        disc = (obs.get("roster", {}).get("house_dir") or {}).get("url") or \
-            ((obs.get("roster", {}).get("senate") or {}).get("row") or {}).get("website")
+        ro = obs.get("roster", {})
+        disc = (ro.get("house_dir") or {}).get("url") or ((ro.get("senate") or {}).get("row") or {}).get("website") \
+            or ((ro.get("va_house") or {}).get("row") or {}).get("url") \
+            or ((ro.get("va_senate") or {}).get("row") or {}).get("url")
         if disc and not c.get("website"):
             c = dict(c, website=disc)
         tier = L.tier_of(c)
@@ -212,6 +214,41 @@ def main():
                                              "old": c_orig.get("website"), "new": w, "kind": "contact",
                                              "evidence": {"quote": q, "url": url, "evidence_type": "xml_record",
                                                           "source_rank": 1}, "confidence": "high"})
+        # ---------------------------------------------------------------- roster (Virginia General Assembly)
+        for src_key in ("va_house", "va_senate"):
+            r = obs.get("roster", {}).get(src_key)
+            if not r:
+                continue
+            url = r["source"]
+            if not r.get("matched"):
+                if F.index.get(url, {}).get("ok"):
+                    P["flags"].append({"change_id": cid(), "kind": "flag", "field": "status",
+                                       "title": "not found on the official General Assembly member list — possible "
+                                                "out of office or wrong record",
+                                       "evidence": {"url": url, "quote": None, "evidence_type": "absence"},
+                                       "gate": "hold", "hold_reasons": ["out-of-office flag (Roy QA)"]})
+                continue
+            row = r["row"]
+            q = row.get("snippet")
+            if not (q and verified(q, url, raw=True)):
+                continue
+            ev = {"quote": q, "url": url, "evidence_type": "html_record", "source_rank": 1,
+                  "note": "official member list card (name link + district" +
+                          (" + party" if src_key == "va_senate" else "") + ")"}
+            rdist = str(c.get("district") or "").lstrip("0")
+            if row.get("district") and rdist and row["district"] != rdist:
+                P["changes"].append({"change_id": cid(), "field": "district", "op": "replace", "old": c.get("district"),
+                                     "new": row["district"], "kind": "roster", "evidence": ev, "confidence": "high"})
+            if row.get("party") in ("D", "R") and (c.get("party") or "")[:1].upper() != row["party"]:
+                P["changes"].append({"change_id": cid(), "field": "party", "op": "replace", "old": c.get("party"),
+                                     "new": row["party"], "kind": "roster", "evidence": ev, "confidence": "high"})
+            if L.domain(row["url"]) != L.domain(c_orig.get("website")) or not c_orig.get("website"):
+                if (c_orig.get("website") or "").rstrip("/") != row["url"]:
+                    P["changes"].append({"change_id": cid(), "field": "website",
+                                         "op": "fill" if not c_orig.get("website") else "replace",
+                                         "old": c_orig.get("website"), "new": row["url"], "kind": "contact",
+                                         "evidence": ev, "confidence": "high"})
+
         hd = obs.get("roster", {}).get("house_dir")
         if hd and hd.get("url") and L.domain(hd["url"]) != L.domain(c_orig.get("website")):
             q = hd.get("snippet")
@@ -260,8 +297,25 @@ def main():
             # keep only one proposal per field (first own-site html_link wins)
             if any(ch["field"] == fld for ch in P["changes"]):
                 continue
+            # store in the profile's own convention: twitter "@handle", facebook/instagram "handle",
+            # youtube channel id (the profile template builds the link from it)
+            h = s["url"].rstrip("/").split("/")[-1]
+            fmt_note = None
+            if fld == "profile.twitter":
+                newv = "@" + h.lstrip("@")
+            elif fld == "profile.youtube":
+                if "/channel/" in s["url"]:
+                    newv = h
+                elif old:
+                    P["dropped"].append({"field": fld, "new": s["url"], "url": s.get("page"),
+                                         "reason": "stored value is a channel id, page link is a handle: cannot tell if they differ"})
+                    continue
+                else:
+                    newv, fmt_note = s["url"], "youtube value is not a channel id; template link may need review"
+            else:
+                newv = h
             P["changes"].append({"change_id": cid(), "field": fld, "op": "fill" if not old else "replace", "old": old,
-                                 "new": s["url"], "kind": "contact",
+                                 "new": newv, "new_url": s["url"], "format_note": fmt_note, "kind": "contact",
                                  "evidence": {"quote": q, "url": s["page"], "evidence_type": s["evidence_type"],
                                               "source_rank": 2 if s.get("own_site") else 3},
                                  "confidence": "high" if s["evidence_type"] == "html_link" else "low"})
@@ -394,21 +448,32 @@ def main():
                                   "op": "research", "evidence": {"url": P["profile_url"], "quote": None,
                                   "note": "no footnote or claim backs these answers (scaffolding or lost citation)"},
                                   "gate": "hold", "hold_reasons": ["uncited answers"]})
+        P["citations_unread"] = []
         for r in obs.get("rechecks", []):
             if r.get("skipped"):
+                P["citations_unread"].append({"url": r["url"], "why": r["skipped"]})
                 continue
+            err = str(r.get("error") or "")
             if not r.get("ok"):
-                P["rechecks"].append({"change_id": cid(), "kind": "recheck", "field": "citations",
-                                      "title": f"cited source unreachable ({r.get('status') or r.get('error')})",
-                                      "cells": r["cells"], "evidence": {"url": r["url"], "quote": None},
-                                      "gate": "hold", "hold_reasons": ["citation re-check"]})
+                dead = r.get("status") in (404, 410) or "nodename nor servname" in err or "Name or service" in err
+                if dead:
+                    P["rechecks"].append({"change_id": cid(), "kind": "recheck", "field": "citations",
+                                          "title": f"cited source is dead ({r.get('status') or 'no such host'})",
+                                          "cells": r["cells"], "evidence": {"url": r["url"], "quote": None},
+                                          "gate": "hold", "hold_reasons": ["citation re-check"]})
+                else:   # blocked / timeout / pdf: not evidence of a problem, just not re-read this round
+                    P["citations_unread"].append({"url": r["url"], "why": err or f"HTTP {r.get('status')}"})
+            elif r.get("script_rendered"):
+                P["citations_unread"].append({"url": r["url"], "why": "script-rendered page; readable text too thin"})
             elif r.get("names_person") is False:
                 P["rechecks"].append({"change_id": cid(), "kind": "recheck", "field": "citations",
-                                      "title": "cited page does not name this official", "cells": r["cells"],
-                                      "evidence": {"url": r.get("fetched_url") or r["url"], "quote": None},
-                                      "gate": "hold", "hold_reasons": ["scope: citation not about this person"]})
+                                      "title": "cited page's readable text does not name this official",
+                                      "cells": r["cells"], "evidence": {"url": r.get("fetched_url") or r["url"],
+                                      "quote": None, "note": "searched the page text for the official's name "
+                                      "(first + last, Last, First, or title + surname)"},
+                                      "gate": "hold", "hold_reasons": ["scope: citation may not be about this person"]})
         for u, k in cited_count.items():
-            if k >= 3:
+            if k >= 3 and not L.PLATFORM_URL.search(u):
                 P["rechecks"].append({"change_id": cid(), "kind": "recheck", "field": "citations",
                                       "title": f"one source backs {k} answered cells", "evidence": {"url": u, "quote": None},
                                       "gate": "hold", "hold_reasons": ["over-application check"]})
@@ -417,10 +482,16 @@ def main():
         office = c.get("office") or ""
         if c.get("status") in ("active", None) and re.search(r"withdrew|suspended|did not make|not running|lost",
                                                              office, re.I):
+            prof_page = next((p for p in obs.get("pages", []) if p.get("role") == "usmcmin-profile" and p.get("ok")), None)
+            m_ = re.search(r"[^()·]*(withdrew|suspended|did not make|not running|lost)[^()·]*", office, re.I)
+            frag = (m_.group(0).strip(" ·") if m_ else office)
+            qv = L.exact_quote(frag, page_text(prof_page["fetched_url"])) if prof_page else None
             P["flags"].append({"change_id": cid(), "kind": "flag", "field": "status",
                                "title": "office text says withdrawn/suspended/lost but status is active",
-                               "evidence": {"url": P["profile_url"], "quote": office, "evidence_type": "record_text",
-                                            "note": "internal inconsistency in the record; needs an external source"},
+                               "evidence": {"url": P["profile_url"], "quote": qv, "evidence_type": "page_text",
+                                            "record_status": c.get("status"),
+                                            "note": "the published profile prints this office text while the record's "
+                                                    "status is active; needs an external source before any change"},
                                "rule": rules.general("currency"), "gate": "hold",
                                "hold_reasons": ["out-of-office / candidacy currency (Roy QA)"]})
         if name_index[(L.norm(c.get("name")), (c.get("state") or "").upper())] > 1:
@@ -475,12 +546,20 @@ def main():
                     reasons.append("not an auto-apply field (auto: website, term dates, office phone)")
             if ch["confidence"] != "high":
                 reasons.append(f"confidence {ch['confidence']}")
+            if ch.get("format_note"):
+                reasons.append(ch["format_note"])
             if ch["evidence"].get("evidence_type") in ("site-config", "archive_copy"):
                 reasons.append(f"evidence type {ch['evidence']['evidence_type']}")
             ch["gate"] = "hold" if reasons else "auto"
             ch["hold_reasons"] = sorted(set(reasons))
 
-        P["status"] = "reviewed" if obs.get("reachable") else "unreachable"
+        # reachable = at least one page other than our own profile that names this official, or an
+        # official roster row matched; otherwise nothing about the person could be read this round
+        named = [p for p in obs.get("pages", []) if p.get("ok") and p.get("role") not in ("usmcmin-profile",)
+                 and L.page_names_person(page_text(p.get("fetched_url")), c)]
+        roster_hit = any(isinstance(v, dict) and v.get("matched") for v in obs.get("roster", {}).values())
+        P["status"] = "reviewed" if (named or roster_hit) else "unreachable"
+        P["pages_naming_official"] = len(named)
         P["counts"] = {"changes": len(P["changes"]), "auto": sum(ch["gate"] == "auto" for ch in P["changes"]),
                        "hold_changes": sum(ch["gate"] == "hold" for ch in P["changes"]),
                        "rulings": sum(f["kind"] == "ruling" for f in P["flags"]),
@@ -542,7 +621,10 @@ def main():
     led = L.load_json(lp, {}) or {}
     for p in pols:
         if p.get("status") in ("reviewed", "unreachable"):
-            led[p["key"]] = {"last_round": rid, "status": p["status"], "dry_run": True}
+            led[p["key"]] = {"last_round": rid, "status": p["status"], "dry_run": True,
+                             "changed": bool(p.get("changes")),
+                             "held": any(ch["gate"] == "hold" for ch in p.get("changes", [])) or bool(p.get("flags"))
+                             or bool(p.get("rechecks"))}
     L.dump_json(lp, led)
 
     # public dashboard counts (no names, no evidence)
@@ -553,9 +635,13 @@ def main():
                      "Evidence and HOLD items are kept off the public site."},
            "last_round": {k: summary[k] for k in ("round", "dry_run", "reviewed", "changed", "held", "unreachable",
                                                     "applied", "auto_would_apply")},
+           # distinct politicians, latest review each (re-running a politician does not double count)
            "totals": {"rounds": len(hist), "dry_run_rounds": sum(1 for h in hist if h["dry_run"]),
-                      "reviewed": sum(h["reviewed"] for h in hist), "changed": sum(h["changed"] for h in hist),
-                      "held": sum(h["held"] for h in hist), "applied": sum(h["applied"] for h in hist)}}
+                      "reviewed": sum(1 for v in led.values() if v.get("status") == "reviewed"),
+                      "unreachable": sum(1 for v in led.values() if v.get("status") == "unreachable"),
+                      "changed": sum(1 for v in led.values() if v.get("changed")),
+                      "held": sum(1 for v in led.values() if v.get("held")),
+                      "applied": sum(h["applied"] for h in hist)}}
     L.dump_json(L.PUBLIC_STATS, pub)
     print(json.dumps(summary, indent=1))
 

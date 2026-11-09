@@ -67,6 +67,18 @@ class Scope(unittest.TestCase):
         ok, why, _ = L.scope_check(CLINE, "https://news.example.com/x", page, "abortion should be legal", page)
         self.assertFalse(ok)  # page never names Ben Cline
 
+    def test_surname_inside_longer_name_is_not_a_match(self):
+        # Brandon Gill must not match Representative Laura Gillen's site
+        gill = {"name": "Brandon Gill", "state": "TX"}
+        self.assertFalse(L.page_names_person("Representative Laura Gillen serves New York's 4th district.", gill))
+        self.assertTrue(L.page_names_person("Rep. Brandon Gill (TX-26) introduced the bill.", gill))
+
+    def test_house_dir_exact_label(self):
+        rows = FE.parse_house_dir('<a href="https://gillen.house.gov/">Gillen, Laura</a>'
+                                  '<a href="https://gill.house.gov/">Gill, Brandon</a>')
+        exact = [r for r in rows if L.norm(r["label"].split(",")[0]) == "gill"]
+        self.assertEqual([r["url"] for r in exact], ["https://gill.house.gov/"])
+
     def test_third_party_must_name_them(self):
         page = "Ben Cline spoke Tuesday. Separately, the governor said guns must be registered statewide now."
         ok, why, _ = L.scope_check(CLINE, "https://news.example.com/x", page,

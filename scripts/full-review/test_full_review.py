@@ -105,6 +105,23 @@ class Scope(unittest.TestCase):
         self.assertEqual(s[0]["evidence_type"], "site-config")
 
 
+class Coverage(unittest.TestCase):
+    Q = "Candidate supports photo voter ID with citizenship verification"
+
+    def test_citizenship_only_is_partial(self):
+        cov, miss = L.coverage("election_integrity", 1, self.Q,
+                               "The SAVE Act ensures only American citizens vote in American elections.")
+        self.assertEqual((cov, miss), (["citizenship verification"], ["photo voter ID"]))
+
+    def test_both_parts_covered(self):
+        _, miss = L.coverage("election_integrity", 1, self.Q,
+                             "I support requiring a photo ID and proof of citizenship to vote.")
+        self.assertEqual(miss, [])
+
+    def test_single_part_question_not_compound(self):
+        self.assertEqual(L.coverage("self_defense", 0, "Candidate supports constitutional carry", "x"), ([], []))
+
+
 class Rank(unittest.TestCase):
     def test_order(self):
         self.assertEqual(L.source_rank("https://clerk.house.gov/Votes/2025123", CLINE)[0], 1)

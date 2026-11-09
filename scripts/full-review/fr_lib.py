@@ -546,6 +546,92 @@ def on_topic(cat, qi, verdict, quote):
     return (bool(hits), hits[:3] if hits else "quote has no word on this question's topic")
 
 
+# ----------------------------------------------------------------------------- multi-part coverage
+# Compound rubric questions ("photo voter ID WITH citizenship verification") need evidence for every part
+# before a TRUE counts, for a new fill AND for re-confirming a stored TRUE. Each part: (label, regex that
+# shows the part is in THIS tier's question text, regex the evidence quote must match). Parts whose
+# question regex does not match the tier wording are skipped, so state/local variants are judged on their
+# own wording. Deterministic; the second model's full_standard answer is an extra check, not the only one.
+_P = lambda label, q, e: (label, re.compile(q, re.I), re.compile(e, re.I))
+PARTS = {
+    ("sanctity_of_life", 0): [_P("life from conception", r"conception", r"concep|life begins|fertiliz"),
+                              _P("personhood", r"personhood", r"personhood|\bpersons?\b|human being")],
+    ("sanctity_of_life", 2): [_P("embryonic stem-cell research", r"stem[- ]cell", r"stem[- ]cell"),
+                              _P("IVF embryo discard", r"ivf", r"\bivf\b|in vitro|embryo"),
+                              _P("chimeric experimentation", r"chimer", r"chimer")],
+    ("sanctity_of_life", 3): [_P("euthanasia", r"euthanas", r"euthanas"),
+                              _P("assisted suicide", r"assisted suicide|physician", r"assisted (suicide|death|dying)|aid in dying"),
+                              _P("quality-of-life rationing", r"rationing", r"ration")],
+    ("biblical_marriage", 1): [_P("same-sex marriage", r"same-sex marriage|recognition of same-sex", r"same[- ]sex|gay marriage|marriage equality|respect for marriage|obergefell"),
+                               _P("civil unions", r"civil union", r"civil union"),
+                               _P("domestic partnerships", r"domestic partner", r"domestic partner")],
+    ("family_child_sovereignty", 0): [_P("school choice", r"school choice|school-choice", r"school choice|voucher|education savings|\besas?\b|charter|tuition"),
+                                      _P("homeschool freedom", r"homeschool", r"home[- ]?school")],
+    ("family_child_sovereignty", 1): [_P("parental notification", r"notification", r"notif|notify|inform\w* parents|parents? (know|be told)"),
+                                      _P("parental consent", r"consent", r"consent")],
+    ("family_child_sovereignty", 3): [_P("age verification", r"age-verification|age verification", r"age[- ]verif"),
+                                      _P("criminal penalties", r"criminal penalt", r"criminal|penalt|prosecut|felony")],
+    ("family_child_sovereignty", 4): [_P("faith-based adoption/foster agencies", r"faith-based adoption", r"faith|religious|church"),
+                                      _P("placement with same-sex couples", r"same-sex couples", r"same[- ]sex")],
+    ("economic_stewardship", 0): [_P("opposes a CBDC", r"cbdc|central bank digital", r"cbdc|central bank digital|digital (dollar|currency)"),
+                                  _P("cash/crypto as legal tender", r"cash", r"\bcash\b|crypto|bitcoin|legal tender")],
+    ("economic_stewardship", 1): [_P("gold/silver money", r"gold", r"\bgold\b|silver|sound money"),
+                                  _P("audit/abolish the Fed", r"federal reserve", r"federal reserve|audit the fed|end the fed")],
+    ("economic_stewardship", 2): [_P("opposes deficit spending", r"deficit", r"deficit|debt|spending|borrow"),
+                                  _P("balanced-budget amendment", r"balanced-budget|balanced budget", r"balanced[- ]budget")],
+    ("election_integrity", 0): [_P("hand-counted paper ballots", r"hand-count|paper ballot", r"paper ballot|hand[- ]count"),
+                                _P("opposes electronic voting machines", r"machine|electronic", r"machine|electronic|tabulator")],
+    ("election_integrity", 1): [_P("photo voter ID", r"photo|voter id", r"photo|voter id|\bid\b|identification"),
+                                _P("citizenship verification", r"citizenship", r"citizen|save act")],
+    ("election_integrity", 2): [_P("single-day in-person voting", r"single-day|early-voting|early voting", r"single[- ]day|election day|early voting|in[- ]person"),
+                                _P("absentee limited to verified exceptions", r"absentee", r"absentee")],
+    ("election_integrity", 3): [_P("mail-in voting", r"mail-in|mail", r"mail"),
+                                _P("drop boxes", r"drop box|drop-box", r"drop[- ]?box"),
+                                _P("ballot harvesting", r"harvest", r"harvest")],
+    ("election_integrity", 4): [_P("private election funding", r"private", r"private|zuckerbucks|ctcl|grant"),
+                                _P("foreign election interference", r"foreign", r"foreign")],
+    ("border_immigration", 0): [_P("physical border barrier", r"barrier|wall", r"wall|barrier|fence"),
+                                _P("military border presence", r"military", r"military|national guard|troops")],
+    ("border_immigration", 1): [_P("mandatory deportation", r"deportation", r"deport|remov"),
+                                _P("including those who entered as minors", r"minors", r"minor|daca|dreamer|child")],
+    ("border_immigration", 2): [_P("opposes sanctuary policies", r"sanctuary", r"sanctuary"),
+                                _P("federal preemption", r"preemption|preempt", r"preempt|federal law|punish|ban")],
+    ("border_immigration", 3): [_P("E-Verify for employment", r"employment", r"employ|work|hire|e-?verify"),
+                                _P("E-Verify for benefit eligibility", r"benefit", r"benefit")],
+    ("border_immigration", 4): [_P("ends birthright citizenship", r"birthright", r"birthright"),
+                                _P("foreign ownership of farmland", r"farmland", r"farmland|land")],
+    ("self_defense", 1): [_P("red-flag laws", r"red-flag|red flag", r"red[- ]flag"),
+                          _P("magazine limits", r"magazine", r"magazine"),
+                          _P("assault-weapon bans", r"assault", r"assault"),
+                          _P("gun registries", r"registr", r"registr")],
+    ("self_defense", 2): [_P("repeal of the NFA", r"national firearms act|\bnfa\b", r"\bnfa\b|national firearms act"),
+                          _P("repeal of the GCA", r"gun control act|\bgca\b", r"\bgca\b|gun control act")],
+    ("self_defense", 3): [_P("castle doctrine", r"castle", r"castle"),
+                          _P("stand-your-ground", r"stand-your-ground|stand your ground", r"stand[- ]your[- ]ground")],
+    ("self_defense", 4): [_P("ATF overreach", r"\batf\b", r"\batf\b"),
+                          _P("U.N. small-arms treaty", r"treaty", r"treaty|united nations|\bu\.n\.")],
+    ("foreign_policy_restraint", 1): [_P("withdrawal from forever wars", r"forever wars|withdrawal", r"withdraw|forever war|endless war|troops home"),
+                                      _P("repeal of standing AUMFs", r"aumf", r"\baumf|authorization for (the )?use of military force")],
+    ("foreign_policy_restraint", 4): [_P("WHO", r"\bwho\b", r"\bwho\b|world health"),
+                                      _P("U.N. governance overreach", r"u\.n\.|united nations", r"\bu\.n\.|united nations"),
+                                      _P("NATO expansion", r"nato", r"\bnato\b")],
+    ("industry_capture", 0): [_P("opposes pharmaceutical mandates", r"mandate", r"mandat"),
+                              _P("informed consent", r"informed consent", r"informed consent|consent|medical freedom")],
+}
+
+
+def coverage(cat, qi, question, quote):
+    """-> (covered_labels, missing_labels). Both empty when the cell is not compound for this wording."""
+    covered, missing = [], []
+    for label, qrx, erx in PARTS.get((cat, qi), []):
+        if not qrx.search(question or ""):
+            continue
+        (covered if erx.search(quote or "") else missing).append(label)
+    if len(covered) + len(missing) < 2:
+        return [], []
+    return covered, missing
+
+
 SLOGAN = re.compile(r"^\W*(fighting for (families|you|our)|common[- ]sense|freedom\W*$|liberty\W*$|"
                     r"putting (people|families|virginia|america) first|working for you)", re.I)
 
@@ -642,7 +728,7 @@ def scope_check(c, page_url, page_text, quote, context):
 ROLLCALL = re.compile(r"clerk\.house\.gov/(evs|votes)|senate\.gov/legislative/lis/roll_call|lis\.virginia\.gov/.*vote|"
                       r"/roll-?call", re.I)
 SPONSOR = re.compile(r"congress\.gov/bill/|lis\.virginia\.gov/bill-details|lis\.virginia\.gov/cgi-bin/legp604", re.I)
-ORGS = re.compile(r"sbaprolife|nrapvf|nra-?ila|ivoterguide|vote411|heritageaction|plannedparenthood|hrc\.org|"
+ORGS = re.compile(r"sbaprolife|nrapvf|nra-?ila|ivoterguide|vote411|heritageaction|plannedparenthood|hrc\.org|victoryfund|"
                   r"emilyslist|reproductivefreedom|everytown|momsdemand|giffords", re.I)
 NEWS = re.compile(r"ballotpedia|wikipedia|patch\.com|fxbgadvance|freelancestar|fredericksburg\.com|richmond\.com|"
                   r"virginiamercury|cardinalnews|apnews|thehill|washingtonpost|nytimes|politico|vpap", re.I)
@@ -665,7 +751,7 @@ def source_rank(url, c):
     if (camp and d == camp) or d in own_domains(c):
         return 3, "campaign / personal site"
     if ORGS.search(d):
-        return 4, "endorsing / rating organization"
+        return 4, "endorsing / rating organization's own page"
     if govish:
         return 2, "government page naming the official"
     return 5, "news / aggregator"

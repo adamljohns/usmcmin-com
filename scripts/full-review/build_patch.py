@@ -357,9 +357,11 @@ def main():
                 P["dropped"].append({**base, "reason": f"cross-check: {ccs or cc}"}); continue
             rule = rules.for_cell(cat, qi, pr["question"])
             rank, rank_why = L.source_rank(url, c)
-            partial = stance == "support" and not ccs["full_standard"].startswith("YES")
+            # multi-part coverage: a TRUE needs evidence for every part of a compound question
+            covered, missing = L.coverage(cat, qi, pr["question"], q) if stance == "support" else ([], [])
+            partial = stance == "support" and (bool(missing) or not ccs["full_standard"].startswith("YES"))
             item = {"cat": cat, "qi": qi, "cell": cell, "verdict": stance == "support", "quote": q, "url": url,
-                    "partial": partial,
+                    "partial": partial, "covered": covered, "missing": missing,
                     "context": ctx, "rule": rule, "rank": rank, "rank_why": rank_why, "scope": swhy,
                     "scope_flags": sflags, "crosscheck": ccs, "archive": "web.archive.org" in url}
             cand.setdefault((cat, qi), []).append(item)
@@ -382,10 +384,22 @@ def main():
                                    "evidence": ev, "evidence_more": more, "gate": "hold",
                                    "hold_reasons": ["conflicting evidence"]})
                 continue
+            if cur == best["verdict"] and best.get("partial"):
+                # same direction, but the evidence covers only part of the compound question: it does NOT
+                # confirm the stored answer. The answer is left untouched; Roy re-checks its citation.
+                only = ", ".join(best.get("covered") or []) or "part of the rule (second-model full-standard check)"
+                P["rechecks"].append({"change_id": cid(), "kind": "citation-recheck", "field": field,
+                                      "title": f"evidence covers only: {only}", "value": cur,
+                                      "missing": best.get("missing") or None, "evidence": ev, "rule": best["rule"],
+                                      "existing_citations": L.cell_citations(c, cat, qi),
+                                      "op": "research", "gate": "hold",
+                                      "hold_reasons": ["re-confirmation covers only part of a compound question; "
+                                                       "stored answer left as is"]})
+                continue
             if cur == best["verdict"]:
-                # re-check agrees with the stored answer: recorded, never a change
+                # re-check agrees with the stored answer on every part: recorded, never a change
                 P["confirms"].append({"field": field, "value": cur, "evidence": ev, "rule": best["rule"],
-                                      "partial": best.get("partial"), "source_rank": best["rank"]})
+                                      "partial": False, "source_rank": best["rank"]})
                 continue
             if quote_uses[L.norm(best["quote"])] >= L.MAX_CELLS_PER_QUOTE:
                 P["dropped"].append({"cell": best["cell"], "quote": best["quote"], "url": best["url"],
@@ -396,6 +410,24 @@ def main():
                                    "title": "needs-ruling: this cell's question text is not on the published rubric page",
                                    "evidence": ev, "proposed": best["verdict"], "gate": "hold",
                                    "hold_reasons": ["no published rule text"]})
+                continue
+            endorse = best["rank"] == 4 and re.search(r"endors", (best["quote"] + " " + best["context"]), re.I)
+            if endorse:
+                hard = rules.find(L.METHOD_URL, "A Susan B. Anthony Pro-Life or NRA endorsement \u2014 or a Planned "
+                                  "Parenthood or Human Rights Campaign one \u2014 is hard evidence of where someone "
+                                  "stands, and we cite it")
+                P["flags"].append({"change_id": cid(), "kind": "ruling", "field": field,
+                                   "title": f"needs-ruling: endorsement on the endorsing organization's own page "
+                                            f"supports {best['verdict']}",
+                                   "evidence": ev, "rule": best["rule"], "proposed": best["verdict"], "gate": "hold",
+                                   "note": ("The methodology's 'Candidates Without a Voting Record' section treats "
+                                            "accepted endorsements as hard evidence"
+                                            + (f": \"{hard}\" ({L.METHOD_URL})." if hard else ".")
+                                            + " This page shows the organization endorsed the official; it does not "
+                                              "show the official accepting it, and the quote states the "
+                                              "organization's criteria, not the official's words."),
+                                   "endorsement_rule": {"text": hard, "url": L.METHOD_URL} if hard else None,
+                                   "hold_reasons": ["endorsement: acceptance and fit to this question need a ruling"]})
                 continue
             if best["rank"] >= 5:
                 P["flags"].append({"change_id": cid(), "kind": "ruling", "field": field,

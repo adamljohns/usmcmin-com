@@ -596,8 +596,16 @@ def page_names_person(text, c):
                   or re.search(r"\b" + re.escape(nl) + r",\s*" + re.escape(nf[:3]), t)):
         return True
     # nickname / initial forms: surname next to a title word
-    return bool(re.search(r"(rep\.|representative|senator|sen\.|delegate|del\.|mayor|councilm|supervisor|sheriff|"
+    return bool(re.search(r"(rep\.|representatives?|senators?|sen\.|delegates?|del\.|mayor|councilm|supervisor|sheriff|"
                           r"governor|judge|commissioner)\s+(\w+\s+){0,2}" + re.escape(norm(last)) + r"\b", t))
+
+
+def surname_on_page(text, c):
+    """Citation re-check test: does the cited page carry this official's surname as a whole word anywhere
+    (roll calls and bill pages list members by surname only)? Weaker than page_names_person on purpose:
+    it asks only whether the citation could be about this person."""
+    _, last = name_parts(c.get("name"))
+    return bool(last) and bool(re.search(r"\b" + re.escape(norm(last)) + r"\b", norm(text)))
 
 
 JOINT = re.compile(r"joint statement|joined (by )?(senators?|reps?\.|representatives?|colleagues)|along with (senators?|reps?\.|"

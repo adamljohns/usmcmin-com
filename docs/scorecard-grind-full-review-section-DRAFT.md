@@ -12,7 +12,7 @@ fill blanks), contact fields, and the citations already on the record. Principal
 2026-11-08. Same standard as the church full review. Ticket:
 `~/.openclaw/workspace/scorecard-full-review-strike-ticket-2026-11-09.md`.
 
-**Code:** `usmcmin-com/scripts/full-review/` — `select.py` (order), `fetch.py` (pages + local models),
+**Code:** `usmcmin-com/scripts/full-review/` — `select_batch.py` (order), `fetch.py` (pages + local models),
 `build_patch.py` (deterministic gates, patch, HOLD queue, public counts), `apply.py` (not run live
 without Adam's go), `round.sh` (orchestrator), `test_full_review.py` (gate tests).
 
@@ -34,8 +34,9 @@ than 3 cited cells or no headline letter; (d) the rest. Never-reviewed first, th
 
 **Shares the grind lock.** `round.sh` takes `/tmp/scorecard-refine-local.lock` (the grind's own mkdir lock;
 owner noted in `/tmp/scorecard-refine-local.lock.owner`). It waits for a running grind round (up to 25 min),
-stops taking new politicians at HH:00 and releases the lock before the grind's HH:07 start, then resumes on
-the next call. It never holds the lock through a grind start except if one politician overruns (one round).
+never starts between :04 and :10 (lets the :07 grind take the lock first), stops taking new politicians at
+HH:00 and releases the lock before the grind's HH:07 start, then resumes on the next call. A detached guardian
+frees the lock if the round is killed (the grind has no stale-lock check). Worst case one grind round skipped.
 
 **Models (no cloud, no paid API):** LM Studio `127.0.0.1:1234`. `qwen/qwen3.6-35b-a3b` (no-think) proposes;
 `gemma-4-31b-it` cross-checks each surviving quote: on topic? right direction? about THIS official? meets the

@@ -24,7 +24,7 @@ The patch and HOLD files are deliberately NOT in the repo (the repo root deploys
 | Round log | `~/Library/Logs/scorecard-full-review.log` |
 | Public counts (the only thing that goes on the site) | `data/full-review-stats.json` in the worktree; panel on `stats.html` |
 
-ROUND_ID for the dry run: see "Dry run" at the end of this file.
+ROUND_ID for the dry run: `fr-20261109-0728` (see "Dry run" at the end of this file).
 
 ## How a change maps to its evidence
 
@@ -110,8 +110,26 @@ All three must be identical.
 
 ## Suggested spread for the 10
 
-At least one Fredericksburg official (term dates from the city page), one Virginia General Assembly roster
-item, one House Clerk XML fact (term start / phone), one house.gov directory website fill, one social link
-from an official site, at least two score changes (if the round produced them; otherwise two `confirms` or
-`needs-ruling` rows, judged as "is the hold right"), one citation re-check row (open the cited URL and look
-for the name), and one out-of-office / currency flag.
+The dry run proposed 20 changes (10 auto, 10 hold) and no score changes: every score finding the gates kept
+matched the stored answer (14 `confirms`) or went to `needs-ruling` (1). So the 10 should be drawn from
+`changes[]` first, then HOLD rows judged as "is this hold right":
+
+- both Virginia General Assembly website fills (`joshua-cole@VA`, `l-louise-lucas@VA`; `html_record`)
+- two House Clerk `profile.term_start` fills (`xml_record`), e.g. `august-pfluger@TX`, `brett-guthrie@KY`
+- two house.gov directory website fills (`html_link`), e.g. `brandon-gill@TX` (must be gill.house.gov,
+  not gillen.house.gov), `brendan-boyle@PA`
+- two social fills/replaces from official sites, e.g. `brandon-gill@TX` facebook replace and one instagram fill
+- `joshua-cole@VA` facebook fill (link on the official delegate page)
+- one HOLD row: the `james-osyf@VA` currency flag (is "SUSPENDED Dec 2025" on the live profile while the
+  record says active?) or his `needs-ruling` row (is holding it right?), or a citation re-check row (open the
+  cited URL and search for the surname)
+
+Score evidence you can also spot-check (not changes): `politicians[].confirms[]`, each with `evidence` and
+the published `rule`.
+
+## Dry run
+
+ROUND_ID = `fr-20261109-0728` (25 politicians: 10 Fredericksburg/Virginia, 10 federal; same batch as the
+superseded round `fr-20261109-0648`, which was re-run after fixes and is kept for comparison only).
+scorecard.json sha256 before and after:
+`1442bbdeec0fb5c5f7700c5019004601d86b7cc48c88bfbc39306af58cce6951`.

@@ -133,8 +133,12 @@ def parse_senate(xml):
 
 def parse_house_dir(html):
     """house.gov/representatives table rows: <a href="https://x.house.gov/">Last, First</a> per state."""
-    out = []
+    out, seen = [], set()
     for m in re.finditer(r'<a href="(https?://[a-z0-9-]+\.house\.gov/?)"[^>]*>\s*([^<]+?)\s*</a>', html, re.I):
+        k = (m.group(1).rstrip("/"), m.group(2).strip())
+        if k in seen:      # the directory lists every member twice (by state and A-Z)
+            continue
+        seen.add(k)
         out.append({"url": m.group(1), "label": m.group(2).strip(), "snippet": m.group(0)})
     return out
 
@@ -416,8 +420,7 @@ def review_one(b, c, ctx):
         obs["rechecks"].append({"url": u, "cells": cells, "ok": rec.get("ok"), "status": rec.get("status"),
                                 "error": rec.get("error"), "fetched_url": rec.get("url"), "text_chars": len(t),
                                 "script_rendered": scripted,
-                                "names_person": (L.page_names_person(t, c) or L.page_names_person(L.html_to_text_full(raw), c))
-                                if t else None})
+                                "names_person": L.surname_on_page(L.html_to_text_full(raw), c) if t else None})
 
     # ---- the live usmcmin.com profile (what the public sees now; quoted by record-consistency flags)
     add_page(f"https://usmcmin.com/candidates/{st.lower()}/{c['slug']}.html", "usmcmin-profile")

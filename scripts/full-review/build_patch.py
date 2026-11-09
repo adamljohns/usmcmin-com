@@ -284,6 +284,11 @@ def main():
             fld = SOCIAL_FIELD.get(host)
             if not fld:
                 continue
+            if s["evidence_type"] == "site-config" and not s.get("handle_names_person"):
+                P["dropped"].append({"field": fld, "new": s["url"], "url": s.get("page"),
+                                     "reason": "site-config link whose handle does not name this official "
+                                               "(embedded widget for another account)"})
+                continue
             if not (s.get("own_site") or s.get("handle_names_person")):
                 P["dropped"].append({"field": fld, "new": s["url"], "reason": "shared site link that does not name "
                                      "this official (e.g. the city's own account)", "url": s.get("page")})
@@ -312,6 +317,9 @@ def main():
                     continue
                 else:
                     newv, fmt_note = s["url"], "youtube value is not a channel id; template link may need review"
+            elif fld == "profile.facebook":
+                # template links facebook.com/<value>: keep the whole path (e.g. people/Name/123)
+                newv = re.sub(r"^https?://(www\.)?facebook\.com/", "", s["url"]).strip("/")
             else:
                 newv = h
             P["changes"].append({"change_id": cid(), "field": fld, "op": "fill" if not old else "replace", "old": old,
@@ -465,12 +473,13 @@ def main():
                     P["citations_unread"].append({"url": r["url"], "why": err or f"HTTP {r.get('status')}"})
             elif r.get("script_rendered"):
                 P["citations_unread"].append({"url": r["url"], "why": "script-rendered page; readable text too thin"})
-            elif r.get("names_person") is False:
+            elif r.get("names_person") is False and not L.surname_on_page(
+                    L.html_to_text_full(page_raw(r.get("fetched_url") or r["url"])), c):
                 P["rechecks"].append({"change_id": cid(), "kind": "recheck", "field": "citations",
-                                      "title": "cited page's readable text does not name this official",
+                                      "title": "cited page does not carry this official's surname anywhere",
                                       "cells": r["cells"], "evidence": {"url": r.get("fetched_url") or r["url"],
-                                      "quote": None, "note": "searched the page text for the official's name "
-                                      "(first + last, Last, First, or title + surname)"},
+                                      "quote": None, "note": "searched every visible string on the page for the "
+                                      "surname as a whole word"},
                                       "gate": "hold", "hold_reasons": ["scope: citation may not be about this person"]})
         for u, k in cited_count.items():
             if k >= 3 and not L.PLATFORM_URL.search(u):

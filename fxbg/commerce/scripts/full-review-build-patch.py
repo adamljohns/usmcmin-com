@@ -78,7 +78,7 @@ class Builder:
         self.src = src
         self.recovered = bool(src) and src is not obs
         self.pages = [dict(p, norm=fr.nrm(p["text"])) for p in (src.get("pages") or [])]
-        self.multi = src.get("multi_location")
+        self.multi = fr.detect_multi(self.pages, src.get("raw_flags")) or src.get("multi_location")
         self.site_identity = src.get("site_identity") or []
         self.tags = osm_tags_for(biz, osm)
         self.chain = bool(self.tags.get("brand") or self.tags.get("brand:wikidata"))
@@ -99,14 +99,26 @@ class Builder:
             return False, "page not in fetched set"
         if not self.site_identity:
             return False, "site never prints this listing's street, ZIP or phone"
-        if self.multi or self.chain:
-            if not page["identity"]:
-                return False, "multi-location/chain site: page does not print this location's street or phone"
-            if len(self.other_streets(page)) >= 1 and not any(h.startswith(("street:", "phone")) for h in page["identity"]):
-                return False, "multi-location page names other addresses"
-            if len(self.other_streets(page)) >= 2:
-                return False, "multi-location page lists several locations (not this location's own subpage)"
         return True, ""
+
+    def location_reasons(self, quote: str, url: str, etype: str) -> list[str]:
+        """Location gate. Auto needs the exact page holding the quote to print the stored street
+        or ZIP (a shared phone, or nothing, is not location identity). On a multi-location or
+        chain site the evidence must also come from this location's own page or section."""
+        page = next((p for p in self.pages if p["url"] == url), None)
+        if not page:
+            return ["evidence page not in the fetched set"]
+        out = []
+        if not fr.location_identity(self.biz, page["text"]):
+            out.append("location gate: the page holding the quote does not print the stored street or the stored ZIP in an address "
+                       f"(page identity: {', '.join(page['identity']) or 'none'}; a shared phone or a service-area ZIP list is not location identity)")
+        if self.multi or self.chain:
+            own = fr.own_location(self.biz, page["text"], quote) if etype == "html_text" else (
+                "own-page" if fr.own_location(self.biz, page["text"], "") == "own-page" else None)
+            if not own:
+                out.append("multi-location/chain site: evidence is not from this location's own page or section"
+                           + (f" ({self.multi['why']})" if self.multi else " (chain brand)"))
+        return out
 
     def quote_scope(self, quote: str, url: str) -> tuple[bool, str]:
         ok, why = self.page_scope(url)
@@ -145,6 +157,11 @@ class Builder:
             url = url if fr.locate(quote, [p for p in self.pages if p["url"] == url]) else located
             quote = fr.display_quote(quote)
         reasons = list(reasons)
+        if etype in ("html_text", "html_link"):
+            raw_quote = quote if etype == "html_link" else fr.nrm(quote)
+            for r in self.location_reasons(raw_quote, url, etype):
+                if r not in reasons and not (field == "sources" and r.startswith("multi-location") and any(x.startswith("multi-location") for x in reasons)):
+                    reasons.append(r)
         if self.recovered:
             reasons.append("evidence from a recovered website (website recovery is always HOLD)")
         if confidence != "high":
@@ -270,20 +287,49 @@ class Builder:
             conf = "high" if (best["near_street"] or len(cands) == 1 or len({c['digits'] for c in cands}) == 1) else "medium"
             self.add("phone", "fill", "", new, best["quote"], best["url"], conf, True, [])
 
+    def check_moved(self):
+        """possibly_moved: the stored URL's own site prints a different street (and a different
+        phone, or our phone) than the listing. HOLD flag with both values; never auto."""
+        b = self.biz
+        if self.recovered or not self.pages or self.multi or self.chain:
+            return
+        no, word = fr.stored_street(b)
+        if not (no and word) or any(h.startswith("street:") for h in self.site_identity):
+            return
+        site_addr = None
+        for p in sorted(self.pages, key=lambda p: p["kind"] != "home"):
+            for m in fr.STREET_RE.finditer(p["text"]):
+                if fr.ZIP_RE.search(p["text"][m.end(): m.end() + 80]):
+                    q = fr.snippet(p["text"], m.start(), m.end() + 40, 200)
+                    if fr.locate(q, self.pages):
+                        site_addr = {"url": p["url"], "quote": q, "street": m.group(0).strip()}
+                        break
+            if site_addr:
+                break
+        site_phones = [x for x in (self.src.get("phones_on_site") or []) if not fr.junk_phone(x["digits"])]
+        stored_ph = fr.digits(b.get("phone"))
+        phone_match = "phone" in self.site_identity
+        other_phone = next((x for x in site_phones if x["digits"] != stored_ph), None)
+        if not site_addr or not (phone_match or other_phone):
+            return
+        stored = {"address": b.get("address"), "zip": b.get("zip"), "phone": b.get("phone")}
+        site = {"street": site_addr["street"], "phone": (f"({other_phone['digits'][:3]}) {other_phone['digits'][3:6]}-{other_phone['digits'][6:]}"
+                                                       if other_phone and not phone_match else b.get("phone"))}
+        how = "matched by phone" if phone_match else "neither the stored street nor the stored phone appears on the site"
+        more = [{"url": other_phone["url"], "quote": fr.display_quote(other_phone["quote"]), "what": "phone the site prints"}] if other_phone and not phone_match else None
+        self.n += 1
+        self.flags.append({"flag_id": f"{self.round_id}:{b['slug']}:{self.n}", "kind": "possibly_moved",
+                           "title": f"possibly moved / record mismatch: listing {stored['address']} {stored['phone'] or ''} vs site {site['street']} {site['phone'] or ''} ({how})",
+                           "stored": stored, "site": site,
+                           "evidence": {"url": site_addr["url"], "quote": fr.display_quote(site_addr["quote"]), "evidence_type": "html_text"},
+                           **({"evidence_more": more} if more else {}), "gate": "hold"})
+
     def do_address(self):
         b = self.biz
         if not self.pages or not self.site_identity:
             return
         no, word = fr.stored_street(b)
-        if no and word and not any(h.startswith("street:") for h in self.site_identity) and "phone" in self.site_identity and not (self.multi or self.chain):
-            for p in self.pages:
-                m = fr.STREET_RE.search(p["text"])
-                if m and fr.ZIP_RE.search(p["text"][m.end(): m.end() + 60]):
-                    q = fr.snippet(p["text"], m.start(), m.end() + 40, 200)
-                    if fr.locate(q, self.pages):
-                        self.flag("possibly-moved", f"site (matched by phone) prints a different street address: {m.group(0)}",
-                                  {"url": p["url"], "quote": q, "evidence_type": "html_text"})
-                    break
+        pass
         if no and word and not re.fullmatch(r"\d{5}", str(b.get("zip") or "")):
             for p in self.pages:
                 ok, _ = self.page_scope(p["url"])
@@ -304,46 +350,76 @@ class Builder:
         stored_src = "hours" if b.get("hours") else ("osm opening_hours" if self.tags.get("opening_hours") else None)
         stored_text = " · ".join(b["hours"]) if b.get("hours") else fr.osm_hours_text(self.tags.get("opening_hours", ""))
         stored_tok = fr.hours_tokens(fr.parse_hours(stored_text)) if stored_src else []
-        cands = []
+        pool = []
+        for p in self.pages:
+            for a, z in fr.hours_runs(p["text"]):
+                pool.append({"url": p["url"], "quote": p["text"][a:z], "via": "deterministic scan"})
         llm_h = (self.src.get("llm") or {}).get("hours")
-        pool = ([{"url": llm_h["url"], "quote": llm_h["quote"], "via": "model quote"}] if llm_h else []) + \
-               [dict(h, via="deterministic scan") for h in self.src.get("hours_passages") or []]
+        if llm_h:
+            pool.append({"url": llm_h["url"], "quote": llm_h["quote"], "via": "model quote"})
+        cands, seen = [], set()
         for h in pool:
             parsed = fr.parse_hours(h["quote"])
-            if not parsed["ok"] or not fr.locate(h["quote"], self.pages):
+            if not parsed["ok"] or len(parsed["days"]) < 2 or not any(isinstance(v, list) for v in parsed["days"].values()):
+                continue
+            if not fr.locate(h["quote"], self.pages):
                 continue
             ok, why = self.quote_scope(h["quote"], h["url"])
             if not ok:
-                self.scope_dropped.append({"field": "hours", "url": h["url"], "quote": h["quote"], "why": why})
+                self.scope_dropped.append({"field": "hours", "url": h["url"], "quote": fr.display_quote(h["quote"]), "why": why})
                 continue
-            cands.append(dict(h, parsed=parsed, tokens=fr.hours_tokens(parsed)))
-        cands = [c for c in cands if len(c["parsed"]["days"]) >= 2 and any(isinstance(v, list) for v in c["parsed"]["days"].values())]
+            key = (h["url"], fr.nrm(h["quote"]))
+            if key in seen:
+                continue
+            seen.add(key)
+            page = next(p for p in self.pages if p["url"] == h["url"])
+            own = fr.own_location(b, page["text"], h["quote"])
+            i = page["text"].find(h["quote"])
+            kw = i >= 0 and bool(re.search(r"\bhours\b|\bopen\b", page["text"][max(0, i - 80): i], re.I))
+            cands.append(dict(h, parsed=parsed, tokens=fr.hours_tokens(parsed), own=own, kw=kw,
+                              ident=bool(fr.location_identity(b, page["text"]))))
         if not cands:
-            return          # a lone "Sunday: Closed" is not an hours listing
-        cands.sort(key=lambda c: (-len(c["parsed"]["days"]), c["via"] != "model quote"))
+            return
+        # prefer this location's own page/section, then a page printing the stored street/ZIP, then most days
+        cands.sort(key=lambda c: (c["own"] is None, not c["ident"], not c["kw"], -len(c["parsed"]["days"]), c["via"] != "deterministic scan"))
         best = cands[0]
-        rec = {"stored_source": stored_src, "stored_tokens": stored_tok, "page_tokens": best["tokens"]}
+        conflicts, seen_sets = [], {tuple(sorted(best["tokens"]))}
+        for c in cands[1:]:
+            key = tuple(sorted(c["tokens"]))
+            if key in seen_sets or not fr.hours_disagree(best["parsed"], c["parsed"]):
+                continue
+            seen_sets.add(key)
+            conflicts.append(c)
+        rec = {"stored_source": stored_src, "stored_tokens": stored_tok, "page_tokens": best["tokens"],
+               "chosen_from": {"url": best["url"], "location": best["own"] or "not tied to this location"},
+               "other_hours_on_site": [{"url": c["url"], "quote": fr.display_quote(c["quote"]), "tokens": c["tokens"]} for c in conflicts][:6]}
         self.hours_rec = rec
-        if set(best["tokens"]) == set(stored_tok):
+        if set(best["tokens"]) == set(stored_tok) and not conflicts:
             self.confirm.append({"field": "hours", "value": b.get("hours") or self.tags.get("opening_hours"), "url": best["url"]})
             return
+        if set(best["tokens"]) == set(stored_tok):
+            return          # stored matches this location's hours; other blocks belong elsewhere
         reasons = []
-        full = [c for c in cands if len(c["parsed"]["days"]) == len(best["parsed"]["days"])]
-        if any(set(c["tokens"]) != set(best["tokens"]) for c in full[1:]):
-            reasons.append("the site prints more than one different hours block")
+        if conflicts:
+            reasons.append(f"hours conflict: {len(conflicts)} other hours listing(s) on the site disagree on "
+                           f"{', '.join(sorted({d for c in conflicts for d in fr.hours_disagree(best['parsed'], c['parsed'])}, key=fr.DAYS.index))} "
+                           "(all quotes in evidence_more)")
         if not best["parsed"]["complete"]:
             reasons.append(f"page states {len(best['parsed']['days'])} of 7 days; unstated days unknown")
         if best["parsed"]["inferred"]:
             reasons.append("am/pm not printed for every time; inferred")
         if SUBHOURS.search(best["quote"]):
-            reasons.append(f"passage mentions '{SUBHOURS.search(best['quote']).group(0)}' (department/seasonal hours?)")
+            reasons.append(f"passage mentions '{SUBHOURS.search(best['quote']).group(0)}' (department/seasonal/appointment hours)")
         new = fr.hours_lines(best["parsed"])
         also = {"hours_source": {"url": best["url"], "checked": TODAY,
                                  "how": f"hours as printed on the business's own website (commerce full review {self.round_id})",
                                  "verbatim": fr.display_quote(best["quote"])}}
+        more = [{"url": c["url"], "quote": fr.display_quote(c["quote"]), "parsed": fr.hours_lines(c["parsed"]),
+                 "location": c["own"] or "not tied to this location"} for c in conflicts][:6]
         self.add("hours", "set" if b.get("hours") else "fill", b.get("hours") or [], new, best["quote"], best["url"],
-                 "high", True, reasons, also=also,
-                 note=f"stored ({stored_src or 'none'}) tokens {len(stored_tok)} vs page tokens {len(best['tokens'])}; sets differ")
+                 "high", True, reasons, also=also, more=more or None,
+                 note=f"chosen from {best['own'] or 'a page not tied to this location'}; stored ({stored_src or 'none'}) "
+                      f"tokens {len(stored_tok)} vs page tokens {len(best['tokens'])}; sets differ")
 
     def do_owner(self):
         b = self.biz
@@ -520,11 +596,27 @@ class Builder:
     def do_lookups(self):
         b = self.biz
         lk = self.obs.get("lookups") or {}
+        lic = getattr(self, "lic_ev", None)
+        if not lic:
+            for p in self.pages:
+                found = fr.license_numbers(p["text"])
+                if found:
+                    f0 = found[0]
+                    q = fr.snippet(p["text"], max(0, f0["pos"] - 1), f0["pos"] + 10, 200)
+                    if f0["number"] in q and fr.locate(q, self.pages):
+                        lic = {"number": f0["number"], "url": p["url"], "quote": fr.display_quote(q), "why": f0["why"]}
+                        break
+        if lic:
+            # re-find the quote in the cached pages (the fetcher matched against the uncapped page)
+            here = fr.locate(lic["quote"], [p for p in self.pages if p["url"] == lic["url"]]) or fr.locate(lic["quote"], self.pages)
+            lic = dict(lic, url=here, quote=fr.display_quote(lic["quote"])) if here else None
+        if lic and "dpor" not in lk:
+            lk = dict(lk, dpor={"reason": fr.LOOKUP_SKIPS["dpor"], "lookup_url": fr.DPOR_LOOKUP_URL})
         if "dpor" in lk:
-            lic = getattr(self, "lic_ev", None)
             self.n += 1
             self.lookups.append({"hold_id": f"{self.round_id}:{b['slug']}:{self.n}", "kind": "lookup",
-                                 "title": "DPOR license check needed (licensed trade)",
+                                 "title": (f"DPOR check: license #{lic['number']} printed on the business's site" if lic
+                                           else "DPOR license check needed (licensed trade)"),
                                  "license_number_on_site": (lic or {}).get("number"),
                                  "evidence": ({"url": lic["url"], "quote": lic["quote"], "evidence_type": "html_text"} if lic else None),
                                  "status": "not checked", "reason": lk["dpor"]["reason"], "lookup_url": lk["dpor"]["lookup_url"]})
@@ -582,7 +674,7 @@ class Builder:
         self.hours_rec = None
         self.duplicates = []
         self.duplicate_result = ""
-        for step in (self.do_website, self.do_phone, self.do_address, self.do_hours, self.do_owner, self.do_name_category,
+        for step in (self.do_website, self.do_phone, self.check_moved, self.do_address, self.do_hours, self.do_owner, self.do_name_category,
                      self.do_socials, self.do_scores, self.do_lookups, self.do_duplicates):
             step()
         rv = o.get("recovery") or {}

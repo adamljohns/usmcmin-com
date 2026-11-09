@@ -23,16 +23,28 @@ Patches and HOLD rows are kept OUTSIDE the repo, which is public on GitHub and s
 | sha256 of businesses.json before/after | `$FR/rounds/<ROUND>/checksums.txt` |
 | Round log | `~/Library/Logs/commerce-full-review-round.log` |
 | Public counts only | `fxbg/commerce/data/full-review-stats.json` |
-| Strict-order round (ticket selection order, mostly no-website listings) | `$FR/rounds/fr-20261109-0655/` |
-| Superseded first attempt | `$FR/rounds/fr-20261109-0649/` (`"superseded"` set) |
+| Strict-order round on the fixed gates (ticket selection order, mostly no-website listings) | `$FR/rounds/fr-20261109-0740/` |
+| Superseded rounds (`"superseded"` set) | `fr-20261109-0649`, `fr-20261109-0655`, `fr-20261109-0701` (verify round 1: 8/10, `VERIFY-commerce-full-review.md`) |
 
-Main dry run: **`<ROUND>` = `fr-20261109-0701`**, started with `--spread` (sample mode, round-robin across
-selection tiers a/b/c so every gate runs; its `selection_tier` values end in "(spread sample)").
-It holds 25 businesses, including 2400-diner and 2400-diner-fxbg. There are 27 proposed changes: 12
-`auto` and 15 `hold`. The patch was rebuilt from the same `observations.json` after the gate fixes, with
-no re-fetch. The strict ticket-order round `fr-20261109-0655` has 24 of 25 listings with no reachable
-site, because tier (a) is all no-website stubs and SearXNG's engines were blocked. It has 5 changes,
-all on bad-truck-pottery, and they repeat in 0701.
+Main dry run (verify round 2): **`<ROUND>` = `fr-20261109-0723`**. It uses the same 25-business
+`--spread` sample as round 1 (fr-20261109-0701): every `selection_tier` ends in "(spread sample)", and
+the two 2400 Diner records are included. It was re-fetched after the location-identity fixes; the patch
+was then rebuilt once from that round's own `observations.json` (no re-fetch) for the address-form ZIP
+rule. There are 28 proposed changes: 4 `auto` and 24 `hold`.
+
+What changed since round 1 (both of its failures were location identity):
+- **Location gate.** An auto change needs the exact page holding its quote to print the stored street,
+  or the stored ZIP in address form ("VA 22407"). A shared phone, a service-area ZIP list or nothing is
+  never enough; those rows are `hold` with a "location gate:" reason.
+- **Multi-location sites.** "N Locations", a locations picker/menu, or two or more street+ZIP addresses
+  mark a site multi-location (`businesses[].multi_location`). Fills must come from the stored location's
+  own page or section; otherwise they are held.
+- **Hours.** Every page is scanned, including one-day-per-line listings, "Closed on Saturdays" and "by
+  appointment". `businesses[].hours.chosen_from` says which page and whether it is this location's
+  section. `other_hours_on_site` and the change's `evidence_more` list every listing that disagrees; any
+  disagreement holds the change.
+- **`possibly_moved`** HOLD flag (e.g. bim-heating-cooling-fxbg), with `stored` and `site` values.
+- **Licence numbers** (e.g. All Air "#2705069928") are on the DPOR lookup row as `license_number_on_site`.
 
 ## How a proposed change maps to its evidence
 
@@ -104,17 +116,19 @@ for b in p["businesses"]:
     print(" | ".join([c["change_id"], c["gate"], c["field"], json.dumps(c["old"])[:50], "->", json.dumps(c["new"])[:80], c["evidence"]["url"], c["evidence"]["evidence_type"], json.dumps(c["evidence"]["quote"])[:140]]))' "$R"
 ```
 
-This round has no score changes and no owner_operator changes. No Gray factor met a written rule
-from in-scope evidence: Robinson's "Christian Owned" brand is already Green, so it is only a
-confirmation. Model-only signals went to `needs_ruling`.
+This round has no score changes and no owner_operator changes.
 
-Suggested spread for the 10 (all from fr-20261109-0701):
-- the three `auto` hours or social changes on nk-floors-fxbg (`:1` hours fill, `:2` Instagram, `:3` LinkedIn);
-- all-fixed-appliance-repair-fxbg `:1` (auto hours set: adds "Sat–Sun: Closed") and `:2` (auto Facebook);
-- robinsons-roofing-fxbg `:1` (hold hours, "more than one hours block") and `:2` (auto Facebook, numeric page id);
-- all-air-heating-cooling-fxbg `:1` (hold phone replace, stored number not on site);
-- bad-truck-pottery `:1` (hold website recovery via name-domain probe);
-- forte-construction-design-fxbg `:1`–`:3` (auto socials) or krispy-kreme `:1` (hold hours on a chain
-  location page; two hours blocks).
+Suggested spread for the 10 (all from fr-20261109-0723):
+- all 4 `auto` changes: all-air-heating-cooling-fxbg `:2` (Facebook) and forte-construction-design-fxbg
+  `:1`–`:3` (Facebook, Instagram, YouTube). Each evidence page prints the stored street;
+- nk-floors-fxbg `:1` (hold hours: the Selection Center section's own hours, conflicting listings in
+  `evidence_more`);
+- all-fixed-appliance-repair-fxbg `:1` (hold hours: location gate);
+- all-air-heating-cooling-fxbg `:1` (hold phone replace);
+- bad-truck-pottery `:1` (hold website recovery);
+- robinsons-roofing-fxbg `:1` (hold hours) and one krispy-kreme hold (chain location page).
+
+The bim-heating-cooling-fxbg `possibly_moved` flag and the All Air DPOR row with #2705069928 are HOLD
+rows, not changes; check them separately if you want.
 
 Also read `duplicate_result` for 2400-diner and 2400-diner-fxbg. It is a finding, not a change.

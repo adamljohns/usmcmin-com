@@ -64,6 +64,21 @@ and its root syncs to R2, so patches, quotes and HOLD rows never go in it. Only 
   sponsors, partners, other locations or other towns are dropped and listed in `scope_dropped`.
 - Hours: stored and page hours are compared as sets of day+time tokens. A change is proposed only when
   the sets differ, and `new` is the structured value (`["Mon–Fri: 7:00 AM–8:00 PM", …]`).
+- Location gate (added after verify round 1, 8/10). An auto change needs the exact page holding
+  its quote to print the stored street, or the stored ZIP in address form ("VA 22407"). A shared
+  phone number, a service-area ZIP list, or no identifier at all never counts.
+- Multi-location sites are detected by any of: "N Locations" / "two locations" wording, a location
+  picker or `/locations/<x>` menu, or two or more street+ZIP addresses. On such a site every fill must
+  come from the stored location's own page, or from its own section (the nearest street address before
+  the passage is the stored one). Anything else is HOLD.
+- Hours conflicts. Hours are read from every page as runs of day/time tokens; runs are split at street
+  addresses, and one-day-per-line, "Closed on Saturdays" and "by appointment" are handled. If any other
+  listing on the site disagrees on a day both state, the change is HOLD and every conflicting quote is
+  in `evidence_more`.
+- `possibly_moved` flag (HOLD): the stored URL's site prints a different street, and a different phone
+  (or only our phone), than the listing. `stored` and `site` values are both in the flag.
+- Licence numbers: a bare `#27xxxxxxxx` (footers) or a 27xxxxxxxx number next to licence wording is
+  captured onto the DPOR-check HOLD row as `license_number_on_site`.
 - Auto (would apply on a live run) only: hours, phone fills and social links from the business's own
   website. They also need high confidence, in-scope evidence, and no partial or inferred hours.
   Everything else is HOLD.
@@ -120,3 +135,12 @@ checkout level with origin/main, never from a stale one.
   sha256 was the same before and after.
 - Until SearXNG engines recover, tier-(a) rounds mostly yield "unreachable". Name-domain probes still
   run.
+- Verify round 1 on `fr-20261109-0701` scored 8/10. Every quote was real; both failures were location
+  identity. NK Floors auto hours came from a location-less pop-up on a two-location site, and BIM's
+  site prints a different street and phone. The gates were fixed (location gate, multi-location,
+  cross-page hours conflicts, one-day-per-line hours, `possibly_moved`, bare licence numbers).
+- `fr-20261109-0723` re-ran the same `--spread` sample: 28 changes, 4 auto, 24 hold. businesses.json
+  sha256 was unchanged.
+- `fr-20261109-0740` re-ran strict order on the fixed gates. SearXNG answered part of the round (Bing),
+  then Bing was suspended again; DuckDuckGo was denied and Google CSE suspended. 2 of 25 sites were
+  recovered (bad-truck-pottery, plumb-perfect-plumbing), giving 9 changes, all hold.

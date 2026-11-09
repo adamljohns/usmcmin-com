@@ -311,6 +311,7 @@ _TOKEN_RX = re.compile(
     r"|(?P<daily>\b(?:daily|every ?day|7 days a week|seven days a week|open daily)\b)"
     r"|(?P<closed>\bclosed\b)"
     r"|(?P<h24>\b(?:open )?24 ?(?:hours|hrs|/7)\b)"
+    r"|(?P<appt>\b(?:open )?by appointment(?: only)?\b|\bappointment only\b)"
     r"|(?P<range>(?:" + _TIME_RX + r")\s*(?:-|–|—|to|until|till)\s*(?:" + _TIME_RX + r"))"
     r"|(?P<dsep>\s*(?:-|–|—|\bthrough\b|\bthru\b|\bto\b)\s*)"
     r"|(?P<amp>\s*(?:&|\band\b|,|/)\s*)",
@@ -398,6 +399,8 @@ def parse_hours(text: str) -> dict:
     after_time = False
     last_end = 0
     t = (text or "").replace("–", "-").replace("—", "-")
+    # "Closed on Saturdays" -> "Saturdays closed" (the closure word comes before the day)
+    t = re.sub(r"\bclosed (?:on )?((?:mon|tue|wed|thu|fri|sat|sun)[a-z]*)", r"\1 closed", t, flags=re.I)
     for m in _TOKEN_RX.finditer(t):
         kind = m.lastgroup
         if m.start() - last_end > 25 and kind not in ("day", "daily"):
@@ -423,13 +426,13 @@ def parse_hours(text: str) -> dict:
             mode = "group" if not after_time else "new"
         elif kind == "daily":
             pending, last_day, mode, after_time = list(range(7)), None, "new", False
-        else:  # closed | h24 | range
+        else:  # closed | appt | h24 | range
             if not pending:
                 continue
-            if kind == "closed":
+            if kind in ("closed", "appt"):
                 if after_time:
-                    continue          # "closed on holidays" after a day's hours is not a day closure
-                val = "closed"
+                    continue          # "closed on holidays" / "or by appointment" after a day's hours is not that day's value
+                val = kind if kind == "closed" else "appointment"
             elif kind == "h24":
                 val = [(0, 24 * 60)]
             else:
@@ -441,6 +444,8 @@ def parse_hours(text: str) -> dict:
                 val = [(o, c)]
             for d in pending:
                 cur = days.get(DAYS[d])
+                if after_time and cur is not None and not isinstance(cur, list):
+                    continue          # "Sunday Closed · Available 24/7": a day already closed/by appointment keeps that value
                 if isinstance(cur, list) and isinstance(val, list) and after_time:
                     if val[0] not in cur:
                         cur.extend(val)  # split shift right after, e.g. "11-2 & 5-9"
@@ -458,6 +463,8 @@ def hours_tokens(parsed: dict) -> list[str]:
             continue
         if v == "closed":
             out.append(f"{d} closed")
+        elif v == "appointment":
+            out.append(f"{d} by appointment")
         else:
             for o, c in sorted(v):
                 out.append(f"{d} {fmt_min(o)}-{fmt_min(c)}")
@@ -469,6 +476,8 @@ def hours_lines(parsed: dict) -> list[str]:
     def span_str(v):
         if v == "closed":
             return "Closed"
+        if v == "appointment":
+            return "By appointment"
         if v == [(0, 24 * 60)]:
             return "Open 24 hours"
         return ", ".join(f"{fmt_min(o)}–{fmt_min(c)}" for o, c in sorted(v))
@@ -538,3 +547,138 @@ def check_rules() -> dict:
 
 def rule(*keys: str) -> list[dict]:
     return [dict(RULES[k], key=k, url=METHODOLOGY_URL) for k in keys]
+
+
+# ── hours passages: runs of day/time tokens, split at street addresses ──────
+_SIG = ("day", "daily", "range", "closed", "appt", "h24")
+_CLOSED_ON = re.compile(r"\bclosed (?:on )?((?:mon|tue|wed|thu|fri|sat|sun)[a-z]*)", re.I)
+
+
+def hours_runs(text: str) -> list[tuple[int, int]]:
+    """Spans of `text` that read as an hours listing: consecutive day/time tokens with gaps
+    <= 60 chars, broken at any street address (so two locations' hours never merge).
+    Handles one-day-per-line ("Monday 10am-4pm · Tuesday ..."), ranges, Closed, by appointment."""
+    text = text or ""
+    streets = [m.start() for m in STREET_RE.finditer(text)]
+    closed_on = {m.start(1): m.start() for m in _CLOSED_ON.finditer(text)}   # day pos -> "Closed on" pos
+    runs, cur = [], None
+    for m in _TOKEN_RX.finditer(text):
+        if m.lastgroup not in _SIG:
+            continue
+        if cur and (m.start() - cur[1] > 60 or any(cur[1] <= sp < m.start() for sp in streets)):
+            runs.append(tuple(cur))
+            cur = None
+        if cur is None:
+            if m.lastgroup not in ("day", "daily"):
+                continue
+            cur = [m.start(), m.end()]
+        else:
+            cur[1] = m.end()
+        if m.lastgroup == "day" and m.start() in closed_on and cur[0] == m.start():
+            cur[0] = closed_on[m.start()]
+    if cur:
+        runs.append(tuple(cur))
+    out = []
+    for a, b in runs:
+        p = parse_hours(text[a:b])
+        if len(p["days"]) >= 2 and any(isinstance(v, list) for v in p["days"].values()):
+            out.append((a, b))
+    return out
+
+
+# ── multi-location detection and location sections ─────────────────────────
+MULTI_LOC_TEXT = re.compile(r"\b(our (other )?locations|all (of our )?locations|other locations|find a location|store locator|"
+                            r"location finder|select (a |your )?location|choose (a |your )?location|change location|"
+                            r"(two|three|four|five|six|several|multiple|\d{1,2}) (convenient )?locations\b)", re.I)
+UP_TO_LOC = re.compile(r"up to [\d,]+ locations", re.I)
+
+
+def _street_key(m) -> tuple[str, str]:
+    return m.group(1), re.sub(r"^[nsew]\.?\s+", "", m.group(2).lower()).split()[0]
+
+
+def address_anchors(text: str) -> list[tuple[int, str, str]]:
+    return [(m.start(),) + _street_key(m) for m in STREET_RE.finditer(text or "")]
+
+
+def local_addresses(text: str) -> set:
+    """Distinct street addresses followed within 80 chars by a VA ZIP."""
+    return {_street_key(m) for m in STREET_RE.finditer(text or "") if ZIP_RE.search(text[m.end(): m.end() + 80])}
+
+
+def detect_multi(pages: list[dict], flags: dict | None = None) -> dict | None:
+    """Multi-location site: 'N Locations' / 'two locations' wording, a location picker or
+    menu, or several street+ZIP addresses across the site."""
+    for p in pages:
+        for m in MULTI_LOC_TEXT.finditer(p["text"]):
+            if UP_TO_LOC.search(p["text"][max(0, m.start() - 20): m.end() + 5]):
+                continue           # widget boilerplate ("up to 3 locations or up to 10,000 locations")
+            return {"url": p["url"], "quote": snippet(p["text"], m.start(), m.end(), 200), "why": "site names several locations"}
+    lm = (flags or {}).get("location_menu")
+    if lm:
+        return {"url": lm["url"], "quote": lm["quote"], "why": "location picker / locations menu in the page HTML", "evidence_type": "html_link"}
+    addrs = set()
+    for p in pages:
+        addrs |= local_addresses(p["text"])
+    if len(addrs) >= 2:
+        return {"url": pages[0]["url"], "quote": None, "why": f"{len(addrs)} different street addresses with ZIPs across the site: "
+                + "; ".join(f"{a} {b}" for a, b in sorted(addrs)[:4])}
+    return None
+
+
+def own_location(biz: dict, text: str, quote: str) -> str | None:
+    """'own-page' when every street address on the page is the stored one; 'own-section' when
+    the nearest street address before the quote (within 400 chars), and every address inside
+    it, is the stored one; else None."""
+    no, word = stored_street(biz)
+    if not (no and word):
+        return None
+    nt, nq = nrm(text), nrm(quote).strip(" .,;:")
+    anchors = address_anchors(nt)
+    is_stored = lambda a: a[1] == no and a[2] == word.lower()
+    if anchors and all(is_stored(a) for a in anchors):
+        return "own-page"
+    pos = nt.find(nq) if nq else -1
+    if pos < 0:
+        return None
+    inside = [a for a in anchors if pos <= a[0] < pos + len(nq)]
+    if inside:
+        return "own-section" if all(is_stored(a) for a in inside) else None
+    before = [a for a in anchors if pos - 400 <= a[0] < pos]
+    if before and is_stored(before[-1]):
+        return "own-section"
+    return None
+
+
+# ── contractor licence numbers (DPOR format 27xxxxxxxx) ──────────────────────
+LIC_CTX = re.compile(r"licen[sc]|\blic\b|\blic\.|class [abc]\b|contractor|dpor", re.I)
+
+
+def license_numbers(text: str) -> list[dict]:
+    """'#2705069928' anywhere (footers), or a 27xxxxxxxx number within 80 chars of licence wording."""
+    out = []
+    for m in re.finditer(r"(?<![\d\-().])(27\d{8})(?![\d\-])", text or ""):
+        pre = text[max(0, m.start() - 3): m.start()]
+        ctx = text[max(0, m.start() - 80): m.end() + 20]
+        if "#" in pre or LIC_CTX.search(ctx):
+            if m.group(1) not in [x["number"] for x in out]:
+                out.append({"number": m.group(1), "pos": m.start(), "why": "printed with '#'" if "#" in pre else "next to licence wording"})
+    return out
+
+
+def hours_disagree(a: dict, b: dict) -> list[str]:
+    """Days both listings state with different values (a partial listing that agrees is not a conflict)."""
+    return [d for d in DAYS if d in a["days"] and d in b["days"] and
+            (sorted(a["days"][d]) if isinstance(a["days"][d], list) else a["days"][d]) !=
+            (sorted(b["days"][d]) if isinstance(b["days"][d], list) else b["days"][d])]
+
+
+def location_identity(biz: dict, text: str) -> list[str]:
+    """Identity strong enough to tie a page to THIS location (location gate for auto):
+    the stored street, or the stored ZIP printed in address form ("VA 22407"). A ZIP in a
+    service-area list or a shared phone number does not count."""
+    out = [h for h in identity_hits(biz, text) if h.startswith("street:")]
+    z = str(biz.get("zip") or "").strip()
+    if re.fullmatch(r"\d{5}", z) and re.search(r"\b(?:VA|Va\.?|Virginia),?\s+" + z + r"\b", text or ""):
+        out.append("zip:" + z + " (address form)")
+    return out

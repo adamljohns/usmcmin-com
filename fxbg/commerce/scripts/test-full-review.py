@@ -74,5 +74,41 @@ check("identity hits", fr.identity_hits(biz, page["text"]) == ["street:100 Main"
 b.add("phone", "fill", "", "(540) 555-0199", "Call (540) 555-0199", page["url"], "high", True, [])
 check("unverifiable quote -> no change", not b.changes and b.dropped_unverifiable == 1)
 
+# ── verify round 1 fixes (VERIFY-commerce-full-review.md: NK Floors, BIM, All Air) ──
+NK = ("Business Hours · NK Floors Selection Center 10042 Southpoint Parkway Fredericksburg, VA 22407 · Monday 10am-4pm · "
+      "Tuesday 10am - 4pm · Wednesday 10am - 4pm · Thursday 10am - 4pm · Friday 10am-4pm · Saturday Open by Appointment Only · "
+      "NK Floors Builder Showroom 210 Freedom Court, Unit 112 Fredericksburg, VA 22408 · Monday-Friday 8am-4pm · Closed on Saturdays")
+runs = [NK[a:b] for a, b in fr.hours_runs(NK)]
+check("one-day-per-line runs split at the second address", len(runs) == 2)
+check("Selection Center hours parsed", fr.hours_lines(fr.parse_hours(runs[0])) == ["Mon–Fri: 10:00 AM–4:00 PM", "Sat: By appointment"])
+check("'Closed on Saturdays' parsed", fr.hours_lines(fr.parse_hours(runs[1])) == ["Mon–Fri: 8:00 AM–4:00 PM", "Sat: Closed"])
+nkbiz = {"address": "10042 Southpoint Pkwy"}
+check("Selection Center block is this location's section", fr.own_location(nkbiz, NK, runs[0]) == "own-section")
+check("Builder Showroom block is not", fr.own_location(nkbiz, NK, runs[1]) is None)
+check("'2 Locations:' header -> multi-location",
+      bool(fr.detect_multi([{"url": "u", "text": "Free Estimate · 2 Locations: NK Floors Selection Center & NK Floors Builder Showroom"}])))
+check("widget 'up to 3 locations' is not multi-location",
+      fr.detect_multi([{"url": "u", "text": "up to 3 locations or up to 10,000 locations, depending on the plan"}]) is None)
+check("two street+ZIP addresses -> multi-location", bool(fr.detect_multi([{"url": "u", "text": NK}])))
+check("'Sunday Closed · Available 24/7' keeps Sunday closed",
+      fr.hours_lines(fr.parse_hours("Mon - Sat 7:00 am - 7:00 pm · Sunday Closed · Available 24/7")) == ["Mon–Sat: 7:00 AM–7:00 PM", "Sun: Closed"])
+check("partial listing that agrees is not a conflict",
+      not fr.hours_disagree(fr.parse_hours("Mon.-Fri. 8am-5pm"), fr.parse_hours("Monday to Friday, 8:00 AM to 5:00 PM Saturday and Sunday: Closed")))
+check("different hours on the same days are a conflict",
+      fr.hours_disagree(fr.parse_hours(runs[0]), fr.parse_hours("Mon - Fri: 9AM - 6PM · Sat: 10AM - 2PM · Sun: Closed"))[:1] == ["Mon"])
+check("bare '#2705069928' in a footer is a licence number",
+      [x["number"] for x in fr.license_numbers("4934 Trade Center Dr · Fredericksburg, VA 22408 · (540) 317-0727 · #2705069928 · Areas")] == ["2705069928"])
+check("a phone is not a licence number", fr.license_numbers("Call 540-271-2345 today") == [])
+
+# location gate: a page printing only the (shared) phone can never carry an auto change
+biz2 = {"slug": "nk", "name": "NK Floors", "address": "10042 Southpoint Pkwy", "zip": "22407", "phone": "(540) 582-4000",
+        "category": "flooring", "scores": {}, "sources": []}
+pop = {"url": "https://nk.example/store/", "kind": "inner", "identity": ["phone"],
+       "text": "Call (540) 582-4000 · Business Hours · Mon - Fri: 9AM - 6PM · Sat: 10AM - 2PM · Sun: Closed"}
+b2 = bp.Builder("r", biz2, {"slug": "nk", "pages": [pop], "site_identity": ["phone"], "site": {}}, {"nk": biz2}, {})
+b2.add("hours", "fill", [], ["x"], "Mon - Fri: 9AM - 6PM", pop["url"], "high", True, [])
+check("phone-only page -> hold, never auto", bool(b2.changes) and b2.changes[0]["gate"] == "hold"
+      and any("location gate" in r for r in b2.changes[0]["hold_reasons"]))
+
 print(f"\n{'ALL PASS' if not fails else f'{fails} FAIL'}")
 sys.exit(1 if fails else 0)

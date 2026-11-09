@@ -134,6 +134,9 @@ def ld_blocks(raw: str, url: str) -> list[dict]:
     return out[:3]
 
 
+# a location picker / "Locations" menu: <select> of stores, or nav links to /locations/<x> pages
+LOC_MENU_RE = re.compile(r'<select[^>]*(?:id|name|class)=["\'][^"\']*(?:location|store|branch)[^"\']*["\']|'
+                         r'<a\b[^>]*href=["\'][^"\']*/locations?/[a-z0-9\-]+/?["\'][^>]*>', re.I)
 TEL_RE = re.compile(r'<a\b[^>]*href=["\']tel:([^"\']+)["\'][^>]*>', re.I)
 
 
@@ -176,6 +179,10 @@ def _absorb(res: dict, biz: dict, url: str, raw: str, kind: str) -> None:
     for m in TEL_RE.finditer(raw):
         res["tel_links"].append({"url": url, "digits": fr.digits(urllib.parse.unquote(m.group(1))), "quote": m.group(0)[:300]})
     txt = fr.page_text(raw)
+    if "location_menu" not in res["raw_flags"]:
+        lm = LOC_MENU_RE.search(raw)
+        if lm:
+            res["raw_flags"]["location_menu"] = {"url": url, "quote": raw[max(0, lm.start() - 20): lm.end() + 60][:240]}
     if PARKED_RE.search(raw[:20000]) and len(txt) < 1500:
         res["raw_flags"]["parked"] = {"url": url, "quote": fr.snippet(txt, *PARKED_RE.search(txt).span()) if PARKED_RE.search(txt) else txt[:200]}
     title = re.search(r"<title[^>]*>(.*?)</title>", raw, re.S | re.I)
@@ -538,13 +545,13 @@ def observe(base, model, biz, site, recovered=False):
     obs = {"site": {"start_url": site["start_url"], "final_url": site["final_url"], "attempts": site["attempts"],
                     "recovered": recovered},
            "pages": [{"url": p["url"], "kind": p["kind"], "title": p.get("title"), "og_site_name": p.get("og_site_name"),
-                      "identity": p["identity"], "chars": len(p["text"]), "text": p["text"][:20000]} for p in pages],
+                      "identity": p["identity"], "chars": len(p["text"]), "text": p["text"][:60000]} for p in pages],
            "socials": site["socials"], "ld": site["ld"], "tel_links": site["tel_links"][:12], "raw_flags": site["raw_flags"]}
     if not pages:
         return obs
     obs["site_identity"] = sorted({h for p in pages for h in p["identity"]})
     obs["name_on_site"] = fr.name_on_page(biz, " ".join(p["text"] for p in pages))
-    obs["multi_location"] = multi_location(pages)
+    obs["multi_location"] = fr.detect_multi(pages, site["raw_flags"]) or multi_location(pages)
     obs["hours_passages"] = hours_passages(pages)
     obs["closed_signals"] = closed_signals(pages)
     phones = []

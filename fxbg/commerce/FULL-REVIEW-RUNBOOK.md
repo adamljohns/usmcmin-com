@@ -16,6 +16,7 @@ cd <usmcmin-com checkout or worktree>
 fxbg/commerce/scripts/full-review-round.sh            # 25 businesses, selection order below
 fxbg/commerce/scripts/full-review-round.sh 40         # batch size (max 60)
 fxbg/commerce/scripts/full-review-round.sh 25 --include 2400-diner,2400-diner-fxbg   # force slugs in
+fxbg/commerce/scripts/full-review-round.sh 25 --spread      # sample mode: round-robin tiers a,b,c,d (dry runs / QA)
 ```
 
 Needs LM Studio on `127.0.0.1:1234` (`COMMERCE_FR_MODEL`, default `gemma-4-31b-it`; `qwen/qwen3.6-35b-a3b`
@@ -107,3 +108,15 @@ pattern, and never deletes. It then regenerates the touched pages, categories an
 integrity checks, appends to `$FR_HOME/applied-ledger.json`, and commits only those paths. `--push` uses
 the same pull --rebase / push HEAD:main as the grind, so deploy doctrine is unchanged. Run it from a
 checkout level with origin/main, never from a stale one.
+
+## Dry-run record (2026-11-09)
+
+- `fr-20261109-0655` (strict ticket order, 25 listings): 24 had no reachable site. Tier (a) is all
+  no-website OSM stubs, and SearXNG's upstream engines were blocked that morning (DuckDuckGo CAPTCHA,
+  Google CSE suspended, Bing connection errors). Only bad-truck-pottery was recovered, through the
+  name-domain probe.
+- `fr-20261109-0701` (`--spread`, 25 listings including both 2400 Diner records): 12 reviewed,
+  27 changes proposed (12 auto, 15 hold), 7 needs-ruling, 16 DPOR lookup rows. businesses.json
+  sha256 was the same before and after.
+- Until SearXNG engines recover, tier-(a) rounds mostly yield "unreachable". Name-domain probes still
+  run.

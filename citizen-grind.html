@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Citizen grind — scorecard and commerce</title>
+<meta name="description" content="Live counters for the RESOLUTE Citizen scorecard grind and the Fredericksburg commerce directory. Not the church directory.">
+<link rel="canonical" href="https://usmcmin.com/citizen-grind.html">
+<style>
+  :root { color-scheme: dark; }
+  body { margin:0; background:#12160f; color:#e8e2d4; font:16px/1.45 Georgia, "Iowan Old Style", serif; }
+  main { max-width:880px; margin:0 auto; padding:28px 18px 64px; }
+  h1 { font-size:1.7rem; margin:0 0 6px; color:#d4b36a; }
+  h2 { font-size:1.15rem; margin:28px 0 8px; color:#d4b36a; }
+  a { color:#d4b36a; }
+  .lede { color:#c9c1b0; margin:0 0 18px; }
+  .note { border:1px solid #3f7d55; background:#3f7d5522; border-radius:10px; padding:12px 14px; margin:0 0 16px; }
+  .warn { border-color:#8a6d1f; background:#8a6d1f22; }
+  .err { color:#e0b4b4; }
+  .cards { display:grid; grid-template-columns:repeat(auto-fit,minmax(180px,1fr)); gap:10px; }
+  .card { background:#1c2218; border-radius:10px; padding:12px 14px; }
+  .label { font-size:.78rem; letter-spacing:.04em; text-transform:uppercase; color:#b7ad98; }
+  .big { font-size:1.55rem; margin-top:4px; }
+  .base { font-size:.82rem; color:#b7ad98; margin-top:4px; }
+  ul { padding-left:1.1rem; }
+  code { font-family:ui-monospace, Menlo, monospace; font-size:.85em; }
+</style>
+</head>
+<body>
+<main>
+  <h1>Citizen grind</h1>
+  <p class="lede">Two local-model grinds on usmcmin.com. This is not the church directory. That report stays on <a href="https://usmcmin.org/grind-report.html">usmcmin.org/grind-report.html</a>.</p>
+  <div id="score-status" class="note">Loading scorecard counters…</div>
+  <h2>RESOLUTE Citizen scorecard</h2>
+  <p class="lede">The scorecard itself is <a href="/citizen.html">citizen.html</a>. This board only shows the published counters. There is no hop chart yet, because this grind does not write a time series the way the church grind does.</p>
+  <div id="score-cards" class="cards"></div>
+  <div id="score-levels"></div>
+
+  <h2>Fredericksburg commerce directory</h2>
+  <p class="lede">Listings live at <a href="/fxbg/commerce/">fxbg/commerce</a>. The public grind log records that a round ran. It does not record fields applied.</p>
+  <div id="commerce-status" class="note">Loading today's commerce log…</div>
+  <div id="commerce-cards" class="cards"></div>
+</main>
+<script>
+(async function () {
+  const $ = id => document.getElementById(id);
+  const n = v => { const x = Number(v); return Number.isFinite(x) ? x : 0; };
+  const card = (label, val, base) =>
+    `<div class="card"><div class="label">${label}</div><div class="big">${val}</div>` +
+    (base ? `<div class="base">${base}</div>` : '') + `</div>`;
+  const age = iso => {
+    const then = new Date(iso);
+    if (isNaN(then)) return 'time unknown';
+    const hours = (Date.now() - then.getTime()) / 36e5;
+    if (hours < 1) return Math.max(1, Math.round(hours * 60)) + ' minutes ago';
+    if (hours < 48) return Math.round(hours) + ' hours ago';
+    return Math.floor(hours / 24) + ' days ago';
+  };
+
+  try {
+    const stats = await (await fetch('/data/stats.json', {cache:'no-store'})).json();
+    const cov = await (await fetch('/data/coverage-by-state.json', {cache:'no-store'})).json();
+    const generated = (stats._meta || {}).generated;
+    const totals = stats.totals || {};
+    const conf = stats.scoring_confidence || {};
+    const nat = cov.national || {};
+    const hours = generated ? (Date.now() - new Date(generated).getTime()) / 36e5 : 99;
+    $('score-status').className = 'note' + (hours > 3 ? ' warn' : '');
+    $('score-status').textContent = hours <= 3
+      ? 'Scorecard snapshot is current. Last publish ' + age(generated) + '.'
+      : 'Scorecard snapshot is stale. Last publish ' + age(generated) + '.';
+    $('score-cards').innerHTML = [
+      card('Evidence-scored', n(nat.evidence_scored).toLocaleString(), 'of ' + n(nat.total).toLocaleString() + ' candidates · ' + (nat.pct ?? '—') + '%'),
+      card('Verified claims', n(totals.verified_claims).toLocaleString(), n(totals.total_claims).toLocaleString() + ' claims on file'),
+      card('Still unreviewed', n(conf.unreviewed).toLocaleString(), n(conf.legacy_reviewed).toLocaleString() + ' legacy-reviewed · ' + n(conf.party_default).toLocaleString() + ' party-default'),
+      card('Citation coverage', (totals.bias_citation_coverage_pct ?? '—') + '%', 'of cited sources have a bias entry')
+    ].join('');
+    const levels = (nat.by_level) || {};
+    const va = (cov.states || []).find(s => s.state === 'VA');
+    const line = (name, row) => row ? `<li>${name}: ${n(row.evidence_scored).toLocaleString()} / ${n(row.total).toLocaleString()} (${row.pct ?? '—'}%)</li>` : '';
+    $('score-levels').innerHTML = '<ul>' +
+      line('Federal', levels.federal) + line('State', levels.state) + line('Local', levels.local) +
+      (va ? `<li>Virginia: ${n(va.evidence_scored).toLocaleString()} / ${n(va.total).toLocaleString()} (${va.pct ?? '—'}%), local ${n((va.by_level||{}).local && va.by_level.local.evidence_scored).toLocaleString()} / ${n((va.by_level||{}).local && va.by_level.local.total).toLocaleString()}</li>` : '') +
+      '</ul>';
+  } catch (e) {
+    $('score-status').className = 'note warn';
+    $('score-status').textContent = 'Scorecard counters did not load. ' + (e && e.message ? e.message : e);
+  }
+
+  try {
+    const et = new Date().toLocaleDateString('en-CA', {timeZone:'America/New_York'});
+    const url = '/fxbg/commerce/GRIND-' + et + '.md';
+    const res = await fetch(url, {cache:'no-store'});
+    if (!res.ok) throw new Error('today\'s log returned ' + res.status);
+    const text = await res.text();
+    const rounds = text.match(/^## Automated round \S+/gm) || [];
+    const rows = text.match(/directory-index\.json: ([0-9,]+) rows/g) || [];
+    const lastRows = rows.length ? rows[rows.length - 1].replace('directory-index.json: ', '').replace(' rows', '') : 'not stated';
+    const flat = rows.length > 1 && new Set(rows).size === 1;
+    $('commerce-status').className = 'note' + (flat ? ' warn' : '');
+    $('commerce-status').textContent = rounds.length
+      ? (rounds.length + ' commerce rounds logged for ' + et + (flat ? '. The index size did not change. The log does not say any field was applied.' : '. The log does not say any field was applied.'))
+      : 'Today\'s commerce log is up, but it has no round headings.';
+    $('commerce-cards').innerHTML = [
+      card('Rounds today', String(rounds.length), 'from ' + url),
+      card('Index size', lastRows, flat ? 'unchanged across today\'s log' : 'last figure in today\'s log'),
+      card('Fields applied', 'not recorded', 'do not read a round as yield')
+    ].join('');
+  } catch (e) {
+    $('commerce-status').className = 'note warn';
+    $('commerce-status').textContent = 'Commerce log did not load. ' + (e && e.message ? e.message : e);
+  }
+})();
+</script>
+</body>
+</html>

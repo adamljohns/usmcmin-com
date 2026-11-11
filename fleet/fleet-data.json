@@ -1,9 +1,9 @@
 {
-  "generated": "2026-11-11T13:44:33.093217+00:00",
+  "generated": "2026-11-11T14:16:38.554220+00:00",
   "totals": {
     "agents": 17,
-    "operational": 11,
-    "degraded": 5,
+    "operational": 10,
+    "degraded": 6,
     "jobs": 194,
     "enabled": 112,
     "accomplishments": 417,
@@ -13,16 +13,17 @@
     "cron": {
       "enabled": 112,
       "ran26h": 67,
-      "delivered": 25,
+      "delivered": 24,
       "fails": [
-        "scheduled job \u00d7 7"
+        "scheduled job \u00d7 7",
+        "scheduled skill \u00d7 1"
       ]
     },
     "cron_source": "openclaw.sqlite + hermes/cron/jobs.json",
     "launchd": {
-      "healthy": 100,
+      "healthy": 99,
       "fails": [
-        "launchd job \u00d7 4"
+        "launchd job \u00d7 5"
       ]
     }
   },
@@ -1889,7 +1890,7 @@
       "n_jobs": 9,
       "n_enabled": 6,
       "err": 0,
-      "last_ms": 1794403525989,
+      "last_ms": 1794405327972,
       "status": "operational",
       "accomplishments": [
         {
@@ -2354,10 +2355,10 @@
           "expr": "",
           "tz": "",
           "channel": "",
-          "last_ms": 1794403525989,
+          "last_ms": 1794405327972,
           "status": "ok",
           "errors": 0,
-          "dur_ms": 50016
+          "dur_ms": 128299
         },
         {
           "name": "invitation-check",
@@ -2526,9 +2527,9 @@
       ],
       "n_jobs": 28,
       "n_enabled": 14,
-      "err": 0,
-      "last_ms": 1794402884263,
-      "status": "operational",
+      "err": 1,
+      "last_ms": 1794405600486,
+      "status": "degraded",
       "accomplishments": [
         {
           "date": "2026-11-09",
@@ -2684,6 +2685,39 @@
       },
       "jobs": [
         {
+          "name": "Daily reconciliation \u2014 previous day (AC3-1025-RECON)",
+          "enabled": true,
+          "expr": "0 9 * * 1-6",
+          "tz": "America/New_York",
+          "channel": "last",
+          "last_ms": 1794405600486,
+          "status": "ok",
+          "errors": 0,
+          "dur_ms": 117201
+        },
+        {
+          "name": "heartbeat-carnegie",
+          "enabled": true,
+          "expr": "",
+          "tz": "",
+          "channel": "",
+          "last_ms": 1794405289390,
+          "status": "ok",
+          "errors": 0,
+          "dur_ms": 114097
+        },
+        {
+          "name": "Skill: finance-news",
+          "enabled": true,
+          "expr": "50 8 * * 1-5",
+          "tz": "America/New_York",
+          "channel": "telegram",
+          "last_ms": 1794405000052,
+          "status": "error",
+          "errors": 1,
+          "dur_ms": 1288
+        },
+        {
           "name": "hourly-cache-watch",
           "enabled": true,
           "expr": "",
@@ -2693,17 +2727,6 @@
           "status": "ok",
           "errors": 0,
           "dur_ms": 120956
-        },
-        {
-          "name": "heartbeat-carnegie",
-          "enabled": true,
-          "expr": "",
-          "tz": "",
-          "channel": "",
-          "last_ms": 1794401689334,
-          "status": "ok",
-          "errors": 0,
-          "dur_ms": 121667
         },
         {
           "name": "C5iSR Daily Post \u2014 Carnegie (Mon-Sat 7:30AM, all six themes)",
@@ -2781,28 +2804,6 @@
           "status": "ok",
           "errors": 0,
           "dur_ms": 157185
-        },
-        {
-          "name": "Daily reconciliation \u2014 previous day (AC3-1025-RECON)",
-          "enabled": true,
-          "expr": "0 9 * * 1-6",
-          "tz": "America/New_York",
-          "channel": "last",
-          "last_ms": 1794319200051,
-          "status": "ok",
-          "errors": 0,
-          "dur_ms": 72690
-        },
-        {
-          "name": "Skill: finance-news",
-          "enabled": true,
-          "expr": "50 8 * * 1-5",
-          "tz": "America/New_York",
-          "channel": "telegram",
-          "last_ms": 1794318600050,
-          "status": "ok",
-          "errors": 0,
-          "dur_ms": 105975
         },
         {
           "name": "Skill: personal-finance-v2 (Mon ledger)",
@@ -3075,7 +3076,7 @@
       "n_jobs": 21,
       "n_enabled": 12,
       "err": 1,
-      "last_ms": 1794404400041,
+      "last_ms": 1794406138203,
       "status": "degraded",
       "accomplishments": [
         {
@@ -3255,6 +3256,28 @@
       },
       "jobs": [
         {
+          "name": "review-batch-submit",
+          "enabled": true,
+          "expr": "",
+          "tz": "",
+          "channel": "",
+          "last_ms": 1794406138203,
+          "status": "ok",
+          "errors": 0,
+          "dur_ms": 159775
+        },
+        {
+          "name": "Sally: host-inbox sweep AM",
+          "enabled": true,
+          "expr": "50 8 * * *",
+          "tz": "America/New_York",
+          "channel": "telegram",
+          "last_ms": 1794405000063,
+          "status": "ok",
+          "errors": 0,
+          "dur_ms": 141463
+        },
+        {
           "name": "Skill: airbnb-reader",
           "enabled": true,
           "expr": "40 8 * * *",
@@ -3264,17 +3287,6 @@
           "status": "ok",
           "errors": 0,
           "dur_ms": 58570
-        },
-        {
-          "name": "review-batch-submit",
-          "enabled": true,
-          "expr": "",
-          "tz": "",
-          "channel": "",
-          "last_ms": 1794404336349,
-          "status": "ok",
-          "errors": 0,
-          "dur_ms": 45148
         },
         {
           "name": "Cottage 30-day rule ON weekdays 7 AM",
@@ -3341,17 +3353,6 @@
           "status": "ok",
           "errors": 0,
           "dur_ms": 248097
-        },
-        {
-          "name": "Sally: host-inbox sweep AM",
-          "enabled": true,
-          "expr": "50 8 * * *",
-          "tz": "America/New_York",
-          "channel": "telegram",
-          "last_ms": 1794318600061,
-          "status": "ok",
-          "errors": 0,
-          "dur_ms": 42788
         },
         {
           "name": "Sally: Monday commercial RE scan",
@@ -3649,7 +3650,7 @@
       "n_jobs": 10,
       "n_enabled": 7,
       "err": 2,
-      "last_ms": 1794404083638,
+      "last_ms": 1794405465936,
       "status": "degraded",
       "accomplishments": [
         {
@@ -3927,6 +3928,17 @@
       },
       "jobs": [
         {
+          "name": "heartbeat-coach-arnie",
+          "enabled": true,
+          "expr": "",
+          "tz": "",
+          "channel": "",
+          "last_ms": 1794405465936,
+          "status": "ok",
+          "errors": 0,
+          "dur_ms": 45840
+        },
+        {
           "name": "recovery-pulse",
           "enabled": true,
           "expr": "",
@@ -3936,17 +3948,6 @@
           "status": "ok",
           "errors": 0,
           "dur_ms": 17231
-        },
-        {
-          "name": "heartbeat-coach-arnie",
-          "enabled": true,
-          "expr": "",
-          "tz": "",
-          "channel": "",
-          "last_ms": 1794403665900,
-          "status": "ok",
-          "errors": 0,
-          "dur_ms": 44364
         },
         {
           "name": "fit20 Daily Lead Sweep (07:30 ET)",
@@ -4113,7 +4114,7 @@
       "n_jobs": 11,
       "n_enabled": 6,
       "err": 0,
-      "last_ms": 1794402548758,
+      "last_ms": 1794406150434,
       "status": "operational",
       "accomplishments": [
         {
@@ -4257,10 +4258,10 @@
           "expr": "",
           "tz": "",
           "channel": "",
-          "last_ms": 1794402548758,
+          "last_ms": 1794406150434,
           "status": "ok",
           "errors": 0,
-          "dur_ms": 320279
+          "dur_ms": 146680
         },
         {
           "name": "Doc Morning Clinical Read (0800 EDT)",
@@ -4453,7 +4454,7 @@
       "n_jobs": 10,
       "n_enabled": 7,
       "err": 0,
-      "last_ms": 1794404208659,
+      "last_ms": 1794406010382,
       "status": "operational",
       "accomplishments": [
         {
@@ -4626,10 +4627,10 @@
           "expr": "",
           "tz": "",
           "channel": "",
-          "last_ms": 1794404208659,
+          "last_ms": 1794406010382,
           "status": "ok",
           "errors": 0,
-          "dur_ms": 65121
+          "dur_ms": 198557
         },
         {
           "name": "agenda-this-week",
@@ -4804,7 +4805,7 @@
       "n_jobs": 10,
       "n_enabled": 7,
       "err": 0,
-      "last_ms": 1794403398934,
+      "last_ms": 1794405198983,
       "status": "operational",
       "accomplishments": [
         {
@@ -5019,10 +5020,10 @@
           "expr": "",
           "tz": "",
           "channel": "",
-          "last_ms": 1794403398934,
+          "last_ms": 1794405198983,
           "status": "ok",
           "errors": 0,
-          "dur_ms": 46849
+          "dur_ms": 44614
         },
         {
           "name": "Newsletter Synthesis (Wed 5:30 AM) \u2014 Prof X",
@@ -5204,7 +5205,7 @@
       "n_jobs": 9,
       "n_enabled": 6,
       "err": 1,
-      "last_ms": 1794403833090,
+      "last_ms": 1794405633499,
       "status": "degraded",
       "accomplishments": [
         {
@@ -5383,10 +5384,10 @@
           "expr": "",
           "tz": "",
           "channel": "",
-          "last_ms": 1794403833090,
+          "last_ms": 1794405633499,
           "status": "ok",
           "errors": 0,
-          "dur_ms": 105172
+          "dur_ms": 565202
         },
         {
           "name": "Daily Tech/AI Brief (08:30)",
@@ -5556,7 +5557,7 @@
       "n_jobs": 11,
       "n_enabled": 8,
       "err": 0,
-      "last_ms": 1794403761947,
+      "last_ms": 1794405606833,
       "status": "operational",
       "accomplishments": [
         {
@@ -5707,15 +5708,26 @@
       },
       "jobs": [
         {
+          "name": "Daily Father Outreach Reminder (Pops)",
+          "enabled": true,
+          "expr": "0 9 * * 1-5",
+          "tz": "America/New_York",
+          "channel": "telegram",
+          "last_ms": 1794405606833,
+          "status": "ok",
+          "errors": 0,
+          "dur_ms": 458685
+        },
+        {
           "name": "heartbeat-pops",
           "enabled": true,
           "expr": "",
           "tz": "",
           "channel": "",
-          "last_ms": 1794403761947,
+          "last_ms": 1794405562010,
           "status": "ok",
           "errors": 0,
-          "dur_ms": 40032
+          "dur_ms": 40989
         },
         {
           "name": "wheelhouse-pattern",
@@ -5749,17 +5761,6 @@
           "status": "ok",
           "errors": 0,
           "dur_ms": 33763
-        },
-        {
-          "name": "Daily Father Outreach Reminder (Pops)",
-          "enabled": true,
-          "expr": "0 9 * * 1-5",
-          "tz": "America/New_York",
-          "channel": "telegram",
-          "last_ms": 1794319206122,
-          "status": "ok",
-          "errors": 0,
-          "dur_ms": 315405
         },
         {
           "name": "Skill: calendar-apple (Sun family week)",
@@ -5906,7 +5907,7 @@
       "n_jobs": 8,
       "n_enabled": 4,
       "err": 0,
-      "last_ms": 1794402834773,
+      "last_ms": 1794406434876,
       "status": "operational",
       "accomplishments": [
         {
@@ -6067,10 +6068,10 @@
           "expr": "",
           "tz": "",
           "channel": "",
-          "last_ms": 1794402834773,
-          "status": "skipped",
+          "last_ms": 1794406434876,
+          "status": "ok",
           "errors": 0,
-          "dur_ms": 265
+          "dur_ms": 42863
         },
         {
           "name": "pt-log-late-check",
@@ -6225,7 +6226,7 @@
       "n_jobs": 8,
       "n_enabled": 5,
       "err": 0,
-      "last_ms": 1794404036843,
+      "last_ms": 1794405263023,
       "status": "operational",
       "accomplishments": [
         {
@@ -6400,6 +6401,17 @@
       },
       "jobs": [
         {
+          "name": "heartbeat-bg-hartwell",
+          "enabled": true,
+          "expr": "",
+          "tz": "",
+          "channel": "",
+          "last_ms": 1794405263023,
+          "status": "ok",
+          "errors": 0,
+          "dur_ms": 16818
+        },
+        {
           "name": "pattern-watch",
           "enabled": true,
           "expr": "",
@@ -6409,17 +6421,6 @@
           "status": "ok",
           "errors": 0,
           "dur_ms": 16897
-        },
-        {
-          "name": "heartbeat-bg-hartwell",
-          "enabled": true,
-          "expr": "",
-          "tz": "",
-          "channel": "",
-          "last_ms": 1794403462957,
-          "status": "ok",
-          "errors": 0,
-          "dur_ms": 40501
         },
         {
           "name": "Gus Sunday Reading List + Reflection (Sun 6PM)",
@@ -6533,5 +6534,5 @@
     "write-airbnb-reviews-for-listings",
     "you-are-an-expert-ai-agent"
   ],
-  "cowork_date": "2026-11-11T08:44:03-05:00"
+  "cowork_date": "2026-11-11T09:16:07-05:00"
 }

@@ -1,9 +1,9 @@
 {
-  "generated": "2026-11-12T19:02:55.757077+00:00",
+  "generated": "2026-11-12T19:35:22.026103+00:00",
   "totals": {
     "agents": 17,
-    "operational": 16,
-    "degraded": 0,
+    "operational": 15,
+    "degraded": 1,
     "jobs": 191,
     "enabled": 110,
     "accomplishments": 417,
@@ -14,7 +14,9 @@
       "enabled": 110,
       "ran26h": 63,
       "delivered": 25,
-      "fails": []
+      "fails": [
+        "scheduled job \u00d7 1"
+      ]
     },
     "cron_source": "openclaw.sqlite + hermes/cron/jobs.json",
     "launchd": {
@@ -1857,7 +1859,7 @@
       "n_jobs": 9,
       "n_enabled": 6,
       "err": 0,
-      "last_ms": 1794510092458,
+      "last_ms": 1794511893505,
       "status": "operational",
       "accomplishments": [
         {
@@ -2322,10 +2324,10 @@
           "expr": "",
           "tz": "",
           "channel": "",
-          "last_ms": 1794510092458,
+          "last_ms": 1794511893505,
           "status": "ok",
           "errors": 0,
-          "dur_ms": 49953
+          "dur_ms": 107058
         },
         {
           "name": "invitation-check",
@@ -2333,10 +2335,10 @@
           "expr": "",
           "tz": "",
           "channel": "",
-          "last_ms": 1794503313865,
+          "last_ms": 1794510513921,
           "status": "ok",
           "errors": 0,
-          "dur_ms": 18644
+          "dur_ms": 18830
         },
         {
           "name": "Evening pre-check-in prompt (9 PM)",
@@ -2496,7 +2498,7 @@
       "n_jobs": 28,
       "n_enabled": 14,
       "err": 0,
-      "last_ms": 1794509695991,
+      "last_ms": 1794512100501,
       "status": "operational",
       "accomplishments": [
         {
@@ -2653,6 +2655,39 @@
       },
       "jobs": [
         {
+          "name": "Paper lab hourly stop check (AC3-1024-HEARTBEAT)",
+          "enabled": true,
+          "expr": "35 9-15 * * 1-5",
+          "tz": "America/New_York",
+          "channel": "last",
+          "last_ms": 1794512100501,
+          "status": "ok",
+          "errors": 0,
+          "dur_ms": 15405
+        },
+        {
+          "name": "carnegie-paper-touch-pm",
+          "enabled": true,
+          "expr": "30 14 * * 1-5",
+          "tz": "America/New_York",
+          "channel": "last",
+          "last_ms": 1794511800058,
+          "status": "ok",
+          "errors": 0,
+          "dur_ms": 109985
+        },
+        {
+          "name": "hourly-cache-watch",
+          "enabled": true,
+          "expr": "",
+          "tz": "",
+          "channel": "",
+          "last_ms": 1794510892075,
+          "status": "ok",
+          "errors": 0,
+          "dur_ms": 315005
+        },
+        {
           "name": "heartbeat-carnegie",
           "enabled": true,
           "expr": "",
@@ -2662,28 +2697,6 @@
           "status": "ok",
           "errors": 0,
           "dur_ms": 125849
-        },
-        {
-          "name": "Paper lab hourly stop check (AC3-1024-HEARTBEAT)",
-          "enabled": true,
-          "expr": "35 9-15 * * 1-5",
-          "tz": "America/New_York",
-          "channel": "last",
-          "last_ms": 1794508500038,
-          "status": "ok",
-          "errors": 0,
-          "dur_ms": 15003
-        },
-        {
-          "name": "hourly-cache-watch",
-          "enabled": true,
-          "expr": "",
-          "tz": "",
-          "channel": "",
-          "last_ms": 1794507290070,
-          "status": "ok",
-          "errors": 0,
-          "dur_ms": 133978
         },
         {
           "name": "carnegie-paper-touch-am",
@@ -2761,17 +2774,6 @@
           "status": "ok",
           "errors": 0,
           "dur_ms": 97316
-        },
-        {
-          "name": "carnegie-paper-touch-pm",
-          "enabled": true,
-          "expr": "30 14 * * 1-5",
-          "tz": "America/New_York",
-          "channel": "last",
-          "last_ms": 1794425401164,
-          "status": "ok",
-          "errors": 0,
-          "dur_ms": 129517
         },
         {
           "name": "Skill: personal-finance-v2 (Mon ledger)",
@@ -3045,7 +3047,7 @@
       "n_jobs": 21,
       "n_enabled": 12,
       "err": 0,
-      "last_ms": 1794508758956,
+      "last_ms": 1794510560589,
       "status": "operational",
       "accomplishments": [
         {
@@ -3230,10 +3232,10 @@
           "expr": "",
           "tz": "",
           "channel": "",
-          "last_ms": 1794508758956,
+          "last_ms": 1794510560589,
           "status": "ok",
           "errors": 0,
-          "dur_ms": 45017
+          "dur_ms": 575533
         },
         {
           "name": "heartbeat-sally",
@@ -3621,7 +3623,7 @@
       "n_jobs": 10,
       "n_enabled": 7,
       "err": 0,
-      "last_ms": 1794508325157,
+      "last_ms": 1794512088316,
       "status": "operational",
       "accomplishments": [
         {
@@ -3899,15 +3901,26 @@
       },
       "jobs": [
         {
+          "name": "recovery-pulse",
+          "enabled": true,
+          "expr": "",
+          "tz": "",
+          "channel": "",
+          "last_ms": 1794512088316,
+          "status": "ok",
+          "errors": 0,
+          "dur_ms": 18607
+        },
+        {
           "name": "heartbeat-coach-arnie",
           "enabled": true,
           "expr": "",
           "tz": "",
           "channel": "",
-          "last_ms": 1794508325157,
+          "last_ms": 1794511928042,
           "status": "ok",
           "errors": 0,
-          "dur_ms": 68860
+          "dur_ms": 119437
         },
         {
           "name": "Coach Midday Garmin Read (12:15 EDT)",
@@ -3919,17 +3932,6 @@
           "status": "ok",
           "errors": 0,
           "dur_ms": 15210
-        },
-        {
-          "name": "recovery-pulse",
-          "enabled": true,
-          "expr": "",
-          "tz": "",
-          "channel": "",
-          "last_ms": 1794501288259,
-          "status": "ok",
-          "errors": 0,
-          "dur_ms": 51322
         },
         {
           "name": "fit20 Daily Lead Sweep (07:30 ET)",
@@ -4086,7 +4088,7 @@
       "n_jobs": 11,
       "n_enabled": 6,
       "err": 0,
-      "last_ms": 1794507685352,
+      "last_ms": 1794510570758,
       "status": "operational",
       "accomplishments": [
         {
@@ -4225,6 +4227,17 @@
       },
       "jobs": [
         {
+          "name": "vitals-warning",
+          "enabled": true,
+          "expr": "",
+          "tz": "",
+          "channel": "",
+          "last_ms": 1794510570758,
+          "status": "ok",
+          "errors": 0,
+          "dur_ms": 572482
+        },
+        {
           "name": "heartbeat-doc",
           "enabled": true,
           "expr": "",
@@ -4234,17 +4247,6 @@
           "status": "ok",
           "errors": 0,
           "dur_ms": 27488
-        },
-        {
-          "name": "vitals-warning",
-          "enabled": true,
-          "expr": "",
-          "tz": "",
-          "channel": "",
-          "last_ms": 1794506969050,
-          "status": "ok",
-          "errors": 0,
-          "dur_ms": 179008
         },
         {
           "name": "Doc Active Intel (midday)",
@@ -4426,9 +4428,9 @@
       ],
       "n_jobs": 10,
       "n_enabled": 7,
-      "err": 0,
-      "last_ms": 1794508587221,
-      "status": "operational",
+      "err": 1,
+      "last_ms": 1794510517981,
+      "status": "degraded",
       "accomplishments": [
         {
           "date": "2026-09-07",
@@ -4595,26 +4597,26 @@
       },
       "jobs": [
         {
-          "name": "heartbeat-sheriff-roy",
-          "enabled": true,
-          "expr": "",
-          "tz": "",
-          "channel": "",
-          "last_ms": 1794508587221,
-          "status": "ok",
-          "errors": 0,
-          "dur_ms": 89576
-        },
-        {
           "name": "agenda-this-week",
           "enabled": true,
           "expr": "",
           "tz": "",
           "channel": "",
-          "last_ms": 1794488917929,
+          "last_ms": 1794510517981,
+          "status": "error",
+          "errors": 1,
+          "dur_ms": 476974
+        },
+        {
+          "name": "heartbeat-sheriff-roy",
+          "enabled": true,
+          "expr": "",
+          "tz": "",
+          "channel": "",
+          "last_ms": 1794510387277,
           "status": "ok",
           "errors": 0,
-          "dur_ms": 268504
+          "dur_ms": 87426
         },
         {
           "name": "Skill: fxbg-city-code (Wed code check)",
@@ -4779,7 +4781,7 @@
       "n_jobs": 10,
       "n_enabled": 7,
       "err": 0,
-      "last_ms": 1794509608759,
+      "last_ms": 1794511408814,
       "status": "operational",
       "accomplishments": [
         {
@@ -4994,10 +4996,10 @@
           "expr": "",
           "tz": "",
           "channel": "",
-          "last_ms": 1794509608759,
+          "last_ms": 1794511408814,
           "status": "ok",
           "errors": 0,
-          "dur_ms": 57281
+          "dur_ms": 56656
         },
         {
           "name": "Newsletter Synthesis (Wed 5:30 AM) \u2014 Prof X",
@@ -5180,7 +5182,7 @@
       "n_jobs": 9,
       "n_enabled": 6,
       "err": 0,
-      "last_ms": 1794509944289,
+      "last_ms": 1794511744343,
       "status": "operational",
       "accomplishments": [
         {
@@ -5359,10 +5361,10 @@
           "expr": "",
           "tz": "",
           "channel": "",
-          "last_ms": 1794509944289,
+          "last_ms": 1794511744343,
           "status": "ok",
           "errors": 0,
-          "dur_ms": 68756
+          "dur_ms": 39054
         },
         {
           "name": "breaking-news-scan",
@@ -5370,10 +5372,10 @@
           "expr": "",
           "tz": "",
           "channel": "",
-          "last_ms": 1794507628537,
+          "last_ms": 1794511228597,
           "status": "ok",
           "errors": 0,
-          "dur_ms": 68497
+          "dur_ms": 75123
         },
         {
           "name": "Daily News Brief (1:00 PM) \u2014 Rush",
@@ -5533,7 +5535,7 @@
       "n_jobs": 11,
       "n_enabled": 8,
       "err": 0,
-      "last_ms": 1794510043757,
+      "last_ms": 1794511844693,
       "status": "operational",
       "accomplishments": [
         {
@@ -5689,10 +5691,10 @@
           "expr": "",
           "tz": "",
           "channel": "",
-          "last_ms": 1794510043757,
+          "last_ms": 1794511844693,
           "status": "ok",
           "errors": 0,
-          "dur_ms": 39972
+          "dur_ms": 144666
         },
         {
           "name": "wheelhouse-pattern",
@@ -5884,7 +5886,7 @@
       "n_jobs": 8,
       "n_enabled": 4,
       "err": 0,
-      "last_ms": 1794509281110,
+      "last_ms": 1794511082819,
       "status": "operational",
       "accomplishments": [
         {
@@ -6045,10 +6047,10 @@
           "expr": "",
           "tz": "",
           "channel": "",
-          "last_ms": 1794509281110,
-          "status": "ok",
+          "last_ms": 1794511082819,
+          "status": "skipped",
           "errors": 0,
-          "dur_ms": 45655
+          "dur_ms": 286
         },
         {
           "name": "pt-log-late-check",
@@ -6056,10 +6058,10 @@
           "expr": "",
           "tz": "",
           "channel": "",
-          "last_ms": 1794503330150,
+          "last_ms": 1794510532167,
           "status": "ok",
           "errors": 0,
-          "dur_ms": 47233
+          "dur_ms": 49821
         },
         {
           "name": "Mac Weekly VA + Military Briefing (Sat 7AM)",
@@ -6204,7 +6206,7 @@
       "n_jobs": 8,
       "n_enabled": 5,
       "err": 0,
-      "last_ms": 1794509671618,
+      "last_ms": 1794512038086,
       "status": "operational",
       "accomplishments": [
         {
@@ -6379,26 +6381,26 @@
       },
       "jobs": [
         {
-          "name": "heartbeat-bg-hartwell",
-          "enabled": true,
-          "expr": "",
-          "tz": "",
-          "channel": "",
-          "last_ms": 1794509671618,
-          "status": "ok",
-          "errors": 0,
-          "dur_ms": 40795
-        },
-        {
           "name": "pattern-watch",
           "enabled": true,
           "expr": "",
           "tz": "",
           "channel": "",
-          "last_ms": 1794490437070,
+          "last_ms": 1794512038086,
           "status": "ok",
           "errors": 0,
-          "dur_ms": 17611
+          "dur_ms": 26949
+        },
+        {
+          "name": "heartbeat-bg-hartwell",
+          "enabled": true,
+          "expr": "",
+          "tz": "",
+          "channel": "",
+          "last_ms": 1794511471676,
+          "status": "ok",
+          "errors": 0,
+          "dur_ms": 41210
         },
         {
           "name": "Gus Sunday Reading List + Reflection (Sun 6PM)",
@@ -6512,5 +6514,5 @@
     "write-airbnb-reviews-for-listings",
     "you-are-an-expert-ai-agent"
   ],
-  "cowork_date": "2026-11-12T14:02:26-05:00"
+  "cowork_date": "2026-11-12T14:34:52-05:00"
 }

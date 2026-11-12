@@ -1,12 +1,12 @@
 {
- "generated_at": "2026-11-11T23:57:38-05:00",
- "generated_at_utc": "2026-11-12T04:57:38+00:00",
+ "generated_at": "2026-11-12T00:29:54-05:00",
+ "generated_at_utc": "2026-11-12T05:29:54+00:00",
  "meter": {
   "week_start": "2026-11-11T14:00-05:00",
   "reset_at": "2026-11-18T14:00-05:00",
   "used_pct": 3.0,
-  "five_hour_used_pct": 2.0,
-  "snapshot_at": "2026-11-11T23:57:19-05:00",
+  "five_hour_used_pct": 0.0,
+  "snapshot_at": "2026-11-12T00:29:34-05:00",
   "source": "fleet/usage-data.json (Anthropic usage API via frontier-usage-poll.py)"
  },
  "method": {
@@ -64,18 +64,18 @@
   "meter": {
    "label": "This meter week",
    "start": "2026-11-11T14:00-05:00",
-   "end": "2026-11-11T23:57-05:00",
-   "total_mtok": 12.773,
-   "total_pts": 4.6,
-   "calls": 768,
+   "end": "2026-11-12T00:29-05:00",
+   "total_mtok": 14.289,
+   "total_pts": 5.1,
+   "calls": 779,
    "sources": {
-    "health": 0.299,
+    "health": 0.318,
     "cron": 8.884,
-    "chat": 1.925,
-    "a2a": 1.665
+    "chat": 2.623,
+    "a2a": 2.464
    },
    "models": {
-    "Opus": 4.554,
+    "Opus": 6.07,
     "Haiku": 0.021,
     "Sonnet": 8.197
    },
@@ -86,7 +86,7 @@
      "role": "Hospitality & Finance",
      "mtok": 6.482,
      "pts": 2.31,
-     "pct": 50.75,
+     "pct": 45.36,
      "calls": 524,
      "sources": {
       "cron": 6.482
@@ -139,12 +139,73 @@
      }
     },
     {
+     "id": "chaps",
+     "name": "Chaplain Chuck",
+     "role": "Ministry Operations",
+     "mtok": 2.443,
+     "pts": 0.87,
+     "pct": 17.1,
+     "calls": 23,
+     "sources": {
+      "chat": 1.293,
+      "a2a": 1.022,
+      "cron": 0.129
+     },
+     "models": {
+      "Opus": 2.315,
+      "Sonnet": 0.129
+     },
+     "top_crons": [
+      {
+       "id": "510e950d-c4a4-4f2e-b3cc-8be3034f6e63",
+       "name": "Evening pre-check-in prompt (9 PM)",
+       "owner": "chaps",
+       "kind": "own",
+       "mtok": 0.129,
+       "pts": 0.05,
+       "calls": 4
+      }
+     ],
+     "received_from": [
+      {
+       "id": "coach-arnie",
+       "mtok": 0.565
+      },
+      {
+       "id": "preacher-john",
+       "mtok": 0.457
+      }
+     ],
+     "causes_on_others": {
+      "mtok": 0.814,
+      "to": [
+       {
+        "id": "preacher-john",
+        "mtok": 0.581
+       },
+       {
+        "id": "coach-arnie",
+        "mtok": 0.233
+       }
+      ]
+     },
+     "other_calls": {
+      "gpt": 0,
+      "grok": 0,
+      "local": 51
+     },
+     "other_tokens": {
+      "gpt": 0,
+      "local": 472408
+     }
+    },
+    {
      "id": "main",
      "name": "Max Pemberton",
      "role": "Fleet Orchestrator",
      "mtok": 2.134,
      "pts": 0.76,
-     "pct": 16.71,
+     "pct": 14.93,
      "calls": 28,
      "sources": {
       "a2a": 0.402,
@@ -208,65 +269,12 @@
      }
     },
     {
-     "id": "chaps",
-     "name": "Chaplain Chuck",
-     "role": "Ministry Operations",
-     "mtok": 1.18,
-     "pts": 0.42,
-     "pct": 9.24,
-     "calls": 17,
-     "sources": {
-      "chat": 0.594,
-      "a2a": 0.457,
-      "cron": 0.129
-     },
-     "models": {
-      "Opus": 1.051,
-      "Sonnet": 0.129
-     },
-     "top_crons": [
-      {
-       "id": "510e950d-c4a4-4f2e-b3cc-8be3034f6e63",
-       "name": "Evening pre-check-in prompt (9 PM)",
-       "owner": "chaps",
-       "kind": "own",
-       "mtok": 0.129,
-       "pts": 0.05,
-       "calls": 4
-      }
-     ],
-     "received_from": [
-      {
-       "id": "preacher-john",
-       "mtok": 0.457
-      }
-     ],
-     "causes_on_others": {
-      "mtok": 0.581,
-      "to": [
-       {
-        "id": "preacher-john",
-        "mtok": 0.581
-       }
-      ]
-     },
-     "other_calls": {
-      "gpt": 0,
-      "grok": 0,
-      "local": 51
-     },
-     "other_tokens": {
-      "gpt": 0,
-      "local": 472408
-     }
-    },
-    {
      "id": "rush",
      "name": "Rush Sullivan",
      "role": "News Correspondent",
      "mtok": 0.905,
      "pts": 0.32,
-     "pct": 7.09,
+     "pct": 6.33,
      "calls": 46,
      "sources": {
       "cron": 0.679,
@@ -316,15 +324,17 @@
      "id": "coach-arnie",
      "name": "Coach Arnold Briggs",
      "role": "Fitness Coach",
-     "mtok": 0.608,
-     "pts": 0.22,
-     "pct": 4.76,
-     "calls": 63,
+     "mtok": 0.841,
+     "pts": 0.3,
+     "pct": 5.89,
+     "calls": 66,
      "sources": {
-      "cron": 0.608
+      "cron": 0.608,
+      "a2a": 0.233
      },
      "models": {
-      "Sonnet": 0.608
+      "Sonnet": 0.608,
+      "Opus": 0.233
      },
      "top_crons": [
       {
@@ -346,10 +356,20 @@
        "calls": 8
       }
      ],
-     "received_from": [],
+     "received_from": [
+      {
+       "id": "chaps",
+       "mtok": 0.233
+      }
+     ],
      "causes_on_others": {
-      "mtok": 0.0,
-      "to": []
+      "mtok": 0.565,
+      "to": [
+       {
+        "id": "chaps",
+        "mtok": 0.565
+       }
+      ]
      },
      "other_calls": {
       "gpt": 0,
@@ -367,7 +387,7 @@
      "role": "Scripture & Theology",
      "mtok": 0.581,
      "pts": 0.21,
-     "pct": 4.55,
+     "pct": 4.07,
      "calls": 8,
      "sources": {
       "a2a": 0.581
@@ -407,7 +427,7 @@
      "role": "Capital Steward",
      "mtok": 0.53,
      "pts": 0.19,
-     "pct": 4.15,
+     "pct": 3.71,
      "calls": 37,
      "sources": {
       "cron": 0.53
@@ -483,15 +503,15 @@
      "id": "watchdog",
      "name": "Auth-watchdog ping",
      "role": "claude -p ping every 15 min",
-     "mtok": 0.299,
+     "mtok": 0.318,
      "pts": 0.11,
-     "pct": 2.34,
-     "calls": 40,
+     "pct": 2.23,
+     "calls": 42,
      "sources": {
-      "health": 0.299
+      "health": 0.318
      },
      "models": {
-      "Opus": 0.299
+      "Opus": 0.318
      },
      "top_crons": [],
      "received_from": [],
@@ -508,7 +528,7 @@
      "role": "Health & Medical",
      "mtok": 0.055,
      "pts": 0.02,
-     "pct": 0.43,
+     "pct": 0.38,
      "calls": 5,
      "sources": {
       "cron": 0.055
@@ -686,22 +706,22 @@
   },
   "d7": {
    "label": "Last 7 days",
-   "start": "2026-11-04T23:57-05:00",
-   "end": "2026-11-11T23:57-05:00",
-   "total_mtok": 345.705,
-   "total_pts": 123.5,
-   "calls": 10311,
+   "start": "2026-11-05T00:29-05:00",
+   "end": "2026-11-12T00:29-05:00",
+   "total_mtok": 347.2,
+   "total_pts": 124.0,
+   "calls": 10319,
    "sources": {
-    "health": 3.682,
+    "health": 3.68,
     "cron": 90.886,
-    "chat": 111.526,
-    "a2a": 71.912,
+    "chat": 112.224,
+    "a2a": 72.711,
     "subtask": 64.007,
     "other": 2.283,
     "terminal": 1.41
    },
    "models": {
-    "Opus": 259.509,
+    "Opus": 261.004,
     "Sonnet": 29.755,
     "Haiku": 0.176,
     "Fable": 56.265
@@ -713,7 +733,7 @@
      "role": "Fleet Orchestrator",
      "mtok": 140.016,
      "pts": 50.01,
-     "pct": 40.5,
+     "pct": 40.33,
      "calls": 2947,
      "sources": {
       "cron": 5.489,
@@ -865,7 +885,7 @@
      "role": "Not an OpenClaw agent",
      "mtok": 42.927,
      "pts": 15.33,
-     "pct": 12.42,
+     "pct": 12.36,
      "calls": 944,
      "sources": {
       "cron": 42.927
@@ -907,7 +927,7 @@
      "role": "Hospitality & Finance",
      "mtok": 40.347,
      "pts": 14.41,
-     "pct": 11.67,
+     "pct": 11.62,
      "calls": 1990,
      "sources": {
       "cron": 21.428,
@@ -1032,7 +1052,7 @@
      "role": "Scripture & Theology",
      "mtok": 36.515,
      "pts": 13.04,
-     "pct": 10.56,
+     "pct": 10.52,
      "calls": 792,
      "sources": {
       "cron": 2.172,
@@ -1128,19 +1148,19 @@
      "id": "chaps",
      "name": "Chaplain Chuck",
      "role": "Ministry Operations",
-     "mtok": 22.36,
-     "pts": 7.99,
-     "pct": 6.47,
-     "calls": 581,
+     "mtok": 23.624,
+     "pts": 8.44,
+     "pct": 6.8,
+     "calls": 587,
      "sources": {
-      "chat": 9.07,
-      "a2a": 6.326,
+      "chat": 9.768,
+      "a2a": 6.892,
       "subtask": 5.985,
       "cron": 0.95,
       "other": 0.029
      },
      "models": {
-      "Opus": 21.58,
+      "Opus": 22.844,
       "Sonnet": 0.78
      },
      "top_crons": [
@@ -1183,7 +1203,7 @@
       },
       {
        "id": "coach-arnie",
-       "mtok": 0.895
+       "mtok": 1.46
       },
       {
        "id": "pops",
@@ -1195,7 +1215,7 @@
       }
      ],
      "causes_on_others": {
-      "mtok": 5.856,
+      "mtok": 6.088,
       "to": [
        {
         "id": "preacher-john",
@@ -1211,7 +1231,7 @@
        },
        {
         "id": "coach-arnie",
-        "mtok": 0.6
+        "mtok": 0.832
        }
       ]
      },
@@ -1231,7 +1251,7 @@
      "role": "Family & Inbox",
      "mtok": 16.845,
      "pts": 6.02,
-     "pct": 4.87,
+     "pct": 4.85,
      "calls": 465,
      "sources": {
       "cron": 1.764,
@@ -1357,19 +1377,19 @@
      "id": "coach-arnie",
      "name": "Coach Arnold Briggs",
      "role": "Fitness Coach",
-     "mtok": 11.998,
-     "pts": 4.29,
-     "pct": 3.47,
-     "calls": 541,
+     "mtok": 12.231,
+     "pts": 4.37,
+     "pct": 3.52,
+     "calls": 544,
      "sources": {
       "cron": 4.423,
       "chat": 4.735,
-      "a2a": 2.372,
+      "a2a": 2.605,
       "subtask": 0.469
      },
      "models": {
       "Sonnet": 2.797,
-      "Opus": 9.201
+      "Opus": 9.434
      },
      "top_crons": [
       {
@@ -1425,7 +1445,7 @@
       },
       {
        "id": "chaps",
-       "mtok": 0.6
+       "mtok": 0.832
       },
       {
        "id": "coach-arnie",
@@ -1433,7 +1453,7 @@
       }
      ],
      "causes_on_others": {
-      "mtok": 3.885,
+      "mtok": 4.451,
       "to": [
        {
         "id": "main",
@@ -1441,7 +1461,7 @@
        },
        {
         "id": "chaps",
-        "mtok": 0.895
+        "mtok": 1.46
        }
       ]
      },
@@ -1461,7 +1481,7 @@
      "role": "Capital Steward",
      "mtok": 10.232,
      "pts": 3.65,
-     "pct": 2.96,
+     "pct": 2.95,
      "calls": 561,
      "sources": {
       "cron": 5.003,
@@ -1595,7 +1615,7 @@
      "role": "News Correspondent",
      "mtok": 6.91,
      "pts": 2.47,
-     "pct": 2.0,
+     "pct": 1.99,
      "calls": 395,
      "sources": {
       "cron": 4.697,
@@ -1675,7 +1695,7 @@
      "role": "Research & Synthesis",
      "mtok": 4.491,
      "pts": 1.6,
-     "pct": 1.3,
+     "pct": 1.29,
      "calls": 156,
      "sources": {
       "a2a": 1.684,
@@ -1836,15 +1856,15 @@
      "id": "watchdog",
      "name": "Auth-watchdog ping",
      "role": "claude -p ping every 15 min",
-     "mtok": 3.213,
+     "mtok": 3.211,
      "pts": 1.15,
-     "pct": 0.93,
-     "calls": 539,
+     "pct": 0.92,
+     "calls": 538,
      "sources": {
-      "health": 3.213
+      "health": 3.211
      },
      "models": {
-      "Opus": 3.213
+      "Opus": 3.211
      },
      "top_crons": [],
      "received_from": [],
@@ -2108,22 +2128,22 @@
   },
   "d14": {
    "label": "Last 14 days",
-   "start": "2026-10-29T00:57-04:00",
-   "end": "2026-11-11T23:57-05:00",
-   "total_mtok": 670.655,
-   "total_pts": 239.5,
-   "calls": 19954,
+   "start": "2026-10-29T01:29-04:00",
+   "end": "2026-11-12T00:29-05:00",
+   "total_mtok": 672.165,
+   "total_pts": 240.1,
+   "calls": 19963,
    "sources": {
-    "health": 6.262,
+    "health": 6.276,
     "other": 3.203,
     "cron": 169.379,
-    "chat": 226.005,
-    "a2a": 174.331,
+    "chat": 226.703,
+    "a2a": 175.129,
     "subtask": 76.107,
     "terminal": 15.368
    },
    "models": {
-    "Opus": 522.629,
+    "Opus": 524.14,
     "Sonnet": 39.096,
     "Haiku": 0.38,
     "Fable": 108.55
@@ -2135,7 +2155,7 @@
      "role": "Fleet Orchestrator",
      "mtok": 240.96,
      "pts": 86.06,
-     "pct": 35.93,
+     "pct": 35.85,
      "calls": 5732,
      "sources": {
       "other": 2.729,
@@ -2287,7 +2307,7 @@
      "role": "Hospitality & Finance",
      "mtok": 84.395,
      "pts": 30.14,
-     "pct": 12.58,
+     "pct": 12.56,
      "calls": 3233,
      "sources": {
       "cron": 35.422,
@@ -2412,7 +2432,7 @@
      "role": "Not an OpenClaw agent",
      "mtok": 79.677,
      "pts": 28.46,
-     "pct": 11.88,
+     "pct": 11.85,
      "calls": 1807,
      "sources": {
       "cron": 79.677
@@ -2452,18 +2472,18 @@
      "id": "coach-arnie",
      "name": "Coach Arnold Briggs",
      "role": "Fitness Coach",
-     "mtok": 53.965,
-     "pts": 19.27,
-     "pct": 8.05,
-     "calls": 1365,
+     "mtok": 54.198,
+     "pts": 19.36,
+     "pct": 8.06,
+     "calls": 1368,
      "sources": {
       "cron": 8.851,
-      "a2a": 14.616,
+      "a2a": 14.849,
       "chat": 30.029,
       "subtask": 0.469
      },
      "models": {
-      "Opus": 51.168,
+      "Opus": 51.401,
       "Sonnet": 2.797
      },
      "top_crons": [
@@ -2528,11 +2548,11 @@
       },
       {
        "id": "chaps",
-       "mtok": 0.6
+       "mtok": 0.832
       }
      ],
      "causes_on_others": {
-      "mtok": 10.616,
+      "mtok": 11.181,
       "to": [
        {
         "id": "main",
@@ -2540,7 +2560,7 @@
        },
        {
         "id": "chaps",
-        "mtok": 0.895
+        "mtok": 1.46
        }
       ]
      },
@@ -2560,7 +2580,7 @@
      "role": "Scripture & Theology",
      "mtok": 49.903,
      "pts": 17.82,
-     "pct": 7.44,
+     "pct": 7.42,
      "calls": 1070,
      "sources": {
       "chat": 28.263,
@@ -2656,19 +2676,19 @@
      "id": "chaps",
      "name": "Chaplain Chuck",
      "role": "Ministry Operations",
-     "mtok": 38.783,
-     "pts": 13.85,
-     "pct": 5.78,
-     "calls": 896,
+     "mtok": 40.047,
+     "pts": 14.3,
+     "pct": 5.96,
+     "calls": 902,
      "sources": {
       "cron": 1.674,
-      "chat": 10.519,
-      "a2a": 20.576,
+      "chat": 11.217,
+      "a2a": 21.141,
       "subtask": 5.985,
       "other": 0.029
      },
      "models": {
-      "Opus": 37.638,
+      "Opus": 38.902,
       "Sonnet": 1.145
      },
      "top_crons": [
@@ -2711,7 +2731,7 @@
       },
       {
        "id": "coach-arnie",
-       "mtok": 0.895
+       "mtok": 1.46
       },
       {
        "id": "pops",
@@ -2723,7 +2743,7 @@
       }
      ],
      "causes_on_others": {
-      "mtok": 16.618,
+      "mtok": 16.851,
       "to": [
        {
         "id": "main",
@@ -2739,7 +2759,7 @@
        },
        {
         "id": "coach-arnie",
-        "mtok": 0.6
+        "mtok": 0.832
        }
       ]
      },
@@ -2759,7 +2779,7 @@
      "role": "Capital Steward",
      "mtok": 35.782,
      "pts": 12.78,
-     "pct": 5.34,
+     "pct": 5.32,
      "calls": 1151,
      "sources": {
       "cron": 11.016,
@@ -2893,7 +2913,7 @@
      "role": "Family & Inbox",
      "mtok": 30.683,
      "pts": 10.96,
-     "pct": 4.58,
+     "pct": 4.56,
      "calls": 761,
      "sources": {
       "cron": 3.897,
@@ -3200,15 +3220,15 @@
      "id": "watchdog",
      "name": "Auth-watchdog ping",
      "role": "claude -p ping every 15 min",
-     "mtok": 5.794,
+     "mtok": 5.808,
      "pts": 2.07,
      "pct": 0.86,
      "calls": 1174,
      "sources": {
-      "health": 5.794
+      "health": 5.808
      },
      "models": {
-      "Opus": 5.794
+      "Opus": 5.808
      },
      "top_crons": [],
      "received_from": [],
@@ -3225,7 +3245,7 @@
      "role": "Research & Synthesis",
      "mtok": 5.064,
      "pts": 1.81,
-     "pct": 0.76,
+     "pct": 0.75,
      "calls": 188,
      "sources": {
       "cron": 0.781,
@@ -3556,7 +3576,6 @@
   }
  },
  "days": [
-  "2026-10-29",
   "2026-10-30",
   "2026-10-31",
   "2026-11-01",
@@ -3569,11 +3588,11 @@
   "2026-11-08",
   "2026-11-09",
   "2026-11-10",
-  "2026-11-11"
+  "2026-11-11",
+  "2026-11-12"
  ],
  "daily": {
   "watchdog": [
-   0.394,
    0.442,
    0.461,
    0.325,
@@ -3586,10 +3605,10 @@
    0.55,
    0.674,
    0.353,
-   0.299
+   0.299,
+   0.02
   ],
   "_fleet": [
-   41.065,
    55.343,
    119.231,
    27.739,
@@ -3602,10 +3621,10 @@
    58.344,
    76.123,
    23.96,
-   20.101
+   21.597,
+   0.02
   ],
   "main": [
-   12.092,
    12.556,
    56.108,
    2.873,
@@ -3618,10 +3637,10 @@
    32.707,
    34.141,
    5.366,
-   2.134
+   2.134,
+   0.0
   ],
   "bg-hartwell": [
-   0.157,
    0.0,
    0.0,
    0.0,
@@ -3634,10 +3653,10 @@
    0.478,
    0.0,
    0.0,
+   0.0,
    0.0
   ],
   "carnegie": [
-   2.329,
    6.331,
    9.385,
    0.287,
@@ -3650,10 +3669,10 @@
    1.678,
    2.518,
    0.811,
-   0.53
+   0.53,
+   0.0
   ],
   "chaps": [
-   0.0,
    0.147,
    14.912,
    0.741,
@@ -3666,10 +3685,10 @@
    3.444,
    7.516,
    0.599,
-   1.18
+   2.443,
+   0.0
   ],
   "coach-arnie": [
-   5.598,
    9.671,
    11.419,
    7.243,
@@ -3682,10 +3701,10 @@
    1.314,
    2.565,
    0.722,
-   0.608
+   0.841,
+   0.0
   ],
   "doc": [
-   0.0,
    0.0,
    0.0,
    0.0,
@@ -3698,10 +3717,10 @@
    1.187,
    0.922,
    0.108,
-   0.055
+   0.055,
+   0.0
   ],
   "nimble-bot": [
-   0.0,
    0.0,
    0.254,
    0.0,
@@ -3714,10 +3733,10 @@
    0.0,
    0.0,
    0.0,
+   0.0,
    0.0
   ],
   "pops": [
-   1.162,
    0.356,
    7.421,
    1.789,
@@ -3730,10 +3749,10 @@
    1.77,
    2.999,
    2.258,
+   0.0,
    0.0
   ],
   "preacher-john": [
-   2.657,
    2.708,
    3.205,
    1.071,
@@ -3746,10 +3765,10 @@
    2.407,
    6.128,
    4.466,
-   0.581
+   0.581,
+   0.0
   ],
   "prof-x": [
-   0.0,
    0.0,
    0.374,
    0.0,
@@ -3762,10 +3781,10 @@
    2.114,
    0.842,
    0.0,
+   0.0,
    0.0
   ],
   "rush": [
-   0.0,
    0.0,
    0.805,
    1.319,
@@ -3778,10 +3797,10 @@
    1.322,
    2.118,
    1.192,
-   0.905
+   0.905,
+   0.0
   ],
   "sally": [
-   11.346,
    13.368,
    3.403,
    2.85,
@@ -3794,10 +3813,10 @@
    3.081,
    10.347,
    3.084,
-   6.482
+   6.482,
+   0.0
   ],
   "sgt-maj-mac": [
-   0.0,
    0.0,
    0.0,
    0.0,
@@ -3810,10 +3829,10 @@
    0.0,
    0.0,
    0.0,
+   0.0,
    0.0
   ],
   "sheriff-roy": [
-   0.467,
    2.198,
    0.088,
    0.147,
@@ -3826,10 +3845,10 @@
    0.0,
    0.0,
    0.0,
+   0.0,
    0.0
   ],
   "desktop-task": [
-   4.125,
    3.633,
    5.011,
    5.717,
@@ -3842,10 +3861,10 @@
    6.023,
    4.349,
    5.001,
-   7.328
+   7.328,
+   0.0
   ],
   "terminal": [
-   0.738,
    3.933,
    6.384,
    3.377,
@@ -3858,12 +3877,12 @@
    0.269,
    1.003,
    0.0,
+   0.0,
    0.0
   ]
  },
  "daily_sources": {
   "health": [
-   0.394,
    0.442,
    0.461,
    0.325,
@@ -3876,10 +3895,10 @@
    0.986,
    0.674,
    0.353,
-   0.299
+   0.299,
+   0.02
   ],
   "other": [
-   0.0,
    0.0,
    0.187,
    0.123,
@@ -3892,10 +3911,10 @@
    0.029,
    0.0,
    0.311,
+   0.0,
    0.0
   ],
   "cron": [
-   8.206,
    11.675,
    9.558,
    11.118,
@@ -3908,10 +3927,10 @@
    11.754,
    15.408,
    10.33,
-   16.212
+   16.212,
+   0.0
   ],
   "chat": [
-   13.585,
    23.74,
    34.704,
    7.183,
@@ -3924,10 +3943,10 @@
    13.108,
    24.149,
    4.2,
-   1.925
+   2.623,
+   0.0
   ],
   "a2a": [
-   17.86,
    15.553,
    56.801,
    5.614,
@@ -3940,10 +3959,10 @@
    10.826,
    14.1,
    8.059,
-   1.665
+   2.464,
+   0.0
   ],
   "subtask": [
-   0.281,
    0.0,
    11.743,
    0.0,
@@ -3956,10 +3975,10 @@
    21.399,
    20.789,
    0.707,
+   0.0,
    0.0
   ],
   "terminal": [
-   0.738,
    3.933,
    5.778,
    3.377,
@@ -3972,12 +3991,12 @@
    0.242,
    1.003,
    0.0,
+   0.0,
    0.0
   ]
  },
  "daily_other_calls": {
   "bg-hartwell": [
-   64,
    64,
    64,
    65,
@@ -3990,10 +4009,10 @@
    62,
    66,
    66,
-   66
+   66,
+   0
   ],
   "carnegie": [
-   96,
    70,
    87,
    106,
@@ -4006,10 +4025,10 @@
    68,
    68,
    116,
-   115
+   115,
+   0
   ],
   "chaps": [
-   288,
    178,
    263,
    146,
@@ -4022,10 +4041,10 @@
    84,
    53,
    409,
-   111
+   111,
+   0
   ],
   "coach-arnie": [
-   170,
    82,
    86,
    68,
@@ -4038,10 +4057,10 @@
    69,
    68,
    146,
-   141
+   141,
+   0
   ],
   "doc": [
-   94,
    78,
    45,
    43,
@@ -4054,10 +4073,10 @@
    36,
    36,
    43,
-   55
+   55,
+   0
   ],
   "main": [
-   25,
    16,
    97,
    153,
@@ -4070,10 +4089,10 @@
    4,
    22,
    79,
-   105
+   105,
+   0
   ],
   "nimble-bot": [
-   36,
    6,
    0,
    0,
@@ -4086,10 +4105,10 @@
    0,
    12,
    4,
+   0,
    0
   ],
   "pops": [
-   66,
    66,
    64,
    249,
@@ -4102,10 +4121,10 @@
    66,
    68,
    68,
-   101
+   101,
+   0
   ],
   "preacher-john": [
-   14,
    13,
    12,
    47,
@@ -4118,10 +4137,10 @@
    16,
    22,
    23,
-   60
+   60,
+   0
   ],
   "prof-x": [
-   62,
    80,
    76,
    88,
@@ -4134,10 +4153,10 @@
    58,
    53,
    78,
-   77
+   77,
+   0
   ],
   "rush": [
-   165,
    182,
    178,
    171,
@@ -4150,10 +4169,10 @@
    90,
    93,
    302,
-   221
+   221,
+   0
   ],
   "sally": [
-   89,
    88,
    92,
    240,
@@ -4166,10 +4185,10 @@
    88,
    86,
    430,
-   600
+   600,
+   0
   ],
   "sgt-maj-mac": [
-   78,
    85,
    107,
    74,
@@ -4182,10 +4201,10 @@
    72,
    60,
    62,
-   68
+   68,
+   0
   ],
   "sheriff-roy": [
-   98,
    123,
    108,
    118,
@@ -4198,7 +4217,8 @@
    116,
    133,
    194,
-   175
+   175,
+   0
   ]
  },
  "build_seconds": 1.6

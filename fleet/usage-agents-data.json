@@ -1,12 +1,12 @@
 {
- "generated_at": "2026-11-12T02:38:08-05:00",
- "generated_at_utc": "2026-11-12T07:38:08+00:00",
+ "generated_at": "2026-11-12T03:41:09-05:00",
+ "generated_at_utc": "2026-11-12T08:41:09+00:00",
  "meter": {
-  "week_start": "2026-11-11T13:59-05:00",
-  "reset_at": "2026-11-18T13:59-05:00",
+  "week_start": "2026-11-11T14:00-05:00",
+  "reset_at": "2026-11-18T14:00-05:00",
   "used_pct": 3.0,
   "five_hour_used_pct": 0.0,
-  "snapshot_at": "2026-11-12T02:37:48-05:00",
+  "snapshot_at": "2026-11-12T03:40:42-05:00",
   "source": "fleet/usage-data.json (Anthropic usage API via frontier-usage-poll.py)"
  },
  "method": {
@@ -63,19 +63,19 @@
  "windows": {
   "meter": {
    "label": "This meter week",
-   "start": "2026-11-11T13:59-05:00",
-   "end": "2026-11-12T02:38-05:00",
-   "total_mtok": 16.504,
-   "total_pts": 5.9,
-   "calls": 852,
+   "start": "2026-11-11T14:00-05:00",
+   "end": "2026-11-12T03:41-05:00",
+   "total_mtok": 19.435,
+   "total_pts": 6.9,
+   "calls": 903,
    "sources": {
-    "health": 0.397,
-    "cron": 11.02,
+    "health": 0.427,
+    "cron": 13.921,
     "chat": 2.623,
     "a2a": 2.464
    },
    "models": {
-    "Opus": 8.286,
+    "Opus": 11.216,
     "Haiku": 0.021,
     "Sonnet": 8.197
    },
@@ -86,7 +86,7 @@
      "role": "Hospitality & Finance",
      "mtok": 6.482,
      "pts": 2.31,
-     "pct": 39.27,
+     "pct": 33.35,
      "calls": 524,
      "sources": {
       "cron": 6.482
@@ -139,12 +139,45 @@
      }
     },
     {
+     "id": "desktop-task",
+     "name": "Claude Desktop scheduled tasks",
+     "role": "Not an OpenClaw agent",
+     "mtok": 5.037,
+     "pts": 1.8,
+     "pct": 25.92,
+     "calls": 111,
+     "sources": {
+      "cron": 5.037
+     },
+     "models": {
+      "Opus": 5.037
+     },
+     "top_crons": [
+      {
+       "id": "nightly-dictionary-batch-run",
+       "name": "nightly-dictionary-batch-run",
+       "owner": "desktop-task",
+       "kind": "own",
+       "mtok": 5.037,
+       "pts": 1.8,
+       "calls": 111
+      }
+     ],
+     "received_from": [],
+     "causes_on_others": {
+      "mtok": 0.0,
+      "to": []
+     },
+     "other_calls": {},
+     "other_tokens": {}
+    },
+    {
      "id": "chaps",
      "name": "Chaplain Chuck",
      "role": "Ministry Operations",
      "mtok": 2.443,
      "pts": 0.87,
-     "pct": 14.81,
+     "pct": 12.57,
      "calls": 23,
      "sources": {
       "chat": 1.293,
@@ -200,45 +233,12 @@
      }
     },
     {
-     "id": "desktop-task",
-     "name": "Claude Desktop scheduled tasks",
-     "role": "Not an OpenClaw agent",
-     "mtok": 2.136,
-     "pts": 0.76,
-     "pct": 12.94,
-     "calls": 64,
-     "sources": {
-      "cron": 2.136
-     },
-     "models": {
-      "Opus": 2.136
-     },
-     "top_crons": [
-      {
-       "id": "nightly-dictionary-batch-run",
-       "name": "nightly-dictionary-batch-run",
-       "owner": "desktop-task",
-       "kind": "own",
-       "mtok": 2.136,
-       "pts": 0.76,
-       "calls": 64
-      }
-     ],
-     "received_from": [],
-     "causes_on_others": {
-      "mtok": 0.0,
-      "to": []
-     },
-     "other_calls": {},
-     "other_tokens": {}
-    },
-    {
      "id": "main",
      "name": "Max Pemberton",
      "role": "Fleet Orchestrator",
      "mtok": 2.134,
      "pts": 0.76,
-     "pct": 12.93,
+     "pct": 10.98,
      "calls": 28,
      "sources": {
       "a2a": 0.402,
@@ -307,7 +307,7 @@
      "role": "News Correspondent",
      "mtok": 0.905,
      "pts": 0.32,
-     "pct": 5.48,
+     "pct": 4.66,
      "calls": 46,
      "sources": {
       "cron": 0.679,
@@ -359,7 +359,7 @@
      "role": "Fitness Coach",
      "mtok": 0.841,
      "pts": 0.3,
-     "pct": 5.1,
+     "pct": 4.33,
      "calls": 66,
      "sources": {
       "cron": 0.608,
@@ -420,7 +420,7 @@
      "role": "Scripture & Theology",
      "mtok": 0.581,
      "pts": 0.21,
-     "pct": 3.52,
+     "pct": 2.99,
      "calls": 8,
      "sources": {
       "a2a": 0.581
@@ -460,7 +460,7 @@
      "role": "Capital Steward",
      "mtok": 0.53,
      "pts": 0.19,
-     "pct": 3.21,
+     "pct": 2.72,
      "calls": 37,
      "sources": {
       "cron": 0.53
@@ -536,15 +536,15 @@
      "id": "watchdog",
      "name": "Auth-watchdog ping",
      "role": "claude -p ping every 15 min",
-     "mtok": 0.397,
-     "pts": 0.14,
-     "pct": 2.41,
-     "calls": 51,
+     "mtok": 0.427,
+     "pts": 0.15,
+     "pct": 2.2,
+     "calls": 55,
      "sources": {
-      "health": 0.397
+      "health": 0.427
      },
      "models": {
-      "Opus": 0.397
+      "Opus": 0.427
      },
      "top_crons": [],
      "received_from": [],
@@ -561,7 +561,7 @@
      "role": "Health & Medical",
      "mtok": 0.055,
      "pts": 0.02,
-     "pct": 0.33,
+     "pct": 0.28,
      "calls": 5,
      "sources": {
       "cron": 0.055
@@ -702,11 +702,11 @@
      "other_calls": {
       "gpt": 0,
       "grok": 0,
-      "local": 31
+      "local": 30
      },
      "other_tokens": {
       "gpt": 0,
-      "local": 270600
+      "local": 261871
      }
     },
     {
@@ -739,14 +739,14 @@
   },
   "d7": {
    "label": "Last 7 days",
-   "start": "2026-11-05T02:38-05:00",
-   "end": "2026-11-12T02:38-05:00",
-   "total_mtok": 347.113,
-   "total_pts": 124.0,
-   "calls": 10315,
+   "start": "2026-11-05T03:41-05:00",
+   "end": "2026-11-12T03:41-05:00",
+   "total_mtok": 344.294,
+   "total_pts": 123.0,
+   "calls": 10265,
    "sources": {
-    "health": 3.738,
-    "cron": 90.741,
+    "health": 3.741,
+    "cron": 87.919,
     "chat": 112.224,
     "a2a": 72.711,
     "subtask": 64.007,
@@ -754,7 +754,7 @@
     "terminal": 1.41
    },
    "models": {
-    "Opus": 260.917,
+    "Opus": 258.098,
     "Sonnet": 29.755,
     "Haiku": 0.176,
     "Fable": 56.265
@@ -766,7 +766,7 @@
      "role": "Fleet Orchestrator",
      "mtok": 140.016,
      "pts": 50.01,
-     "pct": 40.34,
+     "pct": 40.67,
      "calls": 2947,
      "sources": {
       "cron": 5.489,
@@ -913,54 +913,12 @@
      }
     },
     {
-     "id": "desktop-task",
-     "name": "Claude Desktop scheduled tasks",
-     "role": "Not an OpenClaw agent",
-     "mtok": 42.781,
-     "pts": 15.28,
-     "pct": 12.32,
-     "calls": 939,
-     "sources": {
-      "cron": 42.781
-     },
-     "models": {
-      "Opus": 42.781
-     },
-     "top_crons": [
-      {
-       "id": "nightly-dictionary-batch-run",
-       "name": "nightly-dictionary-batch-run",
-       "owner": "desktop-task",
-       "kind": "own",
-       "mtok": 41.331,
-       "pts": 14.76,
-       "calls": 875
-      },
-      {
-       "id": "sunday-sprint-reinterview",
-       "name": "sunday-sprint-reinterview",
-       "owner": "desktop-task",
-       "kind": "own",
-       "mtok": 1.451,
-       "pts": 0.52,
-       "calls": 64
-      }
-     ],
-     "received_from": [],
-     "causes_on_others": {
-      "mtok": 0.0,
-      "to": []
-     },
-     "other_calls": {},
-     "other_tokens": {}
-    },
-    {
      "id": "sally",
      "name": "Sally Mae Thornton",
      "role": "Hospitality & Finance",
      "mtok": 40.347,
      "pts": 14.41,
-     "pct": 11.62,
+     "pct": 11.72,
      "calls": 1990,
      "sources": {
       "cron": 21.428,
@@ -1080,12 +1038,54 @@
      }
     },
     {
+     "id": "desktop-task",
+     "name": "Claude Desktop scheduled tasks",
+     "role": "Not an OpenClaw agent",
+     "mtok": 39.959,
+     "pts": 14.27,
+     "pct": 11.61,
+     "calls": 889,
+     "sources": {
+      "cron": 39.959
+     },
+     "models": {
+      "Opus": 39.959
+     },
+     "top_crons": [
+      {
+       "id": "nightly-dictionary-batch-run",
+       "name": "nightly-dictionary-batch-run",
+       "owner": "desktop-task",
+       "kind": "own",
+       "mtok": 38.509,
+       "pts": 13.75,
+       "calls": 825
+      },
+      {
+       "id": "sunday-sprint-reinterview",
+       "name": "sunday-sprint-reinterview",
+       "owner": "desktop-task",
+       "kind": "own",
+       "mtok": 1.451,
+       "pts": 0.52,
+       "calls": 64
+      }
+     ],
+     "received_from": [],
+     "causes_on_others": {
+      "mtok": 0.0,
+      "to": []
+     },
+     "other_calls": {},
+     "other_tokens": {}
+    },
+    {
      "id": "preacher-john",
      "name": "Preacher John",
      "role": "Scripture & Theology",
      "mtok": 36.515,
      "pts": 13.04,
-     "pct": 10.52,
+     "pct": 10.61,
      "calls": 792,
      "sources": {
       "cron": 2.172,
@@ -1183,7 +1183,7 @@
      "role": "Ministry Operations",
      "mtok": 23.624,
      "pts": 8.44,
-     "pct": 6.81,
+     "pct": 6.86,
      "calls": 587,
      "sources": {
       "chat": 9.768,
@@ -1284,7 +1284,7 @@
      "role": "Family & Inbox",
      "mtok": 16.845,
      "pts": 6.02,
-     "pct": 4.85,
+     "pct": 4.89,
      "calls": 465,
      "sources": {
       "cron": 1.764,
@@ -1412,7 +1412,7 @@
      "role": "Fitness Coach",
      "mtok": 12.231,
      "pts": 4.37,
-     "pct": 3.52,
+     "pct": 3.55,
      "calls": 544,
      "sources": {
       "cron": 4.423,
@@ -1514,7 +1514,7 @@
      "role": "Capital Steward",
      "mtok": 10.232,
      "pts": 3.65,
-     "pct": 2.95,
+     "pct": 2.97,
      "calls": 561,
      "sources": {
       "cron": 5.003,
@@ -1648,7 +1648,7 @@
      "role": "News Correspondent",
      "mtok": 6.91,
      "pts": 2.47,
-     "pct": 1.99,
+     "pct": 2.01,
      "calls": 395,
      "sources": {
       "cron": 4.697,
@@ -1728,7 +1728,7 @@
      "role": "Research & Synthesis",
      "mtok": 4.491,
      "pts": 1.6,
-     "pct": 1.29,
+     "pct": 1.3,
      "calls": 156,
      "sources": {
       "a2a": 1.684,
@@ -1807,7 +1807,7 @@
      "role": "Health & Medical",
      "mtok": 4.223,
      "pts": 1.51,
-     "pct": 1.22,
+     "pct": 1.23,
      "calls": 181,
      "sources": {
       "a2a": 0.74,
@@ -1889,15 +1889,15 @@
      "id": "watchdog",
      "name": "Auth-watchdog ping",
      "role": "claude -p ping every 15 min",
-     "mtok": 3.27,
+     "mtok": 3.273,
      "pts": 1.17,
-     "pct": 0.94,
+     "pct": 0.95,
      "calls": 539,
      "sources": {
-      "health": 3.27
+      "health": 3.273
      },
      "models": {
-      "Opus": 3.27
+      "Opus": 3.273
      },
      "top_crons": [],
      "received_from": [],
@@ -1979,7 +1979,7 @@
      "role": "Not an OpenClaw agent",
      "mtok": 1.469,
      "pts": 0.52,
-     "pct": 0.42,
+     "pct": 0.43,
      "calls": 45,
      "sources": {
       "terminal": 1.41,
@@ -2038,7 +2038,7 @@
      "role": "Standards & Discipline",
      "mtok": 0.499,
      "pts": 0.18,
-     "pct": 0.14,
+     "pct": 0.15,
      "calls": 22,
      "sources": {
       "cron": 0.272,
@@ -2161,22 +2161,22 @@
   },
   "d14": {
    "label": "Last 14 days",
-   "start": "2026-10-29T03:38-04:00",
-   "end": "2026-11-12T02:38-05:00",
-   "total_mtok": 670.219,
-   "total_pts": 239.4,
-   "calls": 19939,
+   "start": "2026-10-29T04:41-04:00",
+   "end": "2026-11-12T03:41-05:00",
+   "total_mtok": 673.137,
+   "total_pts": 240.4,
+   "calls": 19985,
    "sources": {
-    "health": 6.318,
+    "health": 6.334,
     "other": 3.203,
-    "cron": 167.39,
+    "cron": 170.291,
     "chat": 226.703,
     "a2a": 175.129,
     "subtask": 76.107,
     "terminal": 15.368
    },
    "models": {
-    "Opus": 522.194,
+    "Opus": 525.111,
     "Sonnet": 39.096,
     "Haiku": 0.38,
     "Fable": 108.55
@@ -2188,7 +2188,7 @@
      "role": "Fleet Orchestrator",
      "mtok": 240.96,
      "pts": 86.06,
-     "pct": 35.95,
+     "pct": 35.8,
      "calls": 5732,
      "sources": {
       "other": 2.729,
@@ -2340,7 +2340,7 @@
      "role": "Hospitality & Finance",
      "mtok": 84.395,
      "pts": 30.14,
-     "pct": 12.59,
+     "pct": 12.54,
      "calls": 3233,
      "sources": {
       "cron": 35.422,
@@ -2463,15 +2463,15 @@
      "id": "desktop-task",
      "name": "Claude Desktop scheduled tasks",
      "role": "Not an OpenClaw agent",
-     "mtok": 77.689,
-     "pts": 27.75,
-     "pct": 11.59,
-     "calls": 1782,
+     "mtok": 80.59,
+     "pts": 28.78,
+     "pct": 11.97,
+     "calls": 1829,
      "sources": {
-      "cron": 77.689
+      "cron": 80.59
      },
      "models": {
-      "Opus": 77.689
+      "Opus": 80.59
      },
      "top_crons": [
       {
@@ -2479,9 +2479,9 @@
        "name": "nightly-dictionary-batch-run",
        "owner": "desktop-task",
        "kind": "own",
-       "mtok": 75.302,
-       "pts": 26.89,
-       "calls": 1681
+       "mtok": 78.203,
+       "pts": 27.93,
+       "calls": 1728
       },
       {
        "id": "sunday-sprint-reinterview",
@@ -2507,7 +2507,7 @@
      "role": "Fitness Coach",
      "mtok": 54.198,
      "pts": 19.36,
-     "pct": 8.09,
+     "pct": 8.05,
      "calls": 1368,
      "sources": {
       "cron": 8.851,
@@ -2613,7 +2613,7 @@
      "role": "Scripture & Theology",
      "mtok": 49.903,
      "pts": 17.82,
-     "pct": 7.45,
+     "pct": 7.41,
      "calls": 1070,
      "sources": {
       "chat": 28.263,
@@ -2711,7 +2711,7 @@
      "role": "Ministry Operations",
      "mtok": 40.047,
      "pts": 14.3,
-     "pct": 5.98,
+     "pct": 5.95,
      "calls": 902,
      "sources": {
       "cron": 1.674,
@@ -2812,7 +2812,7 @@
      "role": "Capital Steward",
      "mtok": 35.782,
      "pts": 12.78,
-     "pct": 5.34,
+     "pct": 5.32,
      "calls": 1151,
      "sources": {
       "cron": 11.016,
@@ -2946,7 +2946,7 @@
      "role": "Family & Inbox",
      "mtok": 30.683,
      "pts": 10.96,
-     "pct": 4.58,
+     "pct": 4.56,
      "calls": 761,
      "sources": {
       "cron": 3.897,
@@ -3074,7 +3074,7 @@
      "role": "Not an OpenClaw agent",
      "mtok": 16.034,
      "pts": 5.73,
-     "pct": 2.39,
+     "pct": 2.38,
      "calls": 1383,
      "sources": {
       "terminal": 15.368,
@@ -3099,7 +3099,7 @@
      "role": "News Correspondent",
      "mtok": 15.306,
      "pts": 5.47,
-     "pct": 2.28,
+     "pct": 2.27,
      "calls": 655,
      "sources": {
       "cron": 10.042,
@@ -3253,15 +3253,15 @@
      "id": "watchdog",
      "name": "Auth-watchdog ping",
      "role": "claude -p ping every 15 min",
-     "mtok": 5.85,
-     "pts": 2.09,
+     "mtok": 5.866,
+     "pts": 2.1,
      "pct": 0.87,
-     "calls": 1175,
+     "calls": 1174,
      "sources": {
-      "health": 5.85
+      "health": 5.866
      },
      "models": {
-      "Opus": 5.85
+      "Opus": 5.866
      },
      "top_crons": [],
      "received_from": [],
@@ -3278,7 +3278,7 @@
      "role": "Research & Synthesis",
      "mtok": 5.064,
      "pts": 1.81,
-     "pct": 0.76,
+     "pct": 0.75,
      "calls": 188,
      "sources": {
       "cron": 0.781,
@@ -3639,7 +3639,7 @@
    0.674,
    0.353,
    0.299,
-   0.099
+   0.128
   ],
   "_fleet": [
    55.343,
@@ -3655,7 +3655,7 @@
    76.123,
    23.96,
    21.597,
-   2.235
+   5.166
   ],
   "main": [
    12.556,
@@ -3895,7 +3895,7 @@
    4.349,
    5.001,
    7.328,
-   2.136
+   5.037
   ],
   "terminal": [
    3.933,
@@ -3929,7 +3929,7 @@
    0.674,
    0.353,
    0.299,
-   0.099
+   0.128
   ],
   "other": [
    0.0,
@@ -3961,7 +3961,7 @@
    15.408,
    10.33,
    16.212,
-   2.136
+   5.037
   ],
   "chat": [
    23.74,
@@ -4254,5 +4254,5 @@
    0
   ]
  },
- "build_seconds": 1.5
+ "build_seconds": 2.8
 }

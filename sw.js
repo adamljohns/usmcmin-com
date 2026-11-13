@@ -9,7 +9,7 @@
  * Bump SW_VERSION when shipping a major change so existing visitors
  * pick up the new shell on their next page navigation.
  */
-const SW_VERSION = 'v2-2026-05-23';
+const SW_VERSION = 'v3-2026-11-13';
 const CORE_CACHE = `usmcmin-core-${SW_VERSION}`;
 const RUNTIME_CACHE = `usmcmin-runtime-${SW_VERSION}`;
 

@@ -119,12 +119,17 @@ body > nav {
      iPhone, where larger text pushed the brand block 12-45px over the headline.
      With the clamp and hidden tagline above, this only ever engages at extreme
      text sizes, and a slightly clipped brand is a far better failure than a
-     banner sitting on the page's h1. */
-  overflow: hidden;
+     banner sitting on the page's h1.
+     2026-11-13: the clip now lives on .nav-brand, not here. Clipping the whole
+     bar also cut off the phone menu (it opens below the bar at top:100%) and
+     the desktop Citizen dropdown, so the hamburger looked dead on iPhone. */
+  overflow: visible;
 }
 
 .nav-brand {
   display: flex; align-items: center; gap: 0.75rem;
+  /* The overflow guard, scoped to the brand block that actually overflowed. */
+  max-height: var(--nav-h); overflow: hidden;
   /* A flex item will not shrink below its min-content width unless told to.
      Without this the brand pushes into the theme toggle on any page that
      stops it wrapping. */

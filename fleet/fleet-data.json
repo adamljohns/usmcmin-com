@@ -1,9 +1,9 @@
 {
-  "generated": "2026-11-14T00:08:43.415872+00:00",
+  "generated": "2026-11-14T00:43:54.413887+00:00",
   "totals": {
     "agents": 17,
-    "operational": 15,
-    "degraded": 1,
+    "operational": 14,
+    "degraded": 2,
     "jobs": 190,
     "enabled": 110,
     "accomplishments": 418,
@@ -13,8 +13,9 @@
     "cron": {
       "enabled": 110,
       "ran26h": 69,
-      "delivered": 31,
+      "delivered": 29,
       "fails": [
+        "scheduled job \u00d7 1",
         "agent heartbeat \u00d7 1"
       ]
     },
@@ -1817,7 +1818,7 @@
       "n_jobs": 9,
       "n_enabled": 6,
       "err": 0,
-      "last_ms": 1794614605242,
+      "last_ms": 1794616406276,
       "status": "operational",
       "accomplishments": [
         {
@@ -2282,10 +2283,10 @@
           "expr": "",
           "tz": "",
           "channel": "",
-          "last_ms": 1794614605242,
+          "last_ms": 1794616406276,
           "status": "ok",
           "errors": 0,
-          "dur_ms": 17063
+          "dur_ms": 622828
         },
         {
           "name": "invitation-check",
@@ -2456,7 +2457,7 @@
       "n_jobs": 28,
       "n_enabled": 15,
       "err": 0,
-      "last_ms": 1794614679085,
+      "last_ms": 1794615601545,
       "status": "operational",
       "accomplishments": [
         {
@@ -2613,6 +2614,17 @@
       },
       "jobs": [
         {
+          "name": "BTC 2D ADX-DI WATCH",
+          "enabled": true,
+          "expr": "20 19 * * *",
+          "tz": "America/New_York",
+          "channel": "last",
+          "last_ms": 1794615601545,
+          "status": "ok",
+          "errors": 0,
+          "dur_ms": 6663
+        },
+        {
           "name": "heartbeat-carnegie",
           "enabled": true,
           "expr": "",
@@ -2732,17 +2744,6 @@
           "status": "ok",
           "errors": 0,
           "dur_ms": 1624
-        },
-        {
-          "name": "BTC 2D ADX-DI WATCH",
-          "enabled": true,
-          "expr": "20 19 * * *",
-          "tz": "America/New_York",
-          "channel": "last",
-          "last_ms": 1794529200055,
-          "status": "ok",
-          "errors": 0,
-          "dur_ms": 15941
         },
         {
           "name": "Skill: personal-finance-v2 (Mon ledger)",
@@ -3005,7 +3006,7 @@
       "n_jobs": 21,
       "n_enabled": 12,
       "err": 0,
-      "last_ms": 1794613127761,
+      "last_ms": 1794614929633,
       "status": "operational",
       "accomplishments": [
         {
@@ -3190,10 +3191,10 @@
           "expr": "",
           "tz": "",
           "channel": "",
-          "last_ms": 1794613127761,
+          "last_ms": 1794614929633,
           "status": "ok",
           "errors": 0,
-          "dur_ms": 50305
+          "dur_ms": 46787
         },
         {
           "name": "heartbeat-sally",
@@ -3580,9 +3581,9 @@
       ],
       "n_jobs": 10,
       "n_enabled": 7,
-      "err": 0,
-      "last_ms": 1794614689235,
-      "status": "operational",
+      "err": 1,
+      "last_ms": 1794616489611,
+      "status": "degraded",
       "accomplishments": [
         {
           "date": "2026-11-06",
@@ -3864,10 +3865,21 @@
           "expr": "",
           "tz": "",
           "channel": "",
-          "last_ms": 1794614689235,
+          "last_ms": 1794616489611,
           "status": "ok",
           "errors": 0,
-          "dur_ms": 84767
+          "dur_ms": 515887
+        },
+        {
+          "name": "Nutrition log ping 19:00 \u2014 Coach Arnie",
+          "enabled": true,
+          "expr": "12 19 * * *",
+          "tz": "America/New_York",
+          "channel": "telegram",
+          "last_ms": 1794616050746,
+          "status": "error",
+          "errors": 2,
+          "dur_ms": 900185
         },
         {
           "name": "recovery-pulse",
@@ -3901,17 +3913,6 @@
           "status": "ok",
           "errors": 0,
           "dur_ms": 470899
-        },
-        {
-          "name": "Nutrition log ping 19:00 \u2014 Coach Arnie",
-          "enabled": true,
-          "expr": "12 19 * * *",
-          "tz": "America/New_York",
-          "channel": "telegram",
-          "last_ms": 1794528720038,
-          "status": "ok",
-          "errors": 0,
-          "dur_ms": 69242
         },
         {
           "name": "Skill: zoho-crm (fit20 Mon leads)",
@@ -4046,7 +4047,7 @@
       "n_jobs": 11,
       "n_enabled": 6,
       "err": 0,
-      "last_ms": 1794611866392,
+      "last_ms": 1794615688989,
       "status": "operational",
       "accomplishments": [
         {
@@ -4185,26 +4186,37 @@
       },
       "jobs": [
         {
-          "name": "vitals-warning",
-          "enabled": true,
-          "expr": "",
-          "tz": "",
-          "channel": "",
-          "last_ms": 1794611866392,
-          "status": "ok",
-          "errors": 0,
-          "dur_ms": 99165
-        },
-        {
           "name": "heartbeat-doc",
           "enabled": true,
           "expr": "",
           "tz": "",
           "channel": "",
-          "last_ms": 1794594087377,
+          "last_ms": 1794615688989,
           "status": "ok",
           "errors": 0,
-          "dur_ms": 15216
+          "dur_ms": 376066
+        },
+        {
+          "name": "vitals-warning",
+          "enabled": true,
+          "expr": "",
+          "tz": "",
+          "channel": "",
+          "last_ms": 1794615467334,
+          "status": "ok",
+          "errors": 0,
+          "dur_ms": 597721
+        },
+        {
+          "name": "Doc Active Intel (evening)",
+          "enabled": true,
+          "expr": "15 19 * * *",
+          "tz": "America/New_York",
+          "channel": "telegram",
+          "last_ms": 1794615300613,
+          "status": "ok",
+          "errors": 0,
+          "dur_ms": 25545
         },
         {
           "name": "Doc Active Intel (midday)",
@@ -4238,17 +4250,6 @@
           "status": "ok",
           "errors": 0,
           "dur_ms": 29923
-        },
-        {
-          "name": "Doc Active Intel (evening)",
-          "enabled": true,
-          "expr": "15 19 * * *",
-          "tz": "America/New_York",
-          "channel": "telegram",
-          "last_ms": 1794528900423,
-          "status": "ok",
-          "errors": 0,
-          "dur_ms": 43587
         },
         {
           "name": "Dev Loop: doc daily reflection (implement-or-escalate)",
@@ -4387,7 +4388,7 @@
       "n_jobs": 10,
       "n_enabled": 7,
       "err": 0,
-      "last_ms": 1794614691258,
+      "last_ms": 1794616491656,
       "status": "operational",
       "accomplishments": [
         {
@@ -4560,10 +4561,10 @@
           "expr": "",
           "tz": "",
           "channel": "",
-          "last_ms": 1794614691258,
+          "last_ms": 1794616491656,
           "status": "skipped",
           "errors": 0,
-          "dur_ms": 280
+          "dur_ms": 288
         },
         {
           "name": "agenda-this-week",
@@ -4739,7 +4740,7 @@
       "n_jobs": 10,
       "n_enabled": 7,
       "err": 0,
-      "last_ms": 1794614872992,
+      "last_ms": 1794616674730,
       "status": "operational",
       "accomplishments": [
         {
@@ -4954,10 +4955,10 @@
           "expr": "",
           "tz": "",
           "channel": "",
-          "last_ms": 1794614872992,
+          "last_ms": 1794616674730,
           "status": "ok",
           "errors": 0,
-          "dur_ms": 20255
+          "dur_ms": 354233
         },
         {
           "name": "Prof X Weekly Synthesis (Fri 4PM)",
@@ -5140,7 +5141,7 @@
       "n_jobs": 9,
       "n_enabled": 6,
       "err": 0,
-      "last_ms": 1794614373867,
+      "last_ms": 1794614901201,
       "status": "operational",
       "accomplishments": [
         {
@@ -5314,6 +5315,17 @@
       },
       "jobs": [
         {
+          "name": "breaking-news-scan",
+          "enabled": true,
+          "expr": "",
+          "tz": "",
+          "channel": "",
+          "last_ms": 1794614901201,
+          "status": "ok",
+          "errors": 0,
+          "dur_ms": 67974
+        },
+        {
           "name": "heartbeat-rush",
           "enabled": true,
           "expr": "",
@@ -5323,17 +5335,6 @@
           "status": "ok",
           "errors": 0,
           "dur_ms": 34573
-        },
-        {
-          "name": "breaking-news-scan",
-          "enabled": true,
-          "expr": "",
-          "tz": "",
-          "channel": "",
-          "last_ms": 1794611301151,
-          "status": "ok",
-          "errors": 0,
-          "dur_ms": 548924
         },
         {
           "name": "RESOLUTE PM Wire draft (Rush)",
@@ -5844,7 +5845,7 @@
       "n_jobs": 8,
       "n_enabled": 4,
       "err": 0,
-      "last_ms": 1794614873002,
+      "last_ms": 1794616674741,
       "status": "operational",
       "accomplishments": [
         {
@@ -6005,10 +6006,10 @@
           "expr": "",
           "tz": "",
           "channel": "",
-          "last_ms": 1794614873002,
-          "status": "ok",
+          "last_ms": 1794616674741,
+          "status": "skipped",
           "errors": 0,
-          "dur_ms": 21176
+          "dur_ms": 297
         },
         {
           "name": "pt-log-late-check",
@@ -6164,7 +6165,7 @@
       "n_jobs": 8,
       "n_enabled": 5,
       "err": 0,
-      "last_ms": 1794614875027,
+      "last_ms": 1794616676790,
       "status": "operational",
       "accomplishments": [
         {
@@ -6344,10 +6345,10 @@
           "expr": "",
           "tz": "",
           "channel": "",
-          "last_ms": 1794614875027,
+          "last_ms": 1794616676790,
           "status": "skipped",
           "errors": 0,
-          "dur_ms": 276
+          "dur_ms": 306
         },
         {
           "name": "pattern-watch",

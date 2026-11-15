@@ -84,6 +84,7 @@
         <p class="progress-note" id="pg-note"></p>
       </div>
       <p id="stats-line" style="margin-top:0">Loading stats…</p>
+      <p id="fr-line" class="progress-note" hidden></p>
       <div class="cta-row">
         <a class="btn solid" href="directory.html">Full directory + filters →</a>
         <a class="btn" href="categories/index.html">Browse categories</a>
@@ -137,6 +138,13 @@
         const a = document.createElement('a'); a.href = tg.source_url; a.textContent = tg.source;
         a.target = '_blank'; a.rel = 'noopener'; note.appendChild(a); note.appendChild(document.createTextNode('.'));
         document.getElementById('progress-block').hidden = false;
+      }
+      const fr = st.full_review;
+      if (fr) {
+        const n = x => Number(x || 0).toLocaleString('en-US');
+        const el = document.getElementById('fr-line');
+        el.textContent = `Full review: ${n(fr.reviewed)} reviewed · ${n(fr.changed)} with proposed changes · ${n(fr.held)} held for QA · ${n(fr.applied)} applied` + (fr.applied ? '' : ' (dry run; nothing applied yet)');
+        el.hidden = false;
       }
     } catch (e) { /* stats are optional; the rest of the hub still loads */ }
     const bandColor = { green:'#4CAF50', yellow:'#FFC107', red:'#f44336', black:'#888', gray:'#888' };

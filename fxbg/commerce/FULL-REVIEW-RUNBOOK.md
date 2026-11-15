@@ -1,7 +1,11 @@
 # Commerce FULL REVIEW mode — runbook
 
 Ticket: `commerce-full-review-strike-ticket-2026-11-09.md` (Adam order, Max TG 8996, 2026-11-08: same
-standard as the church full review). Status: built and dry-run only. **No live apply until Adam's GO.**
+standard as the church full review). **Status: LIVE as of 2026-11-15** (Adam's GO, 2026-11-15 16:16 ET).
+Merged to main in `78a2d5603b5`; first live apply `c5c73f8c62d` (round `fr-20261109-0723`, the 4 auto
+social links for All Air and Forte; its 24 held changes stay in the HOLD queue for Roy). Live applies
+still take only auto rows plus HOLD ids Roy/Adam approve. No recurring rounds or triggers are installed;
+a round is started by hand.
 
 The ordinary grind (`~/Scripts/commerce-enrichment-round.sh`, 22:00–06:00) fills Gray factors from a
 quick read of one page. A full-review round reads each business's own site end to end with the local
@@ -144,3 +148,12 @@ checkout level with origin/main, never from a stale one.
 - `fr-20261109-0740` re-ran strict order on the fixed gates. SearXNG answered part of the round (Bing),
   then Bing was suspended again; DuckDuckGo was denied and Google CSE suspended. 2 of 25 sites were
   recovered (bad-truck-pottery, plumb-perfect-plumbing), giving 9 changes, all hold.
+
+## Live record (2026-11-15)
+
+- Adam's GO 2026-11-15 16:16 ET. Branch `feat/commerce-full-review` merged onto main (`78a2d5603b5`),
+  `test-full-review.py` ALL PASS.
+- `apply-full-review-patch.py … fr-20261109-0723 --live` with the 4 auto ids only: all 4 "old" values
+  still matched main, 4 applied to 2 listings (`c5c73f8c62d`). The applier also stamps
+  `full_review.verified_at` on all 25 reviewed listings, so the next round's selection skips them for 30 days.
+- Deploy green, `bin/post-deploy-smoke.sh com` PASS, both profile pages serve the new links.

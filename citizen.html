@@ -405,9 +405,11 @@
     .sc-scores {
       padding: 14px 12px;
       display: grid;
-      /* minmax(0,…) keeps all seven columns inside the card; a bare 1fr track
-         grows to its longest label and pushed the last column off the edge. */
-      grid-template-columns: repeat(7, minmax(0, 1fr));
+      /* minmax(0,…) keeps every column inside the card; a bare 1fr track
+         grows to its longest label and pushed the last column off the edge.
+         Five columns (two rows of five) so each label fits in full; at seven
+         the cells were 45 px wide and labels had to be cut to "SANCTITY.". */
+      grid-template-columns: repeat(5, minmax(0, 1fr));
       gap: 6px;
     }
     .sc-score-cell { text-align: center; }
@@ -422,6 +424,7 @@
          scores in one row sitting at different heights. */
       line-height: 1.3;
       min-height: 2.6em;
+      overflow-wrap: anywhere;
     }
     .sc-score-cell .cat-score { font-size: 1.1rem; font-weight: 700; }
     .sc-score-cell .cat-max { font-size: 0.6rem; color: var(--gray); }
@@ -1364,6 +1367,16 @@ function getLevelClass(level) {
   return 'level-' + (level || 'state');
 }
 
+// Card-grid display labels for categories whose full name runs past two lines.
+var CARD_LABELS = {
+  family_child_sovereignty: 'Family & Child',
+  foreign_policy_restraint: 'Foreign Policy',
+  industry_capture: 'Industry Capture',
+  public_justice: 'Public Justice',
+  refuse_federal_overreach: 'Refuse Fed. Overreach',
+  refuse_state_overreach: 'Refuse State Overreach'
+};
+
 function calcCategoryScore(answers) {
   if (!answers) return { score: 0, max: MAX_PER_TOPIC, answered: 0, na: 0 };
   var raw = 0, answered = 0, na = 0;
@@ -1700,11 +1713,13 @@ function renderCards() {
       if (!pillarOf(cat, total.tier)) return; // v5.0 — skip categories not in this tier's rubric
       var cs = calcCategoryScore(c.scores[cat.id]);
       var color = cs.answered > 0 ? getScoreColor(cs.score, cs.max) : '#666';
-      var label = cat.label.length > 10 ? cat.label.substring(0, 9).trim() + '.' : cat.label;
+      // Full label where it fits two lines of a cell, a short form where it does
+      // not. The full label is always in the cell's aria-label and title.
+      var label = CARD_LABELS[cat.id] || cat.label;
       var cellAriaLabel = cs.answered > 0
         ? cat.label + ': ' + cs.score + ' of ' + MAX_PER_TOPIC
         : cat.label + ': not yet scored';
-      html += '<div class="sc-score-cell" role="listitem" aria-label="' + esc(cellAriaLabel) + '">' +
+      html += '<div class="sc-score-cell" role="listitem" title="' + esc(cat.label) + '" aria-label="' + esc(cellAriaLabel) + '">' +
         '<span class="cat-label" aria-hidden="true">' + esc(label) + '</span>' +
         '<span class="cat-score" aria-hidden="true" style="color:' + color + ';">' + (cs.answered > 0 ? cs.score : '—') + '</span>' +
         '<span class="cat-max" aria-hidden="true">/' + MAX_PER_TOPIC + '</span></div>';

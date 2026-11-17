@@ -209,7 +209,7 @@ The bootcamp curriculum itself doesn't change. The platform under it does.
 1. Send Adam (you) a test message from a second account to verify the channel + comments flow works end-to-end.
 2. Pre-schedule Week 1's content (heartbeat + 3 tasks).
 3. Invite **2-3 trusted brothers** as a private pilot before opening the link wider.
-4. Confirm `usmcmin.com/ai-boot-camp.html` is live and the "Join the Telegram channel" button routes to your invite link (`https://t.me/+ddnHqJEqkKk3ZmVh`).
+4. Confirm `usmcmin.com/ai-boot-camp.html` is live and the "Join the Telegram channel" button routes to your invite link (`[invite link removed — ask Adam]`).
 
 ---
 

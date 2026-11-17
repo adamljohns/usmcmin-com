@@ -1,6 +1,6 @@
 # Family Captain — v2 Delivery Index (Telegram Launch)
 
-**Status:** Ready to launch. All artifacts rebuilt with Telegram pivot. Channel invite `https://t.me/+ddnHqJEqkKk3ZmVh` wired into every CTA. Deploy bundle staged on `family-captain-v2` branch, ready to push.
+**Status:** Ready to launch. All artifacts rebuilt with Telegram pivot. Channel invite `[invite link removed — ask Adam]` wired into every CTA. Deploy bundle staged on `family-captain-v2` branch, ready to push.
 
 ---
 
@@ -11,7 +11,7 @@
             │
             │  click "Join the Telegram channel"
             ▼
-   https://t.me/+ddnHqJEqkKk3ZmVh
+   [invite link removed — ask Adam]
             │
             │  read pinned bootcamp index
             ▼

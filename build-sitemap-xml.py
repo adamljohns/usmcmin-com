@@ -125,7 +125,13 @@ def collect():
         # A page that tells crawlers noindex, or that only redirects, is not a
         # sitemap URL. 113 were listed on 2026-10-04 (folded business stubs,
         # fleet/*, finance/debt|forecast|review, private/*, 404.html).
-        head = path.read_text(encoding="utf-8", errors="ignore")[:8000]
+        # Scan the whole <head>, not a fixed prefix. Course pages carry 15-60 KB
+        # of inline CSS ahead of their robots meta, so the old 8,000-character
+        # window listed ai-boot-camp-tools.html and ai-boot-camp-sovereign.html
+        # (both noindex) in the sitemap (2026-11-16).
+        text = path.read_text(encoding="utf-8", errors="ignore")
+        head_end = _HEAD_END_RE.search(text)
+        head = text[: head_end.start()] if head_end else text[:8000]
         if _NOINDEX_RE.search(head) or _REFRESH_RE.search(head):
             continue
         # A page whose canonical names another URL is a duplicate, not a
@@ -137,6 +143,7 @@ def collect():
         urls.append((rel, prio, freq))
     return urls
 
+_HEAD_END_RE = re.compile(r"</head\s*>", re.I)
 _NOINDEX_RE = re.compile(r"""<meta[^>]+name=["']robots["'][^>]+content=["'][^"']*noindex""", re.I)
 _REFRESH_RE = re.compile(r"""<meta[^>]+http-equiv=["']refresh""", re.I)
 _CANON_RE = re.compile(r"""<link[^>]+rel=["']canonical["'][^>]*href=(?:"([^"]+)"|'([^']+)')""", re.I)

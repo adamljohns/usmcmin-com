@@ -350,6 +350,14 @@ def page_shell(title: str, description: str, canonical: str, body: str, active: 
 <div class="race-wrap">
 {body}
 </div>
+<footer>
+  <p><strong>RESOLUTE Citizen</strong> — a module of <a href="https://usmcmin.org">U.S.M.C. Ministries</a></p>
+  <p style="margin-top:6px;font-size:0.72rem;">
+    <a href="../citizen.html">Scorecard</a> &middot;
+    <a href="../changelog.html">Changelog</a> &middot;
+    <a href="https://usmcmin.org/bible.html?ref=Proverbs+29:2">Proverbs 29:2</a>
+  </p>
+</footer>
 <script src="../assets/js/main.min.js?v=1105" defer></script>
 </body>
 </html>

@@ -193,6 +193,7 @@
     <li><a href="/changelog.html">Changelog</a></li>
   </ul>
   <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">🌙</button>
+  <button class="nav-toggle" aria-label="Menu"><span></span><span></span><span></span></button>
 </nav>
 
 <div id="main" class="cp-container">
@@ -318,6 +319,10 @@
 
 <script>
 (function(){var t=document.getElementById('themeToggle');if(!t)return;var s=localStorage.getItem('usmc-theme');if(s!=='light'){document.documentElement.setAttribute('data-theme','dark');t.textContent='☀️';}t.addEventListener('click',function(){var d=document.documentElement.getAttribute('data-theme')==='dark';if(d){document.documentElement.removeAttribute('data-theme');localStorage.setItem('usmc-theme','light');t.textContent='🌙';}else{document.documentElement.setAttribute('data-theme','dark');localStorage.setItem('usmc-theme','dark');t.textContent='☀️';}});})();
+</script>
+<script>
+/* Phone menu button: same behaviour as assets/js/main.js on the other RESOLUTE pages. */
+(function(){var b=document.querySelector('.nav-toggle'),l=document.querySelector('.nav-links');if(!b||!l)return;if(!l.id)l.id='nav-links';b.setAttribute('aria-expanded','false');b.setAttribute('aria-controls',l.id);b.addEventListener('click',function(){var o=l.classList.toggle('open');b.setAttribute('aria-expanded',o?'true':'false');});})();
 </script>
 <script>
 /* v4.3 tier toggle — Federal / State / Local. Choice persists across the

@@ -20,7 +20,7 @@
  *
  * Bump SW_VERSION when the shell changes so installs refresh on next launch.
  */
-const SW_VERSION = 'v4-2026-08-04';
+const SW_VERSION = 'v5-2026-11-16';
 const CORE_CACHE = 'tmc-core-' + SW_VERSION;
 const RUNTIME_CACHE = 'tmc-runtime-' + SW_VERSION;
 const OFFLINE_FALLBACK = '/tmc-father/index.html';
@@ -36,9 +36,9 @@ const CORE_ASSETS = [
   '/tmc-father/module-05.html',
   '/tmc-father/module-06.html',
   '/tmc-father/module-07.html',
-  '/assets/css/main.css',
+  '/assets/css/main.css?v=1105',
   '/assets/css/tmc-father.v2.css',
-  '/assets/js/main.js',
+  '/assets/js/main.js?v=1105',
   '/assets/js/tmc-father.v1.js',
   '/assets/icons/icon-192.png',
   '/assets/icons/icon-512.png',

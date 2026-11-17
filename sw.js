@@ -9,7 +9,7 @@
  * Bump SW_VERSION when shipping a major change so existing visitors
  * pick up the new shell on their next page navigation.
  */
-const SW_VERSION = 'v3-2026-11-13';
+const SW_VERSION = 'v4-2026-11-16';
 const CORE_CACHE = `usmcmin-core-${SW_VERSION}`;
 const RUNTIME_CACHE = `usmcmin-runtime-${SW_VERSION}`;
 
@@ -22,9 +22,9 @@ const CORE_ASSETS = [
   '/find-my-reps.html',
   '/citizen-table.html',
   '/citizen-issues.html',
-  '/assets/css/main.min.css',
-  '/assets/css/profile.min.css',
-  '/assets/js/profile.min.js',
+  '/assets/css/main.min.css?v=1105',
+  '/assets/css/profile.min.css?v=1105',
+  '/assets/js/profile.min.js?v=1105',
   '/assets/img/logo.png',
   '/assets/img/favicon.png',
   '/assets/og/og-citizen.jpg',

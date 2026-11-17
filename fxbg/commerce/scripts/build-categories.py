@@ -83,6 +83,7 @@ def render_category(cat: str, listings: list[dict]) -> str:
         {cards}
       </div>
     </div>
+    <footer><a href="/fredericksburg.html">Fredericksburg page</a> · <a href="/">usmcmin.com</a></footer>
   </div>
   <script src="../assets/commerce.js"></script>
 </body>
@@ -157,6 +158,7 @@ def render_index(counts: list[tuple[str, int]]) -> str:
     <h1 class="profile-title">Browse by <span style="color:var(--gold)">Category</span></h1>
     <p class="meta">{len(counts)} categories · tap for filtered listings · <a href="../directory.html">or search the directory →</a></p>
     {rows}
+    <footer><a href="/fredericksburg.html">Fredericksburg page</a> · <a href="/">usmcmin.com</a></footer>
   </div>
 </body>
 </html>

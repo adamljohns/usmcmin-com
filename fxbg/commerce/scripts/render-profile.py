@@ -419,7 +419,7 @@ def render_profile(biz: dict, osm: dict | None = None, alt_tags: dict | None = N
       <div class="cta-row"><a class="btn solid" href="{esc(suggest_href)}">Submit a correction →</a></div>
     </div>
 
-    <footer>Christ-Centered Commerce · C5iSR · Evidence before heat</footer>
+    <footer>Christ-Centered Commerce · C5iSR · Evidence before heat<br><a href="/fredericksburg.html">Fredericksburg page</a> · <a href="/">usmcmin.com</a></footer>
   </div>
   <script src="../assets/commerce.js"></script>
 </body>

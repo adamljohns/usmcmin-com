@@ -2,7 +2,7 @@
 
 **Cohort drop schedule:** Mon = Kickoff · Wed = Mid-week Call · Fri = Close-out + Scripture Sit
 **Theme order:** Vision → Body → Spiritual → Husbanding → Fathering → Finance → Sabbath
-**Channel:** [t.me/+ddnHqJEqkKk3ZmVh]([invite link removed — ask Adam]) (FC private cohort)
+**Channel:** [invite link removed — ask Adam] (FC private cohort)
 **Bible engine:** Every scripture ref hyperlinks to [usmcmin.org/bible.html](https://usmcmin.org/bible.html)
 
 > 21 posts (7 weeks × 3 drops). Drop times are suggestions — adjust to your cohort's rhythm.

@@ -826,8 +826,9 @@
   </div>
 
   <!-- Welcome Modal (first visit) -->
-  <div id="welcomeModal" role="dialog" aria-modal="true" aria-labelledby="welcomeModalTitle" aria-describedby="welcomeModalDesc" style="display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.85);z-index:9999;display:none;align-items:center;justify-content:center;">
-    <div style="background:var(--bg-card,#141416);border:1px solid var(--border,#2A2D35);border-radius:16px;padding:40px;max-width:420px;width:90%;text-align:center;">
+  <div id="welcomeModal" role="dialog" aria-modal="true" aria-labelledby="welcomeModalTitle" aria-describedby="welcomeModalDesc" onclick="if(event.target===this)closeLocationModal()" style="display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.85);z-index:9999;display:none;align-items:center;justify-content:center;">
+    <div style="position:relative;background:var(--bg-card,#141416);border:1px solid var(--border,#2A2D35);border-radius:16px;padding:40px;max-width:420px;width:90%;text-align:center;">
+      <button type="button" onclick="closeLocationModal()" aria-label="Close" title="Close" style="position:absolute;top:10px;right:10px;width:40px;height:40px;padding:0;background:transparent;border:1px solid var(--border,#2A2D35);border-radius:8px;color:var(--white,#F0F0F0);font-size:1.5rem;line-height:1;cursor:pointer;">&times;</button>
       <img src="assets/icons/shield-star.png" alt="" width="64" height="64" style="margin-bottom:16px;opacity:0.9;">
       <h2 id="welcomeModalTitle" style="color:var(--white,#F0F0F0);font-size:1.4rem;margin-bottom:8px;">Welcome to <span style="color:var(--accent);">RESOLUTE</span> Citizen</h2>
       <p id="welcomeModalDesc" style="color:var(--gray,#9CA3AF);font-size:0.9rem;margin-bottom:24px;line-height:1.6;">Select your state to see your local officials, state legislators, and federal representatives scored on Christian values.</p>
@@ -1219,6 +1220,20 @@ function selectLocation() {
   switchState(st);
 }
 
+// Close without choosing (close button, Esc, or a click on the backdrop). The
+// page behind already shows the default state, so it stays usable. Remembered
+// for this browser session only, so the dialog does not reopen on every return
+// to the page; "Change state" still opens it.
+function closeLocationModal() {
+  document.getElementById('welcomeModal').style.display = 'none';
+  try { sessionStorage.setItem('rc-welcome-closed', '1'); } catch (e) {}
+}
+document.addEventListener('keydown', function(ev) {
+  if (ev.key !== 'Escape') return;
+  var modal = document.getElementById('welcomeModal');
+  if (modal && modal.style.display === 'flex') closeLocationModal();
+});
+
 var INDEX_DATA = null;
 
 function buildStateDropdown(currentState) {
@@ -1298,6 +1313,9 @@ fetch('data/index.json', { cache: 'no-cache' })
 
     var st = getInitialState();
     var showModal = !st;
+    if (showModal) {
+      try { if (sessionStorage.getItem('rc-welcome-closed')) showModal = false; } catch (e) {}
+    }
     if (!st) st = 'VA';
 
     var stateFile = 'data/states/' + st.toLowerCase() + '.json';

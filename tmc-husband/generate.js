@@ -142,11 +142,11 @@ function layout({ title, description, body, page = '', noindex = false }) {
   <meta name="description" content="${esc(description)}">
   ${noindex ? '<meta name="robots" content="noindex, nofollow">' : ''}
   <title>${esc(title)} | U.S.M.C. Ministries</title>
-  <link rel="stylesheet" href="/assets/css/main.css">
+  <link rel="stylesheet" href="/assets/css/main.css?v=1105">
   <link rel="stylesheet" href="/assets/css/tmc-husband.v2.css">
   <link rel="icon" type="image/svg+xml" href="/assets/icons/favicon.svg">
   <link rel="icon" type="image/png" sizes="32x32" href="/assets/icons/favicon-32.png">
-  <script src="/assets/js/main.js" defer></script>
+  <script src="/assets/js/main.js?v=1105" defer></script>
   <script src="/assets/js/tmc-husband.v1.js?v=20260822complete" defer></script>
   <link rel="manifest" href="tmc-husband.webmanifest">
   <meta name="theme-color" content="#1E3A5F">

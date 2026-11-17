@@ -124,7 +124,7 @@ def generate_issue_page(issue):
   <meta name="twitter:description" content="{_esc(summary)}">
   <meta name="twitter:image" content="{og_image}">
   <script type="application/ld+json">{_json_ld(issue, page_url)}</script>
-  <link rel="stylesheet" href="../assets/css/main.min.css">
+  <link rel="stylesheet" href="../assets/css/main.min.css?v=1105">
   <link rel="icon" type="image/svg+xml" href="../assets/icons/favicon.svg">
   <link rel="icon" type="image/png" sizes="32x32" href="../assets/icons/favicon-32.png">
   <link rel="apple-touch-icon" href="../assets/icons/apple-touch-icon.png">

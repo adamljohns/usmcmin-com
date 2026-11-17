@@ -203,7 +203,7 @@ const indexHtml = `<!DOCTYPE html>
   <meta property="og:description" content="Not a generic supplement guide. This is the stack I actually use — seeded from years of NASM education, real lab work, and trial and error.">
   <meta property="og:url" content="https://usmcmin.com/fitness/supplements/">
   <meta property="og:type" content="website">
-  <link rel="stylesheet" href="../../assets/css/main.min.css">
+  <link rel="stylesheet" href="../../assets/css/main.min.css?v=1105">
   <link rel="icon" type="image/svg+xml" href="../../assets/icons/favicon.svg">
   <link rel="icon" type="image/png" sizes="32x32" href="../../assets/icons/favicon-32.png">
   <link rel="apple-touch-icon" sizes="180x180" href="../../assets/icons/apple-touch-icon.png">
@@ -388,7 +388,7 @@ for (const s of data.supplements) {
   <meta property="og:title" content="${escHtml(s.name)} — MOOP's Supplement Protocol">
   <meta property="og:url" content="https://usmcmin.com/fitness/supplements/${escHtml(s.id)}.html">
   <meta property="og:type" content="website">
-  <link rel="stylesheet" href="../../assets/css/main.min.css">
+  <link rel="stylesheet" href="../../assets/css/main.min.css?v=1105">
   <link rel="icon" type="image/svg+xml" href="../../assets/icons/favicon.svg">
   <link rel="icon" type="image/png" sizes="32x32" href="../../assets/icons/favicon-32.png">
   <link rel="apple-touch-icon" sizes="180x180" href="../../assets/icons/apple-touch-icon.png">

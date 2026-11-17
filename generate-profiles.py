@@ -21,6 +21,12 @@ MAX_TOTAL = 100  # v4.0 rubric: 10 categories × 10 pts = 100 (60 God First + 40
 MAX_GOD_FIRST = 60
 MAX_AMERICA_FIRST = 40
 
+# Cache-busting query for the shared CSS/JS the profile template links to. The Worker
+# serves .css/.js with a one-year immutable cache, so an edit to main.css, profile.css
+# or profile.js only reaches returning visitors when this value changes. Keep it equal
+# to the ?v= the hand-written pages use (grep "main.min.css?v=" *.html).
+ASSET_VERSION = "1105"
+
 # RESOLUTE Local civic-tool links by jurisdiction. Local officials whose city
 # has a live RESOLUTE Local page get a banner linking to it (live agendas +
 # briefs + how-to-weigh-in). Add an entry per city as the tool expands.
@@ -1899,12 +1905,12 @@ def generate_profile(candidate, categories, meta, nav=None):
   <!-- JSON-LD Person schema for search engines -->
   <script type="application/ld+json">{json_ld}</script>
 
-  <link rel="stylesheet" href="../../assets/css/main.min.css">
+  <link rel="stylesheet" href="../../assets/css/main.min.css?v={ASSET_VERSION}">
   <link rel="icon" type="image/svg+xml" href="../../assets/icons/favicon.svg">
   <link rel="icon" type="image/png" sizes="32x32" href="../../assets/icons/favicon-32.png">
   <link rel="icon" type="image/png" sizes="16x16" href="../../assets/icons/favicon-16.png">
   <link rel="apple-touch-icon" sizes="180x180" href="../../assets/icons/apple-touch-icon.png">
-  <link rel="stylesheet" href="../../assets/css/profile.min.css">
+  <link rel="stylesheet" href="../../assets/css/profile.min.css?v={ASSET_VERSION}">
 </head>
 <body>
 
@@ -2178,7 +2184,7 @@ def generate_profile(candidate, categories, meta, nav=None):
   <p style="margin-top:6px;font-size:0.72rem;">Each True = +2 points &middot; Max {MAX_TOTAL} &middot; Primary sources only &middot; <a href="https://usmcmin.org/bible.html?ref=Proverbs+29:2">Proverbs 29:2</a></p>
   <p style="margin-top:6px;font-size:0.7rem;"><span id="pageViews"></span></p>
 </footer>
-<script src="../../assets/js/profile.min.js" defer></script>
+<script src="../../assets/js/profile.min.js?v={ASSET_VERSION}" defer></script>
 <script data-goatcounter="https://usmcmin.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
 <noscript><img src="https://usmcmin.goatcounter.com/count?p=/candidates/{c.get('state','').lower()}/{c.get('slug','')}" alt=""></noscript>
 </body>

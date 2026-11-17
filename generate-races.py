@@ -338,7 +338,7 @@ def page_shell(title: str, description: str, canonical: str, body: str, active: 
   <meta name="twitter:image" content="https://usmcmin.com/assets/og/og-citizen-races.jpg">
   <meta name="twitter:title" content="{escape(title)}">
   <meta name="twitter:description" content="{escape(description)}">
-  <link rel="stylesheet" href="../assets/css/main.min.css">
+  <link rel="stylesheet" href="../assets/css/main.min.css?v=1105">
   <link rel="icon" type="image/svg+xml" href="../assets/icons/favicon.svg">
   <link rel="icon" type="image/png" sizes="32x32" href="../assets/icons/favicon-32.png">
   <link rel="icon" type="image/png" sizes="16x16" href="../assets/icons/favicon-16.png">
@@ -350,7 +350,7 @@ def page_shell(title: str, description: str, canonical: str, body: str, active: 
 <div class="race-wrap">
 {body}
 </div>
-<script src="../assets/js/main.min.js" defer></script>
+<script src="../assets/js/main.min.js?v=1105" defer></script>
 </body>
 </html>
 '''

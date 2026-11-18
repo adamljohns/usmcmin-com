@@ -1,22 +1,20 @@
 {
-  "generated": "2026-11-18T01:47:42.190132+00:00",
+  "generated": "2026-11-18T02:19:42.766716+00:00",
   "totals": {
     "agents": 17,
-    "operational": 14,
-    "degraded": 2,
-    "jobs": 190,
-    "enabled": 108,
+    "operational": 15,
+    "degraded": 1,
+    "jobs": 191,
+    "enabled": 109,
     "accomplishments": 423,
     "cowork": 41
   },
   "health": {
     "cron": {
-      "enabled": 108,
+      "enabled": 109,
       "ran26h": 65,
-      "delivered": 25,
-      "fails": [
-        "scheduled job \u00d7 1"
-      ]
+      "delivered": 26,
+      "fails": []
     },
     "cron_source": "openclaw.sqlite + hermes/cron/jobs.json",
     "launchd": {
@@ -73,12 +71,11 @@
   "agents": [
     {
       "id": "main",
-      "primary": "anthropic/claude-opus-5-5",
+      "primary": "xai/grok-4.7",
       "fallback": "openai/gpt-5.6-sol",
       "fallbacks": [
         "openai/gpt-5.6-sol",
-        "lmstudio/qwen/qwen3.6-35b-a3b",
-        "xai/grok-4.7"
+        "lmstudio/qwen/qwen3.6-35b-a3b"
       ],
       "voice": null,
       "tools": [],
@@ -129,8 +126,8 @@
         "voice-memos-export",
         "paywall-access"
       ],
-      "n_jobs": 29,
-      "n_enabled": 11,
+      "n_jobs": 30,
+      "n_enabled": 12,
       "err": 0,
       "last_ms": 1794935700059,
       "status": "operational",
@@ -542,6 +539,17 @@
           "expr": "",
           "tz": "",
           "channel": "last",
+          "last_ms": null,
+          "status": "\u2014",
+          "errors": 0,
+          "dur_ms": null
+        },
+        {
+          "name": "Fleet back on Claude after the weekly reset (one-shot)",
+          "enabled": true,
+          "expr": "",
+          "tz": "",
+          "channel": "",
           "last_ms": null,
           "status": "\u2014",
           "errors": 0,
@@ -1298,11 +1306,10 @@
     {
       "id": "preacher-john",
       "primary": "openai/gpt-5.6-sol",
-      "fallback": "openai/gpt-5.6-sol",
+      "fallback": "xai/grok-4.7",
       "fallbacks": [
-        "openai/gpt-5.6-sol",
-        "lmstudio/qwen/qwen3.6-35b-a3b",
-        "xai/grok-4.7"
+        "xai/grok-4.7",
+        "lmstudio/qwen/qwen3.6-35b-a3b"
       ],
       "voice": {
         "trained": "2026-07-02",
@@ -1788,11 +1795,10 @@
     {
       "id": "chaps",
       "primary": "openai/gpt-5.6-sol",
-      "fallback": "openai/gpt-5.6-sol",
+      "fallback": "xai/grok-4.7",
       "fallbacks": [
-        "openai/gpt-5.6-sol",
-        "lmstudio/qwen/qwen3.6-35b-a3b",
-        "xai/grok-4.7"
+        "xai/grok-4.7",
+        "lmstudio/qwen/qwen3.6-35b-a3b"
       ],
       "voice": null,
       "tools": [
@@ -1867,9 +1873,9 @@
       ],
       "n_jobs": 9,
       "n_enabled": 6,
-      "err": 1,
-      "last_ms": 1794965843481,
-      "status": "degraded",
+      "err": 0,
+      "last_ms": 1794967643518,
+      "status": "operational",
       "accomplishments": [
         {
           "date": "2026-10-25",
@@ -2333,10 +2339,21 @@
           "expr": "",
           "tz": "",
           "channel": "",
-          "last_ms": 1794965843481,
+          "last_ms": 1794967643518,
           "status": "skipped",
           "errors": 0,
-          "dur_ms": 304
+          "dur_ms": 253
+        },
+        {
+          "name": "Evening pre-check-in prompt (9 PM)",
+          "enabled": true,
+          "expr": "0 21 * * *",
+          "tz": "America/New_York",
+          "channel": "telegram",
+          "last_ms": 1794967201315,
+          "status": "ok",
+          "errors": 0,
+          "dur_ms": 84284
         },
         {
           "name": "invitation-check",
@@ -2348,17 +2365,6 @@
           "status": "ok",
           "errors": 0,
           "dur_ms": 329989
-        },
-        {
-          "name": "Evening pre-check-in prompt (9 PM)",
-          "enabled": true,
-          "expr": "0 21 * * *",
-          "tz": "America/New_York",
-          "channel": "telegram",
-          "last_ms": 1794880800042,
-          "status": "error",
-          "errors": 1,
-          "dur_ms": 70177
         },
         {
           "name": "chaps-directory-qa",
@@ -2430,12 +2436,11 @@
     },
     {
       "id": "carnegie",
-      "primary": "openai/gpt-5.6-sol",
+      "primary": "xai/grok-4.7",
       "fallback": "openai/gpt-5.6-sol",
       "fallbacks": [
         "openai/gpt-5.6-sol",
-        "lmstudio/qwen/qwen3.6-35b-a3b",
-        "xai/grok-4.7"
+        "lmstudio/qwen/qwen3.6-35b-a3b"
       ],
       "voice": null,
       "tools": [
@@ -2507,7 +2512,7 @@
       "n_jobs": 28,
       "n_enabled": 14,
       "err": 0,
-      "last_ms": 1794965821118,
+      "last_ms": 1794967497240,
       "status": "operational",
       "accomplishments": [
         {
@@ -2664,6 +2669,17 @@
       },
       "jobs": [
         {
+          "name": "heartbeat-carnegie",
+          "enabled": true,
+          "expr": "",
+          "tz": "",
+          "channel": "",
+          "last_ms": 1794967497240,
+          "status": "skipped",
+          "errors": 0,
+          "dur_ms": 256
+        },
+        {
           "name": "hourly-cache-watch",
           "enabled": true,
           "expr": "",
@@ -2673,17 +2689,6 @@
           "status": "ok",
           "errors": 0,
           "dur_ms": 258740
-        },
-        {
-          "name": "heartbeat-carnegie",
-          "enabled": true,
-          "expr": "",
-          "tz": "",
-          "channel": "",
-          "last_ms": 1794963897194,
-          "status": "ok",
-          "errors": 0,
-          "dur_ms": 963429
         },
         {
           "name": "BTC 2D ADX-DI WATCH",
@@ -2976,11 +2981,10 @@
     {
       "id": "sally",
       "primary": "openai/gpt-5.6-sol",
-      "fallback": "openai/gpt-5.6-sol",
+      "fallback": "xai/grok-4.7",
       "fallbacks": [
-        "openai/gpt-5.6-sol",
-        "lmstudio/qwen/qwen3.6-35b-a3b",
-        "xai/grok-4.7"
+        "xai/grok-4.7",
+        "lmstudio/qwen/qwen3.6-35b-a3b"
       ],
       "voice": null,
       "tools": [
@@ -3056,7 +3060,7 @@
       "n_jobs": 21,
       "n_enabled": 12,
       "err": 0,
-      "last_ms": 1794965051561,
+      "last_ms": 1794968100048,
       "status": "operational",
       "accomplishments": [
         {
@@ -3236,15 +3240,26 @@
       },
       "jobs": [
         {
+          "name": "Sally: Tiffany pay check",
+          "enabled": true,
+          "expr": "15 17,21 * * *",
+          "tz": "America/New_York",
+          "channel": "telegram",
+          "last_ms": 1794968100048,
+          "status": "ok",
+          "errors": 0,
+          "dur_ms": 13337
+        },
+        {
           "name": "review-batch-submit",
           "enabled": true,
           "expr": "",
           "tz": "",
           "channel": "",
-          "last_ms": 1794965051561,
+          "last_ms": 1794966853250,
           "status": "ok",
           "errors": 0,
-          "dur_ms": 313861
+          "dur_ms": 61461
         },
         {
           "name": "heartbeat-sally",
@@ -3267,17 +3282,6 @@
           "status": "ok",
           "errors": 0,
           "dur_ms": 305324
-        },
-        {
-          "name": "Sally: Tiffany pay check",
-          "enabled": true,
-          "expr": "15 17,21 * * *",
-          "tz": "America/New_York",
-          "channel": "telegram",
-          "last_ms": 1794953701380,
-          "status": "ok",
-          "errors": 0,
-          "dur_ms": 16187
         },
         {
           "name": "Sally: host-inbox sweep PM",
@@ -3470,12 +3474,11 @@
     },
     {
       "id": "nimble-bot",
-      "primary": "openai/gpt-5.6-sol",
+      "primary": "xai/grok-4.7",
       "fallback": "openai/gpt-5.6-sol",
       "fallbacks": [
         "openai/gpt-5.6-sol",
-        "lmstudio/qwen/qwen3.6-35b-a3b",
-        "xai/grok-4.7"
+        "lmstudio/qwen/qwen3.6-35b-a3b"
       ],
       "voice": null,
       "tools": [
@@ -3554,11 +3557,10 @@
     {
       "id": "coach-arnie",
       "primary": "openai/gpt-5.6-sol",
-      "fallback": "openai/gpt-5.6-sol",
+      "fallback": "xai/grok-4.7",
       "fallbacks": [
-        "openai/gpt-5.6-sol",
-        "lmstudio/qwen/qwen3.6-35b-a3b",
-        "xai/grok-4.7"
+        "xai/grok-4.7",
+        "lmstudio/qwen/qwen3.6-35b-a3b"
       ],
       "voice": {
         "trained": "2026-07-02",
@@ -3632,7 +3634,7 @@
       "n_jobs": 10,
       "n_enabled": 7,
       "err": 0,
-      "last_ms": 1794965806888,
+      "last_ms": 1794967606945,
       "status": "operational",
       "accomplishments": [
         {
@@ -3915,10 +3917,10 @@
           "expr": "",
           "tz": "",
           "channel": "",
-          "last_ms": 1794965806888,
-          "status": "ok",
+          "last_ms": 1794967606945,
+          "status": "skipped",
           "errors": 0,
-          "dur_ms": 46222
+          "dur_ms": 255
         },
         {
           "name": "recovery-pulse",
@@ -4024,11 +4026,10 @@
     {
       "id": "doc",
       "primary": "openai/gpt-5.6-sol",
-      "fallback": "openai/gpt-5.6-sol",
+      "fallback": "xai/grok-4.7",
       "fallbacks": [
-        "openai/gpt-5.6-sol",
-        "lmstudio/qwen/qwen3.6-35b-a3b",
-        "xai/grok-4.7"
+        "xai/grok-4.7",
+        "lmstudio/qwen/qwen3.6-35b-a3b"
       ],
       "voice": null,
       "tools": [
@@ -4370,12 +4371,11 @@
     },
     {
       "id": "sheriff-roy",
-      "primary": "openai/gpt-5.6-sol",
+      "primary": "xai/grok-4.7",
       "fallback": "openai/gpt-5.6-sol",
       "fallbacks": [
         "openai/gpt-5.6-sol",
-        "lmstudio/qwen/qwen3.6-35b-a3b",
-        "xai/grok-4.7"
+        "lmstudio/qwen/qwen3.6-35b-a3b"
       ],
       "voice": null,
       "tools": [
@@ -4448,7 +4448,7 @@
       "n_jobs": 10,
       "n_enabled": 7,
       "err": 0,
-      "last_ms": 1794965808907,
+      "last_ms": 1794967608958,
       "status": "operational",
       "accomplishments": [
         {
@@ -4621,10 +4621,10 @@
           "expr": "",
           "tz": "",
           "channel": "",
-          "last_ms": 1794965808907,
-          "status": "ok",
+          "last_ms": 1794967608958,
+          "status": "skipped",
           "errors": 0,
-          "dur_ms": 178944
+          "dur_ms": 256
         },
         {
           "name": "agenda-this-week",
@@ -4729,12 +4729,11 @@
     },
     {
       "id": "prof-x",
-      "primary": "openai/gpt-5.6-sol",
+      "primary": "xai/grok-4.7",
       "fallback": "openai/gpt-5.6-sol",
       "fallbacks": [
         "openai/gpt-5.6-sol",
-        "lmstudio/qwen/qwen3.6-35b-a3b",
-        "xai/grok-4.7"
+        "lmstudio/qwen/qwen3.6-35b-a3b"
       ],
       "voice": null,
       "tools": [
@@ -4800,7 +4799,7 @@
       "n_jobs": 10,
       "n_enabled": 6,
       "err": 0,
-      "last_ms": 1794965747973,
+      "last_ms": 1794967548029,
       "status": "operational",
       "accomplishments": [
         {
@@ -5015,10 +5014,10 @@
           "expr": "",
           "tz": "",
           "channel": "",
-          "last_ms": 1794965747973,
-          "status": "ok",
+          "last_ms": 1794967548029,
+          "status": "skipped",
           "errors": 0,
-          "dur_ms": 44987
+          "dur_ms": 256
         },
         {
           "name": "Skill: media-pipeline (Sat audit)",
@@ -5123,12 +5122,11 @@
     },
     {
       "id": "rush",
-      "primary": "openai/gpt-5.6-sol",
+      "primary": "xai/grok-4.7",
       "fallback": "openai/gpt-5.6-sol",
       "fallbacks": [
         "openai/gpt-5.6-sol",
-        "lmstudio/qwen/qwen3.6-35b-a3b",
-        "xai/grok-4.7"
+        "lmstudio/qwen/qwen3.6-35b-a3b"
       ],
       "voice": null,
       "tools": [
@@ -5201,7 +5199,7 @@
       "n_jobs": 9,
       "n_enabled": 6,
       "err": 0,
-      "last_ms": 1794965352530,
+      "last_ms": 1794967710406,
       "status": "operational",
       "accomplishments": [
         {
@@ -5375,26 +5373,26 @@
       },
       "jobs": [
         {
-          "name": "heartbeat-rush",
-          "enabled": true,
-          "expr": "",
-          "tz": "",
-          "channel": "",
-          "last_ms": 1794965352530,
-          "status": "ok",
-          "errors": 0,
-          "dur_ms": 201954
-        },
-        {
           "name": "breaking-news-scan",
           "enabled": true,
           "expr": "",
           "tz": "",
           "channel": "",
-          "last_ms": 1794964110359,
+          "last_ms": 1794967710406,
+          "status": "skipped",
+          "errors": 0,
+          "dur_ms": 254
+        },
+        {
+          "name": "heartbeat-rush",
+          "enabled": true,
+          "expr": "",
+          "tz": "",
+          "channel": "",
+          "last_ms": 1794967152587,
           "status": "ok",
           "errors": 0,
-          "dur_ms": 940719
+          "dur_ms": 84320
         },
         {
           "name": "RESOLUTE PM Wire draft (Rush)",
@@ -5478,11 +5476,10 @@
     {
       "id": "pops",
       "primary": "openai/gpt-5.6-sol",
-      "fallback": "openai/gpt-5.6-sol",
+      "fallback": "xai/grok-4.7",
       "fallbacks": [
-        "openai/gpt-5.6-sol",
-        "lmstudio/qwen/qwen3.6-35b-a3b",
-        "xai/grok-4.7"
+        "xai/grok-4.7",
+        "lmstudio/qwen/qwen3.6-35b-a3b"
       ],
       "voice": null,
       "tools": [
@@ -5554,7 +5551,7 @@
       "n_jobs": 11,
       "n_enabled": 8,
       "err": 0,
-      "last_ms": 1794965330194,
+      "last_ms": 1794967130243,
       "status": "operational",
       "accomplishments": [
         {
@@ -5705,10 +5702,10 @@
           "expr": "",
           "tz": "",
           "channel": "",
-          "last_ms": 1794965330194,
+          "last_ms": 1794967130243,
           "status": "ok",
           "errors": 0,
-          "dur_ms": 195344
+          "dur_ms": 39657
         },
         {
           "name": "wheelhouse-pattern",
@@ -5824,12 +5821,11 @@
     },
     {
       "id": "sgt-maj-mac",
-      "primary": "openai/gpt-5.6-sol",
+      "primary": "xai/grok-4.7",
       "fallback": "openai/gpt-5.6-sol",
       "fallbacks": [
         "openai/gpt-5.6-sol",
-        "lmstudio/qwen/qwen3.6-35b-a3b",
-        "xai/grok-4.7"
+        "lmstudio/qwen/qwen3.6-35b-a3b"
       ],
       "voice": {
         "trained": "2026-07-15",
@@ -5900,7 +5896,7 @@
       "n_jobs": 8,
       "n_enabled": 4,
       "err": 0,
-      "last_ms": 1794964860692,
+      "last_ms": 1794966660740,
       "status": "operational",
       "accomplishments": [
         {
@@ -6061,10 +6057,10 @@
           "expr": "",
           "tz": "",
           "channel": "",
-          "last_ms": 1794964860692,
+          "last_ms": 1794966660740,
           "status": "ok",
           "errors": 0,
-          "dur_ms": 504643
+          "dur_ms": 47243
         },
         {
           "name": "pt-log-late-check",
@@ -6147,12 +6143,11 @@
     },
     {
       "id": "bg-hartwell",
-      "primary": "openai/gpt-5.6-sol",
+      "primary": "xai/grok-4.7",
       "fallback": "openai/gpt-5.6-sol",
       "fallbacks": [
         "openai/gpt-5.6-sol",
-        "lmstudio/qwen/qwen3.6-35b-a3b",
-        "xai/grok-4.7"
+        "lmstudio/qwen/qwen3.6-35b-a3b"
       ],
       "voice": null,
       "tools": [
@@ -6220,7 +6215,7 @@
       "n_jobs": 8,
       "n_enabled": 5,
       "err": 0,
-      "last_ms": 1794965812979,
+      "last_ms": 1794966851230,
       "status": "operational",
       "accomplishments": [
         {
@@ -6400,6 +6395,17 @@
       },
       "jobs": [
         {
+          "name": "heartbeat-bg-hartwell",
+          "enabled": true,
+          "expr": "",
+          "tz": "",
+          "channel": "",
+          "last_ms": 1794966851230,
+          "status": "ok",
+          "errors": 0,
+          "dur_ms": 16779
+        },
+        {
           "name": "pattern-watch",
           "enabled": true,
           "expr": "",
@@ -6409,17 +6415,6 @@
           "status": "ok",
           "errors": 0,
           "dur_ms": 156609
-        },
-        {
-          "name": "heartbeat-bg-hartwell",
-          "enabled": true,
-          "expr": "",
-          "tz": "",
-          "channel": "",
-          "last_ms": 1794965051179,
-          "status": "skipped",
-          "errors": 0,
-          "dur_ms": 300
         },
         {
           "name": "Gus Sunday Reading List + Reflection (Sun 6PM)",
@@ -6533,5 +6528,5 @@
     "write-airbnb-reviews-for-listings",
     "you-are-an-expert-ai-agent"
   ],
-  "cowork_date": "2026-11-17T20:47:12-05:00"
+  "cowork_date": "2026-11-17T21:19:13-05:00"
 }

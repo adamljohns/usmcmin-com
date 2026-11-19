@@ -1,12 +1,12 @@
 {
- "generated_at": "2026-11-19T10:18:02-05:00",
- "generated_at_utc": "2026-11-19T15:18:02+00:00",
+ "generated_at": "2026-11-19T10:50:28-05:00",
+ "generated_at_utc": "2026-11-19T15:50:28+00:00",
  "meter": {
   "week_start": "2026-11-18T14:00-05:00",
   "reset_at": "2026-11-25T14:00-05:00",
-  "used_pct": 4.0,
-  "five_hour_used_pct": 16.0,
-  "snapshot_at": "2026-11-19T10:17:43-05:00",
+  "used_pct": 5.0,
+  "five_hour_used_pct": 20.0,
+  "snapshot_at": "2026-11-19T10:50:05-05:00",
   "source": "fleet/usage-data.json (Anthropic usage API via frontier-usage-poll.py)"
  },
  "method": {
@@ -64,40 +64,40 @@
   "meter": {
    "label": "This meter week",
    "start": "2026-11-18T14:00-05:00",
-   "end": "2026-11-19T10:18-05:00",
-   "total_mtok": 24.949,
-   "total_pts": 8.9,
-   "calls": 1200,
+   "end": "2026-11-19T10:50-05:00",
+   "total_mtok": 28.643,
+   "total_pts": 10.2,
+   "calls": 1370,
    "sources": {
-    "health": 0.492,
-    "cron": 8.687,
-    "a2a": 3.479,
+    "health": 0.498,
+    "cron": 8.691,
+    "a2a": 4.352,
     "chat": 5.411,
-    "subtask": 6.879
+    "subtask": 9.691
    },
    "models": {
-    "Opus": 17.373,
+    "Opus": 21.063,
     "Sonnet": 7.544,
-    "Haiku": 0.032
+    "Haiku": 0.036
    },
    "agents": [
     {
      "id": "main",
      "name": "Max Pemberton",
      "role": "Fleet Orchestrator",
-     "mtok": 13.638,
-     "pts": 4.87,
-     "pct": 54.66,
-     "calls": 376,
+     "mtok": 16.743,
+     "pts": 5.98,
+     "pct": 58.45,
+     "calls": 517,
      "sources": {
       "cron": 0.576,
-      "subtask": 6.879,
-      "a2a": 1.0,
+      "subtask": 9.691,
+      "a2a": 1.293,
       "chat": 5.182
      },
      "models": {
       "Sonnet": 0.11,
-      "Opus": 13.528
+      "Opus": 16.633
      },
      "top_crons": [
       {
@@ -149,15 +149,15 @@
      "received_from": [
       {
        "id": "chaps",
-       "mtok": 0.373
+       "mtok": 0.554
+      },
+      {
+       "id": "subagent",
+       "mtok": 0.347
       },
       {
        "id": "coach-arnie",
        "mtok": 0.306
-      },
-      {
-       "id": "subagent",
-       "mtok": 0.235
       },
       {
        "id": "pops",
@@ -169,11 +169,11 @@
       }
      ],
      "causes_on_others": {
-      "mtok": 0.706,
+      "mtok": 1.286,
       "to": [
        {
         "id": "chaps",
-        "mtok": 0.482
+        "mtok": 1.062
        },
        {
         "id": "coach-arnie",
@@ -186,12 +186,12 @@
       ]
      },
      "other_calls": {
-      "gpt": 5,
+      "gpt": 13,
       "grok": 3,
       "local": 0
      },
      "other_tokens": {
-      "gpt": 557263,
+      "gpt": 1535991,
       "local": 0
      }
     },
@@ -201,7 +201,7 @@
      "role": "Hospitality & Finance",
      "mtok": 5.475,
      "pts": 1.96,
-     "pct": 21.95,
+     "pct": 19.12,
      "calls": 419,
      "sources": {
       "cron": 4.117,
@@ -306,11 +306,11 @@
      "other_calls": {
       "gpt": 179,
       "grok": 82,
-      "local": 74
+      "local": 76
      },
      "other_tokens": {
       "gpt": 5368613,
-      "local": 818261
+      "local": 838102
      }
     },
     {
@@ -319,7 +319,7 @@
      "role": "News Correspondent",
      "mtok": 1.747,
      "pts": 0.62,
-     "pct": 7.0,
+     "pct": 6.1,
      "calls": 110,
      "sources": {
       "cron": 1.747
@@ -369,29 +369,82 @@
      "other_calls": {
       "gpt": 0,
       "grok": 0,
-      "local": 66
+      "local": 68
      },
      "other_tokens": {
       "gpt": 0,
-      "local": 733146
+      "local": 755357
+     }
+    },
+    {
+     "id": "chaps",
+     "name": "Chaplain Chuck",
+     "role": "Ministry Operations",
+     "mtok": 1.421,
+     "pts": 0.51,
+     "pct": 4.96,
+     "calls": 59,
+     "sources": {
+      "cron": 0.131,
+      "a2a": 1.062,
+      "chat": 0.229
+     },
+     "models": {
+      "Sonnet": 0.131,
+      "Opus": 1.291
+     },
+     "top_crons": [
+      {
+       "id": "510e950d-c4a4-4f2e-b3cc-8be3034f6e63",
+       "name": "Evening pre-check-in prompt (9 PM)",
+       "owner": "chaps",
+       "kind": "own",
+       "mtok": 0.131,
+       "pts": 0.05,
+       "calls": 4
+      }
+     ],
+     "received_from": [
+      {
+       "id": "main",
+       "mtok": 1.062
+      }
+     ],
+     "causes_on_others": {
+      "mtok": 0.554,
+      "to": [
+       {
+        "id": "main",
+        "mtok": 0.554
+       }
+      ]
+     },
+     "other_calls": {
+      "gpt": 381,
+      "grok": 0,
+      "local": 94
+     },
+     "other_tokens": {
+      "gpt": 3761105,
+      "local": 934916
      }
     },
     {
      "id": "carnegie",
      "name": "Andrew Carnegie III",
      "role": "Capital Steward",
-     "mtok": 1.215,
-     "pts": 0.43,
-     "pct": 4.87,
-     "calls": 80,
+     "mtok": 1.219,
+     "pts": 0.44,
+     "pct": 4.26,
+     "calls": 82,
      "sources": {
-      "cron": 0.963,
+      "cron": 0.967,
       "a2a": 0.252
      },
      "models": {
       "Sonnet": 0.707,
       "Opus": 0.476,
-      "Haiku": 0.032
+      "Haiku": 0.036
      },
      "top_crons": [
       {
@@ -453,9 +506,9 @@
        "name": "Paper lab hourly stop check (AC3-1024-HEARTBEAT)",
        "owner": "carnegie",
        "kind": "own",
-       "mtok": 0.032,
+       "mtok": 0.036,
        "pts": 0.01,
-       "calls": 6
+       "calls": 8
       }
      ],
      "received_from": [
@@ -484,65 +537,12 @@
      }
     },
     {
-     "id": "chaps",
-     "name": "Chaplain Chuck",
-     "role": "Ministry Operations",
-     "mtok": 0.841,
-     "pts": 0.3,
-     "pct": 3.37,
-     "calls": 34,
-     "sources": {
-      "cron": 0.131,
-      "a2a": 0.482,
-      "chat": 0.229
-     },
-     "models": {
-      "Sonnet": 0.131,
-      "Opus": 0.71
-     },
-     "top_crons": [
-      {
-       "id": "510e950d-c4a4-4f2e-b3cc-8be3034f6e63",
-       "name": "Evening pre-check-in prompt (9 PM)",
-       "owner": "chaps",
-       "kind": "own",
-       "mtok": 0.131,
-       "pts": 0.05,
-       "calls": 4
-      }
-     ],
-     "received_from": [
-      {
-       "id": "main",
-       "mtok": 0.482
-      }
-     ],
-     "causes_on_others": {
-      "mtok": 0.373,
-      "to": [
-       {
-        "id": "main",
-        "mtok": 0.373
-       }
-      ]
-     },
-     "other_calls": {
-      "gpt": 380,
-      "grok": 0,
-      "local": 84
-     },
-     "other_tokens": {
-      "gpt": 3728309,
-      "local": 777873
-     }
-    },
-    {
      "id": "coach-arnie",
      "name": "Coach Arnold Briggs",
      "role": "Fitness Coach",
      "mtok": 0.599,
      "pts": 0.21,
-     "pct": 2.4,
+     "pct": 2.09,
      "calls": 43,
      "sources": {
       "a2a": 0.18,
@@ -590,26 +590,26 @@
      "other_calls": {
       "gpt": 149,
       "grok": 0,
-      "local": 61
+      "local": 64
      },
      "other_tokens": {
       "gpt": 947476,
-      "local": 566913
+      "local": 595284
      }
     },
     {
      "id": "watchdog",
      "name": "Auth-watchdog ping",
      "role": "claude -p ping every 15 min",
-     "mtok": 0.492,
+     "mtok": 0.498,
      "pts": 0.18,
-     "pct": 1.97,
-     "calls": 81,
+     "pct": 1.74,
+     "calls": 83,
      "sources": {
-      "health": 0.492
+      "health": 0.498
      },
      "models": {
-      "Opus": 0.492
+      "Opus": 0.498
      },
      "top_crons": [],
      "received_from": [],
@@ -626,7 +626,7 @@
      "role": "Family & Inbox",
      "mtok": 0.455,
      "pts": 0.16,
-     "pct": 1.82,
+     "pct": 1.59,
      "calls": 24,
      "sources": {
       "a2a": 0.207,
@@ -691,11 +691,11 @@
      "other_calls": {
       "gpt": 321,
       "grok": 0,
-      "local": 50
+      "local": 52
      },
      "other_tokens": {
       "gpt": 413431,
-      "local": 434336
+      "local": 451338
      }
     },
     {
@@ -704,7 +704,7 @@
      "role": "Scripture & Theology",
      "mtok": 0.29,
      "pts": 0.1,
-     "pct": 1.16,
+     "pct": 1.01,
      "calls": 18,
      "sources": {
       "cron": 0.29
@@ -744,7 +744,7 @@
      "role": "Health & Medical",
      "mtok": 0.197,
      "pts": 0.07,
-     "pct": 0.79,
+     "pct": 0.69,
      "calls": 15,
      "sources": {
       "cron": 0.197
@@ -815,11 +815,11 @@
      "other_calls": {
       "gpt": 98,
       "grok": 0,
-      "local": 63
+      "local": 65
      },
      "other_tokens": {
       "gpt": 0,
-      "local": 836991
+      "local": 857623
      }
     },
     {
@@ -841,11 +841,11 @@
      "other_calls": {
       "gpt": 0,
       "grok": 0,
-      "local": 18
+      "local": 20
      },
      "other_tokens": {
       "gpt": 0,
-      "local": 149388
+      "local": 166001
      }
     },
     {
@@ -867,11 +867,11 @@
      "other_calls": {
       "gpt": 0,
       "grok": 0,
-      "local": 14
+      "local": 16
      },
      "other_tokens": {
       "gpt": 0,
-      "local": 136024
+      "local": 156734
      }
     },
     {
@@ -930,22 +930,22 @@
   },
   "d7": {
    "label": "Last 7 days",
-   "start": "2026-11-12T10:18-05:00",
-   "end": "2026-11-19T10:18-05:00",
-   "total_mtok": 413.819,
-   "total_pts": 147.8,
-   "calls": 12366,
+   "start": "2026-11-12T10:50-05:00",
+   "end": "2026-11-19T10:50-05:00",
+   "total_mtok": 409.385,
+   "total_pts": 146.2,
+   "calls": 12339,
    "sources": {
     "health": 3.335,
     "terminal": 3.651,
-    "chat": 126.125,
-    "a2a": 130.024,
+    "chat": 125.972,
+    "a2a": 123.539,
     "cron": 68.311,
-    "subtask": 79.265,
+    "subtask": 81.469,
     "other": 3.107
    },
    "models": {
-    "Opus": 279.886,
+    "Opus": 275.453,
     "Sonnet": 52.531,
     "Haiku": 0.312,
     "Fable": 81.089
@@ -955,19 +955,19 @@
      "id": "main",
      "name": "Max Pemberton",
      "role": "Fleet Orchestrator",
-     "mtok": 164.157,
-     "pts": 58.63,
-     "pct": 39.67,
-     "calls": 3643,
+     "mtok": 166.668,
+     "pts": 59.52,
+     "pct": 40.71,
+     "calls": 3759,
      "sources": {
       "cron": 7.195,
-      "a2a": 19.077,
-      "subtask": 60.411,
+      "a2a": 18.926,
+      "subtask": 63.073,
       "other": 2.463,
       "chat": 75.011
      },
      "models": {
-      "Opus": 81.45,
+      "Opus": 83.961,
       "Sonnet": 2.549,
       "Haiku": 0.043,
       "Fable": 80.115
@@ -1049,11 +1049,11 @@
      "received_from": [
       {
        "id": "chaps",
-       "mtok": 3.709
+       "mtok": 3.889
       },
       {
        "id": "sheriff-roy",
-       "mtok": 2.298
+       "mtok": 1.892
       },
       {
        "id": "preacher-john",
@@ -1065,7 +1065,7 @@
       },
       {
        "id": "prof-x",
-       "mtok": 1.454
+       "mtok": 1.417
       },
       {
        "id": "bg-hartwell",
@@ -1073,33 +1073,33 @@
       }
      ],
      "causes_on_others": {
-      "mtok": 61.022,
+      "mtok": 54.688,
       "to": [
-       {
-        "id": "sheriff-roy",
-        "mtok": 13.563
-       },
-       {
-        "id": "prof-x",
-        "mtok": 11.006
-       },
        {
         "id": "sgt-maj-mac",
         "mtok": 10.119
        },
        {
+        "id": "prof-x",
+        "mtok": 10.001
+       },
+       {
         "id": "preacher-john",
         "mtok": 9.553
+       },
+       {
+        "id": "sheriff-roy",
+        "mtok": 7.654
        }
       ]
      },
      "other_calls": {
-      "gpt": 540,
+      "gpt": 469,
       "grok": 324,
       "local": 36
      },
      "other_tokens": {
-      "gpt": 53132928,
+      "gpt": 44640882,
       "local": 3173616
      }
     },
@@ -1109,7 +1109,7 @@
      "role": "Scripture & Theology",
      "mtok": 50.662,
      "pts": 18.09,
-     "pct": 12.24,
+     "pct": 12.38,
      "calls": 1305,
      "sources": {
       "chat": 25.165,
@@ -1190,7 +1190,7 @@
      "role": "Standards & Discipline",
      "mtok": 29.262,
      "pts": 10.45,
-     "pct": 7.07,
+     "pct": 7.15,
      "calls": 494,
      "sources": {
       "a2a": 27.026,
@@ -1249,11 +1249,11 @@
      "other_calls": {
       "gpt": 0,
       "grok": 127,
-      "local": 697
+      "local": 694
      },
      "other_tokens": {
       "gpt": 0,
-      "local": 31678983
+      "local": 31652247
      }
     },
     {
@@ -1262,7 +1262,7 @@
      "role": "Hospitality & Finance",
      "mtok": 29.222,
      "pts": 10.44,
-     "pct": 7.06,
+     "pct": 7.14,
      "calls": 2158,
      "sources": {
       "chat": 1.333,
@@ -1387,87 +1387,7 @@
      },
      "other_tokens": {
       "gpt": 13586676,
-      "local": 6160937
-     }
-    },
-    {
-     "id": "sheriff-roy",
-     "name": "Sheriff Roy Caldwell",
-     "role": "Civic Watch",
-     "mtok": 22.779,
-     "pts": 8.14,
-     "pct": 5.5,
-     "calls": 320,
-     "sources": {
-      "chat": 0.343,
-      "a2a": 21.826,
-      "cron": 0.557,
-      "subtask": 0.054
-     },
-     "models": {
-      "Opus": 22.222,
-      "Sonnet": 0.557
-     },
-     "top_crons": [
-      {
-       "id": "dfde1d38-c93e-4b7e-90d9-f43a66c5a31d",
-       "name": "Civic Watch (Tue/Thu 4:16 PM) \u2014 Sheriff Roy",
-       "owner": "sheriff-roy",
-       "kind": "own",
-       "mtok": 0.272,
-       "pts": 0.1,
-       "calls": 23
-      },
-      {
-       "id": "job-sheriff-roy-0-18---2-6239",
-       "name": "Sheriff Roy Fxbg Council Brief (Tue 6PM)",
-       "owner": "sheriff-roy",
-       "kind": "own",
-       "mtok": 0.143,
-       "pts": 0.05,
-       "calls": 7
-      },
-      {
-       "id": "4645421a-57a6-4970-a4e8-8759924b8a54",
-       "name": "RESOLUTE Local YouTube weekly (Roy draft)",
-       "owner": "sheriff-roy",
-       "kind": "own",
-       "mtok": 0.142,
-       "pts": 0.05,
-       "calls": 10
-      }
-     ],
-     "received_from": [
-      {
-       "id": "main",
-       "mtok": 13.563
-      },
-      {
-       "id": "prof-x",
-       "mtok": 8.262
-      }
-     ],
-     "causes_on_others": {
-      "mtok": 8.954,
-      "to": [
-       {
-        "id": "prof-x",
-        "mtok": 6.453
-       },
-       {
-        "id": "main",
-        "mtok": 2.501
-       }
-      ]
-     },
-     "other_calls": {
-      "gpt": 98,
-      "grok": 33,
-      "local": 411
-     },
-     "other_tokens": {
-      "gpt": 0,
-      "local": 6944730
+      "local": 6159195
      }
     },
     {
@@ -1476,7 +1396,7 @@
      "role": "Theology Research",
      "mtok": 20.161,
      "pts": 7.2,
-     "pct": 4.87,
+     "pct": 4.92,
      "calls": 397,
      "sources": {
       "chat": 2.149,
@@ -1547,96 +1467,7 @@
      },
      "other_tokens": {
       "gpt": 785288,
-      "local": 2571965
-     }
-    },
-    {
-     "id": "prof-x",
-     "name": "Professor Xavier Archimedes",
-     "role": "Research & Synthesis",
-     "mtok": 19.367,
-     "pts": 6.92,
-     "pct": 4.68,
-     "calls": 318,
-     "sources": {
-      "subtask": 0.51,
-      "cron": 0.835,
-      "a2a": 17.459,
-      "chat": 0.563
-     },
-     "models": {
-      "Opus": 18.532,
-      "Sonnet": 0.835
-     },
-     "top_crons": [
-      {
-       "id": "job-prof-x-0-16---5-6239",
-       "name": "Prof X Weekly Synthesis (Fri 4PM)",
-       "owner": "prof-x",
-       "kind": "own",
-       "mtok": 0.337,
-       "pts": 0.12,
-       "calls": 21
-      },
-      {
-       "id": "23b4a81f-fdb8-4acd-90b1-e5e363b6103b",
-       "name": "Skill: site-bug-hunt (Sat sweep)",
-       "owner": "prof-x",
-       "kind": "own",
-       "mtok": 0.238,
-       "pts": 0.09,
-       "calls": 18
-      },
-      {
-       "id": "4ab627d7-e40d-4311-8f24-7f7857115f8c",
-       "name": "Skill: media-pipeline (Sat audit)",
-       "owner": "prof-x",
-       "kind": "own",
-       "mtok": 0.135,
-       "pts": 0.05,
-       "calls": 9
-      },
-      {
-       "id": "ad431447-3134-4045-8d27-fdeb6b6d9c5c",
-       "name": "Skill: audio-transcribe",
-       "owner": "prof-x",
-       "kind": "own",
-       "mtok": 0.125,
-       "pts": 0.04,
-       "calls": 6
-      }
-     ],
-     "received_from": [
-      {
-       "id": "main",
-       "mtok": 11.006
-      },
-      {
-       "id": "sheriff-roy",
-       "mtok": 6.453
-      }
-     ],
-     "causes_on_others": {
-      "mtok": 9.716,
-      "to": [
-       {
-        "id": "sheriff-roy",
-        "mtok": 8.262
-       },
-       {
-        "id": "main",
-        "mtok": 1.454
-       }
-      ]
-     },
-     "other_calls": {
-      "gpt": 0,
-      "grok": 46,
-      "local": 331
-     },
-     "other_tokens": {
-      "gpt": 0,
-      "local": 12422890
+      "local": 2571968
      }
     },
     {
@@ -1645,7 +1476,7 @@
      "role": "Capital Steward",
      "mtok": 17.974,
      "pts": 6.42,
-     "pct": 4.34,
+     "pct": 4.39,
      "calls": 666,
      "sources": {
       "cron": 5.777,
@@ -1771,12 +1602,181 @@
      }
     },
     {
+     "id": "prof-x",
+     "name": "Professor Xavier Archimedes",
+     "role": "Research & Synthesis",
+     "mtok": 17.905,
+     "pts": 6.39,
+     "pct": 4.37,
+     "calls": 261,
+     "sources": {
+      "subtask": 0.053,
+      "cron": 0.835,
+      "a2a": 16.454,
+      "chat": 0.563
+     },
+     "models": {
+      "Opus": 17.07,
+      "Sonnet": 0.835
+     },
+     "top_crons": [
+      {
+       "id": "job-prof-x-0-16---5-6239",
+       "name": "Prof X Weekly Synthesis (Fri 4PM)",
+       "owner": "prof-x",
+       "kind": "own",
+       "mtok": 0.337,
+       "pts": 0.12,
+       "calls": 21
+      },
+      {
+       "id": "23b4a81f-fdb8-4acd-90b1-e5e363b6103b",
+       "name": "Skill: site-bug-hunt (Sat sweep)",
+       "owner": "prof-x",
+       "kind": "own",
+       "mtok": 0.238,
+       "pts": 0.09,
+       "calls": 18
+      },
+      {
+       "id": "4ab627d7-e40d-4311-8f24-7f7857115f8c",
+       "name": "Skill: media-pipeline (Sat audit)",
+       "owner": "prof-x",
+       "kind": "own",
+       "mtok": 0.135,
+       "pts": 0.05,
+       "calls": 9
+      },
+      {
+       "id": "ad431447-3134-4045-8d27-fdeb6b6d9c5c",
+       "name": "Skill: audio-transcribe",
+       "owner": "prof-x",
+       "kind": "own",
+       "mtok": 0.125,
+       "pts": 0.04,
+       "calls": 6
+      }
+     ],
+     "received_from": [
+      {
+       "id": "main",
+       "mtok": 10.001
+      },
+      {
+       "id": "sheriff-roy",
+       "mtok": 6.453
+      }
+     ],
+     "causes_on_others": {
+      "mtok": 9.679,
+      "to": [
+       {
+        "id": "sheriff-roy",
+        "mtok": 8.262
+       },
+       {
+        "id": "main",
+        "mtok": 1.417
+       }
+      ]
+     },
+     "other_calls": {
+      "gpt": 0,
+      "grok": 46,
+      "local": 331
+     },
+     "other_tokens": {
+      "gpt": 0,
+      "local": 12422796
+     }
+    },
+    {
+     "id": "sheriff-roy",
+     "name": "Sheriff Roy Caldwell",
+     "role": "Civic Watch",
+     "mtok": 16.87,
+     "pts": 6.02,
+     "pct": 4.12,
+     "calls": 216,
+     "sources": {
+      "chat": 0.343,
+      "a2a": 15.916,
+      "cron": 0.557,
+      "subtask": 0.054
+     },
+     "models": {
+      "Opus": 16.312,
+      "Sonnet": 0.557
+     },
+     "top_crons": [
+      {
+       "id": "dfde1d38-c93e-4b7e-90d9-f43a66c5a31d",
+       "name": "Civic Watch (Tue/Thu 4:16 PM) \u2014 Sheriff Roy",
+       "owner": "sheriff-roy",
+       "kind": "own",
+       "mtok": 0.272,
+       "pts": 0.1,
+       "calls": 23
+      },
+      {
+       "id": "job-sheriff-roy-0-18---2-6239",
+       "name": "Sheriff Roy Fxbg Council Brief (Tue 6PM)",
+       "owner": "sheriff-roy",
+       "kind": "own",
+       "mtok": 0.143,
+       "pts": 0.05,
+       "calls": 7
+      },
+      {
+       "id": "4645421a-57a6-4970-a4e8-8759924b8a54",
+       "name": "RESOLUTE Local YouTube weekly (Roy draft)",
+       "owner": "sheriff-roy",
+       "kind": "own",
+       "mtok": 0.142,
+       "pts": 0.05,
+       "calls": 10
+      }
+     ],
+     "received_from": [
+      {
+       "id": "prof-x",
+       "mtok": 8.262
+      },
+      {
+       "id": "main",
+       "mtok": 7.654
+      }
+     ],
+     "causes_on_others": {
+      "mtok": 8.548,
+      "to": [
+       {
+        "id": "prof-x",
+        "mtok": 6.453
+       },
+       {
+        "id": "main",
+        "mtok": 2.095
+       }
+      ]
+     },
+     "other_calls": {
+      "gpt": 98,
+      "grok": 33,
+      "local": 409
+     },
+     "other_tokens": {
+      "gpt": 0,
+      "local": 6906866
+     }
+    },
+    {
      "id": "rush",
      "name": "Rush Sullivan",
      "role": "News Correspondent",
      "mtok": 15.661,
      "pts": 5.59,
-     "pct": 3.78,
+     "pct": 3.83,
      "calls": 887,
      "sources": {
       "cron": 12.688,
@@ -1844,30 +1844,30 @@
      "other_calls": {
       "gpt": 0,
       "grok": 75,
-      "local": 576
+      "local": 574
      },
      "other_tokens": {
       "gpt": 0,
-      "local": 6516469
+      "local": 6494326
      }
     },
     {
      "id": "chaps",
      "name": "Chaplain Chuck",
      "role": "Ministry Operations",
-     "mtok": 13.26,
-     "pts": 4.74,
-     "pct": 3.2,
-     "calls": 278,
+     "mtok": 13.84,
+     "pts": 4.94,
+     "pct": 3.38,
+     "calls": 303,
      "sources": {
       "cron": 1.39,
       "chat": 6.457,
-      "a2a": 3.916,
+      "a2a": 4.496,
       "subtask": 1.497
      },
      "models": {
       "Sonnet": 1.39,
-      "Opus": 11.87
+      "Opus": 12.45
      },
      "top_crons": [
       {
@@ -1910,7 +1910,7 @@
      "received_from": [
       {
        "id": "main",
-       "mtok": 2.606
+       "mtok": 3.186
       },
       {
        "id": "coach-arnie",
@@ -1922,11 +1922,11 @@
       }
      ],
      "causes_on_others": {
-      "mtok": 4.56,
+      "mtok": 4.741,
       "to": [
        {
         "id": "main",
-        "mtok": 3.709
+        "mtok": 3.889
        },
        {
         "id": "pops",
@@ -1939,13 +1939,13 @@
       ]
      },
      "other_calls": {
-      "gpt": 478,
+      "gpt": 479,
       "grok": 0,
-      "local": 600
+      "local": 607
      },
      "other_tokens": {
-      "gpt": 4025742,
-      "local": 5612371
+      "gpt": 4058538,
+      "local": 5741623
      }
     },
     {
@@ -1954,7 +1954,7 @@
      "role": "Family & Inbox",
      "mtok": 6.449,
      "pts": 2.3,
-     "pct": 1.56,
+     "pct": 1.58,
      "calls": 230,
      "sources": {
       "a2a": 1.719,
@@ -2061,7 +2061,7 @@
      },
      "other_tokens": {
       "gpt": 4563600,
-      "local": 4685708
+      "local": 4685250
      }
     },
     {
@@ -2070,7 +2070,7 @@
      "role": "Fitness Coach",
      "mtok": 6.208,
      "pts": 2.22,
-     "pct": 1.5,
+     "pct": 1.52,
      "calls": 458,
      "sources": {
       "cron": 4.348,
@@ -2155,11 +2155,11 @@
      "other_calls": {
       "gpt": 383,
       "grok": 18,
-      "local": 340
+      "local": 341
      },
      "other_tokens": {
       "gpt": 2131846,
-      "local": 3170372
+      "local": 3180458
      }
     },
     {
@@ -2168,7 +2168,7 @@
      "role": "Not an OpenClaw agent",
      "mtok": 5.101,
      "pts": 1.82,
-     "pct": 1.23,
+     "pct": 1.25,
      "calls": 120,
      "sources": {
       "cron": 5.101
@@ -2196,21 +2196,46 @@
      "other_tokens": {}
     },
     {
+     "id": "terminal",
+     "name": "Your own Claude (terminal / Desktop)",
+     "role": "Not an OpenClaw agent",
+     "mtok": 4.874,
+     "pts": 1.74,
+     "pct": 1.19,
+     "calls": 249,
+     "sources": {
+      "terminal": 3.651,
+      "subtask": 1.222
+     },
+     "models": {
+      "Opus": 3.899,
+      "Fable": 0.974
+     },
+     "top_crons": [],
+     "received_from": [],
+     "causes_on_others": {
+      "mtok": 0.0,
+      "to": []
+     },
+     "other_calls": {},
+     "other_tokens": {}
+    },
+    {
      "id": "doc",
      "name": "Doc Hartley",
      "role": "Health & Medical",
-     "mtok": 4.892,
-     "pts": 1.75,
-     "pct": 1.18,
-     "calls": 187,
+     "mtok": 4.739,
+     "pts": 1.69,
+     "pct": 1.16,
+     "calls": 180,
      "sources": {
       "a2a": 1.355,
       "cron": 1.348,
       "subtask": 0.065,
-      "chat": 2.124
+      "chat": 1.971
      },
      "models": {
-      "Opus": 3.545,
+      "Opus": 3.392,
       "Sonnet": 1.348
      },
      "top_crons": [
@@ -2281,31 +2306,6 @@
      }
     },
     {
-     "id": "terminal",
-     "name": "Your own Claude (terminal / Desktop)",
-     "role": "Not an OpenClaw agent",
-     "mtok": 4.874,
-     "pts": 1.74,
-     "pct": 1.18,
-     "calls": 249,
-     "sources": {
-      "terminal": 3.651,
-      "subtask": 1.222
-     },
-     "models": {
-      "Opus": 3.899,
-      "Fable": 0.974
-     },
-     "top_crons": [],
-     "received_from": [],
-     "causes_on_others": {
-      "mtok": 0.0,
-      "to": []
-     },
-     "other_calls": {},
-     "other_tokens": {}
-    },
-    {
      "id": "watchdog",
      "name": "Auth-watchdog ping",
      "role": "claude -p ping every 15 min",
@@ -2364,22 +2364,22 @@
   },
   "d14": {
    "label": "Last 14 days",
-   "start": "2026-11-05T10:18-05:00",
-   "end": "2026-11-19T10:18-05:00",
-   "total_mtok": 761.464,
-   "total_pts": 272.0,
-   "calls": 22814,
+   "start": "2026-11-05T10:50-05:00",
+   "end": "2026-11-19T10:50-05:00",
+   "total_mtok": 765.149,
+   "total_pts": 273.3,
+   "calls": 22980,
    "sources": {
     "health": 7.154,
     "terminal": 4.925,
     "cron": 158.217,
     "chat": 239.816,
-    "a2a": 202.689,
-    "subtask": 143.272,
+    "a2a": 203.563,
+    "subtask": 146.083,
     "other": 5.39
    },
    "models": {
-    "Opus": 541.768,
+    "Opus": 545.453,
     "Sonnet": 85.534,
     "Haiku": 0.488,
     "Fable": 133.673
@@ -2389,20 +2389,20 @@
      "id": "main",
      "name": "Max Pemberton",
      "role": "Fleet Orchestrator",
-     "mtok": 303.693,
-     "pts": 108.46,
-     "pct": 39.88,
-     "calls": 6585,
+     "mtok": 306.797,
+     "pts": 109.57,
+     "pct": 40.1,
+     "calls": 6726,
      "sources": {
       "cron": 13.149,
       "chat": 122.678,
-      "a2a": 49.63,
-      "subtask": 113.422,
+      "a2a": 49.923,
+      "subtask": 116.233,
       "other": 4.406,
       "health": 0.409
      },
      "models": {
-      "Opus": 167.736,
+      "Opus": 170.84,
       "Fable": 132.699,
       "Sonnet": 3.216,
       "Haiku": 0.043
@@ -2492,7 +2492,7 @@
       },
       {
        "id": "chaps",
-       "mtok": 4.605
+       "mtok": 4.785
       },
       {
        "id": "sheriff-roy",
@@ -2508,7 +2508,7 @@
       }
      ],
      "causes_on_others": {
-      "mtok": 83.793,
+      "mtok": 84.374,
       "to": [
        {
         "id": "sheriff-roy",
@@ -2529,12 +2529,12 @@
       ]
      },
      "other_calls": {
-      "gpt": 849,
+      "gpt": 857,
       "grok": 463,
       "local": 36
      },
      "other_tokens": {
-      "gpt": 83046528,
+      "gpt": 84025256,
       "local": 3173616
      }
     },
@@ -2544,7 +2544,7 @@
      "role": "Scripture & Theology",
      "mtok": 88.194,
      "pts": 31.5,
-     "pct": 11.58,
+     "pct": 11.53,
      "calls": 2112,
      "sources": {
       "cron": 4.251,
@@ -2642,7 +2642,7 @@
      "role": "Hospitality & Finance",
      "mtok": 68.301,
      "pts": 24.39,
-     "pct": 8.97,
+     "pct": 8.93,
      "calls": 4181,
      "sources": {
       "chat": 9.878,
@@ -2767,7 +2767,7 @@
      },
      "other_tokens": {
       "gpt": 68079023,
-      "local": 12323948
+      "local": 12324765
      }
     },
     {
@@ -2776,7 +2776,7 @@
      "role": "Not an OpenClaw agent",
      "mtok": 45.06,
      "pts": 16.09,
-     "pct": 5.92,
+     "pct": 5.89,
      "calls": 1009,
      "sources": {
       "cron": 45.06
@@ -2816,20 +2816,20 @@
      "id": "chaps",
      "name": "Chaplain Chuck",
      "role": "Ministry Operations",
-     "mtok": 38.3,
-     "pts": 13.68,
-     "pct": 5.03,
-     "calls": 883,
+     "mtok": 38.88,
+     "pts": 13.89,
+     "pct": 5.08,
+     "calls": 908,
      "sources": {
       "cron": 2.34,
       "chat": 17.641,
-      "a2a": 10.807,
+      "a2a": 11.388,
       "subtask": 7.482,
       "other": 0.029
      },
      "models": {
       "Sonnet": 2.17,
-      "Opus": 36.13
+      "Opus": 36.71
      },
      "top_crons": [
       {
@@ -2872,7 +2872,7 @@
      "received_from": [
       {
        "id": "main",
-       "mtok": 4.725
+       "mtok": 5.306
       },
       {
        "id": "preacher-john",
@@ -2892,11 +2892,11 @@
       }
      ],
      "causes_on_others": {
-      "mtok": 10.648,
+      "mtok": 10.829,
       "to": [
        {
         "id": "main",
-        "mtok": 4.605
+        "mtok": 4.785
        },
        {
         "id": "preacher-john",
@@ -2913,13 +2913,13 @@
       ]
      },
      "other_calls": {
-      "gpt": 1018,
+      "gpt": 1019,
       "grok": 30,
-      "local": 1293
+      "local": 1300
      },
      "other_tokens": {
-      "gpt": 7102614,
-      "local": 11928562
+      "gpt": 7135410,
+      "local": 12058603
      }
     },
     {
@@ -2928,7 +2928,7 @@
      "role": "Standards & Discipline",
      "mtok": 29.761,
      "pts": 10.63,
-     "pct": 3.91,
+     "pct": 3.89,
      "calls": 516,
      "sources": {
       "a2a": 27.253,
@@ -2987,11 +2987,11 @@
      "other_calls": {
       "gpt": 0,
       "grok": 127,
-      "local": 1146
+      "local": 1144
      },
      "other_tokens": {
       "gpt": 0,
-      "local": 35654666
+      "local": 35637102
      }
     },
     {
@@ -3000,7 +3000,7 @@
      "role": "Capital Steward",
      "mtok": 28.528,
      "pts": 10.19,
-     "pct": 3.75,
+     "pct": 3.73,
      "calls": 1236,
      "sources": {
       "cron": 10.801,
@@ -3135,7 +3135,7 @@
      "role": "Civic Watch",
      "mtok": 26.692,
      "pts": 9.53,
-     "pct": 3.51,
+     "pct": 3.49,
      "calls": 452,
      "sources": {
       "a2a": 24.286,
@@ -3206,7 +3206,7 @@
      },
      "other_tokens": {
       "gpt": 2529756,
-      "local": 17863078
+      "local": 17857846
      }
     },
     {
@@ -3215,7 +3215,7 @@
      "role": "Family & Inbox",
      "mtok": 23.981,
      "pts": 8.56,
-     "pct": 3.15,
+     "pct": 3.13,
      "calls": 725,
      "sources": {
       "a2a": 7.936,
@@ -3344,7 +3344,7 @@
      },
      "other_tokens": {
       "gpt": 6885495,
-      "local": 8772107
+      "local": 8771920
      }
     },
     {
@@ -3353,7 +3353,7 @@
      "role": "Research & Synthesis",
      "mtok": 23.858,
      "pts": 8.52,
-     "pct": 3.13,
+     "pct": 3.12,
      "calls": 474,
      "sources": {
       "subtask": 0.51,
@@ -3441,7 +3441,7 @@
      },
      "other_tokens": {
       "gpt": 568348,
-      "local": 16120446
+      "local": 16123130
      }
     },
     {
@@ -3450,7 +3450,7 @@
      "role": "News Correspondent",
      "mtok": 23.398,
      "pts": 8.36,
-     "pct": 3.07,
+     "pct": 3.06,
      "calls": 1323,
      "sources": {
       "cron": 18.016,
@@ -3518,11 +3518,11 @@
      "other_calls": {
       "gpt": 306,
       "grok": 267,
-      "local": 1206
+      "local": 1204
      },
      "other_tokens": {
       "gpt": 2943330,
-      "local": 13449077
+      "local": 13427496
      }
     },
     {
@@ -3531,7 +3531,7 @@
      "role": "Theology Research",
      "mtok": 20.639,
      "pts": 7.37,
-     "pct": 2.71,
+     "pct": 2.7,
      "calls": 429,
      "sources": {
       "cron": 0.616,
@@ -3598,11 +3598,11 @@
      "other_calls": {
       "gpt": 25,
       "grok": 155,
-      "local": 530
+      "local": 532
      },
      "other_tokens": {
       "gpt": 785288,
-      "local": 5263393
+      "local": 5280006
      }
     },
     {
@@ -3611,7 +3611,7 @@
      "role": "Fitness Coach",
      "mtok": 17.672,
      "pts": 6.31,
-     "pct": 2.32,
+     "pct": 2.31,
      "calls": 999,
      "sources": {
       "cron": 8.613,
@@ -3696,11 +3696,11 @@
      "other_calls": {
       "gpt": 484,
       "grok": 102,
-      "local": 826
+      "local": 827
      },
      "other_tokens": {
       "gpt": 2344728,
-      "local": 7541285
+      "local": 7551786
      }
     },
     {
@@ -3709,7 +3709,7 @@
      "role": "Health & Medical",
      "mtok": 9.492,
      "pts": 3.39,
-     "pct": 1.25,
+     "pct": 1.24,
      "calls": 380,
      "sources": {
       "a2a": 2.095,
@@ -3798,7 +3798,7 @@
      "role": "claude -p ping every 15 min",
      "mtok": 6.686,
      "pts": 2.39,
-     "pct": 0.88,
+     "pct": 0.87,
      "calls": 1181,
      "sources": {
       "health": 6.686
@@ -3821,7 +3821,7 @@
      "role": "Not an OpenClaw agent",
      "mtok": 6.207,
      "pts": 2.22,
-     "pct": 0.82,
+     "pct": 0.81,
      "calls": 292,
      "sources": {
       "terminal": 4.925,
@@ -3912,7 +3912,7 @@
    0.339,
    0.446,
    0.546,
-   0.274
+   0.279
   ],
   "_fleet": [
    55.584,
@@ -3928,7 +3928,7 @@
    124.716,
    49.536,
    9.11,
-   16.201
+   19.895
   ],
   "terminal": [
    0.0,
@@ -3976,7 +3976,7 @@
    8.004,
    2.398,
    0.28,
-   0.969
+   0.973
   ],
   "chaps": [
    4.348,
@@ -3992,7 +3992,7 @@
    1.057,
    2.389,
    0.131,
-   0.71
+   1.291
   ],
   "coach-arnie": [
    3.589,
@@ -4168,7 +4168,7 @@
    63.886,
    31.521,
    5.481,
-   8.157
+   11.261
   ],
   "desktop-task": [
    6.424,
@@ -4202,7 +4202,7 @@
    0.339,
    0.446,
    0.546,
-   0.274
+   0.279
   ],
   "terminal": [
    0.0,
@@ -4234,7 +4234,7 @@
    11.171,
    9.099,
    3.2,
-   5.521
+   5.525
   ],
   "chat": [
    21.294,
@@ -4266,7 +4266,7 @@
    17.027,
    8.664,
    0.181,
-   3.298
+   4.171
   ],
   "subtask": [
    4.535,
@@ -4282,7 +4282,7 @@
    48.623,
    17.879,
    0.0,
-   6.879
+   9.691
   ],
   "other": [
    0.239,
@@ -4316,7 +4316,7 @@
    31,
    18,
    26,
-   6
+   8
   ],
   "carnegie": [
    820,
@@ -4348,7 +4348,7 @@
    59,
    131,
    294,
-   221
+   232
   ],
   "coach-arnie": [
    70,
@@ -4364,7 +4364,7 @@
    31,
    62,
    416,
-   58
+   61
   ],
   "doc": [
    42,
@@ -4396,7 +4396,7 @@
    32,
    4,
    168,
-   4
+   12
   ],
   "nimble-bot": [
    19,
@@ -4428,7 +4428,7 @@
    58,
    203,
    278,
-   153
+   155
   ],
   "preacher-john": [
    19,
@@ -4460,7 +4460,7 @@
    20,
    30,
    23,
-   6
+   8
   ],
   "rush": [
    201,
@@ -4476,7 +4476,7 @@
    58,
    92,
    145,
-   24
+   26
   ],
   "sally": [
    206,
@@ -4492,7 +4492,7 @@
    80,
    297,
    712,
-   53
+   55
   ],
   "sgt-maj-mac": [
    52,
@@ -4524,8 +4524,8 @@
    23,
    38,
    197,
-   29
+   31
   ]
  },
- "build_seconds": 7.2
+ "build_seconds": 7.3
 }

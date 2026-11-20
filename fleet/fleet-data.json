@@ -1,9 +1,9 @@
 {
-  "generated": "2026-11-20T12:39:59.936437+00:00",
+  "generated": "2026-11-20T13:12:03.438966+00:00",
   "totals": {
     "agents": 17,
-    "operational": 15,
-    "degraded": 1,
+    "operational": 14,
+    "degraded": 2,
     "jobs": 190,
     "enabled": 108,
     "accomplishments": 424,
@@ -12,9 +12,11 @@
   "health": {
     "cron": {
       "enabled": 108,
-      "ran26h": 66,
-      "delivered": 27,
-      "fails": []
+      "ran26h": 65,
+      "delivered": 26,
+      "fails": [
+        "scheduled job \u00d7 1"
+      ]
     },
     "cron_source": "openclaw.sqlite + hermes/cron/jobs.json",
     "launchd": {
@@ -128,9 +130,9 @@
       ],
       "n_jobs": 29,
       "n_enabled": 11,
-      "err": 0,
-      "last_ms": 1795108500067,
-      "status": "operational",
+      "err": 1,
+      "last_ms": 1795179377851,
+      "status": "degraded",
       "accomplishments": [
         {
           "date": "2026-11-17",
@@ -424,6 +426,30 @@
       },
       "jobs": [
         {
+          "name": "GQueues \u2192 Obsidian workflow snapshot",
+          "enabled": true,
+          "expr": "47 7 * * *",
+          "tz": "America/New_York",
+          "channel": "",
+          "last_ms": 1795179377851,
+          "status": "error",
+          "errors": 1,
+          "dur_ms": 28846,
+          "model": "anthropic/claude-opus-5-5"
+        },
+        {
+          "name": "Fleet Morning SITREP (consolidated stand-up)",
+          "enabled": true,
+          "expr": "45 7 * * 1-5",
+          "tz": "America/New_York",
+          "channel": "discord",
+          "last_ms": 1795179219590,
+          "status": "ok",
+          "errors": 0,
+          "dur_ms": 158159,
+          "model": "anthropic/claude-sonnet-5"
+        },
+        {
           "name": "Noon bolt ask",
           "enabled": true,
           "expr": "15 12 * * *",
@@ -433,30 +459,6 @@
           "status": "ok",
           "errors": 0,
           "dur_ms": 27416,
-          "model": "anthropic/claude-sonnet-5"
-        },
-        {
-          "name": "GQueues \u2192 Obsidian workflow snapshot",
-          "enabled": true,
-          "expr": "47 7 * * *",
-          "tz": "America/New_York",
-          "channel": "",
-          "last_ms": 1795092420630,
-          "status": "ok",
-          "errors": 0,
-          "dur_ms": 86505,
-          "model": "anthropic/claude-opus-5-5"
-        },
-        {
-          "name": "Fleet Morning SITREP (consolidated stand-up)",
-          "enabled": true,
-          "expr": "45 7 * * 1-5",
-          "tz": "America/New_York",
-          "channel": "discord",
-          "last_ms": 1795092300689,
-          "status": "ok",
-          "errors": 0,
-          "dur_ms": 167087,
           "model": "anthropic/claude-sonnet-5"
         },
         {
@@ -1424,7 +1426,7 @@
       "n_jobs": 8,
       "n_enabled": 5,
       "err": 0,
-      "last_ms": 1795158196912,
+      "last_ms": 1795179796968,
       "status": "operational",
       "accomplishments": [
         {
@@ -1743,10 +1745,10 @@
           "expr": "",
           "tz": "",
           "channel": "",
-          "last_ms": 1795158196912,
-          "status": "skipped",
+          "last_ms": 1795179796968,
+          "status": "ok",
           "errors": 0,
-          "dur_ms": 256,
+          "dur_ms": 218233,
           "model": null
         },
         {
@@ -1755,10 +1757,10 @@
           "expr": "37 7 * * *",
           "tz": "America/New_York",
           "channel": "telegram",
-          "last_ms": 1795091820980,
+          "last_ms": 1795178221924,
           "status": "ok",
           "errors": 0,
-          "dur_ms": 353840,
+          "dur_ms": 346321,
           "model": "anthropic/claude-sonnet-5"
         },
         {
@@ -1917,7 +1919,7 @@
       "n_jobs": 10,
       "n_enabled": 7,
       "err": 0,
-      "last_ms": 1795175366312,
+      "last_ms": 1795177166779,
       "status": "operational",
       "accomplishments": [
         {
@@ -2387,10 +2389,10 @@
           "expr": "",
           "tz": "",
           "channel": "",
-          "last_ms": 1795175366312,
+          "last_ms": 1795177166779,
           "status": "ok",
           "errors": 0,
-          "dur_ms": 51510,
+          "dur_ms": 2313650,
           "model": null
         },
         {
@@ -2581,7 +2583,7 @@
       "n_jobs": 28,
       "n_enabled": 14,
       "err": 0,
-      "last_ms": 1795177801303,
+      "last_ms": 1795179896317,
       "status": "operational",
       "accomplishments": [
         {
@@ -2738,6 +2740,18 @@
       },
       "jobs": [
         {
+          "name": "heartbeat-carnegie",
+          "enabled": true,
+          "expr": "",
+          "tz": "",
+          "channel": "",
+          "last_ms": 1795179896317,
+          "status": "ok",
+          "errors": 0,
+          "dur_ms": 309820,
+          "model": null
+        },
+        {
           "name": "C5iSR Daily Post \u2014 Carnegie (Mon-Sat 7:30AM, all six themes)",
           "enabled": true,
           "expr": "30 7 * * 1-6",
@@ -2771,18 +2785,6 @@
           "status": "ok",
           "errors": 0,
           "dur_ms": 610715,
-          "model": null
-        },
-        {
-          "name": "heartbeat-carnegie",
-          "enabled": true,
-          "expr": "",
-          "tz": "",
-          "channel": "",
-          "last_ms": 1795176296196,
-          "status": "ok",
-          "errors": 0,
-          "dur_ms": 815956,
           "model": null
         },
         {
@@ -3157,7 +3159,7 @@
       "n_jobs": 20,
       "n_enabled": 11,
       "err": 0,
-      "last_ms": 1795177899194,
+      "last_ms": 1795180138299,
       "status": "operational",
       "accomplishments": [
         {
@@ -3337,6 +3339,18 @@
       },
       "jobs": [
         {
+          "name": "review-batch-submit",
+          "enabled": true,
+          "expr": "",
+          "tz": "",
+          "channel": "",
+          "last_ms": 1795180138299,
+          "status": "ok",
+          "errors": 0,
+          "dur_ms": 152535,
+          "model": null
+        },
+        {
           "name": "Cottage 30-day rule ON weekdays 7 AM",
           "enabled": true,
           "expr": "0 7 * * 1-5",
@@ -3347,18 +3361,6 @@
           "errors": 0,
           "dur_ms": 55362,
           "model": "anthropic/claude-sonnet-5"
-        },
-        {
-          "name": "review-batch-submit",
-          "enabled": true,
-          "expr": "",
-          "tz": "",
-          "channel": "",
-          "last_ms": 1795176536047,
-          "status": "ok",
-          "errors": 0,
-          "dur_ms": 506585,
-          "model": null
         },
         {
           "name": "heartbeat-sally",
@@ -4035,10 +4037,10 @@
           "expr": "",
           "tz": "",
           "channel": "",
-          "last_ms": 1795175811594,
+          "last_ms": 1795177612241,
           "status": "ok",
           "errors": 0,
-          "dur_ms": 43865,
+          "dur_ms": 1855584,
           "model": null
         },
         {
@@ -4214,7 +4216,7 @@
       "n_jobs": 11,
       "n_enabled": 6,
       "err": 0,
-      "last_ms": 1795176900572,
+      "last_ms": 1795180070798,
       "status": "operational",
       "accomplishments": [
         {
@@ -4363,6 +4365,42 @@
       },
       "jobs": [
         {
+          "name": "vitals-warning",
+          "enabled": true,
+          "expr": "",
+          "tz": "",
+          "channel": "",
+          "last_ms": 1795180070798,
+          "status": "ok",
+          "errors": 0,
+          "dur_ms": 219989,
+          "model": null
+        },
+        {
+          "name": "Doc Morning Clinical Read (0800 EDT)",
+          "enabled": true,
+          "expr": "0 8 * * *",
+          "tz": "",
+          "channel": "telegram",
+          "last_ms": 1795179601470,
+          "status": "ok",
+          "errors": 0,
+          "dur_ms": 23871,
+          "model": "anthropic/claude-sonnet-5"
+        },
+        {
+          "name": "heartbeat-doc",
+          "enabled": true,
+          "expr": "",
+          "tz": "",
+          "channel": "",
+          "last_ms": 1795177294961,
+          "status": "ok",
+          "errors": 0,
+          "dur_ms": 2099940,
+          "model": null
+        },
+        {
           "name": "Doc Active Intel (morning)",
           "enabled": true,
           "expr": "15 7 * * *",
@@ -4373,30 +4411,6 @@
           "errors": 0,
           "dur_ms": 17678,
           "model": "anthropic/claude-sonnet-5"
-        },
-        {
-          "name": "vitals-warning",
-          "enabled": true,
-          "expr": "",
-          "tz": "",
-          "channel": "",
-          "last_ms": 1795176468879,
-          "status": "ok",
-          "errors": 0,
-          "dur_ms": 573893,
-          "model": null
-        },
-        {
-          "name": "heartbeat-doc",
-          "enabled": true,
-          "expr": "",
-          "tz": "",
-          "channel": "",
-          "last_ms": 1795155694294,
-          "status": "skipped",
-          "errors": 0,
-          "dur_ms": 258,
-          "model": null
         },
         {
           "name": "Doc Active Intel (evening)",
@@ -4420,18 +4434,6 @@
           "status": "ok",
           "errors": 0,
           "dur_ms": 21378,
-          "model": "anthropic/claude-sonnet-5"
-        },
-        {
-          "name": "Doc Morning Clinical Read (0800 EDT)",
-          "enabled": true,
-          "expr": "0 8 * * *",
-          "tz": "",
-          "channel": "telegram",
-          "last_ms": 1795093200715,
-          "status": "ok",
-          "errors": 0,
-          "dur_ms": 57035,
           "model": "anthropic/claude-sonnet-5"
         },
         {
@@ -4575,7 +4577,7 @@
       "n_jobs": 10,
       "n_enabled": 7,
       "err": 0,
-      "last_ms": 1795174624898,
+      "last_ms": 1795179987555,
       "status": "operational",
       "accomplishments": [
         {
@@ -4748,10 +4750,10 @@
           "expr": "",
           "tz": "",
           "channel": "",
-          "last_ms": 1795174624898,
+          "last_ms": 1795179987555,
           "status": "ok",
           "errors": 0,
-          "dur_ms": 57759,
+          "dur_ms": 95087,
           "model": null
         },
         {
@@ -4936,7 +4938,7 @@
       "n_jobs": 10,
       "n_enabled": 6,
       "err": 0,
-      "last_ms": 1795178138651,
+      "last_ms": 1795179938913,
       "status": "operational",
       "accomplishments": [
         {
@@ -5151,10 +5153,10 @@
           "expr": "",
           "tz": "",
           "channel": "",
-          "last_ms": 1795178138651,
+          "last_ms": 1795179938913,
           "status": "skipped",
           "errors": 0,
-          "dur_ms": 281,
+          "dur_ms": 263,
           "model": null
         },
         {
@@ -5346,7 +5348,7 @@
       "n_jobs": 9,
       "n_enabled": 6,
       "err": 0,
-      "last_ms": 1795176493306,
+      "last_ms": 1795178568301,
       "status": "operational",
       "accomplishments": [
         {
@@ -5520,6 +5522,30 @@
       },
       "jobs": [
         {
+          "name": "RESOLUTE AM Wire draft (Rush)",
+          "enabled": true,
+          "expr": "40 7 * * *",
+          "tz": "America/New_York",
+          "channel": "last",
+          "last_ms": 1795178568301,
+          "status": "ok",
+          "errors": 0,
+          "dur_ms": 616494,
+          "model": "anthropic/claude-sonnet-5"
+        },
+        {
+          "name": "heartbeat-rush",
+          "enabled": true,
+          "expr": "",
+          "tz": "",
+          "channel": "",
+          "last_ms": 1795177766714,
+          "status": "ok",
+          "errors": 0,
+          "dur_ms": 1803930,
+          "model": null
+        },
+        {
           "name": "breaking-news-scan",
           "enabled": true,
           "expr": "",
@@ -5529,18 +5555,6 @@
           "status": "ok",
           "errors": 0,
           "dur_ms": 549174,
-          "model": null
-        },
-        {
-          "name": "heartbeat-rush",
-          "enabled": true,
-          "expr": "",
-          "tz": "",
-          "channel": "",
-          "last_ms": 1795175966091,
-          "status": "ok",
-          "errors": 0,
-          "dur_ms": 75284,
           "model": null
         },
         {
@@ -5577,18 +5591,6 @@
           "status": "ok",
           "errors": 0,
           "dur_ms": 73674,
-          "model": "anthropic/claude-sonnet-5"
-        },
-        {
-          "name": "RESOLUTE AM Wire draft (Rush)",
-          "enabled": true,
-          "expr": "40 7 * * *",
-          "tz": "America/New_York",
-          "channel": "last",
-          "last_ms": 1795092001889,
-          "status": "ok",
-          "errors": 0,
-          "dur_ms": 438174,
           "model": "anthropic/claude-sonnet-5"
         },
         {
@@ -5707,7 +5709,7 @@
       "n_jobs": 11,
       "n_enabled": 8,
       "err": 0,
-      "last_ms": 1795175933601,
+      "last_ms": 1795179534291,
       "status": "operational",
       "accomplishments": [
         {
@@ -5858,11 +5860,23 @@
           "expr": "",
           "tz": "",
           "channel": "",
-          "last_ms": 1795175933601,
+          "last_ms": 1795179534291,
           "status": "ok",
           "errors": 0,
-          "dur_ms": 39431,
+          "dur_ms": 99123,
           "model": null
+        },
+        {
+          "name": "Pops Daily Wheelhouse Check-in (7:37 AM)",
+          "enabled": true,
+          "expr": "43 7 * * *",
+          "tz": "America/New_York",
+          "channel": "telegram",
+          "last_ms": 1795179184852,
+          "status": "ok",
+          "errors": 0,
+          "dur_ms": 34650,
+          "model": "anthropic/claude-sonnet-5"
         },
         {
           "name": "Pops Daily Captain's Creed (6:55 AM) \u2014 Discord #study + TG link",
@@ -5898,18 +5912,6 @@
           "status": "ok",
           "errors": 0,
           "dur_ms": 89631,
-          "model": "anthropic/claude-sonnet-5"
-        },
-        {
-          "name": "Pops Daily Wheelhouse Check-in (7:37 AM)",
-          "enabled": true,
-          "expr": "43 7 * * *",
-          "tz": "America/New_York",
-          "channel": "telegram",
-          "last_ms": 1795092180732,
-          "status": "ok",
-          "errors": 0,
-          "dur_ms": 33251,
           "model": "anthropic/claude-sonnet-5"
         },
         {
@@ -6063,7 +6065,7 @@
       "n_jobs": 8,
       "n_enabled": 4,
       "err": 0,
-      "last_ms": 1795178152883,
+      "last_ms": 1795179953116,
       "status": "operational",
       "accomplishments": [
         {
@@ -6224,7 +6226,7 @@
           "expr": "",
           "tz": "",
           "channel": "",
-          "last_ms": 1795178152883,
+          "last_ms": 1795179953116,
           "status": "skipped",
           "errors": 0,
           "dur_ms": 295,
@@ -6390,7 +6392,7 @@
       "n_jobs": 8,
       "n_enabled": 5,
       "err": 0,
-      "last_ms": 1795178294976,
+      "last_ms": 1795180095118,
       "status": "operational",
       "accomplishments": [
         {
@@ -6575,10 +6577,10 @@
           "expr": "",
           "tz": "",
           "channel": "",
-          "last_ms": 1795178294976,
+          "last_ms": 1795180095118,
           "status": "skipped",
           "errors": 0,
-          "dur_ms": 299,
+          "dur_ms": 267,
           "model": null
         },
         {
@@ -6711,5 +6713,5 @@
     "write-airbnb-reviews-for-listings",
     "you-are-an-expert-ai-agent"
   ],
-  "cowork_date": "2026-11-20T07:39:30-05:00"
+  "cowork_date": "2026-11-20T08:11:33-05:00"
 }

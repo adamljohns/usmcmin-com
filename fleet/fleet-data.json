@@ -1,5 +1,5 @@
 {
-  "generated": "2026-11-20T13:44:29.473776+00:00",
+  "generated": "2026-11-20T14:26:22.252852+00:00",
   "totals": {
     "agents": 17,
     "operational": 14,
@@ -12,18 +12,16 @@
   "health": {
     "cron": {
       "enabled": 108,
-      "ran26h": 65,
-      "delivered": 26,
+      "ran26h": 66,
+      "delivered": 27,
       "fails": [
         "scheduled job \u00d7 1"
       ]
     },
     "cron_source": "openclaw.sqlite + hermes/cron/jobs.json",
     "launchd": {
-      "healthy": 102,
-      "fails": [
-        "launchd job \u00d7 3"
-      ]
+      "healthy": 108,
+      "fails": []
     }
   },
   "rhythm": [
@@ -1919,7 +1917,7 @@
       "n_jobs": 10,
       "n_enabled": 7,
       "err": 0,
-      "last_ms": 1795181060044,
+      "last_ms": 1795184360157,
       "status": "operational",
       "accomplishments": [
         {
@@ -2384,6 +2382,18 @@
       },
       "jobs": [
         {
+          "name": "heartbeat-chaps",
+          "enabled": true,
+          "expr": "",
+          "tz": "",
+          "channel": "",
+          "last_ms": 1795184360157,
+          "status": "ok",
+          "errors": 0,
+          "dur_ms": 49676,
+          "model": null
+        },
+        {
           "name": "invitation-check",
           "enabled": true,
           "expr": "",
@@ -2393,18 +2403,6 @@
           "status": "ok",
           "errors": 0,
           "dur_ms": 18663,
-          "model": null
-        },
-        {
-          "name": "heartbeat-chaps",
-          "enabled": true,
-          "expr": "",
-          "tz": "",
-          "channel": "",
-          "last_ms": 1795180760023,
-          "status": "ok",
-          "errors": 0,
-          "dur_ms": 108168,
           "model": null
         },
         {
@@ -2583,7 +2581,7 @@
       "n_jobs": 28,
       "n_enabled": 14,
       "err": 0,
-      "last_ms": 1795180103229,
+      "last_ms": 1795183705260,
       "status": "operational",
       "accomplishments": [
         {
@@ -2745,10 +2743,10 @@
           "expr": "",
           "tz": "",
           "channel": "",
-          "last_ms": 1795180103229,
+          "last_ms": 1795183705260,
           "status": "ok",
           "errors": 0,
-          "dur_ms": 419370,
+          "dur_ms": 257180,
           "model": null
         },
         {
@@ -2757,11 +2755,35 @@
           "expr": "",
           "tz": "",
           "channel": "",
-          "last_ms": 1795179896317,
+          "last_ms": 1795183496350,
           "status": "ok",
           "errors": 0,
-          "dur_ms": 309820,
+          "dur_ms": 195425,
           "model": null
+        },
+        {
+          "name": "Daily reconciliation \u2014 previous day (AC3-1025-RECON)",
+          "enabled": true,
+          "expr": "0 9 * * 1-6",
+          "tz": "America/New_York",
+          "channel": "last",
+          "last_ms": 1795183200074,
+          "status": "ok",
+          "errors": 0,
+          "dur_ms": 91991,
+          "model": "anthropic/claude-sonnet-5"
+        },
+        {
+          "name": "Skill: finance-news",
+          "enabled": true,
+          "expr": "50 8 * * 1-5",
+          "tz": "America/New_York",
+          "channel": "telegram",
+          "last_ms": 1795182600672,
+          "status": "ok",
+          "errors": 0,
+          "dur_ms": 150059,
+          "model": "anthropic/claude-opus-5-5"
         },
         {
           "name": "C5iSR Daily Post \u2014 Carnegie (Mon-Sat 7:30AM, all six themes)",
@@ -2846,30 +2868,6 @@
           "errors": 0,
           "dur_ms": 196055,
           "model": "anthropic/claude-sonnet-5"
-        },
-        {
-          "name": "Daily reconciliation \u2014 previous day (AC3-1025-RECON)",
-          "enabled": true,
-          "expr": "0 9 * * 1-6",
-          "tz": "America/New_York",
-          "channel": "last",
-          "last_ms": 1795096802013,
-          "status": "ok",
-          "errors": 0,
-          "dur_ms": 80564,
-          "model": "anthropic/claude-sonnet-5"
-        },
-        {
-          "name": "Skill: finance-news",
-          "enabled": true,
-          "expr": "50 8 * * 1-5",
-          "tz": "America/New_York",
-          "channel": "telegram",
-          "last_ms": 1795096200894,
-          "status": "ok",
-          "errors": 0,
-          "dur_ms": 127195,
-          "model": "anthropic/claude-opus-5-5"
         },
         {
           "name": "Skill: personal-finance-v2 (Mon ledger)",
@@ -3159,7 +3157,7 @@
       "n_jobs": 20,
       "n_enabled": 11,
       "err": 0,
-      "last_ms": 1795182000064,
+      "last_ms": 1795183739872,
       "status": "operational",
       "accomplishments": [
         {
@@ -3339,6 +3337,30 @@
       },
       "jobs": [
         {
+          "name": "review-batch-submit",
+          "enabled": true,
+          "expr": "",
+          "tz": "",
+          "channel": "",
+          "last_ms": 1795183739872,
+          "status": "ok",
+          "errors": 0,
+          "dur_ms": 136764,
+          "model": null
+        },
+        {
+          "name": "Sally: host-inbox sweep AM",
+          "enabled": true,
+          "expr": "50 8 * * *",
+          "tz": "America/New_York",
+          "channel": "telegram",
+          "last_ms": 1795182600686,
+          "status": "ok",
+          "errors": 0,
+          "dur_ms": 139625,
+          "model": "anthropic/claude-opus-5"
+        },
+        {
           "name": "Skill: airbnb-reader",
           "enabled": true,
           "expr": "40 8 * * *",
@@ -3349,18 +3371,6 @@
           "errors": 0,
           "dur_ms": 32105,
           "model": "anthropic/claude-opus-5"
-        },
-        {
-          "name": "review-batch-submit",
-          "enabled": true,
-          "expr": "",
-          "tz": "",
-          "channel": "",
-          "last_ms": 1795181938353,
-          "status": "ok",
-          "errors": 0,
-          "dur_ms": 45709,
-          "model": null
         },
         {
           "name": "Cottage 30-day rule ON weekdays 7 AM",
@@ -3420,18 +3430,6 @@
           "status": "ok",
           "errors": 0,
           "dur_ms": 38502,
-          "model": "anthropic/claude-opus-5"
-        },
-        {
-          "name": "Sally: host-inbox sweep AM",
-          "enabled": true,
-          "expr": "50 8 * * *",
-          "tz": "America/New_York",
-          "channel": "telegram",
-          "last_ms": 1795096200905,
-          "status": "ok",
-          "errors": 0,
-          "dur_ms": 55184,
           "model": "anthropic/claude-opus-5"
         },
         {
@@ -3742,7 +3740,7 @@
       "n_jobs": 10,
       "n_enabled": 7,
       "err": 0,
-      "last_ms": 1795181204233,
+      "last_ms": 1795183133995,
       "status": "operational",
       "accomplishments": [
         {
@@ -4025,10 +4023,10 @@
           "expr": "",
           "tz": "",
           "channel": "",
-          "last_ms": 1795181204233,
+          "last_ms": 1795183133995,
           "status": "ok",
           "errors": 0,
-          "dur_ms": 47621,
+          "dur_ms": 57251,
           "model": null
         },
         {
@@ -4216,7 +4214,7 @@
       "n_jobs": 11,
       "n_enabled": 6,
       "err": 0,
-      "last_ms": 1795180070798,
+      "last_ms": 1795183672783,
       "status": "operational",
       "accomplishments": [
         {
@@ -4370,10 +4368,10 @@
           "expr": "",
           "tz": "",
           "channel": "",
-          "last_ms": 1795180070798,
+          "last_ms": 1795183672783,
           "status": "ok",
           "errors": 0,
-          "dur_ms": 219989,
+          "dur_ms": 69003,
           "model": null
         },
         {
@@ -4577,7 +4575,7 @@
       "n_jobs": 10,
       "n_enabled": 7,
       "err": 0,
-      "last_ms": 1795181787648,
+      "last_ms": 1795183587718,
       "status": "operational",
       "accomplishments": [
         {
@@ -4750,11 +4748,23 @@
           "expr": "",
           "tz": "",
           "channel": "",
-          "last_ms": 1795181787648,
+          "last_ms": 1795183587718,
+          "status": "skipped",
+          "errors": 0,
+          "dur_ms": 281,
+          "model": null
+        },
+        {
+          "name": "RESOLUTE Local YouTube weekly (Roy draft)",
+          "enabled": true,
+          "expr": "0 9 * * 5",
+          "tz": "America/New_York",
+          "channel": "last",
+          "last_ms": 1795183200055,
           "status": "ok",
           "errors": 0,
-          "dur_ms": 66361,
-          "model": null
+          "dur_ms": 293878,
+          "model": "anthropic/claude-sonnet-5"
         },
         {
           "name": "agenda-this-week",
@@ -4814,18 +4824,6 @@
           "status": "ok",
           "errors": 0,
           "dur_ms": 101680,
-          "model": "anthropic/claude-sonnet-5"
-        },
-        {
-          "name": "RESOLUTE Local YouTube weekly (Roy draft)",
-          "enabled": true,
-          "expr": "0 9 * * 5",
-          "tz": "America/New_York",
-          "channel": "last",
-          "last_ms": 1794578400053,
-          "status": "ok",
-          "errors": 0,
-          "dur_ms": 89677,
           "model": "anthropic/claude-sonnet-5"
         },
         {
@@ -4938,7 +4936,7 @@
       "n_jobs": 10,
       "n_enabled": 6,
       "err": 0,
-      "last_ms": 1795181738952,
+      "last_ms": 1795183541000,
       "status": "operational",
       "accomplishments": [
         {
@@ -5153,10 +5151,10 @@
           "expr": "",
           "tz": "",
           "channel": "",
-          "last_ms": 1795181738952,
-          "status": "ok",
+          "last_ms": 1795183541000,
+          "status": "skipped",
           "errors": 0,
-          "dur_ms": 56427,
+          "dur_ms": 295,
           "model": null
         },
         {
@@ -5348,7 +5346,7 @@
       "n_jobs": 9,
       "n_enabled": 6,
       "err": 0,
-      "last_ms": 1795181401176,
+      "last_ms": 1795183697165,
       "status": "operational",
       "accomplishments": [
         {
@@ -5522,6 +5520,30 @@
       },
       "jobs": [
         {
+          "name": "breaking-news-scan",
+          "enabled": true,
+          "expr": "",
+          "tz": "",
+          "channel": "",
+          "last_ms": 1795183697165,
+          "status": "ok",
+          "errors": 0,
+          "dur_ms": 179311,
+          "model": null
+        },
+        {
+          "name": "heartbeat-rush",
+          "enabled": true,
+          "expr": "",
+          "tz": "",
+          "channel": "",
+          "last_ms": 1795183142100,
+          "status": "skipped",
+          "errors": 0,
+          "dur_ms": 298,
+          "model": null
+        },
+        {
           "name": "Daily Tech/AI Brief (08:30)",
           "enabled": true,
           "expr": "30 8 * * *",
@@ -5532,30 +5554,6 @@
           "errors": 0,
           "dur_ms": 97064,
           "model": "anthropic/claude-sonnet-5"
-        },
-        {
-          "name": "heartbeat-rush",
-          "enabled": true,
-          "expr": "",
-          "tz": "",
-          "channel": "",
-          "last_ms": 1795181340401,
-          "status": "ok",
-          "errors": 0,
-          "dur_ms": 110017,
-          "model": null
-        },
-        {
-          "name": "breaking-news-scan",
-          "enabled": true,
-          "expr": "",
-          "tz": "",
-          "channel": "",
-          "last_ms": 1795180095131,
-          "status": "ok",
-          "errors": 0,
-          "dur_ms": 359134,
-          "model": null
         },
         {
           "name": "RESOLUTE AM Wire draft (Rush)",
@@ -5709,7 +5707,7 @@
       "n_jobs": 11,
       "n_enabled": 8,
       "err": 0,
-      "last_ms": 1795181334326,
+      "last_ms": 1795183206158,
       "status": "operational",
       "accomplishments": [
         {
@@ -5855,15 +5853,27 @@
       },
       "jobs": [
         {
+          "name": "Daily Father Outreach Reminder (Pops)",
+          "enabled": true,
+          "expr": "0 9 * * 1-5",
+          "tz": "America/New_York",
+          "channel": "telegram",
+          "last_ms": 1795183206158,
+          "status": "ok",
+          "errors": 0,
+          "dur_ms": 280371,
+          "model": "anthropic/claude-sonnet-5"
+        },
+        {
           "name": "heartbeat-pops",
           "enabled": true,
           "expr": "",
           "tz": "",
           "channel": "",
-          "last_ms": 1795181334326,
-          "status": "ok",
+          "last_ms": 1795183136018,
+          "status": "skipped",
           "errors": 0,
-          "dur_ms": 39761,
+          "dur_ms": 294,
           "model": null
         },
         {
@@ -5900,18 +5910,6 @@
           "status": "ok",
           "errors": 0,
           "dur_ms": 35369,
-          "model": "anthropic/claude-sonnet-5"
-        },
-        {
-          "name": "Daily Father Outreach Reminder (Pops)",
-          "enabled": true,
-          "expr": "0 9 * * 1-5",
-          "tz": "America/New_York",
-          "channel": "telegram",
-          "last_ms": 1795096806062,
-          "status": "ok",
-          "errors": 0,
-          "dur_ms": 89631,
           "model": "anthropic/claude-sonnet-5"
         },
         {
@@ -6065,7 +6063,7 @@
       "n_jobs": 8,
       "n_enabled": 4,
       "err": 0,
-      "last_ms": 1795181753150,
+      "last_ms": 1795183553246,
       "status": "operational",
       "accomplishments": [
         {
@@ -6226,10 +6224,10 @@
           "expr": "",
           "tz": "",
           "channel": "",
-          "last_ms": 1795181753150,
+          "last_ms": 1795183553246,
           "status": "skipped",
           "errors": 0,
-          "dur_ms": 281,
+          "dur_ms": 275,
           "model": null
         },
         {
@@ -6392,7 +6390,7 @@
       "n_jobs": 8,
       "n_enabled": 5,
       "err": 0,
-      "last_ms": 1795181895182,
+      "last_ms": 1795183697152,
       "status": "operational",
       "accomplishments": [
         {
@@ -6577,10 +6575,10 @@
           "expr": "",
           "tz": "",
           "channel": "",
-          "last_ms": 1795181895182,
+          "last_ms": 1795183697152,
           "status": "skipped",
           "errors": 0,
-          "dur_ms": 318,
+          "dur_ms": 278,
           "model": null
         },
         {
@@ -6713,5 +6711,5 @@
     "write-airbnb-reviews-for-listings",
     "you-are-an-expert-ai-agent"
   ],
-  "cowork_date": "2026-11-20T08:43:57-05:00"
+  "cowork_date": "2026-11-20T09:25:54-05:00"
 }

@@ -96,7 +96,7 @@ def render_nav(depth: int, page_basename: str, in_scorecard_subdir: bool = False
 
     nav = f'''<nav>
   <a href="/" class="nav-brand" style="text-decoration:none">
-    <img src="{p}assets/img/logo.png" alt="U.S.M.C. Ministries" style="object-fit:contain">
+    <img src="{p}assets/img/crest-2026.png" alt="U.S.M.C. Ministries" style="object-fit:contain">
     <div class="nav-brand-text">
       <div class="name">U.S.M.C. Ministries</div>
       <div class="tag">Warriors Equipped</div>

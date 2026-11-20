@@ -26,7 +26,7 @@ def _json_ld(issue, page_url):
             'url': 'https://usmcmin.com',
             'logo': {
                 '@type': 'ImageObject',
-                'url': 'https://usmcmin.com/assets/img/logo.png',
+                'url': 'https://usmcmin.com/assets/img/crest-2026.png',
             },
         },
         'isPartOf': {
@@ -271,7 +271,7 @@ def generate_issue_page(issue):
 
 <nav>
   <a href="/" class="nav-brand" style="text-decoration:none">
-    <img src="../assets/img/logo.png" alt="U.S.M.C. Ministries" style="object-fit:contain">
+    <img src="../assets/img/crest-2026.png" alt="U.S.M.C. Ministries" style="object-fit:contain">
     <div class="nav-brand-text">
       <div class="name">U.S.M.C. Ministries</div>
       <div class="tag">Warriors Equipped</div>

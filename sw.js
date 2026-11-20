@@ -25,7 +25,7 @@ const CORE_ASSETS = [
   '/assets/css/main.min.css?v=1105',
   '/assets/css/profile.min.css?v=1105',
   '/assets/js/profile.min.js?v=1105',
-  '/assets/img/logo.png',
+  '/assets/img/crest-2026.png',
   '/assets/img/favicon.png',
   '/assets/og/og-citizen.jpg',
   '/data/index.json',

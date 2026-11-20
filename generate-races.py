@@ -130,7 +130,7 @@ def nav_html(active: str = "races") -> str:
     races_cls = ' class="active"' if active == "races" else ""
     return f'''<nav>
   <a href="/" class="nav-brand" style="text-decoration:none">
-    <img src="../assets/img/logo.png" alt="U.S.M.C. Ministries" style="object-fit:contain">
+    <img src="../assets/img/crest-2026.png" alt="U.S.M.C. Ministries" style="object-fit:contain">
     <div class="nav-brand-text">
       <div class="name">U.S.M.C. Ministries</div>
       <div class="tag">Warriors Equipped</div>

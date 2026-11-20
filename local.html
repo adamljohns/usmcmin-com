@@ -64,7 +64,11 @@
       padding: 14px 0 10px;
       border-bottom: 1px solid var(--line);
     }
-    .brand { display: flex; flex-direction: column; gap: 2px; }
+    .brand { display: flex; flex-direction: row; align-items: center; gap: 10px; min-width: 0; }
+    .brand-crest-link { display: inline-flex; flex: 0 0 auto; line-height: 0; }
+    .brand-crest { width: 40px; height: 40px; border-radius: 4px; object-fit: contain; display: block; }
+    .brand-text { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+    @media (max-width: 640px) { .topbar { flex-wrap: wrap; } .brand-crest { width: 36px; height: 36px; } }
     .brand .kicker { font-size: 0.68rem; letter-spacing: 0.22em; text-transform: uppercase; color: var(--gold); font-weight: 800; }
     .brand strong { font-family: var(--serif); font-size: 1.05rem; letter-spacing: 0.02em; }
     .nav { display: flex; gap: 16px; align-items: center; flex-wrap: wrap; font-size: 0.82rem; }
@@ -206,8 +210,11 @@
   <div class="wrap">
     <div class="topbar">
       <div class="brand">
-        <span class="kicker">U.S.M.C. Ministries</span>
-        <strong>RESOLUTE Local</strong>
+        <a href="/" class="brand-crest-link" aria-label="U.S.M.C. Ministries home"><img class="brand-crest" src="assets/img/crest-2026.png" alt="U.S.M.C. Ministries crest" width="40" height="40"></a>
+        <div class="brand-text">
+          <span class="kicker">U.S.M.C. Ministries</span>
+          <strong>RESOLUTE Local</strong>
+        </div>
       </div>
       <nav class="nav" aria-label="Primary">
         <a href="https://usmcmin.com/mission.html">Mission</a>

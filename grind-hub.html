@@ -1,185 +1,103 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="robots" content="noindex">
-<title>Grind Hub — MOOP Local Grinds</title>
-<style>
-  :root { --gold:#d4af37; --bg:#0a0a0a; --card:#161616; --border:#2a2a2a; --white:#e8e8e8; --gray:#8a8a8a; --green:#4caf7d; --red:#e07070; --yellow:#d4b36a; }
-  * { margin:0; padding:0; box-sizing:border-box; }
-  body { background:var(--bg); color:var(--white); font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif; padding:28px 16px 60px; }
-  .wrap { max-width:1200px; margin:0 auto; }
-  h1 { font-size:1.8rem; color:var(--gold); margin-bottom:8px; }
-  .sub { color:var(--gray); font-size:.9rem; margin-bottom:30px; }
-  .nav-links { display:flex; gap:12px; margin-bottom:30px; flex-wrap:wrap; }
-  .nav-link { background:var(--card); border:1px solid var(--border); color:var(--gold); padding:10px 18px; border-radius:8px; text-decoration:none; font-size:.9rem; transition:all .2s; }
-  .nav-link:hover { background:var(--border); border-color:var(--gold); }
-  .nav-link.active { background:var(--gold); color:var(--bg); border-color:var(--gold); }
-  .cards { display:grid; grid-template-columns:repeat(auto-fit,minmax(320px,1fr)); gap:16px; margin-bottom:30px; }
-  .card { background:var(--card); border:1px solid var(--border); border-radius:12px; padding:20px; }
-  .card h2 { font-size:1.2rem; color:var(--gold); margin-bottom:12px; }
-  .card .status { font-size:.85rem; color:var(--gray); margin-bottom:12px; }
-  .card .stats { display:grid; grid-template-columns:1fr 1fr; gap:8px; }
-  .card .stat { background:var(--bg); padding:10px; border-radius:6px; }
-  .card .stat .label { font-size:.7rem; color:var(--gray); text-transform:uppercase; letter-spacing:.05em; }
-  .card .stat .value { font-size:1.3rem; font-weight:700; color:var(--gold); margin-top:2px; }
-  .card .stat .delta { font-size:.75rem; color:var(--green); }
-  .card .actions { margin-top:16px; display:flex; gap:8px; flex-wrap:wrap; }
-  .card .action-btn { background:transparent; border:1px solid var(--border); color:var(--white); padding:6px 12px; border-radius:6px; font-size:.8rem; cursor:pointer; text-decoration:none; }
-  .card .action-btn:hover { border-color:var(--gold); color:var(--gold); }
-  .progress-bar { height:8px; background:var(--bg); border-radius:4px; margin-top:8px; overflow:hidden; }
-  .progress-fill { height:100%; border-radius:4px; transition:width .3s; }
-  .progress-fill.green { background:var(--green); }
-  .progress-fill.yellow { background:var(--yellow); }
-  .progress-fill.red { background:var(--red); }
-  .details { background:var(--card); border:1px solid var(--border); border-radius:12px; padding:20px; margin-bottom:20px; }
-  .details h3 { font-size:1.1rem; color:var(--gold); margin-bottom:12px; }
-  .details table { width:100%; border-collapse:collapse; font-size:.85rem; }
-  .details th,td { padding:8px 10px; text-align:left; border-bottom:1px solid var(--border); }
-  .details th { color:var(--gray); font-size:.7rem; text-transform:uppercase; letter-spacing:.05em; }
-  .details td { color:var(--white); }
-  .details td.num { color:var(--gold); font-weight:600; }
-  .err { color:var(--red); padding:14px; }
-  .note { color:var(--gray); font-size:.8rem; margin-top:8px; }
-</style>
+  <meta charset="UTF-8">
+  <script>(function(){try{var s=localStorage.getItem('usmc-theme')||localStorage.getItem('theme');if(s!=='light')document.documentElement.setAttribute('data-theme','dark');}catch(e){}})();</script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex">
+  <link rel="canonical" href="https://usmcmin.com/grind-hub.html">
+  <title>Grind Hub — Live Local Grinds | U.S.M.C. Ministries</title>
+  <meta name="description" content="Live counters for the three local grinds: the church directory, the RESOLUTE Citizen scorecard, and the Fredericksburg commerce directory.">
+  <link rel="stylesheet" href="assets/css/main.min.css?v=1105">
+  <link rel="stylesheet" href="assets/css/grind-hub.v1.css">
+  <link rel="icon" type="image/svg+xml" href="assets/icons/favicon.svg">
+  <link rel="icon" type="image/png" sizes="32x32" href="assets/icons/favicon-32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="assets/icons/favicon-16.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="assets/icons/apple-touch-icon.png">
 </head>
 <body>
-<div class="wrap">
-  <h1>⚙️ Grind Hub</h1>
-  <div class="sub">Live progress boards for all local grinds. Each page has detailed charts and round history.</div>
-  
-  <div class="nav-links">
-    <a href="#church" class="nav-link active">⛪ Church Directory</a>
-    <a href="#citizen" class="nav-link">🛡️ Citizen Scorecard</a>
-    <a href="#commerce" class="nav-link">🏪 Commerce Directory</a>
-  </div>
-
-  <!-- Church Directory -->
-  <div class="details" id="church">
-    <h3>⛪ Church Directory Enrichment</h3>
-    <div class="status" id="church-status">Loading church data…</div>
-    <div class="cards" id="church-cards"></div>
-    <div class="actions">
-      <a href="https://usmcmin.org/grind-report.html" class="action-btn" target="_blank">View Full Report</a>
-      <a href="https://usmcmin.org/churches.html" class="action-btn" target="_blank">Church Directory</a>
+<a href="#main" class="skip-link">Skip to content</a>
+<nav>
+  <a href="/" class="nav-brand" style="text-decoration:none">
+    <img src="assets/img/crest-2026.png" alt="U.S.M.C. Ministries" style="object-fit:contain">
+    <div class="nav-brand-text">
+      <div class="name">U.S.M.C. Ministries</div>
+      <div class="tag">Warriors Equipped</div>
     </div>
-  </div>
-
-  <!-- Citizen Scorecard -->
-  <div class="details" id="citizen">
-    <h3>🛡️ RESOLUTE Citizen Scorecard</h3>
-    <div class="status" id="citizen-status">Loading citizen data…</div>
-    <div class="cards" id="citizen-cards"></div>
-    <div class="actions">
-      <a href="/citizen-grind.html" class="action-btn">View Full Report</a>
-      <a href="/citizen.html" class="action-btn" target="_blank">Self-Assessment</a>
+  </a>
+  <ul class="nav-links">
+    <li><a href="mission.html">Mission</a></li>
+    <li><a href="shop.html">Shop</a></li>
+    <li><a href="books.html">Books</a></li>
+    <li><a href="coaching.html">Coaching</a></li>
+    <li><a href="fitness/">Fitness</a></li>
+    <li><a href="finance/">Finance</a></li>
+    <li><a href="about.html">About</a></li>
+    <li><a href="https://usmcmin.org" target="_blank">Ministry Site</a></li>
+  </ul>
+  <a href="coaching.html" class="btn nav-cta">Book a Session</a>
+  <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme" title="Switch light/dark mode">&#127769;</button>
+  <button class="nav-toggle" aria-label="Menu"><span></span><span></span><span></span></button>
+</nav>
+<main id="main" class="gh-container">
+  <header class="gh-head">
+    <img src="assets/icons/shield-tools-96.png" alt="" width="72" height="72">
+    <div>
+      <div class="gh-kicker">Local grinds &middot; Live boards</div>
+      <h1>Grind Hub</h1>
+      <p>Live counters for the three local grinds. Each full report has the charts and round history.</p>
     </div>
+  </header>
+
+  <div class="gh-tabs" role="navigation" aria-label="Jump to a grind">
+    <a href="#church" class="gh-tab"><img src="assets/icons/shield-church-48.png" alt="" width="28" height="28">Church Directory</a>
+    <a href="#citizen" class="gh-tab"><img src="assets/icons/shield-checklist-48.png" alt="" width="28" height="28">Citizen Scorecard</a>
+    <a href="#commerce" class="gh-tab"><img src="assets/icons/shield-shop-48.png" alt="" width="28" height="28">Commerce Directory</a>
   </div>
 
-  <!-- Commerce Directory -->
-  <div class="details" id="commerce">
-    <h3>🏪 Fredericksburg Commerce Directory</h3>
-    <div class="status" id="commerce-status">Loading commerce data…</div>
-    <div class="cards" id="commerce-cards"></div>
-    <div class="actions">
-      <a href="/fxbg/commerce/index.html" class="action-btn" target="_blank">View Directory</a>
-      <a href="/fxbg/commerce/categories/" class="action-btn" target="_blank">Browse Categories</a>
+  <section class="gh-section" id="church" aria-labelledby="church-title">
+    <div class="gh-section-head">
+      <img src="assets/icons/shield-church-96.png" alt="" width="44" height="44">
+      <div><h2 id="church-title">Church Directory Enrichment</h2><span class="gh-site">usmcmin.org</span></div>
     </div>
-  </div>
-</div>
+    <p class="gh-status" id="church-status" role="status">Loading church numbers…</p>
+    <div class="gh-stats" id="church-stats"></div>
+    <div class="gh-actions">
+      <a href="https://usmcmin.org/grind-report.html" class="btn btn-gold-outline" target="_blank" rel="noopener">Full Report</a>
+      <a href="https://usmcmin.org/churches.html" class="btn btn-secondary" target="_blank" rel="noopener">Church Directory</a>
+    </div>
+  </section>
 
-<script>
-(async function () {
-  const $ = id => document.getElementById(id);
-  const n = v => { const x = Number(v); return Number.isFinite(x) ? x : 0; };
-  const card = (label, val, delta, sub) =>
-    `<div class="stat"><div class="label">${label}</div><div class="value">${val}</div>${delta ? `<div class="delta">${delta}</div>` : ''}${sub ? `<div class="note">${sub}</div>` : ''}</div>`;
-  
-  const age = iso => {
-    if (!iso) return 'unknown';
-    const then = new Date(iso);
-    if (isNaN(then)) return 'unknown';
-    const hours = (Date.now() - then.getTime()) / 36e5;
-    if (hours < 1) return Math.max(1, Math.round(hours * 60)) + ' min ago';
-    if (hours < 48) return Math.round(hours) + ' hours ago';
-    return Math.floor(hours / 24) + ' days ago';
-  };
+  <section class="gh-section" id="citizen" aria-labelledby="citizen-title">
+    <div class="gh-section-head">
+      <img src="assets/icons/shield-checklist-96.png" alt="" width="44" height="44">
+      <div><h2 id="citizen-title">RESOLUTE Citizen Scorecard</h2><span class="gh-site">usmcmin.com</span></div>
+    </div>
+    <p class="gh-status" id="citizen-status" role="status">Loading scorecard numbers…</p>
+    <div class="gh-stats" id="citizen-stats"></div>
+    <div class="gh-actions">
+      <a href="/citizen-grind.html" class="btn btn-gold-outline">Full Report</a>
+      <a href="/citizen.html" class="btn btn-secondary">Scorecard</a>
+    </div>
+  </section>
 
-  // Church Directory (usmcmin.org)
-  try {
-    const stats = await (await fetch('https://usmcmin.org/data/grind-stats.json', {cache:'no-store'})).json();
-    const s = stats.series || [];
-    if (s.length) {
-      const fullRows = s.filter(r => r && r.real_pastors != null && !r.pending);
-      const base = fullRows[0] || s[0];
-      const last = fullRows.length ? fullRows[fullRows.length - 1] : s[s.length - 1];
-      const attempted = s.reduce((a, r) => a + (r.attempted || 0), 0);
-      const found = s.reduce((a, r) => a + (r.found || 0), 0);
-      const contentApplied = s.reduce((a, r) => a + (r.applied || 0), 0);
-      const recordsUpdated = s.reduce((a, r) => a + (r.records_updated || 0), 0);
-      
-      $('church-status').textContent = `Last round ${age(last.ts)} · ${s.length} total rounds`;
-      $('church-cards').innerHTML = [
-        card('Verified pastors', last.real_pastors?.toLocaleString() || '0', `▲ +${(last.real_pastors - base.real_pastors).toLocaleString()}`, `${last.rosters || 0} multi-pastor rosters`),
-        card('Churches w/ socials', last.socials_any?.toLocaleString() || '0', `▲ +${(last.socials_any - base.socials_any).toLocaleString()}`, `${last.us_total || 0} US churches`),
-        card('Content applied', contentApplied.toLocaleString(), '', `${recordsUpdated} profile records updated`),
-        card('Hit rate', found > 0 ? Math.round(100 * found / attempted) + '%' : '—', '', `${found} pastors landed of ${attempted.toLocaleString()} attempted`)
-      ].join('');
-    } else {
-      $('church-status').textContent = 'No church data available.';
-    }
-  } catch (e) {
-    $('church-status').textContent = 'Church data unavailable: ' + (e && e.message ? e.message : e);
-  }
-
-  // Citizen Scorecard (usmcmin.com)
-  try {
-    const stats = await (await fetch('/data/stats.json', {cache:'no-store'})).json();
-    const cov = await (await fetch('/data/coverage-by-state.json', {cache:'no-store'})).json();
-    const totals = stats.totals || {};
-    const conf = stats.scoring_confidence || {};
-    const nat = cov.national || {};
-    const generated = (stats._meta || {}).generated;
-    const hours = generated ? (Date.now() - new Date(generated).getTime()) / 36e5 : 99;
-    
-    $('citizen-status').textContent = hours <= 48
-      ? `Snapshot current · Last generated ${age(generated)}`
-      : `Snapshot stale · Last generated ${age(generated)}`;
-    
-    const scoredPct = nat.pct || '—';
-    $('citizen-cards').innerHTML = [
-      card('Evidence-scored', n(nat.evidence_scored).toLocaleString(), `▲ ${n(nat.total) - n(nat.evidence_scored)} remaining`, `${scoredPct}% of ${n(nat.total).toLocaleString()} candidates`),
-      card('Verified claims', n(totals.verified_claims).toLocaleString(), '', `${n(totals.total_claims).toLocaleString()} claims on file · ${n(totals.disputed_claims)} disputed`),
-      card('Still unreviewed', n(conf.unreviewed).toLocaleString(), `▲ ${n(conf.legacy_reviewed).toLocaleString()} legacy`, `${n(conf.party_default)} party-default`),
-      card('Citation coverage', (totals.bias_citation_coverage_pct ?? '—') + '%', '', `${n(totals.unique_cited_domains).toLocaleString()} unique domains cited`)
-    ].join('');
-  } catch (e) {
-    $('citizen-status').textContent = 'Citizen data unavailable: ' + (e && e.message ? e.message : e);
-  }
-
-  // Commerce Directory (usmcmin.com)
-  try {
-    const stats = await (await fetch('/fxbg/commerce/data/stats.json', {cache:'no-store'})).json();
-    const total = stats.total || 0;
-    const overall = stats.overall || {};
-    const gray = overall.gray || 0;
-    const yellow = overall.yellow || 0;
-    const green = overall.green || 0;
-    const red = overall.red || 0;
-    const updated = stats.updated || 'unknown';
-    
-    $('commerce-status').textContent = `Updated ${updated} · ${total.toLocaleString()} listings · ${green + red} scored green/red`;
-    $('commerce-cards').innerHTML = [
-      card('Total listings', total.toLocaleString(), '', `${stats.categories || 0} categories`),
-      card('Scored Green/Red', (green + red).toLocaleString(), `▲ +${red} red`, `${green} green · ${yellow} yellow`),
-      card('Still gray', gray.toLocaleString(), `▲ ${(total - gray).toLocaleString()} scored`, `${Math.round(100 * (total - gray) / total)}% scored`),
-      card('Factors scored', Object.values(stats.factor_green_counts || {}).reduce((a,b) => a + b, 0).toLocaleString(), '', '10 factors tracked')
-    ].join('');
-  } catch (e) {
-    $('commerce-status').textContent = 'Commerce data unavailable: ' + (e && e.message ? e.message : e);
-  }
-})();
-</script>
+  <section class="gh-section" id="commerce" aria-labelledby="commerce-title">
+    <div class="gh-section-head">
+      <img src="assets/icons/shield-shop.png" alt="" width="44" height="44">
+      <div><h2 id="commerce-title">Fredericksburg Commerce Directory</h2><span class="gh-site">usmcmin.com</span></div>
+    </div>
+    <p class="gh-status" id="commerce-status" role="status">Loading commerce numbers…</p>
+    <div class="gh-stats" id="commerce-stats"></div>
+    <div class="gh-actions">
+      <a href="/fxbg/commerce/" class="btn btn-gold-outline">Directory</a>
+      <a href="/fxbg/commerce/categories/" class="btn btn-secondary">Categories</a>
+    </div>
+  </section>
+</main>
+<footer>
+  <p><strong>Grind Hub</strong> · a tool of <a href="https://usmcmin.org">U.S.M.C. Ministries</a></p>
+</footer>
+<script src="assets/js/grind-hub.v1.js" defer></script>
+<script src="assets/js/main.min.js?v=1105" defer></script>
 </body>
 </html>

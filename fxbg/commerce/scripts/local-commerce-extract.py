@@ -38,21 +38,36 @@ Green = clear affirmative. Yellow = caution/concern only if page explicitly warn
 
 
 def fetch(url: str, timeout: int = 14) -> str:
+    # 2026-11-22: the cap was 400 KB. Wix/Squarespace homepages run 0.8-2 MB of inline
+    # JSON before the visible copy, so the cut landed inside an open <script> block and
+    # the model was handed nothing but site config. Read up to 4 MB.
     req = urllib.request.Request(url, headers=UA)
     with urllib.request.urlopen(req, timeout=timeout, context=CTX) as r:
-        return r.read(400_000).decode("utf-8", "replace")
+        return r.read(4_000_000).decode("utf-8", "replace")
 
 
 def to_text(html: str) -> str:
-    html = re.sub(r"<(script|style|noscript)[^>]*>.*?</\1>", " ", html, flags=re.S | re.I)
+    html = re.sub(r"<(script|style|noscript|template|svg)[^>]*>.*?</\1>", " ", html, flags=re.S | re.I)
+    # A truncated page can still end inside an unclosed block; drop it to the end.
+    html = re.sub(r"<(script|style|noscript|template|svg)\b[^>]*>.*\Z", " ", html, flags=re.S | re.I)
+    html = re.sub(r"<!--.*?-->", " ", html, flags=re.S)
     html = re.sub(r"<[^>]+>", " ", html)
     import html as h
 
     return re.sub(r"\s+", " ", h.unescape(html)).strip()
 
 
+_PUNCT = str.maketrans({
+    "‘": "'", "’": "'", "‚": "'", "′": "'",
+    "“": '"', "”": '"', "„": '"', "″": '"',
+    "–": "-", "—": "-", "‒": "-", "−": "-",
+    " ": " ", "…": "...",
+})
+
+
 def norm(s: str) -> str:
-    return re.sub(r"\s+", " ", (s or "")).strip().lower()
+    # Typographic quotes/dashes only; the words themselves must still match exactly.
+    return re.sub(r"\s+", " ", (s or "").translate(_PUNCT)).strip().lower()
 
 
 def model_at(base: str, prefer: str | None = None) -> str | None:
@@ -70,13 +85,18 @@ def model_at(base: str, prefer: str | None = None) -> str | None:
         return None
 
 
-def chat(base: str, model: str, user: str, max_tokens: int = 600) -> str:
+CROSS_SYSTEM = "You are a strict evidence checker. Answer with exactly one word: YES or NO."
+
+
+def chat(base: str, model: str, user: str, max_tokens: int = 3000, system: str = SYSTEM) -> str:
+    # 2026-11-22: qwen3.6 spends ~300+ reasoning tokens before answering; 600 can leave a
+    # long page at finish_reason=length with empty content. 3000 leaves room.
     body = json.dumps(
         {
             "model": model,
             "temperature": 0,
             "max_tokens": max_tokens,
-            "messages": [{"role": "system", "content": SYSTEM}, {"role": "user", "content": user}],
+            "messages": [{"role": "system", "content": system}, {"role": "user", "content": user}],
         }
     ).encode()
     req = urllib.request.Request(
@@ -112,7 +132,7 @@ def crosscheck(base: str, model: str, factor: str, quote: str, band: str) -> boo
         "Reply YES if the quote directly supports this factor and band; else NO."
     )
     try:
-        ans = chat(base, model, prompt, max_tokens=8).strip().upper()
+        ans = chat(base, model, prompt, max_tokens=256, system=CROSS_SYSTEM).strip().upper()
         return ans.startswith("YES")
     except Exception:
         return False

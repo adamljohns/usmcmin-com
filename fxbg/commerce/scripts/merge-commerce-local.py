@@ -69,7 +69,9 @@ def main() -> None:
                 if apply_finding(biz, f):
                     touched.append(slug)
             biz["last_grind"] = date.today().isoformat()
-        elif row.get("fetch_error"):
+        else:
+            # 2026-11-22: an empty-but-clean pass used to change nothing, so the selector
+            # re-picked the same listing forever. Every processed row is now a strike + stamp.
             biz["grind_strikes"] = int(biz.get("grind_strikes") or 0) + 1
             biz["last_grind"] = date.today().isoformat()
 

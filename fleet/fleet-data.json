@@ -1,10 +1,10 @@
 {
-  "generated": "2026-11-23T01:31:47.818019+00:00",
+  "generated": "2026-11-23T02:03:48.013015+00:00",
   "totals": {
     "agents": 17,
-    "operational": 12,
-    "degraded": 4,
-    "jobs": 202,
+    "operational": 14,
+    "degraded": 2,
+    "jobs": 190,
     "enabled": 102,
     "accomplishments": 430,
     "cowork": 41
@@ -12,19 +12,18 @@
   "health": {
     "cron": {
       "enabled": 102,
-      "ran26h": 54,
-      "delivered": 28,
+      "ran26h": 55,
+      "delivered": 29,
       "fails": [
-        "agent heartbeat \u00d7 2",
         "scheduled job \u00d7 2",
         "scheduled skill \u00d7 1"
       ]
     },
     "cron_source": "openclaw.sqlite + hermes/cron/jobs.json",
     "launchd": {
-      "healthy": 102,
+      "healthy": 103,
       "fails": [
-        "launchd job \u00d7 2"
+        "launchd job \u00d7 1"
       ]
     }
   },
@@ -38,7 +37,7 @@
     {
       "label": "Command Surface Sync",
       "purpose": "Command DB \u2192 Obsidian / TACC / workflows",
-      "last": "2026-11-22T20:30:38-05:00",
+      "last": "2026-11-22T20:41:27-05:00",
       "status": "local-only"
     },
     {
@@ -131,10 +130,10 @@
         "paywall-access",
         "document-standard"
       ],
-      "n_jobs": 33,
-      "n_enabled": 13,
+      "n_jobs": 25,
+      "n_enabled": 12,
       "err": 2,
-      "last_ms": 1795374000072,
+      "last_ms": 1795399200019,
       "status": "degraded",
       "accomplishments": [
         {
@@ -454,6 +453,18 @@
       },
       "jobs": [
         {
+          "name": "Skill: week-ahead-calendar (gog)",
+          "enabled": true,
+          "expr": "0 21 * * 0",
+          "tz": "America/New_York",
+          "channel": "discord",
+          "last_ms": 1795399200019,
+          "status": "ok",
+          "errors": 0,
+          "dur_ms": 22302,
+          "model": "anthropic/claude-opus-5-5"
+        },
+        {
           "name": "Skill: psa-skill-honing (weekly audit)",
           "enabled": true,
           "expr": "0 14 * * 0",
@@ -562,30 +573,6 @@
           "model": "anthropic/claude-sonnet-5"
         },
         {
-          "name": "Skill: week-ahead-calendar (gog)",
-          "enabled": true,
-          "expr": "0 21 * * 0",
-          "tz": "America/New_York",
-          "channel": "discord",
-          "last_ms": 1794794419806,
-          "status": "ok",
-          "errors": 0,
-          "dur_ms": 27311,
-          "model": "anthropic/claude-opus-5-5"
-        },
-        {
-          "name": "BTC 2D ADX-DI WATCH expiry",
-          "enabled": true,
-          "expr": "",
-          "tz": "",
-          "channel": "last",
-          "last_ms": null,
-          "status": "\u2014",
-          "errors": 0,
-          "dur_ms": null,
-          "model": null
-        },
-        {
           "name": "RESOLUTE Local publish (Max)",
           "enabled": true,
           "expr": "30 8 * * 1,3",
@@ -610,18 +597,6 @@
           "model": null
         },
         {
-          "name": "Revert temporary frontier cutover after Claude reset",
-          "enabled": false,
-          "expr": "",
-          "tz": "",
-          "channel": "last",
-          "last_ms": 1793819401530,
-          "status": "error",
-          "errors": 1,
-          "dur_ms": 134073,
-          "model": null
-        },
-        {
           "name": "Dev Loop: Max weekly EBI implement-or-escalate rollup",
           "enabled": false,
           "expr": "15 20 * * 0",
@@ -632,54 +607,6 @@
           "errors": 4,
           "dur_ms": 3142,
           "model": "anthropic/claude-sonnet-5"
-        },
-        {
-          "name": "One-shot: VA chiropractor reminder (Tue 10/20 08:00)",
-          "enabled": false,
-          "expr": "",
-          "tz": "",
-          "channel": "telegram",
-          "last_ms": 1792497600046,
-          "status": "ok",
-          "errors": 0,
-          "dur_ms": 88,
-          "model": null
-        },
-        {
-          "name": "Post-restart completion \u2014 lifelog and commerce Cursor strike",
-          "enabled": false,
-          "expr": "",
-          "tz": "",
-          "channel": "telegram",
-          "last_ms": 1792372560051,
-          "status": "error",
-          "errors": 1,
-          "dur_ms": 37705,
-          "model": "anthropic/claude-sonnet-5"
-        },
-        {
-          "name": "Owner-authorized Gateway Node-path repair \u2014 2026-10-18 21:11 ET",
-          "enabled": false,
-          "expr": "",
-          "tz": "",
-          "channel": "telegram",
-          "last_ms": 1792372260073,
-          "status": "error",
-          "errors": 1,
-          "dur_ms": 93912,
-          "model": "anthropic/claude-sonnet-5"
-        },
-        {
-          "name": "crawl-1004-report",
-          "enabled": false,
-          "expr": "",
-          "tz": "",
-          "channel": "telegram",
-          "last_ms": 1791120421180,
-          "status": "error",
-          "errors": 1,
-          "dur_ms": 562452,
-          "model": null
         },
         {
           "name": "Five-hour dictionary mill",
@@ -775,30 +702,6 @@
           "status": "error",
           "errors": 10,
           "dur_ms": 286,
-          "model": null
-        },
-        {
-          "name": "DL-0903 evening enrich HARD STOP",
-          "enabled": false,
-          "expr": "",
-          "tz": "",
-          "channel": "telegram",
-          "last_ms": 1788505200061,
-          "status": "error",
-          "errors": 1,
-          "dur_ms": 36511,
-          "model": null
-        },
-        {
-          "name": "Review compaction policy (SuperGrok loosen)",
-          "enabled": false,
-          "expr": "",
-          "tz": "",
-          "channel": "",
-          "last_ms": 1788185146687,
-          "status": "skipped",
-          "errors": 0,
-          "dur_ms": 3,
           "model": null
         },
         {
@@ -2009,9 +1912,9 @@
       ],
       "n_jobs": 11,
       "n_enabled": 7,
-      "err": 1,
-      "last_ms": 1795396094255,
-      "status": "degraded",
+      "err": 0,
+      "last_ms": 1795399200019,
+      "status": "operational",
       "accomplishments": [
         {
           "date": "2026-11-21",
@@ -2480,6 +2383,30 @@
       },
       "jobs": [
         {
+          "name": "Evening pre-check-in prompt (9 PM)",
+          "enabled": true,
+          "expr": "0 21 * * *",
+          "tz": "America/New_York",
+          "channel": "telegram",
+          "last_ms": 1795399200019,
+          "status": "ok",
+          "errors": 0,
+          "dur_ms": 51843,
+          "model": "anthropic/claude-sonnet-5"
+        },
+        {
+          "name": "heartbeat-chaps",
+          "enabled": true,
+          "expr": "",
+          "tz": "",
+          "channel": "",
+          "last_ms": 1795398559387,
+          "status": "ok",
+          "errors": 0,
+          "dur_ms": 46163,
+          "model": "lmstudio/gemma-4-31b-it"
+        },
+        {
           "name": "invitation-check",
           "enabled": true,
           "expr": "",
@@ -2492,18 +2419,6 @@
           "model": "lmstudio/gemma-4-31b-it"
         },
         {
-          "name": "heartbeat-chaps",
-          "enabled": true,
-          "expr": "",
-          "tz": "",
-          "channel": "",
-          "last_ms": 1795394159881,
-          "status": "error",
-          "errors": 7,
-          "dur_ms": 374524,
-          "model": "lmstudio/gemma-4-31b-it"
-        },
-        {
           "name": "chaps-directory-qa",
           "enabled": true,
           "expr": "40 16 */3 * *",
@@ -2513,18 +2428,6 @@
           "status": "ok",
           "errors": 0,
           "dur_ms": 49135,
-          "model": "anthropic/claude-sonnet-5"
-        },
-        {
-          "name": "Evening pre-check-in prompt (9 PM)",
-          "enabled": true,
-          "expr": "0 21 * * *",
-          "tz": "America/New_York",
-          "channel": "telegram",
-          "last_ms": 1795312801657,
-          "status": "ok",
-          "errors": 0,
-          "dur_ms": 106380,
           "model": "anthropic/claude-sonnet-5"
         },
         {
@@ -2689,8 +2592,8 @@
         "paywall-access",
         "document-standard"
       ],
-      "n_jobs": 29,
-      "n_enabled": 13,
+      "n_jobs": 30,
+      "n_enabled": 14,
       "err": 0,
       "last_ms": 1795396022742,
       "status": "operational",
@@ -3005,6 +2908,18 @@
           "model": "anthropic/claude-opus-5-5"
         },
         {
+          "name": "BTC 2D ADX-DI WATCH expiry",
+          "enabled": true,
+          "expr": "",
+          "tz": "",
+          "channel": "last",
+          "last_ms": null,
+          "status": "\u2014",
+          "errors": 0,
+          "dur_ms": null,
+          "model": null
+        },
+        {
           "name": "hourly-cache-watch",
           "enabled": false,
           "expr": "",
@@ -3278,7 +3193,7 @@
         "paywall-access",
         "document-standard"
       ],
-      "n_jobs": 21,
+      "n_jobs": 17,
       "n_enabled": 10,
       "err": 0,
       "last_ms": 1795389723081,
@@ -3499,7 +3414,7 @@
         {
           "name": "Sally: host-inbox sweep PM",
           "enabled": true,
-          "expr": "20 16 * * *",
+          "expr": "50 16 * * *",
           "tz": "America/New_York",
           "channel": "telegram",
           "last_ms": 1795382702074,
@@ -3605,42 +3520,6 @@
           "model": "openai/gpt-5.6-sol"
         },
         {
-          "name": "Short-notice booking: Justin And Jes Polhemus (10/26)",
-          "enabled": false,
-          "expr": "",
-          "tz": "",
-          "channel": "telegram",
-          "last_ms": 1793021448469,
-          "status": "error",
-          "errors": 1,
-          "dur_ms": 1267106,
-          "model": null
-        },
-        {
-          "name": "Short-notice booking: Frank Waitkus (10/25)",
-          "enabled": false,
-          "expr": "",
-          "tz": "",
-          "channel": "telegram",
-          "last_ms": 1792950310381,
-          "status": "error",
-          "errors": 1,
-          "dur_ms": 257165,
-          "model": null
-        },
-        {
-          "name": "Short-notice booking: Brian Watson (10/20)",
-          "enabled": false,
-          "expr": "",
-          "tz": "",
-          "channel": "telegram",
-          "last_ms": 1792518669299,
-          "status": "error",
-          "errors": 1,
-          "dur_ms": 188024,
-          "model": null
-        },
-        {
           "name": "Dev Loop: sally daily reflection (implement-or-escalate)",
           "enabled": false,
           "expr": "24 23 * * 1,4",
@@ -3650,18 +3529,6 @@
           "status": "ok",
           "errors": 0,
           "dur_ms": 33496,
-          "model": null
-        },
-        {
-          "name": "Sally: Tiffany late-checkout + baggage reminder",
-          "enabled": false,
-          "expr": "",
-          "tz": "",
-          "channel": "telegram",
-          "last_ms": 1788175200049,
-          "status": "error",
-          "errors": 1,
-          "dur_ms": 180546,
           "model": null
         },
         {
@@ -3898,7 +3765,7 @@
       "n_jobs": 10,
       "n_enabled": 6,
       "err": 0,
-      "last_ms": 1795396122396,
+      "last_ms": 1795397922407,
       "status": "operational",
       "accomplishments": [
         {
@@ -4181,10 +4048,10 @@
           "expr": "",
           "tz": "",
           "channel": "",
-          "last_ms": 1795396122396,
+          "last_ms": 1795397922407,
           "status": "ok",
           "errors": 0,
-          "dur_ms": 341156,
+          "dur_ms": 124869,
           "model": "lmstudio/gemma-4-31b-it"
         },
         {
@@ -4200,9 +4067,9 @@
           "model": "anthropic/claude-sonnet-5"
         },
         {
-          "name": "Coach Midday Garmin Read (12:15 EDT)",
+          "name": "Coach Midday Garmin Read (12:45 ET)",
           "enabled": true,
-          "expr": "15 12 * * *",
+          "expr": "45 12 * * *",
           "tz": "America/New_York",
           "channel": "telegram",
           "last_ms": 1795367700050,
@@ -4735,7 +4602,7 @@
       "n_jobs": 12,
       "n_enabled": 7,
       "err": 0,
-      "last_ms": 1795396915319,
+      "last_ms": 1795397786945,
       "status": "operational",
       "accomplishments": [
         {
@@ -4908,10 +4775,10 @@
           "expr": "",
           "tz": "",
           "channel": "",
-          "last_ms": 1795396915319,
+          "last_ms": 1795397786945,
           "status": "ok",
           "errors": 0,
-          "dur_ms": 363261,
+          "dur_ms": 116545,
           "model": "lmstudio/gemma-4-31b-it"
         },
         {
@@ -5121,7 +4988,7 @@
       "n_jobs": 10,
       "n_enabled": 6,
       "err": 0,
-      "last_ms": 1795396149347,
+      "last_ms": 1795397949430,
       "status": "operational",
       "accomplishments": [
         {
@@ -5336,10 +5203,10 @@
           "expr": "",
           "tz": "",
           "channel": "",
-          "last_ms": 1795396149347,
+          "last_ms": 1795397949430,
           "status": "ok",
           "errors": 0,
-          "dur_ms": 314516,
+          "dur_ms": 114071,
           "model": "lmstudio/gemma-4-31b-it"
         },
         {
@@ -5532,7 +5399,7 @@
       "n_jobs": 10,
       "n_enabled": 5,
       "err": 0,
-      "last_ms": 1795396592825,
+      "last_ms": 1795398393031,
       "status": "operational",
       "accomplishments": [
         {
@@ -5711,10 +5578,10 @@
           "expr": "",
           "tz": "",
           "channel": "",
-          "last_ms": 1795396592825,
+          "last_ms": 1795398393031,
           "status": "ok",
           "errors": 0,
-          "dur_ms": 367739,
+          "dur_ms": 105691,
           "model": "lmstudio/gemma-4-31b-it"
         },
         {
@@ -5905,9 +5772,9 @@
       ],
       "n_jobs": 11,
       "n_enabled": 7,
-      "err": 1,
-      "last_ms": 1795394054564,
-      "status": "degraded",
+      "err": 0,
+      "last_ms": 1795399054974,
+      "status": "operational",
       "accomplishments": [
         {
           "date": "2026-11-22",
@@ -6057,10 +5924,10 @@
           "expr": "",
           "tz": "",
           "channel": "",
-          "last_ms": 1795394054564,
-          "status": "error",
-          "errors": 7,
-          "dur_ms": 62620,
+          "last_ms": 1795399054974,
+          "status": "ok",
+          "errors": 0,
+          "dur_ms": 66644,
           "model": "lmstudio/gemma-4-31b-it"
         },
         {
@@ -6260,10 +6127,10 @@
         "paywall-access",
         "document-standard"
       ],
-      "n_jobs": 8,
+      "n_jobs": 7,
       "n_enabled": 3,
       "err": 0,
-      "last_ms": 1795396697116,
+      "last_ms": 1795398497128,
       "status": "operational",
       "accomplishments": [
         {
@@ -6424,10 +6291,10 @@
           "expr": "",
           "tz": "",
           "channel": "",
-          "last_ms": 1795396697116,
+          "last_ms": 1795398497128,
           "status": "ok",
           "errors": 0,
-          "dur_ms": 141593,
+          "dur_ms": 63588,
           "model": "lmstudio/gemma-4-31b-it"
         },
         {
@@ -6465,18 +6332,6 @@
           "errors": 5,
           "dur_ms": 600251,
           "model": "lmstudio/gemma-4-31b-it"
-        },
-        {
-          "name": "DL-1007 sgt-maj-mac t1",
-          "enabled": false,
-          "expr": "",
-          "tz": "",
-          "channel": "last",
-          "last_ms": 1791425331165,
-          "status": "error",
-          "errors": 1,
-          "dur_ms": 230154,
-          "model": null
         },
         {
           "name": "Dev Loop: sgt-maj-mac daily reflection (implement-or-escalate)",
@@ -6591,7 +6446,7 @@
       "n_jobs": 8,
       "n_enabled": 4,
       "err": 0,
-      "last_ms": 1795397110157,
+      "last_ms": 1795398910420,
       "status": "operational",
       "accomplishments": [
         {
@@ -6776,10 +6631,10 @@
           "expr": "",
           "tz": "",
           "channel": "",
-          "last_ms": 1795397110157,
+          "last_ms": 1795398910420,
           "status": "ok",
           "errors": 0,
-          "dur_ms": 84638,
+          "dur_ms": 65149,
           "model": "lmstudio/gemma-4-31b-it"
         },
         {
@@ -6809,7 +6664,7 @@
         {
           "name": "Skill: theology-research (Sun prep)",
           "enabled": true,
-          "expr": "0 17 * * 0",
+          "expr": "30 17 * * 0",
           "tz": "America/New_York",
           "channel": "telegram",
           "last_ms": 1795384835347,
@@ -6912,5 +6767,5 @@
     "write-airbnb-reviews-for-listings",
     "you-are-an-expert-ai-agent"
   ],
-  "cowork_date": "2026-11-22T20:31:18-05:00"
+  "cowork_date": "2026-11-22T21:03:19-05:00"
 }

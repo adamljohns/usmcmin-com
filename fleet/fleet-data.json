@@ -1,20 +1,21 @@
 {
-  "generated": "2026-11-23T13:31:45.929687+00:00",
+  "generated": "2026-11-23T14:03:52.615284+00:00",
   "totals": {
     "agents": 17,
-    "operational": 14,
-    "degraded": 2,
-    "jobs": 191,
-    "enabled": 100,
+    "operational": 10,
+    "degraded": 6,
+    "jobs": 192,
+    "enabled": 98,
     "accomplishments": 430,
     "cowork": 41
   },
   "health": {
     "cron": {
-      "enabled": 100,
-      "ran26h": 55,
-      "delivered": 27,
+      "enabled": 98,
+      "ran26h": 68,
+      "delivered": 38,
       "fails": [
+        "agent heartbeat \u00d7 4",
         "scheduled job \u00d7 2",
         "scheduled skill \u00d7 1"
       ]
@@ -37,7 +38,7 @@
     {
       "label": "Command Surface Sync",
       "purpose": "Command DB \u2192 Obsidian / TACC / workflows",
-      "last": "2026-11-23T08:31:15-05:00",
+      "last": "2026-11-23T08:38:54-05:00",
       "status": "local-only"
     },
     {
@@ -130,10 +131,10 @@
         "paywall-access",
         "document-standard"
       ],
-      "n_jobs": 26,
-      "n_enabled": 13,
-      "err": 2,
-      "last_ms": 1795399605732,
+      "n_jobs": 27,
+      "n_enabled": 12,
+      "err": 1,
+      "last_ms": 1795441800412,
       "status": "degraded",
       "accomplishments": [
         {
@@ -453,28 +454,52 @@
       },
       "jobs": [
         {
+          "name": "GQueues \u2192 Obsidian workflow snapshot",
+          "enabled": true,
+          "expr": "47 7 * * *",
+          "tz": "America/New_York",
+          "channel": "",
+          "last_ms": 1795441800412,
+          "status": "ok",
+          "errors": 0,
+          "dur_ms": 16193,
+          "model": "anthropic/claude-opus-5-5"
+        },
+        {
+          "name": "Fleet Morning SITREP (consolidated stand-up)",
+          "enabled": true,
+          "expr": "45 7 * * 1-5",
+          "tz": "America/New_York",
+          "channel": "discord",
+          "last_ms": 1795441765370,
+          "status": "ok",
+          "errors": 0,
+          "dur_ms": 192842,
+          "model": "anthropic/claude-sonnet-5"
+        },
+        {
+          "name": "AI-course drift scan (monthly, first Monday)",
+          "enabled": true,
+          "expr": "30 6 * * 1",
+          "tz": "America/New_York",
+          "channel": "last",
+          "last_ms": 1795441460267,
+          "status": "ok",
+          "errors": 0,
+          "dur_ms": 11610,
+          "model": "anthropic/claude-sonnet-5"
+        },
+        {
           "name": "Fleet self-check (quiet)",
           "enabled": true,
           "expr": "20 6 * * *",
           "tz": "America/New_York",
           "channel": "telegram",
-          "last_ms": 1795399605732,
+          "last_ms": 1795440698139,
           "status": "ok",
           "errors": 0,
-          "dur_ms": 3133,
+          "dur_ms": 8282,
           "model": null
-        },
-        {
-          "name": "Skill: week-ahead-calendar (gog)",
-          "enabled": true,
-          "expr": "0 21 * * 0",
-          "tz": "America/New_York",
-          "channel": "discord",
-          "last_ms": 1795399200019,
-          "status": "ok",
-          "errors": 0,
-          "dur_ms": 22302,
-          "model": "anthropic/claude-opus-5-5"
         },
         {
           "name": "Skill: psa-skill-honing (weekly audit)",
@@ -513,18 +538,6 @@
           "model": "anthropic/claude-sonnet-5"
         },
         {
-          "name": "GQueues \u2192 Obsidian workflow snapshot",
-          "enabled": true,
-          "expr": "47 7 * * *",
-          "tz": "America/New_York",
-          "channel": "",
-          "last_ms": 1795351621104,
-          "status": "error",
-          "errors": 3,
-          "dur_ms": 38879,
-          "model": "anthropic/claude-opus-5-5"
-        },
-        {
           "name": "Weekly Self-Audit (Sat 05:57 ET)",
           "enabled": true,
           "expr": "57 5 * * 6",
@@ -561,42 +574,6 @@
           "model": "anthropic/claude-sonnet-5"
         },
         {
-          "name": "Fleet Morning SITREP (consolidated stand-up)",
-          "enabled": true,
-          "expr": "45 7 * * 1-5",
-          "tz": "America/New_York",
-          "channel": "discord",
-          "last_ms": 1795179219590,
-          "status": "ok",
-          "errors": 0,
-          "dur_ms": 158159,
-          "model": "anthropic/claude-sonnet-5"
-        },
-        {
-          "name": "AI-course drift scan (monthly, first Monday)",
-          "enabled": true,
-          "expr": "30 6 * * 1",
-          "tz": "America/New_York",
-          "channel": "last",
-          "last_ms": 1794828600048,
-          "status": "ok",
-          "errors": 0,
-          "dur_ms": 7546,
-          "model": "anthropic/claude-sonnet-5"
-        },
-        {
-          "name": "RESOLUTE Local publish (Max)",
-          "enabled": true,
-          "expr": "30 8 * * 1,3",
-          "tz": "America/New_York",
-          "channel": "telegram",
-          "last_ms": null,
-          "status": "\u2014",
-          "errors": 0,
-          "dur_ms": null,
-          "model": null
-        },
-        {
           "name": "Max: act on Adam's open decisions from Nov 22",
           "enabled": true,
           "expr": "",
@@ -607,6 +584,30 @@
           "errors": 0,
           "dur_ms": null,
           "model": null
+        },
+        {
+          "name": "Max: morning follow-through after the outage (Nov 23)",
+          "enabled": true,
+          "expr": "",
+          "tz": "",
+          "channel": "telegram",
+          "last_ms": null,
+          "status": "\u2014",
+          "errors": 0,
+          "dur_ms": null,
+          "model": null
+        },
+        {
+          "name": "Skill: week-ahead-calendar (gog)",
+          "enabled": false,
+          "expr": "0 21 * * 0",
+          "tz": "America/New_York",
+          "channel": "discord",
+          "last_ms": 1795399200019,
+          "status": "ok",
+          "errors": 0,
+          "dur_ms": 22302,
+          "model": "anthropic/claude-opus-5-5"
         },
         {
           "name": "Dev Loop: Max weekly EBI implement-or-escalate rollup",
@@ -763,6 +764,18 @@
           "errors": 0,
           "dur_ms": null,
           "model": "lmstudio/gemma-4-31b-it"
+        },
+        {
+          "name": "RESOLUTE Local publish (Max)",
+          "enabled": false,
+          "expr": "30 8 * * 1,3",
+          "tz": "America/New_York",
+          "channel": "telegram",
+          "last_ms": null,
+          "status": "\u2014",
+          "errors": 0,
+          "dur_ms": null,
+          "model": null
         }
       ]
     },
@@ -780,8 +793,8 @@
       "skills": [],
       "n_jobs": 18,
       "n_enabled": 11,
-      "err": 1,
-      "last_ms": 1795390459345,
+      "err": 2,
+      "last_ms": 1795442440759,
       "status": "degraded",
       "accomplishments": [
         {
@@ -921,6 +934,54 @@
       },
       "jobs": [
         {
+          "name": "Melaleuca Monday Briefing",
+          "enabled": true,
+          "expr": "0 9 * * 1",
+          "tz": "",
+          "channel": "origin",
+          "last_ms": 1795442440759,
+          "status": "error",
+          "errors": 1,
+          "dur_ms": null,
+          "model": "default (gpt-5.6-sol)"
+        },
+        {
+          "name": "Fleet Integrity Watch",
+          "enabled": true,
+          "expr": "30 7 * * *",
+          "tz": "",
+          "channel": "origin",
+          "last_ms": 1795441391244,
+          "status": "ok",
+          "errors": 0,
+          "dur_ms": null,
+          "model": "lmstudio/qwen/qwen3.6-35b-a3b"
+        },
+        {
+          "name": "Credential and OAuth Watch",
+          "enabled": true,
+          "expr": "20 7 * * 1,4",
+          "tz": "",
+          "channel": "origin",
+          "last_ms": 1795440822081,
+          "status": "ok",
+          "errors": 0,
+          "dur_ms": null,
+          "model": "lmstudio/qwen/qwen3.6-35b-a3b"
+        },
+        {
+          "name": "Infrastructure Readiness Check",
+          "enabled": true,
+          "expr": "10 7 * * *",
+          "tz": "",
+          "channel": "origin",
+          "last_ms": 1795440782054,
+          "status": "ok",
+          "errors": 0,
+          "dur_ms": null,
+          "model": "lmstudio/qwen/qwen3.6-35b-a3b"
+        },
+        {
           "name": "Weekly Automation Review",
           "enabled": true,
           "expr": "30 18 * * 0",
@@ -957,30 +1018,6 @@
           "model": "default (gpt-5.6-sol)"
         },
         {
-          "name": "Fleet Integrity Watch",
-          "enabled": true,
-          "expr": "30 7 * * *",
-          "tz": "",
-          "channel": "origin",
-          "last_ms": 1795350732952,
-          "status": "ok",
-          "errors": 0,
-          "dur_ms": null,
-          "model": "lmstudio/qwen/qwen3.6-35b-a3b"
-        },
-        {
-          "name": "Infrastructure Readiness Check",
-          "enabled": true,
-          "expr": "10 7 * * *",
-          "tz": "",
-          "channel": "origin",
-          "last_ms": 1795349504986,
-          "status": "ok",
-          "errors": 0,
-          "dur_ms": null,
-          "model": "lmstudio/qwen/qwen3.6-35b-a3b"
-        },
-        {
           "name": "Weekly Fleet Currency Review",
           "enabled": true,
           "expr": "0 0 * * 0",
@@ -1015,30 +1052,6 @@
           "errors": 0,
           "dur_ms": null,
           "model": "anthropic/claude-sonnet-5"
-        },
-        {
-          "name": "Credential and OAuth Watch",
-          "enabled": true,
-          "expr": "20 7 * * 1,4",
-          "tz": "",
-          "channel": "origin",
-          "last_ms": 1795086472057,
-          "status": "ok",
-          "errors": 0,
-          "dur_ms": null,
-          "model": "lmstudio/qwen/qwen3.6-35b-a3b"
-        },
-        {
-          "name": "Melaleuca Monday Briefing",
-          "enabled": true,
-          "expr": "0 9 * * 1",
-          "tz": "",
-          "channel": "origin",
-          "last_ms": 1794837689680,
-          "status": "ok",
-          "errors": 0,
-          "dur_ms": null,
-          "model": "default (gpt-5.6-sol)"
         },
         {
           "name": "Semiannual Email Archive Review",
@@ -1334,10 +1347,10 @@
     },
     {
       "id": "preacher-john",
-      "primary": "openai/gpt-5.6-sol",
-      "fallback": "anthropic/claude-opus-5-5",
+      "primary": "anthropic/claude-opus-5-5",
+      "fallback": "openai/gpt-5.6-sol",
       "fallbacks": [
-        "anthropic/claude-opus-5-5",
+        "openai/gpt-5.6-sol",
         "lmstudio/qwen/qwen3.6-35b-a3b"
       ],
       "voice": {
@@ -1418,9 +1431,9 @@
       ],
       "n_jobs": 9,
       "n_enabled": 4,
-      "err": 0,
-      "last_ms": 1795396598531,
-      "status": "operational",
+      "err": 1,
+      "last_ms": 1795441711884,
+      "status": "degraded",
       "accomplishments": [
         {
           "date": "2026-11-12",
@@ -1733,15 +1746,27 @@
       },
       "jobs": [
         {
+          "name": "The Watchman's Daily Devotional",
+          "enabled": true,
+          "expr": "37 7 * * *",
+          "tz": "America/New_York",
+          "channel": "telegram",
+          "last_ms": 1795441711884,
+          "status": "ok",
+          "errors": 0,
+          "dur_ms": 316045,
+          "model": "anthropic/claude-sonnet-5"
+        },
+        {
           "name": "heartbeat-preacher-john",
           "enabled": true,
           "expr": "",
           "tz": "",
           "channel": "",
-          "last_ms": 1795396598531,
-          "status": "ok",
-          "errors": 0,
-          "dur_ms": 584372,
+          "last_ms": 1795441423477,
+          "status": "error",
+          "errors": 1,
+          "dur_ms": 600163,
           "model": "lmstudio/gemma-4-31b-it"
         },
         {
@@ -1766,18 +1791,6 @@
           "status": "ok",
           "errors": 0,
           "dur_ms": 45060,
-          "model": "anthropic/claude-sonnet-5"
-        },
-        {
-          "name": "The Watchman's Daily Devotional",
-          "enabled": true,
-          "expr": "37 7 * * *",
-          "tz": "America/New_York",
-          "channel": "telegram",
-          "last_ms": 1795351021492,
-          "status": "ok",
-          "errors": 0,
-          "dur_ms": 374989,
           "model": "anthropic/claude-sonnet-5"
         },
         {
@@ -1925,7 +1938,7 @@
       "n_jobs": 11,
       "n_enabled": 6,
       "err": 0,
-      "last_ms": 1795399200019,
+      "last_ms": 1795441686794,
       "status": "operational",
       "accomplishments": [
         {
@@ -2395,6 +2408,30 @@
       },
       "jobs": [
         {
+          "name": "invitation-check",
+          "enabled": true,
+          "expr": "",
+          "tz": "",
+          "channel": "",
+          "last_ms": 1795441686794,
+          "status": "ok",
+          "errors": 0,
+          "dur_ms": 288628,
+          "model": "lmstudio/gemma-4-31b-it"
+        },
+        {
+          "name": "heartbeat-chaps",
+          "enabled": true,
+          "expr": "",
+          "tz": "",
+          "channel": "",
+          "last_ms": 1795441264067,
+          "status": "ok",
+          "errors": 0,
+          "dur_ms": 422703,
+          "model": "lmstudio/gemma-4-31b-it"
+        },
+        {
           "name": "Evening pre-check-in prompt (9 PM)",
           "enabled": true,
           "expr": "0 21 * * *",
@@ -2405,30 +2442,6 @@
           "errors": 0,
           "dur_ms": 51843,
           "model": "anthropic/claude-sonnet-5"
-        },
-        {
-          "name": "heartbeat-chaps",
-          "enabled": true,
-          "expr": "",
-          "tz": "",
-          "channel": "",
-          "last_ms": 1795398559387,
-          "status": "ok",
-          "errors": 0,
-          "dur_ms": 46163,
-          "model": "lmstudio/gemma-4-31b-it"
-        },
-        {
-          "name": "invitation-check",
-          "enabled": true,
-          "expr": "",
-          "tz": "",
-          "channel": "",
-          "last_ms": 1795396094255,
-          "status": "ok",
-          "errors": 0,
-          "dur_ms": 588800,
-          "model": "lmstudio/gemma-4-31b-it"
         },
         {
           "name": "chaps-directory-qa",
@@ -2530,10 +2543,10 @@
     },
     {
       "id": "carnegie",
-      "primary": "openai/gpt-5.6-sol",
-      "fallback": "anthropic/claude-opus-5-5",
+      "primary": "anthropic/claude-opus-5-5",
+      "fallback": "openai/gpt-5.6-sol",
       "fallbacks": [
-        "anthropic/claude-opus-5-5",
+        "openai/gpt-5.6-sol",
         "lmstudio/qwen/qwen3.6-35b-a3b"
       ],
       "voice": null,
@@ -2606,9 +2619,9 @@
       ],
       "n_jobs": 30,
       "n_enabled": 14,
-      "err": 0,
-      "last_ms": 1795440698139,
-      "status": "operational",
+      "err": 1,
+      "last_ms": 1795442401672,
+      "status": "degraded",
       "accomplishments": [
         {
           "date": "2026-11-16",
@@ -2764,6 +2777,66 @@
       },
       "jobs": [
         {
+          "name": "Daily reconciliation \u2014 previous day (AC3-1025-RECON)",
+          "enabled": true,
+          "expr": "0 9 * * 1-6",
+          "tz": "America/New_York",
+          "channel": "last",
+          "last_ms": 1795442401672,
+          "status": "ok",
+          "errors": 0,
+          "dur_ms": 55292,
+          "model": "anthropic/claude-sonnet-5"
+        },
+        {
+          "name": "Skill: finance-news",
+          "enabled": true,
+          "expr": "50 8 * * 1-5",
+          "tz": "America/New_York",
+          "channel": "telegram",
+          "last_ms": 1795442027978,
+          "status": "ok",
+          "errors": 0,
+          "dur_ms": 110835,
+          "model": "anthropic/claude-opus-5-5"
+        },
+        {
+          "name": "Skill: personal-finance-v2 (Mon ledger)",
+          "enabled": true,
+          "expr": "53 7 * * 1",
+          "tz": "America/New_York",
+          "channel": "telegram",
+          "last_ms": 1795441816646,
+          "status": "ok",
+          "errors": 0,
+          "dur_ms": 15433,
+          "model": "anthropic/claude-opus-5-5"
+        },
+        {
+          "name": "C5iSR Daily Post \u2014 Carnegie (Mon-Sat 7:30AM, all six themes)",
+          "enabled": true,
+          "expr": "30 7 * * 1-6",
+          "tz": "America/New_York",
+          "channel": "telegram",
+          "last_ms": 1795441530366,
+          "status": "ok",
+          "errors": 0,
+          "dur_ms": 28122,
+          "model": "anthropic/claude-sonnet-5"
+        },
+        {
+          "name": "heartbeat-carnegie",
+          "enabled": true,
+          "expr": "",
+          "tz": "",
+          "channel": "",
+          "last_ms": 1795440864220,
+          "status": "error",
+          "errors": 1,
+          "dur_ms": 900182,
+          "model": "lmstudio/gemma-4-31b-it"
+        },
+        {
           "name": "C5iSR Price Pre-Fetch (7:23AM Mon-Sat)",
           "enabled": true,
           "expr": "23 7 * * 1-6",
@@ -2776,18 +2849,6 @@
           "model": null
         },
         {
-          "name": "heartbeat-carnegie",
-          "enabled": true,
-          "expr": "",
-          "tz": "",
-          "channel": "",
-          "last_ms": 1795399482982,
-          "status": "skipped",
-          "errors": 0,
-          "dur_ms": 32,
-          "model": "lmstudio/gemma-4-31b-it"
-        },
-        {
           "name": "BTC 2D ADX-DI WATCH",
           "enabled": true,
           "expr": "20 19 * * *",
@@ -2798,30 +2859,6 @@
           "errors": 0,
           "dur_ms": 15404,
           "model": "openai/gpt-5.6-sol@openai:adam.l.johns@gmail.com"
-        },
-        {
-          "name": "Daily reconciliation \u2014 previous day (AC3-1025-RECON)",
-          "enabled": true,
-          "expr": "0 9 * * 1-6",
-          "tz": "America/New_York",
-          "channel": "last",
-          "last_ms": 1795269601121,
-          "status": "ok",
-          "errors": 0,
-          "dur_ms": 67890,
-          "model": "anthropic/claude-sonnet-5"
-        },
-        {
-          "name": "C5iSR Daily Post \u2014 Carnegie (Mon-Sat 7:30AM, all six themes)",
-          "enabled": true,
-          "expr": "30 7 * * 1-6",
-          "tz": "America/New_York",
-          "channel": "telegram",
-          "last_ms": 1795264200983,
-          "status": "ok",
-          "errors": 0,
-          "dur_ms": 29401,
-          "model": "anthropic/claude-sonnet-5"
         },
         {
           "name": "Paper lab Friday weekly-swing scan (AC3-1024-FRISCAN)",
@@ -2882,30 +2919,6 @@
           "errors": 0,
           "dur_ms": 79506,
           "model": "anthropic/claude-sonnet-5"
-        },
-        {
-          "name": "Skill: finance-news",
-          "enabled": true,
-          "expr": "50 8 * * 1-5",
-          "tz": "America/New_York",
-          "channel": "telegram",
-          "last_ms": 1795182600672,
-          "status": "ok",
-          "errors": 0,
-          "dur_ms": 150059,
-          "model": "anthropic/claude-opus-5-5"
-        },
-        {
-          "name": "Skill: personal-finance-v2 (Mon ledger)",
-          "enabled": true,
-          "expr": "53 7 * * 1",
-          "tz": "America/New_York",
-          "channel": "telegram",
-          "last_ms": 1794833580042,
-          "status": "ok",
-          "errors": 0,
-          "dur_ms": 33577,
-          "model": "anthropic/claude-opus-5-5"
         },
         {
           "name": "Skill: tax-deadlines (monthly)",
@@ -3127,10 +3140,10 @@
     },
     {
       "id": "sally",
-      "primary": "openai/gpt-5.6-sol",
-      "fallback": "anthropic/claude-opus-5-5",
+      "primary": "anthropic/claude-opus-5-5",
+      "fallback": "openai/gpt-5.6-sol",
       "fallbacks": [
-        "anthropic/claude-opus-5-5",
+        "openai/gpt-5.6-sol",
         "lmstudio/qwen/qwen3.6-35b-a3b"
       ],
       "voice": null,
@@ -3208,7 +3221,7 @@
       "n_jobs": 17,
       "n_enabled": 10,
       "err": 0,
-      "last_ms": 1795389723081,
+      "last_ms": 1795442055712,
       "status": "operational",
       "accomplishments": [
         {
@@ -3329,7 +3342,7 @@
         "browser_profile": "airbnb",
         "files": {
           "AGENTS.md": 50721,
-          "MEMORY.md": 43106,
+          "MEMORY.md": 43299,
           "HEARTBEAT.md": 984
         },
         "verified": "2026-11-23"
@@ -3388,6 +3401,66 @@
       },
       "jobs": [
         {
+          "name": "Sally: host-inbox sweep AM",
+          "enabled": true,
+          "expr": "50 8 * * *",
+          "tz": "America/New_York",
+          "channel": "telegram",
+          "last_ms": 1795442055712,
+          "status": "ok",
+          "errors": 0,
+          "dur_ms": 204918,
+          "model": "anthropic/claude-opus-5"
+        },
+        {
+          "name": "Skill: airbnb-reader",
+          "enabled": true,
+          "expr": "40 8 * * *",
+          "tz": "America/New_York",
+          "channel": "telegram",
+          "last_ms": 1795441975525,
+          "status": "ok",
+          "errors": 0,
+          "dur_ms": 30039,
+          "model": "anthropic/claude-opus-5"
+        },
+        {
+          "name": "Sally: Monday commercial RE scan",
+          "enabled": true,
+          "expr": "0 8 * * 1",
+          "tz": "America/New_York",
+          "channel": "telegram",
+          "last_ms": 1795441853144,
+          "status": "ok",
+          "errors": 0,
+          "dur_ms": 728172,
+          "model": "anthropic/claude-opus-5"
+        },
+        {
+          "name": "Cottage 30-day rule ON weekdays 7 AM",
+          "enabled": true,
+          "expr": "0 7 * * 1-5",
+          "tz": "America/New_York",
+          "channel": "telegram",
+          "last_ms": 1795441479121,
+          "status": "ok",
+          "errors": 0,
+          "dur_ms": 376660,
+          "model": "anthropic/claude-opus-5"
+        },
+        {
+          "name": "Sally: Tiffany pay check",
+          "enabled": true,
+          "expr": "15 17,21 * * *",
+          "tz": "America/New_York",
+          "channel": "telegram",
+          "last_ms": 1795440818212,
+          "status": "ok",
+          "errors": 0,
+          "dur_ms": 445838,
+          "model": "anthropic/claude-opus-5"
+        },
+        {
           "name": "heartbeat-sally",
           "enabled": true,
           "expr": "",
@@ -3412,18 +3485,6 @@
           "model": "anthropic/claude-opus-5"
         },
         {
-          "name": "Sally: Tiffany pay check",
-          "enabled": true,
-          "expr": "15 17,21 * * *",
-          "tz": "America/New_York",
-          "channel": "telegram",
-          "last_ms": 1795385700070,
-          "status": "ok",
-          "errors": 0,
-          "dur_ms": 307880,
-          "model": "anthropic/claude-opus-5"
-        },
-        {
           "name": "Sally: host-inbox sweep PM",
           "enabled": true,
           "expr": "50 16 * * *",
@@ -3436,42 +3497,6 @@
           "model": "anthropic/claude-opus-5"
         },
         {
-          "name": "Sally: host-inbox sweep AM",
-          "enabled": true,
-          "expr": "50 8 * * *",
-          "tz": "America/New_York",
-          "channel": "telegram",
-          "last_ms": 1795355400041,
-          "status": "ok",
-          "errors": 0,
-          "dur_ms": 93130,
-          "model": "anthropic/claude-opus-5"
-        },
-        {
-          "name": "Skill: airbnb-reader",
-          "enabled": true,
-          "expr": "40 8 * * *",
-          "tz": "America/New_York",
-          "channel": "telegram",
-          "last_ms": 1795354800035,
-          "status": "ok",
-          "errors": 0,
-          "dur_ms": 46286,
-          "model": "anthropic/claude-opus-5"
-        },
-        {
-          "name": "Cottage 30-day rule ON weekdays 7 AM",
-          "enabled": true,
-          "expr": "0 7 * * 1-5",
-          "tz": "America/New_York",
-          "channel": "telegram",
-          "last_ms": 1795177899194,
-          "status": "ok",
-          "errors": 0,
-          "dur_ms": 55362,
-          "model": "anthropic/claude-opus-5"
-        },
-        {
           "name": "Skill: airbnb-search",
           "enabled": true,
           "expr": "30 14 * * 2",
@@ -3481,18 +3506,6 @@
           "status": "ok",
           "errors": 0,
           "dur_ms": 108947,
-          "model": "anthropic/claude-opus-5"
-        },
-        {
-          "name": "Sally: Monday commercial RE scan",
-          "enabled": true,
-          "expr": "0 8 * * 1",
-          "tz": "America/New_York",
-          "channel": "telegram",
-          "last_ms": 1794834001865,
-          "status": "ok",
-          "errors": 0,
-          "dur_ms": 63973,
           "model": "anthropic/claude-opus-5"
         },
         {
@@ -3698,10 +3711,10 @@
     },
     {
       "id": "coach-arnie",
-      "primary": "openai/gpt-5.6-sol",
-      "fallback": "anthropic/claude-opus-5-5",
+      "primary": "anthropic/claude-opus-5-5",
+      "fallback": "openai/gpt-5.6-sol",
       "fallbacks": [
-        "anthropic/claude-opus-5-5",
+        "openai/gpt-5.6-sol",
         "lmstudio/qwen/qwen3.6-35b-a3b"
       ],
       "voice": {
@@ -3777,7 +3790,7 @@
       "n_jobs": 10,
       "n_enabled": 6,
       "err": 0,
-      "last_ms": 1795399722411,
+      "last_ms": 1795441855808,
       "status": "operational",
       "accomplishments": [
         {
@@ -4055,15 +4068,51 @@
       },
       "jobs": [
         {
+          "name": "Skill: zoho-crm (fit20 Mon leads)",
+          "enabled": true,
+          "expr": "20 8 * * 1",
+          "tz": "America/New_York",
+          "channel": "telegram",
+          "last_ms": 1795441855808,
+          "status": "ok",
+          "errors": 0,
+          "dur_ms": 199868,
+          "model": "anthropic/claude-sonnet-5"
+        },
+        {
+          "name": "fit20 Daily Lead Sweep (07:30 ET)",
+          "enabled": true,
+          "expr": "30 7 * * *",
+          "tz": "America/New_York",
+          "channel": "telegram",
+          "last_ms": 1795441549663,
+          "status": "ok",
+          "errors": 0,
+          "dur_ms": 215693,
+          "model": "anthropic/claude-sonnet-5"
+        },
+        {
+          "name": "Coach Arnie Monday Weekly Audit (Mon 6AM)",
+          "enabled": true,
+          "expr": "15 6 * * 1",
+          "tz": "",
+          "channel": "telegram",
+          "last_ms": 1795441449099,
+          "status": "ok",
+          "errors": 0,
+          "dur_ms": 100528,
+          "model": "anthropic/claude-sonnet-5"
+        },
+        {
           "name": "heartbeat-coach-arnie",
           "enabled": true,
           "expr": "",
           "tz": "",
           "channel": "",
-          "last_ms": 1795399722411,
-          "status": "skipped",
+          "last_ms": 1795440853794,
+          "status": "ok",
           "errors": 0,
-          "dur_ms": 43,
+          "dur_ms": 595272,
           "model": "lmstudio/gemma-4-31b-it"
         },
         {
@@ -4088,42 +4137,6 @@
           "status": "ok",
           "errors": 0,
           "dur_ms": 13037,
-          "model": "anthropic/claude-sonnet-5"
-        },
-        {
-          "name": "fit20 Daily Lead Sweep (07:30 ET)",
-          "enabled": true,
-          "expr": "30 7 * * *",
-          "tz": "America/New_York",
-          "channel": "telegram",
-          "last_ms": 1795350600837,
-          "status": "ok",
-          "errors": 0,
-          "dur_ms": 186970,
-          "model": "anthropic/claude-sonnet-5"
-        },
-        {
-          "name": "Skill: zoho-crm (fit20 Mon leads)",
-          "enabled": true,
-          "expr": "20 8 * * 1",
-          "tz": "America/New_York",
-          "channel": "telegram",
-          "last_ms": 1794835201963,
-          "status": "ok",
-          "errors": 0,
-          "dur_ms": 104233,
-          "model": "anthropic/claude-sonnet-5"
-        },
-        {
-          "name": "Coach Arnie Monday Weekly Audit (Mon 6AM)",
-          "enabled": true,
-          "expr": "15 6 * * 1",
-          "tz": "",
-          "channel": "telegram",
-          "last_ms": 1794827700049,
-          "status": "ok",
-          "errors": 0,
-          "dur_ms": 537905,
           "model": "anthropic/claude-sonnet-5"
         },
         {
@@ -4178,10 +4191,10 @@
     },
     {
       "id": "doc",
-      "primary": "openai/gpt-5.6-sol",
-      "fallback": "anthropic/claude-opus-5-5",
+      "primary": "anthropic/claude-opus-5-5",
+      "fallback": "openai/gpt-5.6-sol",
       "fallbacks": [
-        "anthropic/claude-opus-5-5",
+        "openai/gpt-5.6-sol",
         "lmstudio/qwen/qwen3.6-35b-a3b"
       ],
       "voice": null,
@@ -4252,7 +4265,7 @@
       "n_jobs": 11,
       "n_enabled": 5,
       "err": 0,
-      "last_ms": 1795393297611,
+      "last_ms": 1795442005603,
       "status": "operational",
       "accomplishments": [
         {
@@ -4406,11 +4419,35 @@
           "expr": "",
           "tz": "",
           "channel": "",
-          "last_ms": 1795393297611,
+          "last_ms": 1795442005603,
           "status": "ok",
           "errors": 0,
-          "dur_ms": 68400,
+          "dur_ms": 449221,
           "model": "lmstudio/gemma-4-31b-it"
+        },
+        {
+          "name": "Doc Morning Clinical Read (0800 EDT)",
+          "enabled": true,
+          "expr": "0 8 * * *",
+          "tz": "",
+          "channel": "telegram",
+          "last_ms": 1795441832104,
+          "status": "ok",
+          "errors": 0,
+          "dur_ms": 21012,
+          "model": "anthropic/claude-sonnet-5"
+        },
+        {
+          "name": "Doc Active Intel (morning)",
+          "enabled": true,
+          "expr": "15 7 * * *",
+          "tz": "America/New_York",
+          "channel": "telegram",
+          "last_ms": 1795441503925,
+          "status": "ok",
+          "errors": 0,
+          "dur_ms": 26389,
+          "model": "anthropic/claude-sonnet-5"
         },
         {
           "name": "Doc Active Intel (evening)",
@@ -4434,30 +4471,6 @@
           "status": "ok",
           "errors": 0,
           "dur_ms": 21686,
-          "model": "anthropic/claude-sonnet-5"
-        },
-        {
-          "name": "Doc Morning Clinical Read (0800 EDT)",
-          "enabled": true,
-          "expr": "0 8 * * *",
-          "tz": "",
-          "channel": "telegram",
-          "last_ms": 1795352401177,
-          "status": "ok",
-          "errors": 0,
-          "dur_ms": 68407,
-          "model": "anthropic/claude-sonnet-5"
-        },
-        {
-          "name": "Doc Active Intel (morning)",
-          "enabled": true,
-          "expr": "15 7 * * *",
-          "tz": "America/New_York",
-          "channel": "telegram",
-          "last_ms": 1795349700060,
-          "status": "ok",
-          "errors": 0,
-          "dur_ms": 30070,
           "model": "anthropic/claude-sonnet-5"
         },
         {
@@ -4612,10 +4625,10 @@
         "document-standard"
       ],
       "n_jobs": 12,
-      "n_enabled": 7,
-      "err": 0,
-      "last_ms": 1795399586949,
-      "status": "operational",
+      "n_enabled": 6,
+      "err": 1,
+      "last_ms": 1795441559529,
+      "status": "degraded",
       "accomplishments": [
         {
           "date": "2026-09-07",
@@ -4782,15 +4795,27 @@
       },
       "jobs": [
         {
+          "name": "RESOLUTE Local weekly page pass (Roy)",
+          "enabled": true,
+          "expr": "30 7 * * 1,3",
+          "tz": "America/New_York",
+          "channel": "last",
+          "last_ms": 1795441559529,
+          "status": "ok",
+          "errors": 0,
+          "dur_ms": 155102,
+          "model": "anthropic/claude-opus-5-5"
+        },
+        {
           "name": "heartbeat-sheriff-roy",
           "enabled": true,
           "expr": "",
           "tz": "",
           "channel": "",
-          "last_ms": 1795399586949,
-          "status": "skipped",
-          "errors": 0,
-          "dur_ms": 33,
+          "last_ms": 1795441290004,
+          "status": "error",
+          "errors": 1,
+          "dur_ms": 900173,
           "model": "lmstudio/gemma-4-31b-it"
         },
         {
@@ -4830,18 +4855,6 @@
           "model": "anthropic/claude-opus-5-5"
         },
         {
-          "name": "Skill: fxbg-council-monitor",
-          "enabled": true,
-          "expr": "30 10 * * 3",
-          "tz": "America/New_York",
-          "channel": "telegram",
-          "last_ms": 1795015801458,
-          "status": "ok",
-          "errors": 0,
-          "dur_ms": 97138,
-          "model": "anthropic/claude-opus-5-5"
-        },
-        {
           "name": "Sheriff Roy Fxbg Council Brief (Tue 6PM)",
           "enabled": true,
           "expr": "0 18 * * 2",
@@ -4852,18 +4865,6 @@
           "errors": 0,
           "dur_ms": 101680,
           "model": "anthropic/claude-sonnet-5"
-        },
-        {
-          "name": "RESOLUTE Local weekly page pass (Roy)",
-          "enabled": true,
-          "expr": "30 7 * * 1,3",
-          "tz": "America/New_York",
-          "channel": "last",
-          "last_ms": null,
-          "status": "\u2014",
-          "errors": 0,
-          "dur_ms": null,
-          "model": "anthropic/claude-opus-5-5"
         },
         {
           "name": "agenda-this-week",
@@ -4888,6 +4889,18 @@
           "errors": 0,
           "dur_ms": 406484,
           "model": "openai/gpt-5.6-sol"
+        },
+        {
+          "name": "Skill: fxbg-council-monitor",
+          "enabled": false,
+          "expr": "30 10 * * 3",
+          "tz": "America/New_York",
+          "channel": "telegram",
+          "last_ms": 1795015801458,
+          "status": "ok",
+          "errors": 0,
+          "dur_ms": 97138,
+          "model": "anthropic/claude-opus-5-5"
         },
         {
           "name": "Dev Loop: sheriff-roy daily reflection (implement-or-escalate)",
@@ -5000,7 +5013,7 @@
       "n_jobs": 10,
       "n_enabled": 5,
       "err": 0,
-      "last_ms": 1795399749444,
+      "last_ms": 1795441999706,
       "status": "operational",
       "accomplishments": [
         {
@@ -5215,10 +5228,10 @@
           "expr": "",
           "tz": "",
           "channel": "",
-          "last_ms": 1795399749444,
-          "status": "skipped",
+          "last_ms": 1795441999706,
+          "status": "ok",
           "errors": 0,
-          "dur_ms": 73,
+          "dur_ms": 556158,
           "model": "lmstudio/gemma-4-31b-it"
         },
         {
@@ -5410,9 +5423,9 @@
       ],
       "n_jobs": 10,
       "n_enabled": 5,
-      "err": 0,
-      "last_ms": 1795398393031,
-      "status": "operational",
+      "err": 1,
+      "last_ms": 1795441958253,
+      "status": "degraded",
       "accomplishments": [
         {
           "date": "2026-11-03",
@@ -5585,15 +5598,39 @@
       },
       "jobs": [
         {
+          "name": "Daily Tech/AI Brief (08:30)",
+          "enabled": true,
+          "expr": "30 8 * * *",
+          "tz": "America/New_York",
+          "channel": "telegram",
+          "last_ms": 1795441958253,
+          "status": "ok",
+          "errors": 0,
+          "dur_ms": 41410,
+          "model": "anthropic/claude-sonnet-5"
+        },
+        {
+          "name": "RESOLUTE AM Wire draft (Rush)",
+          "enabled": true,
+          "expr": "40 7 * * *",
+          "tz": "America/New_York",
+          "channel": "last",
+          "last_ms": 1795441714664,
+          "status": "ok",
+          "errors": 0,
+          "dur_ms": 590034,
+          "model": "anthropic/claude-sonnet-5"
+        },
+        {
           "name": "heartbeat-rush",
           "enabled": true,
           "expr": "",
           "tz": "",
           "channel": "",
-          "last_ms": 1795398393031,
-          "status": "ok",
-          "errors": 0,
-          "dur_ms": 105691,
+          "last_ms": 1795440823181,
+          "status": "error",
+          "errors": 1,
+          "dur_ms": 600243,
           "model": "lmstudio/gemma-4-31b-it"
         },
         {
@@ -5618,30 +5655,6 @@
           "status": "ok",
           "errors": 0,
           "dur_ms": 97128,
-          "model": "anthropic/claude-sonnet-5"
-        },
-        {
-          "name": "Daily Tech/AI Brief (08:30)",
-          "enabled": true,
-          "expr": "30 8 * * *",
-          "tz": "America/New_York",
-          "channel": "telegram",
-          "last_ms": 1795354200037,
-          "status": "ok",
-          "errors": 0,
-          "dur_ms": 71766,
-          "model": "anthropic/claude-sonnet-5"
-        },
-        {
-          "name": "RESOLUTE AM Wire draft (Rush)",
-          "enabled": true,
-          "expr": "40 7 * * *",
-          "tz": "America/New_York",
-          "channel": "last",
-          "last_ms": 1795351200538,
-          "status": "ok",
-          "errors": 0,
-          "dur_ms": 611110,
           "model": "anthropic/claude-sonnet-5"
         },
         {
@@ -5708,10 +5721,10 @@
     },
     {
       "id": "pops",
-      "primary": "openai/gpt-5.6-sol",
-      "fallback": "anthropic/claude-opus-5-5",
+      "primary": "anthropic/claude-opus-5-5",
+      "fallback": "openai/gpt-5.6-sol",
       "fallbacks": [
-        "anthropic/claude-opus-5-5",
+        "openai/gpt-5.6-sol",
         "lmstudio/qwen/qwen3.6-35b-a3b"
       ],
       "voice": null,
@@ -5785,7 +5798,7 @@
       "n_jobs": 11,
       "n_enabled": 7,
       "err": 0,
-      "last_ms": 1795399054974,
+      "last_ms": 1795442454866,
       "status": "operational",
       "accomplishments": [
         {
@@ -5931,15 +5944,51 @@
       },
       "jobs": [
         {
+          "name": "Daily Father Outreach Reminder (Pops)",
+          "enabled": true,
+          "expr": "0 9 * * 1-5",
+          "tz": "America/New_York",
+          "channel": "telegram",
+          "last_ms": 1795442454866,
+          "status": "ok",
+          "errors": 0,
+          "dur_ms": 58875,
+          "model": "anthropic/claude-sonnet-5"
+        },
+        {
+          "name": "Pops Daily Wheelhouse Check-in (7:37 AM)",
+          "enabled": true,
+          "expr": "43 7 * * *",
+          "tz": "America/New_York",
+          "channel": "telegram",
+          "last_ms": 1795441764437,
+          "status": "ok",
+          "errors": 0,
+          "dur_ms": 35950,
+          "model": "anthropic/claude-sonnet-5"
+        },
+        {
+          "name": "Pops Daily Captain's Creed (6:55 AM) \u2014 Discord #study + TG link",
+          "enabled": true,
+          "expr": "55 6 * * *",
+          "tz": "America/New_York",
+          "channel": "telegram",
+          "last_ms": 1795441471916,
+          "status": "ok",
+          "errors": 0,
+          "dur_ms": 31967,
+          "model": "anthropic/claude-sonnet-5"
+        },
+        {
           "name": "heartbeat-pops",
           "enabled": true,
           "expr": "",
           "tz": "",
           "channel": "",
-          "last_ms": 1795399054974,
+          "last_ms": 1795441277646,
           "status": "ok",
           "errors": 0,
-          "dur_ms": 66644,
+          "dur_ms": 434191,
           "model": "lmstudio/gemma-4-31b-it"
         },
         {
@@ -5967,18 +6016,6 @@
           "model": "anthropic/claude-sonnet-5"
         },
         {
-          "name": "Pops Daily Wheelhouse Check-in (7:37 AM)",
-          "enabled": true,
-          "expr": "43 7 * * *",
-          "tz": "America/New_York",
-          "channel": "telegram",
-          "last_ms": 1795351381173,
-          "status": "ok",
-          "errors": 0,
-          "dur_ms": 23166,
-          "model": "anthropic/claude-sonnet-5"
-        },
-        {
           "name": "Pops Sunday Weekly Theme Change",
           "enabled": true,
           "expr": "40 7 * * 0",
@@ -5988,30 +6025,6 @@
           "status": "ok",
           "errors": 0,
           "dur_ms": 60699,
-          "model": "anthropic/claude-sonnet-5"
-        },
-        {
-          "name": "Pops Daily Captain's Creed (6:55 AM) \u2014 Discord #study + TG link",
-          "enabled": true,
-          "expr": "55 6 * * *",
-          "tz": "America/New_York",
-          "channel": "telegram",
-          "last_ms": 1795348889219,
-          "status": "ok",
-          "errors": 0,
-          "dur_ms": 38412,
-          "model": "anthropic/claude-sonnet-5"
-        },
-        {
-          "name": "Daily Father Outreach Reminder (Pops)",
-          "enabled": true,
-          "expr": "0 9 * * 1-5",
-          "tz": "America/New_York",
-          "channel": "telegram",
-          "last_ms": 1795183206158,
-          "status": "ok",
-          "errors": 0,
-          "dur_ms": 280371,
           "model": "anthropic/claude-sonnet-5"
         },
         {
@@ -6142,7 +6155,7 @@
       "n_jobs": 7,
       "n_enabled": 3,
       "err": 0,
-      "last_ms": 1795398497128,
+      "last_ms": 1795440829253,
       "status": "operational",
       "accomplishments": [
         {
@@ -6303,10 +6316,10 @@
           "expr": "",
           "tz": "",
           "channel": "",
-          "last_ms": 1795398497128,
+          "last_ms": 1795440829253,
           "status": "ok",
           "errors": 0,
-          "dur_ms": 63588,
+          "dur_ms": 448378,
           "model": "lmstudio/gemma-4-31b-it"
         },
         {
@@ -6458,7 +6471,7 @@
       "n_jobs": 8,
       "n_enabled": 4,
       "err": 0,
-      "last_ms": 1795398910420,
+      "last_ms": 1795440839397,
       "status": "operational",
       "accomplishments": [
         {
@@ -6643,10 +6656,10 @@
           "expr": "",
           "tz": "",
           "channel": "",
-          "last_ms": 1795398910420,
+          "last_ms": 1795440839397,
           "status": "ok",
           "errors": 0,
-          "dur_ms": 65149,
+          "dur_ms": 450592,
           "model": "lmstudio/gemma-4-31b-it"
         },
         {
@@ -6779,5 +6792,5 @@
     "write-airbnb-reviews-for-listings",
     "you-are-an-expert-ai-agent"
   ],
-  "cowork_date": "2026-11-23T08:31:01-05:00"
+  "cowork_date": "2026-11-23T09:03:20-05:00"
 }

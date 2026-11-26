@@ -1,5 +1,5 @@
 {
-  "generated": "2026-11-26T20:10:52.828965+00:00",
+  "generated": "2026-11-26T20:42:57.215072+00:00",
   "totals": {
     "agents": 17,
     "operational": 15,
@@ -13,10 +13,8 @@
     "cron": {
       "enabled": 100,
       "ran26h": 56,
-      "delivered": 27,
-      "fails": [
-        "scheduled job \u00d7 1"
-      ]
+      "delivered": 28,
+      "fails": []
     },
     "cron_source": "openclaw.sqlite + hermes/cron/jobs.json",
     "launchd": {
@@ -756,19 +754,20 @@
     {
       "id": "hermes",
       "primary": "openai-codex/gpt-5.6-sol",
-      "fallback": "claude-cli-subscription/sonnet",
+      "fallback": "anthropic/claude-sonnet-5",
       "fallbacks": [
-        "claude-cli-subscription/sonnet",
+        "anthropic/claude-sonnet-5",
         "xai-oauth/grok-4.7",
-        "local-qwen-last/qwen3.6-35b-a3b"
+        "local-qwen-last/qwen3.6-35b-a3b",
+        "claude-cli-subscription/sonnet"
       ],
       "voice": null,
       "tools": [],
       "skills": [],
       "n_jobs": 18,
       "n_enabled": 11,
-      "err": 2,
-      "last_ms": 1795712429490,
+      "err": 1,
+      "last_ms": 1795725769301,
       "status": "degraded",
       "accomplishments": [
         {
@@ -913,11 +912,11 @@
           "expr": "0 12 * * *",
           "tz": "",
           "channel": "origin",
-          "last_ms": 1795712429490,
-          "status": "error",
-          "errors": 1,
+          "last_ms": 1795725769301,
+          "status": "ok",
+          "errors": 0,
           "dur_ms": null,
-          "model": "default (gpt-5.6-sol)"
+          "model": "anthropic/claude-sonnet-5"
         },
         {
           "name": "Email Autopilot After-Action Report",
@@ -1001,7 +1000,7 @@
           "status": "error",
           "errors": 1,
           "dur_ms": null,
-          "model": "default (gpt-5.6-sol)"
+          "model": "anthropic/claude-sonnet-5"
         },
         {
           "name": "Weekly Automation Review",
@@ -1013,7 +1012,7 @@
           "status": "ok",
           "errors": 0,
           "dur_ms": null,
-          "model": "default (gpt-5.6-sol)"
+          "model": "anthropic/claude-sonnet-5"
         },
         {
           "name": "Weekly Fleet Currency Review",
@@ -1025,7 +1024,7 @@
           "status": "ok",
           "errors": 0,
           "dur_ms": null,
-          "model": "default (gpt-5.6-sol)"
+          "model": "anthropic/claude-sonnet-5"
         },
         {
           "name": "Semiannual Email Archive Review",
@@ -1037,7 +1036,7 @@
           "status": "\u2014",
           "errors": 0,
           "dur_ms": null,
-          "model": "default (gpt-5.6-sol)"
+          "model": "anthropic/claude-sonnet-5"
         },
         {
           "name": "Restore Claude primaries after weekly reset",
@@ -1406,7 +1405,7 @@
       "n_jobs": 9,
       "n_enabled": 4,
       "err": 0,
-      "last_ms": 1795702395017,
+      "last_ms": 1795723995082,
       "status": "operational",
       "accomplishments": [
         {
@@ -1725,10 +1724,10 @@
           "expr": "",
           "tz": "",
           "channel": "",
-          "last_ms": 1795702395017,
+          "last_ms": 1795723995082,
           "status": "ok",
           "errors": 0,
-          "dur_ms": 77550,
+          "dur_ms": 82482,
           "model": "lmstudio/gemma-4-31b-it"
         },
         {
@@ -1912,7 +1911,7 @@
       "n_jobs": 11,
       "n_enabled": 6,
       "err": 0,
-      "last_ms": 1795722494377,
+      "last_ms": 1795725689643,
       "status": "operational",
       "accomplishments": [
         {
@@ -2382,6 +2381,18 @@
       },
       "jobs": [
         {
+          "name": "heartbeat-chaps",
+          "enabled": true,
+          "expr": "",
+          "tz": "",
+          "channel": "",
+          "last_ms": 1795725689643,
+          "status": "ok",
+          "errors": 0,
+          "dur_ms": 45648,
+          "model": "lmstudio/gemma-4-31b-it"
+        },
+        {
           "name": "invitation-check",
           "enabled": true,
           "expr": "",
@@ -2391,18 +2402,6 @@
           "status": "ok",
           "errors": 0,
           "dur_ms": 106230,
-          "model": "lmstudio/gemma-4-31b-it"
-        },
-        {
-          "name": "heartbeat-chaps",
-          "enabled": true,
-          "expr": "",
-          "tz": "",
-          "channel": "",
-          "last_ms": 1795722089625,
-          "status": "ok",
-          "errors": 0,
-          "dur_ms": 45291,
           "model": "lmstudio/gemma-4-31b-it"
         },
         {
@@ -2594,7 +2593,7 @@
       "n_jobs": 32,
       "n_enabled": 15,
       "err": 0,
-      "last_ms": 1795721700023,
+      "last_ms": 1795725300030,
       "status": "operational",
       "accomplishments": [
         {
@@ -2756,11 +2755,23 @@
           "expr": "35 9-15 * * 1-5",
           "tz": "America/New_York",
           "channel": "last",
-          "last_ms": 1795721700023,
+          "last_ms": 1795725300030,
           "status": "ok",
           "errors": 0,
-          "dur_ms": 11330,
+          "dur_ms": 10631,
           "model": "anthropic/claude-haiku-4-5"
+        },
+        {
+          "name": "heartbeat-carnegie",
+          "enabled": true,
+          "expr": "",
+          "tz": "",
+          "channel": "",
+          "last_ms": 1795723966842,
+          "status": "ok",
+          "errors": 0,
+          "dur_ms": 163926,
+          "model": "lmstudio/gemma-4-31b-it"
         },
         {
           "name": "carnegie-paper-touch-pm",
@@ -2773,18 +2784,6 @@
           "errors": 0,
           "dur_ms": 59063,
           "model": "anthropic/claude-sonnet-5"
-        },
-        {
-          "name": "heartbeat-carnegie",
-          "enabled": true,
-          "expr": "",
-          "tz": "",
-          "channel": "",
-          "last_ms": 1795720366826,
-          "status": "ok",
-          "errors": 0,
-          "dur_ms": 81764,
-          "model": "lmstudio/gemma-4-31b-it"
         },
         {
           "name": "carnegie-paper-touch-am",
@@ -3788,7 +3787,7 @@
       "n_jobs": 10,
       "n_enabled": 6,
       "err": 0,
-      "last_ms": 1795723658301,
+      "last_ms": 1795725458316,
       "status": "operational",
       "accomplishments": [
         {
@@ -4071,10 +4070,10 @@
           "expr": "",
           "tz": "",
           "channel": "",
-          "last_ms": 1795723658301,
+          "last_ms": 1795725458316,
           "status": "ok",
           "errors": 0,
-          "dur_ms": 16750,
+          "dur_ms": 16849,
           "model": "lmstudio/gemma-4-31b-it"
         },
         {
@@ -4625,7 +4624,7 @@
       "n_jobs": 12,
       "n_enabled": 7,
       "err": 0,
-      "last_ms": 1795723598348,
+      "last_ms": 1795725398362,
       "status": "operational",
       "accomplishments": [
         {
@@ -4798,10 +4797,10 @@
           "expr": "",
           "tz": "",
           "channel": "",
-          "last_ms": 1795723598348,
+          "last_ms": 1795725398362,
           "status": "ok",
           "errors": 0,
-          "dur_ms": 14322,
+          "dur_ms": 12920,
           "model": "lmstudio/gemma-4-31b-it"
         },
         {
@@ -5011,7 +5010,7 @@
       "n_jobs": 10,
       "n_enabled": 5,
       "err": 0,
-      "last_ms": 1795723756553,
+      "last_ms": 1795725556567,
       "status": "operational",
       "accomplishments": [
         {
@@ -5226,10 +5225,10 @@
           "expr": "",
           "tz": "",
           "channel": "",
-          "last_ms": 1795723756553,
+          "last_ms": 1795725556567,
           "status": "ok",
           "errors": 0,
-          "dur_ms": 24683,
+          "dur_ms": 26759,
           "model": "lmstudio/gemma-4-31b-it"
         },
         {
@@ -5422,7 +5421,7 @@
       "n_jobs": 10,
       "n_enabled": 6,
       "err": 0,
-      "last_ms": 1795723167230,
+      "last_ms": 1795724967499,
       "status": "operational",
       "accomplishments": [
         {
@@ -5601,10 +5600,10 @@
           "expr": "",
           "tz": "",
           "channel": "",
-          "last_ms": 1795723167230,
+          "last_ms": 1795724967499,
           "status": "ok",
           "errors": 0,
-          "dur_ms": 13683,
+          "dur_ms": 12542,
           "model": "lmstudio/gemma-4-31b-it"
         },
         {
@@ -5796,7 +5795,7 @@
       "n_jobs": 11,
       "n_enabled": 7,
       "err": 0,
-      "last_ms": 1795722285122,
+      "last_ms": 1795724085146,
       "status": "operational",
       "accomplishments": [
         {
@@ -5947,10 +5946,10 @@
           "expr": "",
           "tz": "",
           "channel": "",
-          "last_ms": 1795722285122,
+          "last_ms": 1795724085146,
           "status": "ok",
           "errors": 0,
-          "dur_ms": 11636,
+          "dur_ms": 50740,
           "model": "lmstudio/gemma-4-31b-it"
         },
         {
@@ -6153,7 +6152,7 @@
       "n_jobs": 7,
       "n_enabled": 3,
       "err": 0,
-      "last_ms": 1795723453564,
+      "last_ms": 1795725253825,
       "status": "operational",
       "accomplishments": [
         {
@@ -6314,10 +6313,10 @@
           "expr": "",
           "tz": "",
           "channel": "",
-          "last_ms": 1795723453564,
+          "last_ms": 1795725253825,
           "status": "ok",
           "errors": 0,
-          "dur_ms": 29929,
+          "dur_ms": 30326,
           "model": "lmstudio/gemma-4-31b-it"
         },
         {
@@ -6469,7 +6468,7 @@
       "n_jobs": 8,
       "n_enabled": 4,
       "err": 0,
-      "last_ms": 1795723453564,
+      "last_ms": 1795725253825,
       "status": "operational",
       "accomplishments": [
         {
@@ -6654,10 +6653,10 @@
           "expr": "",
           "tz": "",
           "channel": "",
-          "last_ms": 1795723453564,
+          "last_ms": 1795725253825,
           "status": "ok",
           "errors": 0,
-          "dur_ms": 29893,
+          "dur_ms": 30545,
           "model": "lmstudio/gemma-4-31b-it"
         },
         {
@@ -6790,5 +6789,5 @@
     "write-airbnb-reviews-for-listings",
     "you-are-an-expert-ai-agent"
   ],
-  "cowork_date": "2026-11-26T15:10:22-05:00"
+  "cowork_date": "2026-11-26T15:42:26-05:00"
 }

@@ -1,24 +1,26 @@
 {
-  "generated": "2026-11-27T15:16:37.721387+00:00",
+  "generated": "2026-11-27T15:41:09.385740+00:00",
   "totals": {
     "agents": 17,
     "operational": 15,
     "degraded": 1,
-    "jobs": 192,
-    "enabled": 100,
+    "jobs": 193,
+    "enabled": 99,
     "accomplishments": 431,
     "cowork": 41
   },
   "health": {
     "cron": {
-      "enabled": 100,
-      "ran26h": 57,
-      "delivered": 29,
-      "fails": []
+      "enabled": 99,
+      "ran26h": 55,
+      "delivered": 26,
+      "fails": [
+        "scheduled job \u00d7 1"
+      ]
     },
     "cron_source": "openclaw.sqlite + hermes/cron/jobs.json",
     "launchd": {
-      "healthy": 105,
+      "healthy": 106,
       "fails": [
         "launchd job \u00d7 1"
       ]
@@ -766,8 +768,8 @@
       "skills": [],
       "n_jobs": 18,
       "n_enabled": 11,
-      "err": 1,
-      "last_ms": 1795782803819,
+      "err": 2,
+      "last_ms": 1795794039084,
       "status": "degraded",
       "accomplishments": [
         {
@@ -907,6 +909,18 @@
       },
       "jobs": [
         {
+          "name": "Email Autopilot After-Action Report",
+          "enabled": true,
+          "expr": "30 10 * * 1-5",
+          "tz": "",
+          "channel": "origin",
+          "last_ms": 1795794039084,
+          "status": "error",
+          "errors": 1,
+          "dur_ms": null,
+          "model": "anthropic/claude-sonnet-5"
+        },
+        {
           "name": "Fleet Integrity Watch",
           "enabled": true,
           "expr": "30 7 * * *",
@@ -961,18 +975,6 @@
           "tz": "",
           "channel": "origin",
           "last_ms": 1795725769301,
-          "status": "ok",
-          "errors": 0,
-          "dur_ms": null,
-          "model": "anthropic/claude-sonnet-5"
-        },
-        {
-          "name": "Email Autopilot After-Action Report",
-          "enabled": true,
-          "expr": "30 10 * * 1-5",
-          "tz": "",
-          "channel": "origin",
-          "last_ms": 1795707365719,
           "status": "ok",
           "errors": 0,
           "dur_ms": null,
@@ -2593,7 +2595,7 @@
       "n_jobs": 32,
       "n_enabled": 15,
       "err": 0,
-      "last_ms": 1795792367150,
+      "last_ms": 1795793700021,
       "status": "operational",
       "accomplishments": [
         {
@@ -2750,6 +2752,18 @@
       },
       "jobs": [
         {
+          "name": "Paper lab hourly stop check (AC3-1024-HEARTBEAT)",
+          "enabled": true,
+          "expr": "35 9-15 * * 1-5",
+          "tz": "America/New_York",
+          "channel": "last",
+          "last_ms": 1795793700021,
+          "status": "ok",
+          "errors": 0,
+          "dur_ms": 15868,
+          "model": "anthropic/claude-haiku-4-5"
+        },
+        {
           "name": "heartbeat-carnegie",
           "enabled": true,
           "expr": "",
@@ -2772,18 +2786,6 @@
           "errors": 0,
           "dur_ms": 63030,
           "model": "anthropic/claude-sonnet-5"
-        },
-        {
-          "name": "Paper lab hourly stop check (AC3-1024-HEARTBEAT)",
-          "enabled": true,
-          "expr": "35 9-15 * * 1-5",
-          "tz": "America/New_York",
-          "channel": "last",
-          "last_ms": 1795790100022,
-          "status": "ok",
-          "errors": 0,
-          "dur_ms": 12923,
-          "model": "anthropic/claude-haiku-4-5"
         },
         {
           "name": "Daily reconciliation \u2014 previous day (AC3-1025-RECON)",
@@ -3215,8 +3217,8 @@
         "paywall-access",
         "document-standard"
       ],
-      "n_jobs": 17,
-      "n_enabled": 10,
+      "n_jobs": 18,
+      "n_enabled": 9,
       "err": 0,
       "last_ms": 1795787400040,
       "status": "operational",
@@ -3339,7 +3341,7 @@
         "browser_profile": "airbnb",
         "files": {
           "AGENTS.md": 52239,
-          "MEMORY.md": 46898,
+          "MEMORY.md": 47442,
           "HEARTBEAT.md": 984
         },
         "verified": "2026-11-27"
@@ -3422,18 +3424,6 @@
           "model": "anthropic/claude-opus-5"
         },
         {
-          "name": "Cottage 30-day rule ON weekdays 7 AM",
-          "enabled": true,
-          "expr": "0 7 * * 1-5",
-          "tz": "America/New_York",
-          "channel": "telegram",
-          "last_ms": 1795780800395,
-          "status": "ok",
-          "errors": 0,
-          "dur_ms": 478834,
-          "model": "anthropic/claude-opus-5"
-        },
-        {
           "name": "heartbeat-sally",
           "enabled": true,
           "expr": "",
@@ -3455,18 +3445,6 @@
           "status": "ok",
           "errors": 0,
           "dur_ms": 31241,
-          "model": "anthropic/claude-opus-5"
-        },
-        {
-          "name": "Cottage 30-day rule OFF Sun-Fri 5:30 PM",
-          "enabled": true,
-          "expr": "30 17 * * 0-5",
-          "tz": "America/New_York",
-          "channel": "telegram",
-          "last_ms": 1795732200354,
-          "status": "ok",
-          "errors": 0,
-          "dur_ms": 401822,
           "model": "anthropic/claude-opus-5"
         },
         {
@@ -3515,6 +3493,42 @@
           "status": "ok",
           "errors": 0,
           "dur_ms": 74483,
+          "model": "anthropic/claude-opus-5"
+        },
+        {
+          "name": "Greg cottage Dec 15-26: block after he cancels",
+          "enabled": true,
+          "expr": "10 12,20 * * *",
+          "tz": "America/New_York",
+          "channel": "telegram",
+          "last_ms": null,
+          "status": "\u2014",
+          "errors": 0,
+          "dur_ms": null,
+          "model": null
+        },
+        {
+          "name": "Cottage 30-day rule ON weekdays 7 AM",
+          "enabled": false,
+          "expr": "0 7 * * 1-5",
+          "tz": "America/New_York",
+          "channel": "telegram",
+          "last_ms": 1795780800395,
+          "status": "ok",
+          "errors": 0,
+          "dur_ms": 478834,
+          "model": "anthropic/claude-opus-5"
+        },
+        {
+          "name": "Cottage 30-day rule OFF Sun-Fri 5:30 PM",
+          "enabled": false,
+          "expr": "30 17 * * 0-5",
+          "tz": "America/New_York",
+          "channel": "telegram",
+          "last_ms": 1795732200354,
+          "status": "ok",
+          "errors": 0,
+          "dur_ms": 401822,
           "model": "anthropic/claude-opus-5"
         },
         {
@@ -4624,7 +4638,7 @@
       "n_jobs": 12,
       "n_enabled": 7,
       "err": 0,
-      "last_ms": 1795791999258,
+      "last_ms": 1795793799271,
       "status": "operational",
       "accomplishments": [
         {
@@ -4797,10 +4811,10 @@
           "expr": "",
           "tz": "",
           "channel": "",
-          "last_ms": 1795791999258,
+          "last_ms": 1795793799271,
           "status": "ok",
           "errors": 0,
-          "dur_ms": 12158,
+          "dur_ms": 11104,
           "model": "lmstudio/gemma-4-31b-it"
         },
         {
@@ -5421,7 +5435,7 @@
       "n_jobs": 10,
       "n_enabled": 6,
       "err": 0,
-      "last_ms": 1795791746987,
+      "last_ms": 1795793547289,
       "status": "operational",
       "accomplishments": [
         {
@@ -5600,10 +5614,10 @@
           "expr": "",
           "tz": "",
           "channel": "",
-          "last_ms": 1795791746987,
+          "last_ms": 1795793547289,
           "status": "ok",
           "errors": 0,
-          "dur_ms": 12797,
+          "dur_ms": 13986,
           "model": "lmstudio/gemma-4-31b-it"
         },
         {
@@ -6157,7 +6171,7 @@
       "n_jobs": 7,
       "n_enabled": 3,
       "err": 0,
-      "last_ms": 1795791857749,
+      "last_ms": 1795793657759,
       "status": "operational",
       "accomplishments": [
         {
@@ -6318,10 +6332,10 @@
           "expr": "",
           "tz": "",
           "channel": "",
-          "last_ms": 1795791857749,
+          "last_ms": 1795793657759,
           "status": "ok",
           "errors": 0,
-          "dur_ms": 29117,
+          "dur_ms": 28452,
           "model": "lmstudio/gemma-4-31b-it"
         },
         {
@@ -6473,7 +6487,7 @@
       "n_jobs": 8,
       "n_enabled": 4,
       "err": 0,
-      "last_ms": 1795791857749,
+      "last_ms": 1795793657759,
       "status": "operational",
       "accomplishments": [
         {
@@ -6658,10 +6672,10 @@
           "expr": "",
           "tz": "",
           "channel": "",
-          "last_ms": 1795791857749,
+          "last_ms": 1795793657759,
           "status": "ok",
           "errors": 0,
-          "dur_ms": 28941,
+          "dur_ms": 28405,
           "model": "lmstudio/gemma-4-31b-it"
         },
         {
@@ -6794,5 +6808,5 @@
     "write-airbnb-reviews-for-listings",
     "you-are-an-expert-ai-agent"
   ],
-  "cowork_date": "2026-11-27T10:16:06-05:00"
+  "cowork_date": "2026-11-27T10:40:14-05:00"
 }

@@ -1,5 +1,5 @@
 {
-  "generated": "2026-11-27T13:40:02.627711+00:00",
+  "generated": "2026-11-27T14:12:30.416276+00:00",
   "totals": {
     "agents": 17,
     "operational": 15,
@@ -12,8 +12,8 @@
   "health": {
     "cron": {
       "enabled": 100,
-      "ran26h": 57,
-      "delivered": 28,
+      "ran26h": 58,
+      "delivered": 30,
       "fails": []
     },
     "cron_source": "openclaw.sqlite + hermes/cron/jobs.json",
@@ -1911,7 +1911,7 @@
       "n_jobs": 11,
       "n_enabled": 6,
       "err": 0,
-      "last_ms": 1795785092132,
+      "last_ms": 1795788692255,
       "status": "operational",
       "accomplishments": [
         {
@@ -2386,10 +2386,10 @@
           "expr": "",
           "tz": "",
           "channel": "",
-          "last_ms": 1795785092132,
+          "last_ms": 1795788692255,
           "status": "ok",
           "errors": 0,
-          "dur_ms": 53439,
+          "dur_ms": 53730,
           "model": "lmstudio/gemma-4-31b-it"
         },
         {
@@ -2398,10 +2398,10 @@
           "expr": "",
           "tz": "",
           "channel": "",
-          "last_ms": 1795780095237,
+          "last_ms": 1795787295534,
           "status": "ok",
           "errors": 0,
-          "dur_ms": 105307,
+          "dur_ms": 105305,
           "model": "lmstudio/gemma-4-31b-it"
         },
         {
@@ -2593,7 +2593,7 @@
       "n_jobs": 32,
       "n_enabled": 15,
       "err": 0,
-      "last_ms": 1795785167109,
+      "last_ms": 1795788000418,
       "status": "operational",
       "accomplishments": [
         {
@@ -2750,6 +2750,30 @@
       },
       "jobs": [
         {
+          "name": "Daily reconciliation \u2014 previous day (AC3-1025-RECON)",
+          "enabled": true,
+          "expr": "0 9 * * 1-6",
+          "tz": "America/New_York",
+          "channel": "last",
+          "last_ms": 1795788000418,
+          "status": "ok",
+          "errors": 0,
+          "dur_ms": 92364,
+          "model": "anthropic/claude-sonnet-5"
+        },
+        {
+          "name": "Skill: finance-news",
+          "enabled": true,
+          "expr": "50 8 * * 1-5",
+          "tz": "America/New_York",
+          "channel": "telegram",
+          "last_ms": 1795787400040,
+          "status": "ok",
+          "errors": 0,
+          "dur_ms": 104536,
+          "model": "anthropic/claude-opus-5-5"
+        },
+        {
           "name": "heartbeat-carnegie",
           "enabled": true,
           "expr": "",
@@ -2844,30 +2868,6 @@
           "errors": 0,
           "dur_ms": 42336,
           "model": "anthropic/claude-sonnet-5"
-        },
-        {
-          "name": "Daily reconciliation \u2014 previous day (AC3-1025-RECON)",
-          "enabled": true,
-          "expr": "0 9 * * 1-6",
-          "tz": "America/New_York",
-          "channel": "last",
-          "last_ms": 1795701600022,
-          "status": "ok",
-          "errors": 0,
-          "dur_ms": 110384,
-          "model": "anthropic/claude-sonnet-5"
-        },
-        {
-          "name": "Skill: finance-news",
-          "enabled": true,
-          "expr": "50 8 * * 1-5",
-          "tz": "America/New_York",
-          "channel": "telegram",
-          "last_ms": 1795701000026,
-          "status": "ok",
-          "errors": 0,
-          "dur_ms": 17286,
-          "model": "anthropic/claude-opus-5-5"
         },
         {
           "name": "Skill: personal-finance-v2 (Mon ledger)",
@@ -3218,7 +3218,7 @@
       "n_jobs": 17,
       "n_enabled": 10,
       "err": 0,
-      "last_ms": 1795780800395,
+      "last_ms": 1795787400040,
       "status": "operational",
       "accomplishments": [
         {
@@ -3398,6 +3398,30 @@
       },
       "jobs": [
         {
+          "name": "Sally: host-inbox sweep AM",
+          "enabled": true,
+          "expr": "50 8 * * *",
+          "tz": "America/New_York",
+          "channel": "telegram",
+          "last_ms": 1795787400040,
+          "status": "ok",
+          "errors": 0,
+          "dur_ms": 213328,
+          "model": "anthropic/claude-opus-5"
+        },
+        {
+          "name": "Skill: airbnb-reader",
+          "enabled": true,
+          "expr": "40 8 * * *",
+          "tz": "America/New_York",
+          "channel": "telegram",
+          "last_ms": 1795786800014,
+          "status": "ok",
+          "errors": 0,
+          "dur_ms": 15988,
+          "model": "anthropic/claude-opus-5"
+        },
+        {
           "name": "Cottage 30-day rule ON weekdays 7 AM",
           "enabled": true,
           "expr": "0 7 * * 1-5",
@@ -3455,30 +3479,6 @@
           "status": "ok",
           "errors": 0,
           "dur_ms": 118393,
-          "model": "anthropic/claude-opus-5"
-        },
-        {
-          "name": "Sally: host-inbox sweep AM",
-          "enabled": true,
-          "expr": "50 8 * * *",
-          "tz": "America/New_York",
-          "channel": "telegram",
-          "last_ms": 1795701000026,
-          "status": "ok",
-          "errors": 0,
-          "dur_ms": 100548,
-          "model": "anthropic/claude-opus-5"
-        },
-        {
-          "name": "Skill: airbnb-reader",
-          "enabled": true,
-          "expr": "40 8 * * *",
-          "tz": "America/New_York",
-          "channel": "telegram",
-          "last_ms": 1795700400019,
-          "status": "ok",
-          "errors": 0,
-          "dur_ms": 24358,
           "model": "anthropic/claude-opus-5"
         },
         {
@@ -3787,7 +3787,7 @@
       "n_jobs": 10,
       "n_enabled": 6,
       "err": 0,
-      "last_ms": 1795785087383,
+      "last_ms": 1795788687398,
       "status": "operational",
       "accomplishments": [
         {
@@ -4070,10 +4070,10 @@
           "expr": "",
           "tz": "",
           "channel": "",
-          "last_ms": 1795785087383,
+          "last_ms": 1795788687398,
           "status": "ok",
           "errors": 0,
-          "dur_ms": 21089,
+          "dur_ms": 21294,
           "model": "lmstudio/gemma-4-31b-it"
         },
         {
@@ -4624,7 +4624,7 @@
       "n_jobs": 12,
       "n_enabled": 7,
       "err": 0,
-      "last_ms": 1795786599209,
+      "last_ms": 1795788399233,
       "status": "operational",
       "accomplishments": [
         {
@@ -4797,11 +4797,23 @@
           "expr": "",
           "tz": "",
           "channel": "",
-          "last_ms": 1795786599209,
+          "last_ms": 1795788399233,
           "status": "ok",
           "errors": 0,
-          "dur_ms": 14848,
+          "dur_ms": 11980,
           "model": "lmstudio/gemma-4-31b-it"
+        },
+        {
+          "name": "RESOLUTE Local YouTube weekly (Roy draft)",
+          "enabled": true,
+          "expr": "0 9 * * 5",
+          "tz": "America/New_York",
+          "channel": "last",
+          "last_ms": 1795788000418,
+          "status": "ok",
+          "errors": 0,
+          "dur_ms": 37286,
+          "model": "anthropic/claude-sonnet-5"
         },
         {
           "name": "Civic Watch (Tue/Thu 4:16 PM) \u2014 Sheriff Roy",
@@ -4861,18 +4873,6 @@
           "status": "ok",
           "errors": 0,
           "dur_ms": 406484,
-          "model": "anthropic/claude-sonnet-5"
-        },
-        {
-          "name": "RESOLUTE Local YouTube weekly (Roy draft)",
-          "enabled": true,
-          "expr": "0 9 * * 5",
-          "tz": "America/New_York",
-          "channel": "last",
-          "last_ms": 1795183200055,
-          "status": "ok",
-          "errors": 0,
-          "dur_ms": 293878,
           "model": "anthropic/claude-sonnet-5"
         },
         {
@@ -5010,7 +5010,7 @@
       "n_jobs": 10,
       "n_enabled": 5,
       "err": 0,
-      "last_ms": 1795786758214,
+      "last_ms": 1795788558223,
       "status": "operational",
       "accomplishments": [
         {
@@ -5225,10 +5225,10 @@
           "expr": "",
           "tz": "",
           "channel": "",
-          "last_ms": 1795786758214,
+          "last_ms": 1795788558223,
           "status": "ok",
           "errors": 0,
-          "dur_ms": 13820,
+          "dur_ms": 13197,
           "model": "lmstudio/gemma-4-31b-it"
         },
         {
@@ -5421,7 +5421,7 @@
       "n_jobs": 10,
       "n_enabled": 6,
       "err": 0,
-      "last_ms": 1795786346162,
+      "last_ms": 1795788146182,
       "status": "operational",
       "accomplishments": [
         {
@@ -5600,10 +5600,10 @@
           "expr": "",
           "tz": "",
           "channel": "",
-          "last_ms": 1795786346162,
+          "last_ms": 1795788146182,
           "status": "ok",
           "errors": 0,
-          "dur_ms": 12303,
+          "dur_ms": 13068,
           "model": "lmstudio/gemma-4-31b-it"
         },
         {
@@ -5795,7 +5795,7 @@
       "n_jobs": 11,
       "n_enabled": 7,
       "err": 0,
-      "last_ms": 1795785287213,
+      "last_ms": 1795788004864,
       "status": "operational",
       "accomplishments": [
         {
@@ -5946,15 +5946,27 @@
       },
       "jobs": [
         {
+          "name": "Daily Father Outreach Reminder (Pops)",
+          "enabled": true,
+          "expr": "0 9 * * 1-5",
+          "tz": "America/New_York",
+          "channel": "telegram",
+          "last_ms": 1795788004864,
+          "status": "ok",
+          "errors": 0,
+          "dur_ms": 229570,
+          "model": "anthropic/claude-sonnet-5"
+        },
+        {
           "name": "heartbeat-pops",
           "enabled": true,
           "expr": "",
           "tz": "",
           "channel": "",
-          "last_ms": 1795785287213,
+          "last_ms": 1795787087506,
           "status": "ok",
           "errors": 0,
-          "dur_ms": 11847,
+          "dur_ms": 12517,
           "model": "lmstudio/gemma-4-31b-it"
         },
         {
@@ -5979,18 +5991,6 @@
           "status": "ok",
           "errors": 0,
           "dur_ms": 32741,
-          "model": "anthropic/claude-sonnet-5"
-        },
-        {
-          "name": "Daily Father Outreach Reminder (Pops)",
-          "enabled": true,
-          "expr": "0 9 * * 1-5",
-          "tz": "America/New_York",
-          "channel": "telegram",
-          "last_ms": 1795701604859,
-          "status": "ok",
-          "errors": 0,
-          "dur_ms": 176828,
           "model": "anthropic/claude-sonnet-5"
         },
         {
@@ -6157,7 +6157,7 @@
       "n_jobs": 7,
       "n_enabled": 3,
       "err": 0,
-      "last_ms": 1795786457707,
+      "last_ms": 1795788257721,
       "status": "operational",
       "accomplishments": [
         {
@@ -6318,10 +6318,10 @@
           "expr": "",
           "tz": "",
           "channel": "",
-          "last_ms": 1795786457707,
+          "last_ms": 1795788257721,
           "status": "ok",
           "errors": 0,
-          "dur_ms": 28979,
+          "dur_ms": 28344,
           "model": "lmstudio/gemma-4-31b-it"
         },
         {
@@ -6473,7 +6473,7 @@
       "n_jobs": 8,
       "n_enabled": 4,
       "err": 0,
-      "last_ms": 1795786457707,
+      "last_ms": 1795788257721,
       "status": "operational",
       "accomplishments": [
         {
@@ -6658,10 +6658,10 @@
           "expr": "",
           "tz": "",
           "channel": "",
-          "last_ms": 1795786457707,
+          "last_ms": 1795788257721,
           "status": "ok",
           "errors": 0,
-          "dur_ms": 28855,
+          "dur_ms": 28312,
           "model": "lmstudio/gemma-4-31b-it"
         },
         {
@@ -6794,5 +6794,5 @@
     "write-airbnb-reviews-for-listings",
     "you-are-an-expert-ai-agent"
   ],
-  "cowork_date": "2026-11-27T08:39:38-05:00"
+  "cowork_date": "2026-11-27T09:11:57-05:00"
 }

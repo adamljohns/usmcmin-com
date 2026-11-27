@@ -1,19 +1,19 @@
 {
-  "generated": "2026-11-27T12:03:30.325030+00:00",
+  "generated": "2026-11-27T12:35:39.373440+00:00",
   "totals": {
     "agents": 17,
     "operational": 15,
     "degraded": 1,
     "jobs": 192,
     "enabled": 100,
-    "accomplishments": 430,
+    "accomplishments": 431,
     "cowork": 41
   },
   "health": {
     "cron": {
       "enabled": 100,
       "ran26h": 57,
-      "delivered": 27,
+      "delivered": 28,
       "fails": []
     },
     "cron_source": "openclaw.sqlite + hermes/cron/jobs.json",
@@ -40,8 +40,8 @@
     {
       "label": "Morning Intel",
       "purpose": "Calendar, mail, house, body, wire",
-      "last": "2026-11-26-morning-brief",
-      "status": "stale"
+      "last": "2026-11-27-morning-brief",
+      "status": "current"
     },
     {
       "label": "Daily Command Brief",
@@ -767,7 +767,7 @@
       "n_jobs": 18,
       "n_enabled": 11,
       "err": 1,
-      "last_ms": 1795746899894,
+      "last_ms": 1795782803819,
       "status": "degraded",
       "accomplishments": [
         {
@@ -907,6 +907,30 @@
       },
       "jobs": [
         {
+          "name": "Fleet Integrity Watch",
+          "enabled": true,
+          "expr": "30 7 * * *",
+          "tz": "",
+          "channel": "origin",
+          "last_ms": 1795782803819,
+          "status": "ok",
+          "errors": 0,
+          "dur_ms": null,
+          "model": "lmstudio/qwen/qwen3.6-35b-a3b"
+        },
+        {
+          "name": "Infrastructure Readiness Check",
+          "enabled": true,
+          "expr": "10 7 * * *",
+          "tz": "",
+          "channel": "origin",
+          "last_ms": 1795781477660,
+          "status": "ok",
+          "errors": 0,
+          "dur_ms": null,
+          "model": "lmstudio/qwen/qwen3.6-35b-a3b"
+        },
+        {
           "name": "Vault Loop",
           "enabled": true,
           "expr": "30 21 * * *",
@@ -955,36 +979,12 @@
           "model": "anthropic/claude-sonnet-5"
         },
         {
-          "name": "Fleet Integrity Watch",
-          "enabled": true,
-          "expr": "30 7 * * *",
-          "tz": "",
-          "channel": "origin",
-          "last_ms": 1795696589902,
-          "status": "ok",
-          "errors": 0,
-          "dur_ms": null,
-          "model": "lmstudio/qwen/qwen3.6-35b-a3b"
-        },
-        {
           "name": "Credential and OAuth Watch",
           "enabled": true,
           "expr": "20 7 * * 1,4",
           "tz": "",
           "channel": "origin",
           "last_ms": 1795695643500,
-          "status": "ok",
-          "errors": 0,
-          "dur_ms": null,
-          "model": "lmstudio/qwen/qwen3.6-35b-a3b"
-        },
-        {
-          "name": "Infrastructure Readiness Check",
-          "enabled": true,
-          "expr": "10 7 * * *",
-          "tz": "",
-          "channel": "origin",
-          "last_ms": 1795695067372,
           "status": "ok",
           "errors": 0,
           "dur_ms": null,
@@ -1911,7 +1911,7 @@
       "n_jobs": 11,
       "n_enabled": 6,
       "err": 0,
-      "last_ms": 1795780095237,
+      "last_ms": 1795781492010,
       "status": "operational",
       "accomplishments": [
         {
@@ -2381,6 +2381,18 @@
       },
       "jobs": [
         {
+          "name": "heartbeat-chaps",
+          "enabled": true,
+          "expr": "",
+          "tz": "",
+          "channel": "",
+          "last_ms": 1795781492010,
+          "status": "ok",
+          "errors": 0,
+          "dur_ms": 145918,
+          "model": "lmstudio/gemma-4-31b-it"
+        },
+        {
           "name": "invitation-check",
           "enabled": true,
           "expr": "",
@@ -2390,18 +2402,6 @@
           "status": "ok",
           "errors": 0,
           "dur_ms": 105307,
-          "model": "lmstudio/gemma-4-31b-it"
-        },
-        {
-          "name": "heartbeat-chaps",
-          "enabled": true,
-          "expr": "",
-          "tz": "",
-          "channel": "",
-          "last_ms": 1795779691998,
-          "status": "ok",
-          "errors": 0,
-          "dur_ms": 71780,
           "model": "lmstudio/gemma-4-31b-it"
         },
         {
@@ -2593,7 +2593,7 @@
       "n_jobs": 32,
       "n_enabled": 15,
       "err": 0,
-      "last_ms": 1795777967064,
+      "last_ms": 1795782600013,
       "status": "operational",
       "accomplishments": [
         {
@@ -2750,15 +2750,39 @@
       },
       "jobs": [
         {
+          "name": "C5iSR Daily Post \u2014 Carnegie (Mon-Sat 7:30AM, all six themes)",
+          "enabled": true,
+          "expr": "30 7 * * 1-6",
+          "tz": "America/New_York",
+          "channel": "telegram",
+          "last_ms": 1795782600013,
+          "status": "ok",
+          "errors": 0,
+          "dur_ms": 71339,
+          "model": "anthropic/claude-sonnet-5"
+        },
+        {
+          "name": "C5iSR Price Pre-Fetch (7:23AM Mon-Sat)",
+          "enabled": true,
+          "expr": "23 7 * * 1-6",
+          "tz": "",
+          "channel": "",
+          "last_ms": 1795782180400,
+          "status": "ok",
+          "errors": 0,
+          "dur_ms": 1091,
+          "model": null
+        },
+        {
           "name": "heartbeat-carnegie",
           "enabled": true,
           "expr": "",
           "tz": "",
           "channel": "",
-          "last_ms": 1795777967064,
+          "last_ms": 1795781567088,
           "status": "ok",
           "errors": 0,
-          "dur_ms": 83192,
+          "dur_ms": 92080,
           "model": "lmstudio/gemma-4-31b-it"
         },
         {
@@ -2844,30 +2868,6 @@
           "errors": 0,
           "dur_ms": 17286,
           "model": "anthropic/claude-opus-5-5"
-        },
-        {
-          "name": "C5iSR Daily Post \u2014 Carnegie (Mon-Sat 7:30AM, all six themes)",
-          "enabled": true,
-          "expr": "30 7 * * 1-6",
-          "tz": "America/New_York",
-          "channel": "telegram",
-          "last_ms": 1795696200502,
-          "status": "ok",
-          "errors": 0,
-          "dur_ms": 20994,
-          "model": "anthropic/claude-sonnet-5"
-        },
-        {
-          "name": "C5iSR Price Pre-Fetch (7:23AM Mon-Sat)",
-          "enabled": true,
-          "expr": "23 7 * * 1-6",
-          "tz": "",
-          "channel": "",
-          "last_ms": 1795695780350,
-          "status": "ok",
-          "errors": 0,
-          "dur_ms": 1054,
-          "model": null
         },
         {
           "name": "Skill: personal-finance-v2 (Mon ledger)",
@@ -3218,7 +3218,7 @@
       "n_jobs": 17,
       "n_enabled": 10,
       "err": 0,
-      "last_ms": 1795776920902,
+      "last_ms": 1795780800395,
       "status": "operational",
       "accomplishments": [
         {
@@ -3398,6 +3398,18 @@
       },
       "jobs": [
         {
+          "name": "Cottage 30-day rule ON weekdays 7 AM",
+          "enabled": true,
+          "expr": "0 7 * * 1-5",
+          "tz": "America/New_York",
+          "channel": "telegram",
+          "last_ms": 1795780800395,
+          "status": "ok",
+          "errors": 0,
+          "dur_ms": 478834,
+          "model": "anthropic/claude-opus-5"
+        },
+        {
           "name": "heartbeat-sally",
           "enabled": true,
           "expr": "",
@@ -3467,18 +3479,6 @@
           "status": "ok",
           "errors": 0,
           "dur_ms": 24358,
-          "model": "anthropic/claude-opus-5"
-        },
-        {
-          "name": "Cottage 30-day rule ON weekdays 7 AM",
-          "enabled": true,
-          "expr": "0 7 * * 1-5",
-          "tz": "America/New_York",
-          "channel": "telegram",
-          "last_ms": 1795694400050,
-          "status": "ok",
-          "errors": 0,
-          "dur_ms": 459358,
           "model": "anthropic/claude-opus-5"
         },
         {
@@ -3787,7 +3787,7 @@
       "n_jobs": 10,
       "n_enabled": 6,
       "err": 0,
-      "last_ms": 1795779458738,
+      "last_ms": 1795781258756,
       "status": "operational",
       "accomplishments": [
         {
@@ -4070,10 +4070,10 @@
           "expr": "",
           "tz": "",
           "channel": "",
-          "last_ms": 1795779458738,
+          "last_ms": 1795781258756,
           "status": "ok",
           "errors": 0,
-          "dur_ms": 44604,
+          "dur_ms": 42654,
           "model": "lmstudio/gemma-4-31b-it"
         },
         {
@@ -4262,7 +4262,7 @@
       "n_jobs": 11,
       "n_enabled": 5,
       "err": 0,
-      "last_ms": 1795760226479,
+      "last_ms": 1795781826486,
       "status": "operational",
       "accomplishments": [
         {
@@ -4416,11 +4416,23 @@
           "expr": "",
           "tz": "",
           "channel": "",
-          "last_ms": 1795760226479,
-          "status": "skipped",
+          "last_ms": 1795781826486,
+          "status": "ok",
           "errors": 0,
-          "dur_ms": 60,
+          "dur_ms": 43649,
           "model": "lmstudio/gemma-4-31b-it"
+        },
+        {
+          "name": "Doc Active Intel (morning)",
+          "enabled": true,
+          "expr": "15 7 * * *",
+          "tz": "America/New_York",
+          "channel": "telegram",
+          "last_ms": 1795781700066,
+          "status": "ok",
+          "errors": 0,
+          "dur_ms": 25556,
+          "model": "anthropic/claude-sonnet-5"
         },
         {
           "name": "Doc Active Intel (evening)",
@@ -4456,18 +4468,6 @@
           "status": "ok",
           "errors": 0,
           "dur_ms": 29369,
-          "model": "anthropic/claude-sonnet-5"
-        },
-        {
-          "name": "Doc Active Intel (morning)",
-          "enabled": true,
-          "expr": "15 7 * * *",
-          "tz": "America/New_York",
-          "channel": "telegram",
-          "last_ms": 1795695300058,
-          "status": "ok",
-          "errors": 0,
-          "dur_ms": 23053,
           "model": "anthropic/claude-sonnet-5"
         },
         {
@@ -4624,7 +4624,7 @@
       "n_jobs": 12,
       "n_enabled": 7,
       "err": 0,
-      "last_ms": 1795779399102,
+      "last_ms": 1795781199133,
       "status": "operational",
       "accomplishments": [
         {
@@ -4797,10 +4797,10 @@
           "expr": "",
           "tz": "",
           "channel": "",
-          "last_ms": 1795779399102,
+          "last_ms": 1795781199133,
           "status": "ok",
           "errors": 0,
-          "dur_ms": 40901,
+          "dur_ms": 41131,
           "model": "lmstudio/gemma-4-31b-it"
         },
         {
@@ -5010,7 +5010,7 @@
       "n_jobs": 10,
       "n_enabled": 5,
       "err": 0,
-      "last_ms": 1795779556927,
+      "last_ms": 1795781356948,
       "status": "operational",
       "accomplishments": [
         {
@@ -5225,10 +5225,10 @@
           "expr": "",
           "tz": "",
           "channel": "",
-          "last_ms": 1795779556927,
+          "last_ms": 1795781356948,
           "status": "ok",
           "errors": 0,
-          "dur_ms": 43410,
+          "dur_ms": 42977,
           "model": "lmstudio/gemma-4-31b-it"
         },
         {
@@ -5421,7 +5421,7 @@
       "n_jobs": 10,
       "n_enabled": 6,
       "err": 0,
-      "last_ms": 1795780816417,
+      "last_ms": 1795782616760,
       "status": "operational",
       "accomplishments": [
         {
@@ -5600,10 +5600,10 @@
           "expr": "",
           "tz": "",
           "channel": "",
-          "last_ms": 1795780816417,
+          "last_ms": 1795782616760,
           "status": "ok",
           "errors": 0,
-          "dur_ms": 44518,
+          "dur_ms": 50230,
           "model": "lmstudio/gemma-4-31b-it"
         },
         {
@@ -5795,9 +5795,19 @@
       "n_jobs": 11,
       "n_enabled": 7,
       "err": 0,
-      "last_ms": 1795780500289,
+      "last_ms": 1795781687171,
       "status": "operational",
       "accomplishments": [
+        {
+          "date": "2026-11-27",
+          "title": "TACC Morning Brief \u2014 Fri Nov 27",
+          "detail": "PDF shipped via psa-send-pdf.sh \u00b7 file=2026-11-27-morning-brief"
+        },
+        {
+          "date": "2026-11-27",
+          "title": "Email back-brief (2026-11-27)",
+          "detail": "Personal-lane digest only (Gmail/iCloud/Yahoo) \u2014 B&A/fit20/USMC excluded per Principal 2026-07-17."
+        },
         {
           "date": "2026-11-26",
           "title": "TACC Morning Brief \u2014 Thu Nov 26",
@@ -5867,11 +5877,6 @@
           "date": "2026-11-21",
           "title": "Email back-brief (2026-11-21)",
           "detail": "Personal-lane digest only (Gmail/iCloud/Yahoo) \u2014 B&A/fit20/USMC excluded per Principal 2026-07-17."
-        },
-        {
-          "date": "2026-11-20",
-          "title": "TACC Morning Brief \u2014 Fri Nov 20",
-          "detail": "PDF shipped via psa-send-pdf.sh \u00b7 file=2026-11-20-morning-brief"
         }
       ],
       "name": "Pops Henderson",
@@ -5941,6 +5946,18 @@
       },
       "jobs": [
         {
+          "name": "heartbeat-pops",
+          "enabled": true,
+          "expr": "",
+          "tz": "",
+          "channel": "",
+          "last_ms": 1795781687171,
+          "status": "ok",
+          "errors": 0,
+          "dur_ms": 44878,
+          "model": "lmstudio/gemma-4-31b-it"
+        },
+        {
           "name": "Pops Daily Captain's Creed (6:55 AM) \u2014 Discord #study + TG link",
           "enabled": true,
           "expr": "55 6 * * *",
@@ -5951,18 +5968,6 @@
           "errors": 0,
           "dur_ms": 32741,
           "model": "anthropic/claude-sonnet-5"
-        },
-        {
-          "name": "heartbeat-pops",
-          "enabled": true,
-          "expr": "",
-          "tz": "",
-          "channel": "",
-          "last_ms": 1795779887151,
-          "status": "ok",
-          "errors": 0,
-          "dur_ms": 12864,
-          "model": "lmstudio/gemma-4-31b-it"
         },
         {
           "name": "Daily Father Outreach Reminder (Pops)",
@@ -6152,7 +6157,7 @@
       "n_jobs": 7,
       "n_enabled": 3,
       "err": 0,
-      "last_ms": 1795779256944,
+      "last_ms": 1795782857690,
       "status": "operational",
       "accomplishments": [
         {
@@ -6313,10 +6318,10 @@
           "expr": "",
           "tz": "",
           "channel": "",
-          "last_ms": 1795779256944,
+          "last_ms": 1795782857690,
           "status": "ok",
           "errors": 0,
-          "dur_ms": 81341,
+          "dur_ms": 81193,
           "model": "lmstudio/gemma-4-31b-it"
         },
         {
@@ -6468,7 +6473,7 @@
       "n_jobs": 8,
       "n_enabled": 4,
       "err": 0,
-      "last_ms": 1795779256944,
+      "last_ms": 1795782857690,
       "status": "operational",
       "accomplishments": [
         {
@@ -6653,10 +6658,10 @@
           "expr": "",
           "tz": "",
           "channel": "",
-          "last_ms": 1795779256944,
+          "last_ms": 1795782857690,
           "status": "ok",
           "errors": 0,
-          "dur_ms": 73799,
+          "dur_ms": 74419,
           "model": "lmstudio/gemma-4-31b-it"
         },
         {
@@ -6789,5 +6794,5 @@
     "write-airbnb-reviews-for-listings",
     "you-are-an-expert-ai-agent"
   ],
-  "cowork_date": "2026-11-27T07:02:59-05:00"
+  "cowork_date": "2026-11-27T07:35:04-05:00"
 }

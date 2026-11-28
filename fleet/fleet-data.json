@@ -1,17 +1,17 @@
 {
-  "generated": "2026-11-28T13:30:50.113560+00:00",
+  "generated": "2026-11-28T14:03:34.150679+00:00",
   "totals": {
     "agents": 17,
     "operational": 15,
     "degraded": 1,
-    "jobs": 192,
-    "enabled": 98,
+    "jobs": 183,
+    "enabled": 100,
     "accomplishments": 431,
-    "cowork": 7
+    "cowork": 41
   },
   "health": {
     "cron": {
-      "enabled": 98,
+      "enabled": 100,
       "ran26h": 59,
       "delivered": 29,
       "fails": [
@@ -20,7 +20,7 @@
     },
     "cron_source": "openclaw.sqlite + hermes/cron/jobs.json",
     "launchd": {
-      "healthy": 104,
+      "healthy": 106,
       "fails": [
         "launchd job \u00d7 2"
       ]
@@ -129,8 +129,8 @@
         "paywall-access",
         "document-standard"
       ],
-      "n_jobs": 25,
-      "n_enabled": 11,
+      "n_jobs": 23,
+      "n_enabled": 13,
       "err": 0,
       "last_ms": 1795870020020,
       "status": "operational",
@@ -383,7 +383,22 @@
       "tg": "@MiniMOOP_TGBot",
       "accent": "#C9A227",
       "blurb": "The adjutant. Routes work across the fleet, runs the morning standup and evening pulse, keeps memory and model-routing healthy, and answers \"who owns this?\"",
-      "projects": [],
+      "projects": [
+        "automate-home-network-and-device-controls",
+        "but-i-don-t-know-if",
+        "but-i-don-t-know-if-2",
+        "but-i-don-t-know-if-3",
+        "files-mentioned-by-the-user-png",
+        "formats-the-active-sheet-as-a",
+        "i-don-t-even-know-where",
+        "leadership-brief-pdf-slide-deck",
+        "pause-recurring-tasks",
+        "plugin-creator-users-moop-bot-pro",
+        "recurring-tasks-setup",
+        "scheduled-tasks-setup",
+        "weekly-planning-and-workflow-review",
+        "you-are-an-expert-ai-agent"
+      ],
       "narration": {
         "voice": "en_GB-alan",
         "engine": "piper",
@@ -569,6 +584,30 @@
           "model": null
         },
         {
+          "name": "Skill: agent-self-introspect",
+          "enabled": true,
+          "expr": "30 10 * * 1",
+          "tz": "America/New_York",
+          "channel": "discord",
+          "last_ms": 1787582370263,
+          "status": "error",
+          "errors": 0,
+          "dur_ms": 60003,
+          "model": "anthropic/claude-sonnet-5"
+        },
+        {
+          "name": "MOOP Dictionary nightly tick (8 words)",
+          "enabled": true,
+          "expr": "20 2 * * *",
+          "tz": "America/New_York",
+          "channel": "",
+          "last_ms": null,
+          "status": "\u2014",
+          "errors": 0,
+          "dur_ms": null,
+          "model": "anthropic/claude-sonnet-5"
+        },
+        {
           "name": "Skill: week-ahead-calendar (gog)",
           "enabled": false,
           "expr": "0 21 * * 0",
@@ -579,18 +618,6 @@
           "errors": 0,
           "dur_ms": 22302,
           "model": "anthropic/claude-opus-5-5"
-        },
-        {
-          "name": "Dev Loop: Max weekly EBI implement-or-escalate rollup",
-          "enabled": false,
-          "expr": "15 20 * * 0",
-          "tz": "America/New_York",
-          "channel": "telegram",
-          "last_ms": 1792974095650,
-          "status": "error",
-          "errors": 4,
-          "dur_ms": 3142,
-          "model": "anthropic/claude-sonnet-5"
         },
         {
           "name": "Five-hour dictionary mill",
@@ -615,18 +642,6 @@
           "errors": 1,
           "dur_ms": 408498,
           "model": null
-        },
-        {
-          "name": "Dev Loop: main daily reflection (implement-or-escalate)",
-          "enabled": false,
-          "expr": "05 22 * * *",
-          "tz": "America/New_York",
-          "channel": "discord",
-          "last_ms": 1789697647407,
-          "status": "error",
-          "errors": 4,
-          "dur_ms": 2605,
-          "model": "lmstudio/qwen/qwen3.6-35b-a3b"
         },
         {
           "name": "DL-0905 Grok burn Wave B",
@@ -674,30 +689,6 @@
           "status": "ok",
           "errors": 0,
           "dur_ms": 6480,
-          "model": null
-        },
-        {
-          "name": "DL-0903 evening enrich controller",
-          "enabled": false,
-          "expr": "",
-          "tz": "",
-          "channel": "",
-          "last_ms": 1788521006580,
-          "status": "error",
-          "errors": 10,
-          "dur_ms": 286,
-          "model": null
-        },
-        {
-          "name": "Skill: agent-self-introspect",
-          "enabled": false,
-          "expr": "30 10 * * 1",
-          "tz": "America/New_York",
-          "channel": "discord",
-          "last_ms": 1787582370263,
-          "status": "error",
-          "errors": 4,
-          "dur_ms": 60003,
           "model": null
         },
         {
@@ -840,7 +831,9 @@
       "tg": "@MOOP_bot_Pro_M5bot",
       "accent": "#C9A227",
       "blurb": "Adam's private, no-persona staff officer. Chats on Grok 4.7; scheduled jobs run on the local Qwen model; fallbacks are ChatGPT, then local. Owns cross-cutting systems, Command OS, research synthesis, browser automation, and technical operations.",
-      "projects": [],
+      "projects": [
+        "hermes-brief-upgrade-v2-resume"
+      ],
       "narration": {
         "voice": "am_adam",
         "engine": "kokoro",
@@ -896,7 +889,7 @@
           "enabled": true,
           "expr": "30 7 * * *",
           "tz": "",
-          "channel": "origin",
+          "channel": "local",
           "last_ms": 1795869248626,
           "status": "ok",
           "errors": 0,
@@ -908,7 +901,7 @@
           "enabled": true,
           "expr": "10 7 * * *",
           "tz": "",
-          "channel": "origin",
+          "channel": "local",
           "last_ms": 1795867916453,
           "status": "ok",
           "errors": 0,
@@ -1120,7 +1113,7 @@
       "n_jobs": 0,
       "n_enabled": 0,
       "err": 0,
-      "last_ms": 1795872373723,
+      "last_ms": 1795872901347,
       "status": "operational",
       "accomplishments": [
         {
@@ -1898,7 +1891,7 @@
       "n_jobs": 11,
       "n_enabled": 6,
       "err": 0,
-      "last_ms": 1795871854579,
+      "last_ms": 1795874146733,
       "status": "operational",
       "accomplishments": [
         {
@@ -2368,27 +2361,27 @@
       },
       "jobs": [
         {
-          "name": "heartbeat-chaps",
-          "enabled": true,
-          "expr": "",
-          "tz": "",
-          "channel": "",
-          "last_ms": 1795871854579,
-          "status": "ok",
-          "errors": 0,
-          "dur_ms": 82704,
-          "model": "lmstudio/gemma-4-31b-it"
-        },
-        {
           "name": "invitation-check",
           "enabled": true,
           "expr": "",
           "tz": "",
           "channel": "",
-          "last_ms": 1795866946720,
+          "last_ms": 1795874146733,
           "status": "ok",
           "errors": 0,
-          "dur_ms": 105200,
+          "dur_ms": 164293,
+          "model": "lmstudio/gemma-4-31b-it"
+        },
+        {
+          "name": "heartbeat-chaps",
+          "enabled": true,
+          "expr": "",
+          "tz": "",
+          "channel": "",
+          "last_ms": 1795873654656,
+          "status": "ok",
+          "errors": 0,
+          "dur_ms": 141725,
           "model": "lmstudio/gemma-4-31b-it"
         },
         {
@@ -2578,10 +2571,10 @@
         "paywall-access",
         "document-standard"
       ],
-      "n_jobs": 32,
+      "n_jobs": 30,
       "n_enabled": 15,
       "err": 0,
-      "last_ms": 1795872029229,
+      "last_ms": 1795874400020,
       "status": "operational",
       "accomplishments": [
         {
@@ -2667,7 +2660,9 @@
       "tg": "@AndrewCarnegieIIICPA_bot",
       "accent": "#C9A227",
       "blurb": "CFA/JD capital steward. Publishes the C5iSR daily market post (Mon\u2013Sat), tracks crypto and metals, and frames capital allocation as stewardship.",
-      "projects": [],
+      "projects": [
+        "initialize-carnegie-capital-steward-role"
+      ],
       "upgrade": {
         "lane": "C5iSR/capital",
         "browser_profile": "c5isr",
@@ -2735,6 +2730,18 @@
         ]
       },
       "jobs": [
+        {
+          "name": "Daily reconciliation \u2014 previous day (AC3-1025-RECON)",
+          "enabled": true,
+          "expr": "0 9 * * 1-6",
+          "tz": "America/New_York",
+          "channel": "last",
+          "last_ms": 1795874400020,
+          "status": "ok",
+          "errors": 0,
+          "dur_ms": 83512,
+          "model": "anthropic/claude-sonnet-5"
+        },
         {
           "name": "heartbeat-carnegie",
           "enabled": true,
@@ -2844,18 +2851,6 @@
           "model": "anthropic/claude-sonnet-5"
         },
         {
-          "name": "Daily reconciliation \u2014 previous day (AC3-1025-RECON)",
-          "enabled": true,
-          "expr": "0 9 * * 1-6",
-          "tz": "America/New_York",
-          "channel": "last",
-          "last_ms": 1795788000418,
-          "status": "ok",
-          "errors": 0,
-          "dur_ms": 92364,
-          "model": "anthropic/claude-sonnet-5"
-        },
-        {
           "name": "Skill: finance-news",
           "enabled": true,
           "expr": "50 8 * * 1-5",
@@ -2914,18 +2909,6 @@
           "errors": 0,
           "dur_ms": null,
           "model": null
-        },
-        {
-          "name": "BTC 2D ADX-DI WATCH",
-          "enabled": false,
-          "expr": "20 19 * * *",
-          "tz": "America/New_York",
-          "channel": "last",
-          "last_ms": 1795703704605,
-          "status": "error",
-          "errors": 4,
-          "dur_ms": 63,
-          "model": "anthropic/claude-sonnet-5"
         },
         {
           "name": "hourly-cache-watch",
@@ -2997,18 +2980,6 @@
           "status": "ok",
           "errors": 0,
           "dur_ms": 34693,
-          "model": null
-        },
-        {
-          "name": "Melaleuca Monday Briefing",
-          "enabled": false,
-          "expr": "0 11 * * 1",
-          "tz": "America/New_York",
-          "channel": "telegram",
-          "last_ms": 1787584170252,
-          "status": "error",
-          "errors": 4,
-          "dur_ms": 60003,
           "model": null
         },
         {
@@ -3202,10 +3173,10 @@
         "paywall-access",
         "document-standard"
       ],
-      "n_jobs": 17,
+      "n_jobs": 15,
       "n_enabled": 8,
       "err": 0,
-      "last_ms": 1795863320979,
+      "last_ms": 1795873800029,
       "status": "operational",
       "accomplishments": [
         {
@@ -3313,7 +3284,13 @@
       "blurb": "MBA/CPA hospitality operator for Bow & Arrow Studio. Live lane: Airbnb host ops (guest comms drafts, reviews, pricing/comp checks, occupancy & payout reads), B&A Gmail triage, cleaner-pay alerts, ADT status pulse, and B&A bookkeeping coordination with Carnegie. Browser profile bowandarrow; nightly review submit; fleet Airbnb ops board owner.",
       "projects": [
         "amanda-davis-ford-matter",
-        "sally-airbnb-adt-ops"
+        "automate-smart-home-controls-cleaner-payments",
+        "build-bow-arrow-studio-booking-platform",
+        "build-monthly-debrief-rollup-automation",
+        "fix-sally-mae-s-telegram-voice",
+        "sally-airbnb-adt-ops",
+        "stabilize-sally-mae-airbnb-agent",
+        "write-airbnb-reviews-for-listings"
       ],
       "upgrade": {
         "lane": "Airbnb/studio",
@@ -3379,6 +3356,30 @@
       },
       "jobs": [
         {
+          "name": "Sally: host-inbox sweep AM",
+          "enabled": true,
+          "expr": "50 8 * * *",
+          "tz": "America/New_York",
+          "channel": "telegram",
+          "last_ms": 1795873800029,
+          "status": "ok",
+          "errors": 0,
+          "dur_ms": 166471,
+          "model": "anthropic/claude-opus-5"
+        },
+        {
+          "name": "Skill: airbnb-reader",
+          "enabled": true,
+          "expr": "40 8 * * *",
+          "tz": "America/New_York",
+          "channel": "telegram",
+          "last_ms": 1795873200009,
+          "status": "ok",
+          "errors": 0,
+          "dur_ms": 20258,
+          "model": "anthropic/claude-opus-5"
+        },
+        {
           "name": "heartbeat-sally",
           "enabled": true,
           "expr": "",
@@ -3412,30 +3413,6 @@
           "status": "ok",
           "errors": 0,
           "dur_ms": 515033,
-          "model": "anthropic/claude-opus-5"
-        },
-        {
-          "name": "Sally: host-inbox sweep AM",
-          "enabled": true,
-          "expr": "50 8 * * *",
-          "tz": "America/New_York",
-          "channel": "telegram",
-          "last_ms": 1795787400040,
-          "status": "ok",
-          "errors": 0,
-          "dur_ms": 213328,
-          "model": "anthropic/claude-opus-5"
-        },
-        {
-          "name": "Skill: airbnb-reader",
-          "enabled": true,
-          "expr": "40 8 * * *",
-          "tz": "America/New_York",
-          "channel": "telegram",
-          "last_ms": 1795786800014,
-          "status": "ok",
-          "errors": 0,
-          "dur_ms": 15988,
           "model": "anthropic/claude-opus-5"
         },
         {
@@ -3499,18 +3476,6 @@
           "model": "anthropic/claude-opus-5"
         },
         {
-          "name": "review-batch-submit",
-          "enabled": false,
-          "expr": "",
-          "tz": "",
-          "channel": "",
-          "last_ms": 1795389723081,
-          "status": "error",
-          "errors": 6,
-          "dur_ms": 600178,
-          "model": "lmstudio/gemma-4-31b-it"
-        },
-        {
           "name": "three-directory-business-review",
           "enabled": false,
           "expr": "0 21 * * 2",
@@ -3532,18 +3497,6 @@
           "status": "ok",
           "errors": 0,
           "dur_ms": 33496,
-          "model": null
-        },
-        {
-          "name": "Skill: airbnb-host",
-          "enabled": false,
-          "expr": "0 14 * * *",
-          "tz": "America/New_York",
-          "channel": "discord",
-          "last_ms": 1787248800045,
-          "status": "error",
-          "errors": 5,
-          "dur_ms": 377885,
           "model": null
         },
         {
@@ -3770,7 +3723,7 @@
       "n_jobs": 10,
       "n_enabled": 6,
       "err": 0,
-      "last_ms": 1795872404240,
+      "last_ms": 1795874204195,
       "status": "operational",
       "accomplishments": [
         {
@@ -3962,7 +3915,14 @@
       "accent": "#2E9E5B",
       "blurb": "Tracks Garmin metrics and fit20 training, builds the morning fitness brief, and keeps the calorie/recovery picture honest.",
       "projects": [
-        "coach-arnie-fit20-lead-sweep"
+        "build-fit20-studio-coordinator-task-system",
+        "coach-arnie-aquia-tracker",
+        "coach-arnie-fit20-lead-sweep",
+        "coach-arnie-morning-brief",
+        "coach-arnie-morning-brief-2",
+        "coach-arnie-morning-brief-3",
+        "coach-arnie-morning-brief-4",
+        "log-training-session-notes-in-zoho"
       ],
       "upgrade": {
         "lane": "Garmin/fit20",
@@ -4046,10 +4006,10 @@
           "expr": "",
           "tz": "",
           "channel": "",
-          "last_ms": 1795872404240,
+          "last_ms": 1795874204195,
           "status": "ok",
           "errors": 0,
-          "dur_ms": 85974,
+          "dur_ms": 127762,
           "model": "lmstudio/gemma-4-31b-it"
         },
         {
@@ -4602,7 +4562,7 @@
       "n_jobs": 12,
       "n_enabled": 7,
       "err": 0,
-      "last_ms": 1795871731641,
+      "last_ms": 1795873531714,
       "status": "operational",
       "accomplishments": [
         {
@@ -4708,7 +4668,9 @@
       "tg": "@RoyTheSherriff_CivlMag_Bot",
       "accent": "#3F7CAC",
       "blurb": "Monitors Fredericksburg civic life \u2014 council, governance, the RESOLUTE Citizen scorecard \u2014 and feeds the RESOLUTE Local civic pipeline. RESOLUTE Local council video recaps are paused since 2026-10-13: the council video source now sits behind a login.",
-      "projects": [],
+      "projects": [
+        "ingest-31-missing-state-slates"
+      ],
       "narration": {
         "voice": "am_onyx",
         "engine": "kokoro",
@@ -4773,10 +4735,10 @@
           "expr": "",
           "tz": "",
           "channel": "",
-          "last_ms": 1795871731641,
+          "last_ms": 1795873531714,
           "status": "ok",
           "errors": 0,
-          "dur_ms": 90428,
+          "dur_ms": 87510,
           "model": "lmstudio/gemma-4-31b-it"
         },
         {
@@ -4987,7 +4949,7 @@
       "n_jobs": 10,
       "n_enabled": 5,
       "err": 0,
-      "last_ms": 1795871736687,
+      "last_ms": 1795873536753,
       "status": "operational",
       "accomplishments": [
         {
@@ -5139,6 +5101,8 @@
       "accent": "#8E6FB0",
       "blurb": "PhD research lead. Synthesizes research and builds reading lists. The daily newsletter synthesis product was retired 2026-08-19; the 05:30 job now only checks the inbox and publishes nothing unless real items arrive.",
       "projects": [
+        "anthropic-dev-academy-4-week-sprint",
+        "anthropic-developer-academy-sprint",
         "government-career-campaign",
         "openclaw-anthropic-sprint"
       ],
@@ -5200,10 +5164,10 @@
           "expr": "",
           "tz": "",
           "channel": "",
-          "last_ms": 1795871736687,
+          "last_ms": 1795873536753,
           "status": "ok",
           "errors": 0,
-          "dur_ms": 160868,
+          "dur_ms": 139627,
           "model": "lmstudio/gemma-4-31b-it"
         },
         {
@@ -5394,10 +5358,10 @@
         "paywall-access",
         "document-standard"
       ],
-      "n_jobs": 10,
+      "n_jobs": 9,
       "n_enabled": 6,
       "err": 0,
-      "last_ms": 1795871859614,
+      "last_ms": 1795873659673,
       "status": "operational",
       "accomplishments": [
         {
@@ -5576,11 +5540,23 @@
           "expr": "",
           "tz": "",
           "channel": "",
-          "last_ms": 1795871859614,
+          "last_ms": 1795873659673,
           "status": "ok",
           "errors": 0,
-          "dur_ms": 44939,
+          "dur_ms": 103394,
           "model": "lmstudio/gemma-4-31b-it"
+        },
+        {
+          "name": "Daily Tech/AI Brief (08:30)",
+          "enabled": true,
+          "expr": "30 8 * * *",
+          "tz": "America/New_York",
+          "channel": "telegram",
+          "last_ms": 1795872600028,
+          "status": "ok",
+          "errors": 0,
+          "dur_ms": 107512,
+          "model": "anthropic/claude-sonnet-5"
         },
         {
           "name": "RESOLUTE AM Wire draft (Rush)",
@@ -5619,18 +5595,6 @@
           "model": "anthropic/claude-sonnet-5"
         },
         {
-          "name": "Daily Tech/AI Brief (08:30)",
-          "enabled": true,
-          "expr": "30 8 * * *",
-          "tz": "America/New_York",
-          "channel": "telegram",
-          "last_ms": 1795786200456,
-          "status": "ok",
-          "errors": 0,
-          "dur_ms": 143684,
-          "model": "anthropic/claude-sonnet-5"
-        },
-        {
           "name": "three-directory-citizen-intake",
           "enabled": true,
           "expr": "0 20 * * 3,6",
@@ -5641,18 +5605,6 @@
           "errors": 0,
           "dur_ms": 398409,
           "model": "anthropic/claude-sonnet-5"
-        },
-        {
-          "name": "breaking-news-scan",
-          "enabled": false,
-          "expr": "",
-          "tz": "",
-          "channel": "",
-          "last_ms": 1795388894216,
-          "status": "error",
-          "errors": 5,
-          "dur_ms": 495957,
-          "model": "lmstudio/gemma-4-31b-it"
         },
         {
           "name": "Dev Loop: rush daily reflection (implement-or-escalate)",
@@ -5769,10 +5721,10 @@
         "paywall-access",
         "document-standard"
       ],
-      "n_jobs": 11,
+      "n_jobs": 10,
       "n_enabled": 7,
       "err": 0,
-      "last_ms": 1795871844354,
+      "last_ms": 1795873644380,
       "status": "operational",
       "accomplishments": [
         {
@@ -5864,6 +5816,8 @@
       "accent": "#E8743B",
       "blurb": "The home-front agent. Runs the daily wheelhouse check-in, the evening Spirit Front capture, and the personal Gmail inbox autopilot.",
       "projects": [
+        "ai-boot-camp-for-family-leaders",
+        "create-personalized-songs-and-stories-for",
         "family-captain-bootcamp"
       ],
       "narration": {
@@ -5926,10 +5880,10 @@
           "expr": "",
           "tz": "",
           "channel": "",
-          "last_ms": 1795871844354,
+          "last_ms": 1795873644380,
           "status": "ok",
           "errors": 0,
-          "dur_ms": 62946,
+          "dur_ms": 121240,
           "model": "lmstudio/gemma-4-31b-it"
         },
         {
@@ -6003,18 +5957,6 @@
           "errors": 0,
           "dur_ms": 60699,
           "model": "anthropic/claude-sonnet-5"
-        },
-        {
-          "name": "wheelhouse-pattern",
-          "enabled": false,
-          "expr": "",
-          "tz": "",
-          "channel": "",
-          "last_ms": 1795384947797,
-          "status": "error",
-          "errors": 4,
-          "dur_ms": 600163,
-          "model": "lmstudio/gemma-4-31b-it"
         },
         {
           "name": "Dev Loop: pops daily reflection (implement-or-escalate)",
@@ -6130,10 +6072,10 @@
         "paywall-access",
         "document-standard"
       ],
-      "n_jobs": 7,
+      "n_jobs": 6,
       "n_enabled": 3,
       "err": 0,
-      "last_ms": 1795872027271,
+      "last_ms": 1795873827349,
       "status": "operational",
       "accomplishments": [
         {
@@ -6294,10 +6236,10 @@
           "expr": "",
           "tz": "",
           "channel": "",
-          "last_ms": 1795872027271,
+          "last_ms": 1795873827349,
           "status": "ok",
           "errors": 0,
-          "dur_ms": 78973,
+          "dur_ms": 41942,
           "model": "lmstudio/gemma-4-31b-it"
         },
         {
@@ -6323,18 +6265,6 @@
           "errors": 0,
           "dur_ms": 115285,
           "model": "anthropic/claude-sonnet-5"
-        },
-        {
-          "name": "pt-log-late-check",
-          "enabled": false,
-          "expr": "",
-          "tz": "",
-          "channel": "",
-          "last_ms": 1795388894216,
-          "status": "error",
-          "errors": 5,
-          "dur_ms": 600251,
-          "model": "lmstudio/gemma-4-31b-it"
         },
         {
           "name": "Dev Loop: sgt-maj-mac daily reflection (implement-or-escalate)",
@@ -6450,7 +6380,7 @@
       "n_jobs": 8,
       "n_enabled": 4,
       "err": 0,
-      "last_ms": 1795871726461,
+      "last_ms": 1795873526487,
       "status": "operational",
       "accomplishments": [
         {
@@ -6635,10 +6565,10 @@
           "expr": "",
           "tz": "",
           "channel": "",
-          "last_ms": 1795871726461,
+          "last_ms": 1795873526487,
           "status": "ok",
           "errors": 0,
-          "dur_ms": 93008,
+          "dur_ms": 90601,
           "model": "lmstudio/gemma-4-31b-it"
         },
         {
@@ -6729,13 +6659,47 @@
     }
   ],
   "cowork": [
+    "ai-boot-camp-for-family-leaders",
     "amanda-davis-ford-matter",
+    "anthropic-dev-academy-4-week-sprint",
+    "anthropic-developer-academy-sprint",
+    "automate-home-network-and-device-controls",
+    "automate-smart-home-controls-cleaner-payments",
+    "build-bow-arrow-studio-booking-platform",
+    "build-fit20-studio-coordinator-task-system",
+    "build-monthly-debrief-rollup-automation",
+    "but-i-don-t-know-if",
+    "but-i-don-t-know-if-2",
+    "but-i-don-t-know-if-3",
+    "coach-arnie-aquia-tracker",
     "coach-arnie-fit20-lead-sweep",
+    "coach-arnie-morning-brief",
+    "coach-arnie-morning-brief-2",
+    "coach-arnie-morning-brief-3",
+    "coach-arnie-morning-brief-4",
+    "create-personalized-songs-and-stories-for",
     "family-captain-bootcamp",
+    "files-mentioned-by-the-user-png",
+    "fix-sally-mae-s-telegram-voice",
+    "formats-the-active-sheet-as-a",
     "government-career-campaign",
+    "hermes-brief-upgrade-v2-resume",
+    "i-don-t-even-know-where",
+    "ingest-31-missing-state-slates",
+    "initialize-carnegie-capital-steward-role",
+    "leadership-brief-pdf-slide-deck",
+    "log-training-session-notes-in-zoho",
     "openclaw-anthropic-sprint",
+    "pause-recurring-tasks",
+    "plugin-creator-users-moop-bot-pro",
+    "recurring-tasks-setup",
     "sally-airbnb-adt-ops",
-    "ttf-ministry-social-media"
+    "scheduled-tasks-setup",
+    "stabilize-sally-mae-airbnb-agent",
+    "ttf-ministry-social-media",
+    "weekly-planning-and-workflow-review",
+    "write-airbnb-reviews-for-listings",
+    "you-are-an-expert-ai-agent"
   ],
-  "cowork_date": "2026-11-28T08:30:22-05:00"
+  "cowork_date": "2026-11-28T09:03:03-05:00"
 }

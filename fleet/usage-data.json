@@ -1,6 +1,6 @@
 {
-  "generated": "2026-11-28T15:01:12-05:00",
-  "generated_utc": "2026-11-28T20:01:26+00:00",
+  "generated": "2026-11-28T15:33:47-05:00",
+  "generated_utc": "2026-11-28T20:34:02+00:00",
   "title": "Mission Control \u2014 Usage & Progress",
   "honesty": {
     "bluf": "Most consumer frontier plans do not expose remaining quota via clean API. This board shows LIVE measured OpenClaw usage + manual/browser snapshots for remaining allowance.",
@@ -12,14 +12,33 @@
       "name": "Grok / SuperGrok (xAI)",
       "kind": "subscription+api",
       "used_in": [
+        "OpenClaw primary for 3 of 14 desks",
         "Hermes chat (primary)",
         "scorecard refine",
         "commerce enrichment"
       ],
       "remaining_source": "dashboard/manual",
       "check_url": "https://grok.com/",
-      "measured_24h": {},
-      "measured_7d": {},
+      "measured_24h": {
+        "provider": "xai",
+        "runs": 1,
+        "ok": 1,
+        "bad": 0,
+        "tokens": 0,
+        "models": {
+          "grok-4.7": 1
+        }
+      },
+      "measured_7d": {
+        "provider": "xai",
+        "runs": 5,
+        "ok": 1,
+        "bad": 4,
+        "tokens": 0,
+        "models": {
+          "grok-4.7": 5
+        }
+      },
       "status": "manual_snapshot",
       "note": "Weekly percent comes live from the SuperGrok OAuth sign-in OpenClaw holds (openclaw models status). console.x.ai is a different meter.",
       "manual": {
@@ -36,14 +55,14 @@
       "reset_at": "2026-12-01T20:01-05:00",
       "plan": "SuperGrok (OAuth)",
       "snapshot_at": "2026-11-28T15:01:12-05:00",
-      "snapshot_age_hours": 0.0
+      "snapshot_age_hours": 0.5
     },
     {
       "id": "openai-chatgpt",
       "name": "ChatGPT / Codex (OpenAI)",
       "kind": "subscription+oauth",
       "used_in": [
-        "OpenClaw primary for 7 of 14 desks",
+        "OpenClaw primary for 4 of 14 desks",
         "first fallback rung for every OpenClaw agent",
         "Hermes fallback",
         "ChatGPT web"
@@ -52,42 +71,42 @@
       "check_url": "https://chatgpt.com/",
       "measured_24h": {
         "provider": "openai",
-        "runs": 1,
+        "runs": 2,
         "ok": 1,
-        "bad": 0,
+        "bad": 1,
         "tokens": 0,
         "models": {
-          "gpt-5.6-sol": 1
+          "gpt-5.6-sol": 2
         }
       },
       "measured_7d": {
         "provider": "openai",
-        "runs": 14,
-        "ok": 5,
-        "bad": 9,
+        "runs": 47,
+        "ok": 39,
+        "bad": 8,
         "tokens": 0,
         "models": {
-          "gpt-5.6-sol": 14
+          "gpt-5.6-sol": 47
         }
       },
       "status": "manual_snapshot",
       "note": "Week and 5-hour percents come live from the Codex OAuth sign-in OpenClaw holds (openclaw models status). Tier on this card is not a receipt.",
       "manual": {
         "plan": "ChatGPT / Codex (OAuth)",
-        "remaining_pct": 0.0,
-        "remaining_text": "Week 100% used (resets in 22m) \u00b7 5h 0% used (resets in 4h 59m)",
-        "reset_at": "2026-11-28T15:23-05:00",
-        "snapshot_at": "2026-11-28T15:01:12-05:00",
+        "remaining_pct": 100.0,
+        "remaining_text": "Week 0% used (resets in 6d 23h) \u00b7 5h 0% used (resets in 4h 59m)",
+        "reset_at": "2026-12-05T14:33-05:00",
+        "snapshot_at": "2026-11-28T15:33:47-05:00",
         "source": "openclaw models status (codex oauth)",
-        "used_pct": 100.0,
+        "used_pct": 0.0,
         "five_hour_used_pct": 0.0,
-        "five_hour_reset_at": "2026-11-28T20:00-05:00"
+        "five_hour_reset_at": "2026-11-28T20:32-05:00"
       },
-      "remaining_pct": 0.0,
-      "remaining_text": "Week 100% used (resets in 22m) \u00b7 5h 0% used (resets in 4h 59m)",
-      "reset_at": "2026-11-28T15:23-05:00",
+      "remaining_pct": 100.0,
+      "remaining_text": "Week 0% used (resets in 6d 23h) \u00b7 5h 0% used (resets in 4h 59m)",
+      "reset_at": "2026-12-05T14:33-05:00",
       "plan": "ChatGPT / Codex (OAuth)",
-      "snapshot_at": "2026-11-28T15:01:12-05:00",
+      "snapshot_at": "2026-11-28T15:33:47-05:00",
       "snapshot_age_hours": 0.0
     },
     {
@@ -103,28 +122,28 @@
       "check_url": "https://claude.ai/",
       "measured_24h": {
         "provider": "anthropic",
-        "runs": 38,
-        "ok": 37,
-        "bad": 1,
+        "runs": 36,
+        "ok": 36,
+        "bad": 0,
         "tokens": 0,
         "models": {
           "claude-sonnet-5": 26,
-          "claude-opus-5-5": 6,
           "claude-opus-5": 5,
+          "claude-opus-5-5": 4,
           "claude-haiku-4-5": 1
         },
-        "local_output_tokens_7d": 19887149,
+        "local_output_tokens_7d": 20013756,
         "local_rows_7d": 0
       },
       "measured_7d": {
         "provider": "anthropic",
-        "runs": 369,
-        "ok": 350,
-        "bad": 19,
+        "runs": 330,
+        "ok": 314,
+        "bad": 16,
         "tokens": 0,
         "models": {
-          "claude-sonnet-5": 183,
-          "claude-opus-5-5": 103,
+          "claude-sonnet-5": 187,
+          "claude-opus-5-5": 60,
           "claude-opus-5": 48,
           "claude-haiku-4-5": 35
         }
@@ -134,31 +153,31 @@
       "manual": {
         "plan": "Claude Max",
         "remaining_pct": 41.0,
-        "remaining_text": "Week 59% used (resets Wed 14:00 ET) \u00b7 5h 4% used (resets Sat 19:10 ET) \u00b7 pace 43% expected now \u2192 16 pts OVER pace \u2014 ease off",
-        "reset_at": "2026-12-02T19:00:00.408094+00:00",
-        "snapshot_at": "2026-11-28T15:01:06-05:00",
+        "remaining_text": "Week 59% used (resets Wed 14:00 ET) \u00b7 5h 8% used (resets Sat 19:10 ET) \u00b7 pace 43% expected now \u2192 16 pts OVER pace \u2014 ease off",
+        "reset_at": "2026-12-02T19:00:00.331931+00:00",
+        "snapshot_at": "2026-11-28T15:33:32-05:00",
         "source": "anthropic oauth usage api (frontier-usage-poll.py)",
         "used_pct": 59.0,
-        "five_hour_used_pct": 4.0,
-        "five_hour_reset_at": "2026-11-29T00:10:00.408074+00:00",
+        "five_hour_used_pct": 8.0,
+        "five_hour_reset_at": "2026-11-29T00:10:00.331912+00:00",
         "pace": {
           "target_pct": 85.0,
           "target_at": "2026-12-01T15:00-05:00",
-          "expected_now_pct": 42.8,
-          "delta_pct": 16.2,
+          "expected_now_pct": 43.1,
+          "delta_pct": 15.9,
           "text": "pace 43% expected now \u2192 16 pts OVER pace \u2014 ease off"
         }
       },
       "remaining_pct": 41.0,
-      "remaining_text": "Week 59% used (resets Wed 14:00 ET) \u00b7 5h 4% used (resets Sat 19:10 ET) \u00b7 pace 43% expected now \u2192 16 pts OVER pace \u2014 ease off",
-      "reset_at": "2026-12-02T19:00:00.408094+00:00",
+      "remaining_text": "Week 59% used (resets Wed 14:00 ET) \u00b7 5h 8% used (resets Sat 19:10 ET) \u00b7 pace 43% expected now \u2192 16 pts OVER pace \u2014 ease off",
+      "reset_at": "2026-12-02T19:00:00.331931+00:00",
       "plan": "Claude Max",
-      "snapshot_at": "2026-11-28T15:01:06-05:00",
+      "snapshot_at": "2026-11-28T15:33:32-05:00",
       "snapshot_age_hours": 0.0,
       "local_measured_7d": {
         "rows_7d": 0,
-        "output_tokens_7d": 19887149,
-        "input_tokens_7d": 73516
+        "output_tokens_7d": 20013756,
+        "input_tokens_7d": 74542
       }
     },
     {
@@ -185,7 +204,7 @@
       },
       "plan": "Cursor Pro/Pro+/Ultra",
       "snapshot_at": "2026-09-19T03:40:37-04:00",
-      "snapshot_age_hours": 1692.3,
+      "snapshot_age_hours": 1692.9,
       "stale": true
     },
     {
@@ -212,7 +231,7 @@
       },
       "plan": "AI Studio / API",
       "snapshot_at": "2026-09-19T03:42:02-04:00",
-      "snapshot_age_hours": 1692.3,
+      "snapshot_age_hours": 1692.9,
       "stale": true
     },
     {
@@ -238,7 +257,7 @@
       },
       "plan": "NotebookLM",
       "snapshot_at": "2026-09-19T03:42:21-04:00",
-      "snapshot_age_hours": 1692.3,
+      "snapshot_age_hours": 1692.9,
       "stale": true
     },
     {
@@ -254,22 +273,22 @@
       "check_url": "lmstudio://",
       "measured_24h": {
         "provider": "lmstudio",
-        "runs": 270,
-        "ok": 266,
+        "runs": 269,
+        "ok": 265,
         "bad": 4,
         "tokens": 0,
         "models": {
-          "gemma-4-31b-it": 270
+          "gemma-4-31b-it": 269
         }
       },
       "measured_7d": {
         "provider": "lmstudio",
-        "runs": 528,
-        "ok": 513,
+        "runs": 530,
+        "ok": 515,
         "bad": 15,
         "tokens": 0,
         "models": {
-          "gemma-4-31b-it": 528
+          "gemma-4-31b-it": 530
         }
       },
       "status": "healthy",
@@ -280,11 +299,11 @@
     {
       "provider": "lmstudio",
       "model": "gemma-4-31b-it",
-      "runs": 270,
-      "ok": 266,
+      "runs": 269,
+      "ok": 265,
       "bad": 4,
       "tokens": 0,
-      "dur_ms": 34917266
+      "dur_ms": 34451507
     },
     {
       "provider": "anthropic",
@@ -297,21 +316,30 @@
     },
     {
       "provider": "anthropic",
-      "model": "claude-opus-5-5",
-      "runs": 6,
-      "ok": 5,
-      "bad": 1,
-      "tokens": 0,
-      "dur_ms": 506380
-    },
-    {
-      "provider": "anthropic",
       "model": "claude-opus-5",
       "runs": 5,
       "ok": 5,
       "bad": 0,
       "tokens": 0,
       "dur_ms": 1554551
+    },
+    {
+      "provider": "anthropic",
+      "model": "claude-opus-5-5",
+      "runs": 4,
+      "ok": 4,
+      "bad": 0,
+      "tokens": 0,
+      "dur_ms": 194038
+    },
+    {
+      "provider": "openai",
+      "model": "gpt-5.6-sol",
+      "runs": 2,
+      "ok": 1,
+      "bad": 1,
+      "tokens": 0,
+      "dur_ms": 312342
     },
     {
       "provider": "anthropic",
@@ -323,8 +351,8 @@
       "dur_ms": 11618
     },
     {
-      "provider": "openai",
-      "model": "gpt-5.6-sol",
+      "provider": "xai",
+      "model": "grok-4.7",
       "runs": 1,
       "ok": 1,
       "bad": 0,
@@ -336,29 +364,29 @@
     {
       "provider": "lmstudio",
       "model": "gemma-4-31b-it",
-      "runs": 528,
-      "ok": 513,
+      "runs": 530,
+      "ok": 515,
       "bad": 15,
       "tokens": 0,
-      "dur_ms": 63925556
+      "dur_ms": 63714387
     },
     {
       "provider": "anthropic",
       "model": "claude-sonnet-5",
-      "runs": 183,
+      "runs": 187,
       "ok": 182,
-      "bad": 1,
+      "bad": 5,
       "tokens": 0,
-      "dur_ms": 22973856
+      "dur_ms": 25374705
     },
     {
       "provider": "anthropic",
       "model": "claude-opus-5-5",
-      "runs": 103,
-      "ok": 86,
-      "bad": 17,
+      "runs": 60,
+      "ok": 50,
+      "bad": 10,
       "tokens": 0,
-      "dur_ms": 16455916
+      "dur_ms": 8176932
     },
     {
       "provider": "anthropic",
@@ -370,6 +398,15 @@
       "dur_ms": 12526945
     },
     {
+      "provider": "openai",
+      "model": "gpt-5.6-sol",
+      "runs": 47,
+      "ok": 39,
+      "bad": 8,
+      "tokens": 0,
+      "dur_ms": 8747017
+    },
+    {
       "provider": "anthropic",
       "model": "claude-haiku-4-5",
       "runs": 35,
@@ -379,13 +416,13 @@
       "dur_ms": 662316
     },
     {
-      "provider": "openai",
-      "model": "gpt-5.6-sol",
-      "runs": 14,
-      "ok": 5,
-      "bad": 9,
+      "provider": "xai",
+      "model": "grok-4.7",
+      "runs": 5,
+      "ok": 1,
+      "bad": 4,
       "tokens": 0,
-      "dur_ms": 5414418
+      "dur_ms": 2342642
     }
   ],
   "progress": {

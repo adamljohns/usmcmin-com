@@ -1,9 +1,9 @@
 {
-  "generated": "2026-11-28T11:53:43.932946+00:00",
+  "generated": "2026-11-28T12:26:08.014766+00:00",
   "totals": {
     "agents": 17,
-    "operational": 15,
-    "degraded": 1,
+    "operational": 14,
+    "degraded": 2,
     "jobs": 192,
     "enabled": 98,
     "accomplishments": 431,
@@ -12,9 +12,10 @@
   "health": {
     "cron": {
       "enabled": 98,
-      "ran26h": 58,
-      "delivered": 28,
+      "ran26h": 59,
+      "delivered": 29,
       "fails": [
+        "agent heartbeat \u00d7 1",
         "scheduled job \u00d7 1"
       ]
     },
@@ -42,8 +43,8 @@
     {
       "label": "Morning Intel",
       "purpose": "Calendar, mail, house, body, wire",
-      "last": "2026-11-27-morning-brief",
-      "status": "stale"
+      "last": "2026-11-28-morning-brief",
+      "status": "current"
     },
     {
       "label": "Daily Command Brief",
@@ -754,7 +755,7 @@
       "n_jobs": 18,
       "n_enabled": 11,
       "err": 2,
-      "last_ms": 1795833350745,
+      "last_ms": 1795867916453,
       "status": "degraded",
       "accomplishments": [
         {
@@ -892,6 +893,18 @@
       },
       "jobs": [
         {
+          "name": "Infrastructure Readiness Check",
+          "enabled": true,
+          "expr": "10 7 * * *",
+          "tz": "",
+          "channel": "origin",
+          "last_ms": 1795867916453,
+          "status": "ok",
+          "errors": 0,
+          "dur_ms": null,
+          "model": "lmstudio/qwen/qwen3.6-35b-a3b"
+        },
+        {
           "name": "Vault Loop",
           "enabled": true,
           "expr": "30 21 * * *",
@@ -946,18 +959,6 @@
           "tz": "",
           "channel": "origin",
           "last_ms": 1795782803819,
-          "status": "ok",
-          "errors": 0,
-          "dur_ms": null,
-          "model": "lmstudio/qwen/qwen3.6-35b-a3b"
-        },
-        {
-          "name": "Infrastructure Readiness Check",
-          "enabled": true,
-          "expr": "10 7 * * *",
-          "tz": "",
-          "channel": "origin",
-          "last_ms": 1795781477660,
           "status": "ok",
           "errors": 0,
           "dur_ms": null,
@@ -1898,7 +1899,7 @@
       "n_jobs": 11,
       "n_enabled": 6,
       "err": 0,
-      "last_ms": 1795866454407,
+      "last_ms": 1795868254483,
       "status": "operational",
       "accomplishments": [
         {
@@ -2373,10 +2374,10 @@
           "expr": "",
           "tz": "",
           "channel": "",
-          "last_ms": 1795866454407,
+          "last_ms": 1795868254483,
           "status": "ok",
           "errors": 0,
-          "dur_ms": 258916,
+          "dur_ms": 376539,
           "model": "lmstudio/gemma-4-31b-it"
         },
         {
@@ -2385,10 +2386,10 @@
           "expr": "",
           "tz": "",
           "channel": "",
-          "last_ms": 1795859296411,
-          "status": "skipped",
+          "last_ms": 1795866946720,
+          "status": "ok",
           "errors": 0,
-          "dur_ms": 48,
+          "dur_ms": 105200,
           "model": "lmstudio/gemma-4-31b-it"
         },
         {
@@ -2581,7 +2582,7 @@
       "n_jobs": 32,
       "n_enabled": 15,
       "err": 0,
-      "last_ms": 1795864685002,
+      "last_ms": 1795868580067,
       "status": "operational",
       "accomplishments": [
         {
@@ -2672,7 +2673,7 @@
         "lane": "C5iSR/capital",
         "browser_profile": "c5isr",
         "files": {
-          "AGENTS.md": 72471,
+          "AGENTS.md": 72488,
           "MEMORY.md": 15052,
           "HEARTBEAT.md": 6716
         },
@@ -2736,15 +2737,27 @@
       },
       "jobs": [
         {
+          "name": "C5iSR Price Pre-Fetch (7:23AM Mon-Sat)",
+          "enabled": true,
+          "expr": "23 7 * * 1-6",
+          "tz": "",
+          "channel": "",
+          "last_ms": 1795868580067,
+          "status": "ok",
+          "errors": 0,
+          "dur_ms": 1050,
+          "model": null
+        },
+        {
           "name": "heartbeat-carnegie",
           "enabled": true,
           "expr": "",
           "tz": "",
           "channel": "",
-          "last_ms": 1795864685002,
+          "last_ms": 1795868429150,
           "status": "ok",
           "errors": 0,
-          "dur_ms": 277895,
+          "dur_ms": 257052,
           "model": "lmstudio/gemma-4-31b-it"
         },
         {
@@ -2854,18 +2867,6 @@
           "errors": 0,
           "dur_ms": 71339,
           "model": "anthropic/claude-sonnet-5"
-        },
-        {
-          "name": "C5iSR Price Pre-Fetch (7:23AM Mon-Sat)",
-          "enabled": true,
-          "expr": "23 7 * * 1-6",
-          "tz": "",
-          "channel": "",
-          "last_ms": 1795782180400,
-          "status": "ok",
-          "errors": 0,
-          "dur_ms": 1091,
-          "model": null
         },
         {
           "name": "Skill: personal-finance-v2 (Mon ledger)",
@@ -3769,9 +3770,9 @@
       ],
       "n_jobs": 10,
       "n_enabled": 6,
-      "err": 0,
-      "last_ms": 1795866449407,
-      "status": "operational",
+      "err": 1,
+      "last_ms": 1795868249478,
+      "status": "degraded",
       "accomplishments": [
         {
           "date": "2026-11-06",
@@ -4046,10 +4047,10 @@
           "expr": "",
           "tz": "",
           "channel": "",
-          "last_ms": 1795866449407,
-          "status": "ok",
-          "errors": 0,
-          "dur_ms": 300376,
+          "last_ms": 1795868249478,
+          "status": "error",
+          "errors": 1,
+          "dur_ms": 332940,
           "model": "lmstudio/gemma-4-31b-it"
         },
         {
@@ -4239,7 +4240,7 @@
       "n_jobs": 11,
       "n_enabled": 5,
       "err": 0,
-      "last_ms": 1795846626538,
+      "last_ms": 1795868226554,
       "status": "operational",
       "accomplishments": [
         {
@@ -4393,11 +4394,23 @@
           "expr": "",
           "tz": "",
           "channel": "",
-          "last_ms": 1795846626538,
-          "status": "skipped",
+          "last_ms": 1795868226554,
+          "status": "ok",
           "errors": 0,
-          "dur_ms": 57,
+          "dur_ms": 242781,
           "model": "lmstudio/gemma-4-31b-it"
+        },
+        {
+          "name": "Doc Active Intel (morning)",
+          "enabled": true,
+          "expr": "15 7 * * *",
+          "tz": "America/New_York",
+          "channel": "telegram",
+          "last_ms": 1795868100029,
+          "status": "ok",
+          "errors": 0,
+          "dur_ms": 47400,
+          "model": "anthropic/claude-sonnet-5"
         },
         {
           "name": "Doc Active Intel (evening)",
@@ -4433,18 +4446,6 @@
           "status": "ok",
           "errors": 0,
           "dur_ms": 25937,
-          "model": "anthropic/claude-sonnet-5"
-        },
-        {
-          "name": "Doc Active Intel (morning)",
-          "enabled": true,
-          "expr": "15 7 * * *",
-          "tz": "America/New_York",
-          "channel": "telegram",
-          "last_ms": 1795781700066,
-          "status": "ok",
-          "errors": 0,
-          "dur_ms": 25556,
           "model": "anthropic/claude-sonnet-5"
         },
         {
@@ -4602,7 +4603,7 @@
       "n_jobs": 12,
       "n_enabled": 7,
       "err": 0,
-      "last_ms": 1795866331434,
+      "last_ms": 1795868131501,
       "status": "operational",
       "accomplishments": [
         {
@@ -4773,10 +4774,10 @@
           "expr": "",
           "tz": "",
           "channel": "",
-          "last_ms": 1795866331434,
+          "last_ms": 1795868131501,
           "status": "ok",
           "errors": 0,
-          "dur_ms": 334306,
+          "dur_ms": 297635,
           "model": "lmstudio/gemma-4-31b-it"
         },
         {
@@ -4987,7 +4988,7 @@
       "n_jobs": 10,
       "n_enabled": 5,
       "err": 0,
-      "last_ms": 1795866336463,
+      "last_ms": 1795868136534,
       "status": "operational",
       "accomplishments": [
         {
@@ -5200,10 +5201,10 @@
           "expr": "",
           "tz": "",
           "channel": "",
-          "last_ms": 1795866336463,
+          "last_ms": 1795868136534,
           "status": "ok",
           "errors": 0,
-          "dur_ms": 339231,
+          "dur_ms": 368173,
           "model": "lmstudio/gemma-4-31b-it"
         },
         {
@@ -5397,7 +5398,7 @@
       "n_jobs": 10,
       "n_enabled": 6,
       "err": 0,
-      "last_ms": 1795866459401,
+      "last_ms": 1795868259476,
       "status": "operational",
       "accomplishments": [
         {
@@ -5576,10 +5577,10 @@
           "expr": "",
           "tz": "",
           "channel": "",
-          "last_ms": 1795866459401,
+          "last_ms": 1795868259476,
           "status": "ok",
           "errors": 0,
-          "dur_ms": 220990,
+          "dur_ms": 320667,
           "model": "lmstudio/gemma-4-31b-it"
         },
         {
@@ -5772,9 +5773,19 @@
       "n_jobs": 11,
       "n_enabled": 7,
       "err": 0,
-      "last_ms": 1795866444206,
+      "last_ms": 1795868244294,
       "status": "operational",
       "accomplishments": [
+        {
+          "date": "2026-11-28",
+          "title": "TACC Morning Brief \u2014 Sat Nov 28",
+          "detail": "PDF shipped via psa-send-pdf.sh \u00b7 file=2026-11-28-morning-brief"
+        },
+        {
+          "date": "2026-11-28",
+          "title": "Email back-brief (2026-11-28)",
+          "detail": "Personal-lane digest only (Gmail/iCloud/Yahoo) \u2014 B&A/fit20/USMC excluded per Principal 2026-07-17."
+        },
         {
           "date": "2026-11-27",
           "title": "TACC Morning Brief \u2014 Fri Nov 27",
@@ -5843,16 +5854,6 @@
         {
           "date": "2026-11-22",
           "title": "Email back-brief (2026-11-22)",
-          "detail": "Personal-lane digest only (Gmail/iCloud/Yahoo) \u2014 B&A/fit20/USMC excluded per Principal 2026-07-17."
-        },
-        {
-          "date": "2026-11-21",
-          "title": "TACC Morning Brief \u2014 Sat Nov 21",
-          "detail": "PDF shipped via psa-send-pdf.sh \u00b7 file=2026-11-21-morning-brief"
-        },
-        {
-          "date": "2026-11-21",
-          "title": "Email back-brief (2026-11-21)",
           "detail": "Personal-lane digest only (Gmail/iCloud/Yahoo) \u2014 B&A/fit20/USMC excluded per Principal 2026-07-17."
         }
       ],
@@ -5926,11 +5927,23 @@
           "expr": "",
           "tz": "",
           "channel": "",
-          "last_ms": 1795866444206,
+          "last_ms": 1795868244294,
           "status": "ok",
           "errors": 0,
-          "dur_ms": 235800,
+          "dur_ms": 310673,
           "model": "lmstudio/gemma-4-31b-it"
+        },
+        {
+          "name": "Pops Daily Captain's Creed (6:55 AM) \u2014 Discord #study + TG link",
+          "enabled": true,
+          "expr": "55 6 * * *",
+          "tz": "America/New_York",
+          "channel": "telegram",
+          "last_ms": 1795866900019,
+          "status": "ok",
+          "errors": 0,
+          "dur_ms": 33094,
+          "model": "anthropic/claude-sonnet-5"
         },
         {
           "name": "Daily Father Outreach Reminder (Pops)",
@@ -5954,18 +5967,6 @@
           "status": "ok",
           "errors": 0,
           "dur_ms": 25409,
-          "model": "anthropic/claude-sonnet-5"
-        },
-        {
-          "name": "Pops Daily Captain's Creed (6:55 AM) \u2014 Discord #study + TG link",
-          "enabled": true,
-          "expr": "55 6 * * *",
-          "tz": "America/New_York",
-          "channel": "telegram",
-          "last_ms": 1795780500289,
-          "status": "ok",
-          "errors": 0,
-          "dur_ms": 32741,
           "model": "anthropic/claude-sonnet-5"
         },
         {
@@ -6133,7 +6134,7 @@
       "n_jobs": 7,
       "n_enabled": 3,
       "err": 0,
-      "last_ms": 1795866464427,
+      "last_ms": 1795868427216,
       "status": "operational",
       "accomplishments": [
         {
@@ -6294,11 +6295,23 @@
           "expr": "",
           "tz": "",
           "channel": "",
-          "last_ms": 1795866464427,
+          "last_ms": 1795868427216,
           "status": "ok",
           "errors": 0,
-          "dur_ms": 211480,
+          "dur_ms": 153177,
           "model": "lmstudio/gemma-4-31b-it"
+        },
+        {
+          "name": "Mac Weekly VA + Military Briefing (Sat 7AM)",
+          "enabled": true,
+          "expr": "15 7 * * 6",
+          "tz": "",
+          "channel": "telegram",
+          "last_ms": 1795868100029,
+          "status": "ok",
+          "errors": 0,
+          "dur_ms": 18831,
+          "model": "anthropic/claude-sonnet-5"
         },
         {
           "name": "Weekly Standards Check (Sat 9:30 AM) \u2014 Mac",
@@ -6310,18 +6323,6 @@
           "status": "ok",
           "errors": 0,
           "dur_ms": 115285,
-          "model": "anthropic/claude-sonnet-5"
-        },
-        {
-          "name": "Mac Weekly VA + Military Briefing (Sat 7AM)",
-          "enabled": true,
-          "expr": "15 7 * * 6",
-          "tz": "",
-          "channel": "telegram",
-          "last_ms": 1795263300052,
-          "status": "ok",
-          "errors": 0,
-          "dur_ms": 79002,
           "model": "anthropic/claude-sonnet-5"
         },
         {
@@ -6450,7 +6451,7 @@
       "n_jobs": 8,
       "n_enabled": 4,
       "err": 0,
-      "last_ms": 1795866326389,
+      "last_ms": 1795868126420,
       "status": "operational",
       "accomplishments": [
         {
@@ -6635,10 +6636,10 @@
           "expr": "",
           "tz": "",
           "channel": "",
-          "last_ms": 1795866326389,
+          "last_ms": 1795868126420,
           "status": "ok",
           "errors": 0,
-          "dur_ms": 162661,
+          "dur_ms": 300777,
           "model": "lmstudio/gemma-4-31b-it"
         },
         {
@@ -6737,5 +6738,5 @@
     "sally-airbnb-adt-ops",
     "ttf-ministry-social-media"
   ],
-  "cowork_date": "2026-11-28T06:53:14-05:00"
+  "cowork_date": "2026-11-28T07:25:36-05:00"
 }
